@@ -1,0 +1,11 @@
+{
+  "appId": "com.voxxrin3.mobile",
+  "appName": "voxxrin",
+  "bundledWebRuntime": false,
+  "webDir": "dist",
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0
+    }
+  }
+}
