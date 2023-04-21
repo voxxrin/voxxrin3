@@ -1,6 +1,6 @@
 {
-  "name": "App",
-  "short_name": "App",
+  "name": "Voxxrin",
+  "short_name": "Voxxrin",
   "start_url": "index.html",
   "display": "standalone",
   "icons": [{
