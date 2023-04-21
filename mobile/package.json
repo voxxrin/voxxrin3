@@ -17,7 +17,8 @@
     "@capacitor/camera": "4.1.4",
     "@capacitor/core": "4.7.3",
     "@capacitor/ios": "4.7.3",
-    "@capacitor/splash-screen": "4.2.0"
+    "@capacitor/splash-screen": "4.2.0",
+    "lit": "2.7.2"
   },
   "devDependencies": {
     "@capacitor/cli": "4.7.3",
