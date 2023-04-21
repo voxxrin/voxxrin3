@@ -1,5 +1,6 @@
 import { SplashScreen } from '@capacitor/splash-screen';
 import { Camera } from '@capacitor/camera';
+import {CameraResultType} from "@capacitor/camera/dist/esm/definitions";
 
 window.customElements.define(
   'capacitor-welcome',
@@ -95,10 +96,10 @@ window.customElements.define(
       self.shadowRoot.querySelector('#take-photo').addEventListener('click', async function (e) {
         try {
           const photo = await Camera.getPhoto({
-            resultType: 'uri',
+            resultType: CameraResultType.Uri,
           });
 
-          const image = self.shadowRoot.querySelector('#image');
+          const image = self.shadowRoot.querySelector<HTMLImageElement>('#image');
           if (!image) {
             return;
           }
