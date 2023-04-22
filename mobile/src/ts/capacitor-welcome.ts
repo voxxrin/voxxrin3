@@ -3,7 +3,6 @@ import {Camera, Photo} from '@capacitor/camera';
 import {CameraResultType} from "@capacitor/camera/dist/esm/definitions";
 import {css, html, LitElement} from "lit";
 import {customElement, property, query, state} from 'lit/decorators.js';
-import MARVEL_CHARS from '../data/marvel-characters.json'
 import {MarvelCharacter} from "./types";
 import "@lit-labs/virtualizer"
 import {virtualize} from "@lit-labs/virtualizer/virtualize.js";
@@ -15,7 +14,7 @@ class CapacitorWelcome extends LitElement {
     private photo: Photo|undefined = undefined;
 
     @state()
-    private marvelCharacters: MarvelCharacter[];
+    private marvelCharacters: MarvelCharacter[] = [];
 
     static styles = [
         css`
@@ -71,7 +70,9 @@ class CapacitorWelcome extends LitElement {
     constructor() {
         super();
 
-        this.marvelCharacters = MARVEL_CHARS;
+        fetch('/data/marvel-characters.json')
+            .then(resp => resp.json())
+            .then(marvelChars => this.marvelCharacters = marvelChars);
     }
 
     protected render(): unknown {
