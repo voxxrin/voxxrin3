@@ -1,0 +1,12 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="[prod] start mobile app (android)" type="js.build_tools.npm">
+    <package-json value="$PROJECT_DIR$/mobile/package.json" />
+    <command value="run" />
+    <scripts>
+      <script value="buildrun-prod-android" />
+    </scripts>
+    <node-interpreter value="project" />
+    <envs />
+    <method v="2" />
+  </configuration>
+</component>

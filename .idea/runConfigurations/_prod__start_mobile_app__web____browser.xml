@@ -1,0 +1,7 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="[prod] start mobile app (web) + browser" type="CompoundRunConfigurationType">
+    <toRun name="[prod] start mobile app (web)" type="js.build_tools.npm" />
+    <toRun name="Open browser :4173" type="ShConfigurationType" />
+    <method v="2" />
+  </configuration>
+</component>
