@@ -8,7 +8,8 @@
     "mobile"
   ],
   "scripts": {
-    "start": "vite",
+    "start": "vite --mode dev",
+    "build-dev": "vite --mode dev build",
     "build": "vite build",
     "preview": "vite preview"
   },
