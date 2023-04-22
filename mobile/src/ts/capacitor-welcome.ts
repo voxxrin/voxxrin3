@@ -2,13 +2,18 @@ import { SplashScreen } from '@capacitor/splash-screen';
 import {Camera, Photo} from '@capacitor/camera';
 import {CameraResultType} from "@capacitor/camera/dist/esm/definitions";
 import {css, html, LitElement} from "lit";
-import {customElement, query, state} from 'lit/decorators.js';
+import {customElement, property, query, state} from 'lit/decorators.js';
+import MARVEL_CHARS from '../data/marvel-characters.json'
+import {MarvelCharacter} from "./types";
 
 @customElement('capacitor-welcome')
 class CapacitorWelcome extends LitElement {
 
     @state()
     private photo: Photo|undefined = undefined;
+
+    @state()
+    private marvelCharacters: MarvelCharacter[];
 
     static styles = [
         css`
@@ -53,8 +58,19 @@ class CapacitorWelcome extends LitElement {
   main pre {
     white-space: pre-line;
   }
+  ul {
+    list-style: none;
+    margin: 0px;
+    padding: 0px;
+  }
         `
     ]
+
+    constructor() {
+        super();
+
+        this.marvelCharacters = MARVEL_CHARS;
+    }
 
     protected render(): unknown {
         SplashScreen.hide();
@@ -89,6 +105,12 @@ class CapacitorWelcome extends LitElement {
                 <p>
                   <img id="image" style="max-width: 100%" src="${this.photo?.webPath}">
                 </p>
+                
+                <ul style="width: 100%">
+                  ${this.marvelCharacters.map(mc => html`
+                    <marvel-character .character="${mc}"></marvel-character>
+                  `)}
+                </ul>
               </main>
             </div>
         `
