@@ -8,6 +8,7 @@
     "mobile"
   ],
   "scripts": {
+    "postinstall": "patch-package",
     "start": "vite --mode dev",
     "build-dev": "vite --mode dev build",
     "build": "vite build",
@@ -23,11 +24,13 @@
     "@capacitor/core": "4.7.3",
     "@capacitor/ios": "4.7.3",
     "@capacitor/splash-screen": "4.2.0",
+    "@ionic/pwa-elements": "3.1.1",
     "@lit-labs/virtualizer": "2.0.0",
     "lit": "2.7.2"
   },
   "devDependencies": {
     "@capacitor/cli": "4.7.3",
+    "patch-package": "6.5.1",
     "typescript": "5.0.4",
     "vite": "2.9.13"
   },
