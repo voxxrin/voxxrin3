@@ -5,6 +5,8 @@ import {css, html, LitElement} from "lit";
 import {customElement, property, query, state} from 'lit/decorators.js';
 import MARVEL_CHARS from '../data/marvel-characters.json'
 import {MarvelCharacter} from "./types";
+import "@lit-labs/virtualizer"
+import {virtualize} from "@lit-labs/virtualizer/virtualize.js";
 
 @customElement('capacitor-welcome')
 class CapacitorWelcome extends LitElement {
@@ -107,9 +109,12 @@ class CapacitorWelcome extends LitElement {
                 </p>
                 
                 <ul style="width: 100%">
-                  ${this.marvelCharacters.map(mc => html`
-                    <marvel-character .character="${mc}"></marvel-character>
-                  `)}
+                  ${virtualize({
+                    items: this.marvelCharacters,
+                    renderItem: mc => html`
+                        <marvel-character .character="${mc}"></marvel-character>
+                    `
+                  })}
                 </ul>
               </main>
             </div>

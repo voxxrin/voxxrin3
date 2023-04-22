@@ -9,6 +9,9 @@ class MarvelCharacterElement extends LitElement {
 
     static styles = [
         css`
+          :host {
+            width: 100%;
+          }
           li {
             border: 1px solid black;
             padding: 10px 20px 10px 20px;
