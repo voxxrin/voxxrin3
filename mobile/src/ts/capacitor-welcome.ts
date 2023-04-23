@@ -6,6 +6,7 @@ import {customElement, property, query, state} from 'lit/decorators.js';
 import {MarvelCharacter} from "./types";
 import "@lit-labs/virtualizer"
 import {virtualize} from "@lit-labs/virtualizer/virtualize.js";
+import {ActionSheet, ActionSheetButtonStyle} from "@capacitor/action-sheet";
 
 @customElement('capacitor-welcome')
 class CapacitorWelcome extends LitElement {
@@ -109,6 +110,8 @@ class CapacitorWelcome extends LitElement {
                   <img id="image" style="max-width: 100%" src="${this.photo?.webPath}">
                 </p>
                 
+                <button @click="${() => this.showCapacitorModal()}">Open Capacitor Action Sheet</button>
+                
                 <ul style="width: 100%">
                   ${virtualize({
                     items: this.marvelCharacters,
@@ -130,6 +133,27 @@ class CapacitorWelcome extends LitElement {
         } catch (e) {
             console.warn('User cancelled', e);
         }
+    }
+
+    private async showCapacitorModal() {
+        const result = await ActionSheet.showActions({
+            title: 'Une architecture GitOps from scratch: Gitlab, Ansible, Terraform, Kube...',
+            message: 'Select an option to perform',
+            options: [
+                {
+                    title: 'Remove from my Favorites',
+                },
+                {
+                    title: 'Notify me once video is available',
+                },
+                {
+                    title: 'View Details',
+                    style: ActionSheetButtonStyle.Destructive,
+                },
+            ],
+        });
+
+        alert(JSON.stringify(result))
     }
 }
 

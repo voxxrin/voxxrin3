@@ -23,6 +23,7 @@
     "buildrun-prod-ios": "npm run build && npm run run-prod-ios"
   },
   "dependencies": {
+    "@capacitor/action-sheet": "4.1.0",
     "@capacitor/android": "4.7.3",
     "@capacitor/camera": "4.1.4",
     "@capacitor/core": "4.7.3",
