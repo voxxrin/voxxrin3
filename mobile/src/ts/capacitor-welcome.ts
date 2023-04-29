@@ -80,11 +80,9 @@ class CapacitorWelcome extends LitElement {
         SplashScreen.hide();
 
         return html`
-            <div>
               <capacitor-welcome-titlebar>
                 <h1>Capacitor</h1>
               </capacitor-welcome-titlebar>
-              <main>
                 <p>
                   Capacitor makes it easy to build powerful apps for the app stores, mobile web (Progressive Web Apps), and desktop, all
                   with a single code base.
@@ -111,7 +109,8 @@ class CapacitorWelcome extends LitElement {
                 </p>
                 
                 <button @click="${() => this.showCapacitorModal()}">Open Capacitor Action Sheet</button>
-                
+                <ion-button id="open-modal" expand="block">Open Sheet Modal</ion-button>
+
                 <ul style="width: 100%">
                   ${virtualize({
                     items: this.marvelCharacters,
@@ -120,8 +119,50 @@ class CapacitorWelcome extends LitElement {
                     `
                   })}
                 </ul>
-              </main>
-            </div>
+
+              <ion-modal trigger="open-modal" initial-breakpoint="0.25">
+                <ion-content>
+                  <ion-searchbar placeholder="Search"></ion-searchbar>
+                  <ion-list>
+                    <ion-item>
+                      <ion-avatar slot="start">
+                        <ion-img src="https://i.pravatar.cc/300?u=b" />
+                      </ion-avatar>
+                      <ion-label>
+                        <h2>Connor Smith</h2>
+                        <p>Sales Rep</p>
+                      </ion-label>
+                    </ion-item>
+                    <ion-item>
+                      <ion-avatar slot="start">
+                        <ion-img src="https://i.pravatar.cc/300?u=a" />
+                      </ion-avatar>
+                      <ion-label>
+                        <h2>Daniel Smith</h2>
+                        <p>Product Designer</p>
+                      </ion-label>
+                    </ion-item>
+                    <ion-item>
+                      <ion-avatar slot="start">
+                        <ion-img src="https://i.pravatar.cc/300?u=d" />
+                      </ion-avatar>
+                      <ion-label>
+                        <h2>Greg Smith</h2>
+                        <p>Director of Operations</p>
+                      </ion-label>
+                    </ion-item>
+                    <ion-item>
+                      <ion-avatar slot="start">
+                        <ion-img src="https://i.pravatar.cc/300?u=e" />
+                      </ion-avatar>
+                      <ion-label>
+                        <h2>Zoey Smith</h2>
+                        <p>CEO</p>
+                      </ion-label>
+                    </ion-item>
+                  </ion-list>
+                </ion-content>
+              </ion-modal>              
         `
     }
 
