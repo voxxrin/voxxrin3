@@ -6,7 +6,7 @@ import {
     ScheduleTimeSlot, Speaker, Talk,
     TalkFormat,
     Track
-} from "../../../shared/crawler";
+} from "../../../shared/dayly-schedule.firestore";
 import {DeepReadonly} from "ts-essentials";
 import {match} from "ts-pattern";
 
