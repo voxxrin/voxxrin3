@@ -5,16 +5,16 @@ import { star } from 'ionicons/icons';
 
 import {ScheduleTalk} from "../data/schedule"
 import useUserId from '../hooks/useUserId';
-import useTalkStats from '../hooks/useTalkStats';
 import useUserTalkNotes from '../hooks/useUserTalkNotes';
+import { TalkStats } from '../data/feedbacks';
 
 interface ScheduleTalkItemProps {
     eventId: string,
-    talk: ScheduleTalk;
+    talk: ScheduleTalk,
+    talkStats: TalkStats
 }
 
-const ScheduleTalkItem: React.FC<ScheduleTalkItemProps> = ({eventId, talk}) => {
-    const talkStats = useTalkStats({eventId: eventId, talkId: talk.id})
+const ScheduleTalkItem: React.FC<ScheduleTalkItemProps> = ({eventId, talk, talkStats}) => {
     const userId = useUserId()
     const {talkNotes, updateTalkNotes} = useUserTalkNotes({userId: userId, eventId: eventId, talkId: talk.id})
     const isFavorite = talkNotes?.isFavorite ?? false

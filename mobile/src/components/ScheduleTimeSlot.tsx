@@ -8,20 +8,23 @@ import {
 import {BreakScheduleTimeSlot, TalksScheduleTimeSlot} from "../data/schedule"
 
 import ScheduleTalkItem from "./ScheduleTalkItem"
+import { DayTalksStats } from '../data/feedbacks';
 
 
 interface ScheduleTimeSlotProps {
     eventId: string,
     timeSlot: BreakScheduleTimeSlot | TalksScheduleTimeSlot;
+    stats?: DayTalksStats
 }
   
 
-const ScheduleTimeSlot: React.FC<ScheduleTimeSlotProps> = ({eventId, timeSlot}) => {
+const ScheduleTimeSlot: React.FC<ScheduleTimeSlotProps> = ({eventId, timeSlot, stats}) => {
     var content;
 if (timeSlot.type == "talks") {
     const slot = timeSlot as TalksScheduleTimeSlot
     content = slot.talks.map((talk) => {
-        return <ScheduleTalkItem key={talk.id} eventId={eventId} talk={talk} />
+        const talkStats = stats?.stats.find((t) => {return t.id == talk.id}) ?? {id: talk.id, totalFavoritesCount: 0}
+        return <ScheduleTalkItem key={talk.id} eventId={eventId} talk={talk} talkStats={talkStats} />
     })
 } else {
     const slot = timeSlot as BreakScheduleTimeSlot

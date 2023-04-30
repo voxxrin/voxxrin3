@@ -12,10 +12,8 @@ export const crawl = async (eventId:string) => {
     const event: Event = { id: eventId, daySchedules: [], talkStats: []}
     for (const day of days) {
         const {daySchedule, talkStats} = await crawlDevoxxDay(eventId, day)
-        event.daySchedules.push(daySchedule)
-        for (const talkStat of talkStats) {
-            event.talkStats.push(talkStat)
-        }
+        event.daySchedules.push(daySchedule)        
+        event.talkStats.push({day: day, stats: talkStats})
     }
     return event
 }

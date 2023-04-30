@@ -13,3 +13,14 @@ export interface UserTalkNotes {
     },
     comment?: string
 }
+
+export interface DayTalksStats {
+    day: string,
+    stats: TalkStats[]
+}
+
+export interface UserDayTalksNotes {
+    userId: string,
+    day: string,
+    notes: UserTalkNotes[]
+}

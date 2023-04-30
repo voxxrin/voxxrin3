@@ -1,4 +1,4 @@
-import {TalkStats} from "./feedbacks"
+import {DayTalksStats} from "./feedbacks"
 
 export interface ScheduleTimeSlot {
     id: string;
@@ -51,7 +51,7 @@ export interface DaySchedule {
 export interface Event {
     id: string,
     daySchedules: DaySchedule[],
-    talkStats: TalkStats[]
+    talkStats: DayTalksStats[]
 }
 
 export interface EventInfo {

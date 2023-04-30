@@ -8,6 +8,7 @@ import ScheduleTimeSlot from "./ScheduleTimeSlot"
 import './EventDaySchedule.css';
 
 import useDaySchedule from "../hooks/useDaySchedule"
+import useTalkStats from '../hooks/useTalkStats';
 
 interface EventDayScheduleProps {
     eventId: string;
@@ -17,6 +18,7 @@ interface EventDayScheduleProps {
 
 const EventDaySchedule: React.FC<EventDayScheduleProps> = ({eventId, day}) => {
     const daySchedule = useDaySchedule({eventId, day})
+    const dayTalkStats = useTalkStats({eventId, day})
 
     return (
         <>
@@ -24,7 +26,7 @@ const EventDaySchedule: React.FC<EventDayScheduleProps> = ({eventId, day}) => {
             {daySchedule?.day ?? "Loading..."}
         </IonHeader>
         <IonAccordionGroup>
-            {daySchedule?.timeSlots?.map((s) => <ScheduleTimeSlot eventId={eventId} timeSlot={s} key={s.id} />)}
+            {daySchedule?.timeSlots?.map((s) => <ScheduleTimeSlot eventId={eventId} timeSlot={s} key={s.id} stats={dayTalkStats} />)}
         </IonAccordionGroup>
     </>
     );
