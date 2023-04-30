@@ -1,9 +1,10 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
 import { RouteRecordRaw } from 'vue-router';
+import EventSelectorPage from "@/views/EventSelectorPage.vue";
 
 const routes: Array<RouteRecordRaw> = [
   { path: '/', redirect: '/event-selector' },
-  { path: '/event-selector', component: () => import(`@/views/EventSelectorPage.vue`) },
+  { path: '/event-selector', component: EventSelectorPage },
   { path: '/events/:eventId', component: () => import('@/views/EventPage.vue'), children: [
     { path: '', redirect: (route) => `/events/${route.params.eventId}/schedule` },
     { path: 'schedule', component: () => import('@/views/event/SchedulePage.vue') },
