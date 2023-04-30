@@ -3,46 +3,48 @@ import { doc, onSnapshot, setDoc } from "firebase/firestore";
 import { db } from "../firebase"
 
 
-import {UserTalkNotes} from "../data/feedbacks"
+import {UserDayTalksNotes, UserTalkNotes} from "../data/feedbacks"
 
 interface UserTalkNotesProps {
     userId: string,
     eventId: string,
-    talkId: string
+    day?: string
 }
 
 export default function useUserTalkNotes(props: UserTalkNotesProps) {
-    const [talkNotes, setTalkNotes] = useState<UserTalkNotes | null>(null);
+    const [talksNotes, setTalksNotes] = useState<UserDayTalksNotes | undefined>(undefined);
     const userId = props.userId
 
     useEffect(() => {
-        if (userId === "") {            
+        if (userId === "" || props.day == null) {            
             return () => {}
         } else {
-            const d = doc(db, `users/${userId}/events/${props.eventId}/talkNotes/${props.talkId}`);
+            const d = doc(db, `users/${userId}/events/${props.eventId}/talksNotes/${props.day}`);
             const unsubscribe = onSnapshot(d, (docSnapshot) => {
-                setTalkNotes(docSnapshot.data() as UserTalkNotes)
+                setTalksNotes(docSnapshot.data() as UserDayTalksNotes)
             });
             return unsubscribe;
         }
-    }, [props.userId, props.eventId, props.talkId]);
+    }, [props.userId, props.eventId, props.day]);
 
-    const updateTalkNotes = async function(changeFn: (notes: UserTalkNotes) => void) {
+    const updateTalkNotes = async function(talkId: string, changeFn: (notes: UserTalkNotes) => void) {
         if (userId === "") {
             console.log("cant update favorites without user id")            
             return
         }
-        const notes = JSON.parse(JSON.stringify(talkNotes ?? {
-            talkId: props.talkId,
-            isFavorite: false,
-            ratings: {}        
-        } as UserTalkNotes)) as UserTalkNotes
-        changeFn(notes)
-        setDoc(doc(db, `users/${userId}/events/${props.eventId}/talkNotes/${props.talkId}`), notes).then(() => {
-            console.log(`updated user talk notes on firestore for ${props.eventId} - ${props.talkId}`)
+        const notes = JSON.parse(JSON.stringify(talksNotes ?? {userId: userId, day: props.day, notes: []})) as UserDayTalksNotes
+
+        let talkNotes = notes.notes.find((n) => {return n.talkId == talkId}) 
+        if (talkNotes == null) {
+            talkNotes = { talkId: talkId, isFavorite: false, ratings: {} } as UserTalkNotes
+            notes.notes.push(talkNotes)
+        }
+        changeFn(talkNotes)
+        setDoc(doc(db, `users/${userId}/events/${props.eventId}/talksNotes/${props.day}`), notes).then(() => {
+            console.log(`updated user talk notes on firestore for ${props.eventId} - ${talkId}`)
         })
-        setTalkNotes(notes)
+        setTalksNotes(notes)
     }
 
-    return {talkNotes, updateTalkNotes};
+    return {talksNotes, updateTalkNotes};
   }

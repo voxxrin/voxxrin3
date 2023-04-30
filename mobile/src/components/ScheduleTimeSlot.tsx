@@ -8,23 +8,28 @@ import {
 import {BreakScheduleTimeSlot, TalksScheduleTimeSlot} from "../data/schedule"
 
 import ScheduleTalkItem from "./ScheduleTalkItem"
-import { DayTalksStats } from '../data/feedbacks';
+import { DayTalksStats, UserDayTalksNotes } from '../data/feedbacks';
 
 
 interface ScheduleTimeSlotProps {
-    eventId: string,
-    timeSlot: BreakScheduleTimeSlot | TalksScheduleTimeSlot;
-    stats?: DayTalksStats
+    timeSlot: BreakScheduleTimeSlot | TalksScheduleTimeSlot,
+    stats?: DayTalksStats,
+    talksNotes?: UserDayTalksNotes,
+    onToggleFavorite: (talkId: string) => void
 }
   
 
-const ScheduleTimeSlot: React.FC<ScheduleTimeSlotProps> = ({eventId, timeSlot, stats}) => {
+const ScheduleTimeSlot: React.FC<ScheduleTimeSlotProps> = ({timeSlot, stats, talksNotes, onToggleFavorite}) => {
     var content;
 if (timeSlot.type == "talks") {
     const slot = timeSlot as TalksScheduleTimeSlot
     content = slot.talks.map((talk) => {
         const talkStats = stats?.stats.find((t) => {return t.id == talk.id}) ?? {id: talk.id, totalFavoritesCount: 0}
-        return <ScheduleTalkItem key={talk.id} eventId={eventId} talk={talk} talkStats={talkStats} />
+        const talkNotes = talksNotes?.notes.find((t) => {return t.talkId == talk.id}) ?? undefined
+        return <ScheduleTalkItem
+                  key={talk.id} talk={talk} talkStats={talkStats} 
+                  talkNotes={talkNotes} onToggleFavorite={() => {onToggleFavorite(talk.id)}}
+                  />
     })
 } else {
     const slot = timeSlot as BreakScheduleTimeSlot

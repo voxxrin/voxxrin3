@@ -4,26 +4,17 @@ import {
 import { star } from 'ionicons/icons';
 
 import {ScheduleTalk} from "../data/schedule"
-import useUserId from '../hooks/useUserId';
-import useUserTalkNotes from '../hooks/useUserTalkNotes';
-import { TalkStats } from '../data/feedbacks';
+import { TalkStats, UserTalkNotes } from '../data/feedbacks';
 
 interface ScheduleTalkItemProps {
-    eventId: string,
     talk: ScheduleTalk,
-    talkStats: TalkStats
+    talkStats: TalkStats,
+    talkNotes?: UserTalkNotes,
+    onToggleFavorite: () => void
 }
 
-const ScheduleTalkItem: React.FC<ScheduleTalkItemProps> = ({eventId, talk, talkStats}) => {
-    const userId = useUserId()
-    const {talkNotes, updateTalkNotes} = useUserTalkNotes({userId: userId, eventId: eventId, talkId: talk.id})
+const ScheduleTalkItem: React.FC<ScheduleTalkItemProps> = ({talk, talkStats, talkNotes, onToggleFavorite}) => {
     const isFavorite = talkNotes?.isFavorite ?? false
-
-    const toggleFavorite = function() {                
-        updateTalkNotes((notes) => {
-            notes.isFavorite = !notes.isFavorite
-        })
-    }
 
     return (
         <IonCard key={talk.id}>
@@ -36,7 +27,7 @@ const ScheduleTalkItem: React.FC<ScheduleTalkItemProps> = ({eventId, talk, talkS
             <IonItem>
                 {talk.room.title}
                 <IonBadge slot="end">{talkStats?.totalFavoritesCount ?? "0"}</IonBadge>          
-                <IonButton slot="end" color={isFavorite ? "danger" : "light"} onClick={toggleFavorite}>
+                <IonButton slot="end" color={isFavorite ? "danger" : "light"} onClick={onToggleFavorite}>
                 <IonIcon slot="icon-only" icon={star}></IonIcon>
                 </IonButton>
             </IonItem>          
