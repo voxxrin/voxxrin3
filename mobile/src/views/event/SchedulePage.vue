@@ -65,7 +65,7 @@ import {
     useCurrentSchedule,
     VoxxrinScheduleTimeSlot,
     watchCurrentSchedule
-} from "@/state/VoxxrinSchedule";
+} from "@/state/CurrentSchedule";
 import {DeepReadonly} from "ts-essentials";
 import {getRouteParamsValue} from "@/views/vue-utils";
 

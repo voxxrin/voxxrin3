@@ -44,7 +44,7 @@ import {useRoute, useRouter} from "vue-router";
 import CurrentEventHeader from "@/components/CurrentEventHeader.vue";
 import {
     EventId,
-} from "@/state/VoxxrinSchedule";
+} from "@/state/CurrentSchedule";
 import {getRouteParamsValue} from "@/views/vue-utils";
 
 const router = useRouter();
