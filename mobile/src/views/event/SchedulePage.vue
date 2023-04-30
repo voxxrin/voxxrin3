@@ -59,15 +59,16 @@ import { chatbubble, addCircle } from 'ionicons/icons';
 import {useRoute, useRouter} from "vue-router";
 import {onMounted, onUnmounted, ref, watch} from "vue";
 import {
-    Day,
-    EventId,
     fetchSchedule,
     useCurrentSchedule,
-    VoxxrinScheduleTimeSlot,
     watchCurrentSchedule
 } from "@/state/CurrentSchedule";
 import {DeepReadonly} from "ts-essentials";
 import {getRouteParamsValue} from "@/views/vue-utils";
+import {ConferenceDescriptor} from "../../../../shared/conference-descriptor.firestore";
+import {EventId} from "@/models/VoxxrinEvent";
+import {Day} from "@/models/VoxxrinDay";
+import {VoxxrinScheduleTimeSlot} from "@/models/VoxxrinSchedule";
 
 const router = useRouter();
 const route = useRoute();

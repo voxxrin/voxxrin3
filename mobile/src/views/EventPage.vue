@@ -42,10 +42,8 @@ import {calendar, chatbox, information, star} from 'ionicons/icons';
 import {ref} from "vue";
 import {useRoute, useRouter} from "vue-router";
 import CurrentEventHeader from "@/components/CurrentEventHeader.vue";
-import {
-    EventId,
-} from "@/state/CurrentSchedule";
 import {getRouteParamsValue} from "@/views/vue-utils";
+import {EventId} from "@/models/VoxxrinEvent";
 
 const router = useRouter();
 const route = useRoute();
