@@ -7,16 +7,13 @@
         </ion-toolbar>
       </ion-header>
 
-      Schedule here !
+      <ion-list>
+        <ion-item v-for="(day, index) in currentConferenceDescriptor?.days || []" :key="index">
+          <ion-button @click="changeDayTo(day)">{{day.value}}</ion-button>
+        </ion-item>
+      </ion-list>
 
-      <ul>
-        <li><ion-button @click="changeDayTo('monday')">Monday</ion-button></li>
-        <li><ion-button @click="changeDayTo('tuesday')">Tuesday</ion-button></li>
-        <li><ion-button @click="changeDayTo('wednesday')">Wednesday</ion-button></li>
-        <li><ion-button @click="changeDayTo('thursday')">Thursday</ion-button></li>
-        <li><ion-button @click="changeDayTo('friday')">Friday</ion-button></li>
-      </ul>
-
+      Schedule here !<br/>
       Size: {{timeslots?.length}}<br/>
 
       <ion-button router-direction="forward" :router-link="`/events/${eventId.value}/talks/1/details`">
@@ -54,7 +51,22 @@
 </template>
 
 <script setup lang="ts">
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonIcon, IonFabButton, IonFab, IonAlert, IonLabel, IonFabList } from '@ionic/vue';
+import {
+    IonPage,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonContent,
+    IonButton,
+    IonIcon,
+    IonFabButton,
+    IonFab,
+    IonAlert,
+    IonLabel,
+    IonFabList,
+    IonItem,
+    IonList
+} from '@ionic/vue';
 import { chatbubble, addCircle } from 'ionicons/icons';
 import {useRoute, useRouter} from "vue-router";
 import {onMounted, onUnmounted, ref, watch} from "vue";
@@ -65,25 +77,31 @@ import {
 } from "@/state/CurrentSchedule";
 import {DeepReadonly} from "ts-essentials";
 import {getRouteParamsValue} from "@/views/vue-utils";
-import {ConferenceDescriptor} from "../../../../shared/conference-descriptor.firestore";
 import {EventId} from "@/models/VoxxrinEvent";
 import {Day} from "@/models/VoxxrinDay";
 import {VoxxrinScheduleTimeSlot} from "@/models/VoxxrinSchedule";
+import {
+    fetchConferenceDescriptor,
+    useCurrentConferenceDescriptor
+} from "@/state/CurrentConferenceDescriptor";
 
 const router = useRouter();
 const route = useRoute();
-const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')!));
+const eventId = new EventId(getRouteParamsValue(route, 'eventId')!);
 
 const currentSchedule = useCurrentSchedule();
 const currentlySelectedDay = ref<Day>(new Day(currentSchedule?.day.value || 'unknown'))
-const changeDayTo = (dayName: string) => {
-    currentlySelectedDay.value = new Day(dayName);
+const changeDayTo = (day: Day) => {
+    currentlySelectedDay.value = day;
 }
 
+const currentConferenceDescriptor = ref(useCurrentConferenceDescriptor());
 const timeslots = ref<DeepReadonly<VoxxrinScheduleTimeSlot[]>>(currentSchedule?.timeSlots || []);
 
 onMounted(async () => {
     console.log(`EventPage mounted !`)
+    fetchConferenceDescriptor(eventId)
+        .then(confDesc => currentConferenceDescriptor.value = confDesc);
 })
 
 watchCurrentSchedule((currentSchedule) => {
@@ -94,14 +112,12 @@ watchCurrentSchedule((currentSchedule) => {
 }, onUnmounted);
 
 watch([currentlySelectedDay], async ([selectedDay]) => {
-    fetchSchedule(eventId.value, selectedDay);
+    fetchSchedule(eventId, selectedDay);
 })
 // TODO: we should handle this in a better way
 if(currentlySelectedDay.value.isSameThan(new Day('unknown'))) {
-    changeDayTo('2022-10-10');
+    changeDayTo(new Day('2022-10-10'));
 }
-
-
 </script>
 
 <style scoped>
