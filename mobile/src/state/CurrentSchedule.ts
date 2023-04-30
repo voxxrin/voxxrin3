@@ -29,7 +29,7 @@ export const fetchSchedule = async (eventId: EventId, day: Day) => {
         !CURRENT_SCHEDULE.value?.eventId.isSameThan(eventId)
         || !CURRENT_SCHEDULE.value?.day.isSameThan(day)
     ) {
-        const crawlerDailySchedule: DailySchedule = (await fetch(`/data/dvbe22/${day.value}.json`).then(resp => resp.json()));
+        const crawlerDailySchedule: DailySchedule = (await fetch(`/data/dvbe22/days/${day.value}.json`).then(resp => resp.json()));
         console.log(`timeslots fetched:`, crawlerDailySchedule.timeSlots)
 
         defineCurrentScheduleFromCrawler(eventId, crawlerDailySchedule);

@@ -97,7 +97,7 @@ watch([currentlySelectedDay], async ([selectedDay]) => {
 })
 // TODO: we should handle this in a better way
 if(currentlySelectedDay.value.isSameThan(new Day('unknown'))) {
-    changeDayTo('monday');
+    changeDayTo('2022-10-10');
 }
 
 

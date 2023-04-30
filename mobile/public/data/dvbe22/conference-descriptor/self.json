@@ -1,0 +1,140 @@
+{
+  "id": "dvbe22",
+  "days": [
+    "2022-10-10",
+    "2022-10-11",
+    "2022-10-12",
+    "2022-10-13",
+    "2022-10-14"
+  ],
+  "features": {
+    "roomsDisplayed": true,
+    "favoritesEnabled": true,
+    "remindMeOnceVideosAreAvailableEnabled": true,
+    "hideLanguages": [],
+    "ratings": {
+      "bingo": {
+        "enabled": true,
+        "choices": [
+          {
+            "id": "interesting",
+            "label": "Very interesting"
+          },
+          {
+            "id": "too-much-code",
+            "label": "Too much code"
+          },
+          {
+            "id": "lacking-demos",
+            "label": "Lacking demos"
+          }
+        ]
+      },
+      "scale": {
+        "enabled": true,
+        "icon": "star",
+        "max": 5
+      },
+      "free-text": {
+        "enabled": true,
+        "maxLength": 400
+      },
+      "custom-scale": {
+        "enabled": true,
+        "choices": [
+          {
+            "id": "smiling_face",
+            "icon": "smiling_face"
+          },
+          {
+            "id": "neutral_face",
+            "icon": "neutral_face"
+          },
+          {
+            "id": "confused_face",
+            "icon": "confused_face"
+          }
+        ]
+      }
+    }
+  },
+  "talkFormats": [
+    {
+      "id": "conf",
+      "label": "Conference",
+      "themeColor": "#69BE72"
+    },
+    {
+      "id": "uni",
+      "label": "University",
+      "themeColor": "#DA8DE0"
+    },
+    {
+      "id": "hol",
+      "label": "Hand's on Lab",
+      "themeColor": "#7D51FB"
+    },
+    {
+      "id": "tia",
+      "label": "Tools in action",
+      "themeColor": "#199F8F"
+    }
+  ],
+  "talkTracks": [
+    {
+      "id": "cloud",
+      "label": "Cloud",
+      "themeColor": "#5914CA"
+    },
+    {
+      "id": "java",
+      "label": "Java",
+      "themeColor": "#C21146"
+    },
+    {
+      "id": "bigdata",
+      "label": "Big Data",
+      "themeColor": "#7D51FB"
+    }
+  ],
+  "supportedTalkLanguages": [
+    {
+      "id": "en",
+      "label": "EN",
+      "themeColor": "#165CE3"
+    },
+    {
+      "id": "fr",
+      "label": "FR",
+      "themeColor": "#165CE3"
+    }
+  ],
+  "rooms": [
+    {
+      "id": "4710",
+      "label": "Room 5"
+    },
+    {
+      "id": "4706",
+      "label": "Room 4"
+    },
+    {
+      "id": "4708",
+      "label": "Room 6"
+    },
+    {
+      "id": "4711",
+      "label": "Room 8"
+    }
+  ],
+  "theming": {
+    "colors": {
+      "primary": "#F78125",
+      "secondary": "#202020"
+    }
+  },
+  "infos": {
+    "venuePicture": "https://acme.com/venue-picture.png",
+    "eventDescription": "hello *world* !"
+  }
+}
