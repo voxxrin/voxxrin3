@@ -9,10 +9,20 @@
 
       Schedule here !
 
-      <ion-button router-direction="forward" @click="router.push({name: 'eventTalkDetails', params: {eventId, talkId: '1'}})">
+      <ul>
+        <li><ion-button @click="changeDayTo('monday')">Monday</ion-button></li>
+        <li><ion-button @click="changeDayTo('tuesday')">Tuesday</ion-button></li>
+        <li><ion-button @click="changeDayTo('wednesday')">Wednesday</ion-button></li>
+        <li><ion-button @click="changeDayTo('thursday')">Thursday</ion-button></li>
+        <li><ion-button @click="changeDayTo('friday')">Friday</ion-button></li>
+      </ul>
+
+      Size: {{timeslots?.length}}<br/>
+
+      <ion-button router-direction="forward" @click="router.push({name: 'eventTalkDetails', params: {eventId: eventId.value, talkId: '1'}})">
         Open talk 1
       </ion-button>
-      <ion-button router-direction="forward" @click="router.push({name: 'eventTalkDetails', params: {eventId, talkId: '2'}})">
+      <ion-button router-direction="forward" @click="router.push({name: 'eventTalkDetails', params: {eventId: eventId.value, talkId: '2'}})">
         Open talk 2
       </ion-button>
 
@@ -47,11 +57,50 @@
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonIcon, IonFabButton, IonFab, IonAlert, IonLabel, IonFabList } from '@ionic/vue';
 import { chatbubble, addCircle } from 'ionicons/icons';
 import {useRoute, useRouter} from "vue-router";
-import {ref} from "vue";
+import {onMounted, onUnmounted, ref, watch} from "vue";
+import {
+    Day,
+    EventId,
+    fetchSchedule,
+    useCurrentSchedule,
+    VoxxrinScheduleTimeSlot,
+    watchCurrentSchedule
+} from "@/state/VoxxrinSchedule";
+import {DeepReadonly} from "ts-essentials";
+import {getRouteParamsValue} from "@/views/vue-utils";
 
 const router = useRouter();
 const route = useRoute();
-const eventId = ref(route.params.eventId);
+const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')!));
+
+const currentSchedule = useCurrentSchedule();
+const currentlySelectedDay = ref<Day>(new Day(currentSchedule?.day.value || 'unknown'))
+const changeDayTo = (dayName: string) => {
+    currentlySelectedDay.value = new Day(dayName);
+}
+
+const timeslots = ref<DeepReadonly<VoxxrinScheduleTimeSlot[]>>(currentSchedule?.timeSlots || []);
+
+onMounted(async () => {
+    console.log(`EventPage mounted !`)
+})
+
+watchCurrentSchedule((currentSchedule) => {
+    if(currentSchedule) {
+        timeslots.value = currentSchedule.timeSlots;
+        currentlySelectedDay.value = currentSchedule.day
+    }
+}, onUnmounted);
+
+watch([currentlySelectedDay], async ([selectedDay]) => {
+    fetchSchedule(eventId.value, selectedDay);
+})
+// TODO: we should handle this in a better way
+if(currentlySelectedDay.value.isSameThan(new Day('unknown'))) {
+    changeDayTo('monday');
+}
+
+
 </script>
 
 <style scoped>
