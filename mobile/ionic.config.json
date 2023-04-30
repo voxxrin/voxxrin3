@@ -1,0 +1,7 @@
+{
+  "name": "voxxrin-v3",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react-vite"
+}
