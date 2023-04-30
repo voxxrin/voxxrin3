@@ -14,7 +14,6 @@ const routes: Array<RouteRecordRaw> = [
     { path: 'infos', component: () => import('@/views/event/InfosPage.vue') },
     { path: 'talks/:talkId/details', component: () => import('@/views/event/TalkDetailsPage.vue') },
   ]},
-  { path: '/sandbox', component: () => import(`@/views/SandboxPage.vue`) },
 ]
 
 const router = createRouter({
