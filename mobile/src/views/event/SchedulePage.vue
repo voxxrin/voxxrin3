@@ -19,10 +19,10 @@
 
       Size: {{timeslots?.length}}<br/>
 
-      <ion-button router-direction="forward" @click="router.push({name: 'eventTalkDetails', params: {eventId: eventId.value, talkId: '1'}})">
+      <ion-button router-direction="forward" :router-link="`/events/${eventId.value}/talks/1/details`">
         Open talk 1
       </ion-button>
-      <ion-button router-direction="forward" @click="router.push({name: 'eventTalkDetails', params: {eventId: eventId.value, talkId: '2'}})">
+      <ion-button router-direction="forward" :router-link="`/events/${eventId.value}/talks/2/details`">
         Open talk 2
       </ion-button>
 
