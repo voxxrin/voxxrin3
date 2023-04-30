@@ -29,14 +29,14 @@ export const fetchSchedule = async (eventId: EventId, day: Day) => {
         !CURRENT_SCHEDULE.value?.eventId.isSameThan(eventId)
         || !CURRENT_SCHEDULE.value?.day.isSameThan(day)
     ) {
-        const crawlerDailySchedule: DailySchedule = (await fetch(`/data/dvbe22/days/${day.value}.json`).then(resp => resp.json()));
-        console.log(`timeslots fetched:`, crawlerDailySchedule.timeSlots)
+        const firestoreDailySchedule: DailySchedule = await fetch(`/data/dvbe22/days/${day.value}.json`).then(resp => resp.json());
+        console.log(`timeslots fetched:`, firestoreDailySchedule.timeSlots)
 
-        defineCurrentScheduleFromCrawler(eventId, crawlerDailySchedule);
+        defineCurrentScheduleFromFirestore(eventId, firestoreDailySchedule);
     }
 }
 
-const defineCurrentScheduleFromCrawler = (eventId: EventId, firestoreSchedule: DailySchedule) => {
+const defineCurrentScheduleFromFirestore = (eventId: EventId, firestoreSchedule: DailySchedule) => {
     const voxxrinSchedule = createVoxxrinDailyScheduleFromFirestore(eventId, firestoreSchedule);
     CURRENT_SCHEDULE.value = voxxrinSchedule;
 }
