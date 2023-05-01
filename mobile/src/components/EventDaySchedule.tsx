@@ -1,6 +1,7 @@
 import {
     IonAccordionGroup,
     IonHeader,
+    IonTitle,
 } from '@ionic/react';
 
 import ScheduleTimeSlot from "./ScheduleTimeSlot"
@@ -32,9 +33,7 @@ const EventDaySchedule: React.FC<EventDayScheduleProps> = ({eventId, day}) => {
 
     return (
         <>
-        <IonHeader>
-            {daySchedule?.day ?? "Loading..."}
-        </IonHeader>
+        <IonTitle>{daySchedule?.day ?? "Loading..."}</IonTitle>
         <IonAccordionGroup>
             {daySchedule?.timeSlots?.map( (s) => 
                 <ScheduleTimeSlot 

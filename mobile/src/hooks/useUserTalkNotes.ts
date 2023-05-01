@@ -6,7 +6,7 @@ import { db } from "../firebase"
 import {UserDayTalksNotes, UserTalkNotes} from "../data/feedbacks"
 
 interface UserTalkNotesProps {
-    userId: string,
+    userId?: string,
     eventId: string,
     day?: string
 }
@@ -16,7 +16,7 @@ export default function useUserTalkNotes(props: UserTalkNotesProps) {
     const userId = props.userId
 
     useEffect(() => {
-        if (userId === "" || props.day == null) {            
+        if (!userId || props.day == null) {            
             return () => {}
         } else {
             const d = doc(db, `users/${userId}/events/${props.eventId}/talksNotes/${props.day}`);
@@ -28,7 +28,7 @@ export default function useUserTalkNotes(props: UserTalkNotesProps) {
     }, [props.userId, props.eventId, props.day]);
 
     const updateTalkNotes = async function(talkId: string, changeFn: (notes: UserTalkNotes) => void) {
-        if (userId === "") {
+        if (!userId) {
             console.log("cant update favorites without user id")            
             return
         }

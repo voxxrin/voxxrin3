@@ -1,12 +1,15 @@
-import React from 'react';
-import { IonHeader, IonButton, IonInput, IonCard, IonCardHeader, IonCardTitle, IonCardContent } from '@ionic/react';
+import React, { useEffect } from 'react';
+import { IonHeader, IonButton, IonInput, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonPage, IonContent, IonToolbar, IonButtons, IonMenuButton, IonTitle } from '@ionic/react';
 import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   sendEmailVerification,
-  signOut
+  signOut,
+  onAuthStateChanged,
+  User as FirebaseUser
 } from 'firebase/auth';
+import {app} from "../firebase"
 import { useState } from 'react';
 
 interface User {
@@ -21,8 +24,9 @@ const UserAccount: React.FC = () => {
     const [user, setUser] = useState<User | undefined>(undefined)
     const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined)
 
+    const auth = getAuth(app)
+
     const signup = async function() {
-      const auth = await getAuth()
       createUserWithEmailAndPassword(auth, email ?? "", password ?? "")
           .then((userCredential) => {
             // Signed in 
@@ -37,10 +41,12 @@ const UserAccount: React.FC = () => {
           });
     }
 
-    const checkEmailVerified = async function() {
-        const auth = await getAuth()
+    const reloadUser = async function() {
         await auth.currentUser?.reload()
-        const user = auth.currentUser ?? undefined
+        loadUser(auth.currentUser ?? undefined)
+    }
+
+    const loadUser = async function(user: FirebaseUser | undefined) {
         if (user) {
             setUser({email: user.email ?? "", emailVerified: user.emailVerified})
         } else {
@@ -49,7 +55,6 @@ const UserAccount: React.FC = () => {
     }
 
     const signin = async function() {
-      const auth = await getAuth()
       signInWithEmailAndPassword(auth, email ?? "", password ?? "")
         .then((userCredential) => {
             const user = userCredential.user
@@ -65,14 +70,28 @@ const UserAccount: React.FC = () => {
     }
 
     const signout = async function() {
-        const auth = await getAuth()
         await signOut(auth)
         setUser(undefined)
     }
 
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            loadUser(user ?? undefined)
+          });
+        return unsubscribe
+    }, [])
+
     return (
-      <>
-      <IonHeader>
+      <IonPage id="account-page">
+        <IonHeader>
+          <IonToolbar>
+              <IonButtons slot="start">
+                <IonMenuButton></IonMenuButton>
+              </IonButtons>
+              <IonTitle>Account</IonTitle>
+          </IonToolbar>
+        </IonHeader>
+        <IonContent class="ion-padding">
         {
             !user && (
                 <>
@@ -99,7 +118,7 @@ const UserAccount: React.FC = () => {
                     email verified: {user.emailVerified ? "v" : "x"}
                 </IonCardContent>
                 </IonCard>
-                <IonButton onClick={checkEmailVerified}>
+                <IonButton onClick={reloadUser}>
                 Check
                 </IonButton>
                 <IonButton onClick={signout}>
@@ -121,8 +140,8 @@ const UserAccount: React.FC = () => {
                 </IonCard>
             )
         }        
-      </IonHeader>
-        </>
+        </IonContent>
+      </IonPage>
     );
 }
 

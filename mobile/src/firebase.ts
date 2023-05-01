@@ -16,7 +16,7 @@ const config = {
     appId: "1:20680838449:web:9049ca9161983d0b0d3410"
 };
 
-const app = initializeApp(config);
+export const app = initializeApp(config);
 
 initializeFirestore(app,
     {

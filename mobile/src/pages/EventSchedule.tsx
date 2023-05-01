@@ -5,7 +5,8 @@ import {
     IonButtons,
     IonPage,
     IonTitle,
-    IonToolbar
+    IonToolbar,
+    IonMenuButton
 } from '@ionic/react';
 
 import './EventSchedule.css';
@@ -38,17 +39,22 @@ const EventSchedule: React.FC = () => {
     }    
 
     return (
-        <IonPage id="home-page">
+        <IonPage id="event-page">
             <IonHeader>
+            <IonToolbar>
+                <IonButtons slot="start">
+                <IonMenuButton></IonMenuButton>
+                </IonButtons>
+                <IonTitle>{eventDetails?.info.title ?? "loading..."}</IonTitle>
+            </IonToolbar>
+            </IonHeader>
+            <IonContent fullscreen>
                 <IonToolbar>
                     <IonButtons slot="start">
                     {navButtons}
                     </IonButtons>
-                    <IonTitle>Schedule</IonTitle>
                 </IonToolbar>
-            </IonHeader>
-            <IonContent fullscreen>
-                <EventDaySchedule eventId="dvbe22" day={day} />
+                <EventDaySchedule eventId={eventDetails?.info.id ?? ""} day={day} />
             </IonContent>
         </IonPage>
     );

@@ -1,5 +1,5 @@
 import { Redirect, Route } from 'react-router-dom';
-import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
+import { IonApp, IonContent, IonHeader, IonItem, IonList, IonMenu, IonRouterOutlet, IonTitle, IonToolbar, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import EventSchedule from './pages/EventSchedule';
 import EventsList from './pages/EventsList';
@@ -26,22 +26,27 @@ import UserAccount from './pages/UserAccount';
 
 setupIonicReact();
 
-const App: React.FC = () => (
+const App: React.FC = () => (  
   <IonApp>
+    <IonMenu contentId="router">
+        <IonHeader>
+          <IonToolbar>
+            <IonTitle>Voxxrin</IonTitle>
+          </IonToolbar>
+        </IonHeader>
+        <IonContent className="ion-padding">
+          <IonList>
+            <IonItem routerLink="/account">Account</IonItem>
+            <IonItem routerLink="/events">Events</IonItem>
+          </IonList>
+        </IonContent>
+    </IonMenu>
     <IonReactRouter>
-      <IonRouterOutlet>
-        <Route path="/" exact={true}>
-          <Redirect to="/events" />
-        </Route>
-        <Route path="/account" exact={true}>
-          <UserAccount />
-        </Route>
-        <Route path="/events" exact={true}>
-          <EventsList />
-        </Route>
-        <Route path="/event/:eventId" exact={true}>
-          <EventSchedule />
-        </Route>
+      <IonRouterOutlet id="router">
+        <Redirect exact path="/" to="/account" />
+        <Route path="/account" render={() => <UserAccount />} exact={true} />
+        <Route path="/events" render={() => <EventsList />} exact={true} />
+        <Route path="/events/:eventId" render={() => <EventSchedule />} exact={true} />
       </IonRouterOutlet>
     </IonReactRouter>
   </IonApp>

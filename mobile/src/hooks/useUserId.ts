@@ -1,17 +1,17 @@
 import { useState, useEffect } from 'react';
 import { Device } from '@capacitor/device';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { app } from '../firebase';
 
 export default function useUserId() {
-    const [userId, setUserId] = useState("")
+    const [userId, setUserId] = useState<string | undefined>(undefined)
 
     useEffect(() => {
-        var enabled = true
-        Device.getId().then((id) => {
-            if (enabled) {
-                setUserId(id.uuid)
-            }            
-        })
-        return () => { enabled = false }
+        const auth = getAuth(app)
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            setUserId(user?.uid ?? undefined)
+        });
+        return unsubscribe
     }, [])
 
     return userId
