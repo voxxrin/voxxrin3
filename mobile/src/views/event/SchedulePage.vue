@@ -68,7 +68,7 @@ import {
 } from '@ionic/vue';
 import { chatbubble, addCircle } from 'ionicons/icons';
 import {useRoute, useRouter} from "vue-router";
-import {onMounted, onUnmounted, ref, watch} from "vue";
+import {onMounted, ref, watch} from "vue";
 import {
     fetchSchedule,
     useCurrentSchedule,
@@ -108,7 +108,7 @@ watchCurrentSchedule((currentSchedule) => {
         timeslots.value = currentSchedule.timeSlots;
         currentlySelectedDay.value = findVoxxrinDayById(currentConferenceDescriptor.value, currentSchedule.day)
     }
-}, onUnmounted);
+});
 
 watch([currentlySelectedDay, currentConferenceDescriptor], async ([selectedDay, conferenceDescriptor]) => {
     if(conferenceDescriptor !== undefined) {

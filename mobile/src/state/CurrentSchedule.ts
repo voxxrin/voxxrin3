@@ -17,12 +17,8 @@ const CURRENT_SCHEDULE = ref<DeepReadonly<VoxxrinDailySchedule>|undefined>(undef
 
 export const useCurrentSchedule = () => CURRENT_SCHEDULE.value;
 
-export const watchCurrentSchedule = (
-    callback: (currentSchedule: (DeepReadonly<VoxxrinDailySchedule> | undefined)) => void,
-    onUnmountedHook: (hook: () => any) => (false | Function | undefined)
-) => {
-    const cleaner = watch(CURRENT_SCHEDULE, callback);
-    onUnmountedHook(cleaner);
+export const watchCurrentSchedule = (callback: (currentSchedule: (DeepReadonly<VoxxrinDailySchedule> | undefined)) => void,) => {
+    watch(CURRENT_SCHEDULE, callback);
 }
 
 export const fetchSchedule = async (conferenceDescriptor: VoxxrinConferenceDescriptor, dayId: DayId) => {
