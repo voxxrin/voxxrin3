@@ -1,12 +1,12 @@
 import {ISOLocalDate} from "./type-utils";
 
-
+export type Day = {
+    id: string,
+    localDate: ISOLocalDate
+}
 export type ConferenceDescriptor = {
     id: string,
-    days: Array<{
-        id: string,
-        localDate: ISOLocalDate
-    }>,
+    days: Array<Day>,
     features: {
         roomsDisplayed: boolean,
         favoritesEnabled: boolean,

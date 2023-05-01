@@ -1,5 +1,5 @@
 import {ValueObject} from "@/models/utils";
-import {DayId} from "@/models/VoxxrinDay";
+import {DayId, VoxxrinDay} from "@/models/VoxxrinDay";
 import {ConferenceDescriptor} from "../../../shared/conference-descriptor.firestore";
 import {TalkFormatId} from "@/models/VoxxrinTalkFormat";
 import {TrackId} from "@/models/VoxxrinTrack";
@@ -20,6 +20,14 @@ export type VoxxrinConferenceDescriptor = DeepReadonly<Replace<ConferenceDescrip
 }>>;
 
 export class TalkLanguageCode extends ValueObject<string>{ _talkLanguageCodeDescriptorClassDiscriminator!: never; }
+
+export function findVoxxrinDayById(conferenceDescriptor: VoxxrinConferenceDescriptor, dayId: DayId): VoxxrinDay {
+    const day = conferenceDescriptor.days.find(d => d.id.isSameThan(dayId))
+    if(!day) {
+        throw new Error(`No day found in conference descriptor ${conferenceDescriptor.id.value} matching day=${dayId.value}`)
+    }
+    return day;
+}
 
 export function createVoxxrinConferenceDescriptor(firestoreConferenceDescriptor: ConferenceDescriptor) {
     const voxxrinConferenceDescriptor: VoxxrinConferenceDescriptor = {
