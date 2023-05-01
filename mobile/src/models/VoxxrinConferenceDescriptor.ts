@@ -1,4 +1,4 @@
-import {ArrayReplace, Replace, ValueObject} from "@/models/utils";
+import {ValueObject} from "@/models/utils";
 import {DayId} from "@/models/VoxxrinDay";
 import {ConferenceDescriptor} from "../../../shared/conference-descriptor.firestore";
 import {TalkFormatId} from "@/models/VoxxrinTalkFormat";
@@ -6,6 +6,7 @@ import {TrackId} from "@/models/VoxxrinTrack";
 import {RoomId} from "@/models/VoxxrinRoom";
 import {EventId} from "@/models/VoxxrinEvent";
 import {DeepReadonly} from "ts-essentials";
+import {ArrayReplace, Replace} from "@/models/type-utils";
 
 
 

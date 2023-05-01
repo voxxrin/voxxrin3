@@ -1,9 +1,10 @@
-import {Replace, ValueObject} from "@/models/utils";
+import {ValueObject} from "@/models/utils";
 import {Break, Talk} from "../../../shared/dayly-schedule.firestore";
 import {VoxxrinRoom} from "@/models/VoxxrinRoom";
 import {VoxxrinSpeaker} from "@/models/VoxxrinSpeaker";
 import {VoxxrinTalkFormat} from "@/models/VoxxrinTalkFormat";
 import {VoxxrinTrack} from "@/models/VoxxrinTrack";
+import {Replace} from "@/models/type-utils";
 
 export class TalkId extends ValueObject<string>{ _talkIdClassDiscriminator!: never; }
 
