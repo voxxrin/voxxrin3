@@ -1,7 +1,7 @@
 <template>
   <ion-page>
     <ion-tabs>
-      <current-event-header />
+      <current-event-header v-if="event" :event="event" />
       <ion-router-outlet></ion-router-outlet>
       <ion-tab-bar slot="bottom">
         <ion-tab-button tab="schedule" :href="`/events/${eventId.value}/schedule`">
@@ -44,9 +44,11 @@ import {useRoute, useRouter} from "vue-router";
 import CurrentEventHeader from "@/components/CurrentEventHeader.vue";
 import {getRouteParamsValue} from "@/views/vue-utils";
 import {EventId} from "@/models/VoxxrinEvent";
+import {useCurrentConferenceDescriptor} from "@/state/CurrentConferenceDescriptor";
 
 const router = useRouter();
 const route = useRoute();
 const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')!));
+const event = useCurrentConferenceDescriptor(eventId.value);
 
 </script>

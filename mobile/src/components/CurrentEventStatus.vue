@@ -3,25 +3,24 @@
 </template>
 
 <script setup lang="ts">
-import {useRoute} from "vue-router";
 import {
     IonBadge,
 } from '@ionic/vue';
-import {EventId} from "@/models/VoxxrinEvent";
-import {getRouteParamsValue} from "@/views/vue-utils";
-import {useCurrentConferenceDescriptor} from "@/state/CurrentConferenceDescriptor";
-import {onMounted, onUnmounted, ref, watch} from "vue";
+import {onMounted, onUnmounted, PropType, ref, watch} from "vue";
 import {match, P} from "ts-pattern";
 import {
     ConferenceStatus,
-    conferenceStatusOf,
+    conferenceStatusOf, VoxxrinConferenceDescriptor,
 } from "@/models/VoxxrinConferenceDescriptor";
 import {executeAndSetInterval} from "@/models/utils";
 import {Temporal} from 'temporal-polyfill'
 
-const route = useRoute();
-const eventId = new EventId(getRouteParamsValue(route, 'eventId')!);
-const currentConferenceDescriptor = useCurrentConferenceDescriptor(eventId);
+const props = defineProps({
+    event: {
+        required: true,
+        type: Object as PropType<VoxxrinConferenceDescriptor>
+    }
+})
 
 type DisplayedConferenceStatus = 'unknown'|ConferenceStatus
 const conferenceStatus = ref<DisplayedConferenceStatus>('unknown')
@@ -38,7 +37,7 @@ onUnmounted(() => {
 })
 
 function refreshStatus() {
-    conferenceStatus.value = match(currentConferenceDescriptor.value)
+    conferenceStatus.value = match(props.event)
         .when(val => val === undefined, () => { return 'unknown'; })
         .otherwise((confDesc) => conferenceStatusOf(confDesc))
 }
