@@ -28,7 +28,7 @@ const EventSchedule: React.FC = () => {
 
     const navButtons = eventDetails?.info.days.map((d:string) => {
         return (
-            <IonButton key={d} onClick={() => navToDay(d)}>
+            <IonButton key={d} color={d == day ? "danger" : "primary"} fill="solid" shape="round" onClick={() => navToDay(d)}>
                 {d[0]}
             </IonButton>
             );
@@ -50,7 +50,7 @@ const EventSchedule: React.FC = () => {
             </IonHeader>
             <IonContent fullscreen>
                 <IonToolbar>
-                    <IonButtons slot="start">
+                    <IonButtons>
                     {navButtons}
                     </IonButtons>
                 </IonToolbar>

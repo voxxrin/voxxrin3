@@ -1,6 +1,7 @@
 import {
     IonAccordionGroup,
     IonHeader,
+    IonList,
     IonTitle,
 } from '@ionic/react';
 
@@ -33,14 +34,13 @@ const EventDaySchedule: React.FC<EventDayScheduleProps> = ({eventId, day}) => {
 
     return (
         <>
-        <IonTitle>{daySchedule?.day ?? "Loading..."}</IonTitle>
-        <IonAccordionGroup>
+        <IonList lines="none">
             {daySchedule?.timeSlots?.map( (s) => 
                 <ScheduleTimeSlot 
                     key={s.id} timeSlot={s} stats={dayTalkStats}
                     talksNotes={talksNotes} onToggleFavorite={toggleFavorite} />
             )}
-        </IonAccordionGroup>
+        </IonList>
     </>
     );
 }

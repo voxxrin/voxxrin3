@@ -1,5 +1,5 @@
 import {    
-    IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonBadge, IonButton, IonItem, IonIcon, IonChip
+    IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonBadge, IonButton, IonItem, IonIcon, IonChip, IonLabel
 } from '@ionic/react';
 import { star } from 'ionicons/icons';
 
@@ -17,22 +17,20 @@ const ScheduleTalkItem: React.FC<ScheduleTalkItemProps> = ({talk, talkStats, tal
     const isFavorite = talkNotes?.isFavorite ?? false
 
     return (
-        <IonCard key={talk.id}>
-        <IonCardHeader>
-          <IonCardTitle>{talk.title}</IonCardTitle>          
-          <IonCardSubtitle>{talk.track.title}</IonCardSubtitle>
-        </IonCardHeader>        
+        <IonItem key={talk.id}>
+            <IonLabel>
+            <h2>{talk.title}</h2>          
+            <h3>{talk.track.title}</h3>
+            </IonLabel>
 
-        <IonCardContent>
-            <IonItem>
-                {talk.room.title}
+            <IonItem lines="none">
+                <IonLabel><h4>{talk.room.title}</h4></IonLabel>
                 <IonChip slot="end" color="primary">{talkStats?.totalFavoritesCount ?? "0"}</IonChip>
                 <IonButton slot="end" color={isFavorite ? "danger" : "light"} onClick={onToggleFavorite}>
                 <IonIcon slot="icon-only" icon={star}></IonIcon>
                 </IonButton>
             </IonItem>          
-        </IonCardContent>        
-      </IonCard>
+      </IonItem>
     );
 }
 
