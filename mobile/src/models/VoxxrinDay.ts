@@ -1,3 +1,3 @@
 import {ValueObject} from "@/models/utils";
 
-export class Day extends ValueObject<string>{ _dayClassDiscriminator!: never; }
+export class DayId extends ValueObject<string>{ _dayIdClassDiscriminator!: never; }

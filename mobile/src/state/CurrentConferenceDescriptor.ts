@@ -8,9 +8,12 @@ import {EventId} from "@/models/VoxxrinEvent";
 import {ConferenceDescriptor} from "../../../shared/conference-descriptor.firestore";
 
 
-const CURRENT_CONFERENCE_DESCRIPTOR = ref<DeepReadonly<VoxxrinConferenceDescriptor>|undefined>(undefined);
+const CURRENT_CONFERENCE_DESCRIPTOR = ref<VoxxrinConferenceDescriptor|undefined>(undefined);
 
-export const useCurrentConferenceDescriptor = () => CURRENT_CONFERENCE_DESCRIPTOR.value;
+export const useCurrentConferenceDescriptor = (eventId: EventId) => {
+    fetchConferenceDescriptor(eventId);
+    return CURRENT_CONFERENCE_DESCRIPTOR;
+}
 export const fetchConferenceDescriptor = async (eventId: EventId) => {
     // Avoiding to fetch conference descriptor if the one already loaded matches the one expected
     if(

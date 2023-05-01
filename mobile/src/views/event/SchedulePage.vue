@@ -7,9 +7,10 @@
         </ion-toolbar>
       </ion-header>
 
+
       <ion-list>
         <ion-item v-for="(day, index) in currentConferenceDescriptor?.days || []" :key="index">
-          <ion-button @click="changeDayTo(day)">{{day.value}}</ion-button>
+          <ion-button @click="changeDayTo(day.id)">{{day.localDate}}</ion-button>
         </ion-item>
       </ion-list>
 
@@ -76,9 +77,9 @@ import {
     watchCurrentSchedule
 } from "@/state/CurrentSchedule";
 import {DeepReadonly} from "ts-essentials";
-import {getRouteParamsValue} from "@/views/vue-utils";
+import {getRouteParamsValue, isRefDefined} from "@/views/vue-utils";
 import {EventId} from "@/models/VoxxrinEvent";
-import {Day} from "@/models/VoxxrinDay";
+import {DayId} from "@/models/VoxxrinDay";
 import {VoxxrinScheduleTimeSlot} from "@/models/VoxxrinSchedule";
 import {
     fetchConferenceDescriptor,
@@ -90,18 +91,16 @@ const route = useRoute();
 const eventId = new EventId(getRouteParamsValue(route, 'eventId')!);
 
 const currentSchedule = useCurrentSchedule();
-const currentlySelectedDay = ref<Day>(new Day(currentSchedule?.day.value || 'unknown'))
-const changeDayTo = (day: Day) => {
+const currentlySelectedDay = ref<DayId>(new DayId(currentSchedule?.day.value || 'unknown'))
+const changeDayTo = (day: DayId) => {
     currentlySelectedDay.value = day;
 }
 
-const currentConferenceDescriptor = ref(useCurrentConferenceDescriptor());
+const currentConferenceDescriptor = useCurrentConferenceDescriptor(eventId);
 const timeslots = ref<DeepReadonly<VoxxrinScheduleTimeSlot[]>>(currentSchedule?.timeSlots || []);
 
 onMounted(async () => {
     console.log(`EventPage mounted !`)
-    fetchConferenceDescriptor(eventId)
-        .then(confDesc => currentConferenceDescriptor.value = confDesc);
 })
 
 watchCurrentSchedule((currentSchedule) => {
@@ -112,11 +111,13 @@ watchCurrentSchedule((currentSchedule) => {
 }, onUnmounted);
 
 watch([currentlySelectedDay], async ([selectedDay]) => {
-    fetchSchedule(eventId, selectedDay);
+    if(isRefDefined(currentConferenceDescriptor)) {
+        fetchSchedule(currentConferenceDescriptor.value, selectedDay);
+    }
 })
-// TODO: we should handle this in a better way
-if(currentlySelectedDay.value.isSameThan(new Day('unknown'))) {
-    changeDayTo(new Day('2022-10-10'));
+// TODO: we should handle this in a better way (this can happen when no schedule were loaded yet)
+if(currentlySelectedDay.value.isSameThan(new DayId('unknown'))) {
+    changeDayTo(new DayId('monday'));
 }
 </script>
 

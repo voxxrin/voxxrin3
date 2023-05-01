@@ -1,7 +1,7 @@
 import {DailySchedule, ScheduleTimeSlot} from "../../../shared/dayly-schedule.firestore";
 import {TalkId, VoxxrinBreak, VoxxrinTalk} from "@/models/VoxxrinTalk";
 import {EventId} from "@/models/VoxxrinEvent";
-import {Day} from "@/models/VoxxrinDay";
+import {DayId} from "@/models/VoxxrinDay";
 import {match} from "ts-pattern";
 import {RoomId} from "@/models/VoxxrinRoom";
 import {SpeakerId} from "@/models/VoxxrinSpeaker";
@@ -15,14 +15,14 @@ export type VoxxrinScheduleTimeSlot = Omit<ScheduleTimeSlot, "type"|"break"|"tal
 
 export type VoxxrinDailySchedule = {
     eventId: EventId;
-    day: Day;
+    day: DayId;
     timeSlots: VoxxrinScheduleTimeSlot[]
 }
 
 export function createVoxxrinDailyScheduleFromFirestore(eventId: EventId, firestoreSchedule: DailySchedule) {
     const voxxrinSchedule: VoxxrinDailySchedule = {
         eventId: new EventId(eventId.value),
-        day: new Day(firestoreSchedule.day),
+        day: new DayId(firestoreSchedule.day),
         timeSlots: firestoreSchedule.timeSlots.map(ts => match(ts)
             .with({type: 'break'}, ts => ({
                 start: ts.start,

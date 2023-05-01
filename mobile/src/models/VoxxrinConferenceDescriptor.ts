@@ -1,29 +1,33 @@
 import {ArrayReplace, Replace, ValueObject} from "@/models/utils";
-import {Day} from "@/models/VoxxrinDay";
+import {DayId} from "@/models/VoxxrinDay";
 import {ConferenceDescriptor} from "../../../shared/conference-descriptor.firestore";
 import {TalkFormatId} from "@/models/VoxxrinTalkFormat";
 import {TrackId} from "@/models/VoxxrinTrack";
 import {RoomId} from "@/models/VoxxrinRoom";
+import {EventId} from "@/models/VoxxrinEvent";
+import {DeepReadonly} from "ts-essentials";
 
 
 
-export type VoxxrinConferenceDescriptor = Replace<ConferenceDescriptor, {
-    id: ConferenceDescriptorId;
-    days: Day[];
+export type VoxxrinConferenceDescriptor = DeepReadonly<Replace<ConferenceDescriptor, {
+    id: EventId;
+    days: ArrayReplace<ConferenceDescriptor, "days", { id: DayId }>;
     talkFormats: ArrayReplace<ConferenceDescriptor, 'talkFormats', { id: TalkFormatId }>,
     talkTracks: ArrayReplace<ConferenceDescriptor, 'talkTracks', { id: TrackId }>,
     supportedTalkLanguages: ArrayReplace<ConferenceDescriptor, 'supportedTalkLanguages', { id: TalkLanguageCode }>,
     rooms: ArrayReplace<ConferenceDescriptor, 'rooms', { id: RoomId }>,
-}>;
+}>>;
 
-export class ConferenceDescriptorId extends ValueObject<string>{ _conferenceDescriptorClassDiscriminator!: never; }
 export class TalkLanguageCode extends ValueObject<string>{ _talkLanguageCodeDescriptorClassDiscriminator!: never; }
 
 export function createVoxxrinConferenceDescriptor(firestoreConferenceDescriptor: ConferenceDescriptor) {
     const voxxrinConferenceDescriptor: VoxxrinConferenceDescriptor = {
         ...firestoreConferenceDescriptor,
-        id: new ConferenceDescriptorId(firestoreConferenceDescriptor.id),
-        days: firestoreConferenceDescriptor.days.map(d => new Day(d)),
+        id: new EventId(firestoreConferenceDescriptor.id),
+        days: firestoreConferenceDescriptor.days.map(d => ({
+            id: new DayId(d.id),
+            localDate: d.localDate
+        })),
         talkFormats: firestoreConferenceDescriptor.talkFormats.map(tf => ({
             ...tf,
             id: new TalkFormatId(tf.id)

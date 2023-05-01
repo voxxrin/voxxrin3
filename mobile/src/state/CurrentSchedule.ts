@@ -7,8 +7,9 @@ import {
     createVoxxrinDailyScheduleFromFirestore,
     VoxxrinDailySchedule
 } from "@/models/VoxxrinSchedule";
-import {Day} from "@/models/VoxxrinDay";
+import {DayId} from "@/models/VoxxrinDay";
 import {EventId} from "@/models/VoxxrinEvent";
+import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 
 
 const CURRENT_SCHEDULE = ref<DeepReadonly<VoxxrinDailySchedule>|undefined>(undefined);
@@ -23,16 +24,20 @@ export const watchCurrentSchedule = (
     onUnmountedHook(cleaner);
 }
 
-export const fetchSchedule = async (eventId: EventId, day: Day) => {
+export const fetchSchedule = async (conferenceDescriptor: VoxxrinConferenceDescriptor, dayId: DayId) => {
     // Avoiding to fetch schedule if the one already loaded matches the one expected
     if(
-        !CURRENT_SCHEDULE.value?.eventId.isSameThan(eventId)
-        || !CURRENT_SCHEDULE.value?.day.isSameThan(day)
+        !CURRENT_SCHEDULE.value?.eventId.isSameThan(conferenceDescriptor.id)
+        || !CURRENT_SCHEDULE.value?.day.isSameThan(dayId)
     ) {
-        const firestoreDailySchedule: DailySchedule = await fetch(`/data/dvbe22/days/${day.value}.json`).then(resp => resp.json());
+        const day = conferenceDescriptor.days.find(d => d.id.isSameThan(dayId))
+        if(!day) {
+            throw new Error(`No day found in conference descriptor ${conferenceDescriptor.id.value} matching day=${dayId.value}`)
+        }
+        const firestoreDailySchedule: DailySchedule = await fetch(`/data/${conferenceDescriptor.id.value}/days/${dayId.value}.json`).then(resp => resp.json());
         console.log(`timeslots fetched:`, firestoreDailySchedule.timeSlots)
 
-        defineCurrentScheduleFromFirestore(eventId, firestoreDailySchedule);
+        defineCurrentScheduleFromFirestore(conferenceDescriptor.id, firestoreDailySchedule);
     }
 }
 
