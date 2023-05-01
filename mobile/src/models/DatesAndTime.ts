@@ -1,5 +1,6 @@
 import {ISOLocalDate} from "../../../shared/type-utils";
 import {UserLocale} from "@/models/VoxxrinUser";
+import {Temporal} from "temporal-polyfill";
 
 
 type ReadableLocalDatePartsOpts = {
@@ -26,4 +27,8 @@ export function localDateToReadableParts(localDate: ISOLocalDate, userLocale: Us
         weekday: dateParts.find(p => p.type === 'weekday')!.value,
         full: dateParts.map(p => p.value).join('')
     }
+}
+
+export function formatHourMinutes(datetime: Temporal.ZonedDateTime) {
+    return `${datetime.hour<10?'0':''}${datetime.hour}:${datetime.minute<10?'0':''}${datetime.minute}`;
 }

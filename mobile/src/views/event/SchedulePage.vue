@@ -15,7 +15,12 @@
       ></day-selector>
 
       Schedule here !<br/>
-      Size: {{timeslots?.length}}<br/>
+
+      <ion-accordion-group :multiple="true" :value="[]">
+        <time-slot-accordion v-for="(timeslot, index) in timeslots" :key="index"
+                   :timeslot-feedback="index%2===0?undefined:{}" :timeslot="timeslot"
+        ></time-slot-accordion>
+      </ion-accordion-group>
 
       <ion-button router-direction="forward" :router-link="`/events/${eventId.value}/talks/1/details`">
         Open talk 1
@@ -65,6 +70,7 @@ import {
     IonAlert,
     IonLabel,
     IonFabList,
+    IonAccordionGroup,
 } from '@ionic/vue';
 import { chatbubble, addCircle } from 'ionicons/icons';
 import {useRoute, useRouter} from "vue-router";
@@ -84,6 +90,8 @@ import {
 } from "@/state/CurrentConferenceDescriptor";
 import DaySelector from "@/components/DaySelector.vue";
 import {findVoxxrinDayById} from "@/models/VoxxrinConferenceDescriptor";
+import TimeSlot from "@/components/TimeSlotAccordion.vue";
+import TimeSlotAccordion from "@/components/TimeSlotAccordion.vue";
 
 const router = useRouter();
 const route = useRoute();

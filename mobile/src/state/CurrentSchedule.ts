@@ -35,11 +35,11 @@ export const fetchSchedule = async (conferenceDescriptor: VoxxrinConferenceDescr
         );
         console.debug(`timeslots fetched:`, firestoreDailySchedule.timeSlots)
 
-        defineCurrentScheduleFromFirestore(conferenceDescriptor.id, firestoreDailySchedule);
+        defineCurrentScheduleFromFirestore(conferenceDescriptor, firestoreDailySchedule);
     }
 }
 
-const defineCurrentScheduleFromFirestore = (eventId: EventId, firestoreSchedule: DailySchedule) => {
-    const voxxrinSchedule = createVoxxrinDailyScheduleFromFirestore(eventId, firestoreSchedule);
+const defineCurrentScheduleFromFirestore = (event: VoxxrinConferenceDescriptor, firestoreSchedule: DailySchedule) => {
+    const voxxrinSchedule = createVoxxrinDailyScheduleFromFirestore(event, firestoreSchedule);
     CURRENT_SCHEDULE.value = voxxrinSchedule;
 }
