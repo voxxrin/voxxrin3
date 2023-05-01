@@ -1,5 +1,5 @@
 import {    
-    IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonBadge, IonButton, IonItem, IonIcon, IonChip, IonLabel
+    IonButton, IonItem, IonIcon, IonChip, IonLabel
 } from '@ionic/react';
 import { star } from 'ionicons/icons';
 
