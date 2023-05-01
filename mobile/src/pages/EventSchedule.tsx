@@ -41,19 +41,19 @@ const EventSchedule: React.FC = () => {
     return (
         <IonPage id="event-page">
             <IonHeader>
-            <IonToolbar>
-                <IonButtons slot="start">
-                <IonMenuButton></IonMenuButton>
-                </IonButtons>
-                <IonTitle>{eventDetails?.info.title ?? "loading..."}</IonTitle>
-            </IonToolbar>
-            </IonHeader>
-            <IonContent fullscreen>
+                <IonToolbar>
+                    <IonButtons slot="start">
+                    <IonMenuButton></IonMenuButton>
+                    </IonButtons>
+                    <IonTitle>{eventDetails?.info.title ?? "loading..."}</IonTitle>
+                </IonToolbar>
                 <IonToolbar>
                     <IonButtons>
                     {navButtons}
                     </IonButtons>
                 </IonToolbar>
+            </IonHeader>
+            <IonContent fullscreen>
                 <EventDaySchedule eventId={eventDetails?.info.id ?? ""} day={day} />
             </IonContent>
         </IonPage>
