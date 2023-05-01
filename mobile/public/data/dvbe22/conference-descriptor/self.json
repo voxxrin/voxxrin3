@@ -1,5 +1,7 @@
 {
   "id": "dvbe22",
+  "name": "Devoxx Belgium 2022",
+  "headingName": "DevoxxBE 22",
   "days": [
     { "id":"monday", "localDate": "2022-10-10" },
     { "id":"tuesday", "localDate": "2022-10-11" },

@@ -6,6 +6,8 @@ export type Day = {
 }
 export type ConferenceDescriptor = {
     id: string,
+    name: string,
+    headingName: string,
     days: Array<Day>,
     features: {
         roomsDisplayed: boolean,
