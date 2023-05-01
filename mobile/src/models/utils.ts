@@ -1,4 +1,4 @@
-
+import {Temporal} from 'temporal-polyfill'
 
 export class ValueObject<T> {
     constructor(readonly value: T) {}
@@ -10,4 +10,9 @@ export class ValueObject<T> {
 
         return this.value === other.value;
     }
+}
+
+export async function executeAndSetInterval(callback: Function, duration: Temporal.Duration) {
+    callback();
+    return setInterval(callback, duration.total('milliseconds'));
 }
