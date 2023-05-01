@@ -1,5 +1,6 @@
 import {RouteLocationNormalizedLoaded} from "vue-router";
-import {Ref} from "vue";
+import {ComponentInternalInstance, onUnmounted, ref, Ref, watch} from "vue";
+import {Temporal} from "temporal-polyfill";
 
 // Ensure that we only get a single value from route params
 // this is intended to workaround the fact that route.params.foo is string|string[] and we want
@@ -19,4 +20,17 @@ export function isRefDefined<T>(ref: Ref<T | undefined>): ref is Ref<T> {
 }
 export function isRefUndefined<T>(ref: Ref<T | undefined>): ref is Ref<undefined> {
     return (ref.value === undefined);
+}
+
+export async function useInterval(callback: Function, durationOpts: Parameters<typeof Temporal.Duration.from>[0], opts?: {
+    immediate: boolean
+}) {
+    if(opts?.immediate) {
+        callback();
+    }
+    const interval = setInterval(callback, Temporal.Duration.from(durationOpts).total('milliseconds'));
+    onUnmounted(() => {
+        clearInterval(interval);
+    })
+    return interval;
 }

@@ -6,14 +6,13 @@
 import {
     IonBadge,
 } from '@ionic/vue';
-import {onMounted, onUnmounted, PropType, ref, watch} from "vue";
+import {onMounted, PropType, ref, watch} from "vue";
 import {match, P} from "ts-pattern";
 import {
     ConferenceStatus,
     conferenceStatusOf, VoxxrinConferenceDescriptor,
 } from "@/models/VoxxrinConferenceDescriptor";
-import {executeAndSetInterval} from "@/models/utils";
-import {Temporal} from 'temporal-polyfill'
+import {useInterval} from "@/views/vue-utils";
 
 const props = defineProps({
     event: {
@@ -24,16 +23,9 @@ const props = defineProps({
 
 type DisplayedConferenceStatus = 'unknown'|ConferenceStatus
 const conferenceStatus = ref<DisplayedConferenceStatus>('unknown')
-const intervalIds = [];
 
 onMounted(() => {
-    intervalIds.push(...[
-        executeAndSetInterval(refreshStatus, Temporal.Duration.from({ /* minutes: 15 */ seconds: 4 }))
-    ])
-})
-
-onUnmounted(() => {
-    intervalIds.forEach(clearInterval);
+    useInterval(refreshStatus, { /* minutes: 15 */ seconds: 4 }, {immediate: true})
 })
 
 function refreshStatus() {
