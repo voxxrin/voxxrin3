@@ -1,5 +1,5 @@
 import {    
-    IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonBadge, IonButton, IonItem, IonIcon
+    IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonBadge, IonButton, IonItem, IonIcon, IonChip
 } from '@ionic/react';
 import { star } from 'ionicons/icons';
 
@@ -26,7 +26,7 @@ const ScheduleTalkItem: React.FC<ScheduleTalkItemProps> = ({talk, talkStats, tal
         <IonCardContent>
             <IonItem>
                 {talk.room.title}
-                <IonBadge slot="end">{talkStats?.totalFavoritesCount ?? "0"}</IonBadge>          
+                <IonChip slot="end" color="primary">{talkStats?.totalFavoritesCount ?? "0"}</IonChip>
                 <IonButton slot="end" color={isFavorite ? "danger" : "light"} onClick={onToggleFavorite}>
                 <IonIcon slot="icon-only" icon={star}></IonIcon>
                 </IonButton>

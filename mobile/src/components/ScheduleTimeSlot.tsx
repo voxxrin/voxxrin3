@@ -46,7 +46,7 @@ if (timeSlot.type == "talks") {
 }
 
     return (
-        <IonAccordion value="{timeSlot.id}">
+      <IonAccordion value={timeSlot.id}>
         <IonItem slot="header" color="light">
           <IonLabel>  {timeSlot.start.substring(11)} - {timeSlot.end.substring(11)}</IonLabel>
         </IonItem>
