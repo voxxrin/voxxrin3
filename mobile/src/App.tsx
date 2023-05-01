@@ -23,6 +23,7 @@ import '@ionic/react/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 import UserAccount from './pages/UserAccount';
+import EventDetails from './pages/EventDetails';
 
 setupIonicReact();
 
@@ -46,7 +47,7 @@ const App: React.FC = () => (
         <Redirect exact path="/" to="/account" />
         <Route path="/account" render={() => <UserAccount />} exact={true} />
         <Route path="/events" render={() => <EventsList />} exact={true} />
-        <Route path="/events/:eventId" render={() => <EventSchedule />} exact={true} />
+        <Route path="/events/:eventId" render={() => <EventDetails />} exact={true} />
       </IonRouterOutlet>
     </IonReactRouter>
   </IonApp>

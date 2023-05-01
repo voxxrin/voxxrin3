@@ -19,6 +19,7 @@ import useEventDetails from '../hooks/useEventDetails';
 
 const EventSchedule: React.FC = () => {
     const params = useParams<{ eventId: string }>();
+    const isShowFavorites = window.location.pathname.endsWith("/favorites")
     const eventDetails = useEventDetails({eventId: params.eventId})
     const [day, setDay] = useState<string | undefined>(undefined)
 
@@ -54,7 +55,7 @@ const EventSchedule: React.FC = () => {
                 </IonToolbar>
             </IonHeader>
             <IonContent fullscreen>
-                <EventDaySchedule eventId={eventDetails?.info.id ?? ""} day={day} />
+                <EventDaySchedule eventId={eventDetails?.info.id ?? ""} day={day} favoritesOnly={isShowFavorites} />
             </IonContent>
         </IonPage>
     );

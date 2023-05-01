@@ -8,12 +8,16 @@ interface ScheduleTimeSlotProps {
     timeSlot: BreakScheduleTimeSlot | TalksScheduleTimeSlot,
     stats?: DayTalksStats,
     talksNotes?: UserDayTalksNotes,
+    favoritesOnly: boolean;
     onToggleFavorite: (talkId: string) => void
 }
 
-const ScheduleTimeSlot: React.FC<ScheduleTimeSlotProps> = ({timeSlot, stats, talksNotes, onToggleFavorite}) => {
+const ScheduleTimeSlot: React.FC<ScheduleTimeSlotProps> = ({timeSlot, stats, talksNotes, favoritesOnly, onToggleFavorite}) => {
 
     const scheduleBreakItem = function(slot: BreakScheduleTimeSlot) {
+      if (favoritesOnly) {
+        return <></>
+      }    
       return <IonItem>
                 <IonLabel>
                   <h2>{slot.break.title}</h2>
@@ -33,6 +37,10 @@ const ScheduleTimeSlot: React.FC<ScheduleTimeSlotProps> = ({timeSlot, stats, tal
       const talkNotes = talksNotes?.notes
                                 .find((t) => {return t.talkId == talk.id}) 
                                 ?? undefined
+      
+      if (favoritesOnly && !(talkNotes?.isFavorite)) {
+        return <></>
+      }                          
 
       return <ScheduleTalkItem
               key={talk.id} 
@@ -53,7 +61,7 @@ const ScheduleTimeSlot: React.FC<ScheduleTimeSlotProps> = ({timeSlot, stats, tal
     const formatTime = (date:string) => { return new Date(date).toTimeString().slice(0,5) }
 
     return (
-      <IonItemGroup>
+      <IonItemGroup key={timeSlot.id}>
         <IonItemDivider color={timeSlot.type == "talks" ? "primary" : "secondary"}>
           <IonLabel>  {formatTime(timeSlot.start)} - {formatTime(timeSlot.end)}</IonLabel>
         </IonItemDivider>

@@ -17,10 +17,11 @@ import useUserId from '../hooks/useUserId';
 interface EventDayScheduleProps {
     eventId: string;
     day?: string;
+    favoritesOnly: boolean;
 }
 
 
-const EventDaySchedule: React.FC<EventDayScheduleProps> = ({eventId, day}) => {
+const EventDaySchedule: React.FC<EventDayScheduleProps> = ({eventId, day, favoritesOnly}) => {
     const daySchedule = useDaySchedule({eventId, day})
     const dayTalkStats = useTalkStats({eventId, day})
     const userId = useUserId()
@@ -38,7 +39,9 @@ const EventDaySchedule: React.FC<EventDayScheduleProps> = ({eventId, day}) => {
             {daySchedule?.timeSlots?.map( (s) => 
                 <ScheduleTimeSlot 
                     key={s.id} timeSlot={s} stats={dayTalkStats}
-                    talksNotes={talksNotes} onToggleFavorite={toggleFavorite} />
+                    talksNotes={talksNotes} 
+                    favoritesOnly={favoritesOnly}
+                    onToggleFavorite={toggleFavorite} />
             )}
         </IonList>
     </>
