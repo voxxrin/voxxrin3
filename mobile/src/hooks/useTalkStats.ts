@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { doc, onSnapshot } from "firebase/firestore";
+import { doc, onSnapshot, query, collection, where } from "firebase/firestore";
 import { db } from "../firebase"
 
-import {DayTalksStats} from "../data/feedbacks"
+import {DayTalksStats, TalkStats} from "../data/feedbacks"
 
 interface TalkStatsProps {
     eventId: string,
@@ -14,9 +14,12 @@ export default function useTalkStats(props: TalkStatsProps) {
 
     useEffect(() => {
         if (props.day != null) {
-            const d = doc(db, `events/${props.eventId}/days/${props.day}/talksStats/all`);
-            const unsubscribe = onSnapshot(d, (docSnapshot) => {
-                setTalkStats(docSnapshot.data() as DayTalksStats)
+            const q = query(collection(db, `events/${props.eventId}/days/${props.day}/talksStats`), where("id", "!=", "all"));
+            const unsubscribe = onSnapshot(q, (querySnapshot) => {
+                const stats = querySnapshot.docs.map((d) => {
+                    return d.data() as TalkStats
+                })
+                setTalkStats({day: props.day!!, stats: stats})
             });
             return unsubscribe;
         } else {
