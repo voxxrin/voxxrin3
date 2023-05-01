@@ -11,39 +11,37 @@ interface ScheduleTimeSlotProps {
     onToggleFavorite: (talkId: string) => void
 }
 
-  
-
 const ScheduleTimeSlot: React.FC<ScheduleTimeSlotProps> = ({timeSlot, stats, talksNotes, onToggleFavorite}) => {
 
-  const scheduleBreakItem = function(slot: BreakScheduleTimeSlot) {
-    return <IonItem>
-              <IonLabel>
-                <h2>{slot.break.title}</h2>
-                <h3>Break</h3>
-              </IonLabel>
-              <IonItem>
-                <IonLabel><h4>{slot.break.room.title}</h4></IonLabel>
-              </IonItem>
-           </IonItem>
-  }
-  
-  const talkItem = function(talk: ScheduleTalk) {
-    const talkStats = stats?.stats
-                              .find((t) => {return t.id == talk.id}) 
-                              ?? {id: talk.id, totalFavoritesCount: 0}
+    const scheduleBreakItem = function(slot: BreakScheduleTimeSlot) {
+      return <IonItem>
+                <IonLabel>
+                  <h2>{slot.break.title}</h2>
+                  <h3>Break</h3>
+                </IonLabel>
+                <IonItem>
+                  <IonLabel><h4>{slot.break.room.title}</h4></IonLabel>
+                </IonItem>
+            </IonItem>
+    }
+    
+    const talkItem = function(talk: ScheduleTalk) {
+      const talkStats = stats?.stats
+                                .find((t) => {return t.id == talk.id}) 
+                                ?? {id: talk.id, totalFavoritesCount: 0}
 
-    const talkNotes = talksNotes?.notes
-                              .find((t) => {return t.talkId == talk.id}) 
-                              ?? undefined
+      const talkNotes = talksNotes?.notes
+                                .find((t) => {return t.talkId == talk.id}) 
+                                ?? undefined
 
-    return <ScheduleTalkItem
-            key={talk.id} 
-            talk={talk} 
-            talkStats={talkStats} 
-            talkNotes={talkNotes} 
-            onToggleFavorite={() => {onToggleFavorite(talk.id)}}
-            />
-  }
+      return <ScheduleTalkItem
+              key={talk.id} 
+              talk={talk} 
+              talkStats={talkStats} 
+              talkNotes={talkNotes} 
+              onToggleFavorite={() => {onToggleFavorite(talk.id)}}
+              />
+    }
   
     var content;
     if (timeSlot.type == "talks") {
@@ -52,10 +50,12 @@ const ScheduleTimeSlot: React.FC<ScheduleTimeSlotProps> = ({timeSlot, stats, tal
         content = scheduleBreakItem(timeSlot as BreakScheduleTimeSlot)
     }
 
+    const formatTime = (date:string) => { return new Date(date).toTimeString().slice(0,5) }
+
     return (
       <IonItemGroup>
         <IonItemDivider color={timeSlot.type == "talks" ? "primary" : "secondary"}>
-          <IonLabel>  {timeSlot.start.substring(11)} - {timeSlot.end.substring(11)}</IonLabel>
+          <IonLabel>  {formatTime(timeSlot.start)} - {formatTime(timeSlot.end)}</IonLabel>
         </IonItemDivider>
         {content}
       </IonItemGroup>
