@@ -7,12 +7,17 @@ import {
   sendEmailVerification,
   signOut,
   onAuthStateChanged,
-  User as FirebaseUser
+  User as FirebaseUser,
+  signInAnonymously,
+  EmailAuthProvider,
+  linkWithCredential
 } from 'firebase/auth';
 import {app} from "../firebase"
 import { useState } from 'react';
 
 interface User {
+    anonymous: boolean,
+    id: string,
     email: string,
     emailVerified: boolean
 }
@@ -27,18 +32,31 @@ const UserAccount: React.FC = () => {
     const auth = getAuth(app)
 
     const signup = async function() {
-      createUserWithEmailAndPassword(auth, email ?? "", password ?? "")
-          .then((userCredential) => {
-            // Signed in 
-            const user = userCredential.user;
-            sendEmailVerification(user)
-            setUser({email: user.email ?? "", emailVerified: user.emailVerified})
-            setErrorMessage(undefined)
-          })
-          .catch((error) => {
-            setUser(undefined)
-            setErrorMessage(error.message)
-          });
+        if (auth.currentUser) {
+            // upgrade anonymous user
+            const credential = EmailAuthProvider.credential(email, password);
+            linkWithCredential(auth.currentUser, credential)
+            .then((userCredential) => {
+              const user = userCredential.user;
+              console.log("Anonymous account successfully upgraded", user);
+              sendEmailVerification(user)
+              loadUser(user)
+              setErrorMessage(undefined)
+            }).catch((error) => {
+                setErrorMessage(error.message)
+            });          
+        } else {
+            createUserWithEmailAndPassword(auth, email ?? "", password ?? "")
+            .then((userCredential) => {
+              const user = userCredential.user;
+              sendEmailVerification(user)
+              setErrorMessage(undefined)
+            })
+            .catch((error) => {
+              setUser(undefined)
+              setErrorMessage(error.message)
+            });
+          }
     }
 
     const reloadUser = async function() {
@@ -48,7 +66,12 @@ const UserAccount: React.FC = () => {
 
     const loadUser = async function(user: FirebaseUser | undefined) {
         if (user) {
-            setUser({email: user.email ?? "", emailVerified: user.emailVerified})
+            setUser({
+                anonymous: !user.email, 
+                id: user.uid, 
+                email: user.email ?? "", 
+                emailVerified: user.emailVerified
+            })
         } else {
             setUser(undefined)
         }
@@ -57,8 +80,6 @@ const UserAccount: React.FC = () => {
     const signin = async function() {
       signInWithEmailAndPassword(auth, email ?? "", password ?? "")
         .then((userCredential) => {
-            const user = userCredential.user
-            setUser({email: user.email ?? "", emailVerified: user.emailVerified})
             setErrorMessage(undefined)
         })
         .catch((error) => {
@@ -69,6 +90,19 @@ const UserAccount: React.FC = () => {
         });
     }
 
+    const signinAnonymously = async function() {
+        signInAnonymously(auth)
+          .then(() => {
+              setErrorMessage(undefined)
+          })
+          .catch((error) => {
+              const errorCode = error.code;
+              const errorMessage = error.message;
+              setUser(undefined)
+              setErrorMessage(errorMessage)
+          });
+      }
+  
     const signout = async function() {
         await signOut(auth)
         setUser(undefined)
@@ -93,25 +127,11 @@ const UserAccount: React.FC = () => {
         </IonHeader>
         <IonContent class="ion-padding">
         {
-            !user && (
-                <>
-                    <IonInput label="email" type="email" value={email} onIonInput={(e: any) => setEmail(e.target.value)}></IonInput>
-                    <IonInput label="password" type="password" value={password} onIonInput={(e: any) => setPassword(e.target.value)}></IonInput>
-                    <IonButton onClick={signup}>
-                    Sign up
-                    </IonButton>
-                    <IonButton onClick={signin}>
-                    Sign in
-                    </IonButton>
-                </>
-            )                
-        }
-        {
             user && (
                 <>
                 <IonCard>
                 <IonCardHeader>
-                    <IonCardTitle>{user.email}</IonCardTitle>
+                    <IonCardTitle>{user.anonymous && "Anonymous"} {user.email || user.id}</IonCardTitle>
                 </IonCardHeader>
 
                 <IonCardContent>
@@ -126,6 +146,33 @@ const UserAccount: React.FC = () => {
                 </IonButton>
                 </>
             )
+        }
+        {
+            (!user || user.anonymous) && (
+                <>
+                <IonCard>
+                <IonCardContent>
+                    <IonInput label="email" type="email" value={email} onIonInput={(e: any) => setEmail(e.target.value)}></IonInput>
+                    <IonInput label="password" type="password" value={password} onIonInput={(e: any) => setPassword(e.target.value)}></IonInput>
+                </IonCardContent>
+                </IonCard>
+                    <IonButton onClick={signup}>
+                        Sign up
+                    </IonButton>
+                    {
+                    (!user && (
+                        <>
+                        <IonButton onClick={signin}>
+                        Sign in
+                        </IonButton>
+                        <IonButton onClick={signinAnonymously}>
+                        Anonymous Sign in
+                        </IonButton>
+                        </>
+                    ))
+                    }
+                </>
+            )                
         }
         {
             errorMessage && (
