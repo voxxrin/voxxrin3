@@ -6,6 +6,7 @@ import {
 } from "@/models/VoxxrinConferenceDescriptor";
 import {EventId} from "@/models/VoxxrinEvent";
 import {ConferenceDescriptor} from "../../../shared/conference-descriptor.firestore";
+import {useFetchJsonDebouncer} from "@/state/state-utilities";
 
 
 const CURRENT_CONFERENCE_DESCRIPTOR = ref<VoxxrinConferenceDescriptor|undefined>(undefined);
@@ -19,8 +20,12 @@ export const fetchConferenceDescriptor = async (eventId: EventId) => {
     if(
         !CURRENT_CONFERENCE_DESCRIPTOR.value?.id.isSameThan(eventId)
     ) {
-        const firestoreConferenceDescriptor: ConferenceDescriptor = await fetch(`/data/${eventId.value}/conference-descriptor/self.json`).then(resp => resp.json());
-        console.log(`conference descriptor fetched:`, firestoreConferenceDescriptor)
+        const firestoreConferenceDescriptor: ConferenceDescriptor = await useFetchJsonDebouncer(
+            'conference-descriptor',
+            eventId.value,
+            `/data/${eventId.value}/conference-descriptor/self.json`
+        );
+        console.debug(`conference descriptor fetched:`, firestoreConferenceDescriptor)
 
         defineCurrentConferenceDescriptorFromFirestore(firestoreConferenceDescriptor);
     }

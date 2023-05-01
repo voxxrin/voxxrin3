@@ -10,6 +10,7 @@ import {
 import {DayId} from "@/models/VoxxrinDay";
 import {EventId} from "@/models/VoxxrinEvent";
 import {findVoxxrinDayById, VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
+import {useFetchJsonDebouncer} from "@/state/state-utilities";
 
 
 const CURRENT_SCHEDULE = ref<DeepReadonly<VoxxrinDailySchedule>|undefined>(undefined);
@@ -31,8 +32,12 @@ export const fetchSchedule = async (conferenceDescriptor: VoxxrinConferenceDescr
         || !CURRENT_SCHEDULE.value?.day.isSameThan(dayId)
     ) {
         const day = findVoxxrinDayById(conferenceDescriptor, dayId)
-        const firestoreDailySchedule: DailySchedule = await fetch(`/data/${conferenceDescriptor.id.value}/days/${day.id.value}.json`).then(resp => resp.json());
-        console.log(`timeslots fetched:`, firestoreDailySchedule.timeSlots)
+        const firestoreDailySchedule: DailySchedule = await useFetchJsonDebouncer(
+            'daily-schedule',
+            `events/${conferenceDescriptor.id.value}/days/${day.id.value}`,
+            `/data/${conferenceDescriptor.id.value}/days/${day.id.value}.json`
+        );
+        console.debug(`timeslots fetched:`, firestoreDailySchedule.timeSlots)
 
         defineCurrentScheduleFromFirestore(conferenceDescriptor.id, firestoreDailySchedule);
     }
