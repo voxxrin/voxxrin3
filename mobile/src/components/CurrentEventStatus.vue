@@ -25,7 +25,7 @@ type DisplayedConferenceStatus = 'unknown'|ConferenceStatus
 const conferenceStatus = ref<DisplayedConferenceStatus>('unknown')
 
 onMounted(() => {
-    useInterval(refreshStatus, { /* minutes: 15 */ seconds: 4 }, {immediate: true})
+    useInterval(refreshStatus, import.meta.env.DEV?{seconds:4}:{minutes:15}, {immediate: true})
 })
 
 function refreshStatus() {
