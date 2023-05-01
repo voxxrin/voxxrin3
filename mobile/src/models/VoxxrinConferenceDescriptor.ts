@@ -9,6 +9,7 @@ import {DeepReadonly} from "ts-essentials";
 import {ArrayReplace, Replace} from "@/models/type-utils";
 import {Temporal} from "temporal-polyfill";
 import {match} from "ts-pattern";
+import {useCurrentClock} from "@/state/CurrentClock";
 
 export type VoxxrinConferenceDescriptor = DeepReadonly<Replace<ConferenceDescriptor, {
     id: EventId;
@@ -35,7 +36,7 @@ export type ConferenceStatus = 'future'|'ongoing'|'past'
 export function conferenceStatusOf(confDescriptor: VoxxrinConferenceDescriptor): ConferenceStatus {
     return match([
         confDescriptor.start,
-        Temporal.Now.zonedDateTimeISO(confDescriptor.timezone),
+        useCurrentClock().zonedDateTimeISO(confDescriptor.timezone),
         confDescriptor.end
     ]).when(([start, now, _]) =>
             Temporal.ZonedDateTime.compare(now, start) === -1,
