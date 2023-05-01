@@ -9,6 +9,7 @@ export type ConferenceDescriptor = {
     name: string,
     headingName: string,
     days: Array<Day>,
+    timezone: string,
     features: {
         roomsDisplayed: boolean,
         favoritesEnabled: boolean,

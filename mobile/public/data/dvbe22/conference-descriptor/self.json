@@ -9,6 +9,7 @@
     { "id":"thursday", "localDate": "2022-10-13" },
     { "id":"friday", "localDate": "2022-10-14" }
   ],
+  "timezone": "Europe/Brussels",
   "features": {
     "roomsDisplayed": true,
     "favoritesEnabled": true,

@@ -20,6 +20,7 @@
     "@ionic/vue": "7.0.4",
     "@ionic/vue-router": "7.0.4",
     "ionicons": "7.0.0",
+    "temporal-polyfill": "0.1.1",
     "ts-pattern": "4.2.2",
     "vue": "3.2.47",
     "vue-router": "4.1.6"
