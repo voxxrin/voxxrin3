@@ -13,8 +13,8 @@
           </ion-col>
           <ion-col size="6">
             <ion-progress-bar class="_ongoing-progress" v-if="progress?.status === 'ongoing'" :value="progress.progressInPercent / 100"></ion-progress-bar>
-            <ion-icon class="_missing-feedback" aria-hidden="true" :icon="checkmarkDone"></ion-icon>
-            <ion-button class="_provided-feedback">
+            <ion-icon class="_provided-feedback" aria-hidden="true" :icon="checkmarkDone"></ion-icon>
+            <ion-button class="_missing-feedback">
               <ion-icon :icon="chatboxEllipses"></ion-icon>
             </ion-button>
           </ion-col>
