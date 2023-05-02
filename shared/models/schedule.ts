@@ -58,3 +58,15 @@ export interface EventInfo {
     keywords: string[],
     mainColor: string
 }
+
+export interface Talk {
+    id: string;
+    title: string;
+    language: string;
+    track: {id: string, title:string};
+    format: {id: string, title:string, duration:string};
+    room: RoomInfo;
+    speakers: ScheduleSpeakerInfo[];
+    summary: string;
+    description: string;
+}

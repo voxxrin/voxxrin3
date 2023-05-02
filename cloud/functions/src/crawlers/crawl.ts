@@ -26,15 +26,25 @@ const crawlAll = async function() {
     const event = await crawlDevoxx("dvbe22")
     await saveEvent(event)
     info("Crawling done");
-    return [event]
+    return [{id: event.id}]
 };
 
 const saveEvent = async function(event: Event) {
+    info("saving event " + event.id)
+
     for (const daySchedule of event.daySchedules) {
         await db.collection("events").doc(event.id)
         .collection("days").doc(daySchedule.day)
             .set(daySchedule)
     }
+       
+    for (const talk of event.talks) {
+        info("saving talk " + talk);
+        await db.collection("events").doc(event.id)
+        .collection("talks").doc(talk.id)
+        .set(talk)
+    }    
+
     for (const talksStat of event.talkStats) {
         // TODO: see if we really want to override stats each time we crawl
         info("saving stats " + talksStat);

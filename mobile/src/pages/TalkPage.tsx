@@ -32,6 +32,7 @@ import useUserTalkNotes from '../hooks/useUserTalkNotes';
 import { TalksScheduleTimeSlot } from '../../../shared/models/schedule';
 import { getTalkDetails } from '../models/utils';
 import { star } from 'ionicons/icons';
+import useTalk from '../hooks/useTalk';
 
 interface TalkPageProps {
     eventDetails?: EventDetails,
@@ -43,7 +44,7 @@ const TalkPage: React.FC<TalkPageProps> = ({eventDetails, day}) => {
     const eventId = params.eventId
     const talkId = params.talkId
 
-    const daySchedule = useDaySchedule({eventId, day})
+    const talk = useTalk(eventId, talkId)
     const dayTalkStats = useTalkStats({eventId, day})
     const userId = useUserId()
     const {talksNotes, updateTalkNotes} = useUserTalkNotes({eventId, day, userId})
@@ -53,16 +54,10 @@ const TalkPage: React.FC<TalkPageProps> = ({eventDetails, day}) => {
             notes.isFavorite = !notes.isFavorite
         })
     }
-
-    const talk = daySchedule?.timeSlots
-        ?.filter((s) => {return s.type == "talks"})
-        ?.flatMap((s) => {return (s as TalksScheduleTimeSlot).talks})
-        ?.find((t) => {return t.id == talkId})
     
     const talkDetails = talk && getTalkDetails(talk, dayTalkStats, talksNotes)   
     const talkStats = talkDetails?.talkStats 
     const isFavorite = talkDetails?.talkNotes?.isFavorite ?? false
-
 
     return (
         <IonPage id="talk-page">
@@ -82,6 +77,9 @@ const TalkPage: React.FC<TalkPageProps> = ({eventDetails, day}) => {
                         <IonCardSubtitle>{talk?.format.title}</IonCardSubtitle>
                     </IonCardHeader>
                     <IonCardContent>
+                    <IonLabel>
+                        {talk?.summary}
+                    </IonLabel>
                     <IonItem lines="none">
                         <IonLabel><h4>{talk?.room.title}</h4></IonLabel>
                         <IonChip slot="end" color="primary">{talkStats?.totalFavoritesCount ?? "0"}</IonChip>
@@ -107,6 +105,9 @@ const TalkPage: React.FC<TalkPageProps> = ({eventDetails, day}) => {
                     </>})}
                 </IonList>
 
+                <IonLabel className="ion-padding">
+                <div dangerouslySetInnerHTML={{__html: talk?.description ?? ""}} ></div>
+                </IonLabel>
             </IonContent>
         </IonPage>
     );

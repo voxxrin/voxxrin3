@@ -1,8 +1,8 @@
 import {info} from "../../firebase";
 import * as _ from "lodash";
 
-import {DevoxxScheduleItem, DevoxxScheduleProposal, DevoxxScheduleSpeakerInfo, DevoxxScheduleItemTag} from "./types"
-import {DaySchedule, ScheduleSpeakerInfo} from "../../../../../shared/models/schedule"
+import {DevoxxScheduleItem, DevoxxScheduleSpeakerInfo} from "./types"
+import {DaySchedule, ScheduleSpeakerInfo, Talk} from "../../../../../shared/models/schedule"
 import { TalkStats } from "../../../../../shared/models/feedbacks";
 import { Event } from "../../models/Event";
 
@@ -10,11 +10,14 @@ const axios = require('axios');
 
 export const crawl = async (eventId:string) => {
     const days = ["monday", "tuesday", "wednesday", "thursday", "friday"]
-    const event: Event = { id: eventId, daySchedules: [], talkStats: []}
+    const event: Event = { id: eventId, daySchedules: [], talkStats: [], talks: []}
     for (const day of days) {
-        const {daySchedule, talkStats} = await crawlDevoxxDay(eventId, day)
+        const {daySchedule, talkStats, talks} = await crawlDevoxxDay(eventId, day)
         event.daySchedules.push(daySchedule)        
         event.talkStats.push({day: day, stats: talkStats})
+        for (const talk of talks) {
+            event.talks.push(talk)
+        }
     }
     return event
 }
@@ -31,7 +34,39 @@ const crawlDevoxxDay = async (eventId: string, day: string) => {
 
     const talkStats: TalkStats[] = []
 
+    const talks: Talk[] = []
+
     const slots = _.groupBy(schedules, (s:DevoxxScheduleItem) => {return s.fromDate + "--" + s.toDate})
+
+    const toScheduleTalk = function(item: DevoxxScheduleItem) {
+        const proposal = item.proposal!!
+        return {
+            id: proposal.id.toString(),
+            title: proposal.title,
+            speakers: proposal.speakers.map((s:DevoxxScheduleSpeakerInfo) => {
+                return {
+                    id: s.id.toString(),
+                    fullName: s.fullName,
+                    companyName: s.company,
+                    photoUrl: s.imageUrl
+                } as ScheduleSpeakerInfo
+            }),
+            room: {
+                id: item.room.id.toString(),
+                title: item.room.name
+            },
+            format: {
+                id: item.sessionType.id.toString(),
+                title: item.sessionType.name,
+                duration: "PT" + item.sessionType.duration + "m"
+            },
+            track: {
+                id: proposal.track.id.toString(),
+                title: proposal.track.name
+            },
+            language: "EN"
+        }
+    }
 
     _.forIn(slots, (items: DevoxxScheduleItem[], key: string) => {
         const [start, end] = key.split("--")
@@ -63,56 +98,24 @@ const crawlDevoxxDay = async (eventId: string, day: string) => {
                 start: start,
                 end: end,
                 type: "talks",
-                talks: items.map((item: DevoxxScheduleItem) => {
-                    const proposal = item.proposal!!
-                    return {
-                        id: proposal.id.toString(),
-                        title: proposal.title,
-                        speakers: proposal.speakers.map((s:DevoxxScheduleSpeakerInfo) => {
-                            return {
-                                id: s.id.toString(),
-                                fullName: s.fullName,
-                                companyName: s.company,
-                                photoUrl: s.imageUrl
-                            } as ScheduleSpeakerInfo
-                        }),
-                        room: {
-                            id: item.room.id.toString(),
-                            title: item.room.name
-                        },
-                        format: {
-                            id: item.sessionType.id.toString(),
-                            title: item.sessionType.name,
-                            duration: "PT" + item.sessionType.duration + "m"
-                        },
-                        track: {
-                            id: proposal.track.id.toString(),
-                            title: proposal.track.name
-                        },
-                        language: "EN"
-                    }
-                })
+                talks: items.map(toScheduleTalk)
             })
             items.forEach((i) => {
                 if (i.totalFavourites !== undefined && i.proposal?.id !== undefined) {
                     talkStats.push({id: i.proposal?.id.toString(), totalFavoritesCount: i.totalFavourites})
                 }
+                const scheduleTalk = toScheduleTalk(i)
+                const talk = {
+                    ...scheduleTalk, 
+                    summary: i.proposal?.summary ?? "",
+                    description: i.proposal?.description ?? ""
+                }
+                talks.push(talk)
             })
         }
     })
 
-    return {daySchedule, talkStats}
-
-
-    // for (const schedule of schedules) {
-    //     let title = schedule.proposal?.title || schedule.sessionType.name
-    //     functions.logger.info(`${schedule.id} - ${schedule.room.name} - ${title}`, {structuredData: true});
-    //     functions.logger.info(`/events/${eventId}/days/${day}/schedules/${schedule.id}`, {structuredData: true});
-
-    //     await db.collection("events").doc(eventId)
-    //         .collection("days").doc(day)
-    //         .collection("schedules").doc(schedule.id.toString())
-    //         .set(schedule)
-    // }
+    info("devoxx day crawling done for " + day)
+    return {daySchedule, talkStats, talks}
 }
 
