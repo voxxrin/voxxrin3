@@ -4,7 +4,7 @@ import { db } from "../firebase"
 
 import {EventInfo} from "../../../shared/models/schedule"
 
-interface EventDetails {
+export interface EventDetails {
     info: EventInfo
 }
 

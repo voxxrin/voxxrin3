@@ -1,7 +1,6 @@
 import { Redirect, Route } from 'react-router-dom';
 import { IonApp, IonContent, IonHeader, IonItem, IonList, IonMenu, IonRouterOutlet, IonTitle, IonToolbar, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import EventSchedule from './pages/EventSchedule';
 import EventsList from './pages/EventsList';
 
 /* Core CSS required for Ionic components to work properly */
@@ -23,7 +22,7 @@ import '@ionic/react/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 import UserAccount from './pages/UserAccount';
-import EventDetails from './pages/EventDetails';
+import EventPage from './pages/EventPage';
 
 setupIonicReact();
 
@@ -47,7 +46,7 @@ const App: React.FC = () => (
         <Redirect exact path="/" to="/account" />
         <Route path="/account" render={() => <UserAccount />} exact={true} />
         <Route path="/events" render={() => <EventsList />} exact={true} />
-        <Route path="/events/:eventId" render={() => <EventDetails />} />
+        <Route path="/events/:eventId" render={() => <EventPage />} />
       </IonRouterOutlet>
     </IonReactRouter>
   </IonApp>
