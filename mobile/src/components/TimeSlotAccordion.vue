@@ -23,7 +23,8 @@
     </ion-item>
 
     <div class="ion-padding _accordion-content" slot="content">
-      Content for {{timeslot.id}}
+      <schedule-break v-if="timeslot.type==='break'" :event="event" :talk-break="timeslot.break"></schedule-break>
+      <talk-format-groups-breakdown v-if="timeslot.type==='talks'" :event="event" :talks="timeslot.talks"></talk-format-groups-breakdown>
     </div>
   </ion-accordion>
 </template>
@@ -51,6 +52,9 @@ import {VoxxrinTimeslotFeedback} from "@/models/VoxxrinFeedback";
 import {useInterval} from "@/views/vue-utils";
 import {useCurrentClock} from "@/state/CurrentClock";
 import {caretBackCircle, chatboxEllipses, checkmarkDone, hourglass, time} from "ionicons/icons";
+import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
+import TalkFormatGroupsBreakdown from "@/components/TalkFormatGroupsBreakdown.vue";
+import ScheduleBreak from "@/components/ScheduleBreak.vue";
 
 const props = defineProps({
     timeslot: {
@@ -60,6 +64,10 @@ const props = defineProps({
     timeslotFeedback: {
         required: false,
         type: Object as PropType<VoxxrinTimeslotFeedback|undefined>
+    },
+    event: {
+        required: true,
+        type: Object as PropType<VoxxrinConferenceDescriptor>
     }
 })
 

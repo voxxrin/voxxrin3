@@ -16,9 +16,10 @@
 
       Schedule here !<br/>
 
-      <ion-accordion-group :multiple="true" :value="[]">
+      <ion-accordion-group :multiple="true" :value="[]" v-if="currentConferenceDescriptor">
         <time-slot-accordion v-for="(timeslot, index) in timeslots" :key="index"
                    :timeslot-feedback="index%2===0?undefined:{}" :timeslot="timeslot"
+                   :event="currentConferenceDescriptor"
         ></time-slot-accordion>
       </ion-accordion-group>
 
