@@ -1,7 +1,7 @@
 import { IonLabel, IonItem, IonItemGroup, IonItemDivider } from '@ionic/react';
 import { BreakScheduleTimeSlot, ScheduleTalk, TalksScheduleTimeSlot } from "../data/schedule"
 import ScheduleTalkItem from "./ScheduleTalkItem"
-import { DayTalksStats, UserDayTalksNotes } from '../data/feedbacks';
+import { DayTalksStats, TalkDetails, UserDayTalksNotes, getTalkDetails } from '../data/feedbacks';
 
 
 interface ScheduleTimeSlotProps {
@@ -15,9 +15,6 @@ interface ScheduleTimeSlotProps {
 const ScheduleTimeSlot: React.FC<ScheduleTimeSlotProps> = ({timeSlot, stats, talksNotes, favoritesOnly, onToggleFavorite}) => {
 
     const scheduleBreakItem = function(slot: BreakScheduleTimeSlot) {
-      if (favoritesOnly) {
-        return <></>
-      }    
       return <IonItem>
                 <IonLabel>
                   <h2>{slot.break.title}</h2>
@@ -29,33 +26,20 @@ const ScheduleTimeSlot: React.FC<ScheduleTimeSlotProps> = ({timeSlot, stats, tal
             </IonItem>
     }
     
-    const talkItem = function(talk: ScheduleTalk) {
-      const talkStats = stats?.stats
-                                .find((t) => {return t.id == talk.id}) 
-                                ?? {id: talk.id, totalFavoritesCount: 0}
-
-      const talkNotes = talksNotes?.notes
-                                .find((t) => {return t.talkId == talk.id}) 
-                                ?? undefined
-      
-      if (favoritesOnly && !(talkNotes?.isFavorite)) {
-        return <></>
-      }                          
-
-      return <ScheduleTalkItem
-              key={talk.id} 
-              talk={talk} 
-              talkStats={talkStats} 
-              talkNotes={talkNotes} 
-              onToggleFavorite={() => {onToggleFavorite(talk.id)}}
+    const talkItem = function(talkDetails: TalkDetails) {      
+      return <ScheduleTalkItem key={talkDetails.talk.id} talkDetails={talkDetails} 
+                onToggleFavorite={() => {onToggleFavorite(talkDetails.talk.id)}}
               />
     }
   
     var content;
     if (timeSlot.type == "talks") {
-        content = (timeSlot as TalksScheduleTimeSlot).talks.map(talkItem)
+        content = (timeSlot as TalksScheduleTimeSlot).talks
+        .map((t) => { return getTalkDetails(t, stats, talksNotes) })
+        .filter((td) => { return td.talkNotes?.isFavorite || !favoritesOnly })
+        .map(talkItem)
     } else {
-        content = scheduleBreakItem(timeSlot as BreakScheduleTimeSlot)
+        content = !favoritesOnly ? scheduleBreakItem(timeSlot as BreakScheduleTimeSlot) : <></>
     }
 
     const formatTime = (date:string) => { return new Date(date).toTimeString().slice(0,5) }

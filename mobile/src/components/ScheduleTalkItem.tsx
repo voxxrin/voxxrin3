@@ -3,17 +3,17 @@ import {
 } from '@ionic/react';
 import { star } from 'ionicons/icons';
 
-import {ScheduleTalk} from "../data/schedule"
-import { TalkStats, UserTalkNotes } from '../data/feedbacks';
+import { TalkDetails } from '../data/feedbacks';
 
 interface ScheduleTalkItemProps {
-    talk: ScheduleTalk,
-    talkStats: TalkStats,
-    talkNotes?: UserTalkNotes,
+    talkDetails: TalkDetails,
     onToggleFavorite: () => void
 }
 
-const ScheduleTalkItem: React.FC<ScheduleTalkItemProps> = ({talk, talkStats, talkNotes, onToggleFavorite}) => {
+const ScheduleTalkItem: React.FC<ScheduleTalkItemProps> = ({talkDetails, onToggleFavorite}) => {
+    const talk = talkDetails.talk
+    const talkStats = talkDetails.talkStats
+    const talkNotes = talkDetails.talkNotes
     const isFavorite = talkNotes?.isFavorite ?? false
 
     return (
