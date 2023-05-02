@@ -16,9 +16,9 @@
 
       Schedule here !<br/>
 
-      <ion-accordion-group :multiple="true" :value="[]" v-if="currentConferenceDescriptor">
+      <ion-accordion-group :multiple="true" v-if="currentConferenceDescriptor">
         <time-slot-accordion v-for="(timeslot, index) in timeslots" :key="index"
-                   :timeslot-feedback="index%2===0?undefined:{}" :timeslot="timeslot"
+                   :timeslot-feedback="timeslot.feedback" :timeslot="timeslot"
                    :event="currentConferenceDescriptor"
         ></time-slot-accordion>
       </ion-accordion-group>
@@ -35,23 +35,13 @@
           <ion-icon :icon="chatbubble"></ion-icon>
         </ion-fab-button>
         <ion-fab-list side="top">
-          <ion-fab-button id="testing-alert1">
-            <ion-icon :icon="addCircle"></ion-icon>
-          </ion-fab-button>
-          <ion-label>test 1</ion-label>
-          <ion-fab-button id="testing-alert2">
-            <ion-icon :icon="addCircle"></ion-icon>
-          </ion-fab-button>
-          <ion-label>test 2</ion-label>
+          <div v-for="(missingFeedbacksPastTimeslot, index) in missingFeedbacksPastTimeslots" :key="index">
+            <ion-fab-button @click="showAlertForTimeslot(missingFeedbacksPastTimeslot)">
+              <ion-icon :icon="addCircle"></ion-icon>
+            </ion-fab-button>
+            <ion-label>{{ missingFeedbacksPastTimeslot.start }} => {{ missingFeedbacksPastTimeslot.end }}</ion-label>
+          </div>
         </ion-fab-list>
-        <ion-alert
-            trigger="testing-alert1" header="Alert"
-            subHeader="Testing message" message="This is alert 1 !"
-        ></ion-alert>
-        <ion-alert
-            trigger="testing-alert2" header="Alert"
-            subHeader="Testing message" message="This is alert 2 !"
-        ></ion-alert>
       </ion-fab>
     </ion-content>
   </ion-page>
@@ -72,6 +62,7 @@ import {
     IonLabel,
     IonFabList,
     IonAccordionGroup,
+    alertController,
 } from '@ionic/vue';
 import { chatbubble, addCircle } from 'ionicons/icons';
 import {useRoute, useRouter} from "vue-router";
@@ -81,18 +72,22 @@ import {
     useCurrentSchedule,
     watchCurrentSchedule
 } from "@/state/CurrentSchedule";
-import {getRouteParamsValue, isRefDefined} from "@/views/vue-utils";
+import {getRouteParamsValue, isRefDefined, useInterval} from "@/views/vue-utils";
 import {EventId} from "@/models/VoxxrinEvent";
 import {VoxxrinDay} from "@/models/VoxxrinDay";
-import {VoxxrinScheduleTimeSlot} from "@/models/VoxxrinSchedule";
+import {
+    getTimeslotLabel,
+    getTimeslotTimingProgress,
+    VoxxrinScheduleTimeSlot
+} from "@/models/VoxxrinSchedule";
 import {
     useCurrentConferenceDescriptor
 } from "@/state/CurrentConferenceDescriptor";
 import DaySelector from "@/components/DaySelector.vue";
 import {findVoxxrinDayById} from "@/models/VoxxrinConferenceDescriptor";
-import TimeSlot from "@/components/TimeSlotAccordion.vue";
 import TimeSlotAccordion from "@/components/TimeSlotAccordion.vue";
 import {VoxxrinTimeslotFeedback} from "@/models/VoxxrinFeedback";
+import {useCurrentClock} from "@/state/CurrentClock";
 
 const router = useRouter();
 const route = useRoute();
@@ -110,6 +105,7 @@ const timeslots = ref<Array<VoxxrinScheduleTimeSlot & {feedback: VoxxrinTimeslot
 
 onMounted(async () => {
     console.log(`SchedulePage mounted !`)
+    useInterval(recomputeMissingFeedbacksList, import.meta.env.DEV?{seconds:5}:{minutes:3}, {immediate: true})
 })
 
 watchCurrentSchedule((currentSchedule) => {
@@ -122,6 +118,8 @@ watchCurrentSchedule((currentSchedule) => {
                 return {...ts, feedback: idx%2===0?{}:undefined};
             }
         });
+        recomputeMissingFeedbacksList();
+
         currentlySelectedDay.value = findVoxxrinDayById(currentConferenceDescriptor.value, currentSchedule.day)
     }
 });
@@ -131,6 +129,20 @@ watch([currentlySelectedDay, currentConferenceDescriptor], async ([selectedDay, 
         fetchSchedule(conferenceDescriptor, (selectedDay || conferenceDescriptor.days[0]).id);
     }
 }, {immediate: true})
+
+const missingFeedbacksPastTimeslots = ref<VoxxrinTimeslotFeedback[]>([])
+function recomputeMissingFeedbacksList() {
+    missingFeedbacksPastTimeslots.value = timeslots.value.filter(ts => {
+        return ts.type === 'talks'
+            && !ts.feedback
+            && getTimeslotTimingProgress(ts, useCurrentClock().zonedDateTimeISO()).status === 'past'
+    }).map(ts => getTimeslotLabel(ts));
+}
+
+async function showAlertForTimeslot() {
+    const alert = await alertController.create({ header: 'Alert !', message: 'This is an alert !' });
+    alert.present();
+}
 </script>
 
 <style scoped>
