@@ -92,6 +92,7 @@ import DaySelector from "@/components/DaySelector.vue";
 import {findVoxxrinDayById} from "@/models/VoxxrinConferenceDescriptor";
 import TimeSlot from "@/components/TimeSlotAccordion.vue";
 import TimeSlotAccordion from "@/components/TimeSlotAccordion.vue";
+import {VoxxrinTimeslotFeedback} from "@/models/VoxxrinFeedback";
 
 const router = useRouter();
 const route = useRoute();
@@ -105,7 +106,7 @@ const changeDayTo = (day: VoxxrinDay) => {
     currentlySelectedDay.value = day;
 }
 
-const timeslots = ref<Array<VoxxrinScheduleTimeSlot>>([]);
+const timeslots = ref<Array<VoxxrinScheduleTimeSlot & {feedback: VoxxrinTimeslotFeedback|undefined}>>([]);
 
 onMounted(async () => {
     console.log(`SchedulePage mounted !`)
@@ -113,7 +114,14 @@ onMounted(async () => {
 
 watchCurrentSchedule((currentSchedule) => {
     if(currentSchedule && isRefDefined(currentConferenceDescriptor)) {
-        timeslots.value = currentSchedule.timeSlots;
+        timeslots.value = currentSchedule.timeSlots.map((ts, idx) => {
+            // yes that's weird ... but looks like TS is not very smart here 🤔
+            if(ts.type === 'break') {
+                return {...ts, feedback: idx%2===0?{}:undefined};
+            } else {
+                return {...ts, feedback: idx%2===0?{}:undefined};
+            }
+        });
         currentlySelectedDay.value = findVoxxrinDayById(currentConferenceDescriptor.value, currentSchedule.day)
     }
 });
