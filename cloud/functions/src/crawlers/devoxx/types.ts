@@ -56,6 +56,56 @@ export interface DevoxxScheduleItemTag {
     name: string
 }
 
+
+// event
+// https://{slug}.cfp.dev/api/public/event
+
+export interface CfpEvent {
+  "id": number, 
+  "slug": string, // eg "devoxxuk23",
+  "name": string, // eg "Devoxx UK 2023",
+  "description": string, // eg "Devoxx UK is a space for developers to learn, sharpen their skills [...]\n",
+  "codeOfConduct": string, // eg "All attendees, speakers, sponsors, and volunteers at our conference are required to [...].\n",
+  "website": string, // eg "www.devoxx.co.uk",
+  "twitterHandle": string, // eg "@devoxxuk",
+  "fromDate": string, // eg "2023-05-10T07:00:00Z",
+  "toDate": string, // eg "2023-05-12T15:00:00Z",
+  "flickrURL": string, // eg "https://www.flickr.com/photos/125714253@N02/albums/",
+  "youTubeURL": string, // eg "https://www.youtube.com/channel/UCCBVCTuk6uJrN3iFV_3vurg",
+  "live": boolean,
+  "theme": string, // eg "DEVOXX",
+  "cfpOpening": string, // eg "2022-11-01T08:00:00Z",
+  "cfpClosing": string, // eg "2023-01-10T23:59:00Z",
+  "eventImageURL": string | null, // eg null,
+  "maxProposals": number,
+  "languages": [],
+  "sessionTypes":
+    {
+      "id": number,
+      "name": string, // eg "UnConference Session",
+      "duration": number, // eg 45,
+      "isPause": boolean,
+      "description": string | null,
+      "cssColor": string, // eg "#6fff00"
+    }[],
+  "tracks": 
+    {
+      "id": number,
+      "name": string, // eg "Architecture",
+      "description": string, // eg "How-to’s, tools and techniques for developers to drive great architectures.  Share your in-the-trenches experiences informing us what works and what doesn't.",
+      "imageURL": string, // eg "https://s3-eu-west-1.amazonaws.com/voxxeddays/webapp/images/17c5c96d-cbfd-42ef-b715-13f1a05c5391.png"
+    }[],
+  "locationId": number,
+  "locationName": string, // eg "Business Design Centre",
+  "locationAddress": string, // eg "52 High Street",
+  "locationCity": string, // eg "London",
+  "locationCountry": string, // eg "United Kingdom",
+  "timezone": string, // eg "Europe/London",
+  "venueLongitude": number, // eg -0.10514,
+  "venueLatitude": number, // eg 51.53574
+}
+
+
 // devoxxians
 
 // https://devoxxians.com/api/public/events/upcoming
