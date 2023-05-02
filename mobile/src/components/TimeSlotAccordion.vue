@@ -1,5 +1,5 @@
 <template>
-  <ion-accordion :value="timeslot.id" :class="{ [`_${progress?.status}`]: true, '_feedback-provided': !!timeslotFeedback, '_missing-feedback': !timeslotFeedback }">
+  <ion-accordion :value="timeslot.id" :class="{ [`_${progress?.status}`]: true, '_feedback-provided': !!timeslotFeedback, '_missing-feedback': !timeslotFeedback, '_is-break': timeslot.type==='break' }">
     <ion-item slot="header" color="light">
       <ion-grid>
         <ion-row>
@@ -94,10 +94,10 @@ ion-accordion._past ._accordion-icon._past-icon { display: inline-block; }
 ion-accordion._ongoing ._accordion-icon._ongoing-icon { display: inline-block; }
 ion-accordion._future ._accordion-icon._future-icon { display: inline-block; }
 
-ion-accordion._past._missing-feedback ._missing-feedback {
+ion-accordion._past._missing-feedback:not(._is-break) ._missing-feedback {
   display: inline-block;
 }
-ion-accordion._past._feedback-provided ._provided-feedback {
+ion-accordion._past._feedback-provided:not(._is-break) ._provided-feedback {
   display: inline-block;
 }
 ion-accordion._ongoing ._ongoing-progress {
