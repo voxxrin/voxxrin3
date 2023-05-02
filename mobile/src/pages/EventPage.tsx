@@ -5,6 +5,7 @@ import EventSchedule from "./EventSchedule";
 import { playCircle, star } from "ionicons/icons";
 import { useState } from "react";
 import useEventDetails from "../hooks/useEventDetails";
+import TalkPage from "./TalkPage";
 
 const EventPage: React.FC = () => {
     const params = useParams<{ eventId: string }>();
@@ -25,11 +26,21 @@ const EventPage: React.FC = () => {
                                 <EventSchedule 
                                     eventDetails={eventDetails} favoritesOnly={false} 
                                     day={day} onDayChange={setDay} />} />
+                    <Route path="/events/:eventId/schedule/talks/:talkId"  exact={true}
+                            render={() => 
+                                <TalkPage 
+                                    eventDetails={eventDetails} 
+                                    day={day} />} />
                     <Route path="/events/:eventId/favorites"  exact={true}
                             render={() => 
                                 <EventSchedule 
                                     eventDetails={eventDetails} favoritesOnly={true} 
                                     day={day} onDayChange={setDay} />} />
+                    <Route path="/events/:eventId/favorites/talks/:talkId"  exact={true}
+                            render={() => 
+                                <TalkPage 
+                                    eventDetails={eventDetails} 
+                                    day={day} />} />
                 </IonRouterOutlet>
                 <IonTabBar slot="bottom">
                     <IonTabButton tab="event" href={`/events/${eventId}/schedule`}>

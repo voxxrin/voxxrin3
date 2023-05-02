@@ -17,7 +17,7 @@ const ScheduleTalkItem: React.FC<ScheduleTalkItemProps> = ({talkDetails, onToggl
     const isFavorite = talkNotes?.isFavorite ?? false
 
     return (
-        <IonItem key={talk.id}>
+        <IonItem key={talk.id} href={window.location.pathname + "/talks/" + talk.id}>
             <IonLabel>
             <h2>{talk.title}</h2>          
             <h3>{talk.track.title}</h3>
