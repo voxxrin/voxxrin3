@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase"
 
-import {EventInfo} from "../data/schedule"
+import {EventInfo} from "../models/schedule"
 
 interface EventDetails {
     info: EventInfo

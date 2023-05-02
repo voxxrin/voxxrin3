@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { onSnapshot, query, collection, where } from "firebase/firestore";
 import { db } from "../firebase"
 
-import {EventInfo} from "../data/schedule"
+import {EventInfo} from "../models/schedule"
 
 export default function useEventsList() {
     const [eventsList, setEventsList] = useState<EventInfo[]>([]);

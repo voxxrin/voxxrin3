@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase"
-import { DaySchedule } from "../data/schedule"
+import { DaySchedule } from "../models/schedule"
 
 export interface EventDayScheduleProps {
   eventId: string;
