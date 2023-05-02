@@ -2,7 +2,8 @@ import * as _ from "lodash";
 
 import {db, info} from "../firebase"
 import {crawl as crawlDevoxx} from "./devoxx/crawler"
-import { Event } from "../models/Event";
+import { FullEvent } from "../models/Event";
+import { EventInfo } from "../../../../shared/models/event";
 
 const crawlAll = async function() {
     info("Starting crawling");
@@ -10,17 +11,21 @@ const crawlAll = async function() {
     db.collection("events").doc("dvbe22").set({
         id: "dvbe22",
         title: "Devoxx BE 2022",
+        timezone: "Europe/Brussels",
         start: "2022-10-10",
         end: "2022-10-14",
-        days: ["monday", "tuesday", "wednesday", "thursday", "friday"],
-        // Should fit in a xxx x xxx pixels square
-        logo: "https://acme.com/my-conf-logo.png",
-        // Should fit in a xxx x xxx pixels rectangle
-        backgroundImage: "https://acme.com/background.png",
-        location: { city: "Anvers", country: "BE" },
-        keywords: [ "Devoxx", "Java", "Kotlin", "Cloud", "Big data", "Web" ],
-        mainColor: "#F78125"
-      }
+        days: [
+            {id: "monday", localDate: "2022-10-10"}, 
+            {id: "tuesday", localDate: "2022-10-11"}, 
+            {id: "wednesday", localDate: "2022-10-12"}, 
+            {id: "thursday", localDate: "2022-10-13"}, 
+            {id: "friday", localDate: "2022-10-14"}
+        ],
+        imageUrl: "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-devoxxbe23-1a6e9b93-b9b9-4566-b013-7c9043243e0c.jpg",
+        websiteUrl: "https://devoxx.be",
+        location: { city: "Antwerp", country: "Belgium" },
+        keywords: [ "Devoxx", "Java", "Kotlin", "Cloud", "Big data", "Web" ]
+      } as EventInfo
     )
 
     const event = await crawlDevoxx("dvbe22")
@@ -29,7 +34,7 @@ const crawlAll = async function() {
     return [{id: event.id}]
 };
 
-const saveEvent = async function(event: Event) {
+const saveEvent = async function(event: FullEvent) {
     info("saving event " + event.id)
 
     for (const daySchedule of event.daySchedules) {

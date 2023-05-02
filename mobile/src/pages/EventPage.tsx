@@ -6,12 +6,13 @@ import { playCircle, star } from "ionicons/icons";
 import { useState } from "react";
 import useEventDetails from "../hooks/useEventDetails";
 import TalkPage from "./TalkPage";
+import { Day } from "../../../shared/models/event";
 
 const EventPage: React.FC = () => {
     const params = useParams<{ eventId: string }>();
     const eventId = params.eventId
     const eventDetails = useEventDetails({eventId: params.eventId}) ?? undefined
-    const [day, setDay] = useState<string | undefined>(undefined)
+    const [day, setDay] = useState<Day | undefined>(undefined)
 
     if (!day && (eventDetails?.info.days.length ?? 0) > 0) {
         setDay(eventDetails?.info.days[0])

@@ -1,7 +1,9 @@
+import {ISODatetime, ISOLocalDate} from "./type-utils"
+
 export interface ScheduleTimeSlot {
     id: string;
-    start: string;
-    end: string;
+    start: ISODatetime;
+    end: ISODatetime;
 }
 
 export interface RoomInfo {
@@ -14,7 +16,7 @@ export interface BreakScheduleTimeSlot extends ScheduleTimeSlot {
     break: {
         title: string,
         room: RoomInfo,
-        icon: string
+        icon: 'ticket' | 'restaurant' | 'cafe' | 'beer' | 'film' | 'train'
     };
 }
 
@@ -40,23 +42,9 @@ export interface TalksScheduleTimeSlot extends ScheduleTimeSlot {
     talks: ScheduleTalk[];
 }
 
-
 export interface DaySchedule {
     day: string;
     timeSlots: (BreakScheduleTimeSlot | TalksScheduleTimeSlot)[];
-}
-
-export interface EventInfo {
-    id: string,
-    title: string,
-    start: string, // local date
-    end: string,
-    days: string[],
-    logo: string,
-    backgroundImage: string,
-    location: { city: string, country: string },
-    keywords: string[],
-    mainColor: string
 }
 
 export interface Talk {

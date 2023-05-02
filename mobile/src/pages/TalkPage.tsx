@@ -6,7 +6,6 @@ import {
     IonPage,
     IonTitle,
     IonToolbar,
-    IonMenuButton,
     IonLabel,
     IonItem,
     IonChip,
@@ -25,29 +24,29 @@ import './EventSchedule.css';
 
 import { EventDetails } from '../hooks/useEventDetails';
 import { useParams } from 'react-router';
-import useDaySchedule from '../hooks/useDaySchedule';
 import useTalkStats from '../hooks/useTalkStats';
 import useUserId from '../hooks/useUserId';
 import useUserTalkNotes from '../hooks/useUserTalkNotes';
-import { TalksScheduleTimeSlot } from '../../../shared/models/schedule';
 import { getTalkDetails } from '../models/utils';
 import { star } from 'ionicons/icons';
 import useTalk from '../hooks/useTalk';
+import { Day } from '../../../shared/models/event';
 
 interface TalkPageProps {
     eventDetails?: EventDetails,
-    day?: string
+    day?: Day
 }
 
 const TalkPage: React.FC<TalkPageProps> = ({eventDetails, day}) => {
     const params = useParams<{ eventId: string, talkId: string }>();
     const eventId = params.eventId
     const talkId = params.talkId
+    const dayId = day?.id
 
     const talk = useTalk(eventId, talkId)
-    const dayTalkStats = useTalkStats({eventId, day})
+    const dayTalkStats = useTalkStats({eventId, dayId})
     const userId = useUserId()
-    const {talksNotes, updateTalkNotes} = useUserTalkNotes({eventId, day, userId})
+    const {talksNotes, updateTalkNotes} = useUserTalkNotes({eventId, dayId, userId})
 
     const toggleFavorite = function() {
         updateTalkNotes(talkId, (notes) => {

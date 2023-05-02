@@ -8,7 +8,7 @@ import {UserDayTalksNotes, UserTalkNotes} from "../../../shared/models/feedbacks
 interface UserTalkNotesProps {
     userId?: string,
     eventId: string,
-    day?: string
+    dayId?: string
 }
 
 export default function useUserTalkNotes(props: UserTalkNotesProps) {
@@ -16,23 +16,23 @@ export default function useUserTalkNotes(props: UserTalkNotesProps) {
     const userId = props.userId
 
     useEffect(() => {
-        if (!userId || props.day == null) {            
+        if (!userId || props.dayId == null) {            
             return () => {}
         } else {
-            const d = doc(db, `users/${userId}/events/${props.eventId}/talksNotes/${props.day}`);
+            const d = doc(db, `users/${userId}/events/${props.eventId}/talksNotes/${props.dayId}`);
             const unsubscribe = onSnapshot(d, (docSnapshot) => {
                 setTalksNotes(docSnapshot.data() as UserDayTalksNotes)
             });
             return unsubscribe;
         }
-    }, [props.userId, props.eventId, props.day]);
+    }, [props.userId, props.eventId, props.dayId]);
 
     const updateTalkNotes = async function(talkId: string, changeFn: (notes: UserTalkNotes) => void) {
         if (!userId) {
             console.log("cant update favorites without user id")            
             return
         }
-        const notes = JSON.parse(JSON.stringify(talksNotes ?? {userId: userId, day: props.day, notes: []})) as UserDayTalksNotes
+        const notes = JSON.parse(JSON.stringify(talksNotes ?? {userId: userId, day: props.dayId, notes: []})) as UserDayTalksNotes
 
         let talkNotes = notes.notes.find((n) => {return n.talkId == talkId}) 
         if (talkNotes == null) {
@@ -40,7 +40,7 @@ export default function useUserTalkNotes(props: UserTalkNotesProps) {
             notes.notes.push(talkNotes)
         }
         changeFn(talkNotes)
-        setDoc(doc(db, `users/${userId}/events/${props.eventId}/talksNotes/${props.day}`), notes).then(() => {
+        setDoc(doc(db, `users/${userId}/events/${props.eventId}/talksNotes/${props.dayId}`), notes).then(() => {
             console.log(`updated user talk notes on firestore for ${props.eventId} - ${talkId}`)
         })
         setTalksNotes(notes)

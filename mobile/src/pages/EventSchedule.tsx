@@ -13,21 +13,22 @@ import './EventSchedule.css';
 
 import EventDaySchedule from "../components/EventDaySchedule"
 import { EventDetails } from '../hooks/useEventDetails';
+import { Day } from '../../../shared/models/event';
 
 interface EventScheduleProps {
     eventDetails?: EventDetails,
     favoritesOnly: boolean,
-    day: string | undefined,
-    onDayChange: (day:string) => void
+    day: Day | undefined,
+    onDayChange: (day:Day) => void
 }
 
 const EventSchedule: React.FC<EventScheduleProps> = ({eventDetails, favoritesOnly, day, onDayChange}) => {
-    const navButtons = eventDetails?.info.days.map((d:string) => {
+    const navButtons = eventDetails?.info.days.map((d:Day) => {
         return (
             <IonButton 
-                    key={d} color={d == day ? "danger" : "primary"} fill="solid" shape="round" 
+                    key={d.id} color={d == day ? "danger" : "primary"} fill="solid" shape="round" 
                     onClick={() => onDayChange(d)}>
-                {d[0]}
+                {d.localDate.slice(-2)}
             </IonButton>
             );
     })

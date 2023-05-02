@@ -5,13 +5,13 @@ import { DaySchedule } from "../../../shared/models/schedule"
 
 export interface EventDayScheduleProps {
   eventId: string;
-  day?: string;
+  dayId?: string;
 }
 
 export default function useDaySchedule(props: EventDayScheduleProps) {
     const [daySchedule, setDaySchedule] = useState(null as DaySchedule | null);
     const eventId: string = props.eventId
-    const day = props.day
+    const day = props.dayId
 
     useEffect(() => {
       if (day != null) {

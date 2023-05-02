@@ -8,18 +8,20 @@ import useDaySchedule from "../hooks/useDaySchedule"
 import useTalkStats from '../hooks/useTalkStats';
 import useUserTalkNotes from '../hooks/useUserTalkNotes';
 import useUserId from '../hooks/useUserId';
+import { Day } from '../../../shared/models/event';
 
 interface EventDayScheduleProps {
     eventId: string;
-    day?: string;
+    day?: Day;
     favoritesOnly: boolean;
 }
 
 const EventDaySchedule: React.FC<EventDayScheduleProps> = ({eventId, day, favoritesOnly}) => {
-    const daySchedule = useDaySchedule({eventId, day})
-    const dayTalkStats = useTalkStats({eventId, day})
+    const dayId = day?.id
+    const daySchedule = useDaySchedule({eventId, dayId})
+    const dayTalkStats = useTalkStats({eventId, dayId})
     const userId = useUserId()
-    const {talksNotes, updateTalkNotes} = useUserTalkNotes({eventId, day, userId})
+    const {talksNotes, updateTalkNotes} = useUserTalkNotes({eventId, dayId, userId})
 
     const toggleFavorite = function(talkId: string) {
         updateTalkNotes(talkId, (notes) => {

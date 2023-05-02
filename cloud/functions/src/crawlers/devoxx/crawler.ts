@@ -4,13 +4,14 @@ import * as _ from "lodash";
 import {DevoxxScheduleItem, DevoxxScheduleSpeakerInfo} from "./types"
 import {DaySchedule, ScheduleSpeakerInfo, Talk} from "../../../../../shared/models/schedule"
 import { TalkStats } from "../../../../../shared/models/feedbacks";
-import { Event } from "../../models/Event";
+import { FullEvent } from "../../models/Event";
+import { ISODatetime } from "../../../../../shared/models/type-utils";
 
 const axios = require('axios');
 
 export const crawl = async (eventId:string) => {
     const days = ["monday", "tuesday", "wednesday", "thursday", "friday"]
-    const event: Event = { id: eventId, daySchedules: [], talkStats: [], talks: []}
+    const event: FullEvent = { id: eventId, daySchedules: [], talkStats: [], talks: []}
     for (const day of days) {
         const {daySchedule, talkStats, talks} = await crawlDevoxxDay(eventId, day)
         event.daySchedules.push(daySchedule)        
@@ -79,8 +80,8 @@ const crawlDevoxxDay = async (eventId: string, day: string) => {
         if (items.every((item: DevoxxScheduleItem) => { return item.sessionType.isPause })) {
             daySchedule.timeSlots.push({
                 id: key,
-                start: start,
-                end: end,
+                start: start as ISODatetime,
+                end: end as ISODatetime,
                 type: "break",
                 break: {
                     title: items[0].sessionType.name,
@@ -88,15 +89,15 @@ const crawlDevoxxDay = async (eventId: string, day: string) => {
                         id: items[0].room.id.toString(),
                         title: items[0].room.name
                     },
-                    icon: items[0].sessionType.name
+                    icon: "cafe" // TODO - guess that
                 }
             }
             )
         } else {
             daySchedule.timeSlots.push({
                 id: key,
-                start: start,
-                end: end,
+                start: start as ISODatetime,
+                end: end as ISODatetime,
                 type: "talks",
                 talks: items.map(toScheduleTalk)
             })
