@@ -123,7 +123,7 @@ watch([currentlySelectedDay, currentConferenceDescriptor], async ([selectedDay, 
     if(conferenceDescriptor !== undefined) {
         fetchSchedule(conferenceDescriptor, (selectedDay || conferenceDescriptor.days[0]).id);
     }
-})
+}, {immediate: true})
 </script>
 
 <style scoped>
