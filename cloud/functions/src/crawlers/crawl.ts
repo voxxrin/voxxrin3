@@ -2,7 +2,7 @@ import * as _ from "lodash";
 
 import {db, info} from "../firebase"
 import {crawl as crawlDevoxx} from "./devoxx/crawler"
-import {Event} from "../data/schedule"
+import { Event } from "../models/Event";
 
 const crawlAll = async function() {
     info("Starting crawling");

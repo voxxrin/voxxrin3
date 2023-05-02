@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { Device } from '@capacitor/device';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { app } from '../firebase';
 

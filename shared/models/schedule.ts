@@ -46,11 +46,6 @@ export interface DaySchedule {
     timeSlots: (BreakScheduleTimeSlot | TalksScheduleTimeSlot)[];
 }
 
-export interface Event {
-    id: string,
-    daySchedules: DaySchedule[]
-}
-
 export interface EventInfo {
     id: string,
     title: string,

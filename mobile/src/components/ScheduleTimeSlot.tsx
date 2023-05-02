@@ -1,7 +1,7 @@
 import { IonLabel, IonItem, IonItemGroup, IonItemDivider } from '@ionic/react';
-import { BreakScheduleTimeSlot, ScheduleTalk, TalksScheduleTimeSlot } from "../models/schedule"
+import { BreakScheduleTimeSlot, ScheduleTalk, TalksScheduleTimeSlot } from "../../../shared/models/schedule"
 import ScheduleTalkItem from "./ScheduleTalkItem"
-import { DayTalksStats, TalkDetails, UserDayTalksNotes } from '../models/feedbacks';
+import { DayTalksStats, TalkDetails, UserDayTalksNotes } from '../../../shared/models/feedbacks';
 import { getTalkDetails } from '../models/utils';
 
 

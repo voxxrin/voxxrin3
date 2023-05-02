@@ -1,5 +1,5 @@
-import { DayTalksStats, TalkDetails, UserDayTalksNotes } from "./feedbacks";
-import { ScheduleTalk } from "./schedule";
+import { DayTalksStats, TalkDetails, UserDayTalksNotes } from "../../../shared/models/feedbacks";
+import { ScheduleTalk } from "../../../shared/models/schedule";
 
 export function getTalkDetails(
     talk: ScheduleTalk,

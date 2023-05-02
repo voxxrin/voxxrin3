@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { doc, onSnapshot, query, collection, where } from "firebase/firestore";
 import { db } from "../firebase"
 
-import {DayTalksStats, TalkStats} from "../models/feedbacks"
+import {DayTalksStats, TalkStats} from "../../../shared/models/feedbacks"
 
 interface TalkStatsProps {
     eventId: string,

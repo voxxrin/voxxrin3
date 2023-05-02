@@ -3,7 +3,7 @@ import { doc, onSnapshot, setDoc } from "firebase/firestore";
 import { db } from "../firebase"
 
 
-import {UserDayTalksNotes, UserTalkNotes} from "../models/feedbacks"
+import {UserDayTalksNotes, UserTalkNotes} from "../../../shared/models/feedbacks"
 
 interface UserTalkNotesProps {
     userId?: string,

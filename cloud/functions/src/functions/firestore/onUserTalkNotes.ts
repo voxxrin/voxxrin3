@@ -3,7 +3,7 @@ import * as _ from "lodash";
 import { db, info } from "../../firebase"
 
 import { FieldValue } from "firebase-admin/firestore";
-import { UserDayTalksNotes } from "../../data/feedbacks";
+import { UserDayTalksNotes } from "../../../../../shared/models/feedbacks";
 
 export const onUserTalksNoteUpdate = functions.firestore
     .document("users/{userId}/events/{eventId}/talksNotes/{day}")

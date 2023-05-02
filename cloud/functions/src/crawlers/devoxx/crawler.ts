@@ -2,8 +2,9 @@ import {info} from "../../firebase";
 import * as _ from "lodash";
 
 import {DevoxxScheduleItem, DevoxxScheduleProposal, DevoxxScheduleSpeakerInfo, DevoxxScheduleItemTag} from "./types"
-import {DaySchedule, Event, ScheduleSpeakerInfo} from "../../data/schedule"
-import { TalkStats } from "../../data/feedbacks";
+import {DaySchedule, ScheduleSpeakerInfo} from "../../../../../shared/models/schedule"
+import { TalkStats } from "../../../../../shared/models/feedbacks";
+import { Event } from "../../models/Event";
 
 const axios = require('axios');
 

@@ -3,7 +3,7 @@ import {
 } from '@ionic/react';
 import { star } from 'ionicons/icons';
 
-import { TalkDetails } from '../models/feedbacks';
+import { TalkDetails } from '../../../shared/models/feedbacks';
 
 interface ScheduleTalkItemProps {
     talkDetails: TalkDetails,

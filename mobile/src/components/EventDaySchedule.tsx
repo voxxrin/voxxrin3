@@ -1,9 +1,4 @@
-import {
-    IonAccordionGroup,
-    IonHeader,
-    IonList,
-    IonTitle,
-} from '@ionic/react';
+import { IonList } from '@ionic/react';
 
 import ScheduleTimeSlot from "./ScheduleTimeSlot"
 
@@ -20,7 +15,6 @@ interface EventDayScheduleProps {
     favoritesOnly: boolean;
 }
 
-
 const EventDaySchedule: React.FC<EventDayScheduleProps> = ({eventId, day, favoritesOnly}) => {
     const daySchedule = useDaySchedule({eventId, day})
     const dayTalkStats = useTalkStats({eventId, day})
@@ -35,16 +29,16 @@ const EventDaySchedule: React.FC<EventDayScheduleProps> = ({eventId, day, favori
 
     return (
         <>
-        <IonList lines="none">
-            {daySchedule?.timeSlots?.map( (s) => 
-                <ScheduleTimeSlot 
-                    key={s.id} timeSlot={s} stats={dayTalkStats}
-                    talksNotes={talksNotes} 
-                    favoritesOnly={favoritesOnly}
-                    onToggleFavorite={toggleFavorite} />
-            )}
-        </IonList>
-    </>
+            <IonList lines="none">
+                {daySchedule?.timeSlots?.map((s) => 
+                    <ScheduleTimeSlot 
+                        key={s.id} timeSlot={s} stats={dayTalkStats}
+                        talksNotes={talksNotes} 
+                        favoritesOnly={favoritesOnly}
+                        onToggleFavorite={toggleFavorite} />
+                )}
+            </IonList>
+        </>
     );
 }
 
