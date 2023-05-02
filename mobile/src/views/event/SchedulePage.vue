@@ -81,7 +81,6 @@ import {
     useCurrentSchedule,
     watchCurrentSchedule
 } from "@/state/CurrentSchedule";
-import {DeepReadonly} from "ts-essentials";
 import {getRouteParamsValue, isRefDefined} from "@/views/vue-utils";
 import {EventId} from "@/models/VoxxrinEvent";
 import {VoxxrinDay} from "@/models/VoxxrinDay";
@@ -106,7 +105,7 @@ const changeDayTo = (day: VoxxrinDay) => {
     currentlySelectedDay.value = day;
 }
 
-const timeslots = ref<DeepReadonly<VoxxrinScheduleTimeSlot[]>>(currentSchedule?.timeSlots || []);
+const timeslots = ref<Array<VoxxrinScheduleTimeSlot>>([]);
 
 onMounted(async () => {
     console.log(`SchedulePage mounted !`)

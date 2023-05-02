@@ -2,22 +2,20 @@ import {ref, watch} from "vue";
 import {
     DailySchedule,
 } from "../../../shared/dayly-schedule.firestore";
-import {DeepReadonly} from "ts-essentials";
 import {
     createVoxxrinDailyScheduleFromFirestore,
     VoxxrinDailySchedule
 } from "@/models/VoxxrinSchedule";
 import {DayId} from "@/models/VoxxrinDay";
-import {EventId} from "@/models/VoxxrinEvent";
 import {findVoxxrinDayById, VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {useFetchJsonDebouncer} from "@/state/state-utilities";
 
 
-const CURRENT_SCHEDULE = ref<DeepReadonly<VoxxrinDailySchedule>|undefined>(undefined);
+const CURRENT_SCHEDULE = ref<VoxxrinDailySchedule|undefined>(undefined);
 
 export const useCurrentSchedule = () => CURRENT_SCHEDULE.value;
 
-export const watchCurrentSchedule = (callback: (currentSchedule: (DeepReadonly<VoxxrinDailySchedule> | undefined)) => void,) => {
+export const watchCurrentSchedule = (callback: (currentSchedule: (VoxxrinDailySchedule | undefined)) => void,) => {
     watch(CURRENT_SCHEDULE, callback, {immediate: true});
 }
 

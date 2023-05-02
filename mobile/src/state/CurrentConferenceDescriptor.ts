@@ -1,5 +1,4 @@
 import {ref} from "vue";
-import {DeepReadonly} from "ts-essentials";
 import {
     createVoxxrinConferenceDescriptor,
     VoxxrinConferenceDescriptor

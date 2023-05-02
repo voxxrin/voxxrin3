@@ -5,13 +5,12 @@ import {TalkFormatId, VoxxrinTalkFormat} from "@/models/VoxxrinTalkFormat";
 import {TrackId, VoxxrinTrack} from "@/models/VoxxrinTrack";
 import {RoomId, VoxxrinRoom} from "@/models/VoxxrinRoom";
 import {EventId} from "@/models/VoxxrinEvent";
-import {DeepReadonly} from "ts-essentials";
 import {Replace} from "@/models/type-utils";
 import {Temporal} from "temporal-polyfill";
 import {match} from "ts-pattern";
 import {useCurrentClock} from "@/state/CurrentClock";
 
-export type VoxxrinConferenceDescriptor = DeepReadonly<Replace<ConferenceDescriptor, {
+export type VoxxrinConferenceDescriptor = Replace<ConferenceDescriptor, {
     id: EventId;
     start: Temporal.ZonedDateTime,
     end: Temporal.ZonedDateTime,
@@ -20,7 +19,7 @@ export type VoxxrinConferenceDescriptor = DeepReadonly<Replace<ConferenceDescrip
     talkTracks: VoxxrinTrack[],
     supportedTalkLanguages: VoxxrinLanguaceCode[],
     rooms: VoxxrinRoom[],
-}>>;
+}>;
 
 export type VoxxrinLanguaceCode = Replace<ConferenceDescriptor['supportedTalkLanguages'][number], { id: TalkLanguageCode }>;
 
