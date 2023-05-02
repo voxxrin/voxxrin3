@@ -1,6 +1,6 @@
 import { IonIcon, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
-import { Route, useParams } from "react-router";
+import { Redirect, Route, useParams } from "react-router";
 import EventSchedule from "./EventSchedule";
 import { playCircle, star } from "ionicons/icons";
 
@@ -11,11 +11,12 @@ const EventDetails: React.FC = () => {
     return <IonReactRouter>
             <IonTabs>
                 <IonRouterOutlet id="event-router">
-                    <Route path="/events/:eventId" render={() => <EventSchedule />} exact={true} />
-                    <Route path="/events/:eventId/favorites" render={() => <EventSchedule />} exact={true} />
+                    <Redirect exact path="/events/:eventId" to="/events/:eventId/schedule" />
+                    <Route path="/events/:eventId/schedule" render={() => <EventSchedule favoritesOnly={false} />} exact={true} />
+                    <Route path="/events/:eventId/favorites" render={() => <EventSchedule favoritesOnly={true} />} exact={true} />
                 </IonRouterOutlet>
                 <IonTabBar slot="bottom">
-                    <IonTabButton tab="event" href={`/events/${eventId}`}>
+                    <IonTabButton tab="event" href={`/events/${eventId}/schedule`}>
                         <IonIcon icon={playCircle} />
                     </IonTabButton>
                     <IonTabButton tab="event-favorites" href={`/events/${eventId}/favorites`}>
