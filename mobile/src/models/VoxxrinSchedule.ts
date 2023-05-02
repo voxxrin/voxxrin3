@@ -16,6 +16,7 @@ import {
     VoxxrinConferenceDescriptor
 } from "@/models/VoxxrinConferenceDescriptor";
 import {formatHourMinutes} from "@/models/DatesAndTime";
+import {sortBy} from "@/models/utils";
 
 
 export type VoxxrinScheduleTimeSlot = Replace<Omit<ScheduleTimeSlot, "break"|"talks">, {
@@ -66,48 +67,57 @@ export function getTimeslotLabel(timeslot: VoxxrinScheduleTimeSlot) {
 }
 
 export function createVoxxrinDailyScheduleFromFirestore(event: VoxxrinConferenceDescriptor, firestoreSchedule: DailySchedule) {
+    const timeSlots: VoxxrinScheduleTimeSlot[] = sortBy(firestoreSchedule.timeSlots.map(ts => {
+        return {
+            start: Temporal.ZonedDateTime.from(`${ts.start}[${event.timezone}]`),
+            end: Temporal.ZonedDateTime.from(`${ts.end}[${event.timezone}]`),
+            id: ts.id,
+            ...match(ts)
+                .with({type: 'break'}, ts => ({
+                    type: 'break' as const,
+                    break: {
+                        icon: ts.break.icon,
+                        title: ts.break.title,
+                        room: { id: new RoomId(ts.break.room.id), title: ts.break.room.title }
+                    }
+                }))
+                .with({type: 'talks'}, ts => ({
+                    type: 'talks' as const,
+                    talks: ts.talks.map<VoxxrinTalk>(t => {
+                        const format = findTalkFormat(event, new TalkFormatId(t.format.id));
+                        const track = findTrack(event, new TrackId(t.track.id));
+                        const room = findRoom(event, new RoomId(t.room.id));
+                        return {
+                            language: t.language,
+                            title: t.title,
+                            speakers: t.speakers.map(sp => ({
+                                photoUrl: sp.photoUrl,
+                                companyName: sp.companyName,
+                                fullName: sp.fullName,
+                                id: new SpeakerId(sp.id)
+                            })),
+                            format,
+                            track,
+                            room,
+                            id: new TalkId(t.id)
+                        }
+                    })
+                }))
+                .exhaustive()
+        };
+    }), (timeslot) => {
+        const duration = timeslot.end.toInstant().epochSeconds - timeslot.start.toInstant().epochSeconds;
+        // This one is weird ... we want to sort by start ASC and by duration DESC
+        // I mean, 12345 duration will become 987654 here
+        // (with 6 digits we're safe ... it represents a timeslot duration of 277h...)
+        const complementedDuration = 999999 - duration;
+        return `${timeslot.start} || ${complementedDuration}`;
+    })
+
     const voxxrinSchedule: VoxxrinDailySchedule = {
         eventId: new EventId(event.id.value),
         day: new DayId(firestoreSchedule.day),
-        timeSlots: firestoreSchedule.timeSlots.map<VoxxrinScheduleTimeSlot>(ts => {
-            return {
-                start: Temporal.ZonedDateTime.from(`${ts.start}[${event.timezone}]`),
-                end: Temporal.ZonedDateTime.from(`${ts.end}[${event.timezone}]`),
-                id: ts.id,
-                ...match(ts)
-                    .with({type: 'break'}, ts => ({
-                        type: 'break' as const,
-                        break: {
-                            icon: ts.break.icon,
-                            title: ts.break.title,
-                            room: { id: new RoomId(ts.break.room.id), title: ts.break.room.title }
-                        }
-                    }))
-                    .with({type: 'talks'}, ts => ({
-                        type: 'talks' as const,
-                        talks: ts.talks.map<VoxxrinTalk>(t => {
-                            const format = findTalkFormat(event, new TalkFormatId(t.format.id));
-                            const track = findTrack(event, new TrackId(t.track.id));
-                            const room = findRoom(event, new RoomId(t.room.id));
-                            return {
-                                language: t.language,
-                                title: t.title,
-                                speakers: t.speakers.map(sp => ({
-                                    photoUrl: sp.photoUrl,
-                                    companyName: sp.companyName,
-                                    fullName: sp.fullName,
-                                    id: new SpeakerId(sp.id)
-                                })),
-                                format,
-                                track,
-                                room,
-                                id: new TalkId(t.id)
-                            }
-                        })
-                    }))
-                    .exhaustive()
-            };
-        })
+        timeSlots
     };
 
     return voxxrinSchedule;
