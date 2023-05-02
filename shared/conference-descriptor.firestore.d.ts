@@ -18,10 +18,10 @@ export type ConferenceDescriptor = {
         hideLanguages: string[],
         ratings: {},
     },
-    talkFormats: Array<{ id: string, label: string, themeColor: string }>,
-    talkTracks: Array<{ id: string, label: string, themeColor: string }>,
+    talkFormats: Array<{ id: string, title: string, duration: `PT${number}m`, themeColor: string }>,
+    talkTracks: Array<{ id: string, title: string, themeColor: string }>,
     supportedTalkLanguages: Array<{ id: string, label: string, themeColor: string }>,
-    rooms: Array<{ id: string, label: string }>,
+    rooms: Array<{ id: string, title: string }>,
     theming: {
         colors: {
             primary: '#F78125',

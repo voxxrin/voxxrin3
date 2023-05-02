@@ -63,40 +63,74 @@
   },
   "talkFormats": [
     {
-      "id": "conf",
-      "label": "Conference",
+      "id": "951",
+      "title": "Conference",
+      "duration": "PT50m",
       "themeColor": "#69BE72"
     },
     {
-      "id": "uni",
-      "label": "University",
+      "id": "959",
+      "title": "Deep Dive",
+      "duration": "PT180m",
       "themeColor": "#DA8DE0"
     },
     {
-      "id": "hol",
-      "label": "Hand's on Lab",
+      "id": "968",
+      "title": "Hands-on Lab",
+      "duration": "PT180m",
       "themeColor": "#7D51FB"
     },
     {
-      "id": "tia",
-      "label": "Tools in action",
+      "id": "957",
+      "title": "Tools-in-Action",
+      "duration": "PT30m",
+      "themeColor": "#199F8F"
+    },
+    {
+      "id": "954",
+      "title": "BOF",
+      "duration": "PT60m",
+      "themeColor": "#199F8F"
+    },
+    {
+      "id": "4901",
+      "title": "Keynote",
+      "duration": "PT30m",
+      "themeColor": "#199F8F"
+    },
+    {
+      "id": "956",
+      "title": "Keynote",
+      "duration": "PT45m",
+      "themeColor": "#199F8F"
+    },
+    {
+      "id": "45001",
+      "title": "Lunch Talks",
+      "duration": "PT40m",
+      "themeColor": "#199F8F"
+    },
+    {
+      "id": "960",
+      "title": "Quickie",
+      "duration": "PT15m",
       "themeColor": "#199F8F"
     }
   ],
   "talkTracks": [
     {
       "id": "cloud",
-      "label": "Cloud",
+      "title": "Cloud",
       "themeColor": "#5914CA"
     },
     {
       "id": "java",
-      "label": "Java",
+      "title": "Java",
       "themeColor": "#C21146"
     },
     {
       "id": "bigdata",
-      "label": "Big Data",
+      "title": "Big Data",
       "themeColor": "#7D51FB"
     }
   ],
@@ -115,19 +149,19 @@
   "rooms": [
     {
       "id": "4710",
-      "label": "Room 5"
+      "title": "Room 5"
     },
     {
       "id": "4706",
-      "label": "Room 4"
+      "title": "Room 4"
     },
     {
       "id": "4708",
-      "label": "Room 6"
+      "title": "Room 6"
     },
     {
       "id": "4711",
-      "label": "Room 8"
+      "title": "Room 8"
     }
   ],
   "theming": {
