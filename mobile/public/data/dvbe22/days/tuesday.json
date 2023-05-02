@@ -2,7 +2,7 @@
   "timeSlots": [
     {
       "break": {
-        "icon": "Breakfast",
+        "icon": "cafe",
         "title": "Breakfast",
         "room": {
           "id": "4703",
@@ -230,7 +230,7 @@
     },
     {
       "break": {
-        "icon": "Lunch",
+        "icon": "restaurant",
         "title": "Lunch",
         "room": {
           "id": "4703",
@@ -690,7 +690,7 @@
     },
     {
       "break": {
-        "icon": "Break",
+        "icon": "cafe",
         "title": "Break",
         "room": {
           "id": "4703",
@@ -888,7 +888,7 @@
     },
     {
       "break": {
-        "icon": "Break",
+        "icon": "cafe",
         "title": "Break",
         "room": {
           "id": "4703",
@@ -1046,7 +1046,7 @@
     },
     {
       "break": {
-        "icon": "Break",
+        "icon": "cafe",
         "title": "Break",
         "room": {
           "id": "4703",
@@ -1198,7 +1198,7 @@
     },
     {
       "break": {
-        "icon": "Break",
+        "icon": "cafe",
         "title": "Break",
         "room": {
           "id": "4703",

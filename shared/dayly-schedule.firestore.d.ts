@@ -3,7 +3,7 @@ import type {ISODatetime} from "./type-utils";
 export type Room = {id: string, title: string}
 
 export type Break = {
-    icon: string;
+    icon: 'ticket' | 'restaurant' | 'cafe' | 'beer' | 'film' | 'train';
     title: string;
     room: Room;
 }

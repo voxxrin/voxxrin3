@@ -2,7 +2,7 @@
   "timeSlots": [
     {
       "break": {
-        "icon": "Registration & Breakfast",
+        "icon": "ticket",
         "title": "Registration & Breakfast",
         "room": {
           "id": "4703",
@@ -352,7 +352,7 @@
     },
     {
       "break": {
-        "icon": "Coffee Break",
+        "icon": "cafe",
         "title": "Coffee Break",
         "room": {
           "id": "4703",
@@ -594,7 +594,7 @@
     },
     {
       "break": {
-        "icon": "Lunch",
+        "icon": "restaurant",
         "title": "Lunch",
         "room": {
           "id": "4703",
@@ -1254,7 +1254,7 @@
     },
     {
       "break": {
-        "icon": "Break",
+        "icon": "cafe",
         "title": "Break",
         "room": {
           "id": "4703",
@@ -1484,7 +1484,7 @@
     },
     {
       "break": {
-        "icon": "Break",
+        "icon": "cafe",
         "title": "Break",
         "room": {
           "id": "4703",
@@ -1726,7 +1726,7 @@
     },
     {
       "break": {
-        "icon": "Break",
+        "icon": "cafe",
         "title": "Break",
         "room": {
           "id": "4703",
@@ -1968,7 +1968,7 @@
     },
     {
       "break": {
-        "icon": "Meet & Greet in exhibition floor until 20h30",
+        "icon": "beer",
         "title": "Meet & Greet in exhibition floor until 20h30",
         "room": {
           "id": "4703",

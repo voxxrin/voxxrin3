@@ -2,7 +2,7 @@
   "timeSlots": [
     {
       "break": {
-        "icon": "Registration & Breakfast",
+        "icon": "ticket",
         "title": "Registration & Breakfast",
         "room": {
           "id": "4703",
@@ -262,7 +262,7 @@
     },
     {
       "break": {
-        "icon": "Break",
+        "icon": "cafe",
         "title": "Break",
         "room": {
           "id": "4703",
@@ -504,7 +504,7 @@
     },
     {
       "break": {
-        "icon": "Break",
+        "icon": "cafe",
         "title": "Break",
         "room": {
           "id": "4703",
@@ -746,7 +746,7 @@
     },
     {
       "break": {
-        "icon": "Lunch",
+        "icon": "restaurant",
         "title": "Lunch",
         "room": {
           "id": "4703",
@@ -1306,7 +1306,7 @@
     },
     {
       "break": {
-        "icon": "Break",
+        "icon": "cafe",
         "title": "Break",
         "room": {
           "id": "4703",
@@ -1542,7 +1542,7 @@
     },
     {
       "break": {
-        "icon": "Break",
+        "icon": "cafe",
         "title": "Break",
         "room": {
           "id": "4703",
@@ -1778,7 +1778,7 @@
     },
     {
       "break": {
-        "icon": "Break",
+        "icon": "cafe",
         "title": "Break",
         "room": {
           "id": "4703",
@@ -2014,7 +2014,7 @@
     },
     {
       "break": {
-        "icon": "Break",
+        "icon": "cafe",
         "title": "Break",
         "room": {
           "id": "4703",
@@ -2128,7 +2128,7 @@
     },
     {
       "break": {
-        "icon": "Movie = TopGun Maverick",
+        "icon": "film",
         "title": "Movie = TopGun Maverick",
         "room": {
           "id": "4711",
