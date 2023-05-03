@@ -75,15 +75,17 @@ const theme = {
 
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 ion-thumbnail {
   --size: 80px;
   --border-radius: 40px;
 }
 
-ion-button.watch-later-btn, ion-button.favorite-btn {
-  width: 100%;
-  height: 100%;
+ion-button {
+  &.watch-later-btn, &.favorite-btn {
+    width: 100%;
+    height: 100%;
+  }
 }
 
 ion-badge.track {

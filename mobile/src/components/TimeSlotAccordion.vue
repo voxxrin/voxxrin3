@@ -82,7 +82,7 @@ const timeslotLabel = getTimeslotLabel(props.timeslot!);
 
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 /* Defaults for togglable icons/buttons/progressbar */
 ion-accordion {
   ._accordion-icon, ._missing-feedback, ._provided-feedback, ._ongoing-progress {
@@ -90,22 +90,30 @@ ion-accordion {
   }
 }
 
-ion-accordion._past ._accordion-icon._past-icon { display: inline-block; }
-ion-accordion._ongoing ._accordion-icon._ongoing-icon { display: inline-block; }
-ion-accordion._future ._accordion-icon._future-icon { display: inline-block; }
+ion-accordion {
+  &._past {
+    ._accordion-icon._past-icon { display: inline-block; }
 
-ion-accordion._past._missing-feedback:not(._is-break) ._missing-feedback {
-  display: inline-block;
-}
-ion-accordion._past._feedback-provided:not(._is-break) ._provided-feedback {
-  display: inline-block;
-}
-ion-accordion._ongoing ._ongoing-progress {
-  display: block;
-}
+    &._missing-feedback:not(._is-break) ._missing-feedback {
+      display: inline-block;
+    }
+    &._feedback-provided:not(._is-break) ._provided-feedback {
+      display: inline-block;
+    }
 
-ion-accordion._past ._accordion-content {
-  font-style: italic;
+    ._accordion-content {
+      font-style: italic;
+    }
+  }
+
+  &._ongoing {
+    ._accordion-icon._ongoing-icon { display: inline-block; }
+    ._ongoing-progress { display: block; }
+  }
+
+  &._future {
+    ._accordion-icon._future-icon { display: inline-block; }
+  }
 }
 
 </style>
