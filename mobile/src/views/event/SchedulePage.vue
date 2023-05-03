@@ -100,17 +100,17 @@ import {useCurrentClock} from "@/state/CurrentClock";
 const router = useRouter();
 const route = useRoute();
 const eventId = new EventId(getRouteParamsValue(route, 'eventId')!);
-const event = useCurrentConferenceDescriptor(eventId.value);
+const event = useCurrentConferenceDescriptor(eventId);
 
 const currentConferenceDescriptor = useCurrentConferenceDescriptor(eventId);
 
-const currentSchedule = useCurrentSchedule();
 const currentlySelectedDay = ref<VoxxrinDay|undefined>(currentConferenceDescriptor.value?.days[0])
 const changeDayTo = (day: VoxxrinDay) => {
     currentlySelectedDay.value = day;
 }
 
 const timeslots = ref<Array<VoxxrinScheduleTimeSlot & {feedback: VoxxrinTimeslotFeedback|undefined}>>([]);
+const missingFeedbacksPastTimeslots = ref<VoxxrinTimeslotFeedback[]>([])
 
 onMounted(async () => {
     console.log(`SchedulePage mounted !`)
@@ -139,7 +139,6 @@ watch([currentlySelectedDay, currentConferenceDescriptor], async ([selectedDay, 
     }
 }, {immediate: true})
 
-const missingFeedbacksPastTimeslots = ref<VoxxrinTimeslotFeedback[]>([])
 function recomputeMissingFeedbacksList() {
     missingFeedbacksPastTimeslots.value = timeslots.value.filter(ts => {
         return ts.type === 'talks'
@@ -148,7 +147,7 @@ function recomputeMissingFeedbacksList() {
     }).map(ts => getTimeslotLabel(ts));
 }
 
-async function showAlertForTimeslot() {
+async function showAlertForTimeslot(missingFeedbacksPastTimeslots: VoxxrinTimeslotFeedback) {
     const alert = await alertController.create({ header: 'Alert !', message: 'This is an alert !' });
     alert.present();
 }

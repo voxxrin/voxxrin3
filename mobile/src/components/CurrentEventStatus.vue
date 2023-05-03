@@ -7,6 +7,7 @@
 <script setup lang="ts">
 import {
     IonBadge,
+    IonSpinner
 } from '@ionic/vue';
 import {onMounted, PropType, ref, watch} from "vue";
 import {match, P} from "ts-pattern";
