@@ -47,7 +47,7 @@ const props = defineProps({
     display: block;
     height: 100%;
     width: 100%;
-    background-image: url("../../public/assets/images/jpg/card-conf-cover-devoxx.jpg");
+    background-image: url("/assets/images/jpg/card-conf-cover-devoxx.jpg");
     background-attachment: fixed;
     background-position: center;
     background-repeat: no-repeat;
