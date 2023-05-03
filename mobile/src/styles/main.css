@@ -1,5 +1,16 @@
+@charset "utf-8";
 
 
-body {
-  font-size: 30px;
-}
+/* ~ UTILS*/
+@import "@/styles/utils/variables.css";
+
+/* ~ BASE */
+@import "@/styles/base/base.css";
+
+/* ~ VENDORS*/
+@import "@/styles/vendors/ionic/customs/custom-ion-badges.css";
+@import "@/styles/vendors/ionic/customs/custom-ion-buttons.css";
+@import "@/styles/vendors/ionic/customs/custom-ion-content.css";
+@import "@/styles/vendors/ionic/customs/custom-ion-header.css";
+@import "@/styles/vendors/ionic/theme-ionic-variables.css";
+@import "@/styles/vendors/font.css";

@@ -1,5 +1,7 @@
 <template>
-  <ion-badge>status: {{conferenceStatus}}</ion-badge>
+  <ion-badge color="secondary">
+    <ion-spinner name="dots"></ion-spinner> {{conferenceStatus}}
+  </ion-badge>
 </template>
 
 <script setup lang="ts">

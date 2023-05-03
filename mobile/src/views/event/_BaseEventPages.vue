@@ -1,7 +1,6 @@
 <template>
   <ion-page>
     <ion-tabs>
-      <current-event-header v-if="event" :event="event" />
       <ion-router-outlet></ion-router-outlet>
       <ion-tab-bar slot="bottom">
         <ion-tab-button tab="schedule" :href="`/events/${eventId.value}/schedule`">

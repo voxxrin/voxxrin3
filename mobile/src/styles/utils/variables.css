@@ -1,0 +1,38 @@
+/** App Voxxrin CSS Specifics Variables **/
+
+:root {
+    /* Color styles */
+    --app-voxxrin: #E90866;
+    --app-voxxrin-rgb: 233, 8, 102;
+    --app-voxxrin-contrast: #ffffff;
+    --app-voxxrin-contrast-rgb: 255, 255, 255;
+    --app-voxxrin-shade: #c10553;
+    --app-voxxrin-tint: #f1287e;
+
+    --app-theme-primary: #F78327;
+
+    --app-beige-dark: #A3998F;
+    --app-beige-medium: #EDE7E1;
+    --app-beige-light: #F5F3F0;
+    --app-beige-line: #DDD6CE;
+
+    --app-grey-dark: #807C76;
+    --app-grey-medium: #B1B1B1;
+    --app-grey-light: #EEEEEE;
+    --app-grey-line: #DCDCDC;
+
+    --app-white-transparent: 255, 255, 255, 0.3;
+    --app-white: #FFFFFF;
+    --app-white-90: #FFFFFF;
+
+    --app-primary: #0F0F0F;
+    --app-primary-rgb: 15, 15, 15, 1;
+    --app-primary-contrast: #ffffff;
+    --app-primary-contrast-rgb: 255, 255, 255;
+    --app-primary-shade: #404040;
+    --app-primary-tint: #CACBCF;
+
+    --app-background: #F7F6F0;
+
+    /*  styles */
+}

@@ -1,0 +1,11 @@
+/* Custom Ionic badge component */
+
+ion-badge {
+    display: flex;
+    align-items: center;
+    border-radius: 4px;
+    height: 28px;
+    column-gap: 8px;
+    border: 2px solid var(--app-white);
+    font-weight: normal;
+}

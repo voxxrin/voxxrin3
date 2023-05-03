@@ -1,12 +1,19 @@
 <template>
   <ion-page>
     <ion-content :fullscreen="true">
-      <ion-header collapse="condense">
+      <current-event-header v-if="event" :event="event" />
+      <ion-header class="stickyHeader">
         <ion-toolbar>
-          <ion-title size="large">Schedule</ion-title>
+          <ion-title class="stickyHeader-title" slot="start" >Schedule</ion-title>
+          <ion-button slot="end" shape="round" size="small" fill="outline">
+            <ion-icon :icon="settingsSharp"></ion-icon>
+          </ion-button>
+          <ion-button  slot="end" shape="round" size="small">
+            <ion-icon :icon="searchSharp"></ion-icon>
+          </ion-button>
         </ion-toolbar>
-      </ion-header>
 
+      </ion-header>
 
       <day-selector
           :selected="currentlySelectedDay"
@@ -64,7 +71,7 @@ import {
     IonAccordionGroup,
     alertController,
 } from '@ionic/vue';
-import { chatbubble, addCircle } from 'ionicons/icons';
+import {chatbubble, addCircle, settingsSharp, searchSharp} from 'ionicons/icons';
 import {useRoute, useRouter} from "vue-router";
 import {onMounted, ref, watch} from "vue";
 import {
@@ -72,6 +79,7 @@ import {
     useCurrentSchedule,
     watchCurrentSchedule
 } from "@/state/CurrentSchedule";
+import CurrentEventHeader from "@/components/CurrentEventHeader.vue";
 import {getRouteParamsValue, isRefDefined, useInterval} from "@/views/vue-utils";
 import {EventId} from "@/models/VoxxrinEvent";
 import {VoxxrinDay} from "@/models/VoxxrinDay";
@@ -92,6 +100,7 @@ import {useCurrentClock} from "@/state/CurrentClock";
 const router = useRouter();
 const route = useRoute();
 const eventId = new EventId(getRouteParamsValue(route, 'eventId')!);
+const event = useCurrentConferenceDescriptor(eventId.value);
 
 const currentConferenceDescriptor = useCurrentConferenceDescriptor(eventId);
 
@@ -146,4 +155,8 @@ async function showAlertForTimeslot() {
 </script>
 
 <style scoped>
+ion-toolbar {
+  position: sticky;
+  top: 0;
+}
 </style>
