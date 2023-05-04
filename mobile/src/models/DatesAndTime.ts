@@ -11,7 +11,7 @@ type ReadableLocalDatePartsOpts = {
 }
 const DEFAULT_LOCAL_DATE_PARTS_OPTS: ReadableLocalDatePartsOpts = {
     day: "numeric",
-    month: "long",
+    month: "short",
     year: "numeric",
     weekday: "short"
 };
