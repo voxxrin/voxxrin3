@@ -37,9 +37,10 @@ onMounted(() => {
 })
 
 function refreshStatus() {
-    conferenceStatus.value = match(props.event)
-        .when(val => val === undefined, () => { return 'unknown'; })
-        .otherwise((confDesc) => conferenceStatusOf(confDesc))
+    conferenceStatus.value = match<VoxxrinConferenceDescriptor|undefined, DisplayedConferenceStatus>(props.event)
+        .with(undefined, () => 'unknown')
+        .with(P.any, (confDesc: VoxxrinConferenceDescriptor) => conferenceStatusOf(confDesc))
+        .otherwise(() => 'unknown')
 }
 
 </script>
