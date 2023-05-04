@@ -14,7 +14,11 @@
     "run-dev-android": "NODE_ENV=dev npx cap sync android && NODE_ENV=dev npx cap run android",
     "run-dev-ios": "NODE_ENV=dev npx cap sync ios && NODE_ENV=dev npx cap run ios",
     "buildrun-dev-android": "npm run build-dev && npm run run-dev-android",
-    "buildrun-dev-ios": "npm run build-dev && npm run run-dev-ios"
+    "buildrun-dev-ios": "npm run build-dev && npm run run-dev-ios",
+    "run-prod-android": "NODE_ENV=prod npx cap sync android && NODE_ENV=prod npx cap run android",
+    "run-prod-ios": "NODE_ENV=prod npx cap sync ios && NODE_ENV=prod npx cap run ios",
+    "buildrun-prod-android": "npm run build && npm run run-prod-android",
+    "buildrun-prod-ios": "npm run build && npm run run-prod-ios"
   },
   "dependencies": {
     "@capacitor/android": "5.0.0",
