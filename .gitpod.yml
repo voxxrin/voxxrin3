@@ -1,0 +1,25 @@
+image: gitpod/workspace-node:2023-04-20-16-32-37
+
+tasks:
+  - name: Bootstrap mobile app
+    command: >
+      cd mobile
+      && npm ci
+      && gp sync-done bootstrap-mobile
+
+  - name: run mobile app
+    init: gp sync-await bootstrap-mobile
+    command: >
+      cd mobile
+      && npm run dev
+
+ports:
+  - name: Capacitor mobile app
+    port: 3000
+    onOpen: open-browser
+    visibility: private
+
+jetbrains:
+  intellij:
+    prebuilds:
+      version: stable
