@@ -10,7 +10,11 @@
     "preview": "vite preview",
     "test:e2e": "cypress run",
     "test:unit": "vitest",
-    "lint": "eslint"
+    "lint": "eslint",
+    "run-dev-android": "NODE_ENV=dev npx cap sync android && NODE_ENV=dev npx cap run android",
+    "run-dev-ios": "NODE_ENV=dev npx cap sync ios && NODE_ENV=dev npx cap run ios",
+    "buildrun-dev-android": "npm run build-dev && npm run run-dev-android",
+    "buildrun-dev-ios": "npm run build-dev && npm run run-dev-ios"
   },
   "dependencies": {
     "@capacitor/android": "5.0.0",
