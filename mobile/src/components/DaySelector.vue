@@ -1,7 +1,12 @@
 <template>
   <ion-list class="dayList">
     <ion-item  v-for="(day, index) in formattedDays" :key="index">
-      <ion-button class="dayList-button" @click="$emit('day-selected', day)" :class="{ selected: day.id.isSameThan(selected?.id)}">
+      <ion-button class="dayList-button" @click="$emit('day-selected', day)" :class="{
+          selected: day.id.isSameThan(selected?.id),
+          past: today.localeCompare(day.localDate) === 1,
+          today: today.localeCompare(day.localDate) === 0,
+          future: today.localeCompare(day.localDate) === -1,
+      }">
         <div class="dayList-button-content">
           <strong class="day">{{day.formatted.day}}</strong>
           <span class="month">{{day.formatted.month}}</span>
@@ -16,10 +21,13 @@
 
 <script setup lang="ts">
 import {IonButton, IonItem, IonList } from "@ionic/vue";
-import {computed, PropType, watch} from "vue";
+import {computed, PropType, ref, watch} from "vue";
 import {VoxxrinDay} from "@/models/VoxxrinDay";
 import {localDateToReadableParts} from "@/models/DatesAndTime";
 import {useCurrentUserLocale} from "@/state/CurrentUser";
+import {useInterval} from "@/views/vue-utils";
+import {ISOLocalDate} from "../../../shared/type-utils";
+import {useCurrentClock} from "@/state/CurrentClock";
 
 defineEmits<{
     (e: 'day-selected', day: VoxxrinDay): void
@@ -34,6 +42,12 @@ const props = defineProps({
         type: Object as PropType<VoxxrinDay|undefined>
     }
 });
+
+const today = ref<ISOLocalDate>("0000-00-00")
+useInterval(() => {
+    const todayDate = useCurrentClock().zonedDateTimeISO().toPlainDate()
+    today.value = `${todayDate.year}-${todayDate.month}-${todayDate.day}`
+}, import.meta.env.DEV?{seconds:5}:{minutes:15}, { immediate: true })
 
 const formattedDays = computed(() => {
     return (props.days || []).map(d => ({
@@ -144,7 +158,7 @@ const formattedDays = computed(() => {
         }
       }
 
-      &.paste {
+      &.past {
         border-radius: 44px;
         --border-color: var(--app-grey-light);
         --background: var(--app-grey-light);
@@ -155,6 +169,14 @@ const formattedDays = computed(() => {
         .dayList-button-content {
           color: var(--app-grey-medium);
         }
+      }
+      &.today {
+        --background: red;
+        transition: 140ms ease-in-out;
+      }
+      &.future {
+        font-style: italic;
+        transition: 140ms ease-in-out;
       }
     }
   }
