@@ -5,20 +5,20 @@
       <ion-header class="stickyHeader">
         <ion-toolbar>
           <ion-title class="stickyHeader-title" slot="start" >Schedule</ion-title>
-          <ion-button class="ion-margin-end" slot="end" shape="round" size="small" fill="outline">
+          <ion-button class="ion-margin-end" slot="end" shape="round" size="small" fill="outline" color="primary">
             <ion-icon :icon="settingsSharp"></ion-icon>
           </ion-button>
           <ion-button slot="end" shape="round" size="small">
             <ion-icon :icon="searchSharp"></ion-icon>
           </ion-button>
         </ion-toolbar>
-        <day-selector
-            :selected="currentlySelectedDay"
-            :days="currentConferenceDescriptor?.days || []"
-            @day-selected="(day) => changeDayTo(day)">
-        </day-selector>
       </ion-header>
 
+      <day-selector
+          :selected="currentlySelectedDay"
+          :days="currentConferenceDescriptor?.days || []"
+          @day-selected="(day) => changeDayTo(day)">
+      </day-selector>
       Schedule here !<br/>
 
       <ion-accordion-group :multiple="true" v-if="currentConferenceDescriptor">

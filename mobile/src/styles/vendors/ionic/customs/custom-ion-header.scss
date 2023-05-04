@@ -4,10 +4,17 @@ ion-header  {
     &.stickyHeader {
         position: sticky;
         top: -1px;
+        border-bottom: 1px solid var(--app-beige-line);
+
+
+        &:after {
+            display: none;
+        }
 
         ion-toolbar {
             --padding-top: 8px;
             --padding-bottom: 8px;
+            --background: var(--app-white);
         }
 
         .stickyHeader-title {
