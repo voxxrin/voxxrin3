@@ -15,6 +15,7 @@
         <current-event-status :event="event" align=""></current-event-status>
       </div>
     </ion-toolbar>
+    <img src="/assets/images/jpg/card-conf-cover-devoxx.jpg">
   </ion-header>
 </template>
 
@@ -34,53 +35,49 @@ const props = defineProps({
 
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+  ion-header {
+    img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: block;
+      height: 100%;
+      width: 100%;
+      z-index: -1;
+      object-fit: cover;
+    }
+  }
   ion-toolbar {
     position: relative;
     --background: linear-gradient(0deg, rgba(247, 129, 37, 0.4802) 0%, rgba(247, 129, 37, 0.98) 52.84%);
     z-index: 1;
-  }
 
-  ion-toolbar:before {
-    position: fixed;
-    top: 0;
-    display: block;
-    height: 100%;
-    width: 100%;
-    background-image: url("/assets/images/jpg/card-conf-cover-devoxx.jpg");
-    background-attachment: fixed;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    content: '';
-    z-index: -1;
-  }
+    ion-title {
+      position: relative;
+      padding-inline: 24px;
+    }
 
-  ion-title {
-    position: relative;
-    padding-inline: 24px;
-  }
+    .viewsHeader {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 16px;
+      font-weight: bold;
+      color: var(--app-white);
+    }
 
-  .viewsHeader {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-top: 16px;
-    font-weight: bold;
-    color: var(--app-white);
+    .viewsSubHeader {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 0;
+      font-weight: bold;
 
-  }
-
-  .viewsSubHeader {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 18px 0;
-    font-weight: bold;
-  }
-
-  .viewsSubHeader-title {
-    color: var(--app-white);
-    font-weight: bold;
+      &-title {
+        color: var(--app-white);
+        font-weight: bold;
+      }
+    }
   }
 </style>

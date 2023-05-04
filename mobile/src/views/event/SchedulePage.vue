@@ -5,21 +5,19 @@
       <ion-header class="stickyHeader">
         <ion-toolbar>
           <ion-title class="stickyHeader-title" slot="start" >Schedule</ion-title>
-          <ion-button slot="end" shape="round" size="small" fill="outline">
+          <ion-button class="ion-margin-end" slot="end" shape="round" size="small" fill="outline">
             <ion-icon :icon="settingsSharp"></ion-icon>
           </ion-button>
-          <ion-button  slot="end" shape="round" size="small">
+          <ion-button slot="end" shape="round" size="small">
             <ion-icon :icon="searchSharp"></ion-icon>
           </ion-button>
         </ion-toolbar>
-
+        <day-selector
+            :selected="currentlySelectedDay"
+            :days="currentConferenceDescriptor?.days || []"
+            @day-selected="(day) => changeDayTo(day)">
+        </day-selector>
       </ion-header>
-
-      <day-selector
-          :selected="currentlySelectedDay"
-          :days="currentConferenceDescriptor?.days || []"
-          @day-selected="(day) => changeDayTo(day)"
-      ></day-selector>
 
       Schedule here !<br/>
 
@@ -154,8 +152,8 @@ async function showAlertForTimeslot(missingFeedbacksPastTimeslots: VoxxrinTimesl
 </script>
 
 <style scoped>
-ion-toolbar {
-  position: sticky;
-  top: 0;
-}
+  ion-toolbar {
+    position: sticky;
+    top: 0;
+  }
 </style>

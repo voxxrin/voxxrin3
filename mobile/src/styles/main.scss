@@ -2,15 +2,16 @@
 
 
 /* ~ UTILS*/
-@import "@/styles/utils/variables.css";
+@import "@/styles/utils/variables.scss";
 
 /* ~ BASE */
-@import "@/styles/base/base.css";
+@import "@/styles/base/base.scss";
 
 /* ~ VENDORS*/
-@import "@/styles/vendors/ionic/customs/custom-ion-badges.css";
-@import "@/styles/vendors/ionic/customs/custom-ion-buttons.css";
-@import "@/styles/vendors/ionic/customs/custom-ion-content.css";
-@import "@/styles/vendors/ionic/customs/custom-ion-header.css";
-@import "@/styles/vendors/ionic/theme-ionic-variables.css";
-@import "@/styles/vendors/font.css";
+@import "@/styles/vendors/ionic/customs/custom-ion-badges.scss";
+@import "@/styles/vendors/ionic/customs/custom-ion-buttons.scss";
+@import "@/styles/vendors/ionic/customs/custom-ion-content.scss";
+@import "@/styles/vendors/ionic/customs/custom-ion-header.scss";
+@import "@/styles/vendors/ionic/metrics-ionic-variables.scss";
+@import "@/styles/vendors/ionic/theme-ionic-variables.scss";
+@import "@/styles/vendors/font.scss";

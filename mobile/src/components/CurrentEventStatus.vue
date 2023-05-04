@@ -1,6 +1,9 @@
 <template>
-  <ion-badge color="secondary">
-    <ion-spinner name="dots"></ion-spinner> {{conferenceStatus}}
+  <ion-badge v-bind:class="'_' + conferenceStatus">
+    <ion-spinner v-if="conferenceStatus === 'ongoing'" name="dots"></ion-spinner>
+    <ion-icon v-if="conferenceStatus === 'past'" aria-hidden="true" :icon="playBackCircle"></ion-icon>
+    <ion-icon v-if="conferenceStatus === 'future'" aria-hidden="true" :icon="calendar"></ion-icon>
+    {{conferenceStatus}}
   </ion-badge>
 </template>
 
@@ -16,6 +19,7 @@ import {
     conferenceStatusOf, VoxxrinConferenceDescriptor,
 } from "@/models/VoxxrinConferenceDescriptor";
 import {useInterval} from "@/views/vue-utils";
+import {calendar, playBackCircle} from "ionicons/icons";
 
 const props = defineProps({
     event: {
@@ -39,5 +43,18 @@ function refreshStatus() {
 
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+  ion-badge {
+    text-transform: capitalize;
+
+    &._past {
+      border: none;
+      background: rgba(black, 0.2);
+    }
+
+    &._future {
+      background: var(--app-white);
+      color: var(--app-voxxrin);
+    }
+  }
 </style>

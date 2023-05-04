@@ -1,5 +1,6 @@
-/** App Voxxrin CSS Specifics Variables **/
+/** App Voxxrin Specifics Variables **/
 
+/* CSS Variables */
 :root {
     /* Color styles */
     --app-voxxrin: #E90866;
@@ -33,6 +34,19 @@
     --app-primary-tint: #CACBCF;
 
     --app-background: #F7F6F0;
-
-    /*  styles */
 }
+
+/**
+ * PATH
+ * **************************************************************************************** >
+ */
+
+/** Images path */
+$path-img :                                  '../assets/images/' !default;
+$path-jpg :                                  '#{$path-img}jpg/' !default;
+$path-png :                                  '#{$path-img}png/' !default;
+$path-svg :                                  '#{$path-img}svg/' !default;
+$path-gif :                                  '#{$path-img}gif/' !default;
+
+/** Fonts path */
+$path-font:                                   '../assets/fonts/' !default;

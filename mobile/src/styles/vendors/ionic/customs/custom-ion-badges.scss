@@ -5,7 +5,11 @@ ion-badge {
     align-items: center;
     border-radius: 4px;
     height: 28px;
-    column-gap: 8px;
+    column-gap: 4px;
     border: 2px solid var(--app-white);
     font-weight: normal;
+
+    ion-icon {
+        font-size: 18px;
+    }
 }

@@ -1,0 +1,31 @@
+/* Custom Ionic header component */
+
+ion-header  {
+    &.stickyHeader {
+        position: sticky;
+        top: -1px;
+
+        ion-toolbar {
+            --padding-top: 8px;
+            --padding-bottom: 8px;
+        }
+
+        .stickyHeader-title {
+            padding-inline: 0;
+            position: relative;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: left;
+        }
+
+        &-action {
+            display: inline-flex;
+            column-gap: 16px;
+        }
+    }
+
+    ion-toolbar {
+        --padding-start: 16px;
+        --padding-end: 16px;
+    }
+}
