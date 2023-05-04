@@ -1,7 +1,7 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
+  appId: 'com.voxxrin3.mobile',
   appName: 'voxxrin',
   webDir: 'dist'
 };

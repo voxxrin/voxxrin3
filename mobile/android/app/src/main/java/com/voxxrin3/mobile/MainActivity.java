@@ -1,4 +1,4 @@
-package io.ionic.starter;
+package com.voxxrin3.mobile;
 
 import com.getcapacitor.BridgeActivity;
 
