@@ -9,6 +9,7 @@
 
 <script setup lang="ts">
 import {
+    IonIcon,
     IonBadge,
     IonSpinner
 } from '@ionic/vue';
