@@ -2,13 +2,16 @@
   <ion-page>
     <ion-content :fullscreen="true">
       <current-event-header v-if="event" :event="event" />
-      <ion-header collapse="condense">
+
+      <ion-header class="stickyHeader">
         <ion-toolbar>
-          <ion-title size="large">Favorites</ion-title>
+          <ion-title class="stickyHeader-title" slot="start" >Favorites</ion-title>
+          <ion-button slot="end" shape="round" size="small">
+            <ion-icon src="/assets/icons/line/search-line.svg"></ion-icon>
+          </ion-button>
         </ion-toolbar>
       </ion-header>
 
-      Favorites here !
     </ion-content>
   </ion-page>
 </template>

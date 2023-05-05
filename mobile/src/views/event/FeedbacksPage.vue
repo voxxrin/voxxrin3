@@ -3,13 +3,13 @@
   <ion-page>
     <ion-content :fullscreen="true">
       <current-event-header v-if="event" :event="event" />
-      <ion-header collapse="condense">
-        <ion-toolbar>
-          <ion-title size="large">Feedbacks</ion-title>
-        </ion-toolbar>
-      </ion-header>
 
-      Feedbacks here !
+      <day-selector
+          :selected="currentlySelectedDay"
+          :days="currentConferenceDescriptor?.days || []"
+          @day-selected="(day) => changeDayTo(day)">
+      </day-selector>
+
     </ion-content>
   </ion-page>
 </template>
