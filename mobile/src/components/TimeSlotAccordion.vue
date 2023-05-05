@@ -93,7 +93,7 @@ ion-accordion {
 
   ion-item {
     position: relative;
-    --padding-start: 0;
+    --padding-start: 8px;
 
     .slot {
       display: flex;
