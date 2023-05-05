@@ -3,16 +3,16 @@
     <ion-toolbar>
       <div class="viewsHeader">
         <ion-button @click="$router.go(-1)" shape="round" size="default">
-          <ion-icon :icon="arrowBackOutline"></ion-icon>
+          <ion-icon src="/assets/icons/solid/arrow-left.svg"></ion-icon>
         </ion-button>
         <ion-button class="btnUser" @click="$router.go(-1)" shape="round" size="default">
-          <ion-icon :icon="personOutline"></ion-icon>
+          <ion-icon src="/assets/icons/line/user-line.svg"></ion-icon>
         </ion-button>
       </div>
 
       <div class="viewsSubHeader">
         <div class="viewsSubHeader-title">{{ event?.headingName }}</div>
-        <current-event-status :event="event" align=""></current-event-status>
+        <current-event-status :event="event"></current-event-status>
       </div>
     </ion-toolbar>
     <img src="/assets/images/jpg/card-conf-cover-devoxx.jpg">
@@ -21,7 +21,6 @@
 
 <script setup lang="ts">
 import {IonIcon, IonButton, IonHeader, IonTitle, IonToolbar} from "@ionic/vue";
-import {arrowBackOutline, personOutline} from "ionicons/icons";
 import CurrentEventStatus from "@/components/CurrentEventStatus.vue";
 import {PropType} from "vue";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
