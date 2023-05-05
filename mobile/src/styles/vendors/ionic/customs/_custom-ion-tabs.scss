@@ -1,9 +1,20 @@
 ion-tab-bar {
+  box-shadow: 0px -6px 28px rgba(0, 0, 0, 0.24);
+
   ion-tab-button {
     --ripple-color: var(--app-theme-primary);
+    color: var(--app-primary);
+
+    ion-label {
+      color: var(--app-grey-medium);
+    }
 
     &.tab-selected {
       color: var(--app-theme-primary);
+
+      ion-label {
+        color: var(--app-theme-primary);
+      }
 
       svg {
         display: none;
