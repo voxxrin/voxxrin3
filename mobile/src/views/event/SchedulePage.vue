@@ -6,10 +6,10 @@
         <ion-toolbar>
           <ion-title class="stickyHeader-title" slot="start" >Schedule</ion-title>
           <ion-button class="ion-margin-end" slot="end" shape="round" size="small" fill="outline" color="primary">
-            <ion-icon :icon="settingsSharp"></ion-icon>
+            <ion-icon src="/assets/icons/solid/settings-cog.svg"></ion-icon>
           </ion-button>
           <ion-button slot="end" shape="round" size="small">
-            <ion-icon :icon="searchSharp"></ion-icon>
+            <ion-icon src="/assets/icons/line/search-line.svg"></ion-icon>
           </ion-button>
         </ion-toolbar>
       </ion-header>
