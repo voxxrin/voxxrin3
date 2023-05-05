@@ -9,7 +9,7 @@
         </ion-tab-button>
 
         <ion-tab-button tab="favorites" :href="`/events/${eventId.value}/favorites`">
-          <ion-icon aria-hidden="true" src="/assets/icons/line/bookmark-line.svg"/>
+          <ion-icon aria-hidden="true" src="/assets/icons/line/bookmark-line-favorite.svg"/>
           <ion-label>Favorites</ion-label>
         </ion-tab-button>
 

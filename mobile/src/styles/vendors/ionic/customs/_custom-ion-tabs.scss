@@ -1,0 +1,18 @@
+ion-tab-bar {
+  ion-tab-button {
+    --ripple-color: var(--app-theme-primary);
+
+    &.tab-selected {
+      color: var(--app-theme-primary);
+
+      svg {
+        display: none;
+      }
+    }
+
+    ion-icon {
+      margin-top: 4px;
+      font-size: 26px;
+    }
+  }
+}
