@@ -19,13 +19,12 @@
           :days="currentConferenceDescriptor?.days || []"
           @day-selected="(day) => changeDayTo(day)">
       </day-selector>
-      Schedule here !<br/>
 
       <ion-accordion-group :multiple="true" v-if="currentConferenceDescriptor">
         <time-slot-accordion v-for="(timeslot, index) in timeslots" :key="index"
                    :timeslot-feedback="timeslot.feedback" :timeslot="timeslot"
-                   :event="currentConferenceDescriptor"
-        ></time-slot-accordion>
+                   :event="currentConferenceDescriptor">
+        </time-slot-accordion>
       </ion-accordion-group>
 
       <ion-button router-direction="forward" :router-link="`/events/${eventId.value}/talks/1/details`">
@@ -36,11 +35,11 @@
       </ion-button>
 
       <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-        <ion-fab-button>
-          <ion-icon :icon="chatbubble"></ion-icon>
+        <ion-fab-button color="tertiary">
+          <ion-icon src="/assets/icons/line/comment-line-add.svg"></ion-icon>
         </ion-fab-button>
-        <ion-fab-list side="top">
-          <div v-for="(missingFeedbacksPastTimeslot, index) in missingFeedbacksPastTimeslots" :key="index">
+        <ion-fab-list side="top" class="listFeedbackSlot">
+          <div class="listFeedbackSlot-item" v-for="(missingFeedbacksPastTimeslot, index) in missingFeedbacksPastTimeslots" :key="index">
             <ion-fab-button @click="showAlertForTimeslot(missingFeedbacksPastTimeslot)">
               <ion-icon :icon="addCircle"></ion-icon>
             </ion-fab-button>

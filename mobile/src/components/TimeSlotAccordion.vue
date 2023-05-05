@@ -1,21 +1,19 @@
 <template>
   <ion-accordion :value="timeslot.id" :class="{ [`_${progress?.status}`]: true, '_feedback-provided': !!timeslotFeedback, '_missing-feedback': !timeslotFeedback, '_is-break': timeslot.type==='break' }">
     <ion-item slot="header" color="light">
-      <ion-grid>
+      <ion-grid class="slot">
         <ion-row>
-          <ion-col size="1">
-            <ion-icon class="_accordion-icon _ongoing-icon" aria-hidden="true" :icon="hourglass"></ion-icon>
-            <ion-icon class="_accordion-icon _past-icon" aria-hidden="true" :icon="caretBackCircle"></ion-icon>
-            <ion-icon class="_accordion-icon _future-icon" aria-hidden="true" :icon="time"></ion-icon>
+          <ion-col class="slot-schedule">
+            <ion-icon class="_accordion-icon _ongoing-icon" aria-hidden="true" src="assets/icons/solid/timer.svg"></ion-icon>
+            <ion-icon class="_accordion-icon _past-icon" aria-hidden="true" src="assets/icons/solid/backward-circle.svg"></ion-icon>
+            <ion-icon class="_accordion-icon _future-icon" aria-hidden="true" src="assets/icons/solid/clock.svg"></ion-icon>
+            <ion-label>{{timeslotLabel.start}} <ion-icon aria-hidden="true" src="assets/icons/line/chevron-right-line.svg"></ion-icon> {{timeslotLabel.end}}</ion-label>
           </ion-col>
-          <ion-col size="5">
-            <ion-label>{{timeslotLabel.start}} -> {{timeslotLabel.end}}</ion-label>
-          </ion-col>
-          <ion-col size="6">
+          <ion-col class="slot-actions" size="auto">
             <ion-progress-bar class="_ongoing-progress" v-if="progress?.status === 'ongoing'" :value="progress.progressInPercent / 100"></ion-progress-bar>
             <ion-icon class="_provided-feedback" aria-hidden="true" :icon="checkmarkDone"></ion-icon>
             <ion-button class="_missing-feedback">
-              <ion-icon :icon="chatboxEllipses"></ion-icon>
+              <ion-icon src="/assets/icons/line/comment-line-add.svg"></ion-icon>
             </ion-button>
           </ion-col>
         </ion-row>
@@ -91,7 +89,71 @@ ion-accordion {
 }
 
 ion-accordion {
+  border-bottom: 2px solid var(--app-background);
+
+  ion-item {
+    --padding-start: 0;
+
+    .slot {
+      display: flex;
+      align-items: center;
+      height: 100%;
+      padding: 0;
+
+      ion-row {
+        height: 100%;
+        width: 100%;
+      }
+
+      &-schedule {
+        display: flex;
+        align-items: center;
+        column-gap: 8px;
+
+        ._accordion-icon {
+          font-size: 22px;
+          color: var(--app-primary-shade);
+        }
+      }
+
+      &-actions {
+        display: flex;
+        align-items: center;
+        height: 100%;
+        padding: 0;
+      }
+    }
+
+    .slotCollapse {
+      height: 100%;
+    }
+
+    ion-label {
+      display: flex !important;
+      align-items: center;
+      font-weight: bold;
+    }
+
+    ._missing-feedback {
+      height: 100%;
+      --background: var(--app-theme-hightlight);
+      --box-shadow: none;
+      --border-radius: 0;
+      --padding-start: 8px;
+      --padding-end: 8px;
+      font-size: 20px;
+    }
+  }
+
+  // * States Accordion Divider *//
   &._past {
+    .ion-color-light {
+      --ion-color-base: var(--app-beige-line) !important;
+      --ripple-color: var(--app-beige-dark) !important;
+
+      ion-label { color: var(--app-primary-shade);}
+    }
+
     ._accordion-icon._past-icon { display: inline-block; }
 
     &._missing-feedback:not(._is-break) ._missing-feedback {

@@ -23,3 +23,17 @@ ion-button {
 
     &.btnUser  { --background: rgba(var(--app-white-transparent));}
 }
+
+
+ion-fab {
+    ion-fab-button {
+
+        ion-icon {
+            font-size: 30px;
+        }
+
+        &.ion-color-tertiary {
+            --background: var(--app-theme-hightlight);
+        }
+    }
+}
