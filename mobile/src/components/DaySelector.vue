@@ -1,6 +1,6 @@
 <template>
-  <ion-list class="dayList">
-    <ion-item  v-for="(day, index) in formattedDays" :key="index">
+  <ion-list class="dayList" >
+    <ion-item  v-for="(day, index) in formattedDays" :key="index" :class="{past: today.localeCompare(day.localDate) === 1}">
       <ion-button class="dayList-button" @click="$emit('day-selected', day)" :class="{
           selected: day.id.isSameThan(selected?.id),
           past: today.localeCompare(day.localDate) === 1,
@@ -13,7 +13,6 @@
           <!-- {{day.localDate}} ( {{day.formatted.weekday}}
          {{day.formatted.year}})-->
         </div>
-        <span class="currentDayIndicator" v-if="false"></span>
       </ion-button>
     </ion-item>
   </ion-list>
@@ -59,6 +58,24 @@ const formattedDays = computed(() => {
 </script>
 
 <style scoped lang="scss">
+    %selected {
+      box-shadow: 0 0 0 4px rgba(var(--app-theme-primary-rgb), 0.3);
+      border-radius: 44px;
+      --border-color: var(--app-theme-primary);
+      --background: var(--app-theme-primary);
+      --background-activated: var(--app-theme-primary);
+      transition: 140ms ease-in-out;
+
+      &:active {
+        transition: 140ms ease-in-out;
+        box-shadow: 0 0 0 2px rgba(var(--app-theme-primary-rgb), 0.3);
+      }
+
+      .dayList-button-content {
+        color: var(--app-white) !important;
+      }
+    }
+
   .dayList  {
     display: flex;
     overflow-x: auto;
@@ -89,10 +106,12 @@ const formattedDays = computed(() => {
         width: calc(100% - 68px);
         min-width: 32px;
         height: 0;
-        border-bottom: 2px dotted var(--app-beige-line);;
+        border-bottom: 2px dotted var(--app-beige-line);
         content: '';
         border-radius: 8px;
       }
+
+      &.past:after {  border-bottom: 2px solid var(--app-grey-light);}
     }
 
     &-button {
@@ -107,18 +126,8 @@ const formattedDays = computed(() => {
       --background: transparent;
       overflow: visible !important;
 
-      .currentDayIndicator {
-        position: absolute;
-        top: -8px;
-        height: 12px;
-        width: 12px;
-        border-radius: 8px;
-        background-color: var(--app-theme-hightlight);
-      }
-
       &-content {
         display: flex;
-        row-gap: 2px;
         align-items: center;
         flex-direction: column;
         justify-content: center;
@@ -136,27 +145,12 @@ const formattedDays = computed(() => {
           overflow: hidden;
           white-space: nowrap;
           text-overflow: ellipsis;
-          font-size: 8px;
+          font-size: 11px;
+          letter-spacing: -1px;
         }
       }
 
-      &.selected {
-        box-shadow: 0 0 0 4px rgba(var(--app-theme-primary-rgb), 0.3);
-        border-radius: 44px;
-        --border-color: var(--app-theme-primary);
-        --background: var(--app-theme-primary);
-        --background-activated: var(--app-theme-primary);
-        transition: 140ms ease-in-out;
-
-        &:active {
-          transition: 140ms ease-in-out;
-          box-shadow: 0 0 0 2px rgba(var(--app-theme-primary-rgb), 0.3);
-        }
-
-        .dayList-button-content {
-          color: var(--app-white);
-        }
-      }
+      &.selected { @extend %selected;}
 
       &.past {
         border-radius: 44px;
@@ -165,17 +159,32 @@ const formattedDays = computed(() => {
         --background-activated: var(--app-grey-line);
         transition: 140ms ease-in-out;
 
+        &.selected {@extend %selected;}
 
         .dayList-button-content {
           color: var(--app-grey-medium);
         }
       }
+
       &.today {
-        --background: red;
+        --border-color: var(--app-theme-hightlight);
+        --background: transparent;
+        --background-activated: var(--app-grey-line);
         transition: 140ms ease-in-out;
+
+        &.selected {
+          box-shadow: 0 0 0 4px rgba(var(--app-theme-hightlight-rgb), 0.3);
+          --border-color: var(--app-theme-hightlight);
+          --background: var(--app-theme-hightlight);
+          --background-activated: var(--app-theme-hightlight);
+        }
+
+        .dayList-button-content {
+          color: var(--app-theme-hightlight);
+        }
       }
+
       &.future {
-        font-style: italic;
         transition: 140ms ease-in-out;
       }
     }
