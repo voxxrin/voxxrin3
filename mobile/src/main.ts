@@ -21,7 +21,7 @@ import '@ionic/vue/css/flex-utils.css';
 import '@ionic/vue/css/display.css';
 
 /* Theme variables */
-import './styles/utils/variables.scss';
+import './styles/utils/_variables.scss';
 
 import './styles/main.scss'
 
