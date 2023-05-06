@@ -6,7 +6,7 @@
       </ion-toolbar>
     </ion-header>
     <ion-content :fullscreen="true">
-      <ion-button @click="selectEvent(new EventId('dvbe22'))">
+      <ion-button @click="() => selectEvent('dvbe22')">
         Devoxx BE 2022 Schedule
       </ion-button>
     </ion-content>
@@ -27,9 +27,9 @@ import {EventId} from "@/models/VoxxrinEvent";
 import {fetchConferenceDescriptor} from "@/state/CurrentConferenceDescriptor";
 
 const router = useIonRouter();
-async function selectEvent(eventId: EventId) {
-    await fetchConferenceDescriptor(eventId);
+async function selectEvent(eventCode: string) {
+    await fetchConferenceDescriptor(new EventId(eventCode));
 
-    router.push(`/events/${eventId.value}`);
+    router.push(`/events/${eventCode}`);
 }
 </script>
