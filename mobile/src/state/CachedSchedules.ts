@@ -15,7 +15,7 @@ export function useDailyCachedSchedule(eventId: EventId, dayId: DayId) {
     return match(eventCachedSchedules.findCachedScheduleByDay(dayId))
         .with(undefined, () => undefined)
         .otherwise(cachedDailySchedule =>
-            cachedDailySchedule.isCachedOutdated()?undefined:cachedDailySchedule
+            cachedDailySchedule.isCacheOutdated()?undefined:cachedDailySchedule
         );
 }
 
@@ -46,7 +46,7 @@ export class PerDayCachedSchedule {
     scheduleCacheRefresh(): Temporal.Instant {
         return this.latestCacheRefresh
     }
-    isCachedOutdated() {
+    isCacheOutdated() {
         const isOutdated = Temporal.Instant.compare(
             useCurrentClock().zonedDateTimeISO().toInstant(),
             this.latestCacheRefresh.add(CACHED_DAILY_SCHEDULE_CONSIDERED_OUTDATED_AFTER)
