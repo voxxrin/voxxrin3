@@ -9,6 +9,8 @@ import {
 import {DayId} from "@/models/VoxxrinDay";
 import {findVoxxrinDayById, VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {useFetchJsonDebouncer} from "@/state/state-utilities";
+import {storeDailyCachedSchedule, useDailyCachedSchedule} from "@/state/CachedSchedules";
+import {match} from "ts-pattern";
 
 
 const CURRENT_SCHEDULE = ref<VoxxrinDailySchedule|undefined>(undefined);
@@ -26,18 +28,25 @@ export const fetchSchedule = async (conferenceDescriptor: VoxxrinConferenceDescr
         || !CURRENT_SCHEDULE.value?.day.isSameThan(dayId)
     ) {
         const day = findVoxxrinDayById(conferenceDescriptor, dayId)
-        const firestoreDailySchedule: DailySchedule = await useFetchJsonDebouncer(
-            'daily-schedule',
-            `events/${conferenceDescriptor.id.value}/days/${day.id.value}`,
-            `/data/${conferenceDescriptor.id.value}/days/${day.id.value}.json`
-        );
-        console.debug(`timeslots fetched:`, firestoreDailySchedule.timeSlots)
+        const voxxrinDailySchedule = await match(useDailyCachedSchedule(conferenceDescriptor.id, dayId))
+            .with(undefined, async () => {
+                const firestoreDailySchedule: DailySchedule = await useFetchJsonDebouncer(
+                    'daily-schedule',
+                    `events/${conferenceDescriptor.id.value}/days/${day.id.value}`,
+                    `/data/${conferenceDescriptor.id.value}/days/${day.id.value}.json`
+                );
+                console.debug(`timeslots fetched:`, firestoreDailySchedule.timeSlots)
+                const voxxrinSchedule = createVoxxrinDailyScheduleFromFirestore(conferenceDescriptor, firestoreDailySchedule);
 
-        defineCurrentScheduleFromFirestore(conferenceDescriptor, firestoreDailySchedule);
+                // Caching schedule
+                storeDailyCachedSchedule(conferenceDescriptor.id, dayId, voxxrinSchedule);
+
+                return voxxrinSchedule;
+            })
+            .otherwise(async cachedDailySchedule =>
+                Promise.resolve(cachedDailySchedule.schedule())
+            )
+
+        CURRENT_SCHEDULE.value = voxxrinDailySchedule;
     }
-}
-
-const defineCurrentScheduleFromFirestore = (event: VoxxrinConferenceDescriptor, firestoreSchedule: DailySchedule) => {
-    const voxxrinSchedule = createVoxxrinDailyScheduleFromFirestore(event, firestoreSchedule);
-    CURRENT_SCHEDULE.value = voxxrinSchedule;
 }

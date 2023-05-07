@@ -103,7 +103,7 @@ export async function usePromiseDebouncer<T>(executionName: string, executionHas
 
 export async function useFetchJsonDebouncer<T>(executionName: string, executionHash: string, fetchOpts: string|Request): Promise<T> {
     if(typeof fetchOpts==='object' && fetchOpts.signal) {
-        throw new Error(`useFetchDebouncer() cannog be called with a signal set in fetchOpts !`)
+        throw new Error(`useFetchDebouncer() cannot be called with a signal set in fetchOpts !`)
     }
 
     return usePromiseDebouncer(executionName, executionHash, () => {
