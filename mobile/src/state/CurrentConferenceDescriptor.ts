@@ -22,7 +22,7 @@ export const fetchConferenceDescriptor = async (eventId: EventId) => {
         const firestoreConferenceDescriptor: ConferenceDescriptor = await useFetchJsonDebouncer(
             'conference-descriptor',
             eventId.value,
-            `/data/${eventId.value}/conference-descriptor/self.json`
+            `/data/events/${eventId.value}/conference-descriptor/self.json`
         );
         console.debug(`conference descriptor fetched:`, firestoreConferenceDescriptor)
 

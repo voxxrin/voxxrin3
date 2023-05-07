@@ -33,7 +33,7 @@ export const fetchSchedule = async (conferenceDescriptor: VoxxrinConferenceDescr
                 const firestoreDailySchedule: DailySchedule = await useFetchJsonDebouncer(
                     'daily-schedule',
                     `events/${conferenceDescriptor.id.value}/days/${day.id.value}`,
-                    `/data/${conferenceDescriptor.id.value}/days/${day.id.value}.json`
+                    `/data/events/${conferenceDescriptor.id.value}/days/${day.id.value}.json`
                 );
                 console.debug(`timeslots fetched:`, firestoreDailySchedule.timeSlots)
                 const voxxrinSchedule = createVoxxrinDailyScheduleFromFirestore(conferenceDescriptor, firestoreDailySchedule);
