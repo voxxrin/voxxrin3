@@ -10,6 +10,24 @@ Web (PWA) flavours of the voxxrin app.
 
 For Android/iOS, look at [Capacitor pre-requisites page](https://capacitorjs.com/docs/getting-started/environment-setup)
 
+That being said, you will need to ensure following things :
+
+ - **[Android]** : ensure that you have a `ANDROID_SDK_ROOT` environment variable defined in your terminal :
+
+```
+# Run thi command to ensure this pre-requisite is met : you should see a ANDROID_SDK_ROOT variable defined
+$> env | grep ANDROID
+
+# If no variable is defined, define it to the path of your android SDK (in general, $HOME/Library/Android/sdk)
+export ANDROID_SDK_ROOT="$HOME/Library/Android/sdk"
+# .. and you can store this into your $HOME/.zshrc|.bashrc of choice
+```
+
+- **[Android]** : ensure that you have a Java 17+ installed in your terminal by executing `java -version`.
+  If that's not the case, you can [install SDKMan](https://sdkman.io/install) then install a 17+ version 
+  of [one of the different vendors](https://sdkman.io/jdks)
+
+
 ## Bootstrap
 
 Simply run `npm ci` from the root folder in order to install every npm packages required.
