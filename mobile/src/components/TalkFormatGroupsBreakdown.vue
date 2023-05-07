@@ -46,6 +46,19 @@ const perFormatGroups = sortThenGroupByFormat(props.talks!, props.event!);
 
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+  ion-list {
+    padding: 0;
+  }
 
+  ion-item-group {
+  ion-item-divider, ion-item {
+      --background: var(--app-background);
+      --border-style: inherit;
+
+    ion-card {
+      margin: 8px 0;
+    }
+    }
+  }
 </style>

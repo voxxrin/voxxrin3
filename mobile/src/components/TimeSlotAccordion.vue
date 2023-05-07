@@ -11,7 +11,7 @@
           </ion-col>
           <ion-col class="slot-actions" size="auto">
             <ion-progress-bar class="_ongoing-progress" v-if="progress?.status === 'ongoing'" :value="progress.progressInPercent / 100"></ion-progress-bar>
-            <ion-icon class="_provided-feedback" aria-hidden="true" :icon="checkmarkDone"></ion-icon>
+            <ion-icon class="_provided-feedback" aria-hidden="true" src="/assets/icons/solid/comment-check.svg"></ion-icon>
             <ion-button class="_missing-feedback">
               <ion-icon src="/assets/icons/line/comment-line-add.svg"></ion-icon>
             </ion-button>
@@ -20,7 +20,7 @@
       </ion-grid>
     </ion-item>
 
-    <div class="ion-padding _accordion-content" slot="content">
+    <div class="ion-padding accordion-content" slot="content">
       <schedule-break v-if="timeslot.type==='break'" :event="event" :talk-break="timeslot.break"></schedule-break>
       <talk-format-groups-breakdown v-if="timeslot.type==='talks'" :event="event" :talks="timeslot.talks"></talk-format-groups-breakdown>
     </div>
@@ -83,13 +83,17 @@ const timeslotLabel = getTimeslotLabel(props.timeslot!);
 <style lang="scss" scoped>
 /* Defaults for togglable icons/buttons/progressbar */
 ion-accordion {
+  border-bottom: 2px solid var(--app-background);
+
   ._accordion-icon, ._missing-feedback, ._provided-feedback, ._ongoing-progress {
     display: none;
   }
-}
 
-ion-accordion {
-  border-bottom: 2px solid var(--app-background);
+  ._provided-feedback {
+    width: 48px;
+    font-size: 30px;
+    color: var(--app-beige-dark);
+  }
 
   ion-item {
     position: relative;
@@ -163,7 +167,7 @@ ion-accordion {
     ._accordion-icon._past-icon { display: inline-block; }
     &._missing-feedback:not(._is-break) ._missing-feedback { display: inline-block;}
     &._feedback-provided:not(._is-break) ._provided-feedback {display: inline-block;}
-    ._accordion-content {  font-style: italic;}
+    .accordion-content {  font-style: italic;}
   }
 
   &._ongoing {
@@ -204,6 +208,14 @@ ion-accordion {
     ._accordion-icon._future-icon { display: inline-block; }
     ._accordion-icon { color: var(--app-white) !important;}
   }
-}
 
+
+  .accordion-content {
+    background: var(--app-background);
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 4px;
+    padding-bottom: 4px;
+  }
+}
 </style>

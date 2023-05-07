@@ -1,34 +1,43 @@
 <template>
-  <ion-card :class="{ container: true, 'is-favorited': favorited, 'to-watch-later': toWatchLater }" >
-    <div class="room">
-      <ion-icon :icon="location"></ion-icon>
-      {{talk.room.title}}
+  <ion-card class="talkCard" :class="{ container: true, 'is-favorited': favorited, 'to-watch-later': toWatchLater }" >
+    <div class="talkCard-head">
+      <div class="track">
+        <ion-badge class="track">{{talk.track.title}}</ion-badge>
+      </div>
+
+      <div class="room">
+        <ion-icon :icon="location"></ion-icon>
+        {{talk.room.title}}
+      </div>
     </div>
-    <div class="track">
-      <ion-badge class="track">{{talk.track.title}}</ion-badge>
+
+    <div class="talkCard-content">
+      <div class="title">{{talk.title}}</div>
+      <div class="pictures">
+        <ion-thumbnail v-for="(speaker, index) in talk.speakers" :key="index">
+          <img :src="speaker.photoUrl" />
+        </ion-thumbnail>
+      </div>
     </div>
-    <div class="footer">
+
+    <div class="talkCard-footer">
       <div class="speakers">
         <ion-icon :icon="megaphone"></ion-icon>
         {{displayedSpeakers}}
       </div>
-      <div class="watch-later">
-        <ion-button class="watch-later-btn">
-          <ion-icon :icon="videocam"></ion-icon>
-        </ion-button>
+      <div class="talkCard-footer-actions">
+        <div class="watchLater">
+          <ion-button class="watch-later-btn">
+            <ion-icon :icon="videocam"></ion-icon>
+          </ion-button>
+        </div>
+        <div class="favorite">
+          <ion-button class="favorite-btn">
+            <ion-icon :icon="bookmark"></ion-icon>
+            <ion-label v-if="favoritesCount">{{ favoritesCount }}</ion-label>
+          </ion-button>
+        </div>
       </div>
-      <div class="favorite">
-        <ion-button class="favorite-btn">
-          <ion-icon :icon="bookmark"></ion-icon>
-          <ion-label v-if="favoritesCount">{{ favoritesCount }}</ion-label>
-        </ion-button>
-      </div>
-    </div>
-    <div class="title">{{talk.title}}</div>
-    <div class="pictures">
-      <ion-thumbnail v-for="(speaker, index) in talk.speakers" :key="index">
-        <img :src="speaker.photoUrl" />
-      </ion-thumbnail>
     </div>
   </ion-card>
 </template>
@@ -76,6 +85,9 @@ const theme = {
 </script>
 
 <style lang="scss" scoped>
+
+
+
 ion-thumbnail {
   --size: 80px;
   --border-radius: 40px;
@@ -104,51 +116,59 @@ ion-badge.track {
 }
 
 /* see this grid layout config: https://grid.layoutit.com/?id=iRG8xLp */
-.container {  display: grid;
-  grid-template-columns: 1.8fr 0.3fr 0.9fr;
-  grid-template-rows: 1fr 2.7fr 75px;
-  grid-auto-columns: 1fr;
-  gap: 0px 0px;
-  grid-auto-flow: row dense;
-  grid-template-areas:
-    "track room room"
-    "title title pictures"
-    "footer footer footer";
-/*  width: 525px;  */
+
+.talkCard {
+  display: flex;
+  flex-direction: column;
+  row-gap: 8px;
   width: 100%;
-  height: 250px;
-  padding-left: 4px;
-  border-left: 6px solid v-bind('theme.track.color')
+  border-left: 6px solid v-bind('theme.track.color');
+
+  &-head {
+    display: flex;
+    column-gap: 16px;
+    justify-content: space-between;
+    padding: 16px;
+  }
+
+  &-content {
+    display: flex;
+    column-gap: 16px;
+    justify-content: space-between;
+    padding: 0 16px;
+
+    .title {
+      flex: 1 1 0;
+      font-weight: bolder;
+      color: var(--app-primary);
+      font-style: normal;
+      font-size: 16px;
+      line-height: 1.2;
+    }
+
+    .pictures {
+      display: flex;
+      flex-direction: row;
+      flex: 0 0 auto;
+
+      ion-thumbnail {
+        height: 48px;
+        width: 48px;
+        border: 2px solid var(--app-primary);
+        box-shadow: rgb(0 0 0 / 24%) -3px 3px 6px 0px;
+      }
+    }
+  }
+
+  &-footer {
+    display: flex;
+    column-gap: 16px;
+    justify-content: space-between;
+    padding: 0 16px;
+
+    &-actions {
+      display: flex;
+    }
+  }
 }
-
-.room { grid-area: room; }
-
-.track { grid-area: track; }
-
-.footer {  display: grid;
-  grid-template-columns: 1fr 100px 100px;
-  grid-template-rows: 1fr;
-  gap: 0px 0px;
-  grid-auto-flow: row;
-  grid-template-areas:
-    "speakers watch-later favorite";
-  grid-area: footer;
-}
-
-.speakers { grid-area: speakers; }
-
-.watch-later { grid-area: watch-later; }
-
-.favorite { grid-area: favorite; }
-
-.title { grid-area: title; }
-
-.pictures {
-  justify-self: end;
-  align-self: center;
-  grid-area: pictures;
-  width: 100%;
-  height: 100%;
-}
-
 </style>
