@@ -1,0 +1,45 @@
+[
+  {
+    "title": "Devoxx Belgium 2022",
+    "location": {
+      "city": "Antwerp",
+      "country": "Belgium"
+    },
+    "days": [
+      {
+        "id": "monday",
+        "localDate": "2022-10-10"
+      },
+      {
+        "id": "tuesday",
+        "localDate": "2022-10-11"
+      },
+      {
+        "localDate": "2022-10-12",
+        "id": "wednesday"
+      },
+      {
+        "localDate": "2022-10-13",
+        "id": "thursday"
+      },
+      {
+        "localDate": "2022-10-14",
+        "id": "friday"
+      }
+    ],
+    "imageUrl": null,
+    "end": "2022-10-14",
+    "keywords": [
+      "Devoxx",
+      "Java",
+      "Kotlin",
+      "Cloud",
+      "Big data",
+      "Web"
+    ],
+    "start": "2022-10-10",
+    "timezone": "Europe/Paris",
+    "id": "dvbe22",
+    "websiteUrl": "https://devoxx.be"
+  }
+]
