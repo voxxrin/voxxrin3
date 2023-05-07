@@ -1,0 +1,222 @@
+{
+  "id": "dvgr23",
+  "name": "Devoxx Greece 2023",
+  "headingName": "DevoxxGR 23",
+  "days": [
+    { "id":"thursday", "localDate": "2023-05-04" },
+    { "id":"friday", "localDate": "2023-05-05" },
+    { "id":"saturday", "localDate": "2023-05-06" }
+  ],
+  "timezone": "Europe/Athens",
+  "features": {
+    "roomsDisplayed": true,
+    "favoritesEnabled": true,
+    "remindMeOnceVideosAreAvailableEnabled": true,
+    "hideLanguages": [],
+    "ratings": {
+      "bingo": {
+        "enabled": true,
+        "choices": [
+          {
+            "id": "interesting",
+            "label": "Very interesting"
+          },
+          {
+            "id": "too-much-code",
+            "label": "Too much code"
+          },
+          {
+            "id": "lacking-demos",
+            "label": "Lacking demos"
+          }
+        ]
+      },
+      "scale": {
+        "enabled": true,
+        "icon": "star",
+        "max": 5
+      },
+      "free-text": {
+        "enabled": true,
+        "maxLength": 400
+      },
+      "custom-scale": {
+        "enabled": true,
+        "choices": [
+          {
+            "id": "smiling_face",
+            "icon": "smiling_face"
+          },
+          {
+            "id": "neutral_face",
+            "icon": "neutral_face"
+          },
+          {
+            "id": "confused_face",
+            "icon": "confused_face"
+          }
+        ]
+      }
+    }
+  },
+  "talkFormats": [
+    {
+      "id": "984",
+      "title": "Hands-on Lab",
+      "duration": "PT120m",
+      "themeColor": ""
+    },
+    {
+      "id": "959",
+      "title": "Deep Dive",
+      "duration": "PT180m",
+      "themeColor": ""
+    },
+    {
+      "id": "953",
+      "title": "Conference",
+      "duration": "PT40m",
+      "themeColor": ""
+    },
+    {
+      "id": "960",
+      "title": "Quickie",
+      "duration": "PT15m",
+      "themeColor": ""
+    },
+    {
+      "id": "994",
+      "title": "Keynote",
+      "duration": "PT50m",
+      "themeColor": ""
+    },
+    {
+      "id": "11202",
+      "title": "Social Mixer Event",
+      "duration": "PT120m",
+      "themeColor": ""
+    },
+    {
+      "id": "954",
+      "title": "BOF",
+      "duration": "PT60m",
+      "themeColor": ""
+    }
+  ],
+  "talkTracks": [
+    {
+      "id": "2754",
+      "title": "Java",
+      "themeColor": ""
+    },
+    {
+      "id": "1401",
+      "title": "Programming Languages",
+      "themeColor": ""
+    },
+    {
+      "id": "2760",
+      "title": "UI & UX",
+      "themeColor": ""
+    },
+    {
+      "id": "1251",
+      "title": "Architecture",
+      "themeColor": ""
+    },
+    {
+      "id": "1255",
+      "title": "Security",
+      "themeColor": ""
+    },
+    {
+      "id": "1701",
+      "title": "Development Practices",
+      "themeColor": ""
+    },
+    {
+      "id": "1253",
+      "title": "People & Culture",
+      "themeColor": ""
+    },
+    {
+      "id": "2758",
+      "title": "Mind the Geek",
+      "themeColor": ""
+    },
+    {
+      "id": "1402",
+      "title": "Cloud, Containers & Infrastructure",
+      "themeColor": ""
+    },
+    {
+      "id": "1252",
+      "title": "Data & AI",
+      "themeColor": ""
+    },
+    {
+      "id": "11202",
+      "title": "Social Mixer Event",
+      "themeColor": ""
+    },
+    {
+      "id": "1254",
+      "title": "Build & Deploy",
+      "themeColor": ""
+    },
+    {
+      "id": "1256",
+      "title": "Server Side Java",
+      "themeColor": ""
+    },
+    {
+      "id": "960",
+      "title": "Quickie",
+      "themeColor": ""
+    }
+  ],
+  "rooms": [
+    {
+      "id": "2803",
+      "title": "MC3",
+      "themeColor": ""
+    },
+    {
+      "id": "2804",
+      "title": "MC2",
+      "themeColor": ""
+    },
+    {
+      "id": "2802",
+      "title": "Skalkotas",
+      "themeColor": ""
+    },
+    {
+      "id": "2801",
+      "title": "Banquet",
+      "themeColor": ""
+    },
+    {
+      "id": "2805",
+      "title": "Lobby area",
+      "themeColor": ""
+    }
+  ],
+  "supportedTalkLanguages": [
+    {
+      "id": "en",
+      "label": "EN",
+      "themeColor": "#165CE3"
+    }
+  ],
+  "theming": {
+    "colors": {
+      "primary": "#F78125",
+      "secondary": "#202020"
+    }
+  },
+  "infos": {
+    "venuePicture": "https://acme.com/venue-picture.png",
+    "eventDescription": "hello *world* !"
+  }
+}

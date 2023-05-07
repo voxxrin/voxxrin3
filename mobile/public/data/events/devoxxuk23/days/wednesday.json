@@ -1,0 +1,1958 @@
+{
+  "day": "wednesday",
+  "timeSlots": [
+    {
+      "break": {
+        "room": {
+          "id": "19157",
+          "title": "Exhibition Hall"
+        },
+        "title": "Registration",
+        "icon": "cafe"
+      },
+      "type": "break",
+      "start": "2023-05-10T07:00:00Z",
+      "end": "2023-05-10T08:00:00Z",
+      "id": "2023-05-10T07:00:00Z--2023-05-10T08:00:00Z"
+    },
+    {
+      "start": "2023-05-10T08:00:00Z",
+      "talks": [
+        {
+          "track": {
+            "title": "Mind the Geek",
+            "id": "2758"
+          },
+          "language": "EN",
+          "format": {
+            "duration": "PT10m",
+            "id": "20651",
+            "title": "Opening"
+          },
+          "speakers": [
+            {
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-e3a039b2-38f4-46c4-8f1e-1125ec0fd2c9.png",
+              "companyName": null,
+              "fullName": "Reeps One",
+              "id": "20162"
+            }
+          ],
+          "room": {
+            "id": "19151",
+            "title": "Gallery Hall"
+          },
+          "id": "20260",
+          "title": "Special Guest Performance"
+        }
+      ],
+      "type": "talks",
+      "id": "2023-05-10T08:00:00Z--2023-05-10T08:10:00Z",
+      "end": "2023-05-10T08:10:00Z"
+    },
+    {
+      "type": "talks",
+      "id": "2023-05-10T08:10:00Z--2023-05-10T08:30:00Z",
+      "end": "2023-05-10T08:30:00Z",
+      "talks": [
+        {
+          "language": "EN",
+          "id": "18969",
+          "track": {
+            "title": "People & Culture",
+            "id": "1253"
+          },
+          "room": {
+            "id": "19151",
+            "title": "Gallery Hall"
+          },
+          "title": "Welcome to Devoxx UK",
+          "format": {
+            "id": "19101",
+            "duration": "PT20m",
+            "title": "Welcome"
+          },
+          "speakers": [
+            {
+              "photoUrl": "https://lh3.googleusercontent.com/a-/AOh14Gj1OS6OpAzuwBKwoUuCi9gxvNPvdmVA7nbW8lg3mg=s96-c",
+              "fullName": "Ana-Maria Mihalceanu",
+              "companyName": "Oracle",
+              "id": "1895"
+            },
+            {
+              "fullName": "Mark Hazell",
+              "photoUrl": "https://lh3.googleusercontent.com/a-/AOh14Gjv2Mo-16oK2Y8cB6wrT_L1vM0-fdX1n5CGGsR36g=s96-c",
+              "companyName": "Devoxx UK",
+              "id": "1855"
+            }
+          ]
+        }
+      ],
+      "start": "2023-05-10T08:10:00Z"
+    },
+    {
+      "start": "2023-05-10T08:30:00Z",
+      "talks": [
+        {
+          "id": "2709",
+          "format": {
+            "id": "955",
+            "duration": "PT20m",
+            "title": "Opening Keynote"
+          },
+          "speakers": [
+            {
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-4f84e9ca-c147-4c7c-87a7-102a4f96f0a6.jpg",
+              "fullName": "Sven Peters",
+              "id": "1860",
+              "companyName": "Atlassian"
+            }
+          ],
+          "room": {
+            "id": "19151",
+            "title": "Gallery Hall"
+          },
+          "language": "EN",
+          "track": {
+            "title": "Dev Craft",
+            "id": "1701"
+          },
+          "title": "Developer Joy – How great teams get s%*t done"
+        }
+      ],
+      "end": "2023-05-10T08:50:00Z",
+      "id": "2023-05-10T08:30:00Z--2023-05-10T08:50:00Z",
+      "type": "talks"
+    },
+    {
+      "start": "2023-05-10T08:50:00Z",
+      "end": "2023-05-10T09:10:00Z",
+      "type": "talks",
+      "id": "2023-05-10T08:50:00Z--2023-05-10T09:10:00Z",
+      "talks": [
+        {
+          "title": "Shaky Foundations: The ethics of building on ChatGPT",
+          "track": {
+            "title": "Data & AI",
+            "id": "1252"
+          },
+          "speakers": [
+            {
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-6af5b47e-3de8-4750-bfe0-1904ffdba26a.jpg",
+              "id": "18751",
+              "fullName": "Mhairi Aitken",
+              "companyName": "The Alan Turing Institute"
+            }
+          ],
+          "id": "18957",
+          "format": {
+            "id": "955",
+            "title": "Opening Keynote",
+            "duration": "PT20m"
+          },
+          "language": "EN",
+          "room": {
+            "title": "Gallery Hall",
+            "id": "19151"
+          }
+        }
+      ]
+    },
+    {
+      "type": "talks",
+      "end": "2023-05-10T09:30:00Z",
+      "id": "2023-05-10T09:10:00Z--2023-05-10T09:30:00Z",
+      "start": "2023-05-10T09:10:00Z",
+      "talks": [
+        {
+          "format": {
+            "id": "955",
+            "title": "Opening Keynote",
+            "duration": "PT20m"
+          },
+          "language": "EN",
+          "room": {
+            "title": "Gallery Hall",
+            "id": "19151"
+          },
+          "track": {
+            "title": "People & Culture",
+            "id": "1253"
+          },
+          "id": "20253",
+          "speakers": [
+            {
+              "id": "20159",
+              "fullName": "Dom Hodgson",
+              "companyName": "Little Warden",
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-9bf78d7c-12fb-4202-9bd6-947070bc782a.jpg"
+            }
+          ],
+          "title": "Embracing Imposter Syndrome"
+        }
+      ]
+    },
+    {
+      "type": "break",
+      "break": {
+        "room": {
+          "id": "19157",
+          "title": "Exhibition Hall"
+        },
+        "icon": "cafe",
+        "title": "Coffee Break"
+      },
+      "start": "2023-05-10T09:30:00Z",
+      "end": "2023-05-10T10:00:00Z",
+      "id": "2023-05-10T09:30:00Z--2023-05-10T10:00:00Z"
+    },
+    {
+      "start": "2023-05-10T10:00:00Z",
+      "type": "talks",
+      "talks": [
+        {
+          "track": {
+            "id": "1251",
+            "title": "Architecture"
+          },
+          "room": {
+            "id": "19151",
+            "title": "Gallery Hall"
+          },
+          "speakers": [
+            {
+              "companyName": "Thoughtworks",
+              "fullName": "Andrew Harmel-Law",
+              "id": "7854",
+              "photoUrl": "https://avatars.githubusercontent.com/u/1553476?v=4"
+            }
+          ],
+          "language": "EN",
+          "title": "A Commune in the Ivory Tower: A New Approach to Architecture",
+          "format": {
+            "title": "Conference",
+            "duration": "PT50m",
+            "id": "951"
+          },
+          "id": "7576"
+        },
+        {
+          "id": "7591",
+          "title": "Building Secure HTTPS Gateways for Java Applications",
+          "track": {
+            "id": "1255",
+            "title": "Security"
+          },
+          "language": "EN",
+          "room": {
+            "title": "Auditorium",
+            "id": "19152"
+          },
+          "format": {
+            "duration": "PT50m",
+            "title": "Conference",
+            "id": "951"
+          },
+          "speakers": [
+            {
+              "fullName": "Ana-Maria Mihalceanu",
+              "companyName": "Oracle",
+              "id": "1895",
+              "photoUrl": "https://lh3.googleusercontent.com/a-/AOh14Gj1OS6OpAzuwBKwoUuCi9gxvNPvdmVA7nbW8lg3mg=s96-c"
+            }
+          ]
+        },
+        {
+          "format": {
+            "id": "951",
+            "duration": "PT50m",
+            "title": "Conference"
+          },
+          "language": "EN",
+          "id": "3475",
+          "title": "Keep your dependencies in check",
+          "speakers": [
+            {
+              "companyName": "JetBrains",
+              "id": "2900",
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-cccba746-2c62-4eee-ad68-9b4ba02c4e0a.jpeg",
+              "fullName": "Marit van Dijk"
+            }
+          ],
+          "room": {
+            "id": "19153",
+            "title": "Room A"
+          },
+          "track": {
+            "title": "Build & Deploy",
+            "id": "1254"
+          }
+        },
+        {
+          "format": {
+            "duration": "PT50m",
+            "id": "951",
+            "title": "Conference"
+          },
+          "language": "EN",
+          "room": {
+            "title": "Room B",
+            "id": "19154"
+          },
+          "id": "6265",
+          "title": "Universal bugs",
+          "track": {
+            "title": "Dev Craft",
+            "id": "1701"
+          },
+          "speakers": [
+            {
+              "id": "5541",
+              "companyName": null,
+              "fullName": "Peter Hilton",
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-d76ba88f-8ddd-4bf7-a17c-5237ae1f65fd.jpg"
+            }
+          ]
+        },
+        {
+          "id": "1965",
+          "title": "Writing Greener Java Applications",
+          "language": "EN",
+          "speakers": [
+            {
+              "id": "1864",
+              "fullName": "Holly Cummins",
+              "companyName": "Red Hat",
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-01a6079b-5e7a-469c-a862-d01871e3d8cb.jpeg"
+            }
+          ],
+          "room": {
+            "id": "19155",
+            "title": "Room D"
+          },
+          "track": {
+            "title": "Java",
+            "id": "2754"
+          },
+          "format": {
+            "id": "951",
+            "title": "Conference",
+            "duration": "PT50m"
+          }
+        },
+        {
+          "track": {
+            "title": "Programming Languages",
+            "id": "1401"
+          },
+          "format": {
+            "id": "951",
+            "title": "Conference",
+            "duration": "PT50m"
+          },
+          "id": "10121",
+          "speakers": [
+            {
+              "id": "9913",
+              "companyName": "Xebia",
+              "photoUrl": "https://lh3.googleusercontent.com/a-/AOh14GjMMs__VKc1LYCk_iSnUWDZSLxxGWfEqU5i8cVv3Q=s96-c",
+              "fullName": "Urs Peter"
+            }
+          ],
+          "room": {
+            "title": "Exec Centre",
+            "id": "19156"
+          },
+          "language": "EN",
+          "title": "Project Loom & Kotlin: Will Coroutines become obsolete?"
+        }
+      ],
+      "id": "2023-05-10T10:00:00Z--2023-05-10T10:50:00Z",
+      "end": "2023-05-10T10:50:00Z"
+    },
+    {
+      "start": "2023-05-10T10:00:00Z",
+      "end": "2023-05-10T11:00:00Z",
+      "type": "talks",
+      "talks": [
+        {
+          "speakers": [
+            {
+              "fullName": "Brian Vermeer",
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-17be7038-749a-48bd-941f-b7266d529499.png",
+              "companyName": "Snyk",
+              "id": "4125"
+            }
+          ],
+          "room": {
+            "id": "19158",
+            "title": "Coding Cafe"
+          },
+          "id": "4282",
+          "title": "Building a Secure CI/CD Pipeline with GitHub Actions and Snyk for Java Applications",
+          "track": {
+            "title": "Security",
+            "id": "1255"
+          },
+          "language": "EN",
+          "format": {
+            "title": "Mini Lab",
+            "duration": "PT60m",
+            "id": "1351"
+          }
+        }
+      ],
+      "id": "2023-05-10T10:00:00Z--2023-05-10T11:00:00Z"
+    },
+    {
+      "type": "talks",
+      "talks": [
+        {
+          "id": "2716",
+          "format": {
+            "id": "951",
+            "duration": "PT50m",
+            "title": "Conference"
+          },
+          "track": {
+            "title": "Build & Deploy",
+            "id": "1254"
+          },
+          "title": "Developer Experience with Java on Kubernetes",
+          "room": {
+            "id": "19151",
+            "title": "Gallery Hall"
+          },
+          "speakers": [
+            {
+              "fullName": "Thomas Vitale",
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-a6aa298f-bfe8-4c56-bacf-58124afaf8b8.jpg",
+              "companyName": "Systematic",
+              "id": "2489"
+            }
+          ],
+          "language": "EN"
+        },
+        {
+          "id": "3871",
+          "room": {
+            "id": "19152",
+            "title": "Auditorium"
+          },
+          "speakers": [
+            {
+              "companyName": null,
+              "id": "3643",
+              "fullName": "Cassandra Faris",
+              "photoUrl": "https://lh3.googleusercontent.com/a-/AOh14GjJwKbihrrw_4cw6NXgnJpxA8JmpCOEBmB1gRM7Hg=s96-c"
+            }
+          ],
+          "title": "Failing Successfully",
+          "format": {
+            "id": "951",
+            "title": "Conference",
+            "duration": "PT50m"
+          },
+          "track": {
+            "title": "People & Culture",
+            "id": "1253"
+          },
+          "language": "EN"
+        },
+        {
+          "track": {
+            "id": "1251",
+            "title": "Architecture"
+          },
+          "language": "EN",
+          "format": {
+            "id": "951",
+            "title": "Conference",
+            "duration": "PT50m"
+          },
+          "room": {
+            "title": "Room A",
+            "id": "19153"
+          },
+          "id": "5617",
+          "speakers": [
+            {
+              "fullName": "Josip Stuhli",
+              "id": "5510",
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-cf907d67-2dc4-4360-a588-bf2ef7c8a6f3.jpeg",
+              "companyName": "Sofascore"
+            }
+          ],
+          "title": "Scaling: from 0 to 20 million users"
+        },
+        {
+          "id": "20258",
+          "language": "EN",
+          "title": "Extreme Programming at Discover",
+          "track": {
+            "id": "1701",
+            "title": "Dev Craft"
+          },
+          "format": {
+            "id": "951",
+            "title": "Conference",
+            "duration": "PT50m"
+          },
+          "speakers": [
+            {
+              "fullName": "Ian McLaughlin",
+              "id": "20154",
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-fe1dcbf0-b677-48d8-b663-e0850b2874c6.jpg",
+              "companyName": "Discover Financial Services"
+            }
+          ],
+          "room": {
+            "title": "Room B",
+            "id": "19154"
+          }
+        },
+        {
+          "id": "6273",
+          "room": {
+            "id": "19155",
+            "title": "Room D"
+          },
+          "track": {
+            "title": "Mind the Geek",
+            "id": "2758"
+          },
+          "title": "It's not exactly rocket science:  A live demo of AWS GroundStation for near real-time earth observation",
+          "speakers": [
+            {
+              "companyName": "Amazon Web Services",
+              "fullName": "Markus Ziller",
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-89367842-72dd-4eec-8c7f-4126c16380d8.png",
+              "id": "5538"
+            }
+          ],
+          "format": {
+            "id": "951",
+            "title": "Conference",
+            "duration": "PT50m"
+          },
+          "language": "EN"
+        },
+        {
+          "id": "7585",
+          "track": {
+            "id": "1252",
+            "title": "Data & AI"
+          },
+          "speakers": [
+            {
+              "fullName": "Olena Kutsenko",
+              "id": "7861",
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-0fba5621-07dc-4eb4-b85d-9d7da18bafab.jpeg",
+              "companyName": "Aiven"
+            }
+          ],
+          "format": {
+            "title": "Conference",
+            "id": "951",
+            "duration": "PT50m"
+          },
+          "room": {
+            "id": "19156",
+            "title": "Exec Centre"
+          },
+          "language": "EN",
+          "title": "Using Apache Kafka and OpenSearch to explore Mastodon"
+        }
+      ],
+      "id": "2023-05-10T11:00:00Z--2023-05-10T11:50:00Z",
+      "start": "2023-05-10T11:00:00Z",
+      "end": "2023-05-10T11:50:00Z"
+    },
+    {
+      "talks": [
+        {
+          "speakers": [
+            {
+              "fullName": "Andreas Falk",
+              "id": "4116",
+              "companyName": "Novatec Consulting",
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-1f209cdd-bb1f-4dd6-9dfc-a40cd1ab13b4.jpg"
+            }
+          ],
+          "id": "7577",
+          "language": "EN",
+          "format": {
+            "id": "1351",
+            "title": "Mini Lab",
+            "duration": "PT60m"
+          },
+          "title": "OAuth 2.1 and OpenID Connect for Java Developers",
+          "track": {
+            "id": "1255",
+            "title": "Security"
+          },
+          "room": {
+            "title": "Coding Cafe",
+            "id": "19158"
+          }
+        }
+      ],
+      "end": "2023-05-10T12:05:00Z",
+      "type": "talks",
+      "id": "2023-05-10T11:05:00Z--2023-05-10T12:05:00Z",
+      "start": "2023-05-10T11:05:00Z"
+    },
+    {
+      "break": {
+        "room": {
+          "title": "Exhibition Hall",
+          "id": "19157"
+        },
+        "title": "Lunch",
+        "icon": "cafe"
+      },
+      "type": "break",
+      "start": "2023-05-10T11:50:00Z",
+      "id": "2023-05-10T11:50:00Z--2023-05-10T12:50:00Z",
+      "end": "2023-05-10T12:50:00Z"
+    },
+    {
+      "end": "2023-05-10T12:15:00Z",
+      "start": "2023-05-10T12:00:00Z",
+      "type": "talks",
+      "id": "2023-05-10T12:00:00Z--2023-05-10T12:15:00Z",
+      "talks": [
+        {
+          "language": "EN",
+          "track": {
+            "title": "Architecture",
+            "id": "1251"
+          },
+          "speakers": [
+            {
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-97aef1a1-4156-45d6-9268-768cbd4ad411.png",
+              "companyName": "AxonIQ",
+              "id": "18753",
+              "fullName": "Mitchell Herrijgers"
+            }
+          ],
+          "title": "Reactive applications with Event-Sourcing and Server-Sent events",
+          "room": {
+            "title": "Auditorium",
+            "id": "19152"
+          },
+          "format": {
+            "title": "Byte Size",
+            "id": "960",
+            "duration": "PT15m"
+          },
+          "id": "18959"
+        },
+        {
+          "language": "EN",
+          "track": {
+            "title": "People & Culture",
+            "id": "1253"
+          },
+          "title": "The Future of Java is...Community",
+          "format": {
+            "title": "Byte Size",
+            "duration": "PT15m",
+            "id": "960"
+          },
+          "speakers": [
+            {
+              "photoUrl": "https://avatars.githubusercontent.com/u/20224954?v=4",
+              "id": "10788",
+              "companyName": "Microsoft",
+              "fullName": "George Adams"
+            },
+            {
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-d804c1e0-22d5-4360-a62d-2481ed2e276f.png",
+              "id": "11702",
+              "companyName": "Oracle, Corp",
+              "fullName": "Sharat Chander"
+            }
+          ],
+          "room": {
+            "title": "Room A",
+            "id": "19153"
+          },
+          "id": "11345"
+        },
+        {
+          "language": "EN",
+          "format": {
+            "title": "Byte Size",
+            "duration": "PT15m",
+            "id": "960"
+          },
+          "room": {
+            "id": "19154",
+            "title": "Room B"
+          },
+          "id": "18960",
+          "track": {
+            "title": "Security",
+            "id": "1255"
+          },
+          "title": "10 ways to improve your container workload security",
+          "speakers": [
+            {
+              "id": "18752",
+              "companyName": "Datadog",
+              "photoUrl": "https://lh3.googleusercontent.com/a/AGNmyxbMqFnyh0wZCVsPIL6LF6fnJlLxDM1qP0HOyKLb=s96-c",
+              "fullName": "Rory McCune"
+            }
+          ]
+        },
+        {
+          "track": {
+            "title": "Dev Craft",
+            "id": "1701"
+          },
+          "speakers": [
+            {
+              "companyName": "AtomicJar",
+              "photoUrl": "https://lh3.googleusercontent.com/a/AGNmyxY3sm73ZVuapkG_DCZULTRCSUBpyljoMScIT9_B=s96-c",
+              "id": "20167",
+              "fullName": "Eli Aleyner"
+            }
+          ],
+          "language": "EN",
+          "id": "20264",
+          "format": {
+            "duration": "PT15m",
+            "id": "960",
+            "title": "Byte Size"
+          },
+          "room": {
+            "title": "Room D",
+            "id": "19155"
+          },
+          "title": "Run Tests, Not containers"
+        },
+        {
+          "room": {
+            "title": "Exec Centre",
+            "id": "19156"
+          },
+          "format": {
+            "id": "960",
+            "title": "Byte Size",
+            "duration": "PT15m"
+          },
+          "language": "EN",
+          "title": "ML Governance: A Practical Introduction",
+          "id": "7567",
+          "speakers": [
+            {
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-472c2498-15e6-4ac3-ae30-c6a921dc7d4b.jpg",
+              "id": "6796",
+              "companyName": "Thoughtworks",
+              "fullName": "Ryan Dawson"
+            },
+            {
+              "photoUrl": "https://lh3.googleusercontent.com/a/AEdFTp6TbEyBWKPc_0jYDKglt4sMqiGy6e1HQVcjD6l0=s96-c",
+              "fullName": "Meissane Chami",
+              "id": "6798",
+              "companyName": "Thoughtworks"
+            }
+          ],
+          "track": {
+            "title": "Data & AI",
+            "id": "1252"
+          }
+        }
+      ]
+    },
+    {
+      "id": "2023-05-10T12:25:00Z--2023-05-10T12:40:00Z",
+      "type": "talks",
+      "end": "2023-05-10T12:40:00Z",
+      "start": "2023-05-10T12:25:00Z",
+      "talks": [
+        {
+          "id": "4281",
+          "language": "EN",
+          "speakers": [
+            {
+              "fullName": "Sinan Kucukkoseler",
+              "id": "4124",
+              "companyName": "Shopify",
+              "photoUrl": "https://lh3.googleusercontent.com/a/AEdFTp5HhzDwBTgsMJiiajE6ecfJD57k6fyOR4voV0z8zw=s96-c"
+            }
+          ],
+          "track": {
+            "id": "1254",
+            "title": "Build & Deploy"
+          },
+          "format": {
+            "duration": "PT15m",
+            "title": "Byte Size",
+            "id": "960"
+          },
+          "room": {
+            "id": "19152",
+            "title": "Auditorium"
+          },
+          "title": "Move fast without breaking things"
+        },
+        {
+          "language": "EN",
+          "speakers": [
+            {
+              "id": "4136",
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-1e11d811-3e99-4c1d-9d2d-07ad6abd0d3a.png",
+              "fullName": "Pratik  Patel",
+              "companyName": "Azul Systems"
+            }
+          ],
+          "id": "20256",
+          "format": {
+            "title": "Byte Size",
+            "duration": "PT15m",
+            "id": "960"
+          },
+          "track": {
+            "title": "Java",
+            "id": "2754"
+          },
+          "title": "Java for Serverless Cloud Functions: the how, why and tips to make it awesome",
+          "room": {
+            "title": "Room A",
+            "id": "19153"
+          }
+        },
+        {
+          "title": "The Java Agent: modifying Bytecode at runtime for fun and profit",
+          "track": {
+            "id": "2754",
+            "title": "Java"
+          },
+          "room": {
+            "title": "Room B",
+            "id": "19154"
+          },
+          "id": "20266",
+          "speakers": [
+            {
+              "id": "20168",
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-5dde7d04-7535-4fee-96ce-355692e54c90.png",
+              "fullName": "Joseph Beeton",
+              "companyName": "Contrast Security"
+            }
+          ],
+          "format": {
+            "duration": "PT15m",
+            "title": "Byte Size",
+            "id": "960"
+          },
+          "language": "EN"
+        },
+        {
+          "id": "20257",
+          "room": {
+            "id": "19155",
+            "title": "Room D"
+          },
+          "language": "EN",
+          "format": {
+            "duration": "PT15m",
+            "id": "960",
+            "title": "Byte Size"
+          },
+          "title": "Checked Exceptions: The Bad and the Ugly",
+          "track": {
+            "title": "Dev Craft",
+            "id": "1701"
+          },
+          "speakers": [
+            {
+              "id": "18754",
+              "fullName": "Sina Madani",
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-49171b83-5b71-4801-b00c-ba2a92f2ca51.jpg",
+              "companyName": "Vonage"
+            }
+          ]
+        },
+        {
+          "room": {
+            "title": "Exec Centre",
+            "id": "19156"
+          },
+          "id": "10138",
+          "title": "Bias in Machine Learning",
+          "format": {
+            "duration": "PT15m",
+            "id": "960",
+            "title": "Byte Size"
+          },
+          "track": {
+            "title": "Data & AI",
+            "id": "1252"
+          },
+          "speakers": [
+            {
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-1dd37d7a-f40a-4b04-8256-398444429f6e.jpg",
+              "id": "9926",
+              "companyName": "Holistic AI",
+              "fullName": "Roseline Polle"
+            }
+          ],
+          "language": "EN"
+        }
+      ]
+    },
+    {
+      "start": "2023-05-10T12:50:00Z",
+      "type": "talks",
+      "id": "2023-05-10T12:50:00Z--2023-05-10T13:40:00Z",
+      "talks": [
+        {
+          "track": {
+            "id": "2754",
+            "title": "Java"
+          },
+          "id": "17853",
+          "language": "EN",
+          "room": {
+            "title": "Gallery Hall",
+            "id": "19151"
+          },
+          "title": "Design Patterns Revisited in Modern Java",
+          "speakers": [
+            {
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-venkat_s.jpg",
+              "id": "18252",
+              "fullName": "Venkat Subramaniam",
+              "companyName": "Agile Developer, Inc."
+            }
+          ],
+          "format": {
+            "id": "951",
+            "duration": "PT50m",
+            "title": "Conference"
+          }
+        },
+        {
+          "room": {
+            "id": "19152",
+            "title": "Auditorium"
+          },
+          "title": "Tech Leading 101: the Good, the Bad and the Ugly",
+          "language": "EN",
+          "format": {
+            "duration": "PT50m",
+            "id": "951",
+            "title": "Conference"
+          },
+          "id": "10889",
+          "track": {
+            "title": "Dev Craft",
+            "id": "1701"
+          },
+          "speakers": [
+            {
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-59f59cac-ca77-46c3-8034-9b4940c1a5c1.jpg",
+              "fullName": "Vanessa Formicola",
+              "companyName": "Flo Health",
+              "id": "9940"
+            }
+          ]
+        },
+        {
+          "id": "1997",
+          "track": {
+            "title": "Build & Deploy",
+            "id": "1254"
+          },
+          "room": {
+            "id": "19153",
+            "title": "Room A"
+          },
+          "language": "EN",
+          "speakers": [
+            {
+              "photoUrl": "https://lh3.googleusercontent.com/a-/AOh14GgEdVlHhATC6WroLTbS9GVYGjQuSkLP--UbGxzCow=s96-c",
+              "fullName": "Andres Almiray",
+              "id": "1889",
+              "companyName": "Oracle"
+            },
+            {
+              "companyName": "JFrog",
+              "id": "2483",
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-d01f9864-860a-4edf-985a-fd970cb912df.jpg",
+              "fullName": "Ixchel Ruiz"
+            }
+          ],
+          "title": "Maven Puzzlers",
+          "format": {
+            "title": "Conference",
+            "id": "951",
+            "duration": "PT50m"
+          }
+        },
+        {
+          "format": {
+            "title": "Conference",
+            "duration": "PT50m",
+            "id": "951"
+          },
+          "language": "EN",
+          "room": {
+            "title": "Room B",
+            "id": "19154"
+          },
+          "track": {
+            "id": "2760",
+            "title": "UI & UX"
+          },
+          "title": "The Chips and Pickle Story: What's Really Behind Infamous, Historic UI Failures?",
+          "id": "5212",
+          "speakers": [
+            {
+              "fullName": "Dean Schuster",
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-0a610b3d-441c-4e65-934e-78a98dc5e43a.png",
+              "companyName": "truematter",
+              "id": "4962"
+            }
+          ]
+        },
+        {
+          "room": {
+            "id": "19155",
+            "title": "Room D"
+          },
+          "format": {
+            "id": "951",
+            "duration": "PT50m",
+            "title": "Conference"
+          },
+          "id": "8981",
+          "title": "Fighting The Saboteur in Your Relationships: Dealing with Cognitive Biases",
+          "speakers": [
+            {
+              "companyName": "Aviture",
+              "fullName": "Arthur Doler",
+              "id": "8772",
+              "photoUrl": "https://lh3.googleusercontent.com/a-/AOh14GghjBcJhbh3xcgMHgptlS76aFYBHTSQuUIcb3t6dg=s96-c"
+            }
+          ],
+          "track": {
+            "title": "People & Culture",
+            "id": "1253"
+          },
+          "language": "EN"
+        },
+        {
+          "id": "5609",
+          "room": {
+            "title": "Exec Centre",
+            "id": "19156"
+          },
+          "title": "Busy Developer's Guide to Ballerina",
+          "track": {
+            "title": "Programming Languages",
+            "id": "1401"
+          },
+          "speakers": [
+            {
+              "fullName": "Ted Neward",
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-tedneward.png",
+              "companyName": "Neward & Associates, LLC",
+              "id": "4107"
+            }
+          ],
+          "language": "EN",
+          "format": {
+            "duration": "PT50m",
+            "id": "951",
+            "title": "Conference"
+          }
+        }
+      ],
+      "end": "2023-05-10T13:40:00Z"
+    },
+    {
+      "end": "2023-05-10T13:50:00Z",
+      "id": "2023-05-10T12:50:00Z--2023-05-10T13:50:00Z",
+      "talks": [
+        {
+          "id": "18962",
+          "room": {
+            "id": "19158",
+            "title": "Coding Cafe"
+          },
+          "speakers": [
+            {
+              "companyName": null,
+              "photoUrl": "https://lh3.googleusercontent.com/a/AGNmyxZt2ryncDDhuCxeDrVOc_WdrK1qUm_SljGBajds=s96-c",
+              "id": "20165",
+              "fullName": "Lili Kastilio"
+            },
+            {
+              "fullName": "Micah Silverman",
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-402c04aa-7a02-41bf-8b8f-7937e8bfee3f.png",
+              "companyName": "Snyk",
+              "id": "6758"
+            }
+          ],
+          "title": "Live Bug Bash",
+          "track": {
+            "title": "Security",
+            "id": "1255"
+          },
+          "format": {
+            "duration": "PT60m",
+            "title": "Mini Lab",
+            "id": "1351"
+          },
+          "language": "EN"
+        }
+      ],
+      "start": "2023-05-10T12:50:00Z",
+      "type": "talks"
+    },
+    {
+      "end": "2023-05-10T14:40:00Z",
+      "talks": [
+        {
+          "room": {
+            "title": "Gallery Hall",
+            "id": "19151"
+          },
+          "track": {
+            "id": "1255",
+            "title": "Security"
+          },
+          "format": {
+            "id": "951",
+            "title": "Conference",
+            "duration": "PT50m"
+          },
+          "speakers": [
+            {
+              "companyName": "Snyk",
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-17be7038-749a-48bd-941f-b7266d529499.png",
+              "fullName": "Brian Vermeer",
+              "id": "4125"
+            }
+          ],
+          "language": "EN",
+          "title": "Securing Your Java Containers by Breaking In",
+          "id": "4283"
+        },
+        {
+          "room": {
+            "title": "Auditorium",
+            "id": "19152"
+          },
+          "language": "EN",
+          "format": {
+            "title": "Conference",
+            "duration": "PT50m",
+            "id": "951"
+          },
+          "track": {
+            "title": "Dev Craft",
+            "id": "1701"
+          },
+          "speakers": [
+            {
+              "fullName": "Victor Rentea",
+              "companyName": "Independent",
+              "id": "9920",
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-9f9e1015-cfb3-4df2-b063-aeda4941e955.jpg"
+            }
+          ],
+          "id": "18958",
+          "title": "Your Unit Tests are Trying To Tell You Something "
+        },
+        {
+          "format": {
+            "duration": "PT50m",
+            "title": "Conference",
+            "id": "951"
+          },
+          "speakers": [
+            {
+              "photoUrl": "https://lh3.googleusercontent.com/a-/AOh14GjrEwU0SjbtolYemFOe3QmaTiAt-zFgtTEUORsK=s96-c",
+              "fullName": "Eric Deandrea",
+              "companyName": "Red Hat",
+              "id": "1870"
+            }
+          ],
+          "title": "Quarkus for Spring Developers",
+          "id": "1971",
+          "room": {
+            "title": "Room A",
+            "id": "19153"
+          },
+          "track": {
+            "id": "2754",
+            "title": "Java"
+          },
+          "language": "EN"
+        },
+        {
+          "format": {
+            "id": "951",
+            "title": "Conference",
+            "duration": "PT50m"
+          },
+          "id": "20262",
+          "title": "Beat the Greenwash: Strategies for a low-carbon cloud architecture",
+          "track": {
+            "title": "Architecture",
+            "id": "1251"
+          },
+          "room": {
+            "id": "19154",
+            "title": "Room B"
+          },
+          "language": "EN",
+          "speakers": [
+            {
+              "companyName": "Capgemini",
+              "fullName": "Kamar Ali",
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-764a64ec-2039-4158-8321-65babc8ba133.jpg",
+              "id": "20163"
+            }
+          ]
+        },
+        {
+          "speakers": [
+            {
+              "fullName": "Simone de Gijt",
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-de004818-7fd2-4540-8351-c4890aa41899.jpg",
+              "id": "2874",
+              "companyName": "OpenValue"
+            }
+          ],
+          "format": {
+            "duration": "PT50m",
+            "id": "951",
+            "title": "Conference"
+          },
+          "id": "3891",
+          "room": {
+            "id": "19155",
+            "title": "Room D"
+          },
+          "track": {
+            "id": "1253",
+            "title": "People & Culture"
+          },
+          "language": "EN",
+          "title": "Wired! How your brain learns new (programming) languages."
+        },
+        {
+          "id": "5615",
+          "room": {
+            "id": "19156",
+            "title": "Exec Centre"
+          },
+          "speakers": [
+            {
+              "id": "5506",
+              "companyName": "Logz.io",
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-b158d4f1-8fb6-43ff-9502-da01597fecc1.jpg",
+              "fullName": "Dotan Horovits"
+            }
+          ],
+          "title": "How We Gained Observability Into Our CI/CD Pipeline",
+          "language": "EN",
+          "format": {
+            "duration": "PT50m",
+            "title": "Conference",
+            "id": "951"
+          },
+          "track": {
+            "title": "Build & Deploy",
+            "id": "1254"
+          }
+        }
+      ],
+      "type": "talks",
+      "id": "2023-05-10T13:50:00Z--2023-05-10T14:40:00Z",
+      "start": "2023-05-10T13:50:00Z"
+    },
+    {
+      "talks": [
+        {
+          "format": {
+            "duration": "PT60m",
+            "id": "1351",
+            "title": "Mini Lab"
+          },
+          "title": "Making your own Testcontainers module for fun and profit!",
+          "id": "11879",
+          "speakers": [
+            {
+              "id": "10784",
+              "photoUrl": "https://lh3.googleusercontent.com/a-/AOh14GirxluLvkptnsT5MxbBaxmupiXXUBlJRLyGooNrEZc=s96-c",
+              "fullName": "Oleg Šelajev",
+              "companyName": "AtomicJar"
+            }
+          ],
+          "track": {
+            "title": "Dev Craft",
+            "id": "1701"
+          },
+          "language": "EN",
+          "room": {
+            "id": "19158",
+            "title": "Coding Cafe"
+          }
+        }
+      ],
+      "start": "2023-05-10T13:55:00Z",
+      "end": "2023-05-10T14:55:00Z",
+      "id": "2023-05-10T13:55:00Z--2023-05-10T14:55:00Z",
+      "type": "talks"
+    },
+    {
+      "type": "break",
+      "start": "2023-05-10T14:40:00Z",
+      "id": "2023-05-10T14:40:00Z--2023-05-10T15:10:00Z",
+      "break": {
+        "icon": "cafe",
+        "room": {
+          "title": "Exhibition Hall",
+          "id": "19157"
+        },
+        "title": "Coffee Break"
+      },
+      "end": "2023-05-10T15:10:00Z"
+    },
+    {
+      "id": "2023-05-10T15:10:00Z--2023-05-10T16:00:00Z",
+      "type": "talks",
+      "end": "2023-05-10T16:00:00Z",
+      "start": "2023-05-10T15:10:00Z",
+      "talks": [
+        {
+          "title": "Bootiful Spring Boot 3",
+          "format": {
+            "id": "951",
+            "title": "Conference",
+            "duration": "PT50m"
+          },
+          "track": {
+            "title": "Java",
+            "id": "2754"
+          },
+          "language": "EN",
+          "speakers": [
+            {
+              "id": "10795",
+              "photoUrl": "https://lh3.googleusercontent.com/a-/AOh14GhTAlrBfIHBoWpP1mfcKm-kRON4bdBF_LccGehD=s96-c",
+              "fullName": "Josh Long",
+              "companyName": "VMware"
+            }
+          ],
+          "id": "11335",
+          "room": {
+            "title": "Gallery Hall",
+            "id": "19151"
+          }
+        },
+        {
+          "speakers": [
+            {
+              "fullName": "Helen Scott",
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-520049dd-11e1-47b8-a3d4-2352f3633144.jpeg",
+              "id": "1891",
+              "companyName": "JetBrains"
+            },
+            {
+              "companyName": "Atlassian",
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-4f84e9ca-c147-4c7c-87a7-102a4f96f0a6.jpg",
+              "fullName": "Sven Peters",
+              "id": "1860"
+            }
+          ],
+          "language": "EN",
+          "title": "The Hitchhiker’s Guide to a Great Developer Career",
+          "track": {
+            "id": "1253",
+            "title": "People & Culture"
+          },
+          "format": {
+            "id": "951",
+            "duration": "PT50m",
+            "title": "Conference"
+          },
+          "room": {
+            "id": "19152",
+            "title": "Auditorium"
+          },
+          "id": "1998"
+        },
+        {
+          "room": {
+            "title": "Room A",
+            "id": "19153"
+          },
+          "format": {
+            "id": "951",
+            "title": "Conference",
+            "duration": "PT50m"
+          },
+          "title": "From k9s to OpenTelemetry: A guide to observability for your apps in K8s",
+          "track": {
+            "id": "1254",
+            "title": "Build & Deploy"
+          },
+          "language": "EN",
+          "speakers": [
+            {
+              "companyName": "Novatec Consulting GmbH",
+              "id": "3639",
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-48c9a90b-2bdf-4e01-9d85-32ff8532c483.jpg",
+              "fullName": "Matthias Haeussler"
+            }
+          ],
+          "id": "3867"
+        },
+        {
+          "language": "EN",
+          "format": {
+            "title": "Conference",
+            "duration": "PT50m",
+            "id": "951"
+          },
+          "title": "How to avoid the next Log4Shell - easy steps every developer can take right now",
+          "room": {
+            "id": "19154",
+            "title": "Room B"
+          },
+          "track": {
+            "id": "1255",
+            "title": "Security"
+          },
+          "speakers": [
+            {
+              "companyName": "Sonatype",
+              "id": "1869",
+              "fullName": "Steve Poole",
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-59fbdaa6-a5dc-4b85-8584-8aac58d9cb9d.jpg"
+            }
+          ],
+          "id": "4555"
+        },
+        {
+          "room": {
+            "title": "Room D",
+            "id": "19155"
+          },
+          "id": "3467",
+          "track": {
+            "id": "2760",
+            "title": "UI & UX"
+          },
+          "speakers": [
+            {
+              "id": "2895",
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-51449431-141e-4fbe-9672-4bf9b00eef18.png",
+              "companyName": "Invertase",
+              "fullName": "Majid Hajian"
+            }
+          ],
+          "language": "EN",
+          "title": "Flutter Everywhere: Unleashing the Power of Cross-Platform App Development",
+          "format": {
+            "title": "Conference",
+            "id": "951",
+            "duration": "PT50m"
+          }
+        },
+        {
+          "speakers": [
+            {
+              "companyName": "XDEV Software GmbH",
+              "id": "3632",
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-5e0c9e53-d0f6-4818-83cc-0598ddf6592e.jpg",
+              "fullName": "Richard Fichtner"
+            }
+          ],
+          "room": {
+            "title": "Exec Centre",
+            "id": "19156"
+          },
+          "track": {
+            "title": "Dev Craft",
+            "id": "1701"
+          },
+          "language": "EN",
+          "format": {
+            "title": "Conference",
+            "id": "951",
+            "duration": "PT50m"
+          },
+          "id": "3862",
+          "title": "Full Stack Java - building a web app incl. persistence with plain Java"
+        }
+      ]
+    },
+    {
+      "talks": [
+        {
+          "track": {
+            "title": "Security",
+            "id": "1255"
+          },
+          "id": "18963",
+          "language": "EN",
+          "format": {
+            "id": "1351",
+            "title": "Mini Lab",
+            "duration": "PT60m"
+          },
+          "title": "CTF: 101",
+          "speakers": [
+            {
+              "companyName": "Snyk",
+              "fullName": "Micah Silverman",
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-402c04aa-7a02-41bf-8b8f-7937e8bfee3f.png",
+              "id": "6758"
+            },
+            {
+              "fullName": "Audrey Budryte",
+              "companyName": "Snyk",
+              "id": "20166",
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-fedcb71e-f893-460e-8bba-d1bec1512d01.jpg"
+            }
+          ],
+          "room": {
+            "title": "Coding Cafe",
+            "id": "19158"
+          }
+        }
+      ],
+      "end": "2023-05-10T16:10:00Z",
+      "type": "talks",
+      "start": "2023-05-10T15:10:00Z",
+      "id": "2023-05-10T15:10:00Z--2023-05-10T16:10:00Z"
+    },
+    {
+      "end": "2023-05-10T17:00:00Z",
+      "type": "talks",
+      "start": "2023-05-10T16:10:00Z",
+      "talks": [
+        {
+          "format": {
+            "title": "Conference",
+            "duration": "PT50m",
+            "id": "951"
+          },
+          "id": "11324",
+          "title": "Clean Code with Records, Sealed Classes and Pattern Matching",
+          "room": {
+            "id": "19151",
+            "title": "Gallery Hall"
+          },
+          "speakers": [
+            {
+              "id": "4702",
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-998d8692-f9bd-4004-915c-095633ba7303.jpg",
+              "fullName": "José Paumard",
+              "companyName": "Oracle"
+            }
+          ],
+          "language": "EN",
+          "track": {
+            "title": "Java",
+            "id": "2754"
+          }
+        },
+        {
+          "speakers": [
+            {
+              "companyName": "Form3",
+              "fullName": "Patrycja Wegrzynowicz",
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-908d0732-f394-41a8-8b50-9a83feb3084b.png",
+              "id": "6775"
+            }
+          ],
+          "title": "The Hacker's Guide to Kubernetes",
+          "track": {
+            "id": "1255",
+            "title": "Security"
+          },
+          "room": {
+            "id": "19152",
+            "title": "Auditorium"
+          },
+          "id": "7029",
+          "format": {
+            "duration": "PT50m",
+            "title": "Conference",
+            "id": "951"
+          },
+          "language": "EN"
+        },
+        {
+          "speakers": [
+            {
+              "fullName": "Stephan Janssen",
+              "companyName": "Devoxx",
+              "id": "1856",
+              "photoUrl": "https://lh3.googleusercontent.com/a-/AOh14GhWmAgQ0p0O-S3_cRNpuBRFsRPFZkuGlix6yrm-iw=s96-c"
+            }
+          ],
+          "language": "EN",
+          "format": {
+            "id": "951",
+            "title": "Conference",
+            "duration": "PT50m"
+          },
+          "room": {
+            "title": "Room A",
+            "id": "19153"
+          },
+          "track": {
+            "title": "Data & AI",
+            "id": "1252"
+          },
+          "id": "4565",
+          "title": "Exploring the Power and Potential of Large Language Models: A Case Study "
+        },
+        {
+          "title": "Location transparency",
+          "id": "2723",
+          "track": {
+            "title": "Architecture",
+            "id": "1251"
+          },
+          "room": {
+            "id": "19154",
+            "title": "Room B"
+          },
+          "speakers": [
+            {
+              "companyName": "AxonIQ",
+              "id": "2494",
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-ef5208b8-393f-43a2-86a9-cc3bf53645c7.png",
+              "fullName": "Milen Dyankov"
+            }
+          ],
+          "format": {
+            "duration": "PT50m",
+            "id": "951",
+            "title": "Conference"
+          },
+          "language": "EN"
+        },
+        {
+          "room": {
+            "title": "Room D",
+            "id": "19155"
+          },
+          "title": "Vapourware: The best software that never was",
+          "language": "EN",
+          "track": {
+            "title": "Mind the Geek",
+            "id": "2758"
+          },
+          "speakers": [
+            {
+              "fullName": "Anders Norås",
+              "id": "2896",
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-8ed97227-24a4-4b03-8d21-86f5fd847209.jpg",
+              "companyName": "Avanade"
+            }
+          ],
+          "format": {
+            "id": "951",
+            "duration": "PT50m",
+            "title": "Conference"
+          },
+          "id": "3470"
+        },
+        {
+          "language": "EN",
+          "id": "2000",
+          "speakers": [
+            {
+              "id": "1893",
+              "companyName": "JetBrains",
+              "fullName": "Anton Arhipov",
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-e4193564-00fd-40bd-b620-6105dbef5ef5.jpg"
+            }
+          ],
+          "title": "Kotlin DSL in under an hour",
+          "track": {
+            "title": "Programming Languages",
+            "id": "1401"
+          },
+          "room": {
+            "title": "Exec Centre",
+            "id": "19156"
+          },
+          "format": {
+            "duration": "PT50m",
+            "id": "951",
+            "title": "Conference"
+          }
+        }
+      ],
+      "id": "2023-05-10T16:10:00Z--2023-05-10T17:00:00Z"
+    },
+    {
+      "start": "2023-05-10T17:15:00Z",
+      "end": "2023-05-10T17:30:00Z",
+      "id": "2023-05-10T17:15:00Z--2023-05-10T17:30:00Z",
+      "type": "talks",
+      "talks": [
+        {
+          "speakers": [
+            {
+              "companyName": "Syntasso",
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-8726a4b9-5f17-4c82-bf4a-3bc0765932b0.jpg",
+              "fullName": "Paula Kennedy",
+              "id": "3642"
+            },
+            {
+              "id": "1869",
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-59fbdaa6-a5dc-4b85-8584-8aac58d9cb9d.jpg",
+              "fullName": "Steve Poole",
+              "companyName": "Sonatype"
+            },
+            {
+              "companyName": "Thoughtworks",
+              "id": "7854",
+              "fullName": "Andrew Harmel-Law",
+              "photoUrl": "https://avatars.githubusercontent.com/u/1553476?v=4"
+            }
+          ],
+          "format": {
+            "title": "UnConference Kick-Off",
+            "id": "19102",
+            "duration": "PT15m"
+          },
+          "id": "18967",
+          "track": {
+            "id": "2758",
+            "title": "Mind the Geek"
+          },
+          "language": "EN",
+          "title": "UnConference Kick Off",
+          "room": {
+            "id": "19151",
+            "title": "Gallery Hall"
+          }
+        }
+      ]
+    },
+    {
+      "break": {
+        "icon": "cafe",
+        "title": "Boards Games Night",
+        "room": {
+          "id": "19158",
+          "title": "Coding Cafe"
+        }
+      },
+      "start": "2023-05-10T17:15:00Z",
+      "end": "2023-05-10T20:15:00Z",
+      "id": "2023-05-10T17:15:00Z--2023-05-10T20:15:00Z",
+      "type": "break"
+    },
+    {
+      "start": "2023-05-10T17:30:00Z",
+      "type": "talks",
+      "end": "2023-05-10T18:15:00Z",
+      "talks": [
+        {
+          "id": "19249",
+          "title": "",
+          "speakers": [],
+          "track": {
+            "id": "19103",
+            "title": "UnConference Session"
+          },
+          "language": "EN",
+          "room": {
+            "title": "Room A",
+            "id": "19153"
+          },
+          "format": {
+            "title": "UnConference Session",
+            "duration": "PT45m",
+            "id": "19103"
+          }
+        },
+        {
+          "id": "19248",
+          "language": "EN",
+          "room": {
+            "id": "19154",
+            "title": "Room B"
+          },
+          "format": {
+            "duration": "PT45m",
+            "id": "19103",
+            "title": "UnConference Session"
+          },
+          "speakers": [],
+          "title": "",
+          "track": {
+            "title": "UnConference Session",
+            "id": "19103"
+          }
+        },
+        {
+          "format": {
+            "duration": "PT45m",
+            "title": "UnConference Session",
+            "id": "19103"
+          },
+          "track": {
+            "title": "UnConference Session",
+            "id": "19103"
+          },
+          "id": "19250",
+          "speakers": [],
+          "room": {
+            "title": "Room D",
+            "id": "19155"
+          },
+          "title": "",
+          "language": "EN"
+        }
+      ],
+      "id": "2023-05-10T17:30:00Z--2023-05-10T18:15:00Z"
+    },
+    {
+      "id": "2023-05-10T18:25:00Z--2023-05-10T19:10:00Z",
+      "end": "2023-05-10T19:10:00Z",
+      "type": "talks",
+      "talks": [
+        {
+          "id": "19251",
+          "track": {
+            "id": "19103",
+            "title": "UnConference Session"
+          },
+          "title": "",
+          "room": {
+            "id": "19153",
+            "title": "Room A"
+          },
+          "language": "EN",
+          "speakers": [],
+          "format": {
+            "title": "UnConference Session",
+            "duration": "PT45m",
+            "id": "19103"
+          }
+        },
+        {
+          "title": "",
+          "room": {
+            "title": "Room B",
+            "id": "19154"
+          },
+          "format": {
+            "title": "UnConference Session",
+            "duration": "PT45m",
+            "id": "19103"
+          },
+          "language": "EN",
+          "track": {
+            "id": "19103",
+            "title": "UnConference Session"
+          },
+          "id": "19253",
+          "speakers": []
+        },
+        {
+          "title": "",
+          "format": {
+            "id": "19103",
+            "duration": "PT45m",
+            "title": "UnConference Session"
+          },
+          "id": "19252",
+          "speakers": [],
+          "language": "EN",
+          "room": {
+            "title": "Room D",
+            "id": "19155"
+          },
+          "track": {
+            "title": "UnConference Session",
+            "id": "19103"
+          }
+        }
+      ],
+      "start": "2023-05-10T18:25:00Z"
+    },
+    {
+      "type": "talks",
+      "start": "2023-05-10T19:20:00Z",
+      "end": "2023-05-10T20:05:00Z",
+      "talks": [
+        {
+          "title": "",
+          "language": "EN",
+          "track": {
+            "id": "19103",
+            "title": "UnConference Session"
+          },
+          "id": "19256",
+          "room": {
+            "id": "19153",
+            "title": "Room A"
+          },
+          "speakers": [],
+          "format": {
+            "id": "19103",
+            "duration": "PT45m",
+            "title": "UnConference Session"
+          }
+        },
+        {
+          "format": {
+            "title": "UnConference Session",
+            "id": "19103",
+            "duration": "PT45m"
+          },
+          "language": "EN",
+          "track": {
+            "id": "19103",
+            "title": "UnConference Session"
+          },
+          "title": "",
+          "room": {
+            "title": "Room B",
+            "id": "19154"
+          },
+          "id": "19255",
+          "speakers": []
+        },
+        {
+          "room": {
+            "title": "Room D",
+            "id": "19155"
+          },
+          "format": {
+            "duration": "PT45m",
+            "title": "UnConference Session",
+            "id": "19103"
+          },
+          "language": "EN",
+          "id": "19254",
+          "track": {
+            "id": "19103",
+            "title": "UnConference Session"
+          },
+          "speakers": [],
+          "title": ""
+        }
+      ],
+      "id": "2023-05-10T19:20:00Z--2023-05-10T20:05:00Z"
+    }
+  ]
+}
