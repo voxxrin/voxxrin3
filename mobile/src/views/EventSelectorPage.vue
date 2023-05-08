@@ -5,13 +5,10 @@
         <ion-title>Conference Selector</ion-title>
       </ion-toolbar>
     </ion-header>
-    <ion-content :fullscreen="true">
-      <ion-card v-for="(availableEvent, index) in availableEvents" :key="index">
-        <ion-card-title>{{availableEvent.title}}</ion-card-title>
-        <ion-button @click="() => selectEvent(availableEvent.id)">
-          Open
-        </ion-button>
-      </ion-card>
+    <ion-content>
+      <favorited-event-selector
+          :favoritedEvents="favoritedEvents" @event-selected="(event) => selectEvent(event.id)">
+      </favorited-event-selector>
     </ion-content>
   </ion-page>
 </template>
@@ -23,29 +20,26 @@ import {
     IonToolbar,
     IonTitle,
     IonContent,
-    IonButton,
-    IonCard,
-    IonCardTitle,
     useIonRouter
 } from '@ionic/vue';
-import {EventId} from "@/models/VoxxrinEvent";
+import {EventId, ListableVoxxrinEvent} from "@/models/VoxxrinEvent";
 import {fetchConferenceDescriptor} from "@/state/CurrentConferenceDescriptor";
 import {fetchAvailableEvents, watchCurrentAvailableEvents} from "@/state/CurrentAvailableEvents";
-import {ListableEvent} from "../../../shared/event-list.firestore";
 import {ref, Ref} from "vue";
+import FavoritedEventSelector from "@/components/FavoritedEventSelector.vue";
 
 const router = useIonRouter();
 
-const availableEvents: Ref<ListableEvent[]> = ref([]);
+const favoritedEvents: Ref<ListableVoxxrinEvent[]> = ref([]);
 watchCurrentAvailableEvents(updatedAvailableEvents => {
-    availableEvents.value = updatedAvailableEvents;
+    favoritedEvents.value = updatedAvailableEvents;
 })
 
 fetchAvailableEvents();
 
-async function selectEvent(eventCode: string) {
-    await fetchConferenceDescriptor(new EventId(eventCode));
+async function selectEvent(eventId: EventId) {
+    await fetchConferenceDescriptor(eventId);
 
-    router.push(`/events/${eventCode}`);
+    router.push(`/events/${eventId.value}`);
 }
 </script>

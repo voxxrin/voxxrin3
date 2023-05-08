@@ -3,6 +3,7 @@ import {ISOLocalDate} from "./type-utils";
 export type ListableEvent = {
     id: string;
     title: string,
+    description: string|undefined,
     days: Array<{
         id: string,
         localDate: ISOLocalDate
@@ -14,5 +15,6 @@ export type ListableEvent = {
         city: string
     },
     imageUrl: string,
+    peopleDescription: string|undefined,
     websiteUrl: string,
 }

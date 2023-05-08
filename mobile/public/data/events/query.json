@@ -2,6 +2,7 @@
   {
     "timezone": "Europe/London",
     "id": "devoxxuk23",
+    "description": "Devoxx UK is a space for developers to learn, sharpen their skills and get hands-on experience with the latest tech. At this 3-day conference we bring together a diverse group of inspiring speakers from around the world to cover the most vital developer-focused topics, latest technology advances and delve into some fascinating ideas.",
     "keywords": [
       "Devoxx",
       "Java",
@@ -34,6 +35,7 @@
   },
   {
     "title": "Devoxx Belgium 2022",
+    "description": "Devoxx Belgium 2022 (19th edition), a 5-days technology conference, saw over 3,200 attendees. To our surprise, all conference and combi tickets were sold out in just 5 minutes!",
     "location": {
       "city": "Antwerp",
       "country": "Belgium"
@@ -74,6 +76,8 @@
     "websiteUrl": "https://devoxx.be"
   },
   {
+    "title": "Devoxx Greece 2023",
+    "description": "Devoxx Greece 2023 takes place for the very first time from May 4th until the 6th in the Athens Megaron International Conference Center.",
     "location": {
       "city": "Athens",
       "country": "Greece"
@@ -90,7 +94,6 @@
       "Web"
     ],
     "websiteUrl": "http://devoxx.gr",
-    "title": "Devoxx Greece 2023",
     "days": [
       {
         "id": "thursday",
