@@ -2,10 +2,10 @@
   <ion-header class="ion-no-border">
     <ion-toolbar>
       <div class="viewsHeader">
-        <ion-button @click="$router.go(-1)" shape="round" size="default">
+        <ion-button @click="backToEventsList" shape="round" size="default">
           <ion-icon src="/assets/icons/solid/arrow-left.svg"></ion-icon>
         </ion-button>
-        <ion-button class="btnUser" @click="$router.go(-1)" shape="round" size="default">
+        <ion-button class="btnUser" shape="round" size="default">
           <ion-icon src="/assets/icons/line/user-line.svg"></ion-icon>
         </ion-button>
       </div>
@@ -24,13 +24,22 @@ import {IonIcon, IonButton, IonHeader, IonTitle, IonToolbar} from "@ionic/vue";
 import CurrentEventStatus from "@/components/CurrentEventStatus.vue";
 import {PropType} from "vue";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
+import {unsetCurrentSchedule} from "@/state/CurrentSchedule";
+import {useRouter} from "vue-router";
 
+const router = useRouter();
 const props = defineProps({
     event: {
         required: true,
         type: Object as PropType<VoxxrinConferenceDescriptor>
     }
 })
+
+function backToEventsList() {
+    unsetCurrentSchedule();
+
+    router.go(-1);
+}
 
 </script>
 

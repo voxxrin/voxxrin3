@@ -21,6 +21,10 @@ export const watchCurrentSchedule = (callback: (currentSchedule: (VoxxrinDailySc
     watch(CURRENT_SCHEDULE, callback, {immediate: true});
 }
 
+export function unsetCurrentSchedule() {
+    CURRENT_SCHEDULE.value = undefined;
+}
+
 export const fetchSchedule = async (conferenceDescriptor: VoxxrinConferenceDescriptor, dayId: DayId) => {
     // Avoiding to fetch schedule if the one already loaded matches the one expected
     if(
