@@ -26,14 +26,6 @@ export type VoxxrinLanguaceCode = Replace<ConferenceDescriptor['supportedTalkLan
 
 export class TalkLanguageCode extends ValueObject<string>{ _talkLanguageCodeDescriptorClassDiscriminator!: never; }
 
-export function findVoxxrinDayById(conferenceDescriptor: VoxxrinConferenceDescriptor, dayId: DayId): VoxxrinDay {
-    const day = conferenceDescriptor.days.find(d => d.id.isSameThan(dayId))
-    if(!day) {
-        throw new Error(`No day found in conference descriptor ${conferenceDescriptor.id.value} matching day=${dayId.value}`)
-    }
-    return day;
-}
-
 export type ConferenceStatus = 'future'|'ongoing'|'past'
 export function conferenceStatusOf(start: Temporal.ZonedDateTime, end: Temporal.ZonedDateTime, timezone: string): ConferenceStatus {
     return match([
@@ -85,31 +77,45 @@ export function createVoxxrinConferenceDescriptor(firestoreConferenceDescriptor:
     return voxxrinConferenceDescriptor;
 }
 
+export function findVoxxrinDayIndex(conferenceDescriptor: VoxxrinConferenceDescriptor, dayId: DayId) {
+    return conferenceDescriptor.days.findIndex(d => d.id.isSameThan(dayId));
+}
+export function findVoxxrinDay(conferenceDescriptor: VoxxrinConferenceDescriptor, dayId: DayId): VoxxrinDay {
+    const dayIndex = findVoxxrinDayIndex(conferenceDescriptor, dayId)
+    if(dayIndex === -1) {
+        throw new Error(`No day found in conference descriptor ${conferenceDescriptor.id.value} matching day=${dayId.value}`)
+    }
+    return conferenceDescriptor.days[dayIndex];
+}
+
 export function findRoomIndex(confDescriptor: VoxxrinConferenceDescriptor, roomId: RoomId) {
     return confDescriptor.rooms.findIndex(r => r.id.isSameThan(roomId));
 }
 
 export function findRoom(confDescriptor: VoxxrinConferenceDescriptor, roomId: RoomId) {
-    const room = confDescriptor.rooms.find(r => r.id.isSameThan(roomId));
-    if(!room) {
-        throw new Error(`No room found matching id ${roomId.value}`);
+    const roomIndex = findRoomIndex(confDescriptor, roomId);
+    if(roomIndex === -1) {
+        throw new Error(`No room found in conference descriptor ${confDescriptor.id.value} matching id ${roomId.value}`);
     }
-    return room;
+    return confDescriptor.rooms[roomIndex];
 }
 export function findTalkFormatIndex(confDescriptor: VoxxrinConferenceDescriptor, formatId: TalkFormatId) {
     return confDescriptor.talkFormats.findIndex(f => f.id.isSameThan(formatId));
 }
 export function findTalkFormat(confDescriptor: VoxxrinConferenceDescriptor, formatId: TalkFormatId) {
-    const format = confDescriptor.talkFormats.find(f => f.id.isSameThan(formatId));
-    if(!format) {
-        throw new Error(`No format found matching id ${formatId.value}`);
+    const formatIndex = findTalkFormatIndex(confDescriptor, formatId);
+    if(formatIndex === -1) {
+        throw new Error(`No format found in conference descriptor ${confDescriptor.id.value} matching id ${formatId.value}`);
     }
-    return format;
+    return confDescriptor.talkFormats[formatIndex];
+}
+export function findTrackIndex(confDescriptor: VoxxrinConferenceDescriptor, trackId: TrackId) {
+    return confDescriptor.talkTracks.findIndex(t => t.id.isSameThan(trackId));
 }
 export function findTrack(confDescriptor: VoxxrinConferenceDescriptor, trackId: TrackId) {
-    const track = confDescriptor.talkTracks.find(t => t.id.isSameThan(trackId));
-    if(!track) {
-        throw new Error(`No track found matching id ${trackId.value}`);
+    const trackIndex = findTrackIndex(confDescriptor, trackId);
+    if(trackIndex === -1) {
+        throw new Error(`No track found in conference descriptor ${confDescriptor.id.value} matching id ${trackId.value}`);
     }
-    return track;
+    return confDescriptor.talkTracks[trackIndex];
 }

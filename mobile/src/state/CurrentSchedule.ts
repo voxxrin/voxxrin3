@@ -7,7 +7,7 @@ import {
     VoxxrinDailySchedule
 } from "@/models/VoxxrinSchedule";
 import {DayId} from "@/models/VoxxrinDay";
-import {findVoxxrinDayById, VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
+import {findVoxxrinDay, VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {useFetchJsonDebouncer} from "@/state/state-utilities";
 import {storeDailyCachedSchedule, useDailyCachedSchedule} from "@/state/CachedSchedules";
 import {match} from "ts-pattern";
@@ -31,7 +31,7 @@ export const fetchSchedule = async (conferenceDescriptor: VoxxrinConferenceDescr
         !CURRENT_SCHEDULE.value?.eventId.isSameThan(conferenceDescriptor.id)
         || !CURRENT_SCHEDULE.value?.day.isSameThan(dayId)
     ) {
-        const day = findVoxxrinDayById(conferenceDescriptor, dayId)
+        const day = findVoxxrinDay(conferenceDescriptor, dayId)
         const voxxrinDailySchedule = await match(useDailyCachedSchedule(conferenceDescriptor.id, dayId))
             .with(undefined, async () => {
                 const firestoreDailySchedule: DailySchedule = await useFetchJsonDebouncer(

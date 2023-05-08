@@ -89,7 +89,7 @@ import {
     useCurrentConferenceDescriptor
 } from "@/state/CurrentConferenceDescriptor";
 import DaySelector from "@/components/DaySelector.vue";
-import {findVoxxrinDayById} from "@/models/VoxxrinConferenceDescriptor";
+import {findVoxxrinDay} from "@/models/VoxxrinConferenceDescriptor";
 import TimeSlotAccordion from "@/components/TimeSlotAccordion.vue";
 import {VoxxrinTimeslotFeedback} from "@/models/VoxxrinFeedback";
 import {useCurrentClock} from "@/state/CurrentClock";
@@ -126,7 +126,7 @@ watchCurrentSchedule((currentSchedule) => {
         });
         recomputeMissingFeedbacksList();
 
-        currentlySelectedDay.value = findVoxxrinDayById(currentConferenceDescriptor.value, currentSchedule.day)
+        currentlySelectedDay.value = findVoxxrinDay(currentConferenceDescriptor.value, currentSchedule.day)
     }
 });
 
