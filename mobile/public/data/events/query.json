@@ -31,7 +31,10 @@
         "id": "friday",
         "localDate": "2023-05-12"
       }
-    ]
+    ],
+    "themeColor": "#f9bbbb",
+    "logoUrl": "https://devoxx.be/wp-content/uploads/2019/05/DEVOXX-Name-Only-TransparentBackground.png",
+    "backgroundUrl": "https://www.devoxx.co.uk/wp-content/uploads/2023/02/D23-header-for-web.jpg"
   },
   {
     "title": "Devoxx Belgium 2022",
@@ -73,7 +76,10 @@
     ],
     "timezone": "Europe/Paris",
     "id": "dvbe22",
-    "websiteUrl": "https://devoxx.be"
+    "websiteUrl": "https://devoxx.be",
+    "logoUrl": "https://devoxx.be/wp-content/uploads/2019/05/DEVOXX-Name-Only-TransparentBackground.png",
+    "backgroundUrl": "https://devoxx.be/wp-content/uploads/2022/10/cover.jpg",
+    "themeColor": "#bbbbf9"
   },
   {
     "title": "Devoxx Greece 2023",
@@ -107,6 +113,9 @@
         "localDate": "2023-05-06",
         "id": "saturday"
       }
-    ]
+    ],
+    "themeColor": "#bbf9bb",
+    "logoUrl": "https://devoxx.be/wp-content/uploads/2019/05/DEVOXX-Name-Only-TransparentBackground.png",
+    "backgroundUrl": "https://devoxx.gr/wp-content/uploads/2022/11/VDAthens_3593.jpg"
   }
 ]

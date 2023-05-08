@@ -14,7 +14,9 @@ export type ListableEvent = {
         country: string,
         city: string
     },
-    imageUrl: string,
     peopleDescription: string|undefined,
+    backgroundUrl: string,
+    logoUrl: string,
+    themeColor: string,
     websiteUrl: string,
 }
