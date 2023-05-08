@@ -1,19 +1,21 @@
 <template>
-  <ion-list class="dayList" >
+  <ion-list class="dayList">
     <ion-item  v-for="(day, index) in formattedDays" :key="index" :class="{past: today.localeCompare(day.localDate) === 1}">
-      <ion-button class="dayList-button" @click="$emit('day-selected', day)" :class="{
+      <div class="dayList-content">
+        <ion-button class="dayList-button" @click="$emit('day-selected', day)" :class="{
           selected: day.id.isSameThan(selected?.id),
           past: today.localeCompare(day.localDate) === 1,
           today: today.localeCompare(day.localDate) === 0,
           future: today.localeCompare(day.localDate) === -1,
       }">
-        <div class="dayList-button-content">
-          <strong class="day">{{day.formatted.day}}</strong>
-          <span class="month">{{day.formatted.month}}</span>
-          <!-- {{day.localDate}} ( {{day.formatted.weekday}}
-         {{day.formatted.year}})-->
-        </div>
-      </ion-button>
+          <div class="dayList-button-content">
+            <strong class="day">{{day.formatted.day}}</strong>
+            <span class="month">{{day.formatted.month}}</span>
+            <!-- {{day.localDate}} ( {{day.formatted.weekday}}
+           {{day.formatted.year}})-->
+          </div>
+        </ion-button>
+      </div>
     </ion-item>
   </ion-list>
 </template>
@@ -79,12 +81,21 @@ const formattedDays = computed(() => {
   .dayList  {
     display: flex;
     overflow-x: auto;
+    margin-left: -44px;
+    margin-right: -34px;
     background: var(--app-white);
     box-shadow: var(--app-shadow-light);
 
+    &-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+    }
+
     ion-item {
       position: relative;
-      min-width: 96px;
+      min-width: 144px;
       --ion-item-background: transparent;
       --padding-top: 4px;
       --padding-bottom: 4px;
@@ -101,9 +112,9 @@ const formattedDays = computed(() => {
 
       &:after {
         position: absolute;
-        left: 74px;
+        right: calc(-50% + 24px);
         top: 50%;
-        width: calc(100% - 68px);
+        width: calc(100% - 64px);
         min-width: 32px;
         height: 0;
         border-bottom: 2px dotted var(--app-beige-line);
@@ -119,6 +130,7 @@ const formattedDays = computed(() => {
       align-items: center;
       height: 44px;
       width: 44px;
+      margin: 8px 0;
       --border-radius: 44px;
       --border-width: 1px;
       --border-style: solid;

@@ -21,6 +21,10 @@ ion-button {
        }
    }
 
+    &.button-outline {
+        --border-width: 2px;
+    }
+
     &.btnUser  { --background: rgba(var(--app-white-transparent));}
 }
 
