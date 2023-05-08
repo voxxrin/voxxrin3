@@ -16,7 +16,7 @@
       "city": "London"
     },
     "imageUrl": null,
-    "websiteUrl": "www.devoxx.co.uk",
+    "websiteUrl": "https://www.devoxx.co.uk",
     "title": "Devoxx UK 2023",
     "days": [
       {
@@ -99,7 +99,7 @@
       "Big data",
       "Web"
     ],
-    "websiteUrl": "http://devoxx.gr",
+    "websiteUrl": "https://devoxx.gr",
     "days": [
       {
         "id": "thursday",

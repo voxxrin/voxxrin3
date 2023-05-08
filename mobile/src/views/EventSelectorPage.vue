@@ -14,7 +14,7 @@
         </template>
       </favorited-event-selector>
       <h1>All conferences</h1>
-      <available-events-list :events="availableEvents">
+      <available-events-list :events="availableEvents" @event-clicked="(event) => showEventActions(event)">
         <template #no-event>
           No conference registered yet
         </template>
@@ -38,6 +38,8 @@ import {fetchAvailableEvents, watchCurrentAvailableEvents} from "@/state/Current
 import {ref, Ref} from "vue";
 import FavoritedEventSelector from "@/components/FavoritedEventSelector.vue";
 import AvailableEventsList from "@/components/AvailableEventsList.vue";
+import {presentActionSheetController} from "@/views/vue-utils";
+import {Browser} from "@capacitor/browser";
 
 const router = useIonRouter();
 
@@ -54,5 +56,34 @@ async function selectEvent(eventId: EventId) {
     await fetchConferenceDescriptor(eventId);
 
     router.push(`/events/${eventId.value}`);
+}
+
+async function showEventActions(event: ListableVoxxrinEvent) {
+    const result = await presentActionSheetController({
+        header: 'Actions',
+        buttons: [{
+            text: 'Add to my favorites',
+            data: {action: 'add-to-favs'},
+        }, {
+            text: 'Visit website',
+            data: {action: 'visit-website'},
+        }, {
+            text: 'Cancel', role: 'cancel',
+            data: {action: 'cancel'},
+        }] as const
+    }, {
+        buttonsFilter: btn => !!event.websiteUrl || btn.action !== 'visit-website'
+    });
+
+    // Not sure why, but ts-pattern's match() doesn't work here 🤔
+    if(result?.action === 'visit-website') {
+        Browser.open({url: event.websiteUrl})
+    } else if(result?.action === 'add-to-favs') {
+        console.log(`TODO: Add to favorites !`)
+    } else if(result?.action === 'cancel') {
+
+    } else {
+        // popup closed
+    }
 }
 </script>
