@@ -13,6 +13,12 @@
           No favorites available yet...
         </template>
       </favorited-event-selector>
+      <h1>All conferences</h1>
+      <available-events-list :events="availableEvents">
+        <template #no-event>
+          No conference registered yet
+        </template>
+      </available-events-list>
     </ion-content>
   </ion-page>
 </template>
@@ -31,11 +37,14 @@ import {fetchConferenceDescriptor} from "@/state/CurrentConferenceDescriptor";
 import {fetchAvailableEvents, watchCurrentAvailableEvents} from "@/state/CurrentAvailableEvents";
 import {ref, Ref} from "vue";
 import FavoritedEventSelector from "@/components/FavoritedEventSelector.vue";
+import AvailableEventsList from "@/components/AvailableEventsList.vue";
 
 const router = useIonRouter();
 
 const favoritedEvents: Ref<ListableVoxxrinEvent[]> = ref([]);
+const availableEvents: Ref<ListableVoxxrinEvent[]> = ref([]);
 watchCurrentAvailableEvents(updatedAvailableEvents => {
+    availableEvents.value = updatedAvailableEvents;
     favoritedEvents.value = updatedAvailableEvents;
 })
 
