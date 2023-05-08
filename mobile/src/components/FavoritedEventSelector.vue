@@ -17,7 +17,9 @@
             </ion-item>
             <ion-item>
               <ion-icon :icon="calendar" />
-              <ion-label>{{showEventTimeRange(favoritedEvent)}}</ion-label>
+              <ion-label>
+                <month-day-date-range :range="{ start: favoritedEvent.start, end: favoritedEvent.end }" />
+              </ion-label>
             </ion-item>
             <ion-item v-if="favoritedEvent.peopleDescription">
               <ion-icon :icon="people" />
@@ -49,6 +51,7 @@ import {ListableVoxxrinEvent} from "@/models/VoxxrinEvent";
 import {localDateToReadableParts} from "@/models/DatesAndTime";
 import {useCurrentUserLocale} from "@/state/CurrentUser";
 import CurrentEventStatus from "@/components/CurrentEventStatus.vue";
+import MonthDayDateRange from "@/components/MonthDayDateRange.vue";
 
 const props = defineProps({
     favoritedEvents: {
