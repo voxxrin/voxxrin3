@@ -6,7 +6,7 @@
       </div>
 
       <div class="room">
-        <ion-icon :icon="location"></ion-icon>
+        <ion-icon aria-hidden="true" src="/assets/icons/solid/map-marker.svg"></ion-icon>
         {{talk.room.title}}
       </div>
     </div>
@@ -14,9 +14,11 @@
     <div class="talkCard-content">
       <div class="title">{{talk.title}}</div>
       <div class="pictures">
-        <ion-thumbnail v-for="(speaker, index) in talk.speakers" :key="index">
-          <img :src="speaker.photoUrl" />
-        </ion-thumbnail>
+        <div class="picturesItem" v-for="(speaker, index) in talk.speakers" :key="index">
+          <ion-thumbnail>
+            <img :src="speaker.photoUrl" />
+          </ion-thumbnail>
+        </div>
       </div>
     </div>
 
@@ -27,14 +29,15 @@
       </div>
       <div class="talkCard-footer-actions">
         <div class="watchLater">
-          <ion-button class="watch-later-btn">
+          <ion-button class="btnTalk watch-later-btn">
             <ion-icon :icon="videocam"></ion-icon>
           </ion-button>
         </div>
         <div class="favorite">
-          <ion-button class="favorite-btn">
-            <ion-icon :icon="bookmark"></ion-icon>
-            <ion-label v-if="favoritesCount">{{ favoritesCount }}</ion-label>
+          <ion-button class="btnTalk favorite-btn">
+            <ion-icon class="favorite-btn-icon" v-if="!favorited" src="/assets/icons/line/bookmark-line-favorite.svg"></ion-icon>
+            <ion-icon class="favorite-btn-icon" v-if="favorited" src="/assets/icons/solid/bookmark-favorite.svg"></ion-icon>
+            <ion-label class="favorite-btn-nb" v-if="favoritesCount">{{ favoritesCount }}</ion-label>
           </ion-button>
         </div>
       </div>
@@ -86,20 +89,6 @@ const theme = {
 
 <style lang="scss" scoped>
 
-
-
-ion-thumbnail {
-  --size: 80px;
-  --border-radius: 40px;
-}
-
-ion-button {
-  &.watch-later-btn, &.favorite-btn {
-    width: 100%;
-    height: 100%;
-  }
-}
-
 ion-badge.track {
   --background: v-bind('theme.track.color')
 }
@@ -109,10 +98,14 @@ ion-badge.track {
 }
 
 .is-favorited ion-button.favorite-btn {
-  --background: var(--ion-color-danger)
+  --background: var(--app-theme-primary);
+  --color: var(--app-white);
+  border-left: 1px solid var(--app-theme-primary);
 }
 .to-watch-later ion-button.watch-later-btn {
-  --background: var(--ion-color-secondary)
+  --background: var(--app-voxxrin);
+  --color: var(--app-white);
+  border-left: 1px solid var(--app-voxxrin);
 }
 
 /* see this grid layout config: https://grid.layoutit.com/?id=iRG8xLp */
@@ -123,12 +116,29 @@ ion-badge.track {
   row-gap: 8px;
   width: 100%;
   border-left: 6px solid v-bind('theme.track.color');
+  border : {
+    top: 1px solid var(--app-grey-line);
+    right: 1px solid var(--app-grey-line);
+    bottom: 1px solid var(--app-grey-line);
+  }
 
   &-head {
     display: flex;
     column-gap: 16px;
     justify-content: space-between;
-    padding: 16px;
+    padding: 8px 16px 8px 16px;
+
+    .room {
+      display: flex;
+      align-items: center;
+      column-gap: 2px;
+      color: var(--app-grey-dark);
+
+      ion-icon {
+        font-size: 16px;
+        color: var(--app-primary-medium);
+      }
+    }
   }
 
   &-content {
@@ -151,11 +161,19 @@ ion-badge.track {
       flex-direction: row;
       flex: 0 0 auto;
 
-      ion-thumbnail {
-        height: 48px;
-        width: 48px;
-        border: 2px solid var(--app-primary);
-        box-shadow: rgb(0 0 0 / 24%) -3px 3px 6px 0px;
+      .picturesItem {
+        width: 24px;
+
+        &:last-child {
+          margin-right: 24px;
+        }
+
+        ion-thumbnail {
+          --size: 48px;
+          --border-radius: 40px;
+          filter: drop-shadow(-4px 0px 4px rgba(0, 0, 0, 0.15));
+
+        }
       }
     }
   }
@@ -164,7 +182,42 @@ ion-badge.track {
     display: flex;
     column-gap: 16px;
     justify-content: space-between;
-    padding: 0 16px;
+    border : {
+      top: 1px solid var(--app-grey-line);
+      right: 1px solid var(--app-grey-line);
+      bottom: 1px solid var(--app-grey-line);
+    }
+
+    .btnTalk {
+      height: 48px;
+      width: 58px;
+      margin: 0;
+      --border-radius: 0;
+      --background: transparent;
+      --color: var(--app-primary);
+      border-left: 1px solid var(--app-grey-line);
+      font-size: 18px;
+      --padding-start: 0;
+      --padding-end: 0;
+
+      .favorite-btn {
+        --size: 28px;
+
+        &-icon {
+          position: relative;
+          top: -6px;
+          font-size: 26px;
+        }
+
+        &-nb {
+          position: absolute;
+          bottom: 5px;
+          font-size: 11px;
+          font-weight: 900;
+        }
+      }
+    }
+
 
     &-actions {
       display: flex;

@@ -1,5 +1,5 @@
 <template>
-  <ion-list>
+  <ion-list class="listTalks">
     <ion-item-group v-for="(perFormatGroup, index) in perFormatGroups" :key="index">
       <ion-item-divider>
         <ion-label :style="{ '--color': perFormatGroup.format.themeColor }">
@@ -47,8 +47,15 @@ const perFormatGroups = sortThenGroupByFormat(props.talks!, props.event!);
 </script>
 
 <style scoped lang="scss">
-  ion-list {
+  .listTalks {
     padding: 0;
+    overflow: visible;
+
+    ion-item {
+      overflow: visible !important;
+      --padding-start: 8px;
+      --inner-padding-end: 8px;
+    }
   }
 
   ion-item-group {

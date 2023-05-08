@@ -209,13 +209,12 @@ ion-accordion {
     ._accordion-icon { color: var(--app-white) !important;}
   }
 
-
   .accordion-content {
     background: var(--app-background);
     padding-left: 0;
     padding-right: 0;
-    padding-top: 4px;
-    padding-bottom: 4px;
+    padding-top: 0;
+    padding-bottom: 0;
   }
 }
 </style>
