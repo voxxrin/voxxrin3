@@ -21,11 +21,12 @@ import {
 } from "@/models/VoxxrinConferenceDescriptor";
 import {useInterval} from "@/views/vue-utils";
 import {calendar, playBackCircle} from "ionicons/icons";
+import {ListableVoxxrinEvent} from "@/models/VoxxrinEvent";
 
 const props = defineProps({
     event: {
         required: true,
-        type: Object as PropType<VoxxrinConferenceDescriptor>
+        type: Object as PropType<VoxxrinConferenceDescriptor|ListableVoxxrinEvent>
     }
 })
 
@@ -37,9 +38,9 @@ onMounted(() => {
 })
 
 function refreshStatus() {
-    conferenceStatus.value = match<VoxxrinConferenceDescriptor|undefined, DisplayedConferenceStatus>(props.event)
+    conferenceStatus.value = match<VoxxrinConferenceDescriptor|ListableVoxxrinEvent|undefined, DisplayedConferenceStatus>(props.event)
         .with(undefined, () => 'unknown')
-        .with(P.any, (confDesc: VoxxrinConferenceDescriptor) => conferenceStatusOf(confDesc))
+        .with(P.any, (event: VoxxrinConferenceDescriptor|ListableVoxxrinEvent) => conferenceStatusOf(event.start, event.end, event.timezone))
         .otherwise(() => 'unknown')
 }
 

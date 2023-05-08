@@ -35,11 +35,11 @@ export function findVoxxrinDayById(conferenceDescriptor: VoxxrinConferenceDescri
 }
 
 export type ConferenceStatus = 'future'|'ongoing'|'past'
-export function conferenceStatusOf(confDescriptor: VoxxrinConferenceDescriptor): ConferenceStatus {
+export function conferenceStatusOf(start: Temporal.ZonedDateTime, end: Temporal.ZonedDateTime, timezone: string): ConferenceStatus {
     return match([
-        confDescriptor.start,
-        useCurrentClock().zonedDateTimeISO(confDescriptor.timezone),
-        confDescriptor.end
+        start,
+        useCurrentClock().zonedDateTimeISO(timezone),
+        end
     ]).when(([start, now, _]) =>
             Temporal.ZonedDateTime.compare(now, start) === -1,
         () => 'future' as ConferenceStatus

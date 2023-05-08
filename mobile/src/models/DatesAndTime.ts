@@ -1,6 +1,7 @@
 import {ISOLocalDate} from "../../../shared/type-utils";
 import {UserLocale} from "@/models/VoxxrinUser";
 import {Temporal} from "temporal-polyfill";
+import {match, P} from "ts-pattern";
 
 
 type ReadableLocalDatePartsOpts = {
@@ -15,16 +16,28 @@ const DEFAULT_LOCAL_DATE_PARTS_OPTS: ReadableLocalDatePartsOpts = {
     year: "numeric",
     weekday: "short"
 };
-export function localDateToReadableParts(localDate: ISOLocalDate, userLocale: UserLocale, partOptions: Partial<ReadableLocalDatePartsOpts> = DEFAULT_LOCAL_DATE_PARTS_OPTS) {
+export function localDateToReadableParts(localDate: ISOLocalDate|Temporal.ZonedDateTime, userLocale: UserLocale, partOptions: Partial<ReadableLocalDatePartsOpts> = DEFAULT_LOCAL_DATE_PARTS_OPTS) {
     const formatter = new Intl.DateTimeFormat(userLocale.value, { ...DEFAULT_LOCAL_DATE_PARTS_OPTS, ...partOptions });
 
-    const dateParts = formatter.formatToParts(new Date(localDate));
+    const dateParts = formatter.formatToParts(new Date(match(localDate)
+        .with(P.instanceOf(Temporal.ZonedDateTime), zdt => {
+            const zdtFormatted = zdt.toString();
+            // removing timezone in the end of the format, as this is not recognized by new Date() constructor
+            return zdtFormatted.substring(0, zdtFormatted.indexOf("["));
+        })
+        .with(P.string, isoDate => isoDate)
+        .run()
+    ));
 
     return {
-        day: parseInt(dateParts.find(p => p.type === 'day')!.value),
-        month: dateParts.find(p => p.type === 'month')!.value,
-        year: parseInt(dateParts.find(p => p.type === 'year')!.value),
-        weekday: dateParts.find(p => p.type === 'weekday')!.value,
+        day: match(dateParts.find(p => p.type === 'day'))
+            .with(undefined, undef => undef)
+            .otherwise(part => parseInt(part.value)),
+        month: dateParts.find(p => p.type === 'year')?.value,
+        year: match(dateParts.find(p => p.type === 'day'))
+            .with(undefined, undef => undef)
+            .otherwise(part => parseInt(part.value)),
+        weekday: dateParts.find(p => p.type === 'weekday')?.value,
         full: dateParts.map(p => p.value).join('')
     }
 }
