@@ -1,5 +1,5 @@
 <template>
-  <ion-content :scroll-x="true" :scroll-y="false">
+  <div v-if="favoritedEvents.length>0">
     <ion-list >
       <ion-card class="container" :style="{ 'background-url': favoritedEvent.backgroundUrl }"
                 v-for="(favoritedEvent, index) in favoritedEvents" :key="index"
@@ -10,29 +10,32 @@
           {{favoritedEvent.description}}
         </div>
         <div class="details">
-          <ion-list>
-            <ion-item>
+          <ul>
+            <li>
               <ion-icon :icon="location" />
               <ion-label>{{favoritedEvent.location.city}}{{favoritedEvent.location.country?` (${favoritedEvent.location.country})`:``}}</ion-label>
-            </ion-item>
-            <ion-item>
+            </li>
+            <li>
               <ion-icon :icon="calendar" />
               <ion-label>
                 <month-day-date-range :range="{ start: favoritedEvent.start, end: favoritedEvent.end }" />
               </ion-label>
-            </ion-item>
-            <ion-item v-if="favoritedEvent.peopleDescription">
+            </li>
+            <li v-if="favoritedEvent.peopleDescription">
               <ion-icon :icon="people" />
               <ion-label>{{favoritedEvent.peopleDescription}}</ion-label>
-            </ion-item>
-          </ion-list>
+            </li>
+          </ul>
         </div>
         <div class="logo">
           <ion-img :src="favoritedEvent.logoUrl" />
         </div>
       </ion-card>
     </ion-list>
-  </ion-content>
+  </div>
+  <div v-else>
+    <slot name="no-favorites"></slot>
+  </div>
 </template>
 
 <script setup lang="ts">

@@ -6,8 +6,12 @@
       </ion-toolbar>
     </ion-header>
     <ion-content>
+      <h1>Favorited conferences</h1>
       <favorited-event-selector
           :favoritedEvents="favoritedEvents" @event-selected="(event) => selectEvent(event.id)">
+        <template #no-favorites>
+          No favorites available yet...
+        </template>
       </favorited-event-selector>
     </ion-content>
   </ion-page>
