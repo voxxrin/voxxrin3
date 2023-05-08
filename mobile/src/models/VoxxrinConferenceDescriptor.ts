@@ -9,6 +9,7 @@ import {Replace} from "@/models/type-utils";
 import {Temporal} from "temporal-polyfill";
 import {match} from "ts-pattern";
 import {useCurrentClock} from "@/state/CurrentClock";
+import {zonedDateTimeRangeOf} from "@/models/DatesAndTime";
 
 export type VoxxrinConferenceDescriptor = Replace<ConferenceDescriptor, {
     id: EventId;
@@ -49,21 +50,10 @@ export function conferenceStatusOf(confDescriptor: VoxxrinConferenceDescriptor):
 }
 
 export function createVoxxrinConferenceDescriptor(firestoreConferenceDescriptor: ConferenceDescriptor) {
-    const sortedPlainDates = firestoreConferenceDescriptor.days
-        .map(d => Temporal.PlainDate.from(d.localDate))
-        .sort(Temporal.PlainDate.compare);
-
-    const [start, end] = [
-        sortedPlainDates[0]
-            .toZonedDateTime(firestoreConferenceDescriptor.timezone)
-            .startOfDay(),
-        sortedPlainDates[sortedPlainDates.length-1]
-            .toZonedDateTime(firestoreConferenceDescriptor.timezone)
-            .startOfDay()
-            // "hackish" endOfDay, see https://github.com/tc39/proposal-temporal/issues/2568
-            .add({days:1})
-            .subtract({nanoseconds:1}),
-    ];
+    const {start, end} = zonedDateTimeRangeOf(
+        firestoreConferenceDescriptor.days.map(d => d.localDate),
+        firestoreConferenceDescriptor.timezone
+    );
 
     const voxxrinConferenceDescriptor: VoxxrinConferenceDescriptor = {
         ...firestoreConferenceDescriptor,

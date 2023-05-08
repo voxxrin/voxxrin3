@@ -1,9 +1,11 @@
-import {ListableEvent} from "../../../shared/event-list.firestore";
 import {Temporal} from "temporal-polyfill";
 import {useCurrentClock} from "@/state/CurrentClock";
 import {Ref, ref, watch} from "vue";
-import {DailySchedule} from "../../../shared/dayly-schedule.firestore";
 import {useFetchJsonDebouncer} from "@/state/state-utilities";
+import {EventId, ListableVoxxrinEvent} from "@/models/VoxxrinEvent";
+import {ListableEvent} from "../../../shared/event-list.firestore";
+import {DayId} from "@/models/VoxxrinDay";
+import {zonedDateTimeRangeOf} from "@/models/DatesAndTime";
 
 
 const CACHED_AVAILABLE_EVENTS_CONSIDERED_OUTDATED_AFTER = Temporal.Duration.from({ hours: 2 })
@@ -12,7 +14,7 @@ class FetchedAvailableEvents {
     public readonly lastFetched: Temporal.Instant|undefined = undefined;
 
     constructor(
-        public readonly availableEvents: ListableEvent[]
+        public readonly availableEvents: ListableVoxxrinEvent[]
     ) {
         this.lastFetched = useCurrentClock().zonedDateTimeISO().toInstant()
     }
@@ -33,7 +35,7 @@ class FetchedAvailableEvents {
 
 const CURRENT_AVAILABLE_EVENTS: Ref<FetchedAvailableEvents|undefined> = ref();
 
-export const watchCurrentAvailableEvents = (callback: (availableEvents: ListableEvent[]) => void,) => {
+export const watchCurrentAvailableEvents = (callback: (availableEvents: ListableVoxxrinEvent[]) => void,) => {
     watch(CURRENT_AVAILABLE_EVENTS, (maybeAvailableEvents) => {
         callback(maybeAvailableEvents?.availableEvents || []);
     }, {immediate: true});
@@ -50,7 +52,20 @@ export async function fetchAvailableEvents() {
         `/data/events/query.json`
     );
 
-    CURRENT_AVAILABLE_EVENTS.value = new FetchedAvailableEvents(firestoreAvailableEvents);
+    CURRENT_AVAILABLE_EVENTS.value = new FetchedAvailableEvents(firestoreAvailableEvents.map(fae => {
+        const {start, end} = zonedDateTimeRangeOf(
+            fae.days.map(d => d.localDate),
+            fae.timezone
+        );
+
+        return {
+            ...fae,
+            id: new EventId(fae.id),
+            days: fae.days.map(d => ({...d, id: new DayId(d.id)})),
+            start,
+            end,
+        };
+    }));
 
     return firestoreAvailableEvents;
 }

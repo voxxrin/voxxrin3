@@ -32,3 +32,23 @@ export function localDateToReadableParts(localDate: ISOLocalDate, userLocale: Us
 export function formatHourMinutes(datetime: Temporal.ZonedDateTime) {
     return `${datetime.hour<10?'0':''}${datetime.hour}:${datetime.minute<10?'0':''}${datetime.minute}`;
 }
+
+export function zonedDateTimeRangeOf(localDates: ISOLocalDate[], timezone: string) {
+    const sortedPlainDates = localDates
+        .map(ld => Temporal.PlainDate.from(ld))
+        .sort(Temporal.PlainDate.compare);
+
+    const [start, end] = [
+        sortedPlainDates[0]
+            .toZonedDateTime(timezone)
+            .startOfDay(),
+        sortedPlainDates[sortedPlainDates.length-1]
+            .toZonedDateTime(timezone)
+            .startOfDay()
+            // "hackish" endOfDay, see https://github.com/tc39/proposal-temporal/issues/2568
+            .add({days:1})
+            .subtract({nanoseconds:1}),
+    ];
+
+    return {start, end};
+}

@@ -2,7 +2,6 @@
   {
     "timezone": "Europe/London",
     "id": "devoxxuk23",
-    "start": "2023-05UK-10",
     "keywords": [
       "Devoxx",
       "Java",
@@ -18,7 +17,6 @@
     "imageUrl": null,
     "websiteUrl": "www.devoxx.co.uk",
     "title": "Devoxx UK 2023",
-    "end": "2023-05-12",
     "days": [
       {
         "localDate": "2023-05-10",
@@ -63,7 +61,6 @@
       }
     ],
     "imageUrl": null,
-    "end": "2022-10-14",
     "keywords": [
       "Devoxx",
       "Java",
@@ -72,7 +69,6 @@
       "Big data",
       "Web"
     ],
-    "start": "2022-10-10",
     "timezone": "Europe/Paris",
     "id": "dvbe22",
     "websiteUrl": "https://devoxx.be"
@@ -94,8 +90,6 @@
       "Web"
     ],
     "websiteUrl": "http://devoxx.gr",
-    "start": "2023-05-04",
-    "end": "2023-05-06",
     "title": "Devoxx Greece 2023",
     "days": [
       {
