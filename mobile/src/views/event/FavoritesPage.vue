@@ -12,6 +12,10 @@
         </ion-toolbar>
       </ion-header>
 
+      <p>
+        Favorites planned here !
+      </p>
+
     </ion-content>
   </ion-page>
 </template>
