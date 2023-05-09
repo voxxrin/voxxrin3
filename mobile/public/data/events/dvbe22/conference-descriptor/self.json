@@ -90,44 +90,44 @@
       "id": "954",
       "title": "BOF",
       "duration": "PT60m",
-      "themeColor": "#199F8F"
+      "themeColor": "#165CE3"
     },
     {
       "id": "4901",
       "title": "Keynote",
       "duration": "PT30m",
-      "themeColor": "#199F8F"
+      "themeColor": "#935A59"
     },
     {
       "id": "956",
       "title": "Keynote",
       "duration": "PT45m",
-      "themeColor": "#199F8F"
+      "themeColor": "#D6B304"
     },
     {
       "id": "45001",
       "title": "Lunch Talks",
       "duration": "PT40m",
-      "themeColor": "#199F8F"
+      "themeColor": "#C21146"
     },
     {
       "id": "960",
       "title": "Quickie",
       "duration": "PT15m",
-      "themeColor": "#199F8F"
+      "themeColor": "#EA7872"
     }
   ],
   "talkTracks": [
-    { "id": "1252", "title": "Data & AI", "themeColor": "#5914CA" },
-    { "id": "1254", "title": "Build & Deploy", "themeColor": "#C21146" },
-    { "id": "1701", "title": "Development Practices", "themeColor": "#7D51FB" },
-    { "id": "2754", "title": "Java", "themeColor": "#5914CA" },
-    { "id": "2758", "title": "Mind the Geek", "themeColor": "#C21146" },
-    { "id": "2760", "title": "UI & UX", "themeColor": "#7D51FB" },
-    { "id": "1256", "title": "Server Side Java", "themeColor": "#5914CA" },
-    { "id": "1255", "title": "Security", "themeColor": "#C21146" },
-    { "id": "1251", "title": "Architecture", "themeColor": "#7D51FB" },
-    { "id": "1253", "title": "People & Culture", "themeColor": "#5914CA" }
+    { "id": "1252", "title": "Data & AI", "themeColor": "#165CE3" },
+    { "id": "1254", "title": "Build & Deploy", "themeColor": "#EA7872" },
+    { "id": "1701", "title": "Development Practices", "themeColor": "#935A59" },
+    { "id": "2754", "title": "Java", "themeColor": "#3EDDEF" },
+    { "id": "2758", "title": "Mind the Geek", "themeColor": "#69BE72" },
+    { "id": "2760", "title": "UI & UX", "themeColor": "#DA8DE0" },
+    { "id": "1256", "title": "Server Side Java", "themeColor": "#7D51FB" },
+    { "id": "1255", "title": "Security", "themeColor": "#199F8F" },
+    { "id": "1251", "title": "Architecture", "themeColor": "#D6B304" },
+    { "id": "1253", "title": "People & Culture", "themeColor": "#C21146" }
   ],
   "supportedTalkLanguages": [
     {

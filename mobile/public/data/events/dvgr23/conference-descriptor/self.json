@@ -64,142 +64,137 @@
       "id": "984",
       "title": "Hands-on Lab",
       "duration": "PT120m",
-      "themeColor": ""
+      "themeColor": "#69BE72"
     },
     {
       "id": "959",
       "title": "Deep Dive",
       "duration": "PT180m",
-      "themeColor": ""
+      "themeColor": "#DA8DE0"
     },
     {
       "id": "953",
       "title": "Conference",
       "duration": "PT40m",
-      "themeColor": ""
+      "themeColor": "#7D51FB"
     },
     {
       "id": "960",
       "title": "Quickie",
       "duration": "PT15m",
-      "themeColor": ""
+      "themeColor": "#199F8F"
     },
     {
       "id": "994",
       "title": "Keynote",
       "duration": "PT50m",
-      "themeColor": ""
+      "themeColor": "#165CE3"
     },
     {
       "id": "11202",
       "title": "Social Mixer Event",
       "duration": "PT120m",
-      "themeColor": ""
+      "themeColor": "#935A59"
     },
     {
       "id": "954",
       "title": "BOF",
       "duration": "PT60m",
-      "themeColor": ""
+      "themeColor": "#D6B304"
     }
   ],
   "talkTracks": [
     {
       "id": "2754",
       "title": "Java",
-      "themeColor": ""
+      "themeColor": "#69BE72"
     },
     {
       "id": "1401",
       "title": "Programming Languages",
-      "themeColor": ""
+      "themeColor": "#DA8DE0"
     },
     {
       "id": "2760",
       "title": "UI & UX",
-      "themeColor": ""
+      "themeColor": "#7D51FB"
     },
     {
       "id": "1251",
       "title": "Architecture",
-      "themeColor": ""
+      "themeColor": "#199F8F"
     },
     {
       "id": "1255",
       "title": "Security",
-      "themeColor": ""
+      "themeColor": "#165CE3"
     },
     {
       "id": "1701",
       "title": "Development Practices",
-      "themeColor": ""
+      "themeColor": "#935A59"
     },
     {
       "id": "1253",
       "title": "People & Culture",
-      "themeColor": ""
+      "themeColor": "#D6B304"
     },
     {
       "id": "2758",
       "title": "Mind the Geek",
-      "themeColor": ""
+      "themeColor": "#C21146"
     },
     {
       "id": "1402",
       "title": "Cloud, Containers & Infrastructure",
-      "themeColor": ""
+      "themeColor": "#EA7872"
     },
     {
       "id": "1252",
       "title": "Data & AI",
-      "themeColor": ""
+      "themeColor": "#EA7872"
     },
     {
       "id": "11202",
       "title": "Social Mixer Event",
-      "themeColor": ""
+      "themeColor": "#3EDDEF"
     },
     {
       "id": "1254",
       "title": "Build & Deploy",
-      "themeColor": ""
+      "themeColor": "#3EDDEF"
     },
     {
       "id": "1256",
       "title": "Server Side Java",
-      "themeColor": ""
+      "themeColor": "#69BE72"
     },
     {
       "id": "960",
       "title": "Quickie",
-      "themeColor": ""
+      "themeColor": "#3EDDEF"
     }
   ],
   "rooms": [
     {
       "id": "2803",
-      "title": "MC3",
-      "themeColor": ""
+      "title": "MC3"
     },
     {
       "id": "2804",
-      "title": "MC2",
-      "themeColor": ""
+      "title": "MC2"
     },
     {
       "id": "2802",
-      "title": "Skalkotas",
-      "themeColor": ""
+      "title": "Skalkotas"
     },
     {
       "id": "2801",
-      "title": "Banquet",
-      "themeColor": ""
+      "title": "Banquet"
     },
     {
       "id": "2805",
-      "title": "Lobby area",
-      "themeColor": ""
+      "title": "Lobby area"
     }
   ],
   "supportedTalkLanguages": [
