@@ -30,12 +30,8 @@
 <script setup lang="ts">
 import {PropType, ref} from "vue";
 import {
-  IonIcon,
   IonProgressBar,
   IonAccordion,
-  IonItem,
-  IonButton,
-  IonLabel,
   IonRow,
   IonCol,
   IonGrid,

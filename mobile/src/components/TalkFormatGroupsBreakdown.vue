@@ -22,10 +22,6 @@
 <script setup lang="ts">
 import {PropType} from "vue";
 import {
-    IonItem,
-    IonLabel,
-    IonList,
-    IonIcon,
     IonItemDivider,
     IonItemGroup
 } from '@ionic/vue';

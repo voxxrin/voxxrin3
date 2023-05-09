@@ -25,11 +25,6 @@
 
 <script setup lang="ts">
 import {
-    IonPage,
-    IonHeader,
-    IonToolbar,
-    IonTitle,
-    IonContent,
     useIonRouter
 } from '@ionic/vue';
 import {EventId, ListableVoxxrinEvent} from "@/models/VoxxrinEvent";

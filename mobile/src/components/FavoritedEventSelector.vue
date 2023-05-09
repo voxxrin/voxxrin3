@@ -44,13 +44,7 @@
 <script setup lang="ts">
 import {PropType} from "vue";
 import {
-    IonIcon,
-    IonCard,
-    IonItem,
-    IonList,
-    IonCardTitle,
-    IonLabel,
-    IonImg, IonContent
+    IonImg,
 } from '@ionic/vue';
 import {calendar, location, people} from "ionicons/icons";
 import {ListableVoxxrinEvent} from "@/models/VoxxrinEvent";

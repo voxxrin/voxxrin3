@@ -20,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-import {IonIcon, IonButton, IonHeader, IonTitle, IonToolbar, useIonRouter} from "@ionic/vue";
+import {useIonRouter} from "@ionic/vue";
 import CurrentEventStatus from "@/components/CurrentEventStatus.vue";
 import {PropType} from "vue";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";

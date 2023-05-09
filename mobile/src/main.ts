@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router';
+import globalComponents from './global-components';
 
 import { IonicVue } from '@ionic/vue';
 
@@ -27,8 +28,9 @@ import './styles/main.scss'
 
 const app = createApp(App)
   .use(IonicVue)
-  .use(router);
-  
+  .use(router)
+  .use(globalComponents);
+
 router.isReady().then(() => {
   app.mount('#app');
 });

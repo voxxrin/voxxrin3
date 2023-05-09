@@ -9,9 +9,6 @@
 <script setup lang="ts">
 import {PropType} from "vue";
 import {
-    IonCard,
-    IonLabel,
-    IonIcon,
     IonBadge,
 } from '@ionic/vue';
 import {VoxxrinBreak} from "@/models/VoxxrinTalk";

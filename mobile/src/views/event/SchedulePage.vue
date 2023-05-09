@@ -53,17 +53,8 @@
 
 <script setup lang="ts">
 import {
-    IonPage,
-    IonHeader,
-    IonToolbar,
-    IonTitle,
-    IonContent,
-    IonButton,
-    IonIcon,
     IonFabButton,
     IonFab,
-    IonAlert,
-    IonLabel,
     IonFabList,
     IonAccordionGroup,
     alertController,
@@ -73,7 +64,6 @@ import {useRoute, useRouter} from "vue-router";
 import {onMounted, ref, watch} from "vue";
 import {
     fetchSchedule,
-    useCurrentSchedule,
     watchCurrentSchedule
 } from "@/state/CurrentSchedule";
 import CurrentEventHeader from "@/components/CurrentEventHeader.vue";

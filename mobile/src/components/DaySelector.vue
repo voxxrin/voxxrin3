@@ -21,7 +21,6 @@
 </template>
 
 <script setup lang="ts">
-import {IonButton, IonItem, IonList } from "@ionic/vue";
 import {computed, PropType, ref, watch} from "vue";
 import {VoxxrinDay} from "@/models/VoxxrinDay";
 import {localDateToReadableParts} from "@/models/DatesAndTime";

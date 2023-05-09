@@ -50,12 +50,8 @@
 <script setup lang="ts">
 import {PropType, ref, watch} from "vue";
 import {
-  IonIcon,
   IonBadge,
   IonThumbnail,
-  IonButton,
-  IonCard,
-  IonLabel
 } from '@ionic/vue';
 import { VoxxrinTalk} from "@/models/VoxxrinTalk";
 import {bookmark, location, megaphone, videocam} from "ionicons/icons";

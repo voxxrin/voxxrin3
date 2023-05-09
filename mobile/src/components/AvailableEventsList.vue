@@ -26,7 +26,6 @@
 <script setup lang="ts">
 import {PropType} from "vue";
 import {
-    IonList,
     IonImg
 } from '@ionic/vue';
 import {ListableVoxxrinEvent} from "@/models/VoxxrinEvent";

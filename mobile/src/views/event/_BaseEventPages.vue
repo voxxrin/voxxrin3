@@ -18,9 +18,6 @@ import {
     IonTabBar,
     IonTabButton,
     IonTabs,
-    IonLabel,
-    IonIcon,
-    IonPage,
     IonRouterOutlet, useIonRouter,
 } from '@ionic/vue';
 import {onMounted, ref} from "vue";
