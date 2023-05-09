@@ -106,7 +106,7 @@ const theme = {
   &:active {
     transition: 140ms ease-in-out;
     transform: scale(0.99);
-    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    box-shadow: rgba(99, 99, 99, 0.2) 0 2px 8px 0;
   }
 
   &.is-favorited  {
@@ -139,6 +139,7 @@ const theme = {
     }
 
     ion-thumbnail {
+      background-color: var(--app-background);
       border: 2px solid var(--app-primary-shade);
     }
 
@@ -173,7 +174,7 @@ const theme = {
     display: flex;
     column-gap: 16px;
     justify-content: space-between;
-    padding: 8px 8px 0 8px;
+    padding: 8px 12px 0 8px;
 
     .trackBadge {
       --background: v-bind('theme.track.color');
@@ -197,7 +198,7 @@ const theme = {
     display: flex;
     column-gap: 16px;
     justify-content: space-between;
-    padding: 0 8px;
+    padding: 0 12px 0 8px;
 
     .title {
       flex: 1 1 0;
