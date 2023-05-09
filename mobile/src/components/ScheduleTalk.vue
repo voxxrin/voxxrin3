@@ -32,13 +32,14 @@
       <div class="talkCard-footer-actions">
         <div class="watchLater">
           <ion-button class="btnTalk watch-later-btn">
-            <ion-icon :icon="videocam"></ion-icon>
+            <ion-icon v-if="!toWatchLater" aria-hidden="true" src="/assets/icons/line/video-line.svg"></ion-icon>
+            <ion-icon v-if="toWatchLater" aria-hidden="true" src="/assets/icons/solid/video.svg"></ion-icon>
           </ion-button>
         </div>
         <div class="favorite">
-          <ion-button class="btnTalk favorite-btn">
-            <ion-icon class="favorite-btn-icon" v-if="!favorited" src="/assets/icons/line/bookmark-line-favorite.svg"></ion-icon>
-            <ion-icon class="favorite-btn-icon" v-if="favorited" src="/assets/icons/solid/bookmark-favorite.svg"></ion-icon>
+          <ion-button class="btnTalk favorite-btn" >
+            <ion-icon class="favorite-btn-icon" v-if="!favorited" aria-hidden="true" src="/assets/icons/line/bookmark-line-favorite.svg"></ion-icon>
+            <ion-icon class="favorite-btn-icon" v-if="favorited" aria-hidden="true" src="/assets/icons/solid/bookmark-favorite.svg"></ion-icon>
             <ion-label class="favorite-btn-nb" v-if="favoritesCount">{{ favoritesCount }}</ion-label>
           </ion-button>
         </div>
@@ -108,10 +109,9 @@ const theme = {
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
   }
 
-
   &.is-favorited  {
     border-width: 2px;
-    border-color: var(--app-primary-medium);
+    border-color: var(--app-primary-shade);
 
     &:before {
       position: absolute;
@@ -119,7 +119,7 @@ const theme = {
       height: 70%;
       right: 0;
       bottom: 0;
-      background: rgba(247, 131, 39, 0.5);
+      background: rgba(var(--app-theme-primary-rgb), 0.6);
       filter: blur(32px);
       content: '';
       z-index: -1;
@@ -138,21 +138,25 @@ const theme = {
       z-index: -1;
     }
 
+    ion-thumbnail {
+      border: 2px solid var(--app-primary-shade);
+    }
+
     ion-button.favorite-btn {
       --background: var(--app-theme-primary);
       --color: var(--app-white);
-      border-left: 1px solid var(--app-primary-medium);
+      border-left: 1px solid var(--app-primary-shade);
       --border-radius:  0 0 8px 0 !important;
     }
 
     .talkCard-footer {
       border-width: 2px;
       border-color: var(--app-primary-medium);
-      border-bottom: 2px solid var(--app-primary-medium);
+      border-bottom: 2px solid var(--app-primary-shade);
 
       .btnTalk {
         border-width: 2px;
-        border-color: var(--app-primary-medium);
+        border-color: var(--app-primary-shade);
       }
     }
   }
@@ -184,7 +188,7 @@ const theme = {
 
       ion-icon {
         font-size: 16px;
-        color: var(--app-primary-medium);
+        color: var(--app-primary-shade);
       }
     }
   }
@@ -237,7 +241,9 @@ const theme = {
       display: flex;
       column-gap: 4px;
       padding: 8px;
-      font-size: 12px;
+      font-size: 11px;
+      line-height: 1.1;
+      letter-spacing: -0.4px;
       color: v-bind('theme.track.color');
 
       &-list {
@@ -263,6 +269,8 @@ const theme = {
       font-size: 18px;
       --padding-start: 0;
       --padding-end: 0;
+      --background-activated-opacity: 0.1;
+      --background-hover-opacity: 0.1;
 
       .favorite-btn {
         --size: 28px;
@@ -277,7 +285,7 @@ const theme = {
           position: absolute;
           bottom: 5px;
           font-size: 11px;
-          font-weight: 900;
+          font-weight: 700;
         }
       }
     }

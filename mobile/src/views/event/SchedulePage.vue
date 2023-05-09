@@ -1,7 +1,7 @@
 <template>
   <ion-page>
-    <ion-content :fullscreen="true">
-      <current-event-header v-if="event" :event="event" />
+    <ion-content :fullscreen="true" >
+      <current-event-header v-if="event" :event="event"/>
       <ion-header class="stickyHeader">
         <ion-toolbar>
           <ion-title class="stickyHeader-title" slot="start" >Schedule</ion-title>
@@ -21,10 +21,10 @@
       </day-selector>
 
       <ion-accordion-group :multiple="true" v-if="currentConferenceDescriptor">
-        <time-slot-accordion v-for="(timeslot, index) in timeslots" :key="index"
-                   :timeslot-feedback="timeslot.feedback" :timeslot="timeslot"
-                   :event="currentConferenceDescriptor">
-        </time-slot-accordion>
+          <time-slot-accordion v-for="(timeslot, index) in timeslots" :key="index"
+                               :timeslot-feedback="timeslot.feedback" :timeslot="timeslot"
+                               :event="currentConferenceDescriptor">
+          </time-slot-accordion>
       </ion-accordion-group>
 
       <ion-button router-direction="forward" :router-link="`/events/${eventId.value}/talks/1/details`">

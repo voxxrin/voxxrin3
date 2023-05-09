@@ -84,6 +84,7 @@ function backToEventsList() {
       &-title {
         color: var(--app-white);
         font-weight: bold;
+        font-size: calc(28px + 8 * (100vw - 320px) / 1024)
       }
     }
   }

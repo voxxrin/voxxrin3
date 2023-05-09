@@ -78,13 +78,24 @@ const timeslotLabel = getTimeslotLabel(props.timeslot!);
 
 <style lang="scss" scoped>
 
-/* Defaults for togglable icons/buttons/progressbar */
-
 ion-accordion {
   border-bottom: 2px solid var(--app-background);
 
+  &.accordion-expanded {
+    border-bottom: none;
+  }
+
   .accordion-content {
-    ion-list {background: var(--app-background) !important;}
+    background: var(--app-background);
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-inline-start: 0;
+    padding-inline-end: 0;
+
+    ion-list {
+      padding: 0 var(--app-gutters);
+      background: var(--app-background);
+    }
   }
 
   ._accordion-icon, ._missing-feedback, ._provided-feedback, ._ongoing-progress {
@@ -98,7 +109,8 @@ ion-accordion {
   }
 
   ion-item {
-    position: relative;
+    position: sticky;
+    top: 98px;
     --padding-start: 8px;
     --padding-end: 0;
     --border-width: 0;
@@ -161,7 +173,7 @@ ion-accordion {
       --ion-color-base: var(--app-beige-line) !important;
       --ripple-color: var(--app-beige-dark) !important;
 
-      ion-label { color: var(--app-primary-shade);}
+      ion-label { color: var(--app-primary-tint);}
     }
 
     ::v-deep .ion-accordion-toggle-icon {
@@ -169,13 +181,12 @@ ion-accordion {
       color: var(--app-beige-dark) !important;
     }
 
-    ._accordion-icon._past-icon { display: inline-block; }
+    ._accordion-icon._past-icon { display: inline-block; color: var(--app-primary-tint) }
     &._missing-feedback:not(._is-break) ._missing-feedback { display: inline-block;}
     &._feedback-provided:not(._is-break) ._provided-feedback {display: inline-block;}
   }
 
   &._ongoing {
-
     .ion-color-light {
       --ion-color-base:  var(--app-theme-primary) !important;;
       --ripple-color: var(--app-beige-dark) !important;
@@ -211,14 +222,6 @@ ion-accordion {
 
     ._accordion-icon._future-icon { display: inline-block; }
     ._accordion-icon { color: var(--app-white) !important;}
-  }
-
-  .accordion-content {
-    background: var(--app-background);
-    padding-left: 0;
-    padding-right: 0;
-    padding-top: 0;
-    padding-bottom: 0;
   }
 }
 </style>

@@ -51,7 +51,7 @@ const perFormatGroups = sortThenGroupByFormat(props.talks!, props.event!);
     overflow: visible;
 
     &-divider {
-      --padding-start: 8px;
+      --padding-start: 0;
       --padding-top: 24px;
       --background: transparent;
       --border-style: inherit;
@@ -78,10 +78,14 @@ const perFormatGroups = sortThenGroupByFormat(props.talks!, props.event!);
 
     &-item {
       overflow: visible !important;
-      --padding-start: 8px;
-      --inner-padding-end: 8px;
+      --padding-start: 0;
+      --inner-padding-end: 0;
       --background: transparent;
       --border-style: none;
+
+      &:last-child {
+        margin-bottom: var(--app-gutters);
+      }
     }
   }
 
