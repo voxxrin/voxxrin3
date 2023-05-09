@@ -20,7 +20,7 @@ import {
     IonTabs,
     IonRouterOutlet, useIonRouter,
 } from '@ionic/vue';
-import {onMounted, ref} from "vue";
+import {ref} from "vue";
 import {useRoute} from "vue-router";
 import {getRouteParamsValue} from "@/views/vue-utils";
 import {EventId} from "@/models/VoxxrinEvent";
@@ -30,8 +30,6 @@ const router = useIonRouter();
 const route = useRoute();
 const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')!));
 const event = useCurrentConferenceDescriptor(eventId.value);
-
-const selectedTab = ref('schedule'); // Définit le tab initial sélectionné
 
 const tabs = [{
   id: 'schedule', url: `/events/${eventId.value.value}/schedule`, label: 'Schedule',
@@ -50,6 +48,8 @@ const tabs = [{
   icon: '/assets/icons/line/info-circle-line.svg',
   selectedIcon: '/assets/icons/solid/info-circle.svg',
 }] as const;
+
+const selectedTab = ref((tabs.find(t => t.url === route.fullPath) || tabs[0]).id);
 
 function tabClicked(tab: typeof tabs[number], event: Event) {
     selectedTab.value = tab.id;
