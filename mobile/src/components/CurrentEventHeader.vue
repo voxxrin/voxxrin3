@@ -20,14 +20,13 @@
 </template>
 
 <script setup lang="ts">
-import {IonIcon, IonButton, IonHeader, IonTitle, IonToolbar} from "@ionic/vue";
+import {IonIcon, IonButton, IonHeader, IonTitle, IonToolbar, useIonRouter} from "@ionic/vue";
 import CurrentEventStatus from "@/components/CurrentEventStatus.vue";
 import {PropType} from "vue";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {unsetCurrentSchedule} from "@/state/CurrentSchedule";
-import {useRouter} from "vue-router";
 
-const router = useRouter();
+const router = useIonRouter();
 const props = defineProps({
     event: {
         required: true,
@@ -38,7 +37,7 @@ const props = defineProps({
 function backToEventsList() {
     unsetCurrentSchedule();
 
-    router.go(-1);
+    router.navigate('/event-selector', 'back', 'pop')
 }
 
 </script>
