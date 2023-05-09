@@ -13,3 +13,19 @@ ion-badge {
         font-size: 18px;
     }
 }
+
+/* Badge Tracks */
+
+.trackBadge {
+    display: flex;
+    align-items: center;
+    border-radius: 8px;
+    font-weight: 500;
+    font-style: normal;
+    font-size: 12px;
+
+    ion-icon {
+        --color: white;
+        opacity: 0.5;
+    }
+}

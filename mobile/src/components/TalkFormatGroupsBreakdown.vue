@@ -1,12 +1,14 @@
 <template>
   <ion-list class="listTalks">
     <ion-item-group v-for="(perFormatGroup, index) in perFormatGroups" :key="index">
-      <ion-item-divider>
+      <ion-item-divider class="listTalks-divider">
+        <ion-icon src="/assets/images/svg/format-symbol.svg" :style="{ 'color': perFormatGroup.format.themeColor }"></ion-icon>
         <ion-label :style="{ '--color': perFormatGroup.format.themeColor }">
           {{perFormatGroup.format.title}} ({{perFormatGroup.format.duration}})
         </ion-label>
+        <span class="listTalks-divider-separator"></span>
       </ion-item-divider>
-      <ion-item v-for="(talk, talkIndex) in perFormatGroup.talks" :key="talkIndex">
+      <ion-item class="listTalks-item" v-for="(talk, talkIndex) in perFormatGroup.talks" :key="talkIndex">
         <schedule-talk :talk="talk"
              :favorited="Math.ceil(Math.random()*2)%2===0"
              :to-watch-later="Math.ceil(Math.random()*2)%2===0"
@@ -23,6 +25,7 @@ import {
     IonItem,
     IonLabel,
     IonList,
+    IonIcon,
     IonItemDivider,
     IonItemGroup
 } from '@ionic/vue';
@@ -51,21 +54,47 @@ const perFormatGroups = sortThenGroupByFormat(props.talks!, props.event!);
     padding: 0;
     overflow: visible;
 
-    ion-item {
+    &-divider {
+      --padding-start: 8px;
+      --padding-top: 24px;
+      --background: transparent;
+      --border-style: inherit;
+
+      ion-icon {
+        font-size: 24px;
+      }
+
+      ion-label {
+        padding-left: 8px;
+        font-size: 16px;
+        font-weight: 900;
+      }
+
+      &-separator {
+        display: block;
+        height: 1px;
+        width: 100%;
+        margin-left: 16px;
+        background-color: var(--app-beige-dark);
+        flex: 1;
+      }
+    }
+
+    &-item {
       overflow: visible !important;
       --padding-start: 8px;
       --inner-padding-end: 8px;
+      --background: transparent;
+      --border-style: none;
     }
   }
 
   ion-item-group {
-  ion-item-divider, ion-item {
-      --background: var(--app-background);
-      --border-style: inherit;
+    ion-item-divider, ion-item {
 
-    ion-card {
-      margin: 8px 0;
-    }
+      ion-card {
+        margin: 8px 0;
+      }
     }
   }
 </style>

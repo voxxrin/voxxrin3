@@ -30,21 +30,21 @@
 <script setup lang="ts">
 import {PropType, ref} from "vue";
 import {
-    IonIcon,
-    IonProgressBar,
-    IonAccordion,
-    IonItem,
-    IonButton,
-    IonLabel,
-    IonRow,
-    IonCol,
-    IonGrid,
+  IonIcon,
+  IonProgressBar,
+  IonAccordion,
+  IonItem,
+  IonButton,
+  IonLabel,
+  IonRow,
+  IonCol,
+  IonGrid,
 } from '@ionic/vue';
 import {
-    getTimeslotLabel,
-    getTimeslotTimingProgress,
-    TimeslotTimingProgress,
-    VoxxrinScheduleTimeSlot
+  getTimeslotLabel,
+  getTimeslotTimingProgress,
+  TimeslotTimingProgress,
+  VoxxrinScheduleTimeSlot
 } from "@/models/VoxxrinSchedule";
 import {VoxxrinTimeslotFeedback} from "@/models/VoxxrinFeedback";
 import {useInterval} from "@/views/vue-utils";
@@ -55,25 +55,25 @@ import TalkFormatGroupsBreakdown from "@/components/TalkFormatGroupsBreakdown.vu
 import ScheduleBreak from "@/components/ScheduleBreak.vue";
 
 const props = defineProps({
-    timeslot: {
-        required: true,
-        type: Object as PropType<VoxxrinScheduleTimeSlot>
-    },
-    timeslotFeedback: {
-        required: false,
-        type: Object as PropType<VoxxrinTimeslotFeedback|undefined>
-    },
-    event: {
-        required: true,
-        type: Object as PropType<VoxxrinConferenceDescriptor>
-    }
+  timeslot: {
+    required: true,
+    type: Object as PropType<VoxxrinScheduleTimeSlot>
+  },
+  timeslotFeedback: {
+    required: false,
+    type: Object as PropType<VoxxrinTimeslotFeedback|undefined>
+  },
+  event: {
+    required: true,
+    type: Object as PropType<VoxxrinConferenceDescriptor>
+  }
 })
 
 const progress = ref<TimeslotTimingProgress>()
 useInterval(() => {
-    if(props.timeslot) {
-        progress.value = getTimeslotTimingProgress(props.timeslot, useCurrentClock().zonedDateTimeISO())
-    }
+  if(props.timeslot) {
+    progress.value = getTimeslotTimingProgress(props.timeslot, useCurrentClock().zonedDateTimeISO())
+  }
 }, import.meta.env.DEV?{seconds:4}:{minutes:1}, { immediate: true });
 
 const timeslotLabel = getTimeslotLabel(props.timeslot!);
@@ -81,9 +81,15 @@ const timeslotLabel = getTimeslotLabel(props.timeslot!);
 </script>
 
 <style lang="scss" scoped>
+
 /* Defaults for togglable icons/buttons/progressbar */
+
 ion-accordion {
   border-bottom: 2px solid var(--app-background);
+
+  .accordion-content {
+    ion-list {background: var(--app-background) !important;}
+  }
 
   ._accordion-icon, ._missing-feedback, ._provided-feedback, ._ongoing-progress {
     display: none;
@@ -98,6 +104,8 @@ ion-accordion {
   ion-item {
     position: relative;
     --padding-start: 8px;
+    --padding-end: 0;
+    --border-width: 0;
 
     .slot {
       display: flex;
@@ -126,6 +134,7 @@ ion-accordion {
         align-items: center;
         height: 100%;
         padding: 0;
+        margin-right: 12px;
       }
     }
 
@@ -167,7 +176,6 @@ ion-accordion {
     ._accordion-icon._past-icon { display: inline-block; }
     &._missing-feedback:not(._is-break) ._missing-feedback { display: inline-block;}
     &._feedback-provided:not(._is-break) ._provided-feedback {display: inline-block;}
-    .accordion-content {  font-style: italic;}
   }
 
   &._ongoing {
