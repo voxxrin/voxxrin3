@@ -39,11 +39,11 @@
           <ion-icon src="/assets/icons/line/comment-line-add.svg"></ion-icon>
         </ion-fab-button>
         <ion-fab-list side="top" class="listFeedbackSlot">
-          <div class="listFeedbackSlot-item" v-for="(missingFeedbacksPastTimeslot, index) in missingFeedbacksPastTimeslots" :key="index">
-            <ion-fab-button @click="showAlertForTimeslot(missingFeedbacksPastTimeslot)">
-              <ion-icon :icon="addCircle"></ion-icon>
-            </ion-fab-button>
-            <ion-label>{{ missingFeedbacksPastTimeslot.start }} => {{ missingFeedbacksPastTimeslot.end }}</ion-label>
+          <div class="listFeedbackSlot-item" v-for="(missingFeedbacksPastTimeslot, index) in missingFeedbacksPastTimeslots" :key="index"
+               @click="showAlertForTimeslot(missingFeedbacksPastTimeslot)">
+            <ion-label>{{ missingFeedbacksPastTimeslot.start }} <ion-icon aria-hidden="true" src="assets/icons/line/chevron-right-line.svg"></ion-icon>
+              {{ missingFeedbacksPastTimeslot.end }}</ion-label>
+            <ion-icon class="plusIndicator" aria-hidden="true" src="assets/icons/solid/plus.svg"></ion-icon>
           </div>
         </ion-fab-list>
       </ion-fab>
@@ -59,7 +59,6 @@ import {
     IonAccordionGroup,
     alertController,
 } from '@ionic/vue';
-import {chatbubble, addCircle, settingsSharp, searchSharp} from 'ionicons/icons';
 import {useRoute, useRouter} from "vue-router";
 import {onMounted, ref, watch} from "vue";
 import {
@@ -140,9 +139,61 @@ async function showAlertForTimeslot(missingFeedbacksPastTimeslots: VoxxrinTimesl
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
   ion-toolbar {
     position: sticky;
     top: 0;
   }
+
+  .listFeedbackSlot {
+    flex-direction: column;
+    row-gap: 12px;
+    right: 2px;
+
+    &-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 164px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      background-color: white;
+      border: 1px solid var(--app-beige-line);
+      filter: drop-shadow(-4px 0px 4px rgba(0, 0, 0, 0.15));
+
+      @for $i from 0 through 1000 {
+        animation: slide-left 140ms cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+        animation-timing-function: ease-in-out;
+
+        &:nth-child(#{$i}) {
+          animation-delay: $i * calc(80ms / 6);
+        }
+      }
+
+      ion-label {
+        display: flex;
+        align-items: center;
+        font-weight: bold;
+        color: var(--app-primary-shade);
+      }
+
+      .plusIndicator {
+        height: 24px;
+        width: 24px;
+        background-color: var(--app-theme-hightlight);
+        border-radius: 24px;
+        color: white;
+      }
+    }
+  }
+
+  @keyframes slide-left {
+    0% {
+      transform: translateX(100%);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+
 </style>

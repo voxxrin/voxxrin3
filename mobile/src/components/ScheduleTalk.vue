@@ -101,10 +101,10 @@ const theme = {
     right: 1px solid var(--app-grey-line);
   }
   box-shadow: rgba(100, 100, 111, 0.2) 0 7px 29px 0;
-  transition: 140ms ease-in-out;
+  transition: 80ms ease-in-out;
 
   &:active {
-    transition: 140ms ease-in-out;
+    transition: 80ms ease-in-out;
     transform: scale(0.99);
     box-shadow: rgba(99, 99, 99, 0.2) 0 2px 8px 0;
   }
@@ -152,7 +152,7 @@ const theme = {
 
     .talkCard-footer {
       border-width: 2px;
-      border-color: var(--app-primary-medium);
+      border-color: var(--app-primary-shade);
       border-bottom: 2px solid var(--app-primary-shade);
 
       .btnTalk {
@@ -176,8 +176,14 @@ const theme = {
     justify-content: space-between;
     padding: 8px 12px 0 8px;
 
+    @mixin background-opacity($color, $opacity: 0.3) {
+      background: $color; /* The Fallback */
+      background: rgba($color, $opacity);
+    }
+
     .trackBadge {
       --background: v-bind('theme.track.color');
+      --color: v-bind('theme.track.color');
     }
 
     .room {
@@ -240,6 +246,7 @@ const theme = {
 
     .speakers {
       display: flex;
+      align-items: center;
       column-gap: 4px;
       padding: 8px;
       font-size: 11px;
@@ -264,7 +271,7 @@ const theme = {
       width: 58px;
       margin: 0;
       --border-radius: 0;
-      --background: transparent;
+      --background: white;
       --color: var(--app-primary);
       border-left: 1px solid var(--app-grey-line);
       font-size: 18px;

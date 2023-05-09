@@ -20,12 +20,25 @@ ion-badge {
     display: flex;
     align-items: center;
     border-radius: 8px;
-    font-weight: 500;
+    font-weight: 600;
     font-style: normal;
-    font-size: 12px;
+    font-size: 11px;
+
+    &:before {
+        position: absolute;
+        top: 1px;
+        left: 1px;
+        width: calc(100% - 2px);
+        height: calc(100% - 2px);
+        background-color: rgba(white, 0.9);
+        border-radius: 6px;
+        content: '';
+        z-index: -1;
+    }
 
     ion-icon {
         --color: white;
         opacity: 0.5;
+        font-size: 13px;
     }
 }
