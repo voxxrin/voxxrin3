@@ -109,6 +109,12 @@ const theme = {
     box-shadow: rgba(99, 99, 99, 0.2) 0 2px 8px 0;
   }
 
+  &:before, &:after {
+    transform: scale(0);
+    opacity: 0;
+    transition: 140ms ease-in-out;
+  }
+
   &.is-favorited  {
     border-width: 2px;
     border-color: var(--app-primary-shade);
@@ -120,9 +126,12 @@ const theme = {
       right: 0;
       bottom: 0;
       background: rgba(var(--app-theme-primary-rgb), 0.6);
+      transform: scale(1);
+      opacity: 1;
       filter: blur(32px);
       content: '';
       z-index: -1;
+      transition: 140ms ease-in-out;
     }
 
     &:after {
@@ -132,10 +141,12 @@ const theme = {
       right: 0;
       bottom: 0;
       background-image: url('assets/images/png/texture-favorited.png');
-      mix-blend-mode: overlay;
+      transform: scale(1);
       opacity: 0.5;
+      mix-blend-mode: overlay;
       content: '';
       z-index: -1;
+      transition: 140ms ease-in-out;
     }
 
     ion-thumbnail {
