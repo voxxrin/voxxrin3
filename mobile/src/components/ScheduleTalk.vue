@@ -116,8 +116,9 @@ const theme = {
   }
 
   &.is-favorited  {
-    border-width: 2px;
-    border-color: var(--app-primary-shade);
+    border-top: 2px solid var(--app-primary-shade);
+    border-bottom: 2px solid var(--app-primary-shade);
+    border-right: 2px solid var(--app-primary-shade);
 
     &:before {
       position: absolute;
