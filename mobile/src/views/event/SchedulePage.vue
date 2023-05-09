@@ -146,9 +146,28 @@ async function showAlertForTimeslot(missingFeedbacksPastTimeslots: VoxxrinTimesl
   }
 
   .listFeedbackSlot {
+    display: flex; /* TODO Delete */
     flex-direction: column;
     row-gap: 12px;
     right: 2px;
+    pointer-events: none;
+
+    &.fab-list-active {
+      pointer-events: inherit;
+
+      .listFeedbackSlot-item {
+        visibility: visible;
+
+        @for $i from 0 through 1000 {
+          animation: slide-left 140ms cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+          animation-timing-function: ease-in-out;
+
+          &:nth-child(#{$i}) {
+            animation-delay: $i * calc(80ms / 6);
+          }
+        }
+      }
+    }
 
     &-item {
       display: flex;
@@ -162,11 +181,11 @@ async function showAlertForTimeslot(missingFeedbacksPastTimeslots: VoxxrinTimesl
       filter: drop-shadow(-4px 0px 4px rgba(0, 0, 0, 0.15));
 
       @for $i from 0 through 1000 {
-        animation: slide-left 140ms cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+        animation: slide-left-revert 140ms cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
         animation-timing-function: ease-in-out;
 
         &:nth-child(#{$i}) {
-          animation-delay: $i * calc(80ms / 6);
+          animation-delay: $i * calc(-80ms / 6);
         }
       }
 
@@ -188,12 +207,12 @@ async function showAlertForTimeslot(missingFeedbacksPastTimeslots: VoxxrinTimesl
   }
 
   @keyframes slide-left {
-    0% {
-      transform: translateX(100%);
-    }
-    100% {
-      transform: translateX(0);
-    }
+    0% { transform: translateX(120%);}
+    100% { transform: translateX(0);}
   }
 
+  @keyframes slide-left-revert {
+    0% {transform: translateX(0);}
+    100% { transform: translateX(120%);}
+  }
 </style>
