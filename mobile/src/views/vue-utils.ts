@@ -4,7 +4,7 @@ import {Temporal} from "temporal-polyfill";
 import {
     ActionSheetButton
 } from "@ionic/core/dist/types/components/action-sheet/action-sheet-interface";
-import {actionSheetController} from "@ionic/vue";
+import {actionSheetController, ActionSheetOptions} from "@ionic/vue";
 
 // Ensure that we only get a single value from route params
 // this is intended to workaround the fact that route.params.foo is string|string[] and we want
@@ -39,17 +39,13 @@ export async function useInterval(callback: Function, durationOpts: Parameters<t
     return interval;
 }
 
-export async function presentActionSheetController<BUTTONS extends ActionSheetButton[]>(
-    config: {header: string, buttons: BUTTONS},
-    opts?: { buttonsFilter: (btn: BUTTONS[number]['data']) => boolean }
+export async function presentActionSheetController(
+    config: ActionSheetOptions
 ) {
-    const actionSheet = await actionSheetController.create({
-        ...config,
-        ...(opts?.buttonsFilter?{buttons: config.buttons.filter(opts.buttonsFilter)}:{})
-    });
+    const actionSheet = await actionSheetController.create(config);
 
     await actionSheet.present()
-    const result: { data: BUTTONS[number]['data'] | undefined } = await actionSheet.onWillDismiss();
+    const result = await actionSheet.onWillDismiss();
 
     return result.data;
 }

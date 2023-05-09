@@ -70,9 +70,7 @@ async function showEventActions(event: ListableVoxxrinEvent) {
         }, {
             text: 'Cancel', role: 'cancel',
             data: {action: 'cancel'},
-        }] as const
-    }, {
-        buttonsFilter: btn => !!event.websiteUrl || btn.action !== 'visit-website'
+        }].filter(btn => !!event.websiteUrl || btn.data?.action !== 'visit-website')
     });
 
     // Not sure why, but ts-pattern's match() doesn't work here 🤔
