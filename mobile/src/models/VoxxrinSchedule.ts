@@ -16,12 +16,14 @@ import {
     VoxxrinConferenceDescriptor
 } from "@/models/VoxxrinConferenceDescriptor";
 import {formatHourMinutes} from "@/models/DatesAndTime";
-import {sortBy} from "@/models/utils";
+import {sortBy, ValueObject} from "@/models/utils";
 
+export class ScheduleTimeSlotId extends ValueObject<string>{ _scheduleTimeSlotIdClassDiscriminator!: never; }
 
 export type VoxxrinScheduleTimeSlot = Replace<Omit<ScheduleTimeSlot, "break"|"talks">, {
     start: Temporal.ZonedDateTime,
-    end: Temporal.ZonedDateTime
+    end: Temporal.ZonedDateTime,
+    id: ScheduleTimeSlotId
 } & (
     {type: 'break', break: VoxxrinBreak} | {type: 'talks', talks: VoxxrinTalk[]}
 )>;
@@ -71,7 +73,7 @@ export function createVoxxrinDailyScheduleFromFirestore(event: VoxxrinConference
         return {
             start: Temporal.ZonedDateTime.from(`${ts.start}[${event.timezone}]`),
             end: Temporal.ZonedDateTime.from(`${ts.end}[${event.timezone}]`),
-            id: ts.id,
+            id: new ScheduleTimeSlotId(ts.id),
             ...match(ts)
                 .with({type: 'break'}, ts => ({
                     type: 'break' as const,
