@@ -21,7 +21,7 @@
       </day-selector>
 
       <ion-accordion-group :multiple="true" v-if="currentConferenceDescriptor">
-          <time-slot-accordion v-for="(timeslot, index) in timeslots" :key="index"
+          <time-slot-accordion v-for="(timeslot, index) in timeslots" :key="timeslot.id"
                                :timeslot-feedback="timeslot.feedback" :timeslot="timeslot"
                                :event="currentConferenceDescriptor">
           </time-slot-accordion>
