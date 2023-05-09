@@ -8,6 +8,7 @@
             <ion-icon class="_accordion-icon _past-icon" aria-hidden="true" src="assets/icons/solid/backward-circle.svg"></ion-icon>
             <ion-icon class="_accordion-icon _future-icon" aria-hidden="true" src="assets/icons/solid/clock.svg"></ion-icon>
             <ion-label>{{timeslotLabel.start}} <ion-icon aria-hidden="true" src="assets/icons/line/chevron-right-line.svg"></ion-icon> {{timeslotLabel.end}}</ion-label>
+            <ion-badge v-if="timeslot.type==='talks' && timeslot.overlappingTimeSlots.length > 0">⚠️ overlaps {{timeslot.overlappingTimeSlots.length}} slot{{timeslot.overlappingTimeSlots.length>1?'s':''}}</ion-badge>
           </ion-col>
           <ion-col class="slot-actions" size="auto">
             <ion-progress-bar class="_ongoing-progress" v-if="progress?.status === 'ongoing'" :value="progress.progressInPercent / 100"></ion-progress-bar>
@@ -35,6 +36,7 @@ import {
   IonRow,
   IonCol,
   IonGrid,
+  IonBadge
 } from '@ionic/vue';
 import {
   getTimeslotLabel,
@@ -45,7 +47,6 @@ import {
 import {VoxxrinTimeslotFeedback} from "@/models/VoxxrinFeedback";
 import {useInterval} from "@/views/vue-utils";
 import {useCurrentClock} from "@/state/CurrentClock";
-import {caretBackCircle, chatboxEllipses, checkmarkDone, hourglass, time} from "ionicons/icons";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import TalkFormatGroupsBreakdown from "@/components/TalkFormatGroupsBreakdown.vue";
 import ScheduleBreak from "@/components/ScheduleBreak.vue";

@@ -16,7 +16,7 @@ import {
     VoxxrinConferenceDescriptor
 } from "@/models/VoxxrinConferenceDescriptor";
 import {formatHourMinutes} from "@/models/DatesAndTime";
-import {sortBy, ValueObject} from "@/models/utils";
+import {NumberRange, sortBy, ValueObject} from "@/models/utils";
 
 export class ScheduleTimeSlotId extends ValueObject<string>{ _scheduleTimeSlotIdClassDiscriminator!: never; }
 
@@ -25,7 +25,11 @@ export type VoxxrinScheduleTimeSlot = Replace<Omit<ScheduleTimeSlot, "break"|"ta
     end: Temporal.ZonedDateTime,
     id: ScheduleTimeSlotId
 } & (
-    {type: 'break', break: VoxxrinBreak} | {type: 'talks', talks: VoxxrinTalk[]}
+    {type: 'break', break: VoxxrinBreak}
+    | {
+        type: 'talks', talks: VoxxrinTalk[],
+        overlappingTimeSlots: ScheduleTimeSlotId[]
+    }
 )>;
 
 export type VoxxrinDailySchedule = {
@@ -103,7 +107,19 @@ export function createVoxxrinDailyScheduleFromFirestore(event: VoxxrinConference
                             room,
                             id: new TalkId(t.id)
                         }
-                    })
+                    }),
+                    overlappingTimeSlots: firestoreSchedule.timeSlots
+                        .filter(overlappingTSCandidate => {
+                            return overlappingTSCandidate.id !== ts.id
+                                && overlappingTSCandidate.type === 'talks'
+                                && NumberRange.overlap({
+                                    start: new Date(overlappingTSCandidate.start).getTime(),
+                                    end: new Date(overlappingTSCandidate.end).getTime(),
+                                }, {
+                                    start: new Date(ts.start).getTime(),
+                                    end: new Date(ts.end).getTime(),
+                                }, 'exclusive');
+                        }).map(ts => new ScheduleTimeSlotId(ts.id))
                 }))
                 .exhaustive()
         };
