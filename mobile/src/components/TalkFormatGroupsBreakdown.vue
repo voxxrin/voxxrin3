@@ -52,7 +52,7 @@ const perFormatGroups = sortThenGroupByFormat(props.talks!, props.event!);
 
     &-divider {
       --padding-start: 0;
-      --padding-top: 24px;
+      --padding-top: 12px;
       --background: transparent;
       --border-style: inherit;
       border: none;
