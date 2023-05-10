@@ -2,9 +2,20 @@
   <div v-if="events.length>0">
     <ion-list>
       <div class="container" :style="{
-          '--voxxrin-conf-background-url': event.backgroundUrl,
-          '--voxxrin-conf-logo-url': event.logoUrl,
-          '--voxxrin-conf-theme-color': event.theming.colors.primaryHex
+          '--voxxrin-event-background-url': `url('${event?.backgroundUrl}')`,
+          '--voxxrin-event-logo-url': `url('${event?.logoUrl}')`,
+          '--voxxrin-event-theme-colors-primary-hex': event?.theming.colors.primaryHex,
+          '--voxxrin-event-theme-colors-primary-rgb': event?.theming.colors.primaryRGB,
+          '--voxxrin-event-theme-colors-primary-contrast-hex': event?.theming.colors.primaryContrastHex,
+          '--voxxrin-event-theme-colors-primary-contrast-rgb': event?.theming.colors.primaryContrastRGB,
+          '--voxxrin-event-theme-colors-secondary-hex': event?.theming.colors.secondaryHex,
+          '--voxxrin-event-theme-colors-secondary-rgb': event?.theming.colors.secondaryRGB,
+          '--voxxrin-event-theme-colors-secondary-contrast-hex': event?.theming.colors.secondaryContrastHex,
+          '--voxxrin-event-theme-colors-secondary-contrast-rgb': event?.theming.colors.secondaryContrastRGB,
+          '--voxxrin-event-theme-colors-tertiary-hex': event?.theming.colors.tertiaryHex,
+          '--voxxrin-event-theme-colors-tertiary-rgb': event?.theming.colors.tertiaryRGB,
+          '--voxxrin-event-theme-colors-tertiary-contrast-hex': event?.theming.colors.tertiaryContrastHex,
+          '--voxxrin-event-theme-colors-tertiary-contrast-rgb': event?.theming.colors.tertiaryContrastRGB,
       }" v-for="(event, index) in events" :key="index" @click="$emit('event-clicked', event)">
         <div class="logo">
           <ion-img :src="event.logoUrl" />
@@ -62,7 +73,7 @@ defineEmits<{
   justify-self: center;
   align-self: center;
   grid-area: logo;
-  background-color: var(--voxxrin-conf-theme-color);
+  background-color: var(--voxxrin-event-theme-colors-primary-hex);
   width: 60px;
   height: 60px;
   border-top-left-radius: 10px;
