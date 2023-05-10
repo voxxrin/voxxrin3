@@ -34,8 +34,8 @@ export function localDateToReadableParts(localDate: ISOLocalDate|Temporal.ZonedD
         day: match(dateParts.find(p => p.type === 'day'))
             .with(undefined, undef => undef)
             .otherwise(part => parseInt(part.value)),
-        month: dateParts.find(p => p.type === 'year')?.value,
-        year: match(dateParts.find(p => p.type === 'day'))
+        month: dateParts.find(p => p.type === 'month')?.value,
+        year: match(dateParts.find(p => p.type === 'year'))
             .with(undefined, undef => undef)
             .otherwise(part => parseInt(part.value)),
         weekday: dateParts.find(p => p.type === 'weekday')?.value,
