@@ -62,10 +62,8 @@ import {PropType} from "vue";
 import {
     IonImg,
 } from '@ionic/vue';
-import {calendar, location, people} from "ionicons/icons";
+import {people} from "ionicons/icons";
 import {ListableVoxxrinEvent} from "@/models/VoxxrinEvent";
-import {localDateToReadableParts} from "@/models/DatesAndTime";
-import {useCurrentUserLocale} from "@/state/CurrentUser";
 import CurrentEventStatus from "@/components/CurrentEventStatus.vue";
 import MonthDayDateRange from "@/components/MonthDayDateRange.vue";
 
@@ -79,28 +77,6 @@ const props = defineProps({
 defineEmits<{
     (e: 'event-selected', event: ListableVoxxrinEvent): void
 }>()
-
-function showEventTimeRange(event: ListableVoxxrinEvent) {
-    const readableStartingParts = localDateToReadableParts(event.start, useCurrentUserLocale(), {
-        day: 'numeric',
-        month: 'short',
-        year: undefined,
-        weekday: undefined
-    })
-
-    if(event.days.length === 1) {
-        return readableStartingParts.full;
-    } else {
-        const readableEndingParts = localDateToReadableParts(event.end, useCurrentUserLocale(), {
-            day: 'numeric',
-            month: 'short',
-            year: undefined,
-            weekday: undefined
-        })
-
-        return `${readableStartingParts.full} - ${readableEndingParts.full}`
-    }
-}
 
 </script>
 
