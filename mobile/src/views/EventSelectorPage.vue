@@ -10,7 +10,7 @@
                  :debounce="300" :placeholder="`${LL.Keywords()}...`"
                  @ionInput="(ev) => searchTextUpdated(ev.target.value)"
       ></ion-input>
-      <ion-toggle :enable-on-off-labels="true" @ionChange="(ev) => includePastEventUpdated(ev.target.checked)">
+      <ion-toggle :enable-on-off-labels="true" @ionChange="(ev) => includePastEventUpdated(ev.target.checked)" :checked="searchCriteriaRef.includePastEvents">
         {{ LL.Past_events() }}
       </ion-toggle>
 
