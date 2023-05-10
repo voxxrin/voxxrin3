@@ -2,9 +2,9 @@
   <div v-if="events.length>0">
     <ion-list>
       <div class="container" :style="{
-          '--conf-background-url': event.backgroundUrl,
-          '--conf-logo-url': event.logoUrl,
-          '--conf-theme-color': event.themeColor
+          '--voxxrin-conf-background-url': event.backgroundUrl,
+          '--voxxrin-conf-logo-url': event.logoUrl,
+          '--voxxrin-conf-theme-color': event.themeColor
       }" v-for="(event, index) in events" :key="index" @click="$emit('event-clicked', event)">
         <div class="logo">
           <ion-img :src="event.logoUrl" />
@@ -62,7 +62,7 @@ defineEmits<{
   justify-self: center;
   align-self: center;
   grid-area: logo;
-  background-color: var(--conf-theme-color);
+  background-color: var(--voxxrin-conf-theme-color);
   width: 60px;
   height: 60px;
   border-top-left-radius: 10px;

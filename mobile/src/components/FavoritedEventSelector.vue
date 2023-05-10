@@ -2,9 +2,9 @@
   <div v-if="favoritedEvents.length>0" class="favoritedEventsContainer">
     <ion-list class="favoritedEvents">
       <ion-card class="favoritedEvents-card" :style="{
-          '--conf-background-url': `url('${favoritedEvent.backgroundUrl}')`,
-          '--conf-logo-url': `url('${favoritedEvent.logoUrl}')`,
-          '--conf-theme-color': favoritedEvent.themeColor
+          '--voxxrin-conf-background-url': `url('${favoritedEvent.backgroundUrl}')`,
+          '--voxxrin-conf-logo-url': `url('${favoritedEvent.logoUrl}')`,
+          '--voxxrin-conf-theme-color': favoritedEvent.themeColor
       }" v-for="(favoritedEvent, index) in favoritedEvents" :key="index"
                 @click="$emit('event-selected', favoritedEvent)">
         <current-event-status :event="favoritedEvent"/>
@@ -116,7 +116,7 @@ function showEventTimeRange(event: ListableVoxxrinEvent) {
     height: 268px;
     margin: var(--app-gutters) 0;
     border-radius: 16px;
-    background-image: linear-gradient(to bottom, var(--conf-theme-color) 50%, transparent 200%),var(--conf-background-url);
+    background-image: linear-gradient(to bottom, var(--voxxrin-conf-theme-color) 50%, transparent 200%),var(--conf-background-url);
     contain: initial;
     overflow: visible;
     filter: drop-shadow(0px 4px 24px rgba(0, 0, 0, 0.16));
