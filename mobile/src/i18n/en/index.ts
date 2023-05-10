@@ -22,7 +22,8 @@ const en = {
 	ConfStatus_past: `Past`,
 	ConfStatus_future: `Future`,
 	ConfStatus_unknown: `Unknown`,
-	Overlaps_x_slot: `⚠️ overlaps {nrOfOverlappingSlots} slot{{nrOfOverlappingSlots:s}}`,
+	Overlaps_x_slot_label: `overlaps`,
+	Overlaps_x_slot_value: `{nrOfOverlappingSlots} slot{{nrOfOverlappingSlots:s}}`,
 } satisfies BaseTranslation
 
 export default en

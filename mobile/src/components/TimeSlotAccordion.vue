@@ -7,16 +7,26 @@
             <ion-icon class="_accordion-icon _ongoing-icon" aria-hidden="true" src="assets/icons/solid/timer.svg"></ion-icon>
             <ion-icon class="_accordion-icon _past-icon" aria-hidden="true" src="assets/icons/solid/backward-circle.svg"></ion-icon>
             <ion-icon class="_accordion-icon _future-icon" aria-hidden="true" src="assets/icons/solid/clock.svg"></ion-icon>
-            <ion-label>{{timeslotLabel.start}} <ion-icon aria-hidden="true" src="assets/icons/line/chevron-right-line.svg"></ion-icon> {{timeslotLabel.end}}</ion-label>
-            <ion-badge v-if="timeslot.type==='talks' && timeslot.overlappingTimeSlots.length > 0">{{LL.Overlaps_x_slot({nrOfOverlappingSlots: timeslot.overlappingTimeSlots.length})}}</ion-badge>
+            <ion-label>
+              <span class="slot-schedule-start">{{timeslotLabel.start}}</span>
+              <ion-icon class="slot-schedule-icon" aria-hidden="true" src="assets/icons/line/chevron-right-line.svg"></ion-icon>
+              <span class="slot-schedule-end">{{timeslotLabel.end}}</span>
+            </ion-label>
+            <div class="slotOverlay" v-if="timeslot.type==='talks' && timeslot.overlappingTimeSlots.length > 0">
+              <ion-icon aria-hidden="true" src="assets/icons/solid/slot-overlay.svg"></ion-icon>
+              <span class="slotOverlay-txt">
+                <small>{{LL.Overlaps_x_slot_label()}}</small>
+                <strong>{{LL.Overlaps_x_slot_value({nrOfOverlappingSlots: timeslot.overlappingTimeSlots.length})}}</strong>
+              </span>
+            </div>
           </ion-col>
           <ion-col class="slot-actions" size="auto">
-            <ion-progress-bar class="_ongoing-progress" v-if="progress?.status === 'ongoing'" :value="progress.progressInPercent / 100"></ion-progress-bar>
             <ion-icon class="_provided-feedback" aria-hidden="true" src="/assets/icons/solid/comment-check.svg"></ion-icon>
             <ion-button class="_missing-feedback">
               <ion-icon src="/assets/icons/line/comment-line-add.svg"></ion-icon>
             </ion-button>
           </ion-col>
+          <ion-progress-bar class="_ongoing-progress" v-if="progress?.status === 'ongoing'" :value="progress.progressInPercent / 100"></ion-progress-bar>
         </ion-row>
       </ion-grid>
     </ion-item>
@@ -112,6 +122,19 @@ ion-accordion {
     color: var(--app-beige-dark);
   }
 
+  ._ongoing-progress {
+    position: absolute;
+    left: 28px;
+    top: 50%;
+    transform: translate(0, -50%);
+    height: 24px;
+    border-radius: 8px;
+    width: 128px;
+    z-index: -1;
+    --progress-background: rgba(var(--ion-color-light-rgb), 0.4);
+    border: 1px solid rgba(var(--ion-color-light-rgb), 0.6);
+  }
+
   ion-item {
     position: sticky;
     top: 98px;
@@ -138,6 +161,42 @@ ion-accordion {
         ._accordion-icon {
           font-size: 22px;
           color: var(--app-primary-shade);
+        }
+
+        &-icon {
+          width: 24px;
+          font-size: 16px;
+          opacity: 0.4;
+        }
+
+        &-start, &-end {
+          width: 48px;
+        }
+      }
+
+      .slotOverlay {
+        display: flex;
+        align-items: center;
+        column-gap: 4px;
+        padding: 2px 8px 2px 4px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 500;
+        background-color: var(--app-voxxrin);
+        color: white;
+
+        ion-icon {
+          font-size: 16px;
+        }
+
+        &-txt {
+          display: flex;
+          flex-direction: column;
+          line-height: 0.9;
+
+          small {
+            opacity: 0.8;
+          }
         }
       }
 

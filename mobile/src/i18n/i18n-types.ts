@@ -99,10 +99,14 @@ type RootTranslation = {
 	 */
 	ConfStatus_unknown: string
 	/**
-	 * ⚠​️​ ​o​v​e​r​l​a​p​s​ ​{​n​r​O​f​O​v​e​r​l​a​p​p​i​n​g​S​l​o​t​s​}​ ​s​l​o​t​{​{​s​}​}
+	 * o​v​e​r​l​a​p​s
+	 */
+	Overlaps_x_slot_label: string
+	/**
+	 * {​n​r​O​f​O​v​e​r​l​a​p​p​i​n​g​S​l​o​t​s​}​ ​s​l​o​t​{​{​s​}​}
 	 * @param {string | number | boolean} nrOfOverlappingSlots
 	 */
-	Overlaps_x_slot: RequiredParams<'nrOfOverlappingSlots'>
+	Overlaps_x_slot_value: RequiredParams<'nrOfOverlappingSlots'>
 }
 
 export type TranslationFunctions = {
@@ -191,9 +195,13 @@ export type TranslationFunctions = {
 	 */
 	ConfStatus_unknown: () => LocalizedString
 	/**
-	 * ⚠️ overlaps {nrOfOverlappingSlots} slot{{s}}
+	 * overlaps
 	 */
-	Overlaps_x_slot: (arg: { nrOfOverlappingSlots: string | number | boolean }) => LocalizedString
+	Overlaps_x_slot_label: () => LocalizedString
+	/**
+	 * {nrOfOverlappingSlots} slot{{s}}
+	 */
+	Overlaps_x_slot_value: (arg: { nrOfOverlappingSlots: string | number | boolean }) => LocalizedString
 }
 
 export type Formatters = {}
