@@ -56,9 +56,9 @@ watchCurrentAvailableEvents(updatedAvailableEvents => {
 })
 fetchAvailableEvents();
 
-const favoritedTalksRef = ref<EventId[]>([]);
+const favoritedTalksRef = ref<EventId[]>([new EventId('devoxxuk23')]);
 
-const searchCriteriaRef = ref<{ terms: string|undefined, includePastEvents: boolean}>({ terms: undefined, includePastEvents: false });
+const searchCriteriaRef = ref<{ terms: string|undefined, includePastEvents: boolean}>({ terms: undefined, includePastEvents: true });
 
 const filteredFavoritedEvents: Ref<ListableVoxxrinEvent[]> = ref([]);
 const filteredAvailableEvents: Ref<ListableVoxxrinEvent[]> = ref([]);
