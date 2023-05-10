@@ -57,6 +57,8 @@
 import {
     IonToggle,
     IonInput,
+    IonRippleEffect,
+    IonItemDivider,
     useIonRouter
 } from '@ionic/vue';
 import {EventId, ListableVoxxrinEvent, searchEvents} from "@/models/VoxxrinEvent";
