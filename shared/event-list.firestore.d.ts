@@ -1,4 +1,15 @@
-import {ISOLocalDate} from "./type-utils";
+import {HexColor, ISOLocalDate} from "./type-utils";
+
+export type EventTheme = {
+    colors: {
+        primaryHex: HexColor,
+        primaryContrastHex: HexColor,
+        secondaryHex: HexColor,
+        secondaryContrastHex: HexColor,
+        tertiaryHex: HexColor,
+        tertiaryContrastHex: HexColor
+    }
+}
 
 export type ListableEvent = {
     id: string;
@@ -17,6 +28,6 @@ export type ListableEvent = {
     peopleDescription: string|undefined,
     backgroundUrl: string,
     logoUrl: string,
-    themeColor: string,
     websiteUrl: string,
+    theming: EventTheme
 }

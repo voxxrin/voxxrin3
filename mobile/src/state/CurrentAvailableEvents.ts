@@ -2,7 +2,12 @@ import {Temporal} from "temporal-polyfill";
 import {useCurrentClock} from "@/state/CurrentClock";
 import {Ref, ref, watch} from "vue";
 import {useFetchJsonDebouncer} from "@/state/state-utilities";
-import {EventId, ListableVoxxrinEvent} from "@/models/VoxxrinEvent";
+import {
+    EventId,
+    firestoreListableEventToVoxxrinListableEvent,
+    ListableVoxxrinEvent,
+    toVoxxrinEventTheme
+} from "@/models/VoxxrinEvent";
 import {ListableEvent} from "../../../shared/event-list.firestore";
 import {DayId} from "@/models/VoxxrinDay";
 import {zonedDateTimeRangeOf} from "@/models/DatesAndTime";
@@ -52,20 +57,9 @@ export async function fetchAvailableEvents() {
         `/data/events/query.json`
     );
 
-    CURRENT_AVAILABLE_EVENTS.value = new FetchedAvailableEvents(firestoreAvailableEvents.map(fae => {
-        const {start, end} = zonedDateTimeRangeOf(
-            fae.days.map(d => d.localDate),
-            fae.timezone
-        );
-
-        return {
-            ...fae,
-            id: new EventId(fae.id),
-            days: fae.days.map(d => ({...d, id: new DayId(d.id)})),
-            start,
-            end,
-        };
-    }));
+    CURRENT_AVAILABLE_EVENTS.value = new FetchedAvailableEvents(
+        firestoreAvailableEvents.map(firestoreListableEventToVoxxrinListableEvent)
+    );
 
     return firestoreAvailableEvents;
 }

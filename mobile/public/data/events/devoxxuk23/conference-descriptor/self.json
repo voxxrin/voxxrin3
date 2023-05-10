@@ -228,8 +228,12 @@
   ],
   "theming": {
     "colors": {
-      "primary": "#F78125",
-      "secondary": "#202020"
+      "primaryHex": "#F78327",
+      "primaryContrastHex": "#FFFFFF",
+      "secondaryHex": "#3880FF",
+      "secondaryContrastHex": "#FFFFFF",
+      "tertiaryHex": "#0F0F0F",
+      "tertiaryContrastHex": "#FFFFFF"
     }
   },
   "infos": {

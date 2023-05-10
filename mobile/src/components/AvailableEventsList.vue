@@ -4,7 +4,7 @@
       <div class="container" :style="{
           '--voxxrin-conf-background-url': event.backgroundUrl,
           '--voxxrin-conf-logo-url': event.logoUrl,
-          '--voxxrin-conf-theme-color': event.themeColor
+          '--voxxrin-conf-theme-color': event.theming.colors.primaryHex
       }" v-for="(event, index) in events" :key="index" @click="$emit('event-clicked', event)">
         <div class="logo">
           <ion-img :src="event.logoUrl" />

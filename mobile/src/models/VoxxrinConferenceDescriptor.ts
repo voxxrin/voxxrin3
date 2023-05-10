@@ -4,7 +4,7 @@ import {ConferenceDescriptor} from "../../../shared/conference-descriptor.firest
 import {TalkFormatId, VoxxrinTalkFormat} from "@/models/VoxxrinTalkFormat";
 import {TrackId, VoxxrinTrack} from "@/models/VoxxrinTrack";
 import {RoomId, VoxxrinRoom} from "@/models/VoxxrinRoom";
-import {EventId} from "@/models/VoxxrinEvent";
+import {EventId, toVoxxrinEventTheme, VoxxrinEventTheme} from "@/models/VoxxrinEvent";
 import {Replace} from "@/models/type-utils";
 import {Temporal} from "temporal-polyfill";
 import {match} from "ts-pattern";
@@ -20,6 +20,7 @@ export type VoxxrinConferenceDescriptor = Replace<ConferenceDescriptor, {
     talkTracks: VoxxrinTrack[],
     supportedTalkLanguages: VoxxrinLanguaceCode[],
     rooms: VoxxrinRoom[],
+    theming: VoxxrinEventTheme,
 }>;
 
 export type VoxxrinLanguaceCode = Replace<ConferenceDescriptor['supportedTalkLanguages'][number], { id: TalkLanguageCode }>;
@@ -72,6 +73,7 @@ export function createVoxxrinConferenceDescriptor(firestoreConferenceDescriptor:
             ...r,
             id: new RoomId(r.id)
         })),
+        theming: toVoxxrinEventTheme(firestoreConferenceDescriptor.theming)
     };
 
     return voxxrinConferenceDescriptor;

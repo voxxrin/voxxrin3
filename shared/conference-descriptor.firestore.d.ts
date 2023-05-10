@@ -1,4 +1,5 @@
 import {ISOLocalDate} from "./type-utils";
+import {EventTheme} from "./event-list.firestore";
 
 export type Day = {
     id: string,
@@ -22,12 +23,7 @@ export type ConferenceDescriptor = {
     talkTracks: Array<{ id: string, title: string, themeColor: string }>,
     supportedTalkLanguages: Array<{ id: string, label: string, themeColor: string }>,
     rooms: Array<{ id: string, title: string }>,
-    theming: {
-        colors: {
-            primary: '#F78125',
-            secondary: '#202020',
-        }
-    },
+    theming: EventTheme
     infos: {
         venuePicture: string,
         eventDescription: string
