@@ -18,7 +18,7 @@
                    :debounce="300"
                    @ionInput="(ev) => searchTextUpdated(ev.target.value)"
                    class="searchInput">
-          <ion-icon src="/assets/icons/line/search-line.svg"></ion-icon>
+          <ion-icon aria-hidden="true" src="/assets/icons/line/search-line.svg"></ion-icon>
         </ion-input>
 
         <ion-toggle :enable-on-off-labels="true"
@@ -31,15 +31,19 @@
       </ion-header>
 
       <div class="conferenceContent">
-        <h1>{{ LL.Favorited_conferences() }}</h1>
+        <ion-item-divider sticky>{{ LL.Favorited_conferences() }}</ion-item-divider>
         <favorited-event-selector
+            class="favoritedEventSelector"
             :favoritedEvents="filteredFavoritedEvents" @event-selected="(event) => selectEvent(event.id)">
           <template #no-favorites>
             {{ LL.No_favorites_available_yet() }}
           </template>
         </favorited-event-selector>
-        <h1>All conferences</h1>
-        <available-events-list :events="filteredAvailableEvents" @event-clicked="(event) => showEventActions(event)">
+
+        <ion-item-divider sticky>All conferences</ion-item-divider>
+        <available-events-list
+            class="availableEventsList"
+            :events="filteredAvailableEvents" @event-clicked="(event) => showEventActions(event)">
           <template #no-event>
             {{ LL.No_conference_registered_yet() }}
           </template>
@@ -189,6 +193,7 @@ async function showEventActions(event: ListableVoxxrinEvent) {
     background-color: var(--app-background);
     backdrop-filter: blur(2px);
     border-bottom: none;
+    z-index: 1;
 
     .conferenceToggle {
       display: flex;
@@ -208,6 +213,20 @@ async function showEventActions(event: ListableVoxxrinEvent) {
   }
 
   .conferenceContent {
-    padding: 0 var( --app-gutters-medium);
+    ion-item-divider {
+      top: 68px;
+      --padding-top: var( --app-gutters-medium);
+      --padding-bottom: var( --app-gutters-medium);
+      --color: var(--app-voxxrin);
+      --background: var(--app-white);
+      border-top: 1px solid var(--app-beige-line);
+      border-bottom: 1px solid var(--app-beige-line);
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .availableEventsList {
+      padding: var( --app-gutters-medium);
+    }
   }
 </style>

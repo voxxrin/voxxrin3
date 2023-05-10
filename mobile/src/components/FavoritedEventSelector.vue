@@ -1,34 +1,39 @@
 <template>
-  <div v-if="favoritedEvents.length>0">
-    <ion-list>
-      <ion-card class="container" :style="{
+  <div v-if="favoritedEvents.length>0" class="favoritedEventsContainer">
+    <ion-list class="favoritedEvents">
+      <ion-card class="favoritedEvents-card" :style="{
           '--conf-background-url': `url('${favoritedEvent.backgroundUrl}')`,
           '--conf-logo-url': `url('${favoritedEvent.logoUrl}')`,
           '--conf-theme-color': favoritedEvent.themeColor
       }" v-for="(favoritedEvent, index) in favoritedEvents" :key="index"
                 @click="$emit('event-selected', favoritedEvent)">
-        <current-event-status :event="favoritedEvent" style="position: absolute; right: 0px;" />
-        <ion-card-title class="title">{{favoritedEvent.title}}</ion-card-title>
-        <div class="description" v-if="favoritedEvent.description">
-          {{favoritedEvent.description}}
-        </div>
-        <div class="details">
-          <ul>
-            <li>
-              <ion-icon :icon="location" />
-              <ion-label>{{favoritedEvent.location.city}}{{favoritedEvent.location.country?` (${favoritedEvent.location.country})`:``}}</ion-label>
-            </li>
-            <li>
-              <ion-icon :icon="calendar" />
-              <ion-label>
-                <month-day-date-range :range="{ start: favoritedEvent.start, end: favoritedEvent.end }" />
-              </ion-label>
-            </li>
-            <li v-if="favoritedEvent.peopleDescription">
-              <ion-icon :icon="people" />
-              <ion-label>{{favoritedEvent.peopleDescription}}</ion-label>
-            </li>
-          </ul>
+        <current-event-status :event="favoritedEvent"/>
+        <div>
+          <div class="favoritedEvents-card-head">
+            <ion-card-title class="title">{{favoritedEvent.title}}</ion-card-title>
+          </div>
+
+          <div class="favoritedEvents-card-content">
+            <div class="description" v-if="favoritedEvent.description">
+              {{favoritedEvent.description}}
+            </div>
+            <ul class="details">
+              <li>
+                <ion-icon aria-hidden="true" src="/assets/icons/solid/map-marker.svg" />
+                <ion-label>{{favoritedEvent.location.city}}{{favoritedEvent.location.country?` (${favoritedEvent.location.country})`:``}}</ion-label>
+              </li>
+              <li>
+                <ion-icon aria-hidden="true" src="/assets/icons/solid/calendar.svg" />
+                <ion-label>
+                  <month-day-date-range :range="{ start: favoritedEvent.start, end: favoritedEvent.end }" />
+                </ion-label>
+              </li>
+              <li v-if="favoritedEvent.peopleDescription">
+                <ion-icon aria-hidden="true" :icon="people" />
+                <ion-label>{{favoritedEvent.peopleDescription}}</ion-label>
+              </li>
+            </ul>
+          </div>
         </div>
         <div class="logo">
           <ion-img :src="favoritedEvent.logoUrl" />
@@ -89,31 +94,110 @@ function showEventTimeRange(event: ListableVoxxrinEvent) {
 </script>
 
 <style lang="scss" scoped>
-.container {  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: 70px 1fr 1fr 50px;
-  grid-auto-columns: 1fr;
-  gap: 0px 0px;
-  grid-auto-flow: row dense;
-  grid-template-areas:
-    "title"
-    "description"
-    "details"
-    "logo";
-  width: 300px;
-  height: 300px;
-  background-image: linear-gradient(to bottom, var(--conf-theme-color), transparent),var(--conf-background-url);
-  background-size: cover;
+
+.favoritedEventsContainer {
+  overflow-y: auto;
 }
 
-.description { grid-area: description; }
+.favoritedEvents {
+  display: inline-flex;
+  flex-direction: row;
+  column-gap: var(--app-gutters);
+  padding: 0 var(--app-gutters);
+  background: transparent;
 
-.title { grid-area: title; }
+  &-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 268px;
+    height: 268px;
+    margin: var(--app-gutters) 0;
+    border-radius: 16px;
+    background-image: linear-gradient(to bottom, var(--conf-theme-color) 50%, transparent 200%),var(--conf-background-url);
+    contain: initial;
+    overflow: visible;
+    box-shadow: rgba(100, 100, 111, 0.2) 0 7px 29px 0;
+    transition: 80ms ease-in-out;
 
-.details { grid-area: details; }
+    &:active {
+      transition: 80ms ease-in-out;
+      transform: scale(0.99);
+      box-shadow: rgba(99, 99, 99, 0.2) 0 2px 8px 0;
+    }
 
-.logo {
-  grid-area: logo;
-  background-color: white;
+    ion-badge {
+      position: absolute;
+      right: -4px;
+      top: -1px;
+      transform: scale(0.9);
+      border-radius: 0 16px 0 8px;
+    }
+
+    &-head {
+      display: flex;
+      flex-direction: row;
+      padding: 32px var(--app-gutters) 8px var(--app-gutters);
+
+      .title {
+        font-size: 22px;
+        font-weight: 900;
+        color: var(--app-white);
+        text-overflow: ellipsis;
+        width: 100%;
+        overflow: hidden;
+        white-space: nowrap;
+        mix-blend-mode: difference;
+      }
+    }
+
+    &-content {
+      padding: 0 var(--app-gutters);
+
+      .description {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        font-size: 13px;
+        line-height: 1.4;
+        color: var(--app-white);
+        mix-blend-mode: difference;
+      }
+
+      .details {
+        margin: var(--app-gutters) 0;
+        padding: 0;
+
+        li {
+          display: flex;
+          align-items: center;
+          margin-bottom: 4px;
+          color: var(--app-white);
+          list-style: none;
+          font-size: 12px;
+          font-weight: 700;
+          mix-blend-mode: difference;
+
+          ion-icon {
+            font-size: 16px;
+            width: 24px;
+          }
+        }
+      }
+    }
+
+    .logo {
+      padding: 12px var(--app-gutters);
+      background-color: var(--app-white);
+      border-radius: 0 0 var(--app-gutters) var(--app-gutters);
+
+      ion-img {
+        width: 124px;
+      }
+    }
+  }
 }
 </style>
