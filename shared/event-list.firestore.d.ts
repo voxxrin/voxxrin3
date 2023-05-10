@@ -11,14 +11,16 @@ export type EventTheme = {
     }
 }
 
+export type Day = {
+    id: string,
+    localDate: ISOLocalDate
+}
+
 export type ListableEvent = {
     id: string;
     title: string,
     description: string|undefined,
-    days: Array<{
-        id: string,
-        localDate: ISOLocalDate
-    }>,
+    days: Array<Day>,
     timezone: string,
     keywords: string[],
     location: {
