@@ -7,8 +7,8 @@ export type Day = {
 }
 export type ConferenceDescriptor = {
     id: string,
-    name: string,
-    headingName: string,
+    title: string,
+    headingTitle: string,
     description: string,
     days: Array<Day>,
     timezone: string,

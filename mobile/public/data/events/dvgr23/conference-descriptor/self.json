@@ -1,7 +1,7 @@
 {
   "id": "dvgr23",
-  "name": "Devoxx Greece 2023",
-  "headingName": "DevoxxGR 23",
+  "title": "Devoxx Greece 2023",
+  "headingTitle": "DevoxxGR 23",
   "description": "Devoxx Greece 2023 takes place for the very first time from May 4th until the 6th in the Athens Megaron International Conference Center.",
   "days": [
     { "id":"thursday", "localDate": "2023-05-04" },

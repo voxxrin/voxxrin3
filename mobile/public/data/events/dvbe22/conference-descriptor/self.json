@@ -1,7 +1,7 @@
 {
   "id": "dvbe22",
-  "name": "Devoxx Belgium 2022",
-  "headingName": "DevoxxBE 22",
+  "title": "Devoxx Belgium 2022",
+  "headingTitle": "DevoxxBE 22",
   "description": "Devoxx Belgium 2022 (19th edition), a 5-days technology conference, saw over 3,200 attendees. To our surprise, all conference and combi tickets were sold out in just 5 minutes!",
   "days": [
     { "id":"monday", "localDate": "2022-10-10" },

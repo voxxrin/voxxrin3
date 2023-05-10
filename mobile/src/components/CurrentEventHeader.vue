@@ -11,7 +11,7 @@
       </div>
 
       <div class="viewsSubHeader">
-        <div class="viewsSubHeader-title">{{ event?.headingName }}</div>
+        <div class="viewsSubHeader-title">{{ event?.headingTitle }}</div>
         <current-event-status :event="event"></current-event-status>
       </div>
     </ion-toolbar>

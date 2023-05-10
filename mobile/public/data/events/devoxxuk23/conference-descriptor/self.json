@@ -1,7 +1,7 @@
 {
   "id": "devoxxuk23",
-  "name": "Devoxx UK 2023",
-  "headingName": "DevoxxUK 23",
+  "title": "Devoxx UK 2023",
+  "headingTitle": "DevoxxUK 23",
   "description": "Devoxx UK is a space for developers to learn, sharpen their skills and get hands-on experience with the latest tech. At this 3-day conference we bring together a diverse group of inspiring speakers from around the world to cover the most vital developer-focused topics, latest technology advances and delve into some fascinating ideas.",
   "days": [
     { "id":"wednesday", "localDate": "2023-05-10" },
