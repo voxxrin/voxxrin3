@@ -133,6 +133,18 @@ function showEventTimeRange(event: ListableVoxxrinEvent) {
     filter: drop-shadow(0px 4px 24px rgba(0, 0, 0, 0.16));
     transition: 80ms ease-in-out;
 
+    &:before {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 100%;
+      background: linear-gradient(0deg, rgba(0,0,0,0) 0, rgba(0,0,0,0.4) 200%);
+      border-radius: 16px;
+      content:'';
+      z-index: 0;
+    }
+
     &:active {
       transition: 80ms ease-in-out;
       transform: scale(0.99);
@@ -160,7 +172,6 @@ function showEventTimeRange(event: ListableVoxxrinEvent) {
         width: 100%;
         overflow: hidden;
         white-space: nowrap;
-        mix-blend-mode: difference;
       }
     }
 
@@ -168,6 +179,7 @@ function showEventTimeRange(event: ListableVoxxrinEvent) {
       padding: 0 var(--app-gutters);
 
       .description {
+        position: relative;
         overflow: hidden;
         text-overflow: ellipsis;
         display: -webkit-box;
@@ -176,12 +188,14 @@ function showEventTimeRange(event: ListableVoxxrinEvent) {
         font-size: 13px;
         line-height: 1.4;
         color: var(--app-white);
-        mix-blend-mode: difference;
+        z-index: 1;
       }
 
       .details {
+        position: relative;
         margin: var(--app-gutters) 0;
         padding: 0;
+        z-index: 1;
 
         li {
           display: flex;
@@ -191,7 +205,6 @@ function showEventTimeRange(event: ListableVoxxrinEvent) {
           list-style: none;
           font-size: 12px;
           font-weight: 700;
-          mix-blend-mode: difference;
 
           ion-icon {
             font-size: 16px;
@@ -205,6 +218,7 @@ function showEventTimeRange(event: ListableVoxxrinEvent) {
       padding: 12px var(--app-gutters);
       background-color: var(--app-white);
       border-radius: 0 0 var(--app-gutters) var(--app-gutters);
+      z-index: 1;
 
       ion-img {
         width: 124px;
