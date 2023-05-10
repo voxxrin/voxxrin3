@@ -182,8 +182,8 @@ ion-accordion {
         border-radius: 8px;
         font-size: 12px;
         font-weight: 500;
-        background-color: var(--app-voxxrin);
-        color: white;
+        background-color: white;
+        color: var(--app-theme-hightlight);
 
         ion-icon {
           font-size: 16px;
