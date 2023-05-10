@@ -2,6 +2,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router';
 import globalComponents from './global-components';
+import { i18nPlugin } from './i18n/i18n-vue'
 
 import { IonicVue } from '@ionic/vue';
 
@@ -25,12 +26,22 @@ import '@ionic/vue/css/display.css';
 import './styles/utils/_variables.scss';
 
 import './styles/main.scss'
+import {detectLocale} from "@/i18n/i18n-util";
+import {navigatorDetector} from "typesafe-i18n/detectors";
+import {loadLocaleAsync} from "@/i18n/i18n-util.async";
 
 const app = createApp(App)
   .use(IonicVue)
   .use(router)
   .use(globalComponents);
 
-router.isReady().then(() => {
+// const detectedLocale = detectLocale(navigatorDetector)
+const detectedLocale = 'en';
+
+const localeLoadedPromise= loadLocaleAsync(detectedLocale);
+
+router.isReady().then(async () => {
+  await localeLoadedPromise;
+  app.use(i18nPlugin, detectedLocale);
   app.mount('#app');
 });
