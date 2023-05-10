@@ -27,9 +27,9 @@ describe('utils', () => {
   });
 
   ([
-      { hexColor: '#ffffff', expectedRGB: `rgb(255 255 255)` },
-      { hexColor: '#000000', expectedRGB: `rgb(0 0 0)` },
-      { hexColor: '#1f2328', expectedRGB: `rgb(31 35 40)` },
+      { hexColor: '#ffffff', expectedRGB: `255, 255, 255` },
+      { hexColor: '#000000', expectedRGB: `0, 0, 0` },
+      { hexColor: '#1f2328', expectedRGB: `31, 35, 40` },
   ] as const).forEach(testCase => {
     test(`hexToRGB(${testCase.hexColor}) = ${testCase.expectedRGB}`, () => {
         expect(hexToRGB(testCase.hexColor)).toBe(testCase.expectedRGB);

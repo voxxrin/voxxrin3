@@ -57,7 +57,7 @@ function backToEventsList() {
   }
   ion-toolbar {
     position: relative;
-    --background: linear-gradient(0deg, rgba(247, 129, 37, 0.4802) 0%, rgba(247, 129, 37, 0.98) 52.84%);
+    --background: linear-gradient(0deg, rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.4802) 0%, rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.98) 52.84%);
     z-index: 1;
 
     ion-title {
@@ -71,7 +71,7 @@ function backToEventsList() {
       justify-content: space-between;
       padding-top: 16px;
       font-weight: bold;
-      color: var(--app-white);
+      color: var(--voxxrin-event-theme-colors-primary-contrast-hex);
     }
 
     .viewsSubHeader {
@@ -82,7 +82,7 @@ function backToEventsList() {
       font-weight: bold;
 
       &-title {
-        color: var(--app-white);
+        color: var(--voxxrin-event-theme-colors-primary-contrast-hex);
         font-weight: bold;
         font-size: calc(28px + 8 * (100vw - 320px) / 1024)
       }

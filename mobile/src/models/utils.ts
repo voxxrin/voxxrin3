@@ -35,7 +35,7 @@ function overlap<R extends Range<T>, T>(r1: R, r2: R, comparator: (v1: T, v2: T)
 
 export function hexToRGB(hexColor: HexColor): string {
     const hexValues = hexColor.substring(hexColor[0]==='#'?1:0);
-    return `rgb(${parseInt(hexValues.substring(0,2), 16)} ${parseInt(hexValues.substring(2,4), 16)} ${parseInt(hexValues.substring(4,6), 16)})`
+    return `${parseInt(hexValues.substring(0,2), 16)}, ${parseInt(hexValues.substring(2,4), 16)}, ${parseInt(hexValues.substring(4,6), 16)}`
 }
 export class Range<T> {
     constructor(
