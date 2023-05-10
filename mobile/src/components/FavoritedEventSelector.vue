@@ -105,6 +105,7 @@ function showEventTimeRange(event: ListableVoxxrinEvent) {
   column-gap: var(--app-gutters);
   padding: 0 var(--app-gutters);
   background: transparent;
+  contain: initial;
 
   &-card {
     position: relative;
@@ -118,7 +119,7 @@ function showEventTimeRange(event: ListableVoxxrinEvent) {
     background-image: linear-gradient(to bottom, var(--conf-theme-color) 50%, transparent 200%),var(--conf-background-url);
     contain: initial;
     overflow: visible;
-    box-shadow: rgba(100, 100, 111, 0.2) 0 7px 29px 0;
+    filter: drop-shadow(0px 4px 24px rgba(0, 0, 0, 0.16));
     transition: 80ms ease-in-out;
 
     &:active {
