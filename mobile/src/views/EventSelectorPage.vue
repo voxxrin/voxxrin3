@@ -16,7 +16,7 @@
         <ion-input :placeholder="`${LL.Search_a_conference()}`"
                    aria-label="Custom input"
                    :debounce="300"
-                   @ionInput="(ev) => searchTextUpdated(ev.target.value)"
+                   @ionInput="(ev) => searchTextUpdated(''+ev.target.value)"
                    class="searchInput">
           <ion-icon aria-hidden="true" src="/assets/icons/line/search-line.svg"></ion-icon>
         </ion-input>
@@ -70,6 +70,9 @@ import AvailableEventsList from "@/components/AvailableEventsList.vue";
 import {presentActionSheetController} from "@/views/vue-utils";
 import {Browser} from "@capacitor/browser";
 import {typesafeI18n} from "@/i18n/i18n-vue";
+import {
+    ActionSheetButton
+} from "@ionic/core/dist/types/components/action-sheet/action-sheet-interface";
 
 const router = useIonRouter();
 const { LL } = typesafeI18n()
@@ -109,13 +112,13 @@ function includePastEventUpdated(includePastEvents: boolean) {
 async function showEventActions(event: ListableVoxxrinEvent) {
     const result = await presentActionSheetController({
         header: 'Actions',
-        buttons: [favoritedTalksRef.value.includes(event.id)?{
+        buttons: ([favoritedTalksRef.value.includes(event.id)?{
             text: LL.value.Remove_from_favorites(),
             data: {action: 'remove-from-favs'},
         }:{
             text: LL.value.Add_to_my_favorites(),
             data: {action: 'add-to-favs'},
-        }].concat(event.websiteUrl?[{
+        }] as ActionSheetButton[]).concat(event.websiteUrl?[{
             text: LL.value.Visit_website(),
             data: {action: 'visit-website'},
         }]:[]).concat([{
