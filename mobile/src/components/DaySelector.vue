@@ -43,8 +43,7 @@ const props = defineProps({
 
 const today = ref<ISOLocalDate>("0000-00-00")
 useInterval(() => {
-    const todayDate = useCurrentClock().zonedDateTimeISO().toPlainDate()
-    today.value = `${todayDate.year}-${todayDate.month}-${todayDate.day}`
+    today.value = useCurrentClock().zonedDateTimeISO().toPlainDate().toString() as ISOLocalDate
 }, import.meta.env.DEV?{seconds:5}:{minutes:15}, { immediate: true })
 
 const formattedDays = computed(() => {
