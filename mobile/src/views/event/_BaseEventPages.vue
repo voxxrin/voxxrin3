@@ -7,6 +7,7 @@
             :tab="tab.id" @click="(ev: Event) => tabClicked(tab, ev)" :href="tab.url">
           <ion-icon aria-hidden="true" :src="selectedTab === tab.id ? tab.selectedIcon : tab.icon"/>
           <ion-label>{{ tab.label }}</ion-label>
+          <ion-ripple-effect type="unbounded"></ion-ripple-effect>
         </ion-tab-button>
       </ion-tab-bar>
     </ion-tabs>
