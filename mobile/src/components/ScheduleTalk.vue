@@ -120,9 +120,9 @@ function toggleWatchLater() {
   }
 
   &:before, &:after {
-    transform: scale(0);
-    opacity: 0;
-    transition: 140ms ease-in-out;
+    position: absolute;
+    content: '';
+    z-index: -1;
   }
 
   &.is-favorited  {
@@ -131,7 +131,6 @@ function toggleWatchLater() {
     border-right: 2px solid var(--app-primary-shade);
 
     &:before {
-      position: absolute;
       width: 40%;
       height: 70%;
       right: 0;
@@ -140,13 +139,10 @@ function toggleWatchLater() {
       transform: scale(1);
       opacity: 1;
       filter: blur(32px);
-      content: '';
-      z-index: -1;
-      transition: 140ms ease-in-out;
+      animation: scale-in-center 0.1s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
     }
 
     &:after {
-      position: absolute;
       width: 50%;
       height: 100%;
       right: 0;
@@ -155,9 +151,20 @@ function toggleWatchLater() {
       transform: scale(1);
       opacity: 0.5;
       mix-blend-mode: overlay;
-      content: '';
-      z-index: -1;
-      transition: 140ms ease-in-out;
+      animation: scale-in-center 0.1s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+    }
+
+    @keyframes scale-in-center {
+      0% {
+        -webkit-transform: scale(0);
+        transform: scale(0);
+        opacity: 1;
+      }
+      100% {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+        opacity: 1;
+      }
     }
 
     ion-thumbnail {
@@ -175,7 +182,7 @@ function toggleWatchLater() {
     .talkCard-footer {
       border-width: 2px;
       border-color: var(--app-primary-shade);
-      border-bottom: 2px solid var(--app-primary-shade);
+      border-bottom: none;
 
       .btnTalk {
         border-width: 2px;
