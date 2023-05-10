@@ -15,7 +15,6 @@
       "country": "United Kingdom",
       "city": "London"
     },
-    "imageUrl": null,
     "websiteUrl": "https://www.devoxx.co.uk",
     "title": "Devoxx UK 2023",
     "days": [
@@ -74,7 +73,6 @@
         "id": "friday"
       }
     ],
-    "imageUrl": null,
     "keywords": [
       "Devoxx",
       "Java",
@@ -106,7 +104,6 @@
       "city": "Athens",
       "country": "Greece"
     },
-    "imageUrl": null,
     "id": "dvgr23",
     "timezone": "Europe/Athens",
     "keywords": [
@@ -143,6 +140,7 @@
       }
     },
     "logoUrl": "https://devoxx.be/wp-content/uploads/2019/05/DEVOXX-Name-Only-TransparentBackground.png",
-    "backgroundUrl": "https://devoxx.gr/wp-content/uploads/2022/11/VDAthens_3593.jpg"
+    "backgroundUrl": "https://devoxx.gr/wp-content/uploads/2022/11/VDAthens_3593.jpg",
+    "peopleDescription": "1000+ attendees"
   }
 ]

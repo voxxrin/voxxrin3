@@ -2,6 +2,7 @@
   "id": "dvbe22",
   "name": "Devoxx Belgium 2022",
   "headingName": "DevoxxBE 22",
+  "description": "Devoxx Belgium 2022 (19th edition), a 5-days technology conference, saw over 3,200 attendees. To our surprise, all conference and combi tickets were sold out in just 5 minutes!",
   "days": [
     { "id":"monday", "localDate": "2022-10-10" },
     { "id":"tuesday", "localDate": "2022-10-11" },
@@ -10,6 +11,18 @@
     { "id":"friday", "localDate": "2022-10-14" }
   ],
   "timezone": "Europe/Brussels",
+  "keywords": [
+    "Devoxx",
+    "Java",
+    "Kotlin",
+    "Cloud",
+    "Big data",
+    "Web"
+  ],
+  "location": {
+    "city": "Antwerp",
+    "country": "Belgium"
+  },
   "features": {
     "roomsDisplayed": true,
     "favoritesEnabled": true,
@@ -166,5 +179,9 @@
   "infos": {
     "venuePicture": "https://acme.com/venue-picture.png",
     "eventDescription": "hello *world* !"
-  }
+  },
+  "websiteUrl": "https://devoxx.be",
+  "logoUrl": "https://devoxx.be/wp-content/uploads/2019/05/DEVOXX-Name-Only-TransparentBackground.png",
+  "backgroundUrl": "https://devoxx.be/wp-content/uploads/2022/10/cover.jpg",
+  "peopleDescription": null
 }

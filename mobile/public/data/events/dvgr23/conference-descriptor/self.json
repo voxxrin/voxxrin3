@@ -2,12 +2,25 @@
   "id": "dvgr23",
   "name": "Devoxx Greece 2023",
   "headingName": "DevoxxGR 23",
+  "description": "Devoxx Greece 2023 takes place for the very first time from May 4th until the 6th in the Athens Megaron International Conference Center.",
   "days": [
     { "id":"thursday", "localDate": "2023-05-04" },
     { "id":"friday", "localDate": "2023-05-05" },
     { "id":"saturday", "localDate": "2023-05-06" }
   ],
   "timezone": "Europe/Athens",
+  "keywords": [
+    "Devoxx",
+    "Java",
+    "Kotlin",
+    "Cloud",
+    "Big data",
+    "Web"
+  ],
+  "location": {
+    "city": "Athens",
+    "country": "Greece"
+  },
   "features": {
     "roomsDisplayed": true,
     "favoritesEnabled": true,
@@ -217,5 +230,9 @@
   "infos": {
     "venuePicture": "https://acme.com/venue-picture.png",
     "eventDescription": "hello *world* !"
-  }
+  },
+  "websiteUrl": "https://devoxx.gr",
+  "logoUrl": "https://devoxx.be/wp-content/uploads/2019/05/DEVOXX-Name-Only-TransparentBackground.png",
+  "backgroundUrl": "https://devoxx.gr/wp-content/uploads/2022/11/VDAthens_3593.jpg",
+  "peopleDescription": "1000+ attendees"
 }

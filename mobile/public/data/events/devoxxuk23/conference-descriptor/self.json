@@ -2,12 +2,25 @@
   "id": "devoxxuk23",
   "name": "Devoxx UK 2023",
   "headingName": "DevoxxUK 23",
+  "description": "Devoxx UK is a space for developers to learn, sharpen their skills and get hands-on experience with the latest tech. At this 3-day conference we bring together a diverse group of inspiring speakers from around the world to cover the most vital developer-focused topics, latest technology advances and delve into some fascinating ideas.",
   "days": [
     { "id":"wednesday", "localDate": "2023-05-10" },
     { "id":"thursday", "localDate": "2023-05-11" },
     { "id":"friday", "localDate": "2023-05-12" }
   ],
   "timezone": "Europe/London",
+  "keywords": [
+    "Devoxx",
+    "Java",
+    "Kotlin",
+    "Cloud",
+    "Big data",
+    "Web"
+  ],
+  "location": {
+    "country": "United Kingdom",
+    "city": "London"
+  },
   "features": {
     "roomsDisplayed": true,
     "favoritesEnabled": true,
@@ -239,5 +252,9 @@
   "infos": {
     "venuePicture": "https://acme.com/venue-picture.png",
     "eventDescription": "hello *world* !"
-  }
+  },
+  "logoUrl": "https://devoxx.be/wp-content/uploads/2019/05/DEVOXX-Name-Only-TransparentBackground.png",
+  "backgroundUrl": "https://www.devoxx.co.uk/wp-content/uploads/2023/02/D23-header-for-web.jpg",
+  "websiteUrl": "https://www.devoxx.co.uk",
+  "peopleDescription": null
 }
