@@ -25,26 +25,29 @@ import {useRoute} from "vue-router";
 import {getRouteParamsValue} from "@/views/vue-utils";
 import {EventId} from "@/models/VoxxrinEvent";
 import {useCurrentConferenceDescriptor} from "@/state/CurrentConferenceDescriptor";
+import {typesafeI18n} from "@/i18n/i18n-vue";
 
 const router = useIonRouter();
 const route = useRoute();
 const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')!));
 const event = useCurrentConferenceDescriptor(eventId.value);
 
+const { LL } = typesafeI18n()
+
 const tabs = [{
-  id: 'schedule', url: `/events/${eventId.value.value}/schedule`, label: 'Schedule',
+  id: 'schedule', url: `/events/${eventId.value.value}/schedule`, label: LL.value.Schedule(),
   icon: '/assets/icons/line/calendar-line.svg',
   selectedIcon: '/assets/icons/solid/calendar.svg',
 }, {
-  id: 'favorites', url: `/events/${eventId.value.value}/favorites`, label: 'Favorites',
+  id: 'favorites', url: `/events/${eventId.value.value}/favorites`, label: LL.value.Favorites(),
   icon: '/assets/icons/line/bookmark-line-favorite.svg',
   selectedIcon: '/assets/icons/solid/bookmark-favorite.svg',
 }, {
-  id: 'feedbacks', url: `/events/${eventId.value.value}/feedbacks`, label: 'Feedbacks',
+  id: 'feedbacks', url: `/events/${eventId.value.value}/feedbacks`, label: LL.value.Feedbacks(),
   icon: '/assets/icons/line/comments-2-line.svg',
   selectedIcon: '/assets/icons/solid/comments-2.svg',
 }, {
-  id: 'infos', url: `/events/${eventId.value.value}/infos`, label: 'Infos',
+  id: 'infos', url: `/events/${eventId.value.value}/infos`, label: LL.value.Infos(),
   icon: '/assets/icons/line/info-circle-line.svg',
   selectedIcon: '/assets/icons/solid/info-circle.svg',
 }] as const;

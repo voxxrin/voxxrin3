@@ -4,7 +4,7 @@
       <current-event-header v-if="event" :event="event"/>
       <ion-header class="stickyHeader">
         <ion-toolbar>
-          <ion-title class="stickyHeader-title" slot="start" >Schedule</ion-title>
+          <ion-title class="stickyHeader-title" slot="start" >{{ LL.Schedule() }}</ion-title>
           <ion-button class="ion-margin-end" slot="end" shape="round" size="small" fill="outline" color="primary">
             <ion-icon src="/assets/icons/solid/settings-cog.svg"></ion-icon>
           </ion-button>
@@ -82,11 +82,14 @@ import {findVoxxrinDay} from "@/models/VoxxrinConferenceDescriptor";
 import TimeSlotAccordion from "@/components/TimeSlotAccordion.vue";
 import {VoxxrinTimeslotFeedback} from "@/models/VoxxrinFeedback";
 import {useCurrentClock} from "@/state/CurrentClock";
+import {typesafeI18n} from "@/i18n/i18n-vue";
 
 const router = useRouter();
 const route = useRoute();
 const eventId = new EventId(getRouteParamsValue(route, 'eventId')!);
 const event = useCurrentConferenceDescriptor(eventId);
+
+const { LL } = typesafeI18n()
 
 const currentConferenceDescriptor = useCurrentConferenceDescriptor(eventId);
 

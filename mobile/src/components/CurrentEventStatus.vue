@@ -3,7 +3,7 @@
     <ion-spinner v-if="conferenceStatus === 'ongoing'" name="dots"></ion-spinner>
     <ion-icon v-if="conferenceStatus === 'past'" aria-hidden="true" :icon="playBackCircle"></ion-icon>
     <ion-icon v-if="conferenceStatus === 'future'" aria-hidden="true" :icon="calendar"></ion-icon>
-    {{conferenceStatus}}
+    {{conferenceStatusLabels[conferenceStatus]}}
   </ion-badge>
 </template>
 
@@ -12,7 +12,7 @@ import {
     IonBadge,
     IonSpinner
 } from '@ionic/vue';
-import {onMounted, PropType, ref, watch} from "vue";
+import {onMounted, PropType, ref} from "vue";
 import {match, P} from "ts-pattern";
 import {
     ConferenceStatus,
@@ -21,6 +21,7 @@ import {
 import {useInterval} from "@/views/vue-utils";
 import {calendar, playBackCircle} from "ionicons/icons";
 import {ListableVoxxrinEvent} from "@/models/VoxxrinEvent";
+import {typesafeI18n} from "@/i18n/i18n-vue";
 
 const props = defineProps({
     event: {
@@ -29,8 +30,17 @@ const props = defineProps({
     }
 })
 
+const { LL } = typesafeI18n()
+
 type DisplayedConferenceStatus = 'unknown'|ConferenceStatus
 const conferenceStatus = ref<DisplayedConferenceStatus>('unknown')
+
+const conferenceStatusLabels: Record<DisplayedConferenceStatus, string> = {
+    future: LL.value.ConfStatus_future(),
+    ongoing: LL.value.ConfStatus_ongoing(),
+    past: LL.value.ConfStatus_past(),
+    unknown: LL.value.ConfStatus_unknown(),
+}
 
 onMounted(() => {
     useInterval(refreshStatus, import.meta.env.DEV?{seconds:4}:{minutes:15}, {immediate: true})

@@ -2,27 +2,29 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-title>Conference Selector</ion-title>
+        <ion-title>{{LL.Conference_Selector()}}</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content>
-      <ion-input label="Search a conference" label-placement="stacked" fill="outline"
-                 :debounce="300" placeholder="Keywords..."
+      <ion-input :label="LL.Search_a_conference()" label-placement="stacked" fill="outline"
+                 :debounce="300" :placeholder="`${LL.Keywords()}...`"
                  @ionInput="(ev) => searchTextUpdated(ev.target.value)"
       ></ion-input>
-      <ion-toggle :enable-on-off-labels="true" @ionChange="(ev) => includePastEventUpdated(ev.target.checked)">Past events</ion-toggle>
+      <ion-toggle :enable-on-off-labels="true" @ionChange="(ev) => includePastEventUpdated(ev.target.checked)">
+        {{ LL.Past_events() }}
+      </ion-toggle>
 
-      <h1>Favorited conferences</h1>
+      <h1>{{ LL.Favorited_conferences() }}</h1>
       <favorited-event-selector
           :favoritedEvents="filteredFavoritedEvents" @event-selected="(event) => selectEvent(event.id)">
         <template #no-favorites>
-          No favorites available yet...
+          {{ LL.No_favorites_available_yet() }}
         </template>
       </favorited-event-selector>
       <h1>All conferences</h1>
       <available-events-list :events="filteredAvailableEvents" @event-clicked="(event) => showEventActions(event)">
         <template #no-event>
-          No conference registered yet
+          {{ LL.No_conference_registered_yet() }}
         </template>
       </available-events-list>
     </ion-content>
@@ -43,8 +45,10 @@ import FavoritedEventSelector from "@/components/FavoritedEventSelector.vue";
 import AvailableEventsList from "@/components/AvailableEventsList.vue";
 import {presentActionSheetController} from "@/views/vue-utils";
 import {Browser} from "@capacitor/browser";
+import {typesafeI18n} from "@/i18n/i18n-vue";
 
 const router = useIonRouter();
+const { LL } = typesafeI18n()
 
 const availableEventsRef: Ref<ListableVoxxrinEvent[]> = ref([]);
 watchCurrentAvailableEvents(updatedAvailableEvents => {
@@ -82,16 +86,16 @@ async function showEventActions(event: ListableVoxxrinEvent) {
     const result = await presentActionSheetController({
         header: 'Actions',
         buttons: [favoritedTalksRef.value.includes(event.id)?{
-            text: 'Remove from favorites',
+            text: LL.value.Remove_from_favorites(),
             data: {action: 'remove-from-favs'},
         }:{
-            text: 'Add to my favorites',
+            text: LL.value.Add_to_my_favorites(),
             data: {action: 'add-to-favs'},
         }].concat(event.websiteUrl?[{
-            text: 'Visit website',
+            text: LL.value.Visit_website(),
             data: {action: 'visit-website'},
         }]:[]).concat([{
-            text: 'Cancel', role: 'cancel',
+            text: LL.value.Cancel(), role: 'cancel',
             data: {action: 'cancel'},
         }])
     });

@@ -11,8 +11,6 @@
           <div class="dayList-button-content">
             <strong class="day">{{day.formatted.day}}</strong>
             <span class="month">{{day.formatted.month}}</span>
-            <!-- {{day.localDate}} ( {{day.formatted.weekday}}
-           {{day.formatted.year}})-->
           </div>
         </ion-button>
       </div>
