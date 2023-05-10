@@ -39,7 +39,7 @@
           <ion-icon src="/assets/icons/line/comment-line-add.svg"></ion-icon>
         </ion-fab-button>
         <ion-fab-list side="top" class="listFeedbackSlot">
-          <div class="listFeedbackSlot-item" v-for="(missingFeedbacksPastTimeslot, index) in missingFeedbacksPastTimeslots" :key="index"
+          <div class="listFeedbackSlot-item" v-for="(missingFeedbacksPastTimeslot, index) in missingFeedbacksPastTimeslots" :key="missingFeedbacksPastTimeslot.id.value"
                @click="showAlertForTimeslot(missingFeedbacksPastTimeslot)">
             <ion-label>{{ missingFeedbacksPastTimeslot.start }} <ion-icon aria-hidden="true" src="assets/icons/line/chevron-right-line.svg"></ion-icon>
               {{ missingFeedbacksPastTimeslot.end }}</ion-label>
@@ -111,9 +111,9 @@ watchCurrentSchedule((currentSchedule) => {
         timeslots.value = currentSchedule.timeSlots.map((ts, idx) => {
             // yes that's weird ... but looks like TS is not very smart here 🤔
             if(ts.type === 'break') {
-                return {...ts, feedback: idx%2===0?{}:undefined};
+                return {...ts, feedback: idx%2===0?getTimeslotLabel(ts):undefined};
             } else {
-                return {...ts, feedback: idx%2===0?{}:undefined};
+                return {...ts, feedback: idx%2===0?getTimeslotLabel(ts):undefined};
             }
         });
         recomputeMissingFeedbacksList();

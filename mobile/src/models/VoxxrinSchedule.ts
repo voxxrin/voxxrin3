@@ -66,6 +66,7 @@ export function getTimeslotLabel(timeslot: VoxxrinScheduleTimeSlot) {
     const start = formatHourMinutes(timeslot.start)
     const end = formatHourMinutes(timeslot.end)
     return {
+        id: timeslot.id,
         start,
         end,
         full: `${start} -> ${end}`
