@@ -76,3 +76,31 @@ function tabClicked(tab: typeof tabs[number], event: Event) {
     selectedTab.value = tab.id;
 }
 </script>
+
+<style lang="scss" scoped>
+ion-tab-bar {
+  box-shadow: 0px -6px 28px rgba(0, 0, 0, 0.24);
+
+  ion-tab-button {
+    --ripple-color: var(--voxxrin-event-theme-colors-primary-hex);
+    color: var(--app-primary);
+
+    ion-label {
+      color: var(--app-grey-medium);
+    }
+
+    &.tab-selected {
+      color: var(--voxxrin-event-theme-colors-primary-hex);
+
+      ion-label {
+        color: var(--voxxrin-event-theme-colors-primary-hex);
+      }
+    }
+
+    ion-icon {
+      margin-top: 4px;
+      font-size: 26px;
+    }
+  }
+}
+</style>
