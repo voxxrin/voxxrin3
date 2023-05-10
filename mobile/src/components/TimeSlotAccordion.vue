@@ -184,7 +184,7 @@ ion-accordion {
         font-size: 12px;
         font-weight: 500;
         background-color: white;
-        color: var(--app-theme-hightlight);
+        color: var(--voxxrin-event-theme-colors-secondary-hex);
 
         ion-icon {
           font-size: 16px;
@@ -222,7 +222,7 @@ ion-accordion {
 
     ._missing-feedback {
       height: 100%;
-      --background: var(--app-theme-hightlight);
+      --background: var(--voxxrin-event-theme-colors-secondary-hex);
       --box-shadow: none;
       --border-radius: 0;
       --padding-start: 8px;
@@ -252,7 +252,7 @@ ion-accordion {
 
   &._ongoing {
     .ion-color-light {
-      --ion-color-base:  var(--app-theme-primary) !important;;
+      --ion-color-base:  var(--voxxrin-event-theme-colors-primary-hex) !important;;
       --ripple-color: var(--app-beige-dark) !important;
 
       ion-label { color: var(--app-white);}

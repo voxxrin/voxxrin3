@@ -58,20 +58,17 @@ const formattedDays = computed(() => {
 
 <style scoped lang="scss">
     %selected {
-      box-shadow: 0 0 0 4px rgba(var(--app-theme-primary-rgb), 0.3);
+      box-shadow: 0 0 0 4px rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.3);
       border-radius: 44px;
-      --border-color: var(--app-theme-primary);
-      --background: var(--app-theme-primary);
-      --background-activated: var(--app-theme-primary);
+      --border-color: var(--voxxrin-event-theme-colors-primary-hex);
+      --background: var(--voxxrin-event-theme-colors-primary-hex);
+      --background-activated: var(--voxxrin-event-theme-colors-primary-hex);
+      --color: var(--voxxrin-event-theme-colors-primary-contrast-hex) !important;
       transition: 140ms ease-in-out;
 
       &:active {
         transition: 140ms ease-in-out;
-        box-shadow: 0 0 0 2px rgba(var(--app-theme-primary-rgb), 0.3);
-      }
-
-      .dayList-button-content {
-        color: var(--app-white) !important;
+        box-shadow: 0 0 0 2px rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.3);
       }
     }
 
@@ -80,8 +77,8 @@ const formattedDays = computed(() => {
     overflow-x: auto;
     margin-left: -44px;
     margin-right: -34px;
-    background: var(--app-white);
-    box-shadow: var(--app-shadow-light);
+    background: var(--voxxrin-event-theme-colors-primary-contrast-hex);
+    box-shadow: rgba(var(--voxxrin-event-theme-colors-primary-contrast-rgb), 0.15);
 
     &-content {
       display: flex;
@@ -131,8 +128,7 @@ const formattedDays = computed(() => {
       --border-radius: 44px;
       --border-width: 1px;
       --border-style: solid;
-      --border-color: var(--app-primary);
-      --background: transparent;
+      transition: 140ms ease-in-out;
       overflow: visible !important;
 
       &-content {
@@ -140,7 +136,6 @@ const formattedDays = computed(() => {
         align-items: center;
         flex-direction: column;
         justify-content: center;
-        color: var(--app-primary);
 
         .day {
           font-size: 18px;
@@ -159,42 +154,31 @@ const formattedDays = computed(() => {
         }
       }
 
-      &.selected { @extend %selected;}
-
       &.past {
         border-radius: 44px;
         --border-color: var(--app-grey-light);
         --background: var(--app-grey-light);
         --background-activated: var(--app-grey-line);
-        transition: 140ms ease-in-out;
+        --color: var(--app-grey-medium);
 
         &.selected {@extend %selected;}
-
-        .dayList-button-content {
-          color: var(--app-grey-medium);
-        }
       }
 
       &.today {
-        --border-color: var(--app-theme-hightlight);
+        --border-color: var(--voxxrin-event-theme-colors-primary-hex);
         --background: transparent;
         --background-activated: var(--app-grey-line);
-        transition: 140ms ease-in-out;
+        --color: var(--voxxrin-event-theme-colors-primary-hex);
 
-        &.selected {
-          box-shadow: 0 0 0 4px rgba(var(--app-theme-hightlight-rgb), 0.3);
-          --border-color: var(--app-theme-hightlight);
-          --background: var(--app-theme-hightlight);
-          --background-activated: var(--app-theme-hightlight);
-        }
-
-        .dayList-button-content {
-          color: var(--app-theme-hightlight);
-        }
+        &.selected {@extend %selected;}
       }
 
       &.future {
-        transition: 140ms ease-in-out;
+        --border-color: var(--app-primary-shade);
+        --background: transparent;
+        --color: var(--app-primary-shade);
+
+        &.selected { @extend %selected;}
       }
     }
   }

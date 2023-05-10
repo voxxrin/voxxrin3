@@ -135,7 +135,7 @@ function toggleWatchLater() {
       height: 70%;
       right: 0;
       bottom: 0;
-      background: rgba(var(--app-theme-primary-rgb), 0.6);
+      background: rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.6);
       transform: scale(1);
       opacity: 1;
       filter: blur(32px);
@@ -173,8 +173,8 @@ function toggleWatchLater() {
     }
 
     ion-button.favorite-btn {
-      --background: var(--app-theme-primary);
-      --color: var(--app-white);
+      --background: var(--voxxrin-event-theme-colors-primary-hex);
+      --color: var(--voxxrin-event-theme-colors-primary-contrast-hex);
       border-left: 1px solid var(--app-primary-shade);
       --border-radius:  0 0 8px 0 !important;
     }
@@ -193,9 +193,9 @@ function toggleWatchLater() {
 
   &.to-watch-later {
     ion-button.watch-later-btn {
-      --background: var(--app-voxxrin);
-      --color: var(--app-white);
-      border-left: 1px solid var(--app-voxxrin);
+      --background: var(--voxxrin-event-theme-colors-secondary-hex);
+      --color: var(--voxxrin-event-theme-colors-secondary-contrast-hex);
+      border-left: 1px solid var(--voxxrin-event-theme-colors-secondary-hex);
     }
   }
 

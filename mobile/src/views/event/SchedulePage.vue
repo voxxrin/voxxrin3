@@ -35,7 +35,7 @@
       </ion-button>
 
       <ion-fab vertical="bottom" horizontal="end" slot="fixed" v-if="missingFeedbacksPastTimeslots.length>0">
-        <ion-fab-button color="tertiary">
+        <ion-fab-button>
           <ion-icon src="/assets/icons/line/comment-line-add.svg"></ion-icon>
         </ion-fab-button>
         <ion-fab-list side="top" class="listFeedbackSlot">
@@ -143,6 +143,11 @@ async function showAlertForTimeslot(missingFeedbacksPastTimeslots: VoxxrinTimesl
 </script>
 
 <style scoped lang="scss">
+  ion-fab-button {
+    --background: var(--voxxrin-event-theme-colors-secondary-hex);
+    --color: var(--voxxrin-event-theme-colors-secondary-contrast-hex);
+  }
+
   ion-toolbar {
     position: sticky;
     top: 0;
@@ -179,7 +184,7 @@ async function showAlertForTimeslot(missingFeedbacksPastTimeslots: VoxxrinTimesl
       width: 164px;
       padding: 8px 12px;
       border-radius: 8px;
-      background-color: white;
+      background-color: var(--voxxrin-event-theme-colors-secondary-contrast-hex);
       border: 1px solid var(--app-beige-line);
       filter: drop-shadow(-4px 0px 4px rgba(0, 0, 0, 0.15));
 
@@ -202,9 +207,9 @@ async function showAlertForTimeslot(missingFeedbacksPastTimeslots: VoxxrinTimesl
       .plusIndicator {
         height: 24px;
         width: 24px;
-        background-color: var(--app-theme-hightlight);
+        background-color: var(--voxxrin-event-theme-colors-secondary-hex);
         border-radius: 24px;
-        color: white;
+        color: var(--voxxrin-event-theme-colors-secondary-contrast-hex);
       }
     }
   }

@@ -51,7 +51,7 @@ const props = defineProps({
   border : {
     top: 1px solid var(--app-grey-line);
     right: 1px solid var(--app-grey-line);
-    left: 6px solid var(--app-theme-primary);
+    left: 6px solid var(--voxxrin-event-theme-colors-primary-hex);
   }
   box-shadow: rgba(100, 100, 111, 0.2) 0 7px 29px 0;
   transition: 140ms ease-in-out;

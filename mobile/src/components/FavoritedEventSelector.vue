@@ -119,6 +119,7 @@ function showEventTimeRange(event: ListableVoxxrinEvent) {
   contain: initial;
 
   &-card {
+    color: var(--voxxrin-event-theme-colors-primary-contrast-hex);
     position: relative;
     display: flex;
     flex-direction: column;
@@ -165,9 +166,9 @@ function showEventTimeRange(event: ListableVoxxrinEvent) {
       padding: 32px var(--app-gutters) 8px var(--app-gutters);
 
       .title {
+        --color: var(--voxxrin-event-theme-colors-primary-contrast-hex);
         font-size: 22px;
         font-weight: 900;
-        color: var(--app-white);
         text-overflow: ellipsis;
         width: 100%;
         overflow: hidden;
@@ -187,7 +188,6 @@ function showEventTimeRange(event: ListableVoxxrinEvent) {
         -webkit-box-orient: vertical;
         font-size: 13px;
         line-height: 1.4;
-        color: var(--app-white);
         z-index: 1;
       }
 
@@ -201,7 +201,6 @@ function showEventTimeRange(event: ListableVoxxrinEvent) {
           display: flex;
           align-items: center;
           margin-bottom: 4px;
-          color: var(--app-white);
           list-style: none;
           font-size: 12px;
           font-weight: 700;

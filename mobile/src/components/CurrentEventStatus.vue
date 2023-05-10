@@ -66,7 +66,7 @@ function refreshStatus() {
 
     &._future {
       background: var(--app-white);
-      color: var(--app-voxxrin);
+      color: var(--voxxrin-event-theme-colors-secondary-hex);
     }
   }
 </style>
