@@ -2,18 +2,19 @@
 
 /* CSS Variables */
 :root {
-    /* Color styles */
+    /* Color Theme */
+    --app-theme-primary: #F78327;
+    --app-theme-primary-rgb: 247, 131, 39;
+    --app-theme-hightlight: #165CE3;
+    --app-theme-hightlight-rgb: 22, 92, 227;
+
+    /* Color Fix */
     --app-voxxrin: #E90866;
     --app-voxxrin-rgb: 233, 8, 102;
     --app-voxxrin-contrast: #ffffff;
     --app-voxxrin-contrast-rgb: 255, 255, 255;
     --app-voxxrin-shade: #c10553;
     --app-voxxrin-tint: #f1287e;
-
-    --app-theme-primary: #F78327;
-    --app-theme-primary-rgb: 247, 131, 39;
-    --app-theme-hightlight: #165CE3;
-    --app-theme-hightlight-rgb: 22, 92, 227;
 
     --app-beige-dark: #A3998F;
     --app-beige-medium: #EDE7E1;
@@ -43,6 +44,7 @@
 
     /* METRICS */
     --app-gutters: 16px;
+    --app-gutters-medium: 12px;
 }
 
 /**

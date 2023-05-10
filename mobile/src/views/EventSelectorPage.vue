@@ -1,32 +1,50 @@
 <template>
   <ion-page>
-    <ion-header>
-      <ion-toolbar>
-        <ion-title>{{LL.Conference_Selector()}}</ion-title>
-      </ion-toolbar>
-    </ion-header>
     <ion-content>
-      <ion-input :label="LL.Search_a_conference()" label-placement="stacked" fill="outline"
-                 :debounce="300" :placeholder="`${LL.Keywords()}...`"
-                 @ionInput="(ev) => searchTextUpdated(ev.target.value)"
-      ></ion-input>
-      <ion-toggle :enable-on-off-labels="true" @ionChange="(ev) => includePastEventUpdated(ev.target.checked)" :checked="searchCriteriaRef.includePastEvents">
-        {{ LL.Past_events() }}
-      </ion-toggle>
+      <ion-header class="conferenceWelcome">
+        <div class="conferenceWelcome-title">
+          <span class="name">Hello, Robin</span>
+          <span class="welcome">Welcome to, <strong>Voxxrin</strong></span>
+        </div>
+        <ion-button class="btnUser" shape="round" size="large">
+          <ion-icon src="/assets/icons/line/user-line.svg"></ion-icon>
+          <ion-ripple-effect type="unbounded"></ion-ripple-effect>
+        </ion-button>
+      </ion-header>
 
-      <h1>{{ LL.Favorited_conferences() }}</h1>
-      <favorited-event-selector
-          :favoritedEvents="filteredFavoritedEvents" @event-selected="(event) => selectEvent(event.id)">
-        <template #no-favorites>
-          {{ LL.No_favorites_available_yet() }}
-        </template>
-      </favorited-event-selector>
-      <h1>All conferences</h1>
-      <available-events-list :events="filteredAvailableEvents" @event-clicked="(event) => showEventActions(event)">
-        <template #no-event>
-          {{ LL.No_conference_registered_yet() }}
-        </template>
-      </available-events-list>
+      <ion-header class="conferenceHeader stickyHeader" collapse="condense">
+        <ion-input :placeholder="`${LL.Search_a_conference()}`"
+                   aria-label="Custom input"
+                   :debounce="300"
+                   @ionInput="(ev) => searchTextUpdated(ev.target.value)"
+                   class="searchInput">
+          <ion-icon src="/assets/icons/line/search-line.svg"></ion-icon>
+        </ion-input>
+
+        <ion-toggle :enable-on-off-labels="true"
+                    labelPlacement="end"
+                    @ionChange="(ev) => includePastEventUpdated(ev.target.checked)"
+                    :checked="searchCriteriaRef.includePastEvents"
+                   class="conferenceToggle">
+          <span class="conferenceToggle-label">{{ LL.Past_events() }}</span>
+        </ion-toggle>
+      </ion-header>
+
+      <div class="conferenceContent">
+        <h1>{{ LL.Favorited_conferences() }}</h1>
+        <favorited-event-selector
+            :favoritedEvents="filteredFavoritedEvents" @event-selected="(event) => selectEvent(event.id)">
+          <template #no-favorites>
+            {{ LL.No_favorites_available_yet() }}
+          </template>
+        </favorited-event-selector>
+        <h1>All conferences</h1>
+        <available-events-list :events="filteredAvailableEvents" @event-clicked="(event) => showEventActions(event)">
+          <template #no-event>
+            {{ LL.No_conference_registered_yet() }}
+          </template>
+        </available-events-list>
+      </div>
     </ion-content>
   </ion-page>
 </template>
@@ -114,3 +132,82 @@ async function showEventActions(event: ListableVoxxrinEvent) {
     }
 }
 </script>
+
+<style lang="scss" scoped>
+  .conferenceWelcome {
+    display: flex;
+    flex-direction: row;
+    align-items: end;
+    justify-content: space-between;
+    padding: 34px var( --app-gutters-medium) 0 var( --app-gutters-medium);
+    background: var(--app-background);
+
+    &:after {
+      display: none;
+    }
+
+    &-title {
+      display: flex;
+      flex-direction: column;
+      row-gap: 4px;
+
+      .name {
+        font-size: 14px;
+        color: var(--app-beige-dark);
+      }
+
+      .welcome {
+        font-size: 24px;
+        font-weight: bold;
+
+        strong {
+          color: var(--app-voxxrin);
+        }
+      }
+    }
+
+    .btnUser {
+      height: 58px;
+      width: 58px;
+      border: 1px solid var(--app-beige-line);
+      --padding-end: 0;
+      --padding-start: 0;
+      --background: var(--app-beige-medium);
+      --color: var(--app-beige-dark);
+      --background-activated-opacity: 0.2;
+      --background-focused-opacity: 0.2;
+      --background-hover-opacity: 0.2;
+      border-radius: 58px;
+    }
+  }
+
+  .conferenceHeader {
+    display: flex;
+    flex-direction: row;
+    column-gap: 12px;
+    padding: 12px var( --app-gutters-medium);
+    background-color: var(--app-background);
+    backdrop-filter: blur(2px);
+    border-bottom: none;
+
+    .conferenceToggle {
+      display: flex;
+      --track-background-checked: var(--app-voxxrin);
+
+      &-label {
+        font-weight: bold;
+        font-size: 13px;
+        width: 54px;
+        display: flex;
+        white-space: break-spaces;
+        color: var(--app-primary-shade);
+        line-height: 1;
+      }
+
+    }
+  }
+
+  .conferenceContent {
+    padding: 0 var( --app-gutters-medium);
+  }
+</style>

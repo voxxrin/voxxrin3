@@ -1,6 +1,6 @@
 <template>
   <ion-page>
-    <ion-content :fullscreen="true" >
+    <ion-content :fullscreen="true">
       <current-event-header v-if="event" :event="event"/>
       <ion-header class="stickyHeader">
         <ion-toolbar>

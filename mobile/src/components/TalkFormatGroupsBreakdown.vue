@@ -55,6 +55,7 @@ const perFormatGroups = sortThenGroupByFormat(props.talks!, props.event!);
       --padding-top: 24px;
       --background: transparent;
       --border-style: inherit;
+      border: none;
 
       ion-icon {
         font-size: 24px;
