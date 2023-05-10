@@ -1,5 +1,5 @@
 <template>
-  <ion-card class="talkCard" :class="{ container: true, 'is-favorited': favorited, 'to-watch-later': toWatchLater }" >
+  <ion-card class="talkCard" :class="{ container: true, 'is-favorited': favoritedRef, 'to-watch-later': watchLaterRef }" >
     <div class="talkCard-head">
       <div class="track">
         <ion-badge class="trackBadge">
@@ -31,15 +31,15 @@
       </div>
       <div class="talkCard-footer-actions">
         <div class="watchLater">
-          <ion-button class="btnTalk watch-later-btn">
-            <ion-icon v-if="!toWatchLater" aria-hidden="true" src="/assets/icons/line/video-line.svg"></ion-icon>
-            <ion-icon v-if="toWatchLater" aria-hidden="true" src="/assets/icons/solid/video.svg"></ion-icon>
+          <ion-button class="btnTalk watch-later-btn" @click="() => toggleWatchLater()">
+            <ion-icon v-if="!watchLaterRef" aria-hidden="true" src="/assets/icons/line/video-line.svg"></ion-icon>
+            <ion-icon v-if="watchLaterRef" aria-hidden="true" src="/assets/icons/solid/video.svg"></ion-icon>
           </ion-button>
         </div>
         <div class="favorite">
-          <ion-button class="btnTalk favorite-btn" >
-            <ion-icon class="favorite-btn-icon" v-if="!favorited" aria-hidden="true" src="/assets/icons/line/bookmark-line-favorite.svg"></ion-icon>
-            <ion-icon class="favorite-btn-icon" v-if="favorited" aria-hidden="true" src="/assets/icons/solid/bookmark-favorite.svg"></ion-icon>
+          <ion-button class="btnTalk favorite-btn" @click="() => toggleFavorited()">
+            <ion-icon class="favorite-btn-icon" v-if="!favoritedRef" aria-hidden="true" src="/assets/icons/line/bookmark-line-favorite.svg"></ion-icon>
+            <ion-icon class="favorite-btn-icon" v-if="favoritedRef" aria-hidden="true" src="/assets/icons/solid/bookmark-favorite.svg"></ion-icon>
             <ion-label class="favorite-btn-nb" v-if="favoritesCount">{{ favoritesCount }}</ion-label>
           </ion-button>
         </div>
@@ -76,6 +76,9 @@ const props = defineProps({
   }
 })
 
+const favoritedRef = ref(props.favorited!);
+const watchLaterRef = ref(props.toWatchLater!);
+
 const displayedSpeakers = props.talk!.speakers
     .map(s => `${s.fullName}${s.companyName?` (${s.companyName})`:``}`)
     .join(", ");
@@ -84,6 +87,13 @@ const theme = {
   track: {
     color: props.talk!.track.themeColor
   }
+}
+
+function toggleFavorited() {
+    favoritedRef.value = !favoritedRef.value;
+}
+function toggleWatchLater() {
+    watchLaterRef.value = !watchLaterRef.value;
 }
 </script>
 
