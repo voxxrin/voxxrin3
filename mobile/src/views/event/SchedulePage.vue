@@ -34,7 +34,7 @@
         Open talk 2
       </ion-button>
 
-      <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+      <ion-fab vertical="bottom" horizontal="end" slot="fixed" v-if="missingFeedbacksPastTimeslots.length>0">
         <ion-fab-button color="tertiary">
           <ion-icon src="/assets/icons/line/comment-line-add.svg"></ion-icon>
         </ion-fab-button>
