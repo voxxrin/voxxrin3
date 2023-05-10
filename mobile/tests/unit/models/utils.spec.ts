@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import {NumberRange, Range} from "../../../src/models/utils";
+import {hexToRGB, NumberRange, Range} from "../../../src/models/utils";
 
 describe('utils', () => {
   ([
@@ -23,6 +23,16 @@ describe('utils', () => {
     })
     test(`NumberRange.overlap[inclusive](swap:${testCase.n} => ${JSON.stringify(testCase.r2)}, ${JSON.stringify(testCase.r1)}) => ${testCase.expectsInclusiveOverlap}`, () => {
       expect(NumberRange.overlap(testCase.r2, testCase.r1, 'inclusive')).toBe(testCase.expectsInclusiveOverlap);
+    })
+  });
+
+  ([
+      { hexColor: '#ffffff', expectedRGB: `rgb(255 255 255)` },
+      { hexColor: '#000000', expectedRGB: `rgb(0 0 0)` },
+      { hexColor: '#1f2328', expectedRGB: `rgb(31 35 40)` },
+  ] as const).forEach(testCase => {
+    test(`hexToRGB(${testCase.hexColor}) = ${testCase.expectedRGB}`, () => {
+        expect(hexToRGB(testCase.hexColor)).toBe(testCase.expectedRGB);
     })
   })
 })

@@ -1,5 +1,6 @@
 import {Temporal} from 'temporal-polyfill'
 import {match, P} from "ts-pattern";
+import {HexColor} from "../../../shared/type-utils";
 
 export class ValueObject<T> {
     constructor(readonly value: T) {}
@@ -30,6 +31,11 @@ export function sortBy<T, H extends string|number>(arr: T[], hash: (val: T) => H
 function overlap<R extends Range<T>, T>(r1: R, r2: R, comparator: (v1: T, v2: T) => number, type: 'inclusive'|'exclusive'): boolean {
     return comparator(r1.start, r2.end) <= (type==='inclusive'?0:-1)
         && comparator(r2.start, r1.end) <= (type==='inclusive'?0:-1);
+}
+
+export function hexToRGB(hexColor: HexColor): string {
+    const hexValues = hexColor.substring(hexColor[0]==='#'?1:0);
+    return `rgb(${parseInt(hexValues.substring(0,2), 16)} ${parseInt(hexValues.substring(2,4), 16)} ${parseInt(hexValues.substring(4,6), 16)})`
 }
 export class Range<T> {
     constructor(
