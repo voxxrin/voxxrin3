@@ -6,6 +6,9 @@ ion-header  {
         top: -1px;
         border-bottom: 1px solid var(--app-beige-line);
 
+        @media (prefers-color-scheme: dark) {
+            border-bottom: none;
+        }
 
         &:after {
             display: none;
@@ -15,6 +18,10 @@ ion-header  {
             --padding-top: 8px;
             --padding-bottom: 8px;
             --background: var(--app-white);
+
+            @media (prefers-color-scheme: dark) {
+                --background: var(--app-dark-contrast);
+            }
         }
 
         .stickyHeader-title {

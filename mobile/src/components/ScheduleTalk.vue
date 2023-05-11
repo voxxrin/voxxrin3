@@ -55,7 +55,7 @@ import {
   IonThumbnail,
 } from '@ionic/vue';
 import { VoxxrinTalk} from "@/models/VoxxrinTalk";
-import {bookmark, location, megaphone, videocam} from "ionicons/icons";
+
 
 const props = defineProps({
   talk: {
@@ -113,6 +113,14 @@ function toggleWatchLater() {
   box-shadow: rgba(100, 100, 111, 0.2) 0 7px 29px 0;
   transition: 80ms ease-in-out;
 
+  @media (prefers-color-scheme: dark) {
+    background: var(--app-dark-contrast);
+    border : {
+      top: 1px solid var(--app-light-contrast);
+      right: 1px solid var(--app-light-contrast);
+    }
+  }
+
   &:active {
     transition: 80ms ease-in-out;
     transform: scale(0.99);
@@ -129,6 +137,12 @@ function toggleWatchLater() {
     border-top: 2px solid var(--app-primary-shade);
     border-bottom: 2px solid var(--app-primary-shade);
     border-right: 2px solid var(--app-primary-shade);
+
+    @media (prefers-color-scheme: dark) {
+      border-top: 2px solid var(--app-white);
+      border-bottom: 2px solid var(--app-white);
+      border-right: 2px solid var(--app-white);
+    }
 
     &:before {
       width: 40%;
@@ -152,6 +166,10 @@ function toggleWatchLater() {
       opacity: 0.5;
       mix-blend-mode: overlay;
       animation: scale-in-center 0.1s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+
+      @media (prefers-color-scheme: dark) {
+        mix-blend-mode: difference;
+      }
     }
 
     @keyframes scale-in-center {
@@ -184,6 +202,10 @@ function toggleWatchLater() {
       border-color: var(--app-primary-shade);
       border-bottom: none;
 
+      @media (prefers-color-scheme: dark) {
+        border-color: var(--app-white);
+      }
+
       .btnTalk {
         border-width: 2px;
         border-color: var(--app-primary-shade);
@@ -213,6 +235,10 @@ function toggleWatchLater() {
     .trackBadge {
       --background: v-bind('theme.track.color');
       --color: v-bind('theme.track.color');
+
+      @media (prefers-color-scheme: dark) {
+        --color: var(--app-white);
+      }
     }
 
     .room {
@@ -222,9 +248,17 @@ function toggleWatchLater() {
       font-weight: 500;
       color: var(--app-grey-dark);
 
+      @media (prefers-color-scheme: dark) {
+        color: rgba(white, 0.8);
+      }
+
       ion-icon {
         font-size: 16px;
         color: var(--app-primary-shade);
+
+        @media (prefers-color-scheme: dark) {
+          color: var(--app-white);
+        }
       }
     }
   }
@@ -241,6 +275,10 @@ function toggleWatchLater() {
       color: var(--app-primary);
       font-size: 16px;
       line-height: 1.2;
+
+      @media (prefers-color-scheme: dark) {
+        color: var(--app-white);
+      }
     }
 
     .pictures {
@@ -271,6 +309,14 @@ function toggleWatchLater() {
     justify-content: space-between;
     border : {
       top: 1px solid var(--app-grey-line);
+      bottom: 1px solid var(--app-grey-line);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      border : {
+        top: 1px solid var(--app-light-contrast);
+        bottom: 1px solid var(--app-light-contrast);
+      }
     }
 
     .speakers {
@@ -282,6 +328,10 @@ function toggleWatchLater() {
       line-height: 1.1;
       letter-spacing: -0.4px;
       color: v-bind('theme.track.color');
+
+      @media (prefers-color-scheme: dark) {
+        color: var(--app-white);
+      }
 
       &-list {
         flex: 1;
@@ -308,6 +358,12 @@ function toggleWatchLater() {
       --padding-end: 0;
       --background-activated-opacity: 0.1;
       --background-hover-opacity: 0.1;
+
+      @media (prefers-color-scheme: dark) {
+        --background: var(--app-dark-contrast);
+        --color: var(--app-white);
+        border-left: 1px solid var(--app-light-contrast);
+      }
 
       .favorite-btn {
         --size: 28px;

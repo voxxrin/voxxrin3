@@ -161,6 +161,10 @@ ion-accordion {
         ._accordion-icon {
           font-size: 22px;
           color: var(--app-primary-shade);
+
+          @media (prefers-color-scheme: dark) {
+            color: var(--app-white);
+          }
         }
 
         &-icon {
@@ -185,6 +189,11 @@ ion-accordion {
         font-weight: 500;
         background-color: white;
         color: var(--voxxrin-event-theme-colors-secondary-hex);
+
+        @media (prefers-color-scheme: dark) {
+          background: rgba(white, 0.1);
+          color: var(--app-white);
+        }
 
         ion-icon {
           font-size: 16px;
@@ -228,6 +237,10 @@ ion-accordion {
       --padding-start: 8px;
       --padding-end: 8px;
       font-size: 20px;
+
+      @media (prefers-color-scheme: dark) {
+        color: var(--app-white);
+      }
     }
   }
 
@@ -237,7 +250,13 @@ ion-accordion {
       --ion-color-base: var(--app-beige-line) !important;
       --ripple-color: var(--app-beige-dark) !important;
 
-      ion-label { color: var(--app-primary-tint);}
+      ion-label {
+        color: var(--app-primary-tint);
+
+        @media (prefers-color-scheme: dark) {
+          color: var(--app-white);
+        }
+      }
     }
 
     ::v-deep .ion-accordion-toggle-icon {
@@ -245,7 +264,14 @@ ion-accordion {
       color: var(--app-beige-dark) !important;
     }
 
-    ._accordion-icon._past-icon { display: inline-block; color: var(--app-primary-tint) }
+    ._accordion-icon._past-icon {
+      display: inline-block;
+      color: var(--app-primary-tint);
+
+      @media (prefers-color-scheme: dark) {
+        color: rgba(white, 0.5);
+      }
+    }
     &._missing-feedback:not(._is-break) ._missing-feedback { display: inline-block;}
     &._feedback-provided:not(._is-break) ._provided-feedback {display: inline-block;}
   }

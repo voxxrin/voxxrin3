@@ -41,6 +41,21 @@
     --app-gutters-medium: 12px;
 }
 
+@media (prefers-color-scheme: dark) {
+    :root {
+        --app-beige-dark: #A3998F;
+        --app-beige-medium: #EDE7E1;
+        --app-beige-light: #F5F3F0;
+        --app-beige-line: #1f1f1f;
+
+        --app-background: #0e0e10;
+        --app-dark-contrast: #232323;
+        --app-dark-contrast-rgb: 35, 35, 35;
+        --app-light-contrast: #434343;
+        --app-light-contrast-rgb: 67, 67, 67;
+    }
+}
+
 /**
  * PATH
  * **************************************************************************************** >

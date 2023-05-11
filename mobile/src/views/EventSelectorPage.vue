@@ -191,6 +191,11 @@ async function showEventActions(event: ListableVoxxrinEvent) {
       --background-focused-opacity: 0.2;
       --background-hover-opacity: 0.2;
       border-radius: 58px;
+
+      @media (prefers-color-scheme: dark) {
+        --background: var(--app-dark-contrast);
+        border: none;
+      }
     }
   }
 
@@ -216,8 +221,11 @@ async function showEventActions(event: ListableVoxxrinEvent) {
         white-space: break-spaces;
         color: var(--app-primary-shade);
         line-height: 1;
-      }
 
+        @media (prefers-color-scheme: dark) {
+          color: var(--app-white);
+        }
+      }
     }
   }
 
@@ -232,10 +240,11 @@ async function showEventActions(event: ListableVoxxrinEvent) {
       border-bottom: 1px solid var(--app-beige-line);
       font-size: 18px;
       font-weight: bold;
-    }
 
-    .availableEventsList {
-      padding: var( --app-gutters-medium);
+      @media (prefers-color-scheme: dark) {
+        --background: var(--app-dark-contrast);
+        border: none;
+      }
     }
   }
 </style>

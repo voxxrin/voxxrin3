@@ -130,8 +130,8 @@ defineEmits<{
 
     ion-badge {
       position: absolute;
-      right: -4px;
-      top: -1px;
+      right: -6px;
+      top: -2px;
       transform: scale(0.9);
       border-radius: 0 16px 0 8px;
     }
@@ -190,13 +190,13 @@ defineEmits<{
     }
 
     .logo {
-      padding: 12px var(--app-gutters);
-      background-color: var(--app-white);
+      padding: var(--app-gutters);
+      background: linear-gradient(90deg, rgba(255,255,255,1) 59%, rgba(255,255,255,0) 100%);
       border-radius: 0 0 var(--app-gutters) var(--app-gutters);
       z-index: 1;
 
       ion-img {
-        width: 124px;
+        width: 94px;
       }
     }
   }

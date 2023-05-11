@@ -188,6 +188,11 @@ async function showAlertForTimeslot(missingFeedbacksPastTimeslots: VoxxrinTimesl
       border: 1px solid var(--app-beige-line);
       filter: drop-shadow(-4px 0px 4px rgba(0, 0, 0, 0.15));
 
+      @media (prefers-color-scheme: dark) {
+        background-color: var(--voxxrin-event-theme-colors-tertiary-hex);
+        border: none;
+      }
+
       @for $i from 0 through 1000 {
         animation: slide-left-revert 140ms cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
         animation-timing-function: ease-in-out;
@@ -202,6 +207,10 @@ async function showAlertForTimeslot(missingFeedbacksPastTimeslots: VoxxrinTimesl
         align-items: center;
         font-weight: bold;
         color: var(--app-primary-shade);
+
+        @media (prefers-color-scheme: dark) {
+          color: var(--app-white);
+        }
       }
 
       .plusIndicator {

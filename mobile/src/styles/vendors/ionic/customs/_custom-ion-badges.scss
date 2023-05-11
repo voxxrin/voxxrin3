@@ -8,6 +8,10 @@ ion-badge {
     column-gap: 4px;
     font-weight: normal;
 
+    @media (prefers-color-scheme: dark) {
+        --background: rgba(var(--app-dark-contrast-rgb));
+    }
+
     ion-icon {
         font-size: 18px;
     }
@@ -33,6 +37,10 @@ ion-badge {
         border-radius: 6px;
         content: '';
         z-index: -1;
+
+        @media (prefers-color-scheme: dark) {
+            display: none;
+        }
     }
 
     ion-icon {

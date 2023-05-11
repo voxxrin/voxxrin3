@@ -79,6 +79,10 @@ const formattedDays = computed(() => {
     background: var(--voxxrin-event-theme-colors-primary-contrast-hex);
     box-shadow: rgba(var(--voxxrin-event-theme-colors-primary-contrast-rgb), 0.15);
 
+    @media (prefers-color-scheme: dark) {
+      background: var(--app-background);
+    }
+
     &-content {
       display: flex;
       align-items: center;
@@ -110,12 +114,23 @@ const formattedDays = computed(() => {
         width: calc(100% - 64px);
         min-width: 32px;
         height: 0;
-        border-bottom: 2px dotted var(--app-beige-line);
+        border-bottom: 2px dashed var(--app-beige-line);
         content: '';
         border-radius: 8px;
+
+        @media (prefers-color-scheme: dark) {
+          border-bottom: 2px dashed var(--app-white);
+        }
       }
 
-      &.past:after {  border-bottom: 2px solid var(--app-grey-light);}
+      &.past:after {
+        border-bottom: 2px solid var(--app-grey-light);
+
+        @media (prefers-color-scheme: dark) {
+          border-bottom: 2px solid var(--app-white);
+          opacity: 0.2;
+        }
+      }
     }
 
     &-button {
@@ -160,6 +175,13 @@ const formattedDays = computed(() => {
         --background-activated: var(--app-grey-line);
         --color: var(--app-grey-medium);
 
+        @media (prefers-color-scheme: dark) {
+          --border-color: var(--app-dark-contrast);
+          --background: var(--app-dark-contrast);
+          --background-activated: var(--app-dark);
+          --color: var(--app-grey-dark);
+        }
+
         &.selected {@extend %selected;}
       }
 
@@ -176,6 +198,11 @@ const formattedDays = computed(() => {
         --border-color: var(--app-primary-shade);
         --background: transparent;
         --color: var(--app-primary-shade);
+
+        @media (prefers-color-scheme: dark) {
+          --border-color: var(--app-white);
+          --color: var(--app-white);
+        }
 
         &.selected { @extend %selected;}
       }

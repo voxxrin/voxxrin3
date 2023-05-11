@@ -1,7 +1,7 @@
 <template>
   <div v-if="events.length>0">
     <ion-list>
-      <div class="container" :style="{
+      <ion-item class="eventItem" :style="{
           '--voxxrin-event-background-url': `url('${event?.backgroundUrl}')`,
           '--voxxrin-event-logo-url': `url('${event?.logoUrl}')`,
           '--voxxrin-event-theme-colors-primary-hex': event?.theming.colors.primaryHex,
@@ -16,17 +16,28 @@
           '--voxxrin-event-theme-colors-tertiary-rgb': event?.theming.colors.tertiaryRGB,
           '--voxxrin-event-theme-colors-tertiary-contrast-hex': event?.theming.colors.tertiaryContrastHex,
           '--voxxrin-event-theme-colors-tertiary-contrast-rgb': event?.theming.colors.tertiaryContrastRGB,
-      }" v-for="(event, index) in events" :key="index" @click="$emit('event-clicked', event)">
-        <div class="logo">
-          <ion-img :src="event.logoUrl" />
+      }" v-for="(event, index) in events" :key="index">
+        <ion-ripple-effect type="bounded"></ion-ripple-effect>
+        <div class="eventItem-logoContainer">
+          <div class="logo">
+            <ion-img :src="event.logoUrl" />
+          </div>
         </div>
-        <div class="title">{{event.title}}</div>
-        <div class="location">
-          {{event.location.city}}, {{event.location.country}}
+        <div class="eventItem-infos">
+          <div class="title">{{event.title}}</div>
+          <div class="location">
+            <ion-icon aria-hidden="true" src="/assets/icons/solid/map-marker.svg"></ion-icon> {{event.location.city}}, {{event.location.country}}
+          </div>
         </div>
-        <div class="dates"><month-day-date-range :format="{separator: '>'}" :range="{start: event.start, end: event.end}" /></div>
-        <div class="year">{{event.start.year}}</div>
-      </div>
+
+        <div class="eventItem-end" slot="end" @click="$emit('event-clicked', event)">
+          <div class="eventItem-end-time">
+            <div class="dates"><month-day-date-range :format="{separator: '>'}" :range="{start: event.start, end: event.end}" /></div>
+            <div class="year">{{event.start.year}}</div>
+          </div>
+          <ion-icon src="/assets/icons/solid/more-menu-vertical.svg"></ion-icon>
+        </div>
+      </ion-item>
     </ion-list>
   </div>
   <div v-else>
@@ -56,48 +67,113 @@ defineEmits<{
 </script>
 
 <style lang="scss" scoped>
-.container {  display: grid;
-  grid-template-columns: 80px 1fr min-content;
-  grid-template-rows: 1fr 1fr;
-  grid-auto-columns: 1fr;
-  gap: 0px 0px;
-  grid-auto-flow: row dense;
-  grid-template-areas:
-    "logo title dates"
-    "logo location year";
-  width: 400px;
-  height: 80px;
-}
 
-.logo {
-  justify-self: center;
-  align-self: center;
-  grid-area: logo;
-  background-color: var(--voxxrin-event-theme-colors-primary-hex);
-  width: 60px;
-  height: 60px;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-  border-bottom-left-radius: 10px;
-}
+.eventItem {
+  display: flex;
+  --padding-start: 0;
+  --inner-padding-end: 0;
+  --background: var(--app-background);
 
-.title {
-  align-self: stretch;
-  grid-area: title;
-}
+  &-logoContainer {
+    padding: var(--app-gutters) ;
 
-.location {
-  align-self: end;
-  grid-area: location;
-}
+    .logo {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: white;
+      width: 74px;
+      height: 74px;
+      padding: 8px;
+      filter: drop-shadow(0px 1px 4px rgba(0, 0, 0, 0.15));
+      border: 2px solid var(--voxxrin-event-theme-colors-primary-hex);
+      border-radius: 28px 28px 8px 28px;
+      overflow: hidden;
 
-.dates {
-  align-self: end;
-  grid-area: dates;
-}
+      &:before {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        height: 100%;
+        width: 100%;
+        background: radial-gradient(circle,rgba(255,255,255,0) 0, rgba(var(--voxxrin-event-theme-colors-primary-rgb),1) 140%);
+        content: '';
+        z-index: -1;
+      }
+    }
+  }
 
-.year {
-  align-self: start;
-  grid-area: year;
+  &-infos {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    padding: {
+      top: calc(var(--app-gutters) + 4px);
+      bottom: calc(var(--app-gutters) + 4px);
+      right: 0;
+      left: 0;
+    }
+
+    .title {
+      font-size: 16px;
+      font-weight: bold;
+      word-break: break-word;
+      color: var(--app-primary);
+
+      @media (prefers-color-scheme: dark) {
+        color: var(--app-white);
+      }
+    }
+
+    .location {
+      display: flex;
+      align-items: center;
+      column-gap: 4px;
+      color: var(--app-beige-dark);
+      font-size: 13px;
+      font-weight: bold;
+      text-align: left;
+      word-break: break-word;
+
+      ion-icon {
+        font-size: 16px;
+        color: var(--app-grey-dark);
+      }
+    }
+  }
+
+  &-end {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+
+    &-time {
+      display: flex;
+      flex-direction: column;
+      justify-content: end;
+      font-size: 14px;
+      text-align: end;
+
+      .dates {
+        display: block;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+
+      .year {
+        display: block;
+      }
+    }
+
+    ion-icon {
+      width: 34px;
+      font-size: 34px;
+      color: var(--app-grey-medium);
+    }
+  }
 }
 </style>

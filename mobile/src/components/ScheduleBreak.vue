@@ -51,10 +51,21 @@ const props = defineProps({
   border : {
     top: 1px solid var(--app-grey-line);
     right: 1px solid var(--app-grey-line);
+    bottom: 1px solid var(--app-grey-line);
     left: 6px solid var(--voxxrin-event-theme-colors-primary-hex);
   }
   box-shadow: rgba(100, 100, 111, 0.2) 0 7px 29px 0;
   transition: 140ms ease-in-out;
+
+  @media (prefers-color-scheme: dark) {
+    background: var(--app-dark-contrast);
+    border : {
+      top: 1px solid var(--app-light-contrast);
+      right: 1px solid var(--app-light-contrast);
+      bottom: 1px solid var(--app-light-contrast);
+      left: 6px solid var(--voxxrin-event-theme-colors-primary-hex);
+    }
+  }
 
   &-content {
     display: flex;
@@ -73,6 +84,10 @@ const props = defineProps({
         color: var(--app-primary);
         font-size: 16px;
         line-height: 1.2;
+
+        @media (prefers-color-scheme: dark) {
+          color: var(--app-white);
+        }
       }
 
       .room {
@@ -93,6 +108,10 @@ const props = defineProps({
       padding: 0 16px;
       font-size: 34px;
       color: var(--app-primary-shade);
+
+      @media (prefers-color-scheme: dark) {
+        color: var(--app-white);
+      }
     }
   }
 }
