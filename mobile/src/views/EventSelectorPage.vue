@@ -49,7 +49,10 @@
             class="availableEventsList"
             :events="filteredAvailableEvents" @event-clicked="(event) => showEventActions(event)">
           <template #no-event>
-            {{ LL.No_conference_registered_yet() }}
+            <div class="infoMessage ion-text-center">
+              <ion-icon class="infoMessage-icon" aria-hidden="true" src="/assets/icons/solid/checkbox-list-detail.svg"></ion-icon>
+              <span class="infoMessage-title">{{ LL.No_conference_registered_yet() }}</span>
+            </div>
           </template>
         </available-events-list>
       </div>

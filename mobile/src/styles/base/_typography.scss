@@ -24,6 +24,16 @@
     }
   }
 
+  &-icon {
+    margin: 16px auto;
+    font-size: 64px;
+    color: var(--app-beige-dark);
+
+    @media (prefers-color-scheme: dark) {
+      color: var(--app-light-contrast);
+    }
+  }
+
   &-illustration {
     display: block;
     margin: 16px auto;
