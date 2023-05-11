@@ -130,7 +130,10 @@ function recomputeMissingFeedbacksList() {
 }
 
 async function showAlertForTimeslot(missingFeedbacksPastTimeslots: VoxxrinTimeslotFeedback) {
-    const alert = await alertController.create({ header: 'Alert !', message: 'This is an alert !' });
+    const alert = await alertController.create({
+        header: 'Not implemented yet !',
+        message: 'Providing feedback for a timeslot is not implemented (yet)'
+    });
     alert.present();
 }
 </script>
