@@ -15,7 +15,7 @@ export type TalkEventStatsHook = {
 
 const CACHED_EVENTS_STATS_HOOKS = new Map<string, TalkEventStatsHook>()
 
-export function useTalkEventStats(eventId: EventId, day: DayId, talkId: TalkId): TalkEventStatsHook {
+export function useEventTalkStats(eventId: EventId, day: DayId, talkId: TalkId): TalkEventStatsHook {
     const cacheKey = `${eventId.value}||${day.value}||${talkId.value}`
     if(!CACHED_EVENTS_STATS_HOOKS.has(cacheKey)) {
         let eventTalkStatsRef: TalkEventStatsHook['eventTalkStats'] = ref({

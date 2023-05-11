@@ -61,9 +61,9 @@ import {useCurrentConferenceDescriptor} from "@/state/CurrentConferenceDescripto
 import {useRoute} from "vue-router";
 import {EventId} from "@/models/VoxxrinEvent";
 import {getRouteParamsValue} from "@/views/vue-utils";
-import {useTalkNotes} from "@/state/UserTalkNotes";
+import {useUserTalkNotes} from "@/state/useUserTalkNotes";
 import {DayId} from "@/models/VoxxrinDay";
-import {useTalkEventStats} from "@/state/EventTalkStats";
+import {useEventTalkStats} from "@/state/useEventTalkStats";
 
 
 const props = defineProps({
@@ -80,8 +80,8 @@ const props = defineProps({
 const route = useRoute();
 const eventId = new EventId(getRouteParamsValue(route, 'eventId')!);
 
-const { talkNotes, toggleFavorite, toggleWatchLater} = useTalkNotes(eventId, props.dayId!, props.talk!.id)
-const { eventTalkStats } = useTalkEventStats(eventId, props.dayId!, props.talk!.id)
+const { talkNotes, toggleFavorite, toggleWatchLater} = useUserTalkNotes(eventId, props.dayId!, props.talk!.id)
+const { eventTalkStats } = useEventTalkStats(eventId, props.dayId!, props.talk!.id)
 
 const displayedSpeakers = props.talk!.speakers
     .map(s => `${s.fullName}${s.companyName?` (${s.companyName})`:``}`)

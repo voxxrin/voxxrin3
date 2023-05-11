@@ -22,7 +22,7 @@
 import {computed, PropType, ref, watch} from "vue";
 import {VoxxrinDay} from "@/models/VoxxrinDay";
 import {localDateToReadableParts} from "@/models/DatesAndTime";
-import {useCurrentUserLocale} from "@/state/CurrentUser";
+import {useCurrentUserLocale} from "@/state/useCurrentUserLocale";
 import {useInterval} from "@/views/vue-utils";
 import {ISOLocalDate} from "../../../shared/type-utils";
 import {useCurrentClock} from "@/state/CurrentClock";

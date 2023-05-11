@@ -2,7 +2,7 @@ import {EventId} from "@/models/VoxxrinEvent";
 import {DayId} from "@/models/VoxxrinDay";
 import {TalkId} from "@/models/VoxxrinTalk";
 import {ref, Ref} from "vue";
-import {useTalkEventStats} from "@/state/EventTalkStats";
+import {useEventTalkStats} from "@/state/useEventTalkStats";
 
 
 export type TalkNotesHook = {
@@ -17,8 +17,8 @@ export type TalkNotesHook = {
 
 const CACHED_TALK_NOTES_HOOKS = new Map<string, TalkNotesHook>()
 
-export function useTalkNotes(eventId: EventId, day: DayId, talkId: TalkId): TalkNotesHook {
-    const { incrementTotalFavoritesCount, decrementTotalFavoritesCount } = useTalkEventStats(eventId, day, talkId)
+export function useUserTalkNotes(eventId: EventId, day: DayId, talkId: TalkId): TalkNotesHook {
+    const { incrementTotalFavoritesCount, decrementTotalFavoritesCount } = useEventTalkStats(eventId, day, talkId)
     const cacheKey = `${eventId.value}||${day.value}||${talkId.value}`
     if(!CACHED_TALK_NOTES_HOOKS.has(cacheKey)) {
         let talkNotesRef = ref({

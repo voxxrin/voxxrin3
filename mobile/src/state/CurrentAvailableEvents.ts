@@ -3,14 +3,10 @@ import {useCurrentClock} from "@/state/CurrentClock";
 import {Ref, ref, watch} from "vue";
 import {useFetchJsonDebouncer} from "@/state/state-utilities";
 import {
-    EventId,
     firestoreListableEventToVoxxrinListableEvent,
     ListableVoxxrinEvent,
-    toVoxxrinEventTheme
 } from "@/models/VoxxrinEvent";
 import {ListableEvent} from "../../../shared/event-list.firestore";
-import {DayId} from "@/models/VoxxrinDay";
-import {zonedDateTimeRangeOf} from "@/models/DatesAndTime";
 
 
 const CACHED_AVAILABLE_EVENTS_CONSIDERED_OUTDATED_AFTER = Temporal.Duration.from({ hours: 2 })
