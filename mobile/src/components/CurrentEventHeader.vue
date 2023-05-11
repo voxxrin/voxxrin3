@@ -2,7 +2,7 @@
   <ion-header class="ion-no-border">
     <ion-toolbar>
       <div class="viewsHeader">
-        <ion-button @click="backToEventsList" shape="round" size="default">
+        <ion-button @click="backButtonClicked" shape="round" size="default">
           <ion-icon src="/assets/icons/solid/arrow-left.svg"></ion-icon>
         </ion-button>
         <ion-button class="btnUser" shape="round" size="default">
@@ -24,7 +24,6 @@ import {useIonRouter} from "@ionic/vue";
 import CurrentEventStatus from "@/components/CurrentEventStatus.vue";
 import {PropType} from "vue";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
-import {unsetCurrentSchedule} from "@/state/CurrentSchedule";
 
 const router = useIonRouter();
 const props = defineProps({
@@ -34,10 +33,11 @@ const props = defineProps({
     }
 })
 
-function backToEventsList() {
-    unsetCurrentSchedule();
-
-    router.navigate('/event-selector', 'back', 'pop')
+function backButtonClicked() {
+    // Using standard event dispatching through ionic's $emit is pointless here, as I didn't find
+    // how to bubble these event from <ion-router-outlet> placed into _BaseEventPages
+    // => I'm using a crappy global event (type unsafe) hack here
+    window.dispatchEvent(new CustomEvent('exit-event-requested'))
 }
 
 </script>
