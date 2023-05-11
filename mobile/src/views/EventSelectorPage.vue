@@ -36,7 +36,11 @@
             class="favoritedEventSelector"
             :favoritedEvents="filteredFavoritedEvents" @event-selected="(event) => selectEvent(event.id)">
           <template #no-favorites>
-            {{ LL.No_favorites_available_yet() }}
+            <div class="infoMessage ion-text-center">
+              <img class="infoMessage-illustration" src="/assets/images/svg/illu-list-favorite.svg">
+              <span class="infoMessage-title">{{ LL.No_favorites_available_yet() }}</span>
+              <span class="infoMessage-subTitle">Add from the list below</span>
+            </div>
           </template>
         </favorited-event-selector>
 
