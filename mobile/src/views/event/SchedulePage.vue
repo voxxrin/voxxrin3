@@ -27,13 +27,6 @@
           </time-slot-accordion>
       </ion-accordion-group>
 
-      <ion-button router-direction="forward" :router-link="`/events/${eventId.value}/talks/1/details`">
-        Open talk 1
-      </ion-button>
-      <ion-button router-direction="forward" :router-link="`/events/${eventId.value}/talks/2/details`">
-        Open talk 2
-      </ion-button>
-
       <ion-fab vertical="bottom" horizontal="end" slot="fixed" v-if="missingFeedbacksPastTimeslots.length>0">
         <ion-fab-button>
           <ion-icon src="/assets/icons/line/comment-line-add.svg"></ion-icon>

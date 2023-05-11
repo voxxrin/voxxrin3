@@ -1,5 +1,7 @@
 <template>
-  <ion-card class="talkCard" :class="{ container: true, 'is-favorited': favoritedRef, 'to-watch-later': watchLaterRef }" >
+  <ion-card class="talkCard"
+            :class="{ container: true, 'is-favorited': favoritedRef, 'to-watch-later': watchLaterRef }"
+            :router-link="`/events/${eventId.value}/talks/${talk.id.value}/details`" router-direction="forward">
     <div class="talkCard-head">
       <div class="track">
         <ion-badge class="trackBadge">
@@ -31,13 +33,13 @@
       </div>
       <div class="talkCard-footer-actions">
         <div class="watchLater">
-          <ion-button class="btnTalk watch-later-btn" @click="() => toggleWatchLater()">
+          <ion-button class="btnTalk watch-later-btn" @click.stop="() => toggleWatchLater()">
             <ion-icon v-if="!watchLaterRef" aria-hidden="true" src="/assets/icons/line/video-line.svg"></ion-icon>
             <ion-icon v-if="watchLaterRef" aria-hidden="true" src="/assets/icons/solid/video.svg"></ion-icon>
           </ion-button>
         </div>
         <div class="favorite">
-          <ion-button class="btnTalk favorite-btn" @click="() => toggleFavorited()">
+          <ion-button class="btnTalk favorite-btn" @click.stop="() => toggleFavorited()">
             <ion-icon class="favorite-btn-icon" v-if="!favoritedRef" aria-hidden="true" src="/assets/icons/line/bookmark-line-favorite.svg"></ion-icon>
             <ion-icon class="favorite-btn-icon" v-if="favoritedRef" aria-hidden="true" src="/assets/icons/solid/bookmark-favorite.svg"></ion-icon>
             <ion-label class="favorite-btn-nb" v-if="favoritesCount">{{ favoritesCount }}</ion-label>
@@ -55,6 +57,10 @@ import {
   IonThumbnail,
 } from '@ionic/vue';
 import { VoxxrinTalk} from "@/models/VoxxrinTalk";
+import {useCurrentConferenceDescriptor} from "@/state/CurrentConferenceDescriptor";
+import {useRoute} from "vue-router";
+import {EventId} from "@/models/VoxxrinEvent";
+import {getRouteParamsValue} from "@/views/vue-utils";
 
 
 const props = defineProps({
@@ -75,6 +81,9 @@ const props = defineProps({
     type: Number
   }
 })
+
+const route = useRoute();
+const eventId = new EventId(getRouteParamsValue(route, 'eventId')!);
 
 const favoritedRef = ref(props.favorited!);
 const watchLaterRef = ref(props.toWatchLater!);

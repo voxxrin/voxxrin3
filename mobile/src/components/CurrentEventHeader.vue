@@ -30,14 +30,24 @@ const props = defineProps({
     event: {
         required: true,
         type: Object as PropType<VoxxrinConferenceDescriptor>
+    },
+    backBtnAction: {
+        require: false,
+        type: String as PropType<typeof backBtnAction>
     }
 })
 
+const backBtnAction: "goBack"|"triggerEventExit" = props.backBtnAction || "triggerEventExit";
+
 function backButtonClicked() {
-    // Using standard event dispatching through ionic's $emit is pointless here, as I didn't find
-    // how to bubble these event from <ion-router-outlet> placed into _BaseEventPages
-    // => I'm using a crappy global event (type unsafe) hack here
-    window.dispatchEvent(new CustomEvent('exit-event-requested'))
+    if(backBtnAction === 'goBack') {
+        router.back();
+    } else if (backBtnAction === 'triggerEventExit') {
+        // Using standard event dispatching through ionic's $emit is pointless here, as I didn't find
+        // how to bubble these event from <ion-router-outlet> placed into _BaseEventPages
+        // => I'm using a crappy global event (type unsafe) hack here
+        window.dispatchEvent(new CustomEvent('exit-event-requested'))
+    }
 }
 
 </script>
