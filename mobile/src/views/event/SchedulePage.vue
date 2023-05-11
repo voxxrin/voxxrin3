@@ -23,7 +23,8 @@
       <ion-accordion-group :multiple="true" v-if="currentConferenceDescriptor">
           <time-slot-accordion v-for="(timeslot, index) in timeslots" :key="timeslot.id.value"
                                :timeslot-feedback="timeslot.feedback" :timeslot="timeslot"
-                               :event="currentConferenceDescriptor">
+                               :event="currentConferenceDescriptor"
+                               @add-timeslot-feedback-clicked="(ts) => showAlertForTimeslot(ts)">
           </time-slot-accordion>
       </ion-accordion-group>
 
@@ -32,8 +33,8 @@
           <ion-icon src="/assets/icons/line/comment-line-add.svg"></ion-icon>
         </ion-fab-button>
         <ion-fab-list side="top" class="listFeedbackSlot">
-          <div class="listFeedbackSlot-item" v-for="(missingFeedbacksPastTimeslot, index) in missingFeedbacksPastTimeslots" :key="missingFeedbacksPastTimeslot.id.value"
-               @click="showAlertForTimeslot(missingFeedbacksPastTimeslot)">
+          <div class="listFeedbackSlot-item" v-for="(missingFeedbacksPastTimeslot, index) in missingFeedbacksPastTimeslots" :key="missingFeedbacksPastTimeslot.timeslot.id.value"
+               @click="() => showAlertForTimeslot(missingFeedbacksPastTimeslot.timeslot)">
             <ion-label>{{ missingFeedbacksPastTimeslot.start }} <ion-icon aria-hidden="true" src="assets/icons/line/chevron-right-line.svg"></ion-icon>
               {{ missingFeedbacksPastTimeslot.end }}</ion-label>
             <ion-icon class="plusIndicator" aria-hidden="true" src="assets/icons/solid/plus.svg"></ion-icon>
@@ -92,7 +93,7 @@ const changeDayTo = (day: VoxxrinDay) => {
 }
 
 const timeslots = ref<Array<VoxxrinScheduleTimeSlot & {feedback: VoxxrinTimeslotFeedback|undefined}>>([]);
-const missingFeedbacksPastTimeslots = ref<VoxxrinTimeslotFeedback[]>([])
+const missingFeedbacksPastTimeslots = ref<Array<{start: string, end: string, timeslot: VoxxrinScheduleTimeSlot}>>([])
 
 onMounted(async () => {
     console.log(`SchedulePage mounted !`)
@@ -126,10 +127,13 @@ function recomputeMissingFeedbacksList() {
         return ts.type === 'talks'
             && !ts.feedback
             && getTimeslotTimingProgress(ts, useCurrentClock().zonedDateTimeISO()).status === 'past'
-    }).map(ts => getTimeslotLabel(ts));
+    }).map(timeslot => {
+        const labels = getTimeslotLabel(timeslot)
+        return {timeslot, start: labels.start, end: labels.end };
+    });
 }
 
-async function showAlertForTimeslot(missingFeedbacksPastTimeslots: VoxxrinTimeslotFeedback) {
+async function showAlertForTimeslot(timeslot: VoxxrinScheduleTimeSlot) {
     const alert = await alertController.create({
         header: 'Not implemented yet !',
         message: 'Providing feedback for a timeslot is not implemented (yet)'

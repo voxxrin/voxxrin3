@@ -22,7 +22,7 @@
           </ion-col>
           <ion-col class="slot-actions" size="auto">
             <ion-icon class="_provided-feedback" aria-hidden="true" src="/assets/icons/solid/comment-check.svg"></ion-icon>
-            <ion-button class="_missing-feedback">
+            <ion-button class="_missing-feedback" @click.stop="$emit('add-timeslot-feedback-clicked', timeslot)">
               <ion-icon src="/assets/icons/line/comment-line-add.svg"></ion-icon>
             </ion-button>
           </ion-col>
@@ -76,6 +76,10 @@ const props = defineProps({
     type: Object as PropType<VoxxrinConferenceDescriptor>
   }
 })
+
+defineEmits<{
+    (e: 'add-timeslot-feedback-clicked', timeSlot: VoxxrinScheduleTimeSlot): void
+}>()
 
 const { LL } = typesafeI18n()
 
