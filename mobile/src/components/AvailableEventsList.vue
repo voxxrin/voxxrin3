@@ -48,7 +48,8 @@
 <script setup lang="ts">
 import {PropType} from "vue";
 import {
-    IonImg
+    IonImg,
+    IonRippleEffect
 } from '@ionic/vue';
 import {ListableVoxxrinEvent} from "@/models/VoxxrinEvent";
 import MonthDayDateRange from "@/components/MonthDayDateRange.vue";
