@@ -9,11 +9,7 @@
         <span class="listTalks-divider-separator"></span>
       </ion-item-divider>
       <ion-item class="listTalks-item" v-for="(talk, talkIndex) in perFormatGroup.talks" :key="talkIndex">
-        <schedule-talk :talk="talk"
-             :favorited="Math.ceil(Math.random()*2)%2===0"
-             :to-watch-later="Math.ceil(Math.random()*2)%2===0"
-             :favorites-count="Math.ceil(Math.random()*50)"
-        ></schedule-talk>
+        <schedule-talk :talk="talk" :day-id="dayId"></schedule-talk>
       </ion-item>
     </ion-item-group>
   </ion-list>
@@ -28,9 +24,14 @@ import {
 import {sortThenGroupByFormat, VoxxrinTalk} from "@/models/VoxxrinTalk";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import ScheduleTalk from "@/components/ScheduleTalk.vue";
+import {DayId} from "@/models/VoxxrinDay";
 
 
 const props = defineProps({
+    dayId: {
+        required: true,
+        type: Object as PropType<DayId>
+    },
     talks: {
         required: true,
         type: Array as PropType<VoxxrinTalk[]>

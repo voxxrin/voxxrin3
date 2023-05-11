@@ -20,11 +20,12 @@
           @day-selected="(day) => changeDayTo(day)">
       </day-selector>
 
-      <ion-accordion-group :multiple="true" v-if="currentConferenceDescriptor">
-          <time-slot-accordion v-for="(timeslot, index) in timeslots" :key="timeslot.id.value"
-                               :timeslot-feedback="timeslot.feedback" :timeslot="timeslot"
-                               :event="currentConferenceDescriptor"
-                               @add-timeslot-feedback-clicked="(ts) => showAlertForTimeslot(ts)">
+      <ion-accordion-group :multiple="true" v-if="currentConferenceDescriptor && currentlySelectedDay">
+          <time-slot-accordion :day-id="currentlySelectedDay.id"
+              v-for="(timeslot, index) in timeslots" :key="timeslot.id.value"
+              :timeslot-feedback="timeslot.feedback" :timeslot="timeslot"
+              :event="currentConferenceDescriptor"
+              @add-timeslot-feedback-clicked="(ts) => showAlertForTimeslot(ts)">
           </time-slot-accordion>
       </ion-accordion-group>
 

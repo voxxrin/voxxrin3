@@ -1,7 +1,7 @@
 <template>
   <ion-card class="talkCard"
-            :class="{ container: true, 'is-favorited': favoritedRef, 'to-watch-later': watchLaterRef }"
-            :router-link="`/events/${eventId.value}/talks/${talk.id.value}/details`" router-direction="forward">
+            :class="{ container: true, 'is-favorited': talkNotes.isFavorite, 'to-watch-later': talkNotes.watchLater }"
+            :router-link="`/events/${eventId.value}/days/${dayId.value}/talks/${talk.id.value}/details`" router-direction="forward">
     <div class="talkCard-head">
       <div class="track">
         <ion-badge class="trackBadge">
@@ -34,15 +34,15 @@
       <div class="talkCard-footer-actions">
         <div class="watchLater">
           <ion-button class="btnTalk watch-later-btn" @click.stop="() => toggleWatchLater()">
-            <ion-icon v-if="!watchLaterRef" aria-hidden="true" src="/assets/icons/line/video-line.svg"></ion-icon>
-            <ion-icon v-if="watchLaterRef" aria-hidden="true" src="/assets/icons/solid/video.svg"></ion-icon>
+            <ion-icon v-if="!talkNotes.watchLater" aria-hidden="true" src="/assets/icons/line/video-line.svg"></ion-icon>
+            <ion-icon v-if="talkNotes.watchLater" aria-hidden="true" src="/assets/icons/solid/video.svg"></ion-icon>
           </ion-button>
         </div>
         <div class="favorite">
-          <ion-button class="btnTalk favorite-btn" @click.stop="() => toggleFavorited()">
-            <ion-icon class="favorite-btn-icon" v-if="!favoritedRef" aria-hidden="true" src="/assets/icons/line/bookmark-line-favorite.svg"></ion-icon>
-            <ion-icon class="favorite-btn-icon" v-if="favoritedRef" aria-hidden="true" src="/assets/icons/solid/bookmark-favorite.svg"></ion-icon>
-            <ion-label class="favorite-btn-nb" v-if="favoritesCount">{{ favoritesCount }}</ion-label>
+          <ion-button class="btnTalk favorite-btn" @click.stop="() => toggleFavorite()">
+            <ion-icon class="favorite-btn-icon" v-if="!talkNotes.isFavorite" aria-hidden="true" src="/assets/icons/line/bookmark-line-favorite.svg"></ion-icon>
+            <ion-icon class="favorite-btn-icon" v-if="talkNotes.isFavorite" aria-hidden="true" src="/assets/icons/solid/bookmark-favorite.svg"></ion-icon>
+            <ion-label class="favorite-btn-nb" v-if="eventTalkStats.totalFavoritesCount!==undefined">{{ eventTalkStats.totalFavoritesCount }}</ion-label>
           </ion-button>
         </div>
       </div>
@@ -61,32 +61,27 @@ import {useCurrentConferenceDescriptor} from "@/state/CurrentConferenceDescripto
 import {useRoute} from "vue-router";
 import {EventId} from "@/models/VoxxrinEvent";
 import {getRouteParamsValue} from "@/views/vue-utils";
+import {useTalkNotes} from "@/state/UserTalkNotes";
+import {DayId} from "@/models/VoxxrinDay";
+import {useTalkEventStats} from "@/state/EventTalkStats";
 
 
 const props = defineProps({
+  dayId: {
+      required: true,
+      type: Object as PropType<DayId>
+  },
   talk: {
     required: true,
     type: Object as PropType<VoxxrinTalk>
-  },
-  favorited: {
-    required: true,
-    type: Boolean
-  },
-  toWatchLater: {
-    required: true,
-    type: Boolean
-  },
-  favoritesCount: {
-    required: false,
-    type: Number
   }
 })
 
 const route = useRoute();
 const eventId = new EventId(getRouteParamsValue(route, 'eventId')!);
 
-const favoritedRef = ref(props.favorited!);
-const watchLaterRef = ref(props.toWatchLater!);
+const { talkNotes, toggleFavorite, toggleWatchLater} = useTalkNotes(eventId, props.dayId!, props.talk!.id)
+const { eventTalkStats } = useTalkEventStats(eventId, props.dayId!, props.talk!.id)
 
 const displayedSpeakers = props.talk!.speakers
     .map(s => `${s.fullName}${s.companyName?` (${s.companyName})`:``}`)
@@ -96,13 +91,6 @@ const theme = {
   track: {
     color: props.talk!.track.themeColor
   }
-}
-
-function toggleFavorited() {
-    favoritedRef.value = !favoritedRef.value;
-}
-function toggleWatchLater() {
-    watchLaterRef.value = !watchLaterRef.value;
 }
 </script>
 

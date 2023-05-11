@@ -12,7 +12,7 @@ const routes: Array<RouteRecordRaw> = [
     { path: 'feedbacks', component: () => import('@/views/event/FeedbacksPage.vue') },
     { path: 'notifications', component: () => import('@/views/event/NotificationsPage.vue') },
     { path: 'infos', component: () => import('@/views/event/InfosPage.vue') },
-    { path: 'talks/:talkId/details', component: () => import('@/views/event/TalkDetailsPage.vue') },
+    { path: 'days/:dayId/talks/:talkId/details', component: () => import('@/views/event/TalkDetailsPage.vue') },
   ]},
 ]
 

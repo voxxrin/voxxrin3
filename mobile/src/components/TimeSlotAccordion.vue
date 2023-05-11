@@ -33,7 +33,9 @@
 
     <div class="ion-padding accordion-content" slot="content">
       <schedule-break v-if="timeslot.type==='break'" :event="event" :talk-break="timeslot.break"></schedule-break>
-      <talk-format-groups-breakdown v-if="timeslot.type==='talks'" :event="event" :talks="timeslot.talks"></talk-format-groups-breakdown>
+      <talk-format-groups-breakdown :day-id="dayId" :event="event"
+          v-if="timeslot.type==='talks'" :talks="timeslot.talks"
+      ></talk-format-groups-breakdown>
     </div>
   </ion-accordion>
 </template>
@@ -46,7 +48,6 @@ import {
   IonRow,
   IonCol,
   IonGrid,
-  IonBadge
 } from '@ionic/vue';
 import {
   getTimeslotLabel,
@@ -61,8 +62,13 @@ import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor"
 import TalkFormatGroupsBreakdown from "@/components/TalkFormatGroupsBreakdown.vue";
 import ScheduleBreak from "@/components/ScheduleBreak.vue";
 import {typesafeI18n} from "@/i18n/i18n-vue";
+import {DayId} from "@/models/VoxxrinDay";
 
 const props = defineProps({
+  dayId: {
+    required: true,
+    type: Object as PropType<DayId>
+  },
   timeslot: {
     required: true,
     type: Object as PropType<VoxxrinScheduleTimeSlot>
