@@ -29,7 +29,7 @@
       </ion-accordion-group>
 
       <ion-fab vertical="bottom" horizontal="end" slot="fixed" v-if="missingFeedbacksPastTimeslots.length>0">
-        <ion-fab-button>
+        <ion-fab-button @click="(ev) => fixAnimationOnFabClosing(ev.target)">
           <ion-icon src="/assets/icons/line/comment-line-add.svg"></ion-icon>
         </ion-fab-button>
         <ion-fab-list side="top" class="listFeedbackSlot">
@@ -140,6 +140,23 @@ async function showAlertForTimeslot(timeslot: VoxxrinScheduleTimeSlot) {
     });
     alert.present();
 }
+
+// Crappy hack in order to have a pretty ion-fab-list closing animation
+// Basically, we need to avoid changing display:flex => none on ion-fab-list *as soon as* the ion-fab-button
+// becomes inactive
+// This workaround keeps the display:flex property, until the animation is finished, putting back the
+// display:none after ~1s
+function fixAnimationOnFabClosing($el: HTMLElement) {
+    const $ionFab: HTMLIonFabElement = $el.closest('ion-fab');
+    const $fabButton: HTMLIonFabButtonElement = $ionFab.querySelector('ion-fab-button')
+    const $missingFeedbacksList: HTMLIonFabListElement = $ionFab.querySelector('ion-fab-list')
+    if($fabButton.classList.contains('fab-button-close-active')) {
+        $missingFeedbacksList.classList.add('temporarily-displayed-during-inactive-animation')
+        setTimeout(() => {
+            $missingFeedbacksList.classList.remove('temporarily-displayed-during-inactive-animation')
+        }, 1000)
+    }
+}
 </script>
 
 <style scoped lang="scss">
@@ -154,7 +171,9 @@ async function showAlertForTimeslot(timeslot: VoxxrinScheduleTimeSlot) {
   }
 
   .listFeedbackSlot {
-    display: flex; /* TODO Delete */
+    &.temporarily-displayed-during-inactive-animation {
+      display: flex;
+    }
     flex-direction: column;
     row-gap: 12px;
     right: 2px;
