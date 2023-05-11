@@ -109,6 +109,7 @@ defineEmits<{
     overflow: visible;
     filter: drop-shadow(0px 4px 24px rgba(0, 0, 0, 0.16));
     transition: 80ms ease-in-out;
+    animation: scale-up-center 140ms cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
 
     &:before {
       position: absolute;
@@ -130,10 +131,11 @@ defineEmits<{
 
     ion-badge {
       position: absolute;
-      right: -6px;
+      right: -5px;
       top: -2px;
+      padding: 0 16px;
       transform: scale(0.9);
-      border-radius: 0 16px 0 8px;
+      border-radius: 0 18px 0 8px;
     }
 
     &-head {
@@ -200,5 +202,11 @@ defineEmits<{
       }
     }
   }
+}
+
+
+@keyframes scale-up-center {
+  0% { transform: scale(0.5);}
+  100% { transform: scale(1);}
 }
 </style>
