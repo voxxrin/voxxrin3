@@ -7,6 +7,7 @@ import {
     ListableVoxxrinEvent,
 } from "@/models/VoxxrinEvent";
 import {ListableEvent} from "../../../shared/event-list.firestore";
+import {sortBy} from "@/models/utils";
 
 
 const CACHED_AVAILABLE_EVENTS_CONSIDERED_OUTDATED_AFTER = Temporal.Duration.from({ hours: 2 })
@@ -53,9 +54,12 @@ export async function fetchAvailableEvents() {
         `/data/events/query.json`
     );
 
-    CURRENT_AVAILABLE_EVENTS.value = new FetchedAvailableEvents(
-        firestoreAvailableEvents.map(firestoreListableEventToVoxxrinListableEvent)
+    const availableSortedEvents = sortBy(
+        firestoreAvailableEvents.map(firestoreListableEventToVoxxrinListableEvent),
+        event => -event.start.epochMilliseconds
     );
+
+    CURRENT_AVAILABLE_EVENTS.value = new FetchedAvailableEvents(availableSortedEvents);
 
     return firestoreAvailableEvents;
 }
