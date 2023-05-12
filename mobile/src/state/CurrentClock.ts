@@ -57,7 +57,7 @@ class ShiftedTimeClock implements Clock {
     }
 }
 
-if(import.meta.env.DEV) {
+// if(import.meta.env.DEV) {
     // May be useful for debug purposes
     (window as any).overrideCurrentClock = overrideCurrentClock;
 
@@ -79,4 +79,4 @@ if(import.meta.env.DEV) {
             })
         }:undefined)
     }
-}
+// }
