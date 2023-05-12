@@ -183,9 +183,18 @@ function toggleExpandedTimeslot(timeslot: VoxxrinScheduleTimeSlot) {
 </script>
 
 <style scoped lang="scss">
+
+  $ion-fab-button-height: 56px;
+
   ion-fab-button {
     --background: var(--voxxrin-event-theme-colors-secondary-hex);
     --color: var(--voxxrin-event-theme-colors-secondary-contrast-hex);
+
+    height: $ion-fab-button-height;
+  }
+
+  ion-accordion-group {
+    margin-bottom: $ion-fab-button-height;
   }
 
   ion-toolbar {
