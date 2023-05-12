@@ -31,7 +31,7 @@
       </ion-header>
 
       <div class="conferenceContent">
-        <ion-item-divider sticky>{{ LL.Favorited_conferences() }}</ion-item-divider>
+        <ion-item-divider>{{ LL.Favorited_conferences() }}</ion-item-divider>
         <favorited-event-selector
             class="favoritedEventSelector"
             :favoritedEvents="filteredFavoritedEvents" @event-selected="(event) => selectEvent(event.id)">
