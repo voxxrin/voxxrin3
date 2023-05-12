@@ -1,59 +1,59 @@
 <template>
-  <div v-if="favoritedEvents.length>0" class="favoritedEventsContainer">
-    <ion-list class="favoritedEvents">
-      <ion-card class="favoritedEvents-card" :style="{
-          '--voxxrin-event-background-url': `url('${favoritedEvent.backgroundUrl}')`,
-          '--voxxrin-event-logo-url': `url('${favoritedEvent.logoUrl}')`,
-          '--voxxrin-event-theme-colors-primary-hex': favoritedEvent.theming.colors.primaryHex,
-          '--voxxrin-event-theme-colors-primary-rgb': favoritedEvent.theming.colors.primaryRGB,
-          '--voxxrin-event-theme-colors-primary-contrast-hex': favoritedEvent.theming.colors.primaryContrastHex,
-          '--voxxrin-event-theme-colors-primary-contrast-rgb': favoritedEvent.theming.colors.primaryContrastRGB,
-          '--voxxrin-event-theme-colors-secondary-hex': favoritedEvent.theming.colors.secondaryHex,
-          '--voxxrin-event-theme-colors-secondary-rgb': favoritedEvent.theming.colors.secondaryRGB,
-          '--voxxrin-event-theme-colors-secondary-contrast-hex': favoritedEvent.theming.colors.secondaryContrastHex,
-          '--voxxrin-event-theme-colors-secondary-contrast-rgb': favoritedEvent.theming.colors.secondaryContrastRGB,
-          '--voxxrin-event-theme-colors-tertiary-hex': favoritedEvent.theming.colors.tertiaryHex,
-          '--voxxrin-event-theme-colors-tertiary-rgb': favoritedEvent.theming.colors.tertiaryRGB,
-          '--voxxrin-event-theme-colors-tertiary-contrast-hex': favoritedEvent.theming.colors.tertiaryContrastHex,
-          '--voxxrin-event-theme-colors-tertiary-contrast-rgb': favoritedEvent.theming.colors.tertiaryContrastRGB,
-      }" v-for="(favoritedEvent, index) in favoritedEvents" :key="index"
-                @click="$emit('event-selected', favoritedEvent)">
-        <current-event-status :event="favoritedEvent"/>
+  <div v-if="pinnedEvents.length>0" class="pinnedEventsContainer">
+    <ion-list class="pinnedEvents">
+      <ion-card class="pinnedEvents-card" :style="{
+          '--voxxrin-event-background-url': `url('${pinnedEvent.backgroundUrl}')`,
+          '--voxxrin-event-logo-url': `url('${pinnedEvent.logoUrl}')`,
+          '--voxxrin-event-theme-colors-primary-hex': pinnedEvent.theming.colors.primaryHex,
+          '--voxxrin-event-theme-colors-primary-rgb': pinnedEvent.theming.colors.primaryRGB,
+          '--voxxrin-event-theme-colors-primary-contrast-hex': pinnedEvent.theming.colors.primaryContrastHex,
+          '--voxxrin-event-theme-colors-primary-contrast-rgb': pinnedEvent.theming.colors.primaryContrastRGB,
+          '--voxxrin-event-theme-colors-secondary-hex': pinnedEvent.theming.colors.secondaryHex,
+          '--voxxrin-event-theme-colors-secondary-rgb': pinnedEvent.theming.colors.secondaryRGB,
+          '--voxxrin-event-theme-colors-secondary-contrast-hex': pinnedEvent.theming.colors.secondaryContrastHex,
+          '--voxxrin-event-theme-colors-secondary-contrast-rgb': pinnedEvent.theming.colors.secondaryContrastRGB,
+          '--voxxrin-event-theme-colors-tertiary-hex': pinnedEvent.theming.colors.tertiaryHex,
+          '--voxxrin-event-theme-colors-tertiary-rgb': pinnedEvent.theming.colors.tertiaryRGB,
+          '--voxxrin-event-theme-colors-tertiary-contrast-hex': pinnedEvent.theming.colors.tertiaryContrastHex,
+          '--voxxrin-event-theme-colors-tertiary-contrast-rgb': pinnedEvent.theming.colors.tertiaryContrastRGB,
+      }" v-for="(pinnedEvent, index) in pinnedEvents" :key="index"
+                @click="$emit('event-selected', pinnedEvent)">
+        <current-event-status :event="pinnedEvent"/>
         <div>
-          <div class="favoritedEvents-card-head">
-            <ion-card-title class="title">{{favoritedEvent.title}}</ion-card-title>
+          <div class="pinnedEvents-card-head">
+            <ion-card-title class="title">{{pinnedEvent.title}}</ion-card-title>
           </div>
 
-          <div class="favoritedEvents-card-content">
-            <div class="description" v-if="favoritedEvent.description">
-              {{favoritedEvent.description}}
+          <div class="pinnedEvents-card-content">
+            <div class="description" v-if="pinnedEvent.description">
+              {{pinnedEvent.description}}
             </div>
             <ul class="details">
               <li>
                 <ion-icon aria-hidden="true" src="/assets/icons/solid/map-marker.svg" />
-                <ion-label>{{favoritedEvent.location.city}}{{favoritedEvent.location.country?` (${favoritedEvent.location.country})`:``}}</ion-label>
+                <ion-label>{{pinnedEvent.location.city}}{{pinnedEvent.location.country?` (${pinnedEvent.location.country})`:``}}</ion-label>
               </li>
               <li>
                 <ion-icon aria-hidden="true" src="/assets/icons/solid/calendar.svg" />
                 <ion-label>
-                  <month-day-date-range :range="{ start: favoritedEvent.start, end: favoritedEvent.end }" />
+                  <month-day-date-range :range="{ start: pinnedEvent.start, end: pinnedEvent.end }" />
                 </ion-label>
               </li>
-              <li v-if="favoritedEvent.peopleDescription">
+              <li v-if="pinnedEvent.peopleDescription">
                 <ion-icon aria-hidden="true" :icon="people" />
-                <ion-label>{{favoritedEvent.peopleDescription}}</ion-label>
+                <ion-label>{{pinnedEvent.peopleDescription}}</ion-label>
               </li>
             </ul>
           </div>
         </div>
         <div class="logo">
-          <ion-img :src="favoritedEvent.logoUrl" />
+          <ion-img :src="pinnedEvent.logoUrl" />
         </div>
       </ion-card>
     </ion-list>
   </div>
   <div v-else>
-    <slot name="no-favorites"></slot>
+    <slot name="no-pinned-events"></slot>
   </div>
 </template>
 
@@ -68,7 +68,7 @@ import CurrentEventStatus from "@/components/CurrentEventStatus.vue";
 import MonthDayDateRange from "@/components/MonthDayDateRange.vue";
 
 const props = defineProps({
-    favoritedEvents: {
+    pinnedEvents: {
         required: true,
         type: Object as PropType<Array<ListableVoxxrinEvent>>
     }
@@ -82,11 +82,11 @@ defineEmits<{
 
 <style lang="scss" scoped>
 
-.favoritedEventsContainer {
+.pinnedEventsContainer {
   overflow-y: auto;
 }
 
-.favoritedEvents {
+.pinnedEvents {
   display: inline-flex;
   flex-direction: row;
   column-gap: var(--app-gutters);

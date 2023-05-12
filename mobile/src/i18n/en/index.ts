@@ -3,15 +3,15 @@ import type { BaseTranslation } from '../i18n-types.js'
 const en = {
 	HI: 'Hi {name:string}! Please leave a star if you like this project: https://github.com/ivanhofer/typesafe-i18n',
 	Conference_Selector: `Conference Selector`,
-	Favorited_conferences: `Favorited conferences`,
-	No_favorites_available_yet: `No favorites available yet`,
+	Pinned_events: `Pinned events`,
+	No_pinned_events_available_yet: `No pinned events available yet`,
 	No_conference_registered_yet: `No conference registered yet`,
 	Past_events: `Past events`,
 	Search_a_conference: `Search a conference`,
 	Keywords: `Keywords`,
 	Actions: `Actions`,
-	Remove_from_favorites: `Remove from favorites`,
-	Add_to_my_favorites: `Add to my favorites`,
+	Remove_from_pinned_events: `Remove from pinned events`,
+	Add_to_my_pinned_events: `Add to my pinned events`,
 	Visit_website: `Visit website`,
 	Cancel: `Cancel`,
 	Schedule: `Schedule`,
@@ -27,7 +27,8 @@ const en = {
 	Talk_summary: `Talk summary`,
 	Speakers: `Speakers`,
 	Welcome_to: `Welcome to`,
-	Hello_xxx: `Hello, {name:string}`
+	Hello_xxx: `Hello, {name:string}`,
+	Add_from_the_list_below: `Add from the list below`
 } satisfies BaseTranslation
 
 export default en

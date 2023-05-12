@@ -34,9 +34,9 @@
       </div>
 
       <div class="eventItem-end" slot="end">
-        <ion-button fill="clear" shape="round" @click.stop="$emit('event-fav-toggled', event, isFavorited?'fav-to-unfav':'unfav-to-fav')">
-          <ion-icon src="/assets/icons/line/pin-line.svg" v-if="!isFavorited"></ion-icon>
-          <ion-icon class="_is-pined" src="/assets/icons/solid/pin.svg" v-if="isFavorited"></ion-icon>
+        <ion-button fill="clear" shape="round" @click.stop="$emit('event-pin-toggled', event, isPinnedRef?'pinned-to-unpinned':'unpinned-to-pinned')">
+          <ion-icon src="/assets/icons/line/pin-line.svg" v-if="!isPinnedRef"></ion-icon>
+          <ion-icon class="_is-pined" src="/assets/icons/solid/pin.svg" v-if="isPinnedRef"></ion-icon>
         </ion-button>
       </div>
     </ion-item>
@@ -55,7 +55,7 @@ const props = defineProps({
         required: true,
         type: Object as PropType<ListableVoxxrinEvent>
     },
-    favoritedEvents: {
+    pinnedEvents: {
         required: true,
         type: Object as PropType<Array<EventId>>
     },
@@ -63,12 +63,12 @@ const props = defineProps({
 
 defineEmits<{
     (e: 'event-clicked', event: ListableVoxxrinEvent): void,
-    (e: 'event-fav-toggled', event: ListableVoxxrinEvent, transitionType: 'unfav-to-fav'|'fav-to-unfav'): void,
+    (e: 'event-pin-toggled', event: ListableVoxxrinEvent, transitionType: 'unpinned-to-pinned'|'pinned-to-unpinned'): void,
 }>()
 
-const isFavorited = computed(() => {
-    if(props.favoritedEvents && props.event) {
-        return !!props.favoritedEvents?.find(eventId => props.event?.id.isSameThan(eventId))
+const isPinnedRef = computed(() => {
+    if(props.pinnedEvents && props.event) {
+        return !!props.pinnedEvents?.find(eventId => props.event?.id.isSameThan(eventId))
     } else {
         return false;
     }

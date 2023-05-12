@@ -1,9 +1,9 @@
 <template>
   <div v-if="events.length>0">
     <ion-list>
-      <available-event-item :favorited-events="favoritedEvents" v-for="(event, index) in events" :key="index"
+      <available-event-item :pinned-events="pinnedEvents" v-for="(event, index) in events" :key="index"
               :event="event"
-              @event-fav-toggled="(ev, transitionType) => $emit('event-fav-toggled', ev, transitionType)"
+              @event-pin-toggled="(ev, transitionType) => $emit('event-pin-toggled', ev, transitionType)"
               @event-clicked="$emit('event-clicked', $event)">
       </available-event-item>
     </ion-list>
@@ -23,7 +23,7 @@ const props = defineProps({
         required: true,
         type: Object as PropType<Array<ListableVoxxrinEvent>>
     },
-    favoritedEvents: {
+    pinnedEvents: {
         required: true,
         type: Object as PropType<Array<EventId>>
     },
@@ -31,7 +31,7 @@ const props = defineProps({
 
 defineEmits<{
     (e: 'event-clicked', event: ListableVoxxrinEvent): void,
-    (e: 'event-fav-toggled', event: ListableVoxxrinEvent, transitionType: 'unfav-to-fav'|'fav-to-unfav'): void,
+    (e: 'event-pin-toggled', event: ListableVoxxrinEvent, transitionType: 'unpinned-to-pinned'|'pinned-to-unpinned'): void,
 }>()
 
 </script>

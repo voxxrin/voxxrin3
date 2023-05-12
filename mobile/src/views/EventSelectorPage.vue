@@ -31,24 +31,24 @@
       </ion-header>
 
       <div class="conferenceContent">
-        <ion-item-divider>{{ LL.Favorited_conferences() }}</ion-item-divider>
-        <favorited-event-selector
-            class="favoritedEventSelector"
-            :favoritedEvents="filteredFavoritedEvents" @event-selected="(event) => selectEvent(event.id)">
-          <template #no-favorites>
+        <ion-item-divider>{{ LL.Pinned_events() }}</ion-item-divider>
+        <pinned-event-selector
+            class="pinnedEventSelector"
+            :pinned-events="filteredPinnedEvents" @event-selected="(event) => selectEvent(event.id)">
+          <template #no-pinned-events>
             <div class="infoMessage ion-text-center">
-              <img class="infoMessage-illustration" src="/assets/images/svg/illu-list-favorite.svg">
-              <span class="infoMessage-title">{{ LL.No_favorites_available_yet() }}</span>
-              <span class="infoMessage-subTitle">Add from the list below</span>
+              <img class="infoMessage-illustration" src="/assets/images/svg/illu-list-pinned.svg">
+              <span class="infoMessage-title">{{ LL.No_pinned_events_available_yet() }}</span>
+              <span class="infoMessage-subTitle">{{ LL.Add_from_the_list_below() }}</span>
             </div>
           </template>
-        </favorited-event-selector>
+        </pinned-event-selector>
 
         <ion-item-divider class="stickyDivider" sticky>All conferences</ion-item-divider>
         <available-events-list
             class="availableEventsList"
             :events="filteredAvailableEvents" @event-clicked="(event) => showEventActions(event)"
-            :favorited-events="favoritedTalksRef" @event-fav-toggled="eventFavoriteToggled">
+            :pinned-events="pinnedEventIdsRef" @event-pin-toggled="eventPinToggled">
           <template #no-event>
             <div class="infoMessage ion-text-center">
               <ion-icon class="infoMessage-icon" aria-hidden="true" src="/assets/icons/solid/checkbox-list-detail.svg"></ion-icon>
@@ -72,7 +72,6 @@ import {EventId, ListableVoxxrinEvent, searchEvents} from "@/models/VoxxrinEvent
 import {fetchConferenceDescriptor} from "@/state/CurrentConferenceDescriptor";
 import {fetchAvailableEvents, watchCurrentAvailableEvents} from "@/state/CurrentAvailableEvents";
 import {ref, Ref, watch} from "vue";
-import FavoritedEventSelector from "@/components/FavoritedEventSelector.vue";
 import AvailableEventsList from "@/components/AvailableEventsList.vue";
 import {presentActionSheetController} from "@/views/vue-utils";
 import {Browser} from "@capacitor/browser";
@@ -80,6 +79,7 @@ import {typesafeI18n} from "@/i18n/i18n-vue";
 import {
     ActionSheetButton
 } from "@ionic/core/dist/types/components/action-sheet/action-sheet-interface";
+import PinnedEventSelector from "@/components/PinnedEventSelector.vue";
 
 const router = useIonRouter();
 const { LL } = typesafeI18n()
@@ -90,16 +90,16 @@ watchCurrentAvailableEvents(updatedAvailableEvents => {
 })
 fetchAvailableEvents();
 
-const favoritedTalksRef = ref<EventId[]>([]);
+const pinnedEventIdsRef = ref<EventId[]>([]);
 
 const searchCriteriaRef = ref<{ terms: string|undefined, includePastEvents: boolean}>({ terms: undefined, includePastEvents: false });
 
-const filteredFavoritedEvents: Ref<ListableVoxxrinEvent[]> = ref([]);
+const filteredPinnedEvents: Ref<ListableVoxxrinEvent[]> = ref([]);
 const filteredAvailableEvents: Ref<ListableVoxxrinEvent[]> = ref([]);
-watch([availableEventsRef, searchCriteriaRef, favoritedTalksRef], ([availableEvents, searchCriteria, favoritedTalks]) => {
-    const {events, favorites} = searchEvents(availableEvents, searchCriteria, favoritedTalks)
+watch([availableEventsRef, searchCriteriaRef, pinnedEventIdsRef], ([availableEvents, searchCriteria, pinnedEventIds]) => {
+    const {events, pinnedEvents} = searchEvents(availableEvents, searchCriteria, pinnedEventIds)
     filteredAvailableEvents.value = events;
-    filteredFavoritedEvents.value = favorites;
+    filteredPinnedEvents.value = pinnedEvents;
 }, {immediate: true})
 
 async function selectEvent(eventId: EventId) {
@@ -119,12 +119,12 @@ function includePastEventUpdated(includePastEvents: boolean) {
 async function showEventActions(event: ListableVoxxrinEvent) {
     const result = await presentActionSheetController({
         header: 'Actions',
-        buttons: ([favoritedTalksRef.value.includes(event.id)?{
-            text: LL.value.Remove_from_favorites(),
-            data: {action: 'remove-from-favs'},
+        buttons: ([pinnedEventIdsRef.value.includes(event.id)?{
+            text: LL.value.Remove_from_pinned_events(),
+            data: {action: 'remove-from-pinned-events'},
         }:{
-            text: LL.value.Add_to_my_favorites(),
-            data: {action: 'add-to-favs'},
+            text: LL.value.Add_to_my_pinned_events(),
+            data: {action: 'add-to-pinned-events'},
         }] as ActionSheetButton[]).concat(event.websiteUrl?[{
             text: LL.value.Visit_website(),
             data: {action: 'visit-website'},
@@ -137,10 +137,10 @@ async function showEventActions(event: ListableVoxxrinEvent) {
     // Not sure why, but ts-pattern's match() doesn't work here 🤔
     if(result?.action === 'visit-website') {
         Browser.open({url: event.websiteUrl})
-    } else if(result?.action === 'add-to-favs') {
-        addEventToFavoritedList(event);
-    } else if(result?.action === 'remove-from-favs') {
-        removeEventFromFavoritedList(event);
+    } else if(result?.action === 'add-to-pinned-events') {
+        addEventToPinnedEvents(event);
+    } else if(result?.action === 'remove-from-pinned-events') {
+        removeEventFromPinnedEvents(event);
     } else if(result?.action === 'cancel') {
 
     } else {
@@ -148,19 +148,19 @@ async function showEventActions(event: ListableVoxxrinEvent) {
     }
 }
 
-function eventFavoriteToggled(event: ListableVoxxrinEvent, transitionType: 'unfav-to-fav'|'fav-to-unfav') {
-    if(transitionType === 'unfav-to-fav') {
-        addEventToFavoritedList(event);
+function eventPinToggled(event: ListableVoxxrinEvent, transitionType: 'unpinned-to-pinned'|'pinned-to-unpinned') {
+    if(transitionType === 'unpinned-to-pinned') {
+        addEventToPinnedEvents(event);
     } else {
-        removeEventFromFavoritedList(event);
+        removeEventFromPinnedEvents(event);
     }
 }
 
-function addEventToFavoritedList(event: ListableVoxxrinEvent) {
-    favoritedTalksRef.value = [...favoritedTalksRef.value, event.id];
+function addEventToPinnedEvents(event: ListableVoxxrinEvent) {
+    pinnedEventIdsRef.value = [...pinnedEventIdsRef.value, event.id];
 }
-function removeEventFromFavoritedList(event: ListableVoxxrinEvent) {
-    favoritedTalksRef.value = favoritedTalksRef.value.filter(ev => !ev.isSameThan(event.id));
+function removeEventFromPinnedEvents(event: ListableVoxxrinEvent) {
+    pinnedEventIdsRef.value = pinnedEventIdsRef.value.filter(ev => !ev.isSameThan(event.id));
 }
 </script>
 

@@ -26,7 +26,7 @@ export type VoxxrinEventTheme = Replace<EventTheme, {
     }
 }>
 
-export function searchEvents(events: ListableVoxxrinEvent[], searchCriteria: { terms: string|undefined, includePastEvents: boolean}, favoritedIds: EventId[]) {
+export function searchEvents(events: ListableVoxxrinEvent[], searchCriteria: { terms: string|undefined, includePastEvents: boolean}, pinnededIds: EventId[]) {
     const filteredEvents = events.filter(event => {
         if(searchCriteria.terms
             && [
@@ -46,11 +46,11 @@ export function searchEvents(events: ListableVoxxrinEvent[], searchCriteria: { t
         return true;
     });
 
-    const favoritedIdValues = favoritedIds.map(id => id.value);
+    const pinnedIdValues = pinnededIds.map(id => id.value);
 
     return {
         events: filteredEvents,
-        favorites: filteredEvents.filter(ev => favoritedIdValues.includes(ev.id.value))
+        pinnedEvents: filteredEvents.filter(ev => pinnedIdValues.includes(ev.id.value))
     }
 }
 

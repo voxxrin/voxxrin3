@@ -23,13 +23,13 @@ type RootTranslation = {
 	 */
 	Conference_Selector: string
 	/**
-	 * F​a​v​o​r​i​t​e​d​ ​c​o​n​f​e​r​e​n​c​e​s
+	 * P​i​n​n​e​d​ ​e​v​e​n​t​s
 	 */
-	Favorited_conferences: string
+	Pinned_events: string
 	/**
-	 * N​o​ ​f​a​v​o​r​i​t​e​s​ ​a​v​a​i​l​a​b​l​e​ ​y​e​t
+	 * N​o​ ​p​i​n​n​e​d​ ​e​v​e​n​t​s​ ​a​v​a​i​l​a​b​l​e​ ​y​e​t
 	 */
-	No_favorites_available_yet: string
+	No_pinned_events_available_yet: string
 	/**
 	 * N​o​ ​c​o​n​f​e​r​e​n​c​e​ ​r​e​g​i​s​t​e​r​e​d​ ​y​e​t
 	 */
@@ -51,13 +51,13 @@ type RootTranslation = {
 	 */
 	Actions: string
 	/**
-	 * R​e​m​o​v​e​ ​f​r​o​m​ ​f​a​v​o​r​i​t​e​s
+	 * R​e​m​o​v​e​ ​f​r​o​m​ ​p​i​n​n​e​d​ ​e​v​e​n​t​s
 	 */
-	Remove_from_favorites: string
+	Remove_from_pinned_events: string
 	/**
-	 * A​d​d​ ​t​o​ ​m​y​ ​f​a​v​o​r​i​t​e​s
+	 * A​d​d​ ​t​o​ ​m​y​ ​p​i​n​n​e​d​ ​e​v​e​n​t​s
 	 */
-	Add_to_my_favorites: string
+	Add_to_my_pinned_events: string
 	/**
 	 * V​i​s​i​t​ ​w​e​b​s​i​t​e
 	 */
@@ -124,6 +124,10 @@ type RootTranslation = {
 	 * @param {string} name
 	 */
 	Hello_xxx: RequiredParams<'name'>
+	/**
+	 * A​d​d​ ​f​r​o​m​ ​t​h​e​ ​l​i​s​t​ ​b​e​l​o​w
+	 */
+	Add_from_the_list_below: string
 }
 
 export type TranslationFunctions = {
@@ -136,13 +140,13 @@ export type TranslationFunctions = {
 	 */
 	Conference_Selector: () => LocalizedString
 	/**
-	 * Favorited conferences
+	 * Pinned events
 	 */
-	Favorited_conferences: () => LocalizedString
+	Pinned_events: () => LocalizedString
 	/**
-	 * No favorites available yet
+	 * No pinned events available yet
 	 */
-	No_favorites_available_yet: () => LocalizedString
+	No_pinned_events_available_yet: () => LocalizedString
 	/**
 	 * No conference registered yet
 	 */
@@ -164,13 +168,13 @@ export type TranslationFunctions = {
 	 */
 	Actions: () => LocalizedString
 	/**
-	 * Remove from favorites
+	 * Remove from pinned events
 	 */
-	Remove_from_favorites: () => LocalizedString
+	Remove_from_pinned_events: () => LocalizedString
 	/**
-	 * Add to my favorites
+	 * Add to my pinned events
 	 */
-	Add_to_my_favorites: () => LocalizedString
+	Add_to_my_pinned_events: () => LocalizedString
 	/**
 	 * Visit website
 	 */
@@ -235,6 +239,10 @@ export type TranslationFunctions = {
 	 * Hello, {name}
 	 */
 	Hello_xxx: (arg: { name: string }) => LocalizedString
+	/**
+	 * Add from the list below
+	 */
+	Add_from_the_list_below: () => LocalizedString
 }
 
 export type Formatters = {}
