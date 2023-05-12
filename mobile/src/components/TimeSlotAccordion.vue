@@ -154,9 +154,10 @@ ion-accordion {
   ion-item {
     position: sticky;
     top: 98px;
-    --padding-start: 8px;
+    --padding-start: 0;
     --padding-end: 0;
     --border-width: 0;
+    --inner-padding-end: 12px;
 
     .slot {
       display: flex;
@@ -172,7 +173,7 @@ ion-accordion {
       &-schedule {
         display: flex;
         align-items: center;
-        column-gap: 8px;
+        column-gap: 6px;
 
         ._accordion-icon {
           font-size: 22px;
@@ -184,7 +185,7 @@ ion-accordion {
         }
 
         &-icon {
-          width: 24px;
+          width: 16px;
           font-size: 16px;
           opacity: 0.4;
         }

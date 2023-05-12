@@ -178,7 +178,7 @@ const theme = computed(() => {
         }
 
         .slot-schedule-icon {
-          width: 24px;
+          width: 16px;
           font-size: 16px;
           opacity: 0.4;
         }
