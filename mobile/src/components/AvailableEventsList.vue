@@ -75,6 +75,10 @@ defineEmits<{
   --inner-padding-end: 0;
   --background: var(--app-background);
 
+  @media (prefers-color-scheme: dark) {
+    --border-color: var(--app-line-contrast);
+  }
+
   &-logoContainer {
     padding: var(--app-gutters) ;
 

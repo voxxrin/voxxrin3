@@ -221,7 +221,6 @@ async function showEventActions(event: ListableVoxxrinEvent) {
         --handle-background-checked: var(--app-light-contrast);
       }
 
-
       &-label {
         font-weight: bold;
         font-size: 13px;
