@@ -49,7 +49,6 @@
 import {PropType} from "vue";
 import {
     IonImg,
-    IonRippleEffect
 } from '@ionic/vue';
 import {ListableVoxxrinEvent} from "@/models/VoxxrinEvent";
 import MonthDayDateRange from "@/components/MonthDayDateRange.vue";

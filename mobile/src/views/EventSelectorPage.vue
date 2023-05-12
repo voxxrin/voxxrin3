@@ -64,7 +64,6 @@
 import {
     IonToggle,
     IonInput,
-    IonRippleEffect,
     IonItemDivider,
     useIonRouter
 } from '@ionic/vue';

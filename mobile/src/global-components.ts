@@ -6,7 +6,8 @@ import {
     IonIcon,
     IonItem, IonLabel,
     IonList, IonPage,
-    IonTitle, IonToolbar
+    IonTitle, IonToolbar,
+    IonRippleEffect
 } from "@ionic/vue";
 import {App} from "@vue/runtime-core";
 
@@ -23,6 +24,7 @@ export default {
         app.component('IonLabel', IonLabel);
         app.component('IonList', IonList);
         app.component('IonPage', IonPage);
+        app.component('IonRippleEffect', IonRippleEffect);
         app.component('IonToolbar', IonToolbar);
         app.component('IonTitle', IonTitle);
     },

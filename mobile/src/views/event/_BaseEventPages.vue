@@ -35,7 +35,6 @@ import {
     IonTabButton,
     IonTabs,
     IonRouterOutlet,
-    IonRippleEffect,
     useIonRouter,
 } from '@ionic/vue';
 import {ref} from "vue";
