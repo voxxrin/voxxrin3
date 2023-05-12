@@ -124,7 +124,8 @@ defineEmits<{
     }
 
     &:active {
-      transition: 80ms ease-in-out;
+      transition: 80ms ease-in-out !important;
+      transform: scale(0.95) !important;
       box-shadow: rgba(99, 99, 99, 0.2) 0 2px 8px 0;
     }
 

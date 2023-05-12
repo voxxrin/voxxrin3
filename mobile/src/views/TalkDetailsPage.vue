@@ -16,9 +16,14 @@
           '--voxxrin-event-theme-colors-tertiary-contrast-hex': event.theming.colors.tertiaryContrastHex,
           '--voxxrin-event-theme-colors-tertiary-contrast-rgb': event.theming.colors.tertiaryContrastRGB,
     }">
+      <!-- TODO Delete header when btn close connected -->
       <current-event-header :event="event" back-btn-action="goBack" />
       <ion-header class="stickyHeader" :class="{ 'is-favorited': talkNotes.isFavorite, 'to-watch-later': talkNotes.watchLater }">
         <ion-toolbar>
+          <!-- TODO Connect btn close detail talk -->
+          <ion-button class="stickyHeader-close" shape="round" slot="start" size="small" fill="outline">
+            <ion-icon src="/assets/icons/solid/close.svg"></ion-icon>
+          </ion-button>
           <ion-title class="stickyHeader-title" slot="start" >Talk details</ion-title>
           <ion-button class="btnTalkAction _watchLater" slot="end" shape="round" fill="outline"  @click.stop="() => toggleWatchLater()">
             <ion-icon v-if="!talkNotes.watchLater" aria-hidden="true" src="/assets/icons/line/video-line.svg"></ion-icon>

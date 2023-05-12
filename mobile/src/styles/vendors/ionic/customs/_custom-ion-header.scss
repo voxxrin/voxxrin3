@@ -14,6 +14,10 @@ ion-header  {
             display: none;
         }
 
+        .stickyHeader-close {
+            margin-right: var(--app-gutters) !important;
+        }
+
         ion-toolbar {
             --padding-top: 8px;
             --padding-bottom: 8px;
