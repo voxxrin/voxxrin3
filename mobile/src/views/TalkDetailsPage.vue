@@ -69,6 +69,7 @@
       <div class="talkDetails-description">
         <div class="divider">
           <span class="titleDivider">{{ LL.Talk_summary() }}</span>
+          <span class="divider-separator"></span>
         </div>
         <ion-text v-html="talk?.description">
         </ion-text>
