@@ -37,7 +37,6 @@ ion-header  {
             column-gap: 16px;
         }
 
-
         &.to-watch-later {
             .btnTalkAction._watchLater {
                 --background: var(--voxxrin-event-theme-colors-secondary-hex);
@@ -56,6 +55,11 @@ ion-header  {
             .favorite-btn-nb {
                 background: var(--app-primary) !important;
                 color: var(--app-white);
+
+                @media (prefers-color-scheme: dark) {
+                    background: var(--app-white) !important;
+                    color: var(--app-primary);
+                }
             }
         }
 
@@ -73,6 +77,10 @@ ion-header  {
                 font-size: 13px;
                 background: white;
                 font-weight: bold;
+
+                @media (prefers-color-scheme: dark) {
+                    background: var(--app-dark-contrast);
+                }
             }
         }
 
@@ -82,6 +90,11 @@ ion-header  {
             --padding-start: 0;
             --padding-end: 0;
             font-size: 22px;
+
+            @media (prefers-color-scheme: dark) {
+                --border-style: none;
+                --background: var(--app-light-contrast);
+            }
 
             &._favorite {
                 display: flex;

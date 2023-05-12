@@ -89,7 +89,7 @@
               <div class="speakerInfo-name">
                 {{speaker.fullName}}
                 <span class="speakerInfo-company" v-if="speaker.companyName">
-                     <ion-icon aria-hidden="true" src="assets/icons/solid/suitcase-2.svg"></ion-icon>
+                     <ion-icon aria-hidden="true" :icon="business"></ion-icon>
                   ({{speaker.companyName}})
                 </span>
               </div>
@@ -97,7 +97,6 @@
                 <div v-html="speaker.speakerBio"></div>
               </div>
             </div>
-
           </ion-item>
         </ion-list>
       </div>
@@ -120,6 +119,7 @@ import {getTimeslotLabel} from "@/models/VoxxrinSchedule";
 import {computed, watch} from "vue";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {IonBadge, IonAvatar, IonText} from "@ionic/vue";
+import {business} from "ionicons/icons";
 
 const route = useRoute();
 const eventId = new EventId(getRouteParamsValue(route, 'eventId')!);
@@ -165,12 +165,20 @@ const theme = computed(() => {
       padding: var(--app-gutters);
       z-index: 0;
 
+      @media (prefers-color-scheme: dark) {
+        background-color: var(--app-light-contrast);
+      }
+
       &-schedule, &-room {
         display: flex;
         align-items: center;
         column-gap: 4px;
         font-weight: 600;
         color: var(--app-grey-dark);
+
+        @media (prefers-color-scheme: dark) {
+          color: var(--app-grey-light);
+        }
 
         ion-label {
           display: flex;
@@ -185,6 +193,10 @@ const theme = computed(() => {
 
         ion-icon {
           color: var(--app-primary-shade);
+
+          @media (prefers-color-scheme: dark) {
+            color: var(--app-white);
+          }
         }
       }
     }
@@ -225,10 +237,18 @@ const theme = computed(() => {
       background-color: var(--app-beige-medium);
       padding: var(--app-gutters);
 
+      @media (prefers-color-scheme: dark) {
+        background-color: var(--app-medium-contrast);
+      }
+
       &-list {
        padding-top: var(--app-gutters);
        padding-bottom: var(--app-gutters);
        background-color: var(--app-beige-medium);
+
+        @media (prefers-color-scheme: dark) {
+          background-color: var(--app-medium-contrast);
+        }
 
         ion-item {
           --background: var(--app-beige-medium);
@@ -236,12 +256,22 @@ const theme = computed(() => {
           --inner-padding-end: 0;
           --padding-top: 8px;
           --padding-bottom: 8px;
+          align-items: start;
+
+          @media (prefers-color-scheme: dark) {
+            --background: var(--app-medium-contrast);
+          }
+
+          &:last-child {
+            --border-style: none;
+          }
 
           ion-avatar {
             max-height: 64px;
             min-height: 64px;
             min-width: 64px;
             max-width: 64px;
+            margin-top: 0;
             margin-right: var(--app-gutters);
             border: 2px solid var(--app-primary);
           }
@@ -260,10 +290,16 @@ const theme = computed(() => {
             &-company {
               display: flex;
               column-gap: 4px;
+              margin: 4px 0;
               align-items: center;
               font-weight: normal;
               font-size: 13px;
               color: var(--app-grey-dark);
+
+              @media (prefers-color-scheme: dark) {
+                color: var(--app-grey-light);
+                opacity: 0.5;
+              }
 
               ion-icon {
                 font-size: 16px;
@@ -288,6 +324,10 @@ const theme = computed(() => {
     .titleDivider {
       font-weight: bold;
       color: var(--app-beige-dark);
+
+      @media (prefers-color-scheme: dark) {
+        opacity: 0.8;
+      }
     }
 
     .divider-separator {

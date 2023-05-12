@@ -44,7 +44,7 @@
           </template>
         </favorited-event-selector>
 
-        <ion-item-divider sticky>All conferences</ion-item-divider>
+        <ion-item-divider class="stickyDivider" sticky>All conferences</ion-item-divider>
         <available-events-list
             class="availableEventsList"
             :events="filteredAvailableEvents" @event-clicked="(event) => showEventActions(event)">
@@ -154,7 +154,7 @@ async function showEventActions(event: ListableVoxxrinEvent) {
     flex-direction: row;
     align-items: end;
     justify-content: space-between;
-    padding: 34px var( --app-gutters-medium) 0 var( --app-gutters-medium);
+    padding: 24px var( --app-gutters-medium) 0 var( --app-gutters-medium);
     background: var(--app-background);
 
     &:after {
@@ -238,7 +238,6 @@ async function showEventActions(event: ListableVoxxrinEvent) {
 
   .conferenceContent {
     ion-item-divider {
-      top: 68px;
       --padding-top: var( --app-gutters-medium);
       --padding-bottom: var( --app-gutters-medium);
       --color: var(--app-voxxrin);
@@ -247,6 +246,10 @@ async function showEventActions(event: ListableVoxxrinEvent) {
       border-bottom: 1px solid var(--app-beige-line);
       font-size: 18px;
       font-weight: bold;
+
+      &.stickyDivider {
+        top: 68px;
+      }
 
       @media (prefers-color-scheme: dark) {
         --background: var(--app-dark-contrast);

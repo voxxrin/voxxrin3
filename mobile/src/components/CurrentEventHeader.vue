@@ -2,7 +2,7 @@
   <ion-header class="ion-no-border">
     <ion-toolbar>
       <div class="viewsHeader">
-        <ion-button @click="backButtonClicked" shape="round" size="default">
+        <ion-button class="viewsHeader-back" @click="backButtonClicked" shape="round" size="default">
           <ion-icon src="/assets/icons/solid/arrow-left.svg"></ion-icon>
         </ion-button>
         <ion-button class="btnUser" shape="round" size="default">
@@ -89,6 +89,13 @@ function backButtonClicked() {
       padding-top: 16px;
       font-weight: bold;
       color: var(--voxxrin-event-theme-colors-primary-contrast-hex);
+
+      &-back {
+        @media (prefers-color-scheme: dark) {
+          --background: rgba(var(--app-white-transparent));
+          --color: var(--app-white);
+        }
+      }
     }
 
     .viewsSubHeader {

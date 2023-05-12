@@ -152,8 +152,6 @@ ion-accordion {
   }
 
   ion-item {
-    position: sticky;
-    top: 98px;
     --padding-start: 0;
     --padding-end: 0;
     --border-width: 0;
@@ -225,8 +223,8 @@ ion-accordion {
         display: flex;
         align-items: center;
         height: 100%;
+        width: 44px !important;
         padding: 0;
-        margin-right: 12px;
       }
     }
 
@@ -241,13 +239,15 @@ ion-accordion {
     }
 
     ._missing-feedback {
-      height: 100%;
+      position: relative;
       --background: var(--voxxrin-event-theme-colors-secondary-hex);
       --box-shadow: none;
-      --border-radius: 0;
-      --padding-start: 8px;
-      --padding-end: 8px;
-      font-size: 20px;
+      --border-radius: 38px;
+      width: 38px;
+      margin-right: 0;
+      --padding-start: 4px;
+      --padding-end: 4px;
+      font-size: 18px;
 
       @media (prefers-color-scheme: dark) {
         color: var(--app-white);

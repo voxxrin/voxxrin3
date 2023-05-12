@@ -148,12 +148,19 @@ defineEmits<{
       font-size: 13px;
       font-weight: 500;
       text-align: end;
-      color: var(--app-primary-shade);
+      color: var(--app-grey-light);
 
+      @media (prefers-color-scheme: dark) {
+        color: var(--app-beige-dark);
+      }
 
       ion-icon {
         font-size: 16px;
-        color: var(--app-primary-shade);
+        color: var(--app-beige-dark);
+
+        @media (prefers-color-scheme: dark) {
+          color: var(--app-grey-dark);
+        }
       }
     }
 
