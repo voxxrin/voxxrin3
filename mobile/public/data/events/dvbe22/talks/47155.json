@@ -1,0 +1,28 @@
+{
+  "track": {
+    "title": "UI & UX",
+    "id": "2760"
+  },
+  "room": {
+    "id": "4704",
+    "title": "Room 10"
+  },
+  "description": "<p><span style=\"color: rgb(29, 28, 29); background-color: transparent;\">The sprint planning meeting is about to wrap up when the product owner remembers: \"The customer complained about the </span><em style=\"color: rgb(29, 28, 29); background-color: transparent;\">stale object exceptions</em><span style=\"color: rgb(29, 28, 29); background-color: transparent;\">. How hard would it be to see each other's edits in real time before anyone tries to save?\" And they aren’t talking about Google Docs, but a workhorse enterprise application.</span></p><p><span style=\"color: rgb(29, 28, 29); background-color: transparent;\">Just like that, you find yourself going down a rabbit hole filled with CRDTs (what?), message buses and a perplexed UX designer. It's hard enough for your microservices to deal with eventual consistency, and now your end users might also face something similar. Are you stuck with locking out one user while another one makes changes? Or letting users unintentionally overwrite each others’ edits?&nbsp;&nbsp;</span></p><p><span style=\"color: rgb(29, 28, 29); background-color: transparent;\">Worry not! I've made peace with the rabbit and I'm here to help you understand why collaboration isn’t just for desktop productivity apps and how to make the essential tradeoffs for both your architecture and your users.</span></p>",
+  "format": {
+    "id": "951",
+    "duration": "PT50m",
+    "title": "Conference"
+  },
+  "speakers": [
+    {
+      "id": "47006",
+      "fullName": "Leif Åstrand",
+      "companyName": "Vaadin",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-3c8a8b16-c5b6-4adc-b973-65d37e6f276f.jpg"
+    }
+  ],
+  "language": "EN",
+  "id": "47155",
+  "title": " “Multi-Player” Enterprise Applications: Why and How to Build a Collaborative UX",
+  "summary": ""
+}

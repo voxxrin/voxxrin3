@@ -1,0 +1,34 @@
+{
+  "speakers": [
+    {
+      "id": "20571",
+      "companyName": null,
+      "fullName": "Martin Klähn",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-4fc33dff-2409-484c-952e-c52d63dfbf93.jpg"
+    },
+    {
+      "fullName": "Sven Reimers",
+      "companyName": null,
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-97299609-c563-47a3-9430-71fdd5060009.png",
+      "id": "20572"
+    }
+  ],
+  "room": {
+    "title": "BOF 2",
+    "id": "4702"
+  },
+  "description": "<p>TweetwallFX</p><p>- entertaining thousands of Devoxxians for more than half a decade - time to look back</p><p>to where we started, chat about the achievements, e.g. AI, exchanging</p><p>tips and tricks against hijacking of hashtags, creating layers of self</p><p>protections and so much more..</p><p><br></p><p>Let's talk about using TweetwallFX for your conference (includes CFP</p><p>rendering) and even some fun about embedded - did I mention TweetwallFX</p><p>can be run a RaspberryPi?</p><p><br></p><p>Maybe we can even make it run on GraalVM?</p><p><br></p><p>Bring your own ideas on how TweetwallFX can be further improved - we are always open to crazy suggestions... Ask Stephan...</p>",
+  "id": "20701",
+  "track": {
+    "id": "2754",
+    "title": "Java"
+  },
+  "format": {
+    "title": "BOF",
+    "duration": "PT60m",
+    "id": "954"
+  },
+  "language": "EN",
+  "title": "TweetWalls@Devoxx - Today, Tomorrow and Beyond - A Community Get Together",
+  "summary": ""
+}

@@ -1,0 +1,28 @@
+{
+  "summary": "",
+  "speakers": [
+    {
+      "fullName": "Grace Jansen",
+      "companyName": "IBM",
+      "id": "14903",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-fcfc1bda-1160-4b62-b7aa-00edb082fc4f.jpg"
+    }
+  ],
+  "track": {
+    "id": "1251",
+    "title": "Architecture"
+  },
+  "language": "EN",
+  "description": "<p>How does one choose to architect a system that has a Microservice / REST API endpoints? There are many solutions out there. Some are better than others. Should state be held in a server side component, or externally? Generally we are told this is not a good practice for a Cloud Native system, when the 12-factor guidelines seem to be all about stateless containers, but is it? It’s unclear and this confusion may lead to poor technology stack choices that are impossible or extremely hard to change later on as your system evolves in terms of demand and performance.</p><p>While stateless systems are easier to work with, the reality is that we live in a stateful world, so we have to handle the state of data accordingly to ensure data integrity beyond securing it.</p><p>We will examine and demonstrate the fundamentals of a Cloud Native system with Stateful Microservices that’s built with Open Liberty and MicroProfile.</p>",
+  "title": "Exploring Stateful Microservices in a Cloud Native World",
+  "format": {
+    "duration": "PT50m",
+    "id": "951",
+    "title": "Conference"
+  },
+  "room": {
+    "title": "Room 6",
+    "id": "4708"
+  },
+  "id": "14955"
+}

@@ -1,0 +1,28 @@
+{
+  "language": "EN",
+  "room": {
+    "id": "2803",
+    "title": "MC3"
+  },
+  "format": {
+    "title": "Conference",
+    "id": "953",
+    "duration": "PT40m"
+  },
+  "track": {
+    "id": "2760",
+    "title": "UI & UX"
+  },
+  "title": "The importance of Haptic and tactile interfaces when creating a Digital product.",
+  "speakers": [
+    {
+      "fullName": "Andreas Andreadis",
+      "id": "5163",
+      "companyName": "EPAM Systems ",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-1df81c61-7763-4868-b03e-a1e5225e63c2.jpg"
+    }
+  ],
+  "description": "<p>Haptic and tactile interfaces can improve the user experience by providing users with a more immersive and engaging experience. Creating a tactile interface can be a complex process, but it can be done with the right steps and tools. In my presentation, I will present a basic manual that can help the product design &amp; development process.</p>",
+  "summary": "",
+  "id": "5259"
+}

@@ -1,0 +1,28 @@
+{
+  "id": "12702",
+  "speakers": [
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-davinkevin.jpg",
+      "fullName": "Kevin Davin",
+      "companyName": "Gradle",
+      "id": "12651"
+    }
+  ],
+  "track": {
+    "title": "Server Side Java",
+    "id": "1256"
+  },
+  "summary": "",
+  "description": "<p>What if we take back control over our interactions with our favorite database? Our databases are powerful monster and we underuse them 😓!</p><p>We’ll see with JOOQ how to write standard and advanced queries, with ease and type-safety!</p><p>This presentation is based on a my experience in SQL with PostgreSQL, since the beginning of my career as a software engineer. I described all the state of mind I go through about SQL and what lesson I've learned about it.</p>",
+  "room": {
+    "title": "Room 6",
+    "id": "4708"
+  },
+  "format": {
+    "id": "951",
+    "title": "Conference",
+    "duration": "PT50m"
+  },
+  "language": "EN",
+  "title": "JOOQ, Joy of SQL"
+}

@@ -1,0 +1,28 @@
+{
+  "room": {
+    "title": "Skalkotas",
+    "id": "2802"
+  },
+  "title": "Let's make a contract: the art of designing a Java API",
+  "speakers": [
+    {
+      "photoUrl": "https://lh3.googleusercontent.com/a-/AOh14GinuLQCwL67BBgfGsiWRl3mu3Ya0TbDffhYFiXX=s96-c",
+      "id": "2201",
+      "fullName": "Mario Fusco",
+      "companyName": "Red Hat"
+    }
+  ],
+  "format": {
+    "id": "953",
+    "duration": "PT40m",
+    "title": "Conference"
+  },
+  "summary": "",
+  "language": "EN",
+  "track": {
+    "id": "2754",
+    "title": "Java"
+  },
+  "id": "2155",
+  "description": "<p>An API is what developers use to achieve some task. More precisely it establishes a contract between them and the designers of the software exposing its services through that API. In this sense we're all API designers: our software doesn't work in isolation, but becomes useful only when it interacts with other software written by other developers. When writing software we're not only consumers, but also providers of one or more API and that's why every developer should know the features of a good API. During this presentation we will go through real-world examples, also taken from the standard Java API, of good and bad API and comment them in order to show the dos and don'ts of API design. More in general we will discuss the characteristics of an easy and pleasant to use API, like consistency, discoverability and understandability, together with some basic concepts like the principle of least astonishment, and find out how to achieve them.</p>"
+}

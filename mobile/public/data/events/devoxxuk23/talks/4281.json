@@ -1,0 +1,28 @@
+{
+  "description": "<p>'Move fast and break things' left its place to 'Move fast with stable performance' once the organisations started having a high quality threshold while innovating. </p><p>I will be talking about my experience in big tech, building complex distributed systems, how we rapidly experimented and built high scale MVPs/products while keeping resiliency and performance at a high level.</p><p><br></p><p>People would be able to find points that they can apply to their day-to-day jobs:</p><ul><li>How to plan <span style=\"color: rgb(0, 0, 0);\">their next big software challenge in order to build fast maintaining high quality</span></li><li><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">Performance trade-offs to consider</span></li><li><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">Battle-proven techniques to build more resilient systems</span></li><li><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">How to adopt systems thinking on our day-to-day as a team</span></li></ul><p><br></p><p><br></p><p><br></p>",
+  "room": {
+    "title": "Auditorium",
+    "id": "19152"
+  },
+  "speakers": [
+    {
+      "companyName": "Shopify",
+      "photoUrl": "https://lh3.googleusercontent.com/a/AEdFTp5HhzDwBTgsMJiiajE6ecfJD57k6fyOR4voV0z8zw=s96-c",
+      "fullName": "Sinan Kucukkoseler",
+      "id": "4124"
+    }
+  ],
+  "title": "Move fast without breaking things",
+  "summary": "",
+  "track": {
+    "id": "1254",
+    "title": "Build & Deploy"
+  },
+  "format": {
+    "duration": "PT15m",
+    "title": "Byte Size",
+    "id": "960"
+  },
+  "id": "4281",
+  "language": "EN"
+}

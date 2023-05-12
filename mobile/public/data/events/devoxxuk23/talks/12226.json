@@ -1,0 +1,28 @@
+{
+  "title": "Clone ChatGPT with Hugging Face and Elasticsearch",
+  "room": {
+    "title": "Room B",
+    "id": "19154"
+  },
+  "speakers": [
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-59af17eb-15e4-4a90-91fd-477f686e3920.jpg",
+      "id": "11737",
+      "fullName": "Lucian Precup",
+      "companyName": "Adelean"
+    }
+  ],
+  "language": "EN",
+  "summary": "",
+  "description": "<p>Elasticsearch is a search engine, nosql database and data analysis engine for indexing and visualizing your data. Hugging Face is the collaborative platform to develop, test and deploy the best Open Source Machine Learning models. The integration of the two platforms allows the creation of very powerful applications increasing the data and the performance of their rendering. In this talk we show some examples and prototypes built using two technologies. An opportunity to deepen Hugging Face, revisit Elasticsearch and … redo ChatGPT.</p>",
+  "track": {
+    "id": "1252",
+    "title": "Data & AI"
+  },
+  "format": {
+    "id": "957",
+    "title": "Tools-in-Action",
+    "duration": "PT30m"
+  },
+  "id": "12226"
+}

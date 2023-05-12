@@ -1,0 +1,28 @@
+{
+  "track": {
+    "title": "Build & Deploy",
+    "id": "1254"
+  },
+  "description": "<p>If <span style=\"color: rgb(34, 34, 34);\">Log4Shell</span>, Spring4Shell, etc. have taught us anything, it's that we need to keep our dependencies up to date. But updating our applications can take a lot of time. How do we stay on top of that, while also continuing to deliver business value?</p><p>Luckily, there are plenty of tools that can help us with this, from package managers to bots that can automatically create changes on our repositories. Let's go over some of the different options, so we can make informed choices about what's best for us in a particular situation.</p>",
+  "speakers": [
+    {
+      "companyName": "JetBrains",
+      "id": "17923",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-8f5c9e82-c327-4729-8529-1eb65661d375.jpeg",
+      "fullName": "Marit van Dijk"
+    }
+  ],
+  "room": {
+    "title": "Room 5",
+    "id": "4710"
+  },
+  "title": "Keep your dependencies in check",
+  "format": {
+    "id": "951",
+    "title": "Conference",
+    "duration": "PT50m"
+  },
+  "language": "EN",
+  "summary": "",
+  "id": "20179"
+}

@@ -1,0 +1,28 @@
+{
+  "language": "EN",
+  "format": {
+    "id": "960",
+    "title": "Quickie",
+    "duration": "PT15m"
+  },
+  "id": "20170",
+  "speakers": [
+    {
+      "fullName": "Michaël Strauss",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-8c03abb6-c748-455c-82fa-19bbf74b71c2.jpg",
+      "companyName": "Lunatech",
+      "id": "20075"
+    }
+  ],
+  "description": "<p>Writing tests, a required activity not always that fun. So, when some framework seem to enable writing them in natural langage, easily and quickly, user's (and manager's) expectations are skyrocketing !</p><p>But what is it really about ?</p>",
+  "track": {
+    "title": "Development Practices",
+    "id": "1701"
+  },
+  "summary": "",
+  "title": "Cucumber tests: legends and reality",
+  "room": {
+    "id": "4707",
+    "title": "Room 7"
+  }
+}

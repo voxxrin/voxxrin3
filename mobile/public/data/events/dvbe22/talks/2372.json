@@ -1,0 +1,28 @@
+{
+  "description": "<p>Why do we always estimate the size of tasks? Can't we catch the deadlines without estimating anything? Why do we push the teams to be small? Can't we succeed with big teams? Why do we give status reports every single day in front of a wall? How come many companies build successful products and achieve to be agile without calling themself doing Scrum, Kanban, or XP. Is doing Scrum means being agile? Do Agile Manifesto really explain what agility is? As Allen Holub in his blog, \"Parroting the practices of some framework without knowing why they’re important and what problems those practices solve usually leads to an ineffective and empty faux Agile\". It is time to talk about what agile is without doing Scrum, Kanban, and XP.</p>",
+  "speakers": [
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-lemiorhan.jpg",
+      "fullName": "Lemi Orhan Ergin",
+      "companyName": "Craftgate",
+      "id": "2567"
+    }
+  ],
+  "format": {
+    "id": "951",
+    "title": "Conference",
+    "duration": "PT50m"
+  },
+  "track": {
+    "id": "1253",
+    "title": "People & Culture"
+  },
+  "summary": "We always estimate the size of tasks because we need to catch deadlines. We push teams to be small because we can succeed with big teams. We give status reports every single day in front of a wall because it helps us track progress. Agility is not just doing Scrum, Kanban, or XP.",
+  "title": "Pure Agile: Building a Culture Without Scrum, Kanban and XP",
+  "language": "EN",
+  "id": "2372",
+  "room": {
+    "title": "Room 8",
+    "id": "4711"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "format": {
+    "id": "1351",
+    "title": "Mini Lab",
+    "duration": "PT60m"
+  },
+  "summary": "",
+  "language": "EN",
+  "room": {
+    "id": "19158",
+    "title": "Coding Cafe"
+  },
+  "title": "Write You An Actor (System) For Great Good! (with JBang, JDK 19, records, pattern matching and virtual threads!)",
+  "id": "4275",
+  "description": "<p>Learn everything about all the fanciest recent features of the JDK, by implementing an actor system from scratch!</p><p><br></p><p>In this mini-lab, we will explain how an actor system works, and live-code it right before your eyes using expression switches, records, sealed type hierarchies, and virtual threads!</p><p><br></p><p>We will compare our actor system to other languages and actor runtimes, and will bring all of this to your fingertips with the power of JBang!</p><p><br></p>",
+  "track": {
+    "id": "2754",
+    "title": "Java"
+  },
+  "speakers": [
+    {
+      "photoUrl": "https://lh3.googleusercontent.com/a-/AOh14GgNH8Iy7Re357R6eHetsiymVU2LrKemgJsQcpbsyA=s96-c",
+      "id": "4122",
+      "companyName": "Tetrate",
+      "fullName": "Edoardo Vacchi"
+    },
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-2cec295e-84de-4733-8909-cde37583d2b4.png",
+      "id": "5518",
+      "companyName": "Red Hat",
+      "fullName": "Andrea Peruffo"
+    }
+  ]
+}

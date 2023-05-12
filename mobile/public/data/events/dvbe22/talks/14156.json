@@ -1,0 +1,28 @@
+{
+  "id": "14156",
+  "room": {
+    "id": "4706",
+    "title": "Room 4"
+  },
+  "summary": "",
+  "title": "What is JHipster Lite and why should you care?",
+  "description": "<p>More than 7 years after releasing the initial version of JHipster, there is a new revolution arriving called \"JHipster Lite\". We gathered a ton of feedback, learned from a lot of mistakes, and are now building from scratch a new version of JHipster, based on the latest Java technologies.</p><p>We'll discuss why a huge project like JHipster (with more than 600 contributors) is moving to modern Java, and how we plan to achieve this. We'll also see the downsides and issues that this new release is causing.</p><p>If you're a JHipster user, this should be the first time we do a public conference session showing this new version: you'll see our latest features and goals, hopes and fears, and see how you can contribute too!</p>",
+  "language": "EN",
+  "track": {
+    "id": "1701",
+    "title": "Development Practices"
+  },
+  "format": {
+    "title": "Lunch Talks",
+    "id": "45001",
+    "duration": "PT40m"
+  },
+  "speakers": [
+    {
+      "id": "13310",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-8a4ae6d3-91f5-4039-91ff-ed22f1ff9a7d.png",
+      "companyName": "Microsoft",
+      "fullName": "Julien Dubois"
+    }
+  ]
+}

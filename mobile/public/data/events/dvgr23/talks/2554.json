@@ -1,0 +1,28 @@
+{
+  "description": "<p>Test-Driven Development (TDD) is a proven technique for building robust software, where feature development is guided by writing tests.</p><p>In this session, we'll see how to apply the principals of TDD to the security features of an application, such as authentication and access control.</p><p>We’ll build a secure application from the ground up, using the latest Spring Security 6 testing support. </p>",
+  "title": "Test-Driven Security with Spring 6",
+  "track": {
+    "title": "Development Practices",
+    "id": "1701"
+  },
+  "room": {
+    "id": "2803",
+    "title": "MC3"
+  },
+  "id": "2554",
+  "format": {
+    "duration": "PT40m",
+    "id": "953",
+    "title": "Conference"
+  },
+  "summary": "",
+  "language": "EN",
+  "speakers": [
+    {
+      "fullName": "Eleftheria Stein-Kousathana",
+      "id": "2212",
+      "companyName": "VMware",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-db5e1036-0aa6-4799-aa93-c7077ffed664.jpg"
+    }
+  ]
+}

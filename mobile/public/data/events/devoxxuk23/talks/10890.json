@@ -1,0 +1,28 @@
+{
+  "description": "<p>Puppeteer is a node library that provides a high-level API to control Chrome over the DevTools Protocol. It is mostly used and considered for scraping content, UI testing and automated form submissions. This talk aims to change this mindset by inspiring you on observing your daily routines and common patterns on your development and testing workflows. It will help you automate them in a creative way!</p><p><br></p><p>We'll explore capabilities of Puppeteer with the combination of DevTools protocol and cloud functions (FaaS) across a showcase of real life use cases demonstrated over more than a dozen demos on stage. Finally, we’ll go through existing Puppeteer based solutions to inspire everyone in the room to build their next solution with Puppeteer.</p>",
+  "room": {
+    "title": "Room A",
+    "id": "19153"
+  },
+  "summary": "",
+  "id": "10890",
+  "track": {
+    "id": "2760",
+    "title": "UI & UX"
+  },
+  "language": "EN",
+  "title": "Puppeteer can automate that!",
+  "format": {
+    "duration": "PT50m",
+    "title": "Conference",
+    "id": "951"
+  },
+  "speakers": [
+    {
+      "fullName": "Önder Ceylan",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-a70be585-8845-4e0d-b5cf-3e2713dfdda2.jpg",
+      "id": "4139",
+      "companyName": "Independent Contractor"
+    }
+  ]
+}

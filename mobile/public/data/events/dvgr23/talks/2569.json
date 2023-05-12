@@ -1,0 +1,28 @@
+{
+  "summary": "",
+  "room": {
+    "title": "MC2",
+    "id": "2804"
+  },
+  "format": {
+    "id": "959",
+    "title": "Deep Dive",
+    "duration": "PT180m"
+  },
+  "speakers": [
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-0f050d02-67b7-4a80-b411-83a9f5440082.jpg",
+      "companyName": "MongoDB",
+      "id": "10160",
+      "fullName": "Stamira Vlaeva"
+    }
+  ],
+  "title": "Advanced Search Plays with GraphQL",
+  "track": {
+    "title": "Architecture",
+    "id": "1251"
+  },
+  "description": "<p><span style=\"background-color: transparent; color: rgb(51, 51, 51);\">This demo-heavy, football-themed workshop scores a hat trick by combining Apache Lucene, MongoDB, and GraphQL to easily build search functionality across data collections and 3rd party APIs into applications. Our demo will allow users to scour across an expansive player dataset to find the best players with the most impossible-to-spell names. We get the ball rolling equipped with only a search box, sliders and checkboxes in a hosted code sandbox. Then we kick it up a notch with GraphQL endpoint. By implementing GraphQL custom resolvers to incorporate relationships between collections and an external TikTok API, </span><span style=\"background-color: transparent; color: rgb(67, 67, 67);\">we can create advanced search plays for an even more engaging user experience.</span></p><p><span style=\"background-color: transparent; color: rgb(51, 51, 51);\">Whether a soccerphile or not, expect to learn about:</span></p><ul><li><span style=\"background-color: transparent;\">Built-in relevance-based scoring</span></li><li><span style=\"background-color: transparent;\">Autocomplete</span></li><li><span style=\"background-color: transparent;\">Fuzzy matching</span></li><li><span style=\"background-color: transparent;\">Synonyms</span></li><li><span style=\"background-color: transparent;\">Filters, Facets, and Counts</span></li><li><span style=\"background-color: transparent;\">Custom scoring</span></li><li><span style=\"background-color: transparent;\">Highlighting</span></li><li><span style=\"background-color: transparent;\">Indexes and analyzers</span></li></ul><p><br></p><p><span style=\"background-color: transparent; color: rgb(51, 51, 51);\">In no time, developers will leave with a fully-managed, hosted app and the confidence to send all your application users’ search queries straight to the back of the net!</span></p><p><span style=\"background-color: transparent; color: rgb(51, 51, 51);\">Autocomplete, wildcard, and filters to find Ibrahimović, Błaszczykowski, and Szczęsny? No problem!</span></p><p><br></p><p><br></p>",
+  "language": "EN",
+  "id": "2569"
+}

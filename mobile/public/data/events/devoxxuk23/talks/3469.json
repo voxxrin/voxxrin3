@@ -1,0 +1,28 @@
+{
+  "id": "3469",
+  "speakers": [
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-62515a51-61fe-404c-b4a7-17acdaddf8a7.jpeg",
+      "fullName": "Carly Richmond",
+      "id": "1894",
+      "companyName": "Elastic"
+    }
+  ],
+  "description": "<p>Over the last few years, there has been a great focus on shifting tests left to earlier in the software development cycle. It's great that emerging trends such as e2e testing have enabled us to validate the user workflow earlier. However, they do not eliminate the need to monitor this workflow against a live production system. I have seen that the segregation of development and support teams leads to both teams using different tools to build similar automation that simply targets different environments of the same software.</p><p><br></p><p>By joining forces, we can build automated scripts that can be used both for production monitoring and testing within CI. In this talk, I will discuss the causes of this cultural divide, and why this needs to change for us to shift user testing both left and right. Furthermore, I shall show how this can be achieved using Playwright and Elastic Synthetics and also chat through the challenges you may face shifting left and right.</p>",
+  "language": "EN",
+  "format": {
+    "title": "Tools-in-Action",
+    "id": "957",
+    "duration": "PT30m"
+  },
+  "title": "Ctrl > Shift > Left > Right: Joining Dev and Support Forces Together Using e2e Testing and Synthetic Monitoring",
+  "summary": "",
+  "track": {
+    "title": "Build & Deploy",
+    "id": "1254"
+  },
+  "room": {
+    "id": "19152",
+    "title": "Auditorium"
+  }
+}

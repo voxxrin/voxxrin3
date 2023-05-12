@@ -1,0 +1,28 @@
+{
+  "track": {
+    "title": "Java",
+    "id": "2754"
+  },
+  "summary": "",
+  "id": "1971",
+  "description": "<p>Are you familiar with Spring and like learning new things?</p><p><br></p><p>In this session, I will show concepts and conventions familiar to Spring developers and how those same concepts and conventions can be implemented in Quarkus, all while highlighting similarities and differences between them. Additionally, I will show similarities and differences in how testing is done, highlighting Quarkus Dev Services and continuous testing.</p><p><br></p><p>This session will be mostly live coding while minimizing the amount of slides. I will introduce an existing Spring application with a full test suite and build a Quarkus equivalent version of it, live. Content will come from my book, \"<a href=\"https://red.ht/quarkus-spring-devs\" rel=\"noopener noreferrer\" target=\"_blank\" style=\"color: rgba(0, 0, 0, 0.6);\"><em>Quarkus for Spring Developers</em></a>.\"</p>",
+  "format": {
+    "id": "951",
+    "title": "Conference",
+    "duration": "PT50m"
+  },
+  "room": {
+    "title": "Room A",
+    "id": "19153"
+  },
+  "speakers": [
+    {
+      "id": "1870",
+      "companyName": "Red Hat",
+      "fullName": "Eric Deandrea",
+      "photoUrl": "https://lh3.googleusercontent.com/a-/AOh14GjrEwU0SjbtolYemFOe3QmaTiAt-zFgtTEUORsK=s96-c"
+    }
+  ],
+  "title": "Quarkus for Spring Developers",
+  "language": "EN"
+}

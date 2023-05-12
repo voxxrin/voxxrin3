@@ -1,0 +1,28 @@
+{
+  "room": {
+    "id": "4711",
+    "title": "Room 8"
+  },
+  "speakers": [
+    {
+      "companyName": "OpenValue",
+      "photoUrl": "https://avatars.githubusercontent.com/u/4464854?v=4",
+      "id": "1863",
+      "fullName": "Bert Jan Schrijver"
+    }
+  ],
+  "summary": "",
+  "format": {
+    "title": "Conference",
+    "duration": "PT50m",
+    "id": "951"
+  },
+  "track": {
+    "title": "Development Practices",
+    "id": "1701"
+  },
+  "language": "EN",
+  "title": "Debugging distributed systems",
+  "id": "6904",
+  "description": "<p>Nowadays, most software projects are distributed systems: components are located on different networked computers which communicate and coordinate their actions by passing messages. Debugging distributed systems is not easy. When two components don’t play nice together, the cause could be virtually anything: software, DNS, routing, firewalls, proxies, load balancers, TLS.. and more!</p><p>In this talk, I’ll share my experience with debugging distributed systems. We’ll look at typical issues and share ways to debug those issues and find their root causes. We’ll dive into networking, infrastructure, logging/tracing/metrics, testing, remote debugging and more. I’ll share lots of examples and war stories along the way. After this talk, you’ll have practical knowledge on how and where to get started with debugging distributed systems yourself!</p>"
+}

@@ -1,0 +1,28 @@
+{
+  "id": "11871",
+  "room": {
+    "title": "Auditorium",
+    "id": "19152"
+  },
+  "description": "<p><span style=\"color: rgb(103, 106, 108);\">Misunderstandings frequently happen in spoken speech. Typos in written messages are paramount. Humans can often perceive the incorrect communication’s intended meaning and adjust their actions accordingly, but machines are naturally extraordinarily literal. Mistyped instructions cannot be executed. Many programming languages solved this problem by offering tools that perform exhaustive verification before any code execution is attempted.</span></p><p><br></p><p><span style=\"color: rgb(103, 106, 108);\">What about application programming interfaces in a world made of increasingly interconnected systems? We keep human miscommunications away from APIs by adapting ideas borrowed from the same principles found in programming language tools: compilation, assembly and linkage.</span></p><p><br></p><p><span style=\"color: rgb(103, 106, 108);\">This case study highlights how ING combines these techniques to bring their API quality to the next level.</span></p>",
+  "language": "EN",
+  "track": {
+    "title": "Build & Deploy",
+    "id": "1254"
+  },
+  "speakers": [
+    {
+      "fullName": "Vasco Veloso",
+      "companyName": "ING",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-79dc9365-6e23-4b66-829e-d90df4f951e3.jpg",
+      "id": "11715"
+    }
+  ],
+  "title": "Bullet-proofing APIs to build reliable systems",
+  "format": {
+    "duration": "PT30m",
+    "title": "Tools-in-Action",
+    "id": "957"
+  },
+  "summary": ""
+}

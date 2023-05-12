@@ -1,0 +1,28 @@
+{
+  "description": "<p><span style=\"color: rgb(34, 34, 34);\">Ever encountered ‘NoSuchMethodError’ or ‘ClassNotFoundError’?</span></p><p><span style=\"color: rgb(34, 34, 34);\">In Outbrain we moved from having those errors on a daily basis to barely encountering them.</span></p><p><span style=\"color: rgb(34, 34, 34);\">With dozens of repositories, shared internal libraries and 3rd party libraries, dependency management quickly becomes a nightmare.</span></p><p><span style=\"color: rgb(34, 34, 34);\">We mitigated our dependency management issues using a combination of build time enforcement, centralized dependency management and cross repo refactoring tools.</span></p><p><span style=\"color: rgb(34, 34, 34);\">In this talk we’ll go through the problems we faced and explore the tools and concepts we adopted in order to reduce the dependency hell issues.</span></p><p><span style=\"color: rgb(34, 34, 34);\">Come and see how we managed to substantially reduce our dependency hell issues.</span></p>",
+  "room": {
+    "title": "Gallery Hall",
+    "id": "19151"
+  },
+  "format": {
+    "id": "957",
+    "title": "Tools-in-Action",
+    "duration": "PT30m"
+  },
+  "language": "EN",
+  "id": "3852",
+  "summary": "",
+  "speakers": [
+    {
+      "fullName": "Avi Youkhananov",
+      "id": "3622",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-69b68170-7231-4e29-98e5-7bc995ed0a0c.jpg",
+      "companyName": "Outbrain"
+    }
+  ],
+  "track": {
+    "title": "Java",
+    "id": "2754"
+  },
+  "title": "Escaping Hell, How we tamed our 3rd party libraries."
+}

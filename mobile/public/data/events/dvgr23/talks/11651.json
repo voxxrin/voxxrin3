@@ -1,0 +1,28 @@
+{
+  "format": {
+    "duration": "PT15m",
+    "title": "Quickie",
+    "id": "960"
+  },
+  "id": "11651",
+  "description": "<p>DevOps is a modern, agile way of working used in the IT sector and which is now being adopted by the telco world. DevOps calls for tight cooperation throughout the application lifecycle and unlike traditional software development methodologies, relies on constant and immediate feedback at every stage of development. DevOps as a concept, consist of many subareas and the “Nokia CI/CD (Continuous Integration/Continuous Deployment) Solution” subarea is considered to be as one of the most important subarea in the whole solution. Intention of this presentation would be to provide a basic overview of this subarea, describe the essential components of it and explain on high level the relevant workflow.</p>",
+  "speakers": [
+    {
+      "id": "11551",
+      "companyName": "Nokia",
+      "fullName": "Ioannis Mylonas",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-8d951ddb-1006-425e-a743-53cc94078c66.jpg"
+    }
+  ],
+  "room": {
+    "title": "MC2",
+    "id": "2804"
+  },
+  "language": "EN",
+  "summary": "",
+  "track": {
+    "title": "Development Practices",
+    "id": "1701"
+  },
+  "title": "Continuous Integration/Continuous Deployment” in Telecommunications"
+}

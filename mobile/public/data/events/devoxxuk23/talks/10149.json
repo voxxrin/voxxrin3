@@ -1,0 +1,28 @@
+{
+  "title": "The Great Divergence - The Widening Gap between University and Industry Java",
+  "description": "<p><span style=\"color: rgb(0, 0, 0);\">\tEvery year, there’s always at least one “Java is dead” debate in my Twitter timeline. People have been trying to discard Java for years, but to no avail. Java, in the industry world, is very much not dead. Emerging frameworks and technologies, such as Quarkus and GraalVM, along with the constant updates to the language provided by the new 6-month release cadence make sure that Java is constantly evolving and up-to-date with industry trends.</span></p><p><span style=\"color: rgb(0, 0, 0);\">\tHowever, Java in today's universities is as dead as it can get. Even though there is a lot of innovation going on, universities never get to use those in the classroom. You can hardly find any educational institution that uses past Java 8, and students are bound to learn the “old” Java, which they despise, imprinting them the idea that Java is dead, or dying, and too old-fashioned for “modern” development.&nbsp;</span></p><p><span style=\"color: rgb(0, 0, 0);\">\tIn my capacity as teaching assistant at the University of North Carolina at Chapel Hill, I am trying to change this perspective, showing students that Java is very much alive and modern. In this talk, I hope to be able to share with everyone the calamitous way Java is being taught at universities, how I’ve been working to change that and how you are also able to help!&nbsp;</span></p><p><br></p>",
+  "language": "EN",
+  "room": {
+    "title": "Exec Centre",
+    "id": "19156"
+  },
+  "track": {
+    "title": "Java",
+    "id": "2754"
+  },
+  "summary": "",
+  "id": "10149",
+  "format": {
+    "title": "Conference",
+    "duration": "PT50m",
+    "id": "951"
+  },
+  "speakers": [
+    {
+      "companyName": "Google",
+      "fullName": "Felipe Yanaga",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-2e46d482-6739-4bca-a1d6-e8d9dca3e21d.jpg",
+      "id": "2472"
+    }
+  ]
+}

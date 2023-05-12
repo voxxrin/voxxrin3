@@ -1,0 +1,28 @@
+{
+  "language": "EN",
+  "speakers": [
+    {
+      "companyName": "CINQ ICT",
+      "id": "2804",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-9e5004b0-3c9b-44e1-9fc0-39c0354a2a68.jpg",
+      "fullName": "Bouke Nijhuis"
+    }
+  ],
+  "track": {
+    "id": "1701",
+    "title": "Development Practices"
+  },
+  "id": "2957",
+  "format": {
+    "duration": "PT30m",
+    "id": "957",
+    "title": "Tools-in-Action"
+  },
+  "description": "<p>This presentation is about levelling up your debugging game. Most developers only use the proverbial tip of the iceberg when working with the debugger. There is so much more to learn so lets have a look at interesting mechanisms like:</p><p>- dropping frames (\"going back in time\")</p><p>- remote debugging (why stay on your local machine?)</p><p>- hot code swapping (faster than redeploying the code)</p><p>- stream debugging (for those hard to debug streams)</p><p>The entire presentation will be in IntelliJ. Some parts are IntelliJ specific, but most parts apply to all IDEs.</p>",
+  "title": "Improving your skills with the debugger",
+  "room": {
+    "id": "4711",
+    "title": "Room 8"
+  },
+  "summary": ""
+}

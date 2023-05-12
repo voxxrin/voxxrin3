@@ -1,0 +1,28 @@
+{
+  "language": "EN",
+  "speakers": [
+    {
+      "companyName": "AI Consulting",
+      "id": "2485",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-239b2990-e030-4ce1-b267-f7c2c4cc0a4b.png",
+      "fullName": "Natalie Pistunovich"
+    }
+  ],
+  "format": {
+    "id": "953",
+    "duration": "PT40m",
+    "title": "Conference"
+  },
+  "room": {
+    "id": "2801",
+    "title": "Banquet"
+  },
+  "description": "<p>As artificial intelligence (AI) continues to advance and become more widely adopted, it is increasingly being used to enhance and streamline various aspects of the software development process. </p><p><br></p><p>In this talk, we will focus on the technical aspects of using AI in development, including tools and technologies, software architectures and design patterns, and the role of devops in the deployment and maintenance of AI-powered systems. We will also discuss best practices for incorporating AI into the development workflow and considerations for ethical use. </p><p><br></p><p>This talk is geared towards developers who want to learn more about how to leverage AI to improve their productivity and build cutting-edge software.</p>",
+  "track": {
+    "title": "Architecture",
+    "id": "1251"
+  },
+  "summary": "",
+  "title": "The Current State of AI Driven Development ",
+  "id": "3153"
+}

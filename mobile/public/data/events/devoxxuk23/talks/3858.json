@@ -1,0 +1,28 @@
+{
+  "room": {
+    "title": "Exec Centre",
+    "id": "19156"
+  },
+  "title": "Agile Agency - Trusting People to Get Things Done",
+  "summary": "",
+  "track": {
+    "id": "1254",
+    "title": "Build & Deploy"
+  },
+  "id": "3858",
+  "format": {
+    "id": "951",
+    "duration": "PT50m",
+    "title": "Conference"
+  },
+  "speakers": [
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-abea611e-0aee-401f-8d25-b760f759e676.jpg",
+      "fullName": "Andrew Piper",
+      "companyName": "Diffblue",
+      "id": "3626"
+    }
+  ],
+  "description": "<p>We all understand development deadlines - though our responses to them vary wildly - plan, grasp, deny, avoid. Love them or hate them development deadlines are a fact of life in software - if we don't deliver then the technical core of growth is not functioning and growth - personal, team, corporate - cannot occur.</p><p><br></p><p>In this talk I explore how working to deadlines can be either a virtuous cycle where everyone takes responsibility and things happen naturally - or a deadly cycle where each step requires maintenance, failure involves finger-pointing and the effort to achieve anything at all astronomical. The difference? Giving staff agency and expecting them to act on it.</p>",
+  "language": "EN"
+}

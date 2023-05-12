@@ -1,0 +1,34 @@
+{
+  "language": "EN",
+  "track": {
+    "id": "1252",
+    "title": "Data & AI"
+  },
+  "room": {
+    "title": "Room 6",
+    "id": "4708"
+  },
+  "speakers": [
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-89db0ad8-cc73-46bf-909f-33debf96f67a.jpg",
+      "companyName": "DataStax",
+      "id": "10101",
+      "fullName": "Mary Grygleski"
+    },
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-a543152c-5f7f-4e8a-baad-0d2e29f4baff.png",
+      "companyName": "StarTree",
+      "fullName": "Karin Wolok",
+      "id": "9901"
+    }
+  ],
+  "title": "Optimizing Speed and Scale of Real-Time Analytics Using Apache Pulsar and Apache Pinot",
+  "description": "<p><br></p><p>Apache Pulsar is a new generation of platform that offers enterprise-grade event streaming and processing capabilities built for today's Cloud Native environment. But what do you do if you want to perform user-facing, ad-hoc, real-time analytics too? That's where Apache Pinot comes in.</p><p><br></p><p>Apache Pinot is a realtime distributed OLAP datastore, which is used to deliver scalable real time analytics with low latency. It can ingest data from batch data sources (S3, HDFS, Azure Data Lake, Google Cloud Storage) as well as streaming sources such as Pulsar. Pinot is used extensively at LinkedIn and Uber to power many analytical applications such as Who Viewed My Profile, Ad Analytics, Talent Analytics, Uber Eats and many more serving 100k+ queries per second while ingesting 1Million+ events per second.</p><p><br></p><p>Apache Pulsar's highly performant, distributed, fault-tolerant, real-time publish-subscribe as well as queueing messaging platform that operates seamlessly in a Cloud-Native environment with support for geo-replication, multi-tenancy, data warehouse or data lake integrations, and beyond. It is a tried-and-true platform that has major enterprise customers such as Yahoo, Verizon, GM, Comcast, etc.</p><p><br></p><p>Best of all, Apache Pulsar and Apache Pinot together represents a blissful union in the #OSS \"heaven\"!</p><p><br></p><p>Come hear the dynamic duo, Mary Grygleski from DataStax, and Karin Wolok, Head of Developer Community at StarTree, on an introduction to both systems and a view of how they work together.</p>",
+  "id": "10001",
+  "summary": "Apache Pulsar is a new generation of platform that offers enterprise-grade event streaming and processing capabilities built for today's Cloud Native environment. But what do you do if you want to perform user-facing, ad-hoc, real-time analytics too? That's where Apache Pinot comes in. Apache Pinot is a realtime distributed OLAP datastore, which is used to deliver scalable real time analytics with low latency.",
+  "format": {
+    "duration": "PT50m",
+    "id": "951",
+    "title": "Conference"
+  }
+}

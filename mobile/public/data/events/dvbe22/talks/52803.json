@@ -1,0 +1,34 @@
+{
+  "description": "<p>So, you've built your solution: a set of well-architected microservices, a shiny UI and tying it all together with event sourcing using Kafka.&nbsp;</p><p>However, now the legal department comes along and they're asking to get insight on which data is used where and by whom.&nbsp;</p><p>Marketing wants to generate daily PDF reports to publish on the website.&nbsp;</p><p>Management is requesting that a ticket gets created whenever something goes wrong with a business-critical event.&nbsp;</p><p>And yet another department wants to reuse some of the events for a customized integration with a legacy system.</p><p>You can feel it, soon enough it's chaos. Pure pandemonium. A cobweb of scattered data and services calling each other or external API's. And nobody around anymore can keep the oversight.</p><p>In this session we present how to solve these problems with Flowable, an open source set of engines implementing the BPMN (process), CMMN (case) and DMN (rules) standards.&nbsp;</p><p>Through multiple live-demos and lots of code examples, we demonstrate how to orchestrate, manipulate and eventually tame the event chaos using Flowable, Spring Boot and Kafka.&nbsp;</p>",
+  "format": {
+    "title": "Conference",
+    "duration": "PT50m",
+    "id": "951"
+  },
+  "title": "Taming the event chaos with a workflow engine",
+  "speakers": [
+    {
+      "fullName": "Filip Hrisafov",
+      "photoUrl": "https://lh3.googleusercontent.com/a-/AOh14GhJVNuOPZhCFhy8sA8AYl-ybVffAIPNW9bNhw7XUw=s96-c",
+      "id": "53452",
+      "companyName": "Flowable"
+    },
+    {
+      "companyName": "Flowable",
+      "fullName": "Joram Barrez",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-b63e7b2e-fe61-4504-b8af-118e8ab6e4cc.jpg",
+      "id": "53453"
+    }
+  ],
+  "language": "EN",
+  "track": {
+    "id": "1251",
+    "title": "Architecture"
+  },
+  "room": {
+    "title": "Room 10",
+    "id": "4704"
+  },
+  "summary": "",
+  "id": "52803"
+}

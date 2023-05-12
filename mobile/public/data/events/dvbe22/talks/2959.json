@@ -1,0 +1,28 @@
+{
+  "language": "EN",
+  "description": "<p><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">Whether you write your tests up front or after the fact, you've probably found yourself in this situation: You know exactly what you want to test and how you're going to approach it, but you suffer from a massive lack of inspiration when you try to define your test data. Eventually you end up with \"Test User\", \"Jane Doe\" and \"Product123\". This is both frustrating and ineffective. Coming up with good test data over and over again can be mind numbing and the result is mostly not representative for the data that will actually flow through your system.</span></p><p><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">So how can you improve this? Is there a way you can easily generate good test data and at the same time reduce the burden of creating test data over and over again? Yes you can! In this session I will show you how you can use test data generators like Java Faker and jFairy to create test data factories that help you improve the quality of your test data. I will show how this can massively improve your productivity when writing tests, because it helps you to focus on what really matters: the tests themselves.</span></p>",
+  "title": "Fairies, Fakers and Factories: boost you tests with better test data",
+  "speakers": [
+    {
+      "photoUrl": "https://lh3.googleusercontent.com/a-/AOh14GjX5_p9WoIyquGbe49ex0PC4ShRGPIYxSn-WGTXbw=s96-c",
+      "id": "2806",
+      "fullName": "Jaap Coomans",
+      "companyName": "GROUP9"
+    }
+  ],
+  "id": "2959",
+  "track": {
+    "id": "1701",
+    "title": "Development Practices"
+  },
+  "summary": "In this session, we will discuss how you can use test data generators to improve the quality of your test data. This can massively improve your productivity when writing tests.",
+  "format": {
+    "id": "957",
+    "title": "Tools-in-Action",
+    "duration": "PT30m"
+  },
+  "room": {
+    "id": "4708",
+    "title": "Room 6"
+  }
+}

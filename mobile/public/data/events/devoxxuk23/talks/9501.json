@@ -1,0 +1,28 @@
+{
+  "summary": "",
+  "id": "9501",
+  "format": {
+    "id": "960",
+    "duration": "PT15m",
+    "title": "Byte Size"
+  },
+  "description": "<p><span style=\"color: rgb(0, 0, 0); background-color: transparent;\">Since I started learning how to code, I was always told that “a good developer is lazy”. What better tool for a lazy developer than a lazy programing language?!</span></p><p><br></p><p><span style=\"color: rgb(0, 0, 0); background-color: transparent;\">Laziness at the language level means delaying computation until the last moment when it is needed. This also means we can model and use data structures with infinite elements!</span></p><p><br></p><p><span style=\"color: rgb(0, 0, 0); background-color: transparent;\">In this 0 slides presentation, I will be live coding my way into Kotlin Sequences and show you how to use them for maximum laziness!</span></p><p><br></p><p><span style=\"color: rgb(0, 0, 0); background-color: transparent;\">Key takeaways:</span></p><ul><li><span style=\"background-color: transparent;\">Understand the difference between Kotlin List and Sequence</span></li><li><span style=\"background-color: transparent;\">Similarities and differences with Java Stream</span></li><li><span style=\"background-color: transparent;\">Learn the different ways to build Sequences</span></li><li><span style=\"background-color: transparent;\">How Sequences can be used in a few practical examples from adventofcode.com to fractal generation!</span></li></ul>",
+  "language": "EN",
+  "title": "The lazy Kotlin developer",
+  "track": {
+    "id": "1401",
+    "title": "Programming Languages"
+  },
+  "room": {
+    "title": "Room A",
+    "id": "19153"
+  },
+  "speakers": [
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-2d334453-ef46-4358-b79f-f5694d570daf.jpg",
+      "id": "8782",
+      "fullName": "César Tron-Lozai",
+      "companyName": "ThousandEyes part of Cisco"
+    }
+  ]
+}

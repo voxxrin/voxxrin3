@@ -1,0 +1,28 @@
+{
+  "title": "Writing Greener Java Applications",
+  "track": {
+    "id": "2754",
+    "title": "Java"
+  },
+  "room": {
+    "title": "Room D",
+    "id": "19155"
+  },
+  "summary": "",
+  "format": {
+    "title": "Conference",
+    "id": "951",
+    "duration": "PT50m"
+  },
+  "language": "EN",
+  "description": "<p>The code we write has a climate impact. But how big is that impact? How do we measure it? How do we reduce it? Is the cloud helping? What’s going on with Virginia? Are we still allowed to do CI/CD? Will native compilation save us? Is Java even a good choice anymore? This talk discusses some of the trade-offs for a modern software developer, and provides a roadmap to figuring out the right thing.</p><p>       </p><p>Disclosure: Holly works on Quarkus. Along the way, she will talk about Quarkus sustainability measurements we’ve been doing … but it’s ok, because she promises that the Quarkus carbon data is exciting and interesting. </p><p>       </p>",
+  "speakers": [
+    {
+      "companyName": "Red Hat",
+      "id": "1864",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-01a6079b-5e7a-469c-a862-d01871e3d8cb.jpeg",
+      "fullName": "Holly Cummins"
+    }
+  ],
+  "id": "1965"
+}

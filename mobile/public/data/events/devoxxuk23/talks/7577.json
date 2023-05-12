@@ -1,0 +1,28 @@
+{
+  "format": {
+    "duration": "PT60m",
+    "id": "1351",
+    "title": "Mini Lab"
+  },
+  "room": {
+    "title": "Coding Cafe",
+    "id": "19158"
+  },
+  "language": "EN",
+  "speakers": [
+    {
+      "companyName": "Novatec Consulting",
+      "id": "4116",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-1f209cdd-bb1f-4dd6-9dfc-a40cd1ab13b4.jpg",
+      "fullName": "Andreas Falk"
+    }
+  ],
+  "track": {
+    "id": "1255",
+    "title": "Security"
+  },
+  "title": "OAuth 2.1 and OpenID Connect for Java Developers",
+  "summary": "",
+  "id": "7577",
+  "description": "<p>A Microservice cloud architecture brings many benefits to software applications. But at the same time, new challenges of distributed systems have also been introduced. One of these challenges is how to implement a flexible, secure, and efficient authentication and authorization scheme in a Microservices architecture. The common solution for this is to use stateless token-based authentication and authorization by adopting standard protocols like OAuth 2.1 and OpenID Connect (OIDC).</p><p>In this hands-on mini-lab, attendees will add OAuth 2.1 &amp; OIDC to a client and a server application that are provided as a starting point (to speed things up).</p><p>Attendees of this mini-lab can expect to learn about:</p><ul><li>The basic concepts &amp; best practices of OAuth 2.0 and OpenID Connect</li><li>What's coming with the new OAuth 2.1 release (final specification expected in 2023) and what does it mean for application development</li><li>Authenticating a backend service using signed JWT bearer tokens</li><li>Authenticating a client using the OAuth Authorization Code grant + PKCE</li></ul><p>Prerequisites</p><ul><li>Programming knowledge in Java</li><li>JDK 17</li><li>A Java IDE of your choice like Eclipse, IntelliJ, or VS Code</li><li>A client tool to test a REST API (Curl, Postman, …)</li></ul>"
+}

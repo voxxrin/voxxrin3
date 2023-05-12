@@ -1,0 +1,28 @@
+{
+  "description": "<p>Carbon-aware computing is in its very early stage. Many different activities in the open-source community and enterprises are on their way to changing that. But we don't need to wait until this development delivers its fruits.</p><p><br></p><p>In this session, we will look at the challenges we have to face, and actions that can be taken to optimize your computing and infrastructure. Without being carbon aware we have to target efficiency, utilization and reduction of resources. Yet, it also includes process changes and the pipelines that deliver those. Let's move sustainability into the responsibility of everyone, like security, this is fun to do with Kubernetes, so let us have some fun together!</p>",
+  "format": {
+    "id": "951",
+    "title": "Conference",
+    "duration": "PT50m"
+  },
+  "language": "EN",
+  "id": "5616",
+  "room": {
+    "title": "Exec Centre",
+    "id": "19156"
+  },
+  "speakers": [
+    {
+      "companyName": "Liquid Reply",
+      "fullName": "Max Körbächer",
+      "id": "5503",
+      "photoUrl": "https://lh3.googleusercontent.com/a/AEdFTp7E1azyr95FUnHH6GUgdwYOD3dGU5ufFlfXaTQWsSg=s96-c"
+    }
+  ],
+  "track": {
+    "title": "Architecture",
+    "id": "1251"
+  },
+  "summary": "",
+  "title": "Sustainability eats IT - State of now"
+}

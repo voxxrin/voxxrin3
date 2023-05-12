@@ -1,0 +1,28 @@
+{
+  "summary": "",
+  "language": "EN",
+  "speakers": [
+    {
+      "fullName": "Maarten Mulders",
+      "id": "1860",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-5a27dce0-f016-4133-afdf-55c8ca941412.jpg",
+      "companyName": "Info Support"
+    }
+  ],
+  "track": {
+    "title": "Build & Deploy",
+    "id": "1254"
+  },
+  "id": "1914",
+  "title": "What's cooking in Maven?",
+  "description": "<p>It's been over 10 years since Maven 3 saw the light, bringing initial multi-module support. Later releases brought a lot of improvements, bug fixes, and of course coloured output.</p><p>But the Maven community hasn't been resting on their laurels. A lot of effort has gone into the future of Maven. You may have heard about Maven 4, Maven Wrapper, or Maven Daemon. Why should you care? And how will it change the way you use Maven? I will show you by using the latest snapshot builds of Maven - time will tell if that's a brave or a stupid idea…</p><p>Join me to find out what the future of Maven has for you!</p>",
+  "room": {
+    "id": "4707",
+    "title": "Room 7"
+  },
+  "format": {
+    "id": "951",
+    "duration": "PT50m",
+    "title": "Conference"
+  }
+}

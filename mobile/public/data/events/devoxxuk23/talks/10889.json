@@ -1,0 +1,28 @@
+{
+  "room": {
+    "id": "19152",
+    "title": "Auditorium"
+  },
+  "summary": "",
+  "track": {
+    "title": "Dev Craft",
+    "id": "1701"
+  },
+  "id": "10889",
+  "language": "EN",
+  "speakers": [
+    {
+      "id": "9940",
+      "fullName": "Vanessa Formicola",
+      "companyName": "Flo Health",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-59f59cac-ca77-46c3-8034-9b4940c1a5c1.jpg"
+    }
+  ],
+  "format": {
+    "duration": "PT50m",
+    "id": "951",
+    "title": "Conference"
+  },
+  "title": "Tech Leading 101: the Good, the Bad and the Ugly",
+  "description": "<p><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">Tech Leading is a hard job. You need to be an architect, carer, leader, servant, software engineer, business analyst, devops engineer, diplomat and a lot more all at the same time… What it means to be the tech lead of a team will be explored, its joys and responsibilities. More importantly we will navigate the complex balances of responsibilities and the wide variety of skills needed. Real life experiences will be shared and lots of advice on how to be the best tech lead you can be. Whether you would like to become one, you currently are doing the job or you are leading tech leads this talk might be interesting for you.</span></p>"
+}

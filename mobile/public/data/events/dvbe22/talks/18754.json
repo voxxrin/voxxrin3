@@ -1,0 +1,34 @@
+{
+  "description": "<p><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">Log4Shell and SpringShell are just the vulnerabilities that managed to get everybody’s attention, but vulnerabilities that can be as harmful as them are discovered daily. Staying safe requires good tools and sound data. Getting that right can be a challenge</span></p><p><br></p><p><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">With real-life examples and up-to-the-minute analysis, this presentation will provide guidance on navigating the threat landscape, explaining how different types of attacks need different defenses and how that translates into specific actions that developers must take to reduce the chance of being compromised.&nbsp;&nbsp;</span></p><p><br></p><p><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">Modern software security means being conscious of the choices made in selecting open-source components, tools, and vendors. This talk will teach you more about the tools, skills, and knowledge needed to be effective as well as show why learning to think critically about open source technologies and commercial tools alike will help reduce those sleepless nights. </span></p><p><br></p><p><br></p>",
+  "language": "EN",
+  "id": "18754",
+  "format": {
+    "title": "BOF",
+    "duration": "PT60m",
+    "id": "954"
+  },
+  "track": {
+    "id": "1255",
+    "title": "Security"
+  },
+  "speakers": [
+    {
+      "id": "14123",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-9395c0c7-70e7-4732-a73f-4ce419cb3782.jpg",
+      "fullName": "Steve Poole",
+      "companyName": "Sonatype"
+    },
+    {
+      "fullName": "Olimpiu POP",
+      "companyName": "Salt And Pepper",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-olimpiupop.jpg",
+      "id": "17949"
+    }
+  ],
+  "room": {
+    "id": "4702",
+    "title": "BOF 2"
+  },
+  "summary": "Modern software security means being conscious of the choices made in selecting open-source components, tools, and vendors. This talk will teach you more about the tools, skills, and knowledge needed to be effective as well as show why learning to think critically about open source technologies and commercial tools alike will help reduce those sleepless nights.",
+  "title": "Sleeping Peacefully In the Age Of Shells: How Picking the Right Technologies Is Harder Than You Think"
+}

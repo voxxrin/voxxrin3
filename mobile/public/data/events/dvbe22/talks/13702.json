@@ -1,0 +1,28 @@
+{
+  "language": "EN",
+  "title": "No more John Doe: realistic mock data with mockaroo",
+  "summary": "Mockaroo is a tool that can be used to generate realistic data. It can be used for a variety of purposes, such as IT (domain names, IP addresses, email), commerce (currencies, IBAN), and miscellaneous (colors, animals, currencies). It has an intuitive UI, and can be saved in common formats. In this session, I'll cover why realistic data is useful, and how to create a realistic dataset with mockaroo. ",
+  "format": {
+    "id": "957",
+    "title": "Tools-in-Action",
+    "duration": "PT30m"
+  },
+  "description": "<p><span style=\"color: rgb(0, 0, 0); background-color: transparent;\">When working on something new, you often have to create fake data. Those attempts usually never exceed the John Doe or test123 level, and that’s fine. If you need more meaningful information, or have to generate data on more than one occasion, then you need a tool - welcome mockaroo!</span></p><p><br></p><p><span style=\"color: rgb(0, 0, 0); background-color: transparent;\">Mockaroo offers a wide range of generators, ranging from IT (domain names, IP addresses, email) over commerce (currencies, IBAN) to miscellaneous (colors, animals, currencies). On top it provides an intuitive UI to get you started. Next to that, you can save your data in common formats.</span></p><p><br></p><p><span style=\"color: rgb(0, 0, 0); background-color: transparent;\">In this session, I’ll briefly cover why realistic data is useful. Next I’ll dive into mockaroo and how to create your realistic dataset. While doing so, I’ll provide practical tips based on previous experiences. A short demo consuming this test data as an API will conclude this talk.</span></p>",
+  "track": {
+    "title": "Development Practices",
+    "id": "1701"
+  },
+  "speakers": [
+    {
+      "fullName": "Pieter-Jan Drouillon",
+      "photoUrl": "https://avatars.githubusercontent.com/u/1758817?v=4",
+      "id": "12854",
+      "companyName": null
+    }
+  ],
+  "id": "13702",
+  "room": {
+    "title": "Room 9",
+    "id": "4709"
+  }
+}

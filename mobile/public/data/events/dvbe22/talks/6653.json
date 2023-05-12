@@ -1,0 +1,28 @@
+{
+  "description": "<p>Not everything in the world is an object. That's why DDD defines different design patterns, like Entity, Value Object, Repository, etc. Beginning with Java 14 Oracle has provides us with Record Types. They are a step towards true value types. We look at the current status and what's in the box for the future.</p><p>In this talk&nbsp;we will look at:</p><p>* what's behind the motto \"Codes like a class - works like an int\"</p><p>* why immutabilty leads to less failures</p><p>* why value types make your code at the same time better readable and more efficient</p><p>* the difference between refence and value types</p><p>* the new syntax to support value types in Java</p><p>* how value types are implemented in other languages</p><p>* what inheritance means for value types</p><p>* the advantages of storing data on the stack versus storing data on the heap</p><p>* and most important: how value types can help us to provide a better domain model</p>",
+  "room": {
+    "id": "4711",
+    "title": "Room 8"
+  },
+  "format": {
+    "id": "951",
+    "duration": "PT50m",
+    "title": "Conference"
+  },
+  "speakers": [
+    {
+      "fullName": "Henning Schwentner",
+      "companyName": "WPS – Workplace Solutions",
+      "id": "6553",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-20a2abb8-102e-4135-a9b9-a5a74686406d.jpg"
+    }
+  ],
+  "title": "Using Record Types to Build Better Domain Models",
+  "id": "6653",
+  "language": "EN",
+  "summary": "",
+  "track": {
+    "id": "1251",
+    "title": "Architecture"
+  }
+}

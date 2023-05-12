@@ -1,0 +1,28 @@
+{
+  "room": {
+    "title": "Room A",
+    "id": "19153"
+  },
+  "speakers": [
+    {
+      "companyName": "Sofascore",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-cf907d67-2dc4-4360-a588-bf2ef7c8a6f3.jpeg",
+      "id": "5510",
+      "fullName": "Josip Stuhli"
+    }
+  ],
+  "description": "<p><span style=\"color: rgb(103, 106, 108);\">A story of how our infrastructure evolved over time to accommodate an increasing number of users - from on-premise to cloud and back down.</span></p><p><br></p><p><span style=\"color: rgb(103, 106, 108);\">How does one make an infrastructure to handle more than a couple of users?</span></p><p><br></p><p><span style=\"color: rgb(103, 106, 108);\">How do you go from 100 to 1000 to 100,000 to tens of millions?</span></p><p><br></p><p><span style=\"color: rgb(103, 106, 108);\">What happens when due to popular demand hundreds of thousands of users hit your servers at the same time?</span></p><p><br></p><p><span style=\"color: rgb(103, 106, 108);\">I'll tell you a story of how a small team of people managed to move software and services from one server to two, and then to dozens on cloud and then back to on-premise. What we encountered on the way, where we failed, and how we solved it.</span></p>",
+  "id": "5617",
+  "summary": "",
+  "title": "Scaling: from 0 to 20 million users",
+  "language": "EN",
+  "track": {
+    "title": "Architecture",
+    "id": "1251"
+  },
+  "format": {
+    "duration": "PT50m",
+    "title": "Conference",
+    "id": "951"
+  }
+}

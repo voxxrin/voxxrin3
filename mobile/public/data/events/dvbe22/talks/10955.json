@@ -1,0 +1,28 @@
+{
+  "speakers": [
+    {
+      "id": "10904",
+      "companyName": "Azul",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-b7873f00-ac14-446d-95d3-3cce4f96ed58.jpg",
+      "fullName": "Simon Ritter"
+    }
+  ],
+  "description": "<p>One of the key benefits of a microservice architecture is the ability to dynamically respond to changes in load by spinning up new instances as required. However, when deploying JVM-based services, the <em>warmup</em> time of JIT compilation can be a limitation on the effectiveness of this technique.</p><p>One approach to solving this problem is using <em>native images</em>, where the service is statically compiled using an ahead-of-time (AOT) compiler.&nbsp;Although this does reduce startup time and footprint, it does so at the cost of overall performance.</p><p>A new project has been proposed and accepted into OpenJDK called CRaC (Coordinated Restore at Checkpoint).&nbsp;The goal is to research the co-ordination of Java programs with mechanisms to checkpoint (snapshot) a running application.&nbsp;Restoring from the snapshot could solve some of the problems with the startup and warmup times, especially in microservices.</p><p>In this session, we’ll look at the main challenges for such a project, potential solutions and the results from a proof-of-concept implementation.</p>",
+  "summary": "A microservice architecture can be effective at dynamically responding to changes in load, but the warmup time of JIT compilation can be a limitation. CRaC is a new project proposed and accepted into OpenJDK that aims to reduce the startup and warmup times for Java-based services.",
+  "id": "10955",
+  "language": "EN",
+  "track": {
+    "title": "Java",
+    "id": "2754"
+  },
+  "title": "Java on CRaC: Superfast JVM Application Startup",
+  "room": {
+    "title": "Room 5",
+    "id": "4710"
+  },
+  "format": {
+    "id": "951",
+    "title": "Conference",
+    "duration": "PT50m"
+  }
+}

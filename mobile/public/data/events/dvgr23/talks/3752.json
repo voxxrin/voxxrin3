@@ -1,0 +1,34 @@
+{
+  "description": "<p><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">The session will start with a quick introduction to the theory of profiling discussing the motivations, explaining the different types of profiling and visualization format while listing the tools available for this purpose. This also includes some tooling for reliably emulating the load generation and validating the improvements.</span></p><p><br></p><p><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">Then we will guide the attendees through the profiling tools that we want to use throughout the session:</span></p><ul><li><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">Java VisualVM: </span><a href=\"https://visualvm.github.io/download.html\" rel=\"noopener noreferrer\" target=\"_blank\" style=\"background-color: transparent; color: rgb(17, 85, 204);\">https://visualvm.github.io/download.html</a></li><li><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">Async-profiler: </span><a href=\"https://github.com/jvm-profiling-tools/async-profiler\" rel=\"noopener noreferrer\" target=\"_blank\" style=\"background-color: transparent; color: rgb(17, 85, 204);\">https://github.com/jvm-profiling-tools/async-profiler</a></li><li><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">JDK Mission Control: </span><a href=\"https://www.oracle.com/java/technologies/jdk-mission-control.html\" rel=\"noopener noreferrer\" target=\"_blank\" style=\"background-color: transparent; color: rgb(17, 85, 204);\">https://www.oracle.com/java/technologies/jdk-mission-control.html</a></li><li>JMH: <a href=\"https://github.com/openjdk/jmh\" rel=\"noopener noreferrer\" target=\"_blank\">https://github.com/openjdk/jmh</a></li><li><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">Hyperfoil: </span><a href=\"https://hyperfoil.io/\" rel=\"noopener noreferrer\" target=\"_blank\" style=\"background-color: transparent; color: rgb(17, 85, 204);\">https://hyperfoil.io/</a><span style=\"background-color: transparent; color: rgb(0, 0, 0);\"> (for load generation)</span></li></ul><p><br></p><p><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">Then we will put these tools at work in a practical real-world scenario. We will provide a sample Quarkus-based Java webapp, using a simple but realistic technology stack, having different performance issues involving excessive memory allocation, CPU consumption, slow blocking I/O, locks contention and cache misses. We will demonstrate how to use the before mentioned profiling tools to discover, investigate, fix and verify these issues.</span></p>",
+  "language": "EN",
+  "track": {
+    "title": "Java",
+    "id": "2754"
+  },
+  "speakers": [
+    {
+      "companyName": "Red Hat",
+      "fullName": "Francesco Nigro",
+      "id": "2483",
+      "photoUrl": "https://lh3.googleusercontent.com/a/AItbvmlsKs3_saDtZgJ0buTR5LvusOsvlGmdbC7cEeks=s96-c"
+    },
+    {
+      "photoUrl": "https://lh3.googleusercontent.com/a-/AOh14GinuLQCwL67BBgfGsiWRl3mu3Ya0TbDffhYFiXX=s96-c",
+      "fullName": "Mario Fusco",
+      "companyName": "Red Hat",
+      "id": "2201"
+    }
+  ],
+  "title": "Taming performance issues into the wild: a practical guide to JVM profiling",
+  "id": "3752",
+  "room": {
+    "id": "2804",
+    "title": "MC2"
+  },
+  "summary": "",
+  "format": {
+    "duration": "PT180m",
+    "id": "959",
+    "title": "Deep Dive"
+  }
+}

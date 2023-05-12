@@ -1,0 +1,34 @@
+{
+  "id": "17992",
+  "speakers": [
+    {
+      "id": "17933",
+      "companyName": "OpenValue",
+      "fullName": "Simone de Gijt",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-71a10081-e125-41fd-a466-fa6de4ef040d.jpeg"
+    },
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-42a2fa99-3d2d-431c-b395-7fe576714a08.png",
+      "companyName": "adidas",
+      "id": "20559",
+      "fullName": "Thamar Swart"
+    }
+  ],
+  "summary": " Bringing design, front end, back end etc. together can lead to inefficient workflows and knowledge gaps.",
+  "room": {
+    "title": "Room 4",
+    "id": "4706"
+  },
+  "format": {
+    "id": "951",
+    "duration": "PT50m",
+    "title": "Conference"
+  },
+  "track": {
+    "id": "1253",
+    "title": "People & Culture"
+  },
+  "title": "Co-creating with UX and Software",
+  "description": "<p><span style=\"color: rgb(0, 0, 0);\">What would happen if we would bring design, front end, back end etc. all together? How could we improve the user-flows by thinking of alternative, non-happy flows? What would happen to the performance and therefore the user-experience when back end is already involved before the finalised wireframes are handed over?!&nbsp;</span></p><p>That's all nice and dandy. But we do need to deal with some concerns like:</p><p>-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Knowledge gap: How can the different disciplines with their specialty understand each other and come to conclusions?</p><p>-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Shared responsibilities: Where do start and where do they end?</p><p>-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Efficiency: What would it do to the efficiency of the team when they get different tasks?</p><p>In this session we’ll dive in together;</p><p>- seeing what the pro's and con's are of a multidisciplinaire way of working,</p><p>- what tips and tricks can be exchanged,</p><p>- and what kind of tools can help in smoothing out the concerns that arise</p>",
+  "language": "EN"
+}

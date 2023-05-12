@@ -1,0 +1,28 @@
+{
+  "summary": "",
+  "title": "Melrōse - a language and runtime to program music",
+  "language": "EN",
+  "id": "17461",
+  "room": {
+    "id": "4709",
+    "title": "Room 9"
+  },
+  "format": {
+    "title": "Quickie",
+    "id": "960",
+    "duration": "PT15m"
+  },
+  "speakers": [
+    {
+      "fullName": "Ernest Micklei",
+      "id": "13904",
+      "companyName": "Cloudfork",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-0217bd26-69e3-4a90-bc79-aea5a4864c8d.png"
+    }
+  ],
+  "description": "<p>Melrōse is both a language and a tool to create and listen to music interactively, The language uses musical primitives (note, sequence, chord) and many functions (map, group, transpose) that can be used to create more complex patterns, loops and tracks. Melrōse uses MIDI output to produce sound by any (hard or software) device attached. Melrōse can also react on MIDI inputs to start, record and stop playing musical objects. A plugin is available for Microsoft Visual Studio for the best usage experience.</p>",
+  "track": {
+    "title": "Mind the Geek",
+    "id": "2758"
+  }
+}

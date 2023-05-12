@@ -1,0 +1,28 @@
+{
+  "title": "Overflow",
+  "description": "<p>Overflow</p>",
+  "id": "99252",
+  "language": "EN",
+  "room": {
+    "id": "4706",
+    "title": "Room 4"
+  },
+  "format": {
+    "id": "4901",
+    "duration": "PT30m",
+    "title": "Keynote"
+  },
+  "speakers": [
+    {
+      "photoUrl": "https://lh3.googleusercontent.com/a-/AOh14GhWmAgQ0p0O-S3_cRNpuBRFsRPFZkuGlix6yrm-iw=s96-c",
+      "fullName": "Stephan Janssen",
+      "companyName": "Devoxx",
+      "id": "3801"
+    }
+  ],
+  "track": {
+    "id": "2754",
+    "title": "Java"
+  },
+  "summary": ""
+}

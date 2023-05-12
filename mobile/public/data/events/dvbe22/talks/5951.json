@@ -1,0 +1,28 @@
+{
+  "summary": "",
+  "language": "EN",
+  "title": "Akka Streams for the Brave",
+  "room": {
+    "id": "4706",
+    "title": "Room 4"
+  },
+  "track": {
+    "title": "Architecture",
+    "id": "1251"
+  },
+  "id": "5951",
+  "format": {
+    "id": "951",
+    "title": "Conference",
+    "duration": "PT50m"
+  },
+  "speakers": [
+    {
+      "companyName": "Rock the JVM",
+      "id": "5901",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-f2c34fd2-aa0c-4d72-bc72-ce4172b2eabf.jpg",
+      "fullName": "Daniel Ciocirlan"
+    }
+  ],
+  "description": "<p>Akka Streams is one of the most powerful libraries for streaming computation. In this talk, we'll learn how we can leverage the expressiveness of the Akka Streams DSL to write in 20 lines what other engineers take 2000 to even think about it.</p><p>We’ll cover the principles of Reactive Streams and show, in live code, how they work with Akka Streams. We will start by discussing what Akka Streams is made of, how components are tied together and how they function, and how we can design complex graphs of components with its concise and powerful DSL. At the end we will finish up with a recursive stream generating interesting values by itself.</p>"
+}

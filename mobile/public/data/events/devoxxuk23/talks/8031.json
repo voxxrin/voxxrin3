@@ -1,0 +1,34 @@
+{
+  "description": "<p>Java 17 announced the depreciation of the Security Manager (which is ok since hardly anyone used it) but that doesn’t mean the JVM leaves you vulnerable.&nbsp;There are many design features in the JVM and the JDK that are there to help keep your application safe from harm. &nbsp;</p><p><br></p><p>In this session, we’ll walk through these points - from compiler, to bytecode to runtime and give you a refresher on how to get the best from these features.&nbsp;We’ll also look at new things in the works, compile-to-native consequences and even some off-the-wall “it’s just an idea”&nbsp;thoughts about how to make the JVM an even more secure environment. &nbsp;</p>",
+  "summary": "",
+  "title": "Hidden security features of the JVM - everything you didn’t know and more ",
+  "track": {
+    "title": "Security",
+    "id": "1255"
+  },
+  "speakers": [
+    {
+      "companyName": "Sonatype",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-59fbdaa6-a5dc-4b85-8584-8aac58d9cb9d.jpg",
+      "fullName": "Steve Poole",
+      "id": "1869"
+    },
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-67d49552-7241-45d5-a378-58c11282d4d4.jpg",
+      "id": "8751",
+      "companyName": "Azul",
+      "fullName": "Simon Ritter"
+    }
+  ],
+  "id": "8031",
+  "format": {
+    "id": "951",
+    "duration": "PT50m",
+    "title": "Conference"
+  },
+  "language": "EN",
+  "room": {
+    "id": "19155",
+    "title": "Room D"
+  }
+}

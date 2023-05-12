@@ -1,0 +1,28 @@
+{
+  "format": {
+    "id": "951",
+    "duration": "PT50m",
+    "title": "Conference"
+  },
+  "track": {
+    "title": "Dev Craft",
+    "id": "1701"
+  },
+  "summary": "",
+  "id": "13403",
+  "speakers": [
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-tedneward.png",
+      "id": "4107",
+      "companyName": "Neward & Associates, LLC",
+      "fullName": "Ted Neward"
+    }
+  ],
+  "description": "<p><span style=\"color: rgb(33, 37, 41);\">For so many years, developers have been taught by the \"craftsmen\" of the world that quick-and-dirty is a sin, an evil that must be rooted out and destroyed wherever it is found. What if I told you that not only is quick-and-dirty not the outright abomination that \"thought leaders\" make it out to be, but a necessary tool to have... and should be a critical component of every project you build from here on out?</span></p>",
+  "room": {
+    "id": "19153",
+    "title": "Room A"
+  },
+  "title": "Quick & Dirty (& Right)",
+  "language": "EN"
+}

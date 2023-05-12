@@ -1,0 +1,28 @@
+{
+  "room": {
+    "id": "19156",
+    "title": "Exec Centre"
+  },
+  "track": {
+    "title": "Build & Deploy",
+    "id": "1254"
+  },
+  "title": "Enabling your developer's path to production",
+  "speakers": [
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-4ca9c073-7a97-4046-9f4e-a3a1c05e91bb.png",
+      "companyName": "Diagrid",
+      "id": "3650",
+      "fullName": "Mauricio Salatino"
+    }
+  ],
+  "id": "3893",
+  "summary": "",
+  "format": {
+    "title": "Conference",
+    "id": "951",
+    "duration": "PT50m"
+  },
+  "language": "EN",
+  "description": "<p>Keeping up with a single cloud provider's hundreds of services is challenging. Imagine keeping up with the three most popular ones: AWS, Google Cloud Platform, and Microsoft Azure.</p><p>We cannot expect developers to master all these services to build Cloud-Native applications. In this session, we will look at Open Source projects from the Cloud-Native space that helps organizations to encapsulate the complexity associated with understanding how to use and access services no matter which Cloud Provider we use. We will be looking at three patterns (Self-Service, Multi-Cloud, Developer Focused) that can help Platform Engineers to create platforms that are easy to use and adapt for more complex use cases in their cloud provider of choice. If you want to enable your teams to deploy more software to production you need to encapsulate all this complexity from teams focused on writing new features.</p><p>Mauricio will cover the importance of projects like Kubernetes, Crossplane, VCluster, ArgoCD, Knative, and Dapr with live demos that the audience can run on their laptops/workstations.</p><p><br></p>"
+}

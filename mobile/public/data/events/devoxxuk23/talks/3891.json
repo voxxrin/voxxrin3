@@ -1,0 +1,28 @@
+{
+  "format": {
+    "id": "951",
+    "title": "Conference",
+    "duration": "PT50m"
+  },
+  "title": "Wired! How your brain learns new (programming) languages.",
+  "description": "<p>How much do you know about the computer that you are? The computer we call “our brain”? And do you sometimes struggle with learning the new programming languages or the features of a new Java version (let’s say Java 17)? Yes?! In that case, this talk is something for you!</p><p><br></p><p>In this talk we’ll look at learning a new language from a Linguistic and Neurological perspective, while at the same time looking at how we can apply this in the IT setting we work in. At the end of this talk you will know how your brain stores new information and how that information can be retrieved and used. Next to that you will be given some practical tips and tricks on how to improve your own learning curve and how to help others support others who are in the process of learning.</p><p><br></p><p>As a previous speech-and-language therapist I would like to give you a better understanding of how we learn languages and how this knowledge can help us in the never-ending changing world of software development!</p>",
+  "summary": "",
+  "track": {
+    "id": "1253",
+    "title": "People & Culture"
+  },
+  "language": "EN",
+  "speakers": [
+    {
+      "companyName": "OpenValue",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-de004818-7fd2-4540-8351-c4890aa41899.jpg",
+      "fullName": "Simone de Gijt",
+      "id": "2874"
+    }
+  ],
+  "room": {
+    "title": "Room D",
+    "id": "19155"
+  },
+  "id": "3891"
+}

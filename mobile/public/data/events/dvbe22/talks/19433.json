@@ -1,0 +1,28 @@
+{
+  "speakers": [
+    {
+      "id": "18879",
+      "companyName": "Grafana",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-5740a8f2-e9e3-45aa-9a77-afb263c522ea.jpg",
+      "fullName": "Fabian Stäber"
+    }
+  ],
+  "description": "<p>Understanding how fast REST services respond is one if the key signals in application performance monitoring.</p><p>However, there is no established best practice for monitoring REST service performance. Popular Java metric libraries offer multiple algorithms and representations to choose from, each of which requiring specific trade-offs and targeting specific use cases.</p><p>Moreover, this is an area of active development: The Prometheus community and the OpenTelemetry community are about to finalize the specification of sparse / exponential histograms, which will come with their own strengths and weaknesses.</p><p>In this talk we will give an overview of the algorithms implemented by the most popular Java metrics libraries, explain the implications on dashboards, SLOs, and alerts, and explore trade-offs.</p><p>After the talk you will be able to choose the implementation that fits your use case, and you'll be able to better understand latency data on your monitoring dashboard.</p>",
+  "room": {
+    "id": "4707",
+    "title": "Room 7"
+  },
+  "language": "EN",
+  "title": "Monitoring Latencies: How fast is your REST service?",
+  "track": {
+    "title": "Build & Deploy",
+    "id": "1254"
+  },
+  "summary": "",
+  "format": {
+    "duration": "PT50m",
+    "id": "951",
+    "title": "Conference"
+  },
+  "id": "19433"
+}

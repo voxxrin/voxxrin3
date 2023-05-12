@@ -1,0 +1,28 @@
+{
+  "speakers": [
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-d76ba88f-8ddd-4bf7-a17c-5237ae1f65fd.jpg",
+      "fullName": "Peter Hilton",
+      "companyName": null,
+      "id": "5541"
+    }
+  ],
+  "track": {
+    "title": "Dev Craft",
+    "id": "1701"
+  },
+  "id": "6265",
+  "format": {
+    "title": "Conference",
+    "id": "951",
+    "duration": "PT50m"
+  },
+  "language": "EN",
+  "summary": "",
+  "title": "Universal bugs",
+  "description": "<p>You can blame programmers for bugs caused by typos in the code, and you can blame your product manager or product owner for features that your customer doesn’t need, but who do you blame for the universal bugs that all software has sooner or later? We navigate time zones carefully, but names and numbers still catch us out. Our initial naive solutions don’t take account of real-world complexity, even for solved problems.</p><p><br></p><p>Developers need to know what telephone numbers, house numbers and aircraft tail numbers have in common, apart from predating computers. Attendees will discover different kinds of numbers, learn about validating email addresses and bank account numbers, and realise how unoriginal some bugs are. And more important than straightforward bugs, we’ll also discover bugs we have to fix to make our software inclusive.</p>",
+  "room": {
+    "title": "Room B",
+    "id": "19154"
+  }
+}

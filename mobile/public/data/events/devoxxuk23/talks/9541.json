@@ -1,0 +1,28 @@
+{
+  "description": "<p>I’m increasingly convinced that as an industry we need to get much better at sharing our knowledge with each other. Unfortunately many of us engineers suffer from a common affliction: fear of writing. It often starts at school where we were told we didn’t have a “gift for words”.</p><p><br></p><p>This is nonsense. Writing is a craft, and the principles of it can be learnt.</p><p><br></p><p>Over the last eight years, first at InfoQ and now at Container Solutions, I've helped hundreds of developers become better writers. With this talk I want to show you some of the parallels between programming and writing. I’ll also explain the process I use, explore some patterns that can help you to think about how to communicate your ideas, share some of the tips and tricks you can use to write well, and discuss how you get published.</p><p><br></p><p>By doing so I hope to inspire more engineers to get excited about sharing their knowledge.</p>",
+  "format": {
+    "duration": "PT50m",
+    "id": "951",
+    "title": "Conference"
+  },
+  "speakers": [
+    {
+      "fullName": "Charles Humble",
+      "photoUrl": "https://pbs.twimg.com/profile_images/450626505916170240/1_9c2Fhd_normal.jpeg",
+      "id": "9901",
+      "companyName": "Container Solutions"
+    }
+  ],
+  "language": "EN",
+  "id": "9541",
+  "summary": "",
+  "track": {
+    "id": "1253",
+    "title": "People & Culture"
+  },
+  "title": "Writing for Nerds - Blogging for fun and (not much) profit",
+  "room": {
+    "title": "Room B",
+    "id": "19154"
+  }
+}

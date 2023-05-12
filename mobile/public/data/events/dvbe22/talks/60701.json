@@ -1,0 +1,28 @@
+{
+  "track": {
+    "title": "Security",
+    "id": "1255"
+  },
+  "room": {
+    "title": "Room 10",
+    "id": "4704"
+  },
+  "summary": "",
+  "speakers": [
+    {
+      "fullName": "Simon Melotte",
+      "id": "17924",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-4f37279d-d403-419e-956c-ac1efcd432c0.jpg",
+      "companyName": "Palo Alto Networks"
+    }
+  ],
+  "language": "EN",
+  "title": "Embrace security in your supply chain",
+  "id": "60701",
+  "description": "<p><span style=\"color: rgb(29, 28, 29);\">While cloud native development brings a significantly shorter time-to-market and a whole new level of flexibility (and scalability) for new applications, the use of publicly available tools / code / libraries etc can also incur new business risks that can damage your organization’s reputation and cost lots of money.</span></p><p><span style=\"color: rgb(29, 28, 29);\">There are several separate tools available to reduce such risk, but most of them only cover a small part of the supply chain and they are hardly ever DevOps friendly.</span></p><p><span style=\"color: rgb(29, 28, 29);\">As a security focused organization, we believe that bringing the functionalities together in a user-friendly, yet very powerful platform helps developers and DevOps teams to secure all steps of the supply chain without the burden of having to manage all individual aspects.</span></p><p><span style=\"color: rgb(29, 28, 29);\">In this session, we demonstrate that it is pretty easy to make your code adhere to the organization’s security policies without feeling blocked, that it hardly takes any effort to prevent your pipeline from failing over misconfigurations or the reuse of existing code and that you can easily get full vulnerability and compliance visibility into your code dependencies. Then we will scan the artifact for compliance issues and vulnerabilities before deploying to a kubernetes cluster and see how we mitigate some risk. </span></p>",
+  "format": {
+    "id": "951",
+    "title": "Conference",
+    "duration": "PT50m"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "description": "<p>Web accessibility is a crucial subject to ensure that all users, regardless of their needs or situation, can access and use the content and features of a website equally. This includes people with visual, auditory, motor or cognitive disabilities, as well as those using assistive devices or technologies. In addition, designing an accessible site can also benefit users who do not have disabilities.</p><p><br></p><p>We will see in this presentation how to apply the different accessibility rules of the WCAG (Web Content Accessibility Guidelines) or <a href=\"https://www.a11yproject.com/\" rel=\"noopener noreferrer\" target=\"_blank\">A11y</a>  during all stages of the design of our web application in order to allow users to access our content equally.</p><p><br></p><p>We will finish by seeing some practical cases of accessibility and how to automate some checks to maintain the accessibility of the site over time to ensure that it remains optimal for everyone.</p>",
+  "speakers": [
+    {
+      "id": "9924",
+      "companyName": "CRITEO",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-f3fae18a-a542-45fa-9076-728de470d71c.jpeg",
+      "fullName": "Henry Lagarde"
+    }
+  ],
+  "id": "10136",
+  "title": "Accessibility, why bother ? ",
+  "room": {
+    "id": "19153",
+    "title": "Room A"
+  },
+  "language": "EN",
+  "summary": "",
+  "track": {
+    "title": "UI & UX",
+    "id": "2760"
+  },
+  "format": {
+    "title": "Tools-in-Action",
+    "duration": "PT30m",
+    "id": "957"
+  }
+}

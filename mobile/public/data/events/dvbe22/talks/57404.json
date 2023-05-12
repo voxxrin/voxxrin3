@@ -1,0 +1,28 @@
+{
+  "format": {
+    "title": "Conference",
+    "duration": "PT50m",
+    "id": "951"
+  },
+  "language": "EN",
+  "speakers": [
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-d3d476fc-0c5b-439c-a43e-03798112c28b.jpg",
+      "companyName": "Cegeka NV",
+      "id": "57552",
+      "fullName": "Tim Jacobs"
+    }
+  ],
+  "track": {
+    "title": "Data & AI",
+    "id": "1252"
+  },
+  "title": "Ensuring traffic livability with artificial intelligence",
+  "summary": "",
+  "description": "<p>Every second, gigabytes of mobility data is generated in our cities through connected cars, smartphones, parking sensors and cameras. This enormous big data stream is the source of raw information on the mobility in the city, that is telling us how traffic is behaving under a varying range of conditions: weather changes, road works, traffic accidents. The task of unearthing these correlations between the many different data sources is a daunting one, where technology such as artificial intelligence can shine.</p><p>The Mobilize Digital Twin platform of Cegeka captures such mobility big data, and then trains AI algorithms to understand \"how traffic works\". '</p><p>This opens up the opportunity towards decision makers to answer any kind of \"what if\" question: </p><ul><li>what happens if a road gets closed? </li><li>What happens if a huge rock festival is organized? </li><li>What happens if we introduce a new circulation plan? </li></ul><p>Our AI models can learn the impact of such an event in one city, and then transpose the impact to another location. This way, technology can support decision makers by allowing to compare different scenarios, to see which scenario has the desired impact on traffic livability.</p>",
+  "id": "57404",
+  "room": {
+    "id": "4706",
+    "title": "Room 4"
+  }
+}

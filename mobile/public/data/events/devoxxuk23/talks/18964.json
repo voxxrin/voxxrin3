@@ -1,0 +1,34 @@
+{
+  "speakers": [
+    {
+      "companyName": "Snyk",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-af7744c9-ced2-46c3-9ba2-b79e50ad884a.png",
+      "fullName": "Charlotte Fereday",
+      "id": "20164"
+    },
+    {
+      "companyName": "Snyk",
+      "id": "6758",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-402c04aa-7a02-41bf-8b8f-7937e8bfee3f.png",
+      "fullName": "Micah Silverman"
+    }
+  ],
+  "summary": "",
+  "description": "<p><span style=\"color: rgb(0, 0, 0);\">Ethical Hacking an authorized process for finding and exploiting vulnerabilities to improve the security posture of systems and applications. Join this hands-on workshop to get an introduction to ethical hacking and learn actionable best practices for getting started. You'll see a step-by-step demo of ethical hacking with live Q&amp;A. Then, in the hands-on portion of the lab, you'll practice ethical hacking on vulnerable demo applications, find and exploit vulnerabilities, and learn about responsible disclosure.</span></p>",
+  "id": "18964",
+  "room": {
+    "title": "Coding Cafe",
+    "id": "19158"
+  },
+  "language": "EN",
+  "track": {
+    "title": "Security",
+    "id": "1255"
+  },
+  "format": {
+    "id": "1351",
+    "duration": "PT60m",
+    "title": "Mini Lab"
+  },
+  "title": "Ethical Hacking 101 Workshop "
+}

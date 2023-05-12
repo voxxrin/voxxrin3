@@ -1,0 +1,28 @@
+{
+  "speakers": [
+    {
+      "photoUrl": "https://lh3.googleusercontent.com/a-/AOh14GgN510I9aTJCXXheO5eACMeO9JnLaTcczDUm6D3Vg=s96-c",
+      "companyName": "Red Hat",
+      "id": "14126",
+      "fullName": "Alex Soto"
+    }
+  ],
+  "description": "<p>The Playwright is a testing framework created by Microsoft to write tests for modern web applications. It helps us create multi-browser/platform resilient tests.</p><p>Playwright tests can be executed in different languages (Python, JavaScript, Java, …), working in headless mode and giving some boost to your tests.</p><p>Apart from specific testing features, Playwright comes with a set of different tools that enhance the experience as developers, like creating reports to inspect the test execution, the state of the browser at each moment, and showing why a test failed. Also, screen recording of the execution to review the test path visually.</p><p>Moreover, an automatic code generator is a tool provided to get started with Playwright smoothly.</p><p>If you want to learn about this new testing framework, get an introduction to its components, how it’s different from other testing frameworks, and see it in action. Come to this session and start efficiently writing automated web tests.</p><p><br></p><p><br></p>",
+  "track": {
+    "title": "Development Practices",
+    "id": "1701"
+  },
+  "title": "Playwright. Your Next Java Test Framework for automating Web tests",
+  "room": {
+    "title": "Room 8",
+    "id": "4711"
+  },
+  "format": {
+    "duration": "PT30m",
+    "id": "957",
+    "title": "Tools-in-Action"
+  },
+  "summary": "Playwright is a testing framework created by Microsoft to write tests for modern web applications. It helps us create multi-browser/platform resilient tests.",
+  "language": "EN",
+  "id": "14958"
+}

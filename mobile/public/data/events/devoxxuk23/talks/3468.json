@@ -1,0 +1,28 @@
+{
+  "format": {
+    "id": "960",
+    "title": "Byte Size",
+    "duration": "PT15m"
+  },
+  "track": {
+    "title": "Build & Deploy",
+    "id": "1254"
+  },
+  "language": "EN",
+  "description": "<p><span style=\"color: rgba(6, 19, 17, 0.75);\">Firebase undoubtedly revolutionized how we build a fully scalable and complex backend service to build mobile and web applications rapidly. The service gets even more exciting if you can integrate it with great software on the internet or extending by adding predefined functionalities.</span></p><p><br></p><p><span style=\"color: rgba(6, 19, 17, 0.75);\">Firebase Extensions help you quickly deploy functionality to your app with pre-packaged solutions. This session will reveal the power of Firebase extensions and show you how you can achieve more by doing less on Firebase!</span></p>",
+  "id": "3468",
+  "title": "Extending Firebase",
+  "speakers": [
+    {
+      "id": "2895",
+      "companyName": "Invertase",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-51449431-141e-4fbe-9672-4bf9b00eef18.png",
+      "fullName": "Majid Hajian"
+    }
+  ],
+  "summary": "",
+  "room": {
+    "title": "Room D",
+    "id": "19155"
+  }
+}

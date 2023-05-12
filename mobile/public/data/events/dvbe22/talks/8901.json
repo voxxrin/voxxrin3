@@ -1,0 +1,28 @@
+{
+  "speakers": [
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-033340f2-6ead-47c1-b2ab-88ea23e971bb.jpg",
+      "companyName": "AtomicJar",
+      "fullName": "Oleg Šelajev",
+      "id": "8601"
+    }
+  ],
+  "title": "Mastering Testcontainers",
+  "id": "8901",
+  "summary": "",
+  "format": {
+    "duration": "PT50m",
+    "title": "Conference",
+    "id": "951"
+  },
+  "track": {
+    "id": "1701",
+    "title": "Development Practices"
+  },
+  "language": "EN",
+  "description": "<p>Testcontainers libraries are a great way to create a reliable environment for running tests. They provides programmable, lightweight, and disposable containers to give you more confidence in your integration tests. Getting started with Testcontainers is super straightforward, but have you looked into more advanced features to supercharge your test suite?</p><p>In this session, we’ll look deeper at Testcontainers and learn cool things like what’s the best way to debug what happens in a container? How to build more complex topologies of services? What’s the best way to migrate from Docker compose? How can one use Testcontainers for local development in addition to integration tests? And what’s the magical reusable mode everyone is talking about?</p><p>Whether you’re a practitioner with solid test coverage or just beginning your journey into writing more reliable software, this session will introduce you to Testcontainers and its pretty cool capabilities!</p>",
+  "room": {
+    "title": "Room 8",
+    "id": "4711"
+  }
+}

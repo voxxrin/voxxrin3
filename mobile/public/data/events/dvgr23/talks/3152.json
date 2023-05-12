@@ -1,0 +1,28 @@
+{
+  "track": {
+    "id": "1253",
+    "title": "People & Culture"
+  },
+  "format": {
+    "duration": "PT40m",
+    "title": "Conference",
+    "id": "953"
+  },
+  "description": "<p><span style=\"color: rgb(0, 0, 0);\">From technical expertise to project management and coaching, engineering management is about mastering many skills. The required skills are as diverse as whole teams, yet many software engineers want to transition to engineering management in their careers. But what does it take to be a good manager? While the concrete answer varies individually, there is (much like in a good RPG) a complex tree of various skills to improve and master. In this talk, we’ll explore some builds to become the engineering manager you always wanted to have.</span></p><p><br></p>",
+  "id": "3152",
+  "title": "Traversing the Engineering Manager Skill Tree",
+  "room": {
+    "id": "2804",
+    "title": "MC2"
+  },
+  "speakers": [
+    {
+      "fullName": "Ole Michaelis",
+      "companyName": "DNSimple",
+      "id": "2482",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-d41ad3df-4dc0-4a12-8cf8-861720499c95.jpg"
+    }
+  ],
+  "language": "EN",
+  "summary": ""
+}

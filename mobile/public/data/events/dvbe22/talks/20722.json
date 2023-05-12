@@ -1,0 +1,28 @@
+{
+  "track": {
+    "title": "Architecture",
+    "id": "1251"
+  },
+  "description": "<p><span style=\"color: rgb(14, 16, 26); background-color: transparent;\">Think of that one legacy service in production. Well, you've just been asked to add new functionalities to it. You can already predict the pain in this modernization:</span></p><ul><li><span style=\"background-color: transparent;\">code changes are ineffective and error-prone, and rewriting may ask for insane amounts of work;&nbsp;</span></li><li><span style=\"background-color: transparent;\">you can't move it to cloud environments due to high predictable costs;&nbsp;</span></li><li><span style=\"background-color: transparent;\">if creating new services, you must overcome the challenges of handling data in distributed systems (e.g., dual-write, eventual consistency, distributed transactions)&nbsp;</span></li></ul><p><span style=\"color: rgb(14, 16, 26); background-color: transparent;\">Luckily, you can join this talk and see the way out!&nbsp;</span></p><p><span style=\"color: rgb(14, 16, 26); background-color: transparent;\">In this session, we'll explore a modernization strategy with the outbox pattern. Event-driven technologies and cloud adoption boosts this architecture's solution through enterprise data integration patterns - consequently opening new possibilities for your use cases deliveries.</span></p><p><span style=\"color: rgb(14, 16, 26); background-color: transparent;\">Let's run through an actual implementation to learn how change data capture (CDC) allows extending apps by immersing them - </span><em style=\"color: rgb(14, 16, 26); background-color: transparent;\">with zero code changes</em><span style=\"color: rgb(14, 16, 26); background-color: transparent;\"> - within a cloud-based event-driven microservice architecture. This CDC on steroids relies on cloud-native technologies like Kafka, Kafka Streams, Quarkus, Camel, and OpenShift.</span></p><p><strong style=\"color: rgb(14, 16, 26); background-color: transparent;\">Best of all</strong><span style=\"color: rgb(14, 16, 26); background-color: transparent;\">: You can leave this session with extra architectural knowledge, a complete architectural technical guide, a step-by-step guide to trying the solution and getting your hands dirty, and finally, feeling confident to apply it in your context when needed.&nbsp;</span></p><p><span style=\"color: rgb(14, 16, 26); background-color: transparent;\">It's time to gear up and extend your existing tech stack!</span></p>",
+  "language": "EN",
+  "summary": "\">:</span><em style=\"background-color: transparent; color: rgb(14, 16, 26);\">you don't need to worry about the code changes!</em></p>",
+  "speakers": [
+    {
+      "photoUrl": "https://lh3.googleusercontent.com/a-/AOh14Giu1hk9t0ODVFSfznMHmTYae1m_kLXw8VEi_JfsUe4=s96-c",
+      "id": "7101",
+      "fullName": "Karina Varela",
+      "companyName": "Red Hat"
+    }
+  ],
+  "title": "Apps modernization strategy: a light at the end of the tunnel",
+  "room": {
+    "title": "Room 5",
+    "id": "4710"
+  },
+  "id": "20722",
+  "format": {
+    "title": "Conference",
+    "id": "951",
+    "duration": "PT50m"
+  }
+}

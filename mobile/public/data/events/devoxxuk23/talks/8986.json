@@ -1,0 +1,28 @@
+{
+  "speakers": [
+    {
+      "photoUrl": "https://lh3.googleusercontent.com/a/AEdFTp4zZrP16Px2xHdA1z2QUkV9gYBNJjZ0aq-6K0z4Ag=s96-c",
+      "id": "7884",
+      "fullName": "Maciej Radzikowski",
+      "companyName": "Merapar"
+    }
+  ],
+  "format": {
+    "id": "951",
+    "title": "Conference",
+    "duration": "PT50m"
+  },
+  "id": "8986",
+  "description": "<p>Serverless offers scalability, reliability, management simplicity, and no idle resource costs. But can you apply it to Machine Learning solutions?</p><p><br></p><p>Yes.</p><p><br></p><p>This talk will explore two approaches: using purpose-built AI services and building ML pipelines with custom models. We will discuss the pros and cons of each method and examine the unique challenges of integrating machine learning into a Serverless environment.</p><p><br></p><p>The solution examples we will discuss are based on real-life applications developed for major media companies and used by millions of users.</p>",
+  "track": {
+    "title": "Data & AI",
+    "id": "1252"
+  },
+  "summary": "",
+  "title": "Serverless ❤️ Machine Learning",
+  "language": "EN",
+  "room": {
+    "title": "Auditorium",
+    "id": "19152"
+  }
+}

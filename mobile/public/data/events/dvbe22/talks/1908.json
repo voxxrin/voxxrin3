@@ -1,0 +1,28 @@
+{
+  "summary": "Testing is an important part of software development, and Spring Boot makes it easy to get started. In this talk, I'll give you tips on how to get started testing your Spring Boot applications.",
+  "language": "EN",
+  "room": {
+    "title": "Room 8",
+    "id": "4711"
+  },
+  "track": {
+    "id": "1701",
+    "title": "Development Practices"
+  },
+  "id": "1908",
+  "format": {
+    "title": "Lunch Talks",
+    "id": "45001",
+    "duration": "PT40m"
+  },
+  "speakers": [
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-2a33f18d-d790-4ce6-92fc-3744b42703ac.jpg",
+      "fullName": "Philip Riecks",
+      "companyName": "Philip Riecks IT Consulting",
+      "id": "1859"
+    }
+  ],
+  "title": "Things I Wish I Knew When I Started Testing Spring Boot Applications",
+  "description": "<p>Getting started with Spring Boot and its auto-configuration mechanism can be a hurdle for new developers.</p><p>Once you get your first Spring Boot application up- and running, writing tests for it is the last thing you care about. You’re happy that your code does its job.</p><p>However, as soon as you try to integrate your changes, you face a pull request rejection because your lead developer reminds you that tests are missing.</p><p>Testing is an integral part of software development, and unfortunately, some teams treat this topic neglectfully. That’s bad for the future maintenance and overall health of their project. Fortunately, both Spring Test and Spring Boot offer excellent support for testing your application.</p><p>This talk will give you an overview of best practices, pitfalls, and recipes for testing Spring Boot applications. Simply put, with this talk, I’ll share the things that I wish I had known when I started testing Spring Boot applications.</p>"
+}

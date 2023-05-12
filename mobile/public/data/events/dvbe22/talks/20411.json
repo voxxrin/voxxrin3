@@ -1,0 +1,28 @@
+{
+  "id": "20411",
+  "track": {
+    "title": "Development Practices",
+    "id": "1701"
+  },
+  "description": "<p>In the current world, with a rapidly growing demand for software and software developers, we need to take care of how software development teams experience developing software. Remember that developers are users too. They work in organizations where they use a large set of tools, frameworks, libraries, infrastructure, processes and hardware to build software. All these things contribute to the developer experience and the (un)happiness of Developers. Happy developers write better code.</p><p>In this talk, we will talk about Developer Experience (DX) in organizations and give some examples of what influences this experience and how we can all improve the Developer Experience.</p>",
+  "title": "Happy Developers write better code",
+  "summary": "",
+  "format": {
+    "title": "Lunch Talks",
+    "duration": "PT40m",
+    "id": "45001"
+  },
+  "speakers": [
+    {
+      "id": "11309",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-9d0a27a1-bdd4-47e8-8669-7c499ab78b17.jpeg",
+      "fullName": "Roy Braam",
+      "companyName": "OpenValue"
+    }
+  ],
+  "room": {
+    "id": "4710",
+    "title": "Room 5"
+  },
+  "language": "EN"
+}

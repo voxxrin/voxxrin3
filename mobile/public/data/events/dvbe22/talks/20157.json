@@ -1,0 +1,28 @@
+{
+  "title": "Fast and Furious Full-Stack Development with JHipster & Spring Native",
+  "track": {
+    "id": "1256",
+    "title": "Server Side Java"
+  },
+  "description": "<p><span style=\"color: rgb(23, 43, 77);\">JHipster </span>is a development platform that<span style=\"color: rgb(23, 43, 77);\"> makes it easy and fun to build modern web and microservices with Spring Boot, Micronaut, and Quarkus, as well as </span>Angular, React, and Vue<span style=\"color: rgb(23, 43, 77);\">.&nbsp;With the addition of Spring Native support, it's now possible to build applications that can be compiled ahead of time into self contained native platform executables using GraalVM Native Image. In this session we'll talk about how you can create such app from scratch, extend it, and see some demos!</span></p>",
+  "language": "EN",
+  "summary": "",
+  "speakers": [
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-305e3338-b29b-4d78-a485-3fccf6f7786e.jpg",
+      "companyName": "Oracle Labs",
+      "fullName": "Alina Yurenko",
+      "id": "20069"
+    }
+  ],
+  "id": "20157",
+  "format": {
+    "id": "960",
+    "title": "Quickie",
+    "duration": "PT15m"
+  },
+  "room": {
+    "id": "4701",
+    "title": "BOF 1"
+  }
+}

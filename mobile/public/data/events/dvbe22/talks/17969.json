@@ -1,0 +1,28 @@
+{
+  "track": {
+    "id": "1254",
+    "title": "Build & Deploy"
+  },
+  "description": "<p>One cluster and one cloud are not enough to guarantee a highly available resilient architecture. For critical systems, it may be crucial to provide triple active resiliency. But how to achieve this?</p><p>This talk shows a triple active architecture based on a cluster mesh between AWS, GCP, and Azure using Kubernetes and Cilium. In addition to a live demo of a working cluster mesh across three clouds, the talk discusses multi-cloud networking and Cilium as a CNI plugin with meshing capabilities. The talk focuses on an honest review of Cilium based on real-life experience. It contains a deep dive into routing and meshing configuration problems, cloud-specific limitations, as well as detailed Cilium performance results in a multi-cloud environment.</p><p>The summary provides guidelines on architectural patterns and functional use cases for cluster meshes with Cilium, highlighting Cilium strengths and weaknesses.</p><p>&nbsp;</p>",
+  "room": {
+    "title": "Room 3",
+    "id": "4705"
+  },
+  "summary": "",
+  "title": "Let’s Go Triple Active with Three Clouds and Cilium",
+  "language": "EN",
+  "id": "17969",
+  "format": {
+    "id": "951",
+    "duration": "PT50m",
+    "title": "Conference"
+  },
+  "speakers": [
+    {
+      "id": "12654",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-8dabeb11-4e76-405a-b69d-de53d0f5426a.png",
+      "fullName": "Patrycja Wegrzynowicz",
+      "companyName": "Form3"
+    }
+  ]
+}

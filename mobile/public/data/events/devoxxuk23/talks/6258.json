@@ -1,0 +1,28 @@
+{
+  "summary": "",
+  "track": {
+    "title": "Java",
+    "id": "2754"
+  },
+  "format": {
+    "id": "951",
+    "title": "Conference",
+    "duration": "PT50m"
+  },
+  "language": "EN",
+  "id": "6258",
+  "room": {
+    "id": "19151",
+    "title": "Gallery Hall"
+  },
+  "description": "<p>GraphQL is a query language for APIs, but what are the advantages and how would one implement such in their microservices/APIs. In this session, I will go through the basics of GraphQL, different aspects of GraphQL, and the architecture of such APIs. Most importantly, how 4 different ways we can implement GraphQL for a Springboot microservice/API. Lots of examples, live coding, and helpful comparison on structure, usage, and implementations of GraphQL in Springboot &amp; Java world.</p>",
+  "speakers": [
+    {
+      "fullName": "Soham Dasgupta",
+      "photoUrl": "https://avatars.githubusercontent.com/u/1938772?v=4",
+      "companyName": "Microsoft",
+      "id": "5534"
+    }
+  ],
+  "title": "GraphQL-ify your APIs"
+}

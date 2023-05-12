@@ -1,0 +1,28 @@
+{
+  "title": "java.lang.reflect.*",
+  "speakers": [
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-5e5c7d3d-df50-47a3-a0d1-e266860c0f3c.jpg",
+      "companyName": null,
+      "fullName": "Heinz Kabutz",
+      "id": "3970"
+    }
+  ],
+  "description": "<p>As a Java programmer, if we know how reflection works, we can save a lot of time and effort. Instead of writing versions of the same code over and over again, we can write a single method that does what we want in a general way. In this course we start with the basics, then show how reflection works with the more modern language features such as sealed classes and records. We also show how arrays can be manipulated and created via reflection. Lastly, we show MethodHandle and VarHandle. Learn from hands-on exercises that are followed by demos revealing the solutions.</p>",
+  "summary": "",
+  "id": "4081",
+  "track": {
+    "id": "2754",
+    "title": "Java"
+  },
+  "format": {
+    "title": "Hands-on Lab",
+    "id": "984",
+    "duration": "PT120m"
+  },
+  "room": {
+    "id": "2803",
+    "title": "MC3"
+  },
+  "language": "EN"
+}

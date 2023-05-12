@@ -1,0 +1,28 @@
+{
+  "speakers": [
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-5a3bb8e9-fba3-4cdb-bba2-7131a44c3ad2.jpg",
+      "companyName": "Datasite",
+      "fullName": "Scott Sosna",
+      "id": "3608"
+    }
+  ],
+  "id": "4258",
+  "track": {
+    "id": "1251",
+    "title": "Architecture"
+  },
+  "room": {
+    "id": "19151",
+    "title": "Gallery Hall"
+  },
+  "description": "<p>Most organizations, whether internal-business or software shops, have at least one large, all-encompassing application that represents decades of man-years of effort.  Starting off small, targeted and well-intentioned, over time it's become the do-everything solution essential to overall business success.  Many dark secrets lurk in the code base - 5K-line methods, magic configuration files, copy-and-pasted code for business rules that is both inconsistent and undocumented, random waits in code to \"solve\" race conditions, no unit tests - requiring tribal knowledge known to few. You shudder in fear whenever working on the repo.</p><p><br></p><p>Leadership eventually realizes they have a problem because of:</p><ul><li>too many production bugs;</li><li>too much time spent on maintenance;</li><li>dramatic increase in time required to deliver new features;</li><li>reliance on key resources to provide the tribal knowledge needed;</li><li><em>tech debt</em> comes up in every engineering planning session.</li></ul><p><br></p><p>Organizations - for good reasons - are loathe to accept that a rewrite is the only solution and demand other less-costly solutions. After much analysis, discussions, and deliberations, the technical leads come up with the technical direction: <strong>Demonolith the Monolith!</strong></p><p><br></p><p>Conceptually simple, but in reality impossible. Really. Join me as I discuss the potential issues/problems that turns this effort into a never-ending, never-completed solution that ultimately requires a rewrite.</p>",
+  "title": "Demonolithing the Monolith?  Bullocks!",
+  "summary": "",
+  "format": {
+    "duration": "PT50m",
+    "title": "Conference",
+    "id": "951"
+  },
+  "language": "EN"
+}

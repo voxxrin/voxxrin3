@@ -1,0 +1,28 @@
+{
+  "description": "<p><span style=\"color: rgb(29, 29, 29);\">So you built your Java apps and containerized them, great job! But what does it take to secure a container? Are you sure you're following all the best practices to build container images correctly? What are the threats you are not mitigating in a running container? There’s no better way to understand container security than seeing some live hacking! This session introduces the state of docker security by reviewing vulnerabilities in Docker images and their impact on your Java application. Join me to learn and adopt best practices of running secure containerized Java applications in production</span></p>",
+  "language": "EN",
+  "format": {
+    "id": "951",
+    "duration": "PT50m",
+    "title": "Conference"
+  },
+  "room": {
+    "title": "Gallery Hall",
+    "id": "19151"
+  },
+  "speakers": [
+    {
+      "fullName": "Brian Vermeer",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-17be7038-749a-48bd-941f-b7266d529499.png",
+      "id": "4125",
+      "companyName": "Snyk"
+    }
+  ],
+  "summary": "",
+  "id": "4283",
+  "track": {
+    "id": "1255",
+    "title": "Security"
+  },
+  "title": "Securing Your Java Containers by Breaking In"
+}

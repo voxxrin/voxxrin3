@@ -1,0 +1,40 @@
+{
+  "title": "Panel: Exploring Sustainability in Tech Without the Guilt-Trips",
+  "room": {
+    "title": "BOF 2",
+    "id": "4702"
+  },
+  "speakers": [
+    {
+      "companyName": "Info Support",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-14a3520f-3e50-4376-80ac-61a0e9948be1.jpg",
+      "fullName": "Hanno Embregts",
+      "id": "14104"
+    },
+    {
+      "companyName": "Yoink",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-bf91e2af-f917-4c98-830e-8723d9d1aa05.jpg",
+      "id": "5258",
+      "fullName": "Jan Ouwens"
+    },
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-385907e7-9d0d-4e75-b95b-982a96d43799.png",
+      "id": "18894",
+      "fullName": "Jan-Hendrik Kuperus",
+      "companyName": "Yoink"
+    }
+  ],
+  "id": "19434",
+  "format": {
+    "id": "954",
+    "duration": "PT60m",
+    "title": "BOF"
+  },
+  "track": {
+    "title": "People & Culture",
+    "id": "1253"
+  },
+  "description": "<p><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">Most of us are all well aware of it: the current trend of climate change is not looking great. We can already feel some of its consequences and it is very likely to only become worse. As software developers we’re all about innovation though, so as long as we’re innovating not all hope is lost.</span></p><p><br></p><p><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">So how can you use innovation to become more sustainable, both as a software developer and as a human being? There is no single answer to that question, which is why we’re hosting this talk as a panel so that you’ll be able to hear multiple opinions. Each of us has a different perspective and knows different things we can do to help make a difference, and we'd like to hear from you as well!</span></p><p><br></p><p><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">We’d like to emphasize that we don’t want to guilt-trip anyone. This session is intended as a source of inspiration. The sheer scope of the problem can cause even the best of us to freeze up. Hearing ideas, no matter how small, from peers will provide you and us with ideas for the next step to take. This talk could be an opportunity for you to catch a few sustainability tips that can find their way into your life without costing you any noticeable effort.</span></p><p><br></p><p><br></p>",
+  "summary": "Innovation can be used to become more sustainable, but it’s not easy. This talk is intended as a source of inspiration, and we want to hear your thoughts on how to use innovation to become more sustainable.",
+  "language": "EN"
+}

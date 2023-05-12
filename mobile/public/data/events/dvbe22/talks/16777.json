@@ -1,0 +1,28 @@
+{
+  "title": "The Practice of Securing Kubernetes",
+  "id": "16777",
+  "format": {
+    "title": "Tools-in-Action",
+    "duration": "PT30m",
+    "id": "957"
+  },
+  "language": "EN",
+  "description": "<p><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">Like all frameworks and platforms that gain popularity, Kubernetes has now reached a critical mass of production users, and once this happens would-be attackers start coming out of the woodwork.</span></p><p><br></p><p><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">But fear not! In this session will take a deep dive on what it takes to get baseline Kubernetes security - without having to be a security expert. We'll explore the most common security pitfalls with vanilla Kubernetes installations. Next we'll review the many layers of Kubernetes to optimize for security including: bootstrapping, API server configurations, Kubelet configurations, and etcd best practices. We'll wrap up with practical tips and takeaways for you to get started with securing your Kubernetes environments that anyone can apply.</span></p><p><br></p><p><br></p>",
+  "track": {
+    "id": "1255",
+    "title": "Security"
+  },
+  "speakers": [
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-bac7a9c5-4bb3-4877-91a1-4a3a608cd052.jpeg",
+      "fullName": "Ben Hirschberg",
+      "companyName": "ARMO",
+      "id": "16720"
+    }
+  ],
+  "room": {
+    "id": "4710",
+    "title": "Room 5"
+  },
+  "summary": ""
+}

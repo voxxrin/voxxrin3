@@ -1,0 +1,28 @@
+{
+  "track": {
+    "title": "Development Practices",
+    "id": "1701"
+  },
+  "language": "EN",
+  "id": "19431",
+  "room": {
+    "title": "Room 5",
+    "id": "4710"
+  },
+  "summary": "It's important to understand how deadlines work and how to manage them so that development can happen smoothly.",
+  "description": "<p>We all understand development deadlines - though our responses to them vary wildly - plan, grasp, deny, avoid. Love them or hate them development deadlines are a fact of life in software - if we don't deliver then the technical core of growth is not functioning and growth - personal, team, corporate - cannot occur.</p><p>In this talk I explore how working to deadlines can be either a virtuous cycle where everyone takes responsibility and things happen naturally - or a deadly cycle where each step requires maintenance, failure involves finger-pointing and the effort to achieve anything at all astronomical. The difference? Giving staff agency and expecting them to act on it.</p>",
+  "format": {
+    "title": "Conference",
+    "duration": "PT50m",
+    "id": "951"
+  },
+  "speakers": [
+    {
+      "id": "18898",
+      "fullName": "Andrew Piper",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-9dbb6648-bd07-4d55-b830-e8cd0f27700d.jpg",
+      "companyName": "Diffblue Ltd"
+    }
+  ],
+  "title": "Agile Agency - Trusting People to Get Things Done"
+}

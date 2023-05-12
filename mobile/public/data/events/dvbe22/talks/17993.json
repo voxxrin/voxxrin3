@@ -1,0 +1,28 @@
+{
+  "room": {
+    "title": "Room 3",
+    "id": "4705"
+  },
+  "description": "<p><span style=\"color: rgb(0, 0, 0); background-color: transparent;\">Did you ever use PGP to sign libraries published to Maven Central? Did you try to check PGP signatures when downloading dependencies, to make sure you are not affected by a Software Supply Chain issue?</span></p><p><span style=\"color: rgb(0, 0, 0); background-color: transparent;\">Required PGP keys management is usually not the best experience developers have…</span></p><p><span style=\"color: rgb(0, 0, 0); background-color: transparent;\">That’s why the sigstore project was introduced recently, promising easy keyless signatures. It started with Docker images signatures, but a lot of effort is put to extend its usage to every package registry, including Maven Central.</span></p><p><span style=\"color: rgb(0, 0, 0); background-color: transparent;\">Let’s see how sigstore works and how it is expected to improve not only the signing experience, but also the verification process of artifacts at Maven Central.</span></p>",
+  "title": "PGP vs sigstore: the match at Maven Central",
+  "speakers": [
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-11fbc0fb-4198-4d0f-b6d9-1e142612a9fd.jpg",
+      "companyName": "Sonatype",
+      "fullName": "Hervé Boutemy",
+      "id": "16055"
+    }
+  ],
+  "language": "EN",
+  "track": {
+    "id": "1255",
+    "title": "Security"
+  },
+  "summary": "",
+  "format": {
+    "duration": "PT50m",
+    "id": "951",
+    "title": "Conference"
+  },
+  "id": "17993"
+}

@@ -1,0 +1,28 @@
+{
+  "title": "Let's build together a microfrontends application combining multiple frameworks using Module Federation",
+  "id": "13704",
+  "description": "<p>Live coding demo of a Micro-Frontend application gathering modules in Angular, AngularJS, VueJS and React using the Module Federation plugin from Webpack 5.</p><p>The term Micro-Frontends first appeared in <a href=\"https://www.thoughtworks.com/radar\" rel=\"noopener noreferrer\" target=\"_blank\">ThoughtWorks Technology Radar</a> in late 2016. It extends the concepts of micro-services to the FrontEnd world.</p><p><a href=\"https://webpack.js.org/\" rel=\"noopener noreferrer\" target=\"_blank\">Webpack</a> is an open source bundler modules. Its main purpose is to bundle JavaScript, HTML, and CSS files for use in a browser.</p><p>In its version 5, Webpack brings a new plugin called Module Federation, this one allows to assemble \"remote\" files and modules which are exposed on another machine.</p><p>This plugin opens the door to a new way of making Micro-Frontends applications.</p><p>It makes it possible to cut, version, patch and deploy its application by \"pieces\", in order to reduce its overall complexity and facilitate its evolutions.</p><p>The multi-framework aspect makes it easier to migrate technical stacks by removing the constraint of a global migration carried out in one piece.</p>",
+  "track": {
+    "id": "2760",
+    "title": "UI & UX"
+  },
+  "language": "EN",
+  "room": {
+    "id": "4709",
+    "title": "Room 9"
+  },
+  "format": {
+    "id": "951",
+    "title": "Conference",
+    "duration": "PT50m"
+  },
+  "speakers": [
+    {
+      "id": "13902",
+      "companyName": "Kaizen Solutions",
+      "fullName": "Sylvain Dedieu",
+      "photoUrl": "https://lh3.googleusercontent.com/a-/AOh14GjZ5GpOJwI6-VM_BJNXMkXfqv_kkKnu7CeFTWc92Q=s96-c"
+    }
+  ],
+  "summary": "In this live coding demo, we will use the Module Federation plugin from Webpack 5 to assemble a Micro-Frontend application using Angular, AngularJS, VueJS and React. This will allow us to cut, version, patch and deploy our application by \"pieces\", reducing its overall complexity."
+}

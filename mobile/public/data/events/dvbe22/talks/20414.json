@@ -1,0 +1,34 @@
+{
+  "speakers": [
+    {
+      "companyName": "Miro",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-5f10121c-5bdb-4adc-9d71-60eef2a5c107.jpg",
+      "id": "20553",
+      "fullName": "William Bishop"
+    },
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-18874341-dcd1-4092-8e56-1e13be85be38.png",
+      "id": "49402",
+      "companyName": "Miro",
+      "fullName": "Frederico Estrela Gaiva"
+    }
+  ],
+  "summary": "",
+  "format": {
+    "id": "968",
+    "duration": "PT180m",
+    "title": "Hands-on Lab"
+  },
+  "language": "EN",
+  "description": "<p><span style=\"color: rgb(23, 43, 77);\">React 18 just launched earlier this year, with a feature React developers have been looking forward to for a long time: Server Components. In this workshop, you’ll learn the basics of what React Server Components are, how to effectively build and use them, while focusing on one of the major advantages of React: Reusability through components. Join Addison and Will from Miro to see how you can get ahead of the curve and start building reusable server components for your next project.</span></p>",
+  "track": {
+    "id": "2760",
+    "title": "UI & UX"
+  },
+  "room": {
+    "id": "4701",
+    "title": "BOF 1"
+  },
+  "title": "Building Reusable Server Components in React 18",
+  "id": "20414"
+}

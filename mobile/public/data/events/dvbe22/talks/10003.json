@@ -1,0 +1,28 @@
+{
+  "id": "10003",
+  "title": "Get old, go slow, write code!",
+  "format": {
+    "title": "Conference",
+    "id": "951",
+    "duration": "PT50m"
+  },
+  "language": "EN",
+  "room": {
+    "title": "Room 5",
+    "id": "4710"
+  },
+  "description": "<p>Turning old as a developer is hard. It is hard to stay relevant, hard to keep up with the competition of newcomers and hard to know all of those new frameworks, tools, languages and practices. However, the truth is that we oldies have a big advantage over the younglings.</p><p>We are slow! Slow is good! So whatever you do, don’t put your programming on the shelf just because someone half as old writes code with twice the speed.</p><p>Instead of getting frustrated over the pace of the oldies I really believe that we need to take a step back, embrace the skill of being slow and change the developer mindset to understand that the best way to go fast in the long run often is to be “controlled slow” in the short run.</p><p>In this highly interactive talk, I will elaborate on the danger of the traditional “software developer life cycle” (developer -&gt; team lead -&gt; project leader -&gt; manager) and try to show how we instead can make those grey hairs your biggest asset, just by slowing down.</p>",
+  "summary": "Old developers are often better at taking their time and understanding the codebase better than the young ones.",
+  "speakers": [
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-da4e7534-4cd7-4358-959c-071390d1c6a2.jpg",
+      "fullName": "Tobias Modig",
+      "companyName": "Citerus",
+      "id": "9903"
+    }
+  ],
+  "track": {
+    "title": "People & Culture",
+    "id": "1253"
+  }
+}

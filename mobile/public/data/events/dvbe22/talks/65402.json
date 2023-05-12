@@ -1,0 +1,28 @@
+{
+  "speakers": [
+    {
+      "companyName": "VMWare",
+      "id": "65302",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-4f10309a-5b6c-4dc8-8d4c-75f834b4363b.jpeg",
+      "fullName": "Dieter Hubau"
+    }
+  ],
+  "track": {
+    "id": "1254",
+    "title": "Build & Deploy"
+  },
+  "id": "65402",
+  "title": "Repeatable scalable path to production for Java/Spring apps on Kubernetes",
+  "language": "EN",
+  "description": "<p>We will demonstrate how to easily develop, build and deploy modern Spring boot apps on Kubernetes. We'll use convention over configuration for the whole path to production; showing how you can deliver your apps continuously without being a Kubernetes expert. We'll show how to make apps k8s aware with Spring Cloud Kubernetes, how to do CI/CD with a full integration of open source components like Cloud native buildpacks and Flux/Tekton gitops.&nbsp; Knative brings autoscaling ability and advanced deployment patterns like blue-green and canary deployments. Using Backstage as a developer portal enables faster developer onboarding and a one stop shop for all things related to the apps like runtime information, logging and (API) documentation.</p><p><br></p>",
+  "summary": "",
+  "format": {
+    "id": "951",
+    "title": "Conference",
+    "duration": "PT50m"
+  },
+  "room": {
+    "title": "Room 4",
+    "id": "4706"
+  }
+}

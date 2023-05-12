@@ -1,0 +1,28 @@
+{
+  "summary": "",
+  "format": {
+    "duration": "PT50m",
+    "id": "951",
+    "title": "Conference"
+  },
+  "description": "<p>Aircraft are everywhere. Knowing exactly where is paramount as it’s considered bad form for two aircraft to be in the same place at the same time. To avoid this, aircraft worldwide constantly and publicly broadcast their location, heading, and all sorts of other data using a system called ADS-B or Automatic Dependent Surveillance Broadcast.</p><p><br></p><p>This data is a natural fit for a streaming architecture. After all, it’s a constant stream of data that is literally being broadcast in real-time. But how can we capture these broadcasts and the data within? Surely it must require expensive hardware and special tools!</p><p><br></p><p>Not so much. It turns out that we can capture ADS-B data easily using a combination of a cheap radio dongle and free software—a combination called software-defined radio. From there we can store it in a streaming data structure and consume, transform, and publish it using microservices. Cool, right?</p><p><br></p><p>In this session, you’ll learn how software-defined radio works (and not just for ADB-S), how to receive and store ADS-B data in streams, and how to use those streams with microservices. And, I’ll do it all by example—building a dashboard showing real-time flight data using Node.js, Redis Streams, and whatever front-end JavaScript framework happens to be popular that day!</p>",
+  "speakers": [
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-090c44fa-4664-4d2c-bce6-e29ad8568595.jpg",
+      "fullName": "Guy Royse",
+      "id": "4150",
+      "companyName": "Redis"
+    }
+  ],
+  "id": "4566",
+  "title": "Tracking Aircraft with Redis & Software-Defined Radio",
+  "room": {
+    "id": "19153",
+    "title": "Room A"
+  },
+  "track": {
+    "title": "Data & AI",
+    "id": "1252"
+  },
+  "language": "EN"
+}

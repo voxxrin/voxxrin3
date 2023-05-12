@@ -1,0 +1,28 @@
+{
+  "language": "EN",
+  "speakers": [
+    {
+      "photoUrl": "https://lh3.googleusercontent.com/a-/AOh14GhWmAgQ0p0O-S3_cRNpuBRFsRPFZkuGlix6yrm-iw=s96-c",
+      "id": "3801",
+      "fullName": "Stephan Janssen",
+      "companyName": "Devoxx"
+    }
+  ],
+  "summary": "",
+  "title": "Welcome to 19th edition of Devoxx Belgium",
+  "room": {
+    "title": "Room 8",
+    "id": "4711"
+  },
+  "id": "50751",
+  "format": {
+    "duration": "PT30m",
+    "title": "Keynote",
+    "id": "4901"
+  },
+  "track": {
+    "title": "People & Culture",
+    "id": "1253"
+  },
+  "description": "<p>It's been 3 years since our last Devoxx Belgium edition and we're of course excited to welcome everybody to the 19th edition.</p><p>During this welcome you'll receive some practical info, stats etc.</p>"
+}

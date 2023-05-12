@@ -1,0 +1,34 @@
+{
+  "speakers": [
+    {
+      "id": "1889",
+      "companyName": "Oracle",
+      "photoUrl": "https://lh3.googleusercontent.com/a-/AOh14GgEdVlHhATC6WroLTbS9GVYGjQuSkLP--UbGxzCow=s96-c",
+      "fullName": "Andres Almiray"
+    },
+    {
+      "companyName": "JFrog",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-d01f9864-860a-4edf-985a-fd970cb912df.jpg",
+      "fullName": "Ixchel Ruiz",
+      "id": "2483"
+    }
+  ],
+  "format": {
+    "id": "951",
+    "title": "Conference",
+    "duration": "PT50m"
+  },
+  "id": "1997",
+  "language": "EN",
+  "track": {
+    "title": "Build & Deploy",
+    "id": "1254"
+  },
+  "summary": "",
+  "title": "Maven Puzzlers",
+  "room": {
+    "id": "19153",
+    "title": "Room A"
+  },
+  "description": "<p>Apache Maven is an ubiquitous build tool in the Java ecosystem, some even claim it's the defacto standard build tool. Configuring Maven is deceptively simple, after all it's just a matter of writing XML, isn't it? Things look differently when the rubber meets the road. One must know the intricacies of the build lifecycle; how plugins, goals (mojos), and phases come together; rules for dependency resolution; configuration inheritance between parent - child POM files; enhancing the build with profiles; and more. These features may trip you over if the rules that govern them are unclear. We'll present a series of scenarios to test your knowledge on Maven rules. we guarantee you'll leave this session with a few bits of new information and better understanding of the Maven build tool.</p>"
+}

@@ -1,0 +1,28 @@
+{
+  "room": {
+    "id": "4708",
+    "title": "Room 6"
+  },
+  "id": "20715",
+  "track": {
+    "id": "1256",
+    "title": "Server Side Java"
+  },
+  "description": "<p>Jakarta Contexts and Dependency Injection is probably the most underrated specification around. It is the Jakarta EE and MicroProfile corner stone since it provides a standard programming model and a powerful to integrate third party technology in a seamless way.</p><p>Now that major work on CDI 4.0 is nearly over (waiting for Jakarta EE 10 release), it’s interesting to list the evolution of the spec in the last year.</p><p>In this talk we’ll go thru all new and corrected features in the specification and will make a big focus on CDI lite that will enhance CDI spec to better support build time framework like Quarkus.</p><p>We’ll go thru the new portable extension API with a concrete example, and we’ll see how it differs from legacy runtime portable extension.</p><p>You’ll leave the talk being able to develop CDI Lite extension for your favorite framework integrating it to the CDI programming model.</p>",
+  "summary": "In this talk we'll go thru all new and corrected features in the specification and will make a big focus on CDI lite that will enhance CDI spec to better support build time framework like Quarkus.",
+  "format": {
+    "id": "951",
+    "duration": "PT50m",
+    "title": "Conference"
+  },
+  "language": "EN",
+  "speakers": [
+    {
+      "id": "20573",
+      "fullName": "Antoine Sabot-Durand",
+      "companyName": "SCIAM",
+      "photoUrl": "https://avatars.githubusercontent.com/u/489817?v=4"
+    }
+  ],
+  "title": "What’s new in CDI 4.0 ?"
+}

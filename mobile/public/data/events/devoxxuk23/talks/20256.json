@@ -1,0 +1,28 @@
+{
+  "speakers": [
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-1e11d811-3e99-4c1d-9d2d-07ad6abd0d3a.png",
+      "fullName": "Pratik  Patel",
+      "id": "4136",
+      "companyName": "Azul Systems"
+    }
+  ],
+  "format": {
+    "id": "960",
+    "duration": "PT15m",
+    "title": "Byte Size"
+  },
+  "id": "20256",
+  "track": {
+    "title": "Java",
+    "id": "2754"
+  },
+  "description": "<p>Developers have many options for building applications today, not just for what programming platform to use, but also what architectures are possible. Modern applications can be built using everything from monoliths to microservices to cloud functions.&nbsp;In this session, we’ll look at serverless architecture for building applications and compare them with the other models. Historical problems with long cold-starts, heavy-weight frameworks and lack of tooling have made Java an unpopular choice for serverless development… until now!&nbsp;</p><p>&nbsp;</p><p>We’ll take you on a journey to explain what has changed with Java to finally make it an amazing language for building serverless applications. We’ll do demos of Java Cloud Functions deployed on AWS, Azure, and GCP. We’ll also look at my tips for building Java Cloud Functions including:</p><p>&nbsp;</p><p>JVM advances in the JVM like CRAC</p><p>Low-overhead, serverless ready frameworks</p><p>Where AOT (ahead of time) compilation&nbsp;</p><p>Right sizing Java Cloud Functions</p><p><br></p>",
+  "room": {
+    "title": "Room A",
+    "id": "19153"
+  },
+  "language": "EN",
+  "summary": "",
+  "title": "Java for Serverless Cloud Functions: the how, why and tips to make it awesome"
+}

@@ -1,0 +1,28 @@
+{
+  "language": "EN",
+  "room": {
+    "title": "Coding Cafe",
+    "id": "19158"
+  },
+  "title": "Secure Coding Lab: Building Secure Java Applications",
+  "format": {
+    "title": "Mini Lab",
+    "id": "1351",
+    "duration": "PT60m"
+  },
+  "track": {
+    "title": "Security",
+    "id": "1255"
+  },
+  "speakers": [
+    {
+      "fullName": "Brian Vermeer",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-17be7038-749a-48bd-941f-b7266d529499.png",
+      "companyName": "Snyk",
+      "id": "4125"
+    }
+  ],
+  "id": "18961",
+  "description": "<p>A Practical Guide for Java Developers. Join us in this workshop where we’ll explore common security mistakes that can leave your code vulnerable to attack. Through real-world examples, we’ll experience how attackers exploit these vulnerabilities by hacking them. In addition we will find out how we can easily mitigate these issues in your Java code. Whether you’re a junior developer or a seasoned pro, this workshop is a must-attend for anyone concerned with the security of their applications. Let’s learn how to write secure, bulletproof code that can withstand attacks and avoid security mistakes.</p>",
+  "summary": ""
+}

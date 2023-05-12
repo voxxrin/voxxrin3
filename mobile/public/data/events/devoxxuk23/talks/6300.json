@@ -1,0 +1,34 @@
+{
+  "description": "<p><span style=\"color: black;\">What do Micronaut, Spring Native, </span><span style=\"color: rgb(0, 0, 0);\">Quarkus</span><span style=\"color: black;\"> and Helidon have in common?&nbsp;They all support GraalVM Native Image ahead-of-time (AOT) compilation to transform an application into a native machine executable that starts almost instantaneously, provides peak performance with no warmup, and requires less memory and less CPU.</span></p><p><br></p><p><span style=\"color: black;\">It's perfect for your containerised workloads and microservices where it's critical to minimise your startup time and reduce your resource consumption.&nbsp;In this workshop we'll provide a practical introduction to GraalVM Native Image AOT covering how it works, what it can do, and when to use it.</span></p><p><br></p><p><span style=\"color: black;\">Topics include: building with Maven and Gradle, static and dynamic linking, containerisation,&nbsp;configuration, working with resources, profile guided optimisation, garbage collection options and JUnit testing.</span></p><p><br></p><p>By the end of the lab, you will have:</p><p><br></p><ul><li>Built, run and converted a Java application into a native executable (using GraalVM Native Image)</li><li>Built, run and converted a basic Spring Boot application <span style=\"color: rgb(0, 0, 0);\">into a native executable</span></li><li><span style=\"color: rgb(0, 0, 0);\">Added the native Spring Boot application to a container image, deployed it and run it</span></li><li><span style=\"color: rgb(0, 0, 0);\">Shrunk the size of the container image using Distroless containers</span></li><li><span style=\"color: rgb(0, 0, 0);\">Seen how to use GraalVM Native Build tools as part of your CI/CD pipeline</span></li></ul>",
+  "summary": "",
+  "language": "EN",
+  "speakers": [
+    {
+      "photoUrl": "https://lh3.googleusercontent.com/a/AATXAJy7cafHfqNnglNYpxPSB7zZD2IsuE-RnDdgIFTs=s96-c",
+      "id": "6792",
+      "companyName": "Oracle Labs",
+      "fullName": "Bernard Horan"
+    },
+    {
+      "fullName": "Kris Foster",
+      "companyName": "Oracle",
+      "id": "6761",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-08fd9585-3f34-4211-8cd3-b485200cc53b.jfif"
+    }
+  ],
+  "track": {
+    "id": "2754",
+    "title": "Java"
+  },
+  "title": "GraalVM Native Image Bootcamp Lab",
+  "format": {
+    "id": "1351",
+    "duration": "PT60m",
+    "title": "Mini Lab"
+  },
+  "room": {
+    "id": "19158",
+    "title": "Coding Cafe"
+  },
+  "id": "6300"
+}

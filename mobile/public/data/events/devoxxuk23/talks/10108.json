@@ -1,0 +1,28 @@
+{
+  "room": {
+    "title": "Auditorium",
+    "id": "19152"
+  },
+  "id": "10108",
+  "title": "Easing the daily grind with these awesome JDK command line tools",
+  "format": {
+    "id": "951",
+    "title": "Conference",
+    "duration": "PT50m"
+  },
+  "track": {
+    "id": "2754",
+    "title": "Java"
+  },
+  "speakers": [
+    {
+      "photoUrl": "https://lh3.googleusercontent.com/a-/AFdZucpO8gooQHO5YPlU8bF8rED12W0SycDqcXokPs-4Jg=s96-c",
+      "fullName": "Michael Hunger",
+      "id": "9911",
+      "companyName": "Neo4j"
+    }
+  ],
+  "description": "<h4>Included in the JDK installation are a lot of handy tools for Java developers, from java itself to jshell, jcmd, jfr, jlink and jdeprscan. These allow you to analyse a running JVM, generate JRE's, run Java source code and much more. In this talk I would like to present a number of these tools with practical examples and thus expand the toolbox of the participants.</h4><h4>Async profiler, jbang and sdkman are not part of the JDK but too useful to ignore.</h4><p><br></p><p><br></p><h4>With the command line tools, many tasks can be automated and executed more efficiently, leaving more time for the exciting things in developer life.</h4>",
+  "language": "EN",
+  "summary": ""
+}

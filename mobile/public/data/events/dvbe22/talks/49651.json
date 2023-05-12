@@ -1,0 +1,28 @@
+{
+  "room": {
+    "id": "4707",
+    "title": "Room 7"
+  },
+  "speakers": [
+    {
+      "fullName": "Luke Wood",
+      "id": "49401",
+      "companyName": "Google",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-6dabad08-b590-492e-a8d4-be65fa81979f.jpg"
+    }
+  ],
+  "format": {
+    "title": "Conference",
+    "duration": "PT50m",
+    "id": "951"
+  },
+  "track": {
+    "title": "Data & AI",
+    "id": "1252"
+  },
+  "summary": "",
+  "id": "49651",
+  "description": "<p>Over the last 6 months text to image models such as DallE-2, ImageGen, and StableDiffusion have taken off.&nbsp;These models can achieve previously unfathomable levels of photorealism, illustrate entirely new images from a single text prompt, and even paint your favorite animal in the art style of Picasso.&nbsp;The potential of these models is nearly limitless.</p><p>This talk walks through the architecture and theory enabling these models to generate novel yet coherent images, explores some more advanced uses of text to image models, and lastly shows you how to get started generating images using KerasCV, the most optimized implementation of StableDiffusion available to date.</p>",
+  "language": "EN",
+  "title": "Ever seen an astronaut riding a horse?  Understanding and applying text to image generation models"
+}

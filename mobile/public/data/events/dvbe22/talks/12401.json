@@ -1,0 +1,28 @@
+{
+  "summary": "Testing can be addictive, but it's also important to make it easier and more effective.",
+  "description": "<p>Do you find testing addictive? or is it one of those things you dread to do?</p><p>In either case testing practices are likely to be part of your day to day activities, wouldn't it be nice to make it easier and more effective?</p><p>Codebases that have been written with TDD can have up to 90% test code, isn't it a good idea to pay attention to so much code you will have to maintain?&nbsp;</p><p>This talk is a collection of testing practices identified and experimented during years of work as a developer and a software engineering consultant.</p><p>It walks through different techniques and approaches and the common pitfall encountered.</p>",
+  "format": {
+    "duration": "PT50m",
+    "title": "Conference",
+    "id": "951"
+  },
+  "track": {
+    "id": "1701",
+    "title": "Development Practices"
+  },
+  "speakers": [
+    {
+      "companyName": "Flo Health",
+      "fullName": "Vanessa Formicola",
+      "id": "12351",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-156488fe-b87b-4e60-ad43-d9cde71c97bb.jpg"
+    }
+  ],
+  "language": "EN",
+  "title": "TDD and other drugs",
+  "id": "12401",
+  "room": {
+    "id": "4711",
+    "title": "Room 8"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "title": "Streamlining large-scale Java development using Error Prone",
+  "format": {
+    "title": "Conference",
+    "duration": "PT50m",
+    "id": "951"
+  },
+  "track": {
+    "title": "Development Practices",
+    "id": "1701"
+  },
+  "id": "16770",
+  "speakers": [
+    {
+      "fullName": "Sander Mak",
+      "id": "16717",
+      "companyName": "Picnic Technologies",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-dea8c13a-f254-4d92-b90b-ebaf622cbd91.jpg"
+    }
+  ],
+  "language": "EN",
+  "description": "<p>Using static analysis to spot bugs in your code has become a staple of modern Java development. But what if we can take this one step further where, instead of just finding issues, we fix them automatically? And, what if we can do this not just for bug patterns but for any coding pattern you'd like to enforce?</p><p>At Picnic we use Google's Error Prone and Refaster tooling to do just that. In this session you'll learn what these tools are and how to use them effectively. Large-scale refactoring and enforcement of code patterns becomes a breeze once you master these tools. What's more, you'll get a view of some the automated refactorings we use within Picnic at scale. Come and learn how to take control of your codebase like you never have before!</p>",
+  "summary": "In this session we will be discussing Google's Error Prone and Refaster tooling. We will be discussing how these tools can be used for large-scale refactoring and enforcing code patterns.",
+  "room": {
+    "title": "Room 3",
+    "id": "4705"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "room": {
+    "id": "4706",
+    "title": "Room 4"
+  },
+  "speakers": [
+    {
+      "id": "16711",
+      "fullName": "Etienne Puissant",
+      "companyName": "Betclic",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-79df3b61-c8ff-4aca-b411-12179d2d9908.jpg"
+    },
+    {
+      "fullName": "Jozwiak Nicolas",
+      "id": "16078",
+      "companyName": "Betclic",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-b37ca819-8b2c-4740-b352-e2f99d69b189.jpg"
+    }
+  ],
+  "summary": "",
+  "track": {
+    "title": "Architecture",
+    "id": "1251"
+  },
+  "language": "EN",
+  "title": "How Betclic is using its Datalake to generate some load tests and simulate sports events ?",
+  "format": {
+    "title": "Tools-in-Action",
+    "id": "957",
+    "duration": "PT30m"
+  },
+  "id": "16135",
+  "description": "<p><span style=\"color: rgb(0, 0, 0);\">Sports betting is growing a lot since few years in Europ. All actors in the domain are confronted to the same issue : how to ensure a flawless continuity of service whereas systems requests are exponentially increasing ? Climax of the phenomenon, Euro 2020 football excitement.</span></p><p class=\"ql-align-justify\">To prepare that event, at Betclic, we developed a platform to generate some load tests in order to replay past events and associated actions (bet placement, offers reading, etc)&nbsp;</p><p class=\"ql-align-justify\">Based on a datalake which is able to ingest our logs, that solution allows us to simulate a configurable growth (+50 %, + 100%).&nbsp;</p><p class=\"ql-align-justify\">We propose an architecture presentation about tools we set up and used (AWS Glue, Athena), and also our load tests strategies with Gatling tool.&nbsp;</p><p><br></p>"
+}

@@ -1,0 +1,28 @@
+{
+  "id": "19445",
+  "language": "EN",
+  "description": "<p>I have moved between individual contributor and a management role three times in my career, and every time I felt that what helped me as an IC was impacting me negatively as a manager. I'll walk you through my last transition to a management role: what aspects made the transition harder and how I did overcome them.</p>",
+  "format": {
+    "duration": "PT15m",
+    "id": "960",
+    "title": "Quickie"
+  },
+  "title": "It is not about being right",
+  "track": {
+    "id": "1253",
+    "title": "People & Culture"
+  },
+  "speakers": [
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-848dc2ba-9817-4b61-86c3-c7dd3e4b24d8.jpeg",
+      "companyName": "Onto",
+      "fullName": "Simone Casciaroli",
+      "id": "17940"
+    }
+  ],
+  "summary": "",
+  "room": {
+    "id": "4704",
+    "title": "Room 10"
+  }
+}

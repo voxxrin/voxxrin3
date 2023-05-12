@@ -1,0 +1,28 @@
+{
+  "room": {
+    "title": "Exec Centre",
+    "id": "19156"
+  },
+  "track": {
+    "title": "Architecture",
+    "id": "1251"
+  },
+  "speakers": [
+    {
+      "id": "9949",
+      "fullName": "Aurea Muñoz Hernandez",
+      "companyName": "Red Hat",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-4804b264-e01b-42a4-952c-b2cc87b375c4.jpeg"
+    }
+  ],
+  "description": "<p><span style=\"color: rgb(0, 0, 0);\">In this era of microservice-based architecture where multiple services </span><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">are interacting with each other, service discovery becomes an integral part as it provides a mechanism to find the service instances. However, it leads to another issue which is “How to select the right service instance in case we have multiple instances of a service running?”</span></p><p><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">SmallRye Stork is a </span><em style=\"background-color: transparent; color: rgb(0, 0, 0);\">service discovery and client-side service instance selection framework</em><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">. It comes pre-configured with integrations for Kubernetes, Eureka, and Hashicorp Consul as well as a few selection methods, including round-robin. But the most noteworthy feature of Stork is its extensibility. You can create your own service selection strategy or plug in your own service discovery mechanism.</span></p><p><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">Come discover Stork and be ready to customize your own service discovery strategy!</span></p>",
+  "language": "EN",
+  "format": {
+    "duration": "PT30m",
+    "title": "Tools-in-Action",
+    "id": "957"
+  },
+  "summary": "",
+  "title": "Service discovery and selection like a pro with Stork ",
+  "id": "10447"
+}

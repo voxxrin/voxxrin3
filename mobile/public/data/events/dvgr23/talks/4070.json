@@ -1,0 +1,28 @@
+{
+  "id": "4070",
+  "language": "EN",
+  "room": {
+    "title": "Banquet",
+    "id": "2801"
+  },
+  "track": {
+    "id": "1255",
+    "title": "Security"
+  },
+  "format": {
+    "duration": "PT40m",
+    "title": "Conference",
+    "id": "953"
+  },
+  "summary": "",
+  "speakers": [
+    {
+      "id": "3965",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-bfebb4f9-98d8-4b5a-8a9a-6f50ca941936.jpeg",
+      "fullName": "Mohammed Aboullaite",
+      "companyName": "Spotify"
+    }
+  ],
+  "title": "Move fast Build things… Safely!",
+  "description": "<p>The demand for speed and innovation is everywhere. However, that enthusiasm sometimes creates conflict when it butts up against security, resiliency and reliability concerns. In some cases, the dogged hunt to increase velocity can introduce new challenges and risks (e.g., skipped process gates, insufficient testing…).</p><p>On the other hand, Formula 1 is one of the fastest and riskiest motorsports in the world, where the need for speed does not compromise safety of the drivers. In this talk, we are going to discuss different principles followed in Formula 1 and what lessons we can learn from and adopt in the way we design, architect, ship and secure our systems. We are going to cover:</p><p>+ Importance of having a trusted and adversarial CI/CD pipeline</p><p>+ Security patterns: Least privileged principal, defence in depth, Zero trust</p><p>+ Resiliency patterns: Micro-segmentation, Anti-overload patterns</p><p>+ Monitoring and alerting</p>"
+}

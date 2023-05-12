@@ -1,0 +1,28 @@
+{
+  "format": {
+    "title": "Ignite",
+    "id": "958",
+    "duration": "PT5m"
+  },
+  "id": "18951",
+  "description": "<p><span style=\"color: rgb(0, 0, 0);\">Recently, there is a lot of buzz around WebAssembly: did you know that you can use it to write backend applications? Let me show you how easy it is to write a tiny web service from scratch using Wazero, the WebAssembly runtime for Go!</span></p>",
+  "language": "EN",
+  "room": {
+    "id": "19153",
+    "title": "Room A"
+  },
+  "track": {
+    "id": "2758",
+    "title": "Mind the Geek"
+  },
+  "summary": "",
+  "title": "Write a microservice in 5 minutes with Go, WebAssembly and Wazero!",
+  "speakers": [
+    {
+      "fullName": "Edoardo Vacchi",
+      "photoUrl": "https://lh3.googleusercontent.com/a-/AOh14GgNH8Iy7Re357R6eHetsiymVU2LrKemgJsQcpbsyA=s96-c",
+      "id": "4122",
+      "companyName": "Tetrate"
+    }
+  ]
+}

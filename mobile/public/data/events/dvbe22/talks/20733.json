@@ -1,0 +1,28 @@
+{
+  "title": "7 tools to help you secure your Kubernetes cluster",
+  "language": "EN",
+  "room": {
+    "id": "4709",
+    "title": "Room 9"
+  },
+  "track": {
+    "id": "1254",
+    "title": "Build & Deploy"
+  },
+  "id": "20733",
+  "format": {
+    "id": "957",
+    "duration": "PT30m",
+    "title": "Tools-in-Action"
+  },
+  "description": "<p>Over the last few years Kubernetes has become the leading solution to orchestrate containers.&nbsp;</p><p>Unfortunately, its internal complexity and its various moving parts lead to many security concerns.</p><p>Workloads deployed on the cluster can also lead to security problems if security best practices are not followed.</p><p><br></p><p>This talk will focus on 7 useful tools to help you secure your Kubernetes cluster and its workloads.</p>",
+  "summary": "",
+  "speakers": [
+    {
+      "companyName": "Kubo Labs",
+      "photoUrl": "https://lh3.googleusercontent.com/a-/AFdZucoMvtrrwfCGhvKIFfqBfRpLpaU_hbL3lYUoE_Dulw=s96-c",
+      "id": "20577",
+      "fullName": "Alain Regnier"
+    }
+  ]
+}

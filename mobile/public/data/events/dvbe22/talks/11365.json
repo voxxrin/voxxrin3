@@ -1,0 +1,28 @@
+{
+  "summary": "",
+  "language": "EN",
+  "id": "11365",
+  "speakers": [
+    {
+      "companyName": "Gama-Soft",
+      "fullName": "Uberto Barbini",
+      "id": "7102",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-ramtop.jpg"
+    }
+  ],
+  "description": "<p>Learning Functional Programming in the field. Taking examples from two chapters of my book \"From Objects to Functions\" (pragprog.com) we will see how using a functional approach changes the error handling and the logging parts of our application.</p><p>Using exceptions to recover from errors in our programs goes against the principle of functional programming because it will prevent us from defining the logic composing pure functions since an Exception cannot be a valid return value for a pure function.</p><p>In this talk, I'll present some possible techniques to handle errors differently and, arguably, make our code easier to read and maintain.</p><p>Functional programming also allows us to centralize the logic to log significant events with their context. Instead of using simple string messages scattered along our code, we can define more specific domain events and log them with the full context of the error, removing the need to configure log levels.</p><p>The example code presented is in Kotlin, but applying the same techniques in Java or other languages should be easy.</p>",
+  "track": {
+    "id": "1251",
+    "title": "Architecture"
+  },
+  "title": "From Objects to Functions",
+  "room": {
+    "title": "Room 8",
+    "id": "4711"
+  },
+  "format": {
+    "id": "45001",
+    "duration": "PT40m",
+    "title": "Lunch Talks"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "track": {
+    "id": "1255",
+    "title": "Security"
+  },
+  "id": "10357",
+  "room": {
+    "id": "2803",
+    "title": "MC3"
+  },
+  "format": {
+    "title": "Quickie",
+    "id": "960",
+    "duration": "PT15m"
+  },
+  "summary": "",
+  "language": "EN",
+  "title": " Supply Chain Security and Software Bill of Materials",
+  "description": "<p>In this technical talk, Dimitris Bougioukos shall discuss the state-of-play of securing software supply chains with the help of Software Bill of Materials (SBOMs). A Software Bill of Materials (SBOM) is a complete, formally structured list of components, libraries, and modules that are required to build a given piece of software and the supply chain relationships between them.</p><p>During the talk, the audience will get acquainted with:</p><ul><li>Essential SBOM requirements</li><li>Prevalent SBOM standards</li><li>Commonly used tools for SBOM generation&nbsp;</li><li>SBOM value to achieve security transparency in the software supply chain</li></ul><p><br></p>",
+  "speakers": [
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-4ff69143-3db8-4e16-b4fd-a7af02868965.jpg",
+      "id": "5860",
+      "fullName": "Dimitris Bougioukos",
+      "companyName": "Netcompany Intrasoft"
+    }
+  ]
+}

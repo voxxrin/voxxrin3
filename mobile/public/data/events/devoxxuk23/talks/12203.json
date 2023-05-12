@@ -1,0 +1,28 @@
+{
+  "format": {
+    "duration": "PT50m",
+    "id": "951",
+    "title": "Conference"
+  },
+  "track": {
+    "id": "2754",
+    "title": "Java"
+  },
+  "title": "Return to Planet Collections",
+  "description": "<p>The classes of the Java Collections Framework are arguably the most heavily used data structures on the planet. In their 25 year lifetime, they’ve become part of the everyday vocabulary of millions of programmers. But, actually, how good are they? And how have they changed, along with the changing priorities of the language?</p><p><br></p><p>To answer these questions, this session will preview some of the material in the upcoming second edition of <em>Java Generics and Collections</em>: use cases for the unmodifiable collections of Java 9, best practices for using the framework, and a design retrospective distilling the experience of a quarter-century’s use of the Framework and comparing it with alternatives like Eclipse Collections and Guava. You should leave this session with a better understanding of the design forces that shaped the Framework and an improved understanding of how to get the very best out of it.</p>",
+  "summary": "",
+  "language": "EN",
+  "room": {
+    "title": "Auditorium",
+    "id": "19152"
+  },
+  "speakers": [
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-2163b5d0-2885-40b7-9809-ade027495c01.jpg",
+      "companyName": "Morningside Light Ltd",
+      "fullName": "Maurice Naftalin",
+      "id": "11708"
+    }
+  ],
+  "id": "12203"
+}

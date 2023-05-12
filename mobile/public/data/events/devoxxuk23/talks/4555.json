@@ -1,0 +1,28 @@
+{
+  "description": "<p>A year after Log4Shell dashed all our vacation plans the dust still hasn't settled.&nbsp;More than 25% of downloads from Maven Central are for vulnerable versions of Log4J.&nbsp;</p><p>Is that you? Many think they're safe but it's a false assumption.&nbsp;&nbsp;In this session, we'll explore the technical, business and individual aspects behind these assumptions.</p><p><br></p><p>We'll explain how you could be deceived into wishful thinking and how to counter the effects with practical guidance and appropriate tools</p><p><br></p><p>As developers we have a big part to play in keeping our applications safe - learn some simple techniques here and maybe reduce those holiday blues</p>",
+  "speakers": [
+    {
+      "companyName": "Sonatype",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-59fbdaa6-a5dc-4b85-8584-8aac58d9cb9d.jpg",
+      "fullName": "Steve Poole",
+      "id": "1869"
+    }
+  ],
+  "room": {
+    "id": "19154",
+    "title": "Room B"
+  },
+  "summary": "",
+  "format": {
+    "id": "951",
+    "title": "Conference",
+    "duration": "PT50m"
+  },
+  "id": "4555",
+  "language": "EN",
+  "title": "How to avoid the next Log4Shell - easy steps every developer can take right now",
+  "track": {
+    "title": "Security",
+    "id": "1255"
+  }
+}

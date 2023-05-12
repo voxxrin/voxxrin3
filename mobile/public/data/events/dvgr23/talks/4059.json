@@ -1,0 +1,28 @@
+{
+  "description": "<p><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">Do you know how your data moves into and out of your Apache Kafka® instance? From the programmer’s point of view, it’s relatively simple. But under the hood, writing to and reading from Kafka is a complex process with a fascinating life cycle that’s worth understanding.</span></p><p><br></p><p><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">When you call producer.send() or consumer.poll(), those calls are translated into low-level requests which are sent along to the brokers for processing. In this session, we’ll dive into the world of Kafka producers and consumers to follow a request from an initial call to send() or poll(), all the way to disk, and back to the client via the broker’s final response. Along the way, we’ll explore a number of client and broker configurations that affect how these requests are handled and discuss the metrics that you can monitor to help you to keep track of every stage of the request life cycle.</span></p><p><br></p><p><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">By the end of this session, you’ll know the ins and outs of the read and write requests that your Kafka clients make, making your next debugging or performance analysis session a breeze.&nbsp; </span></p><p><br></p>",
+  "summary": "",
+  "room": {
+    "title": "MC3",
+    "id": "2803"
+  },
+  "language": "EN",
+  "speakers": [
+    {
+      "id": "3956",
+      "companyName": "Confluent",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-6f428d2d-1e07-4502-a34c-f13748db29d7.jpg",
+      "fullName": "Danica Fine"
+    }
+  ],
+  "id": "4059",
+  "title": "A Kafka Client’s Request: There and Back Again",
+  "track": {
+    "id": "1701",
+    "title": "Development Practices"
+  },
+  "format": {
+    "id": "953",
+    "duration": "PT40m",
+    "title": "Conference"
+  }
+}

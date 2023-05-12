@@ -1,0 +1,40 @@
+{
+  "summary": "",
+  "title": "Google's Journey from Java to Kotlin for Server-Side Programming",
+  "description": "<p>Kotlin is now a recommended programming language for server-side JVM usage at Google, while still providing access to a large existing Java ecosystem.&nbsp; With over 11 million lines of Kotlin code at Google (across server and Android), we've done a number of things to ensure our developers are successful with Kotlin.&nbsp; This talk will explore the challenges we faced, and the reasons we're adding&nbsp;Kotlin as an available language and how we've made it a successful change.</p><p><br></p>",
+  "room": {
+    "id": "4710",
+    "title": "Room 5"
+  },
+  "id": "20174",
+  "track": {
+    "id": "1256",
+    "title": "Server Side Java"
+  },
+  "format": {
+    "duration": "PT50m",
+    "title": "Conference",
+    "id": "951"
+  },
+  "speakers": [
+    {
+      "fullName": "James Ward",
+      "id": "20076",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-7cb8faf8-352c-47f3-9761-1538d529283a.jpg",
+      "companyName": "Google"
+    },
+    {
+      "id": "20078",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-b002c6a5-8acd-4dac-aefb-8f7bd7720212.jpeg",
+      "fullName": "Brad Hawkes",
+      "companyName": "Google, Inc."
+    },
+    {
+      "fullName": "John Pampuch",
+      "companyName": "Google",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-d923b7ce-45d1-47c5-b0c5-533a859d9314.jpeg",
+      "id": "20079"
+    }
+  ],
+  "language": "EN"
+}

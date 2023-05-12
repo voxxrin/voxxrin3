@@ -1,0 +1,28 @@
+{
+  "room": {
+    "title": "Room D",
+    "id": "19155"
+  },
+  "title": "Learning Reactive programming with Databases",
+  "speakers": [
+    {
+      "id": "2884",
+      "companyName": "Couchbase",
+      "fullName": "Laurent Doguin",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-ab718de7-321f-4566-89fa-a767c77294c2.png"
+    }
+  ],
+  "language": "EN",
+  "format": {
+    "title": "Conference",
+    "duration": "PT50m",
+    "id": "951"
+  },
+  "summary": "",
+  "description": "<p>It’s time to get on board with reading and understanding reactive code because:</p><p><br></p><ul><li>The latest releases of our favorite frameworks are embracing reactive programming</li><li>Asynchronous APIs are gaining in popularity, and not just on the front-end side</li><li>A cohesive stack is reactive all the way from the database to the UI</li></ul><p><br></p><p>Unfortunately, it may be a challenge to adapt your mindset to asynchronous database access after years of writing synchronous, blocking code. This talk discusses the reasons reactive programming is a great fit for database access and presents a list of common access patterns to read or write data, and to succeed, fail, or retry requests to the database.</p>",
+  "track": {
+    "id": "1401",
+    "title": "Programming Languages"
+  },
+  "id": "3146"
+}

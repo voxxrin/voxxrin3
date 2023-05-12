@@ -1,0 +1,28 @@
+{
+  "summary": "",
+  "track": {
+    "title": "Build & Deploy",
+    "id": "1254"
+  },
+  "room": {
+    "id": "4708",
+    "title": "Room 6"
+  },
+  "speakers": [
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-b00c0de6-c54a-42d9-addf-be06ad15c577.jpg",
+      "id": "20587",
+      "companyName": "Elastic",
+      "fullName": "Philipp Krenn"
+    }
+  ],
+  "title": "The State of OpenTelemetry for Java Developers",
+  "id": "20734",
+  "description": "<p>OpenTelemetry, or OTel for short, is taking over the observability world to uncover all kinds of performance problems or errors. Let’s look at that hands-on.</p><p>This talk dives into the background of OTel including the technologies its building on (or replacing). It also takes a look at what auto-instrumentation can and cannot achieve. As well as the latest developments beyond tracing with metrics and the first steps towards logging.</p><p>This talk also takes a look at different approaches of integration —&nbsp;the Spring ecosystem is wrapping most of OTel into Micrometer while other frameworks are not. What are the pros and cons of these different integrations for the developers.</p>",
+  "format": {
+    "duration": "PT50m",
+    "id": "951",
+    "title": "Conference"
+  },
+  "language": "EN"
+}

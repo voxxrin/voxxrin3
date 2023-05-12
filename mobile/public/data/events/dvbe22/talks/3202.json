@@ -1,0 +1,34 @@
+{
+  "speakers": [
+    {
+      "id": "3152",
+      "fullName": "Benoit LUBEK",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-1febfc95-6f8f-4be0-94eb-941eb82e93d8.jpg",
+      "companyName": "Apollo GraphQL"
+    },
+    {
+      "fullName": "Martin Bonnin",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-8456d513-ed15-4af0-b3af-4a3444457e4e.jpeg",
+      "companyName": null,
+      "id": "3151"
+    }
+  ],
+  "summary": "Apollo Kotlin is a type-safe, caching GraphQL client written 100% in Kotlin. It is the major release of Apollo Android and brings a coroutines and Flow based API, Kotlin Multiplatform support, new codegen options, test builders, and more. In this session, we will look at what Apollo Kotlin is, how to use it in a project, and dive into the latest and upcoming features.",
+  "format": {
+    "duration": "PT30m",
+    "id": "957",
+    "title": "Tools-in-Action"
+  },
+  "id": "3202",
+  "room": {
+    "title": "Room 4",
+    "id": "4706"
+  },
+  "track": {
+    "id": "2760",
+    "title": "UI & UX"
+  },
+  "title": "What's new in Apollo Kotlin 3",
+  "description": "<p><a href=\"https://github.com/apollographql/apollo-kotlin\" rel=\"noopener noreferrer\" target=\"_blank\"><strong>Apollo Kotlin</strong></a> is a type-safe, caching GraphQL client - you may also know it as Apollo Android.</p><p><br></p><p>Why the name change? Well, version 3 is a major release and is now written 100% in Kotlin! It brings, among other things:</p><p><br></p><ul><li>a coroutines and Flow based API</li><li>Kotlin Multiplatform support</li><li>new codegen options</li><li>test builders</li><li>and more!</li></ul><p><br></p><p>In this session we’ll look at what Apollo Kotlin is, how to use it in a project, and dive into the latest and upcoming features.</p>",
+  "language": "EN"
+}

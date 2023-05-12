@@ -1,0 +1,34 @@
+{
+  "speakers": [
+    {
+      "id": "4120",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-3698866c-4114-468e-a446-8a95281fd003.jpeg",
+      "companyName": "Adidas",
+      "fullName": "Thamar Swart"
+    },
+    {
+      "fullName": "Simone de Gijt",
+      "companyName": "OpenValue",
+      "id": "2874",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-de004818-7fd2-4540-8351-c4890aa41899.jpg"
+    }
+  ],
+  "language": "EN",
+  "room": {
+    "title": "Room D",
+    "id": "19155"
+  },
+  "format": {
+    "title": "Conference",
+    "duration": "PT50m",
+    "id": "951"
+  },
+  "id": "5214",
+  "summary": "",
+  "title": "Co-creation with UX and Software",
+  "description": "<p>What would happen if we would bring design, front end, back end etc. all together? How could we improve the user-flows by thinking of alternative, non-happy flows? What would happen to the performance and therefore the user-experience when back end is already involved before the finalised wireframes are handed over?!&nbsp;</p><p><br></p><p>That's all nice and dandy. But we do need to deal with some concerns like:</p><p>-\tKnowledge gap: How can the different disciplines with their specialty understand each other and come to conclusions?</p><p>-\tShared responsibilities: Where do start and where do they end?</p><p>-\tEfficiency: What would it do to the efficiency of the team when they get different tasks?</p><p><br></p><p>In this talk we’ll try to address and hopefully take away those concerns and focus on the benefits it will bring, working in a hybride team.</p>",
+  "track": {
+    "id": "1253",
+    "title": "People & Culture"
+  }
+}
