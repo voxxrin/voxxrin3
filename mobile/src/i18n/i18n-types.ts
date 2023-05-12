@@ -107,6 +107,14 @@ type RootTranslation = {
 	 * @param {string | number | boolean} nrOfOverlappingSlots
 	 */
 	Overlaps_x_slot_value: RequiredParams<'nrOfOverlappingSlots'>
+	/**
+	 * T​a​l​k​ ​s​u​m​m​a​r​y
+	 */
+	Talk_summary: string
+	/**
+	 * S​p​e​a​k​e​r​s
+	 */
+	Speakers: string
 }
 
 export type TranslationFunctions = {
@@ -202,6 +210,14 @@ export type TranslationFunctions = {
 	 * {nrOfOverlappingSlots} slot{{s}}
 	 */
 	Overlaps_x_slot_value: (arg: { nrOfOverlappingSlots: string | number | boolean }) => LocalizedString
+	/**
+	 * Talk summary
+	 */
+	Talk_summary: () => LocalizedString
+	/**
+	 * Speakers
+	 */
+	Speakers: () => LocalizedString
 }
 
 export type Formatters = {}

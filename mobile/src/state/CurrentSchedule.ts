@@ -53,4 +53,6 @@ export const fetchSchedule = async (conferenceDescriptor: VoxxrinConferenceDescr
 
         CURRENT_SCHEDULE.value = voxxrinDailySchedule;
     }
+
+    return CURRENT_SCHEDULE.value;
 }

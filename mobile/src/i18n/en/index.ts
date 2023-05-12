@@ -24,6 +24,8 @@ const en = {
 	ConfStatus_unknown: `Unknown`,
 	Overlaps_x_slot_label: `overlaps`,
 	Overlaps_x_slot_value: `{nrOfOverlappingSlots} slot{{nrOfOverlappingSlots:s}}`,
+	Talk_summary: `Talk summary`,
+	Speakers: `Speakers`,
 } satisfies BaseTranslation
 
 export default en
