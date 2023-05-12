@@ -198,7 +198,6 @@ ion-accordion {
         display: flex;
         align-items: center;
         column-gap: 4px;
-        margin-left: 12px;
         padding: 2px 8px 2px 4px;
         border-radius: 8px;
         font-size: 12px;
