@@ -75,6 +75,10 @@ const perFormatGroups = sortThenGroupByFormat(props.talks!, props.event!);
         margin-left: 16px;
         background-color: var(--app-beige-dark);
         flex: 1;
+
+        @media (prefers-color-scheme: dark) {
+          background-color: var(--app-line-contrast);
+        }
       }
     }
 

@@ -133,7 +133,8 @@ ion-accordion {
     color: var(--app-beige-dark);
 
     @media (prefers-color-scheme: dark) {
-      color: var(--app-line-contrast);
+      color: var(--app-white);
+      opacity: 0.5;
     }
   }
 

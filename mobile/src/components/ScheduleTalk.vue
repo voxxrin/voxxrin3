@@ -294,7 +294,11 @@ const theme = {
           --size: 48px;
           --border-radius: 40px;
           filter: drop-shadow(-4px 0px 4px rgba(0, 0, 0, 0.15));
+          background-color: var(--app-background);
 
+          @media (prefers-color-scheme: dark) {
+            background-color: var(--app-medium-contrast);
+          }
         }
       }
     }
