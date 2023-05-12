@@ -1,7 +1,7 @@
 <template>
   <ion-card class="talkCard"
             :class="{ container: true, 'is-favorited': talkNotes.isFavorite, 'to-watch-later': talkNotes.watchLater }"
-            :router-link="`/events/${eventId.value}/days/${dayId.value}/talks/${talk.id.value}/details`" router-direction="forward">
+            @click="() => openTalkDetails()">
     <div class="talkCard-head">
       <div class="track">
         <ion-badge class="trackBadge">
@@ -64,6 +64,7 @@ import {getRouteParamsValue} from "@/views/vue-utils";
 import {useUserTalkNotes} from "@/state/useUserTalkNotes";
 import {DayId} from "@/models/VoxxrinDay";
 import {useEventTalkStats} from "@/state/useEventTalkStats";
+import {useTabbedPageNav} from "@/state/useTabbedPageNav";
 
 
 const props = defineProps({
@@ -83,6 +84,8 @@ const eventId = new EventId(getRouteParamsValue(route, 'eventId')!);
 const { talkNotes, toggleFavorite, toggleWatchLater} = useUserTalkNotes(eventId, props.dayId!, props.talk!.id)
 const { eventTalkStats } = useEventTalkStats(eventId, props.dayId!, props.talk!.id)
 
+const { triggerTabbedPageNavigate } = useTabbedPageNav();
+
 const displayedSpeakers = props.talk!.speakers
     .map(s => `${s.fullName}${s.companyName?` (${s.companyName})`:``}`)
     .join(", ");
@@ -91,6 +94,12 @@ const theme = {
   track: {
     color: props.talk!.track.themeColor
   }
+}
+
+function openTalkDetails() {
+    if(props.dayId && props.talk) {
+        triggerTabbedPageNavigate(`/events/${eventId.value}/days/${props.dayId.value}/talks/${props.talk.id.value}/details`, "forward", "push");
+    }
 }
 </script>
 

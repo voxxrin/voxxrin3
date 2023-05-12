@@ -24,6 +24,8 @@ import {useIonRouter} from "@ionic/vue";
 import CurrentEventStatus from "@/components/CurrentEventStatus.vue";
 import {PropType} from "vue";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
+import {useTabbedPageNav} from "@/state/useTabbedPageNav";
+import {unsetCurrentSchedule} from "@/state/CurrentSchedule";
 
 const router = useIonRouter();
 const props = defineProps({
@@ -38,15 +40,20 @@ const props = defineProps({
 })
 
 const backBtnAction: "goBack"|"triggerEventExit" = props.backBtnAction || "triggerEventExit";
+const { triggerTabbedPageGoBack } = useTabbedPageNav()
 
 function backButtonClicked() {
     if(backBtnAction === 'goBack') {
+        // standard current ion router attached to the component to go back
+        // (implicitely: if current component is integrated inside tabs, back() will impact the
+        // tab's history, not the tabbed page's history)
         router.back();
     } else if (backBtnAction === 'triggerEventExit') {
-        // Using standard event dispatching through ionic's $emit is pointless here, as I didn't find
-        // how to bubble these event from <ion-router-outlet> placed into _BaseEventPages
-        // => I'm using a crappy global event (type unsafe) hack here
-        window.dispatchEvent(new CustomEvent('exit-event-requested'))
+        // Triggering tabbed page's back, and not current tab's
+        triggerTabbedPageGoBack(() => {
+            unsetCurrentSchedule();
+            return Promise.resolve();
+        });
     }
 }
 

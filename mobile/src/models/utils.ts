@@ -1,5 +1,3 @@
-import {Temporal} from 'temporal-polyfill'
-import {match, P} from "ts-pattern";
 import {HexColor} from "../../../shared/type-utils";
 
 export class ValueObject<T> {
@@ -59,5 +57,21 @@ export class StringRange<S extends string = string> extends Range<S> {
 
     public static overlap<S extends string = string>(r1: StringRange<S>, r2: StringRange<S>, type: 'inclusive'|'exclusive'): boolean {
         return overlap<StringRange<S>, S>(r1, r2, (v1, v2) => v1.localeCompare(v2), type)
+    }
+}
+
+export class TypedCustomEvent<EVENT_TYPE extends string, D> extends CustomEvent<D> {
+    constructor(eventType: EVENT_TYPE, data: D) {
+        super(eventType, {detail: data});
+    }
+}
+
+export type TypedCustomEventData<T> = T extends typeof TypedCustomEvent<any, infer D>?D:never;
+
+export function createTypedCustomEventClass<D, EVENT_TYPE extends string = string>(eventType: EVENT_TYPE) {
+    return class AnonymousTypedCustomEvent extends TypedCustomEvent<EVENT_TYPE, D> {
+        constructor(data: D) {
+            super(eventType, data);
+        }
     }
 }

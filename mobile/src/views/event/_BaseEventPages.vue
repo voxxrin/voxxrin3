@@ -38,13 +38,13 @@ import {
     IonRippleEffect,
     useIonRouter,
 } from '@ionic/vue';
-import {onMounted, onUnmounted, ref} from "vue";
+import {ref} from "vue";
 import {useRoute} from "vue-router";
 import {getRouteParamsValue} from "@/views/vue-utils";
 import {EventId} from "@/models/VoxxrinEvent";
 import {useCurrentConferenceDescriptor} from "@/state/CurrentConferenceDescriptor";
 import {typesafeI18n} from "@/i18n/i18n-vue";
-import {unsetCurrentSchedule} from "@/state/CurrentSchedule";
+import {useTabbedPageNav} from "@/state/useTabbedPageNav";
 
 const router = useIonRouter();
 const route = useRoute();
@@ -77,20 +77,8 @@ function tabClicked(tab: typeof tabs[number], event: Event) {
     selectedTab.value = tab.id;
 }
 
-onMounted(() => {
-    window.addEventListener('exit-event-requested', onExitEventRequested)
-})
-onUnmounted(() => {
-    window.removeEventListener('exit-event-requested', onExitEventRequested);
-})
-function onExitEventRequested() {
-    unsetCurrentSchedule();
-
-    // This navigation has to happen in _BaseEventPages otherwise we get navigation errors,
-    // see https://github.com/ionic-team/ionic-framework/issues/27443
-    router.navigate('/event-selector', 'back', 'pop')
-}
-
+const { registerTabbedPageNavListeners } = useTabbedPageNav();
+registerTabbedPageNavListeners();
 </script>
 
 <style lang="scss" scoped>
