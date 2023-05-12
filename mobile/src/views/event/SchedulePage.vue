@@ -117,8 +117,14 @@ watchCurrentSchedule((currentSchedule) => {
         recomputeMissingFeedbacksList();
 
         currentlySelectedDay.value = findVoxxrinDay(currentConferenceDescriptor.value, currentSchedule.day)
-        expandedTimeslotIds.value = filterTimeslotsToAutoExpandBasedOn(currentSchedule.timeSlots, useCurrentClock().zonedDateTimeISO())
-            .map(ts => ts.id.value);
+
+        // Deferring expanded timeslots so that :
+        // 1/ we don't load the DOM too much when open a schedule
+        // 2/ this allows to show the auto-expand animation to the user
+        setTimeout(() => {
+            expandedTimeslotIds.value = filterTimeslotsToAutoExpandBasedOn(currentSchedule.timeSlots, useCurrentClock().zonedDateTimeISO())
+                .map(ts => ts.id.value);
+        }, 500)
     }
 });
 
@@ -173,7 +179,6 @@ function toggleExpandedTimeslot(timeslot: VoxxrinScheduleTimeSlot) {
     } else {
         expandedTimeslotIds.value.splice(expandedTimeslotIdsIndex, 1);
     }
-    console.log(`toggled ${timeslot.id.value} => ${expandedTimeslotIds.value.join(", ")}`)
 }
 </script>
 
