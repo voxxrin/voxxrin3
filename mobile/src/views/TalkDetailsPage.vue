@@ -17,60 +17,89 @@
           '--voxxrin-event-theme-colors-tertiary-contrast-rgb': event.theming.colors.tertiaryContrastRGB,
     }">
       <current-event-header :event="event" back-btn-action="goBack" />
-      <ion-header class="stickyHeader">
+      <ion-header class="stickyHeader" :class="{ 'is-favorited': talkNotes.isFavorite, 'to-watch-later': talkNotes.watchLater }">
         <ion-toolbar>
           <ion-title class="stickyHeader-title" slot="start" >Talk details</ion-title>
-          <div class="watchLater">
-            <ion-button class="btnTalk watch-later-btn" @click.stop="() => toggleWatchLater()">
-              <ion-icon v-if="!talkNotes.watchLater" aria-hidden="true" src="/assets/icons/line/video-line.svg"></ion-icon>
-              <ion-icon v-if="talkNotes.watchLater" aria-hidden="true" src="/assets/icons/solid/video.svg"></ion-icon>
-            </ion-button>
-          </div>
-          <div class="favorite">
-            <ion-button class="btnTalk favorite-btn" @click.stop="() => toggleFavorite()">
+          <ion-button class="btnTalkAction _watchLater" slot="end" shape="round" fill="outline"  @click.stop="() => toggleWatchLater()">
+            <ion-icon v-if="!talkNotes.watchLater" aria-hidden="true" src="/assets/icons/line/video-line.svg"></ion-icon>
+            <ion-icon v-if="talkNotes.watchLater" aria-hidden="true" src="/assets/icons/solid/video.svg"></ion-icon>
+          </ion-button>
+          <div class="favoriteGroup" slot="end">
+            <ion-button class="btnTalkAction _favorite" shape="round" fill="outline" @click.stop="() => toggleFavorite()">
               <ion-icon class="favorite-btn-icon" v-if="!talkNotes.isFavorite" aria-hidden="true" src="/assets/icons/line/bookmark-line-favorite.svg"></ion-icon>
               <ion-icon class="favorite-btn-icon" v-if="talkNotes.isFavorite" aria-hidden="true" src="/assets/icons/solid/bookmark-favorite.svg"></ion-icon>
-              <ion-label class="favorite-btn-nb" v-if="eventTalkStats.totalFavoritesCount !== undefined">{{
-                  eventTalkStats.totalFavoritesCount
-                }}</ion-label>
             </ion-button>
+            <ion-label class="favorite-btn-nb" v-if="eventTalkStats.totalFavoritesCount !== undefined">{{
+                eventTalkStats.totalFavoritesCount
+              }}</ion-label>
           </div>
         </ion-toolbar>
       </ion-header>
 
-      <ion-text>
-        <ion-icon class="_accordion-icon _future-icon" aria-hidden="true" src="assets/icons/solid/clock.svg"></ion-icon>
-        <ion-label v-if="timeslotLabel">
-          <span class="slot-schedule-start">{{timeslotLabel.start}}</span>
-          <ion-icon class="slot-schedule-icon" aria-hidden="true" src="assets/icons/line/chevron-right-line.svg"></ion-icon>
-          <span class="slot-schedule-end">{{timeslotLabel.end}}</span>
-        </ion-label>
-        <ion-icon aria-hidden="true" src="/assets/icons/solid/map-marker.svg"></ion-icon>
-        {{talk?.room.title}}
-        <hr/>
-        <h3>{{talk?.title}}</h3>
-        <ion-badge class="trackBadge" :style="{
-            '--background': talk?.track.themeColor,
-            '--color': talk?.track.themeColor
-        }">{{talk?.track.title}}</ion-badge>
-        <ion-label :style="{ 'color': talk?.format.themeColor }">
-          {{talk?.format.title}} ({{talk?.format.duration}})
-        </ion-label>
+      <ion-text class="talkDetails">
+        <ion-header class="talkDetails-subHeader">
+          <div class="talkDetails-subHeader-schedule">
+            <ion-icon class="_accordion-icon _future-icon" aria-hidden="true" src="assets/icons/solid/clock.svg"></ion-icon>
+            <ion-label v-if="timeslotLabel">
+              <span class="slot-schedule-start">{{timeslotLabel.start}}</span>
+              <ion-icon class="slot-schedule-icon" aria-hidden="true" src="assets/icons/line/chevron-right-line.svg"></ion-icon>
+              <span class="slot-schedule-end">{{timeslotLabel.end}}</span>
+            </ion-label>
+          </div>
+          <div class="talkDetails-subHeader-room">
+            <ion-icon aria-hidden="true" src="/assets/icons/solid/map-marker.svg"></ion-icon>
+            {{talk?.room.title}}
+          </div>
+        </ion-header>
+
+
+        <h1 class="talkDetails-title">{{talk?.title}}</h1>
+        <div class="talkDetails-infos">
+          <div class="talkDetails-infos-listTrack">
+          <ion-badge class="trackBadge" :style="{
+              '--background': talk?.track.themeColor
+          }">{{talk?.track.title}}</ion-badge>
+          </div>
+          <ion-label :style="{ 'color': talk?.format.themeColor }">
+            {{talk?.format.title}} ({{talk?.format.duration}})
+          </ion-label>
+        </div>
       </ion-text>
-      <h5>{{ LL.Talk_summary() }}</h5>
-      <ion-text v-html="talk?.description">
-      </ion-text>
-      <h5>{{ LL.Speakers() }}</h5>
-      <ion-list>
-        <ion-item v-for="(speaker, index) in talk?.speakers" :key="index">
-          <ion-avatar>
-            <img :src="speaker.photoUrl" />
-          </ion-avatar>
-          {{speaker.fullName}} <span v-if="speaker.companyName">({{speaker.companyName}})</span>
-          <br/>
-          <div v-html="speaker.speakerBio"></div>
-        </ion-item>
-      </ion-list>
+
+      <div class="talkDetails-description">
+        <div class="divider">
+          <span class="titleDivider">{{ LL.Talk_summary() }}</span>
+        </div>
+        <ion-text v-html="talk?.description">
+        </ion-text>
+      </div>
+
+      <div class="talkDetails-speakers">
+        <div class="divider">
+          <span class="titleDivider">{{ LL.Speakers() }}</span>
+          <span class="divider-separator"></span>
+        </div>
+        <ion-list class="talkDetails-speakers-list">
+          <ion-item v-for="(speaker, index) in talk?.speakers" :key="index">
+            <ion-avatar>
+              <img :src="speaker.photoUrl" />
+            </ion-avatar>
+            <div class="speakerInfo">
+              <div class="speakerInfo-name">
+                {{speaker.fullName}}
+                <span class="speakerInfo-company" v-if="speaker.companyName">
+                     <ion-icon aria-hidden="true" src="assets/icons/solid/suitcase-2.svg"></ion-icon>
+                  ({{speaker.companyName}})
+                </span>
+              </div>
+              <div class="speakerInfo-description">
+                <div v-html="speaker.speakerBio"></div>
+              </div>
+            </div>
+
+          </ion-item>
+        </ion-list>
+      </div>
     </ion-content>
   </ion-page>
 </template>
@@ -125,4 +154,152 @@ const theme = computed(() => {
 </script>
 
 <style lang="scss" scoped>
+  .talkDetails {
+
+    &-subHeader {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      background-color: var(--app-beige-line);
+      padding: var(--app-gutters);
+      z-index: 0;
+
+      &-schedule, &-room {
+        display: flex;
+        align-items: center;
+        column-gap: 4px;
+        font-weight: 600;
+        color: var(--app-grey-dark);
+
+        ion-label {
+          display: flex;
+          align-items: center;
+        }
+
+        .slot-schedule-icon {
+          width: 24px;
+          font-size: 16px;
+          opacity: 0.4;
+        }
+
+        ion-icon {
+          color: var(--app-primary-shade);
+        }
+      }
+    }
+
+    &-title {
+      font-weight: 900;
+      padding: 0 var(--app-gutters);
+    }
+
+    &-infos {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px var(--app-gutters) var(--app-gutters) var(--app-gutters);
+
+      .listTrack {
+        display: inline-flex;
+        flex-direction: row;
+        row-gap: 12px;
+      }
+
+      ion-label {
+        font-size: 14px;
+        font-weight: 500;
+      }
+    }
+
+    &-description {
+      padding: var(--app-gutters);
+
+      ion-text {
+        line-height: 1.6;
+      }
+    }
+
+    &-speakers {
+      background-color: var(--app-beige-medium);
+      padding: var(--app-gutters);
+
+      &-list {
+       padding-top: var(--app-gutters);
+       padding-bottom: var(--app-gutters);
+       background-color: var(--app-beige-medium);
+
+        ion-item {
+          --background: var(--app-beige-medium);
+          --padding-start: 0;
+          --inner-padding-end: 0;
+          --padding-top: 8px;
+          --padding-bottom: 8px;
+
+          ion-avatar {
+            max-height: 64px;
+            min-height: 64px;
+            min-width: 64px;
+            max-width: 64px;
+            margin-right: var(--app-gutters);
+            border: 2px solid var(--app-primary);
+          }
+
+          .speakerInfo {
+            display: flex;
+            flex-direction: column;
+
+            &-name {
+              display: flex;
+              flex-direction: column;
+              margin-bottom: 8px;
+              font-weight: bold;
+            }
+
+            &-company {
+              display: flex;
+              column-gap: 4px;
+              align-items: center;
+              font-weight: normal;
+              font-size: 13px;
+              color: var(--app-grey-dark);
+
+              ion-icon {
+                font-size: 16px;
+              }
+            }
+
+            &-description {
+              padding-bottom: 12px;
+              font-size: 14px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .divider {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    .titleDivider {
+      font-weight: bold;
+      color: var(--app-beige-dark);
+    }
+
+    .divider-separator {
+      display: block;
+      height: 1px;
+      width: 100%;
+      margin-left: 16px;
+      background-color: var(--app-beige-line);
+      flex: 1;
+
+      @media (prefers-color-scheme: dark) {
+        background-color: var(--app-line-contrast);
+      }
+    }
+  }
 </style>

@@ -87,8 +87,8 @@ defineEmits<{
       align-items: center;
       justify-content: center;
       background-color: white;
-      width: 74px;
-      height: 74px;
+      width: 68px;
+      height: 68px;
       padding: 8px;
       filter: drop-shadow(0px 1px 4px rgba(0, 0, 0, 0.15));
       border: 2px solid var(--voxxrin-event-theme-colors-primary-hex);
@@ -138,7 +138,6 @@ defineEmits<{
       column-gap: 4px;
       color: var(--app-beige-dark);
       font-size: 13px;
-      font-weight: bold;
       text-align: left;
       word-break: break-word;
 
@@ -154,12 +153,13 @@ defineEmits<{
     align-items: center;
     justify-content: center;
     height: 100%;
+    margin-inline-start: 8px;
 
     &-time {
       display: flex;
       flex-direction: column;
       justify-content: end;
-      font-size: 14px;
+      font-size: 13px;
       text-align: end;
 
       .dates {

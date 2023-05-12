@@ -131,7 +131,7 @@ defineEmits<{
 
     ion-badge {
       position: absolute;
-      right: -5px;
+      right: -6px;
       top: -2px;
       padding: 0 16px;
       transform: scale(0.9);
