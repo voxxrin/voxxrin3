@@ -1,5 +1,10 @@
 import {DailySchedule, ScheduleTimeSlot} from "../../../shared/dayly-schedule.firestore";
-import {TalkId, VoxxrinBreak, VoxxrinTalk} from "@/models/VoxxrinTalk";
+import {
+    createVoxxrinTalkFromFirestore,
+    TalkId,
+    VoxxrinBreak,
+    VoxxrinTalk
+} from "@/models/VoxxrinTalk";
 import {EventId} from "@/models/VoxxrinEvent";
 import {DayId} from "@/models/VoxxrinDay";
 import {match} from "ts-pattern";
@@ -90,25 +95,7 @@ export function createVoxxrinDailyScheduleFromFirestore(event: VoxxrinConference
                 }))
                 .with({type: 'talks'}, ts => ({
                     type: 'talks' as const,
-                    talks: ts.talks.map<VoxxrinTalk>(t => {
-                        const format = findTalkFormat(event, new TalkFormatId(t.format.id));
-                        const track = findTrack(event, new TrackId(t.track.id));
-                        const room = findRoom(event, new RoomId(t.room.id));
-                        return {
-                            language: t.language,
-                            title: t.title,
-                            speakers: t.speakers.map(sp => ({
-                                photoUrl: sp.photoUrl,
-                                companyName: sp.companyName,
-                                fullName: sp.fullName,
-                                id: new SpeakerId(sp.id)
-                            })),
-                            format,
-                            track,
-                            room,
-                            id: new TalkId(t.id)
-                        }
-                    }),
+                    talks: ts.talks.map<VoxxrinTalk>(t => createVoxxrinTalkFromFirestore(event, t)),
                     overlappingTimeSlots: firestoreSchedule.timeSlots
                         .filter(overlappingTSCandidate => {
                             return overlappingTSCandidate.id !== ts.id
