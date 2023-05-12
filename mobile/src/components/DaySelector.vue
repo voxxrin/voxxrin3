@@ -21,7 +21,7 @@
 <script setup lang="ts">
 import {computed, PropType, ref, watch} from "vue";
 import {VoxxrinDay} from "@/models/VoxxrinDay";
-import {localDateToReadableParts} from "@/models/DatesAndTime";
+import {localDateToReadableParts, toISOLocalDate} from "@/models/DatesAndTime";
 import {useCurrentUserLocale} from "@/state/useCurrentUserLocale";
 import {useInterval} from "@/views/vue-utils";
 import {ISOLocalDate} from "../../../shared/type-utils";
@@ -43,7 +43,7 @@ const props = defineProps({
 
 const today = ref<ISOLocalDate>("0000-00-00")
 useInterval(() => {
-    today.value = useCurrentClock().zonedDateTimeISO().toPlainDate().toString() as ISOLocalDate
+    today.value = toISOLocalDate(useCurrentClock().zonedDateTimeISO())
 }, import.meta.env.DEV?{seconds:5}:{minutes:15}, { immediate: true })
 
 const formattedDays = computed(() => {

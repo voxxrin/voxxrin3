@@ -9,7 +9,7 @@ import {Replace} from "@/models/type-utils";
 import {Temporal} from "temporal-polyfill";
 import {match} from "ts-pattern";
 import {useCurrentClock} from "@/state/CurrentClock";
-import {zonedDateTimeRangeOf} from "@/models/DatesAndTime";
+import {toISOLocalDate, zonedDateTimeRangeOf} from "@/models/DatesAndTime";
 
 export type VoxxrinConferenceDescriptor = Replace<ConferenceDescriptor, {
     id: EventId;
@@ -88,6 +88,12 @@ export function findVoxxrinDay(conferenceDescriptor: VoxxrinConferenceDescriptor
         throw new Error(`No day found in conference descriptor ${conferenceDescriptor.id.value} matching day=${dayId.value}`)
     }
     return conferenceDescriptor.days[dayIndex];
+}
+
+export function findDefaultConferenceDay(conferenceDescriptor: VoxxrinConferenceDescriptor) {
+    const today = toISOLocalDate(useCurrentClock().zonedDateTimeISO())
+    const confDayMatchingToday = conferenceDescriptor.days.find(d => d.localDate === today)
+    return confDayMatchingToday || conferenceDescriptor.days[0];
 }
 
 export function findRoomIndex(confDescriptor: VoxxrinConferenceDescriptor, roomId: RoomId) {

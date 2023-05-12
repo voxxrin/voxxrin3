@@ -108,3 +108,7 @@ export function zonedDateTimeRangeOf(localDates: ISOLocalDate[], timezone: strin
 
     return {start, end};
 }
+
+export function toISOLocalDate(zdt: Temporal.ZonedDateTime): ISOLocalDate {
+    return zdt.toPlainDate().toString() as ISOLocalDate;
+}
