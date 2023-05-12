@@ -111,10 +111,10 @@ const theme = {
   transition: 80ms ease-in-out;
 
   @media (prefers-color-scheme: dark) {
-    background: var(--app-dark-contrast);
+    background: var(--app-light-contrast);
     border : {
-      top: 1px solid var(--app-light-contrast);
-      right: 1px solid var(--app-light-contrast);
+      top: 1px solid var(--app-line-contrast);
+      right: 1px solid var(--app-line-contrast);
     }
   }
 
@@ -311,8 +311,8 @@ const theme = {
 
     @media (prefers-color-scheme: dark) {
       border : {
-        top: 1px solid var(--app-light-contrast);
-        bottom: 1px solid var(--app-light-contrast);
+        top: 1px solid var(--app-line-contrast);
+        bottom: 1px solid var(--app-line-contrast);
       }
     }
 
@@ -357,9 +357,9 @@ const theme = {
       --background-hover-opacity: 0.1;
 
       @media (prefers-color-scheme: dark) {
-        --background: var(--app-dark-contrast);
+        --background: var(--app-light-contrast);
         --color: var(--app-white);
-        border-left: 1px solid var(--app-light-contrast);
+        border-left: 1px solid var(--app-line-contrast);
       }
 
       .favorite-btn {

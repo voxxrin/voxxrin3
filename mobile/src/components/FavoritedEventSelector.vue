@@ -204,7 +204,6 @@ defineEmits<{
   }
 }
 
-
 @keyframes scale-up-center {
   0% { transform: scale(0.5);}
   100% { transform: scale(1);}

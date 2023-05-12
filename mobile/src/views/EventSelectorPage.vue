@@ -197,6 +197,7 @@ async function showEventActions(event: ListableVoxxrinEvent) {
 
       @media (prefers-color-scheme: dark) {
         --background: var(--app-dark-contrast);
+        --color: var(--app-white);
         border: none;
       }
     }
@@ -215,6 +216,11 @@ async function showEventActions(event: ListableVoxxrinEvent) {
     .conferenceToggle {
       display: flex;
       --track-background-checked: var(--app-voxxrin);
+
+      @media (prefers-color-scheme: dark) {
+        --handle-background-checked: var(--app-light-contrast);
+      }
+
 
       &-label {
         font-weight: bold;

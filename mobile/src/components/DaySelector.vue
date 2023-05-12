@@ -80,7 +80,7 @@ const formattedDays = computed(() => {
     box-shadow: rgba(var(--voxxrin-event-theme-colors-primary-contrast-rgb), 0.15);
 
     @media (prefers-color-scheme: dark) {
-      background: var(--app-background);
+      background: rgba(var(--app-medium-contrast-rgb), 0.5);
     }
 
     &-content {
@@ -127,8 +127,7 @@ const formattedDays = computed(() => {
         border-bottom: 2px solid var(--app-grey-light);
 
         @media (prefers-color-scheme: dark) {
-          border-bottom: 2px solid var(--app-white);
-          opacity: 0.2;
+          border-bottom: 2px solid var(--app-light-contrast);
         }
       }
     }
@@ -177,9 +176,9 @@ const formattedDays = computed(() => {
 
         @media (prefers-color-scheme: dark) {
           --border-color: var(--app-dark-contrast);
-          --background: var(--app-dark-contrast);
+          --background: var(--app-light-contrast);
           --background-activated: var(--app-dark);
-          --color: var(--app-grey-dark);
+          --color: var(--app-grey-medium);
         }
 
         &.selected {@extend %selected;}

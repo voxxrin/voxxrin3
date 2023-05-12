@@ -1,6 +1,7 @@
 <template>
   <ion-accordion :value="timeslot.id.value" :class="{ [`_${progress?.status}`]: true, '_feedback-provided': !!timeslotFeedback, '_missing-feedback': !timeslotFeedback, '_is-break': timeslot.type==='break' }">
     <ion-item slot="header" color="light">
+      <ion-ripple-effect type="bounded"></ion-ripple-effect>
       <ion-grid class="slot">
         <ion-row>
           <ion-col class="slot-schedule">
@@ -103,7 +104,7 @@ const timeslotLabel = getTimeslotLabel(props.timeslot!);
 <style lang="scss" scoped>
 
 ion-accordion {
-  border-bottom: 2px solid var(--app-background);
+  border-bottom: 1px solid var(--app-background);
 
   &.accordion-expanded {
     border-bottom: none;
@@ -130,6 +131,10 @@ ion-accordion {
     width: 48px;
     font-size: 30px;
     color: var(--app-beige-dark);
+
+    @media (prefers-color-scheme: dark) {
+      color: var(--app-line-contrast);
+    }
   }
 
   ._ongoing-progress {
@@ -200,11 +205,6 @@ ion-accordion {
         background-color: white;
         color: var(--voxxrin-event-theme-colors-secondary-hex);
 
-        @media (prefers-color-scheme: dark) {
-          background: rgba(white, 0.1);
-          color: var(--app-white);
-        }
-
         ion-icon {
           font-size: 16px;
         }
@@ -256,9 +256,17 @@ ion-accordion {
 
   // * States Accordion Divider *//
   &._past {
+    @media (prefers-color-scheme: dark) {
+     border-bottom: 1px solid var(--app-light-contrast);
+    }
+
     .ion-color-light {
       --ion-color-base: var(--app-beige-line) !important;
       --ripple-color: var(--app-beige-dark) !important;
+
+      @media (prefers-color-scheme: dark) {
+        --ion-color-base: var(--app-background) !important;
+      }
 
       ion-label {
         color: var(--app-primary-tint);
@@ -272,6 +280,10 @@ ion-accordion {
     ::v-deep .ion-accordion-toggle-icon {
       font-size: 24px;
       color: var(--app-beige-dark) !important;
+
+      @media (prefers-color-scheme: dark) {
+        color: var(--app-line-contrast) !important;
+      }
     }
 
     ._accordion-icon._past-icon {
@@ -312,12 +324,20 @@ ion-accordion {
       --ion-color-base: var(--app-primary-shade) !important;
       --ripple-color: var(--app-primary) !important;
 
+      @media (prefers-color-scheme: dark) {
+        --ion-color-base: var(--app-light-contrast) !important;
+      }
+
       ion-label { color: var(--app-white);}
     }
 
     ::v-deep .ion-accordion-toggle-icon {
       font-size: 24px;
       color: var(--app-white) !important;
+
+      @media (prefers-color-scheme: dark) {
+        color: var(--app-medium-contrast);
+      }
     }
 
     ._accordion-icon._future-icon { display: inline-block; }

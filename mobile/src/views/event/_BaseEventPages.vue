@@ -102,6 +102,7 @@ ion-tab-bar {
     color: var(--app-primary);
 
     @media (prefers-color-scheme: dark) {
+      --background: var(--app-dark-contrast);
       color: var(--app-white);
     }
 
@@ -112,8 +113,17 @@ ion-tab-bar {
     &.tab-selected {
       color: var(--voxxrin-event-theme-colors-primary-hex);
 
+      @media (prefers-color-scheme: dark) {
+        --background: var(--voxxrin-event-theme-colors-primary-hex);
+        color: var(--app-white);
+      }
+
       ion-label {
         color: var(--voxxrin-event-theme-colors-primary-hex);
+
+        @media (prefers-color-scheme: dark) {
+          color: var(--app-white);
+        }
       }
     }
 

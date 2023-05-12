@@ -58,11 +58,11 @@ const props = defineProps({
   transition: 140ms ease-in-out;
 
   @media (prefers-color-scheme: dark) {
-    background: var(--app-dark-contrast);
+    background: var(--app-light-contrast);
     border : {
-      top: 1px solid var(--app-light-contrast);
-      right: 1px solid var(--app-light-contrast);
-      bottom: 1px solid var(--app-light-contrast);
+      top: 1px solid var(--app-line-contrast);
+      right: 1px solid var(--app-line-contrast);
+      bottom: 1px solid var(--app-line-contrast);
       left: 6px solid var(--voxxrin-event-theme-colors-primary-hex);
     }
   }
@@ -97,9 +97,17 @@ const props = defineProps({
         font-weight: 500;
         color: var(--app-grey-dark);
 
+        @media (prefers-color-scheme: dark) {
+          color: rgba(white, 0.8);
+        }
+
         ion-icon {
           font-size: 16px;
           color: var(--app-primary-shade);
+
+          @media (prefers-color-scheme: dark) {
+            color: var(--app-white);
+          }
         }
       }
     }
