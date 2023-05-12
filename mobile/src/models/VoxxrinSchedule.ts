@@ -1,7 +1,6 @@
 import {DailySchedule, ScheduleTimeSlot} from "../../../shared/dayly-schedule.firestore";
 import {
     createVoxxrinTalkFromFirestore,
-    TalkId,
     VoxxrinBreak,
     VoxxrinTalk
 } from "@/models/VoxxrinTalk";
@@ -9,15 +8,9 @@ import {EventId} from "@/models/VoxxrinEvent";
 import {DayId} from "@/models/VoxxrinDay";
 import {match} from "ts-pattern";
 import {RoomId} from "@/models/VoxxrinRoom";
-import {SpeakerId} from "@/models/VoxxrinSpeaker";
-import {TalkFormatId} from "@/models/VoxxrinTalkFormat";
-import {TrackId} from "@/models/VoxxrinTrack";
 import {Temporal} from "temporal-polyfill";
 import {Replace} from "@/models/type-utils";
 import {
-    findRoom,
-    findTalkFormat,
-    findTrack,
     VoxxrinConferenceDescriptor
 } from "@/models/VoxxrinConferenceDescriptor";
 import {formatHourMinutes} from "@/models/DatesAndTime";
@@ -75,6 +68,21 @@ export function getTimeslotLabel(timeslot: VoxxrinScheduleTimeSlot) {
         start,
         end,
         full: `${start} -> ${end}`
+    }
+}
+
+export function filterTimeslotsToAutoExpandBasedOn(timeslots: VoxxrinScheduleTimeSlot[], now: Temporal.ZonedDateTime) {
+    const expandedTimeslots = timeslots.filter(ts =>
+        ts.end.epochMilliseconds > now.epochMilliseconds
+    );
+
+    // When there is no auto-expanded timeslot, let's consider we're going to auto-expand
+    // EVERY timeslot
+    // This will happen on a past day (or at the end of the day for current day)
+    if(expandedTimeslots.length === 0) {
+        return timeslots;
+    } else {
+        return expandedTimeslots;
     }
 }
 

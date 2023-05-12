@@ -66,6 +66,7 @@ import {getRouteParamsValue, isRefDefined, useInterval} from "@/views/vue-utils"
 import {EventId} from "@/models/VoxxrinEvent";
 import {VoxxrinDay} from "@/models/VoxxrinDay";
 import {
+    filterTimeslotsToAutoExpandBasedOn,
     getTimeslotLabel,
     getTimeslotTimingProgress,
     VoxxrinScheduleTimeSlot
@@ -116,9 +117,8 @@ watchCurrentSchedule((currentSchedule) => {
         recomputeMissingFeedbacksList();
 
         currentlySelectedDay.value = findVoxxrinDay(currentConferenceDescriptor.value, currentSchedule.day)
-        expandedTimeslotIds.value = timeslots.value.filter(ts =>
-            ts.end.epochMilliseconds > useCurrentClock().zonedDateTimeISO().epochMilliseconds
-        ).map(ts => ts.id.value);
+        expandedTimeslotIds.value = filterTimeslotsToAutoExpandBasedOn(currentSchedule.timeSlots, useCurrentClock().zonedDateTimeISO())
+            .map(ts => ts.id.value);
     }
 });
 
