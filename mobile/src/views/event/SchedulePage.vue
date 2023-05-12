@@ -101,7 +101,7 @@ const expandedTimeslotIds = ref<string[]>([])
 
 onMounted(async () => {
     console.log(`SchedulePage mounted !`)
-    useInterval(recomputeMissingFeedbacksList, import.meta.env.DEV?{seconds:5}:{minutes:3}, {immediate: true})
+    useInterval(recomputeMissingFeedbacksList, {seconds:10}, {immediate: true})
 })
 
 watchCurrentSchedule((currentSchedule) => {

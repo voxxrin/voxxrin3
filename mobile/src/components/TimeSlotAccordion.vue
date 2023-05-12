@@ -95,7 +95,7 @@ useInterval(() => {
   if(props.timeslot) {
     progress.value = getTimeslotTimingProgress(props.timeslot, useCurrentClock().zonedDateTimeISO())
   }
-}, import.meta.env.DEV?{seconds:4}:{minutes:1}, { immediate: true });
+}, {seconds:5}, { immediate: true });
 
 const timeslotLabel = getTimeslotLabel(props.timeslot!);
 
