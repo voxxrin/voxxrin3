@@ -253,7 +253,8 @@ async function showEventActions(event: ListableVoxxrinEvent) {
 
       @media (prefers-color-scheme: dark) {
         --background: var(--app-dark-contrast);
-        border: none;
+        border-top: none;
+        border-bottom: 1px solid var(--app-line-contrast);
       }
     }
   }

@@ -89,13 +89,6 @@ function backButtonClicked() {
       padding-top: 16px;
       font-weight: bold;
       color: var(--voxxrin-event-theme-colors-primary-contrast-hex);
-
-      &-back {
-        @media (prefers-color-scheme: dark) {
-          --background: rgba(var(--app-white-transparent));
-          --color: var(--app-white);
-        }
-      }
     }
 
     .viewsSubHeader {
