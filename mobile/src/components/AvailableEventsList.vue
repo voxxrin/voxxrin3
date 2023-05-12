@@ -16,7 +16,8 @@
           '--voxxrin-event-theme-colors-tertiary-rgb': event?.theming.colors.tertiaryRGB,
           '--voxxrin-event-theme-colors-tertiary-contrast-hex': event?.theming.colors.tertiaryContrastHex,
           '--voxxrin-event-theme-colors-tertiary-contrast-rgb': event?.theming.colors.tertiaryContrastRGB,
-      }" v-for="(event, index) in events" :key="index">
+      }" v-for="(event, index) in events" :key="index"
+                @click="$emit('event-clicked', event)">
         <ion-ripple-effect type="bounded"></ion-ripple-effect>
         <div class="eventItem-logoContainer">
           <div class="logo">
@@ -25,17 +26,22 @@
         </div>
         <div class="eventItem-infos">
           <div class="title">{{event.title}}</div>
+          <div class="timeInfos">
+            <ion-icon aria-hidden="true" src="/assets/icons/solid/calendar.svg"></ion-icon>
+            <month-day-date-range :format="{separator: '>'}" :range="{start: event.start, end: event.end}" />
+            {{event.start.year}}
+          </div>
           <div class="location">
             <ion-icon aria-hidden="true" src="/assets/icons/solid/map-marker.svg"></ion-icon> {{event.location.city}}, {{event.location.country}}
           </div>
         </div>
 
-        <div class="eventItem-end" slot="end" @click="$emit('event-clicked', event)">
-          <div class="eventItem-end-time">
-            <div class="dates"><month-day-date-range :format="{separator: '>'}" :range="{start: event.start, end: event.end}" /></div>
-            <div class="year">{{event.start.year}}</div>
-          </div>
-          <ion-icon src="/assets/icons/solid/more-menu-vertical.svg"></ion-icon>
+        <!-- TODO connect pin btn -->
+        <div class="eventItem-end" slot="end">
+          <ion-button fill="clear" shape="round">
+            <ion-icon src="/assets/icons/line/pin-line.svg" v-if="true"></ion-icon>
+            <ion-icon class="_is-pined" src="/assets/icons/solid/pin.svg" v-if="false"></ion-icon>
+          </ion-button>
         </div>
       </ion-item>
     </ion-list>
@@ -132,6 +138,25 @@ defineEmits<{
       }
     }
 
+    .timeInfos {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      margin-top: 14px;
+      margin-bottom: 4px;
+      column-gap: 4px;
+      font-size: 13px;
+      font-weight: 500;
+      text-align: end;
+      color: var(--app-primary-shade);
+
+
+      ion-icon {
+        font-size: 16px;
+        color: var(--app-primary-shade);
+      }
+    }
+
     .location {
       display: flex;
       align-items: center;
@@ -154,29 +179,16 @@ defineEmits<{
     justify-content: center;
     height: 100%;
     margin-inline-start: 8px;
-
-    &-time {
-      display: flex;
-      flex-direction: column;
-      justify-content: end;
-      font-size: 13px;
-      text-align: end;
-
-      .dates {
-        display: block;
-        font-weight: 700;
-        text-transform: uppercase;
-      }
-
-      .year {
-        display: block;
-      }
-    }
+    margin-inline-end: 24px;
 
     ion-icon {
       width: 34px;
       font-size: 34px;
       color: var(--app-grey-medium);
+    }
+
+    ._is-pined {
+      color: var(--app-voxxrin) !important;
     }
   }
 }

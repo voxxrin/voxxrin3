@@ -3,6 +3,11 @@
 /* Input */
 
 ion-input {
+
+  &.sc-ion-input-md-h {
+    min-height: 44px !important;
+  }
+
   &.searchInput {
     position: relative;
     --background: var(--app-white);
