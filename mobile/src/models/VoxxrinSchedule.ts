@@ -77,10 +77,10 @@ export function filterTimeslotsToAutoExpandBasedOn(timeslots: VoxxrinScheduleTim
     );
 
     // When there is no auto-expanded timeslot, let's consider we're going to auto-expand
-    // EVERY timeslot
+    // EVERY non-break timeslot
     // This will happen on a past day (or at the end of the day for current day)
     if(expandedTimeslots.length === 0) {
-        return timeslots;
+        return timeslots.filter(ts => ts.type !== 'break');
     } else {
         return expandedTimeslots;
     }
