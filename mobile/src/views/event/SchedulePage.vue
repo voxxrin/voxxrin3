@@ -20,12 +20,13 @@
           @day-selected="(day) => changeDayTo(day)">
       </day-selector>
 
-      <ion-accordion-group :multiple="true" v-if="currentConferenceDescriptor && currentlySelectedDay">
+      <ion-accordion-group :multiple="true" v-if="currentConferenceDescriptor && currentlySelectedDay" :value="expandedTimeslotIds">
           <time-slot-accordion :day-id="currentlySelectedDay.id"
               v-for="(timeslot, index) in timeslots" :key="timeslot.id.value"
               :timeslot-feedback="timeslot.feedback" :timeslot="timeslot"
               :event="currentConferenceDescriptor"
-              @add-timeslot-feedback-clicked="(ts) => showAlertForTimeslot(ts)">
+              @add-timeslot-feedback-clicked="(ts) => showAlertForTimeslot(ts)"
+              @click="() => toggleExpandedTimeslot(timeslot)">
           </time-slot-accordion>
       </ion-accordion-group>
 
@@ -95,6 +96,7 @@ const changeDayTo = (day: VoxxrinDay) => {
 
 const timeslots = ref<Array<VoxxrinScheduleTimeSlot & {feedback: VoxxrinTimeslotFeedback|undefined}>>([]);
 const missingFeedbacksPastTimeslots = ref<Array<{start: string, end: string, timeslot: VoxxrinScheduleTimeSlot}>>([])
+const expandedTimeslotIds = ref<string[]>([])
 
 onMounted(async () => {
     console.log(`SchedulePage mounted !`)
@@ -114,6 +116,9 @@ watchCurrentSchedule((currentSchedule) => {
         recomputeMissingFeedbacksList();
 
         currentlySelectedDay.value = findVoxxrinDay(currentConferenceDescriptor.value, currentSchedule.day)
+        expandedTimeslotIds.value = timeslots.value.filter(ts =>
+            ts.end.epochMilliseconds > useCurrentClock().zonedDateTimeISO().epochMilliseconds
+        ).map(ts => ts.id.value);
     }
 });
 
@@ -159,6 +164,16 @@ function fixAnimationOnFabClosing($el: HTMLElement) {
             }, 1000)
         }
     }
+}
+
+function toggleExpandedTimeslot(timeslot: VoxxrinScheduleTimeSlot) {
+    const expandedTimeslotIdsIndex = expandedTimeslotIds.value.indexOf(timeslot.id.value)
+    if(expandedTimeslotIdsIndex === -1) {
+        expandedTimeslotIds.value.push(timeslot.id.value);
+    } else {
+        expandedTimeslotIds.value.splice(expandedTimeslotIdsIndex, 1);
+    }
+    console.log(`toggled ${timeslot.id.value} => ${expandedTimeslotIds.value.join(", ")}`)
 }
 </script>
 
