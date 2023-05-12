@@ -26,6 +26,8 @@ const en = {
 	Overlaps_x_slot_value: `{nrOfOverlappingSlots} slot{{nrOfOverlappingSlots:s}}`,
 	Talk_summary: `Talk summary`,
 	Speakers: `Speakers`,
+	Welcome_to: `Welcome to`,
+	Hello_xxx: `Hello, {name:string}`
 } satisfies BaseTranslation
 
 export default en

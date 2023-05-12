@@ -115,6 +115,15 @@ type RootTranslation = {
 	 * S​p​e​a​k​e​r​s
 	 */
 	Speakers: string
+	/**
+	 * W​e​l​c​o​m​e​ ​t​o
+	 */
+	Welcome_to: string
+	/**
+	 * H​e​l​l​o​,​ ​{​n​a​m​e​}
+	 * @param {string} name
+	 */
+	Hello_xxx: RequiredParams<'name'>
 }
 
 export type TranslationFunctions = {
@@ -218,6 +227,14 @@ export type TranslationFunctions = {
 	 * Speakers
 	 */
 	Speakers: () => LocalizedString
+	/**
+	 * Welcome to
+	 */
+	Welcome_to: () => LocalizedString
+	/**
+	 * Hello, {name}
+	 */
+	Hello_xxx: (arg: { name: string }) => LocalizedString
 }
 
 export type Formatters = {}

@@ -3,8 +3,8 @@
     <ion-content>
       <ion-header class="conferenceWelcome">
         <div class="conferenceWelcome-title">
-          <span class="name">Hello, Robin</span>
-          <span class="welcome">Welcome to, <strong>Voxxrin</strong></span>
+          <span class="name">{{ LL.Hello_xxx({name:'World'}) }}</span>
+          <span class="welcome">{{ LL.Welcome_to() }} <strong>Voxxrin</strong></span>
         </div>
         <ion-button class="btnUser" shape="round" size="large">
           <ion-icon src="/assets/icons/line/user-line.svg"></ion-icon>
