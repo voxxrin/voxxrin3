@@ -47,7 +47,8 @@
         <ion-item-divider class="stickyDivider" sticky>All conferences</ion-item-divider>
         <available-events-list
             class="availableEventsList"
-            :events="filteredAvailableEvents" @event-clicked="(event) => showEventActions(event)">
+            :events="filteredAvailableEvents" @event-clicked="(event) => showEventActions(event)"
+            :favorited-events="favoritedTalksRef" @event-fav-toggled="eventFavoriteToggled">
           <template #no-event>
             <div class="infoMessage ion-text-center">
               <ion-icon class="infoMessage-icon" aria-hidden="true" src="/assets/icons/solid/checkbox-list-detail.svg"></ion-icon>
@@ -137,14 +138,29 @@ async function showEventActions(event: ListableVoxxrinEvent) {
     if(result?.action === 'visit-website') {
         Browser.open({url: event.websiteUrl})
     } else if(result?.action === 'add-to-favs') {
-        favoritedTalksRef.value = [...favoritedTalksRef.value, event.id];
+        addEventToFavoritedList(event);
     } else if(result?.action === 'remove-from-favs') {
-        favoritedTalksRef.value = favoritedTalksRef.value.filter(ev => !ev.isSameThan(event.id));
+        removeEventFromFavoritedList(event);
     } else if(result?.action === 'cancel') {
 
     } else {
         // popup closed
     }
+}
+
+function eventFavoriteToggled(event: ListableVoxxrinEvent, transitionType: 'unfav-to-fav'|'fav-to-unfav') {
+    if(transitionType === 'unfav-to-fav') {
+        addEventToFavoritedList(event);
+    } else {
+        removeEventFromFavoritedList(event);
+    }
+}
+
+function addEventToFavoritedList(event: ListableVoxxrinEvent) {
+    favoritedTalksRef.value = [...favoritedTalksRef.value, event.id];
+}
+function removeEventFromFavoritedList(event: ListableVoxxrinEvent) {
+    favoritedTalksRef.value = favoritedTalksRef.value.filter(ev => !ev.isSameThan(event.id));
 }
 </script>
 
