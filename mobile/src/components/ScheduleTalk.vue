@@ -240,7 +240,6 @@ function openTalkDetails() {
 
     .trackBadge {
       --background: v-bind('theme.track.color');
-      --color: v-bind('theme.track.color');
 
       @media (prefers-color-scheme: dark) {
         --color: var(--app-white);
@@ -334,13 +333,15 @@ function openTalkDetails() {
       align-items: center;
       column-gap: 4px;
       padding: 8px;
-      font-size: 11px;
+      font-size: 12px;
       line-height: 1.1;
       letter-spacing: -0.4px;
-      color: v-bind('theme.track.color');
+      color: var(--app-grey-dark);
+      font-weight: 500;
 
       @media (prefers-color-scheme: dark) {
-        color: var(--app-white);
+        color: rgba(white, 0.7);
+
       }
 
       &-list {
