@@ -369,6 +369,7 @@ function openTalkDetails() {
       --padding-end: 0;
       --background-activated-opacity: 0.1;
       --background-hover-opacity: 0.1;
+      --box-shadow: none;
 
       @media (prefers-color-scheme: dark) {
         --background: var(--app-light-contrast);
