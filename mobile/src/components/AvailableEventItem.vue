@@ -151,7 +151,7 @@ const isPinnedRef = computed(() => {
       font-size: 13px;
       font-weight: 500;
       text-align: end;
-      color: var(--app-grey-light);
+      color: var(--app-grey-dark);
 
       @media (prefers-color-scheme: dark) {
         color: var(--app-beige-dark);
