@@ -9,7 +9,7 @@ import {Replace} from "@/models/type-utils";
 import {Temporal} from "temporal-polyfill";
 import {match} from "ts-pattern";
 import {useCurrentClock} from "@/state/CurrentClock";
-import {toISOLocalDate, zonedDateTimeRangeOf} from "@/models/DatesAndTime";
+import {toHMMDuration, toISOLocalDate, zonedDateTimeRangeOf} from "@/models/DatesAndTime";
 
 export type VoxxrinConferenceDescriptor = Replace<ConferenceDescriptor, {
     id: EventId;
@@ -59,7 +59,8 @@ export function createVoxxrinConferenceDescriptor(firestoreConferenceDescriptor:
         })),
         talkFormats: firestoreConferenceDescriptor.talkFormats.map(tf => ({
             ...tf,
-            id: new TalkFormatId(tf.id)
+            id: new TalkFormatId(tf.id),
+            hmmDuration: toHMMDuration(tf.duration)
         })),
         talkTracks: firestoreConferenceDescriptor.talkTracks.map(tt => ({
             ...tt,

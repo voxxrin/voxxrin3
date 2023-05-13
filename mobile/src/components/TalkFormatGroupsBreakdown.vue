@@ -4,7 +4,7 @@
       <ion-item-divider class="listTalks-divider">
         <ion-icon src="/assets/images/svg/format-symbol.svg" :style="{ 'color': perFormatGroup.format.themeColor }"></ion-icon>
         <ion-label :style="{ '--color': perFormatGroup.format.themeColor }">
-          {{perFormatGroup.format.title}} ({{perFormatGroup.format.duration}})
+          {{perFormatGroup.format.title}} ({{perFormatGroup.format.hmmDuration}})
         </ion-label>
         <span class="listTalks-divider-separator"></span>
       </ion-item-divider>

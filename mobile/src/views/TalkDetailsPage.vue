@@ -63,7 +63,7 @@
           }">{{talk?.track.title}}</ion-badge>
           </div>
           <ion-label :style="{ 'color': talk?.format.themeColor }">
-            {{talk?.format.title}} ({{talk?.format.duration}})
+            {{talk?.format.title}} ({{talk?.format.hmmDuration}})
           </ion-label>
         </div>
       </ion-text>
