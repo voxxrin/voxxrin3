@@ -7,10 +7,9 @@ import {
     VoxxrinDailySchedule
 } from "@/models/VoxxrinSchedule";
 import {DayId} from "@/models/VoxxrinDay";
-import {findVoxxrinDay, VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
-import {useFetchJsonDebouncer} from "@/state/state-utilities";
-import {storeDailyCachedSchedule, useDailyCachedSchedule} from "@/state/CachedSchedules";
-import {match} from "ts-pattern";
+import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
+import { doc, onSnapshot } from "firebase/firestore";
+import { db } from "@/state/firebase";
 
 
 const CURRENT_SCHEDULE = ref<VoxxrinDailySchedule|undefined>(undefined);
@@ -25,34 +24,21 @@ export function unsetCurrentSchedule() {
     CURRENT_SCHEDULE.value = undefined;
 }
 
-export const fetchSchedule = async (conferenceDescriptor: VoxxrinConferenceDescriptor, dayId: DayId) => {
+export const fetchSchedule = (conferenceDescriptor: VoxxrinConferenceDescriptor, dayId: DayId) => {
     // Avoiding to fetch schedule if the one already loaded matches the one expected
     if(
         !CURRENT_SCHEDULE.value?.eventId.isSameThan(conferenceDescriptor.id)
         || !CURRENT_SCHEDULE.value?.day.isSameThan(dayId)
     ) {
-        const day = findVoxxrinDay(conferenceDescriptor, dayId)
-        const voxxrinDailySchedule = await match(useDailyCachedSchedule(conferenceDescriptor.id, dayId))
-            .with(undefined, async () => {
-                const firestoreDailySchedule: DailySchedule = await useFetchJsonDebouncer(
-                    'daily-schedule',
-                    `events/${conferenceDescriptor.id.value}/days/${day.id.value}`,
-                    `/data/events/${conferenceDescriptor.id.value}/days/${day.id.value}.json`
-                );
+        const d = doc(db, `events/${conferenceDescriptor.id.value}/days/${dayId.value}`)
+        const unsubscribe = onSnapshot(d, docSnapshot => {
+                const firestoreDailySchedule: DailySchedule = docSnapshot.data() as DailySchedule
                 console.debug(`timeslots fetched:`, firestoreDailySchedule.timeSlots)
-                const voxxrinSchedule = createVoxxrinDailyScheduleFromFirestore(conferenceDescriptor, firestoreDailySchedule);
+                CURRENT_SCHEDULE.value = createVoxxrinDailyScheduleFromFirestore(conferenceDescriptor, firestoreDailySchedule);
+            }, err => {
+                console.log(`Encountered error: ${err}`);
+            });
 
-                // Caching schedule
-                storeDailyCachedSchedule(conferenceDescriptor.id, dayId, voxxrinSchedule);
-
-                return voxxrinSchedule;
-            })
-            .otherwise(async cachedDailySchedule =>
-                Promise.resolve(cachedDailySchedule.schedule())
-            )
-
-        CURRENT_SCHEDULE.value = voxxrinDailySchedule;
+        // TODO: see how to bind the unsubscribe properly in vue
     }
-
-    return CURRENT_SCHEDULE.value;
 }
