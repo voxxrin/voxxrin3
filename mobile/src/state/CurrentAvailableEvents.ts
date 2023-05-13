@@ -53,9 +53,13 @@ export async function fetchAvailableEvents() {
         `/data/events/query.json`
     );
 
+    console.log(firestoreAvailableEvents);
+
     CURRENT_AVAILABLE_EVENTS.value = new FetchedAvailableEvents(
         firestoreAvailableEvents.map(firestoreListableEventToVoxxrinListableEvent)
     );
+
+    console.log(CURRENT_AVAILABLE_EVENTS.value);
 
     return firestoreAvailableEvents;
 }
