@@ -112,3 +112,13 @@ export function zonedDateTimeRangeOf(localDates: ISOLocalDate[], timezone: strin
 export function toISOLocalDate(zdt: Temporal.ZonedDateTime): ISOLocalDate {
     return zdt.toPlainDate().toString() as ISOLocalDate;
 }
+
+export function toHMMDuration(duration: `PT${number}m`): string {
+    const temporalDuration = Temporal.Duration.from(duration)
+
+    let totalMinutes = temporalDuration.total('minutes');
+    const hours = Math.floor(totalMinutes/60);
+    const minutes = totalMinutes % 60;
+
+    return `${hours===0?'':`${hours}h`}${(hours>0 && minutes>0)?' ':''}${minutes===0?'':`${(minutes<10 && hours>0)?'0':''}${minutes}m`}`
+}

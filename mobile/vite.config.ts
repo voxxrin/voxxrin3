@@ -1,3 +1,4 @@
+/// <reference types="vitest" />
 import legacy from '@vitejs/plugin-legacy'
 import vue from '@vitejs/plugin-vue'
 import path from 'path'
@@ -25,6 +26,9 @@ export default defineConfig(({ command, mode }) => {
     },
     server: {
       host: '0.0.0.0'
+    },
+    test: {
+      environment: 'jsdom'
     }
   };
 
