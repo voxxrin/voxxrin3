@@ -1,6 +1,6 @@
 <template>
   <ion-list class="listTalks">
-    <ion-item-group v-for="(perFormatGroup, index) in perFormatGroups" :key="index">
+    <ion-item-group v-for="(perFormatGroup) in perFormatGroups" :key="perFormatGroup.format.id.value">
       <ion-item-divider class="listTalks-divider">
         <ion-icon src="/assets/images/svg/format-symbol.svg" :style="{ 'color': perFormatGroup.format.themeColor }"></ion-icon>
         <ion-label :style="{ '--color': perFormatGroup.format.themeColor }">
@@ -8,7 +8,7 @@
         </ion-label>
         <span class="listTalks-divider-separator"></span>
       </ion-item-divider>
-      <ion-item class="listTalks-item" v-for="(talk, talkIndex) in perFormatGroup.talks" :key="talkIndex">
+      <ion-item class="listTalks-item" v-for="(talk) in perFormatGroup.talks" :key="talk.id.value">
         <schedule-talk :talk="talk" :day-id="dayId"></schedule-talk>
       </ion-item>
     </ion-item-group>
@@ -16,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import {PropType} from "vue";
+import {PropType, computed} from "vue";
 import {
     IonItemDivider,
     IonItemGroup
@@ -42,7 +42,7 @@ const props = defineProps({
     }
 })
 
-const perFormatGroups = sortThenGroupByFormat(props.talks!, props.event!);
+const perFormatGroups = computed(() => sortThenGroupByFormat(props.talks!, props.event!));
 
 </script>
 
