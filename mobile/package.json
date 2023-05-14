@@ -34,6 +34,8 @@
     "@capacitor/status-bar": "5.0.0",
     "@ionic/vue": "7.0.4",
     "@ionic/vue-router": "7.0.4",
+    "@vueuse/core": "^10.1.2",
+    "@vueuse/firebase": "^10.1.2",
     "firebase": "^9.22.0",
     "ionicons": "7.0.0",
     "temporal-polyfill": "0.1.1",
