@@ -1,0 +1,28 @@
+{
+  "description": "<p>&nbsp;It is 2023, and people have certain expectations of web applications. They need to feel fast, smooth, and dependable at the same time. However, synchronizing the data between your backend and frontend can be problematic and can cause inconsistencies to creep in – diminishing the user experience!</p><p><br></p><p>Enter the powerful duo: Server-Sent events and Event-Sourcing. Updating your backend data based on events and sending new data to the frontend ensures the data is always up-to-date and responsive. In just 15 minutes, I will explain the basics and build an implementation with you on stage.</p>",
+  "title": "Reactive applications with Event-Sourcing and Server-Sent events",
+  "speakers": [
+    {
+      "fullName": "Mitchell Herrijgers",
+      "companyName": "AxonIQ",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-97aef1a1-4156-45d6-9268-768cbd4ad411.png",
+      "id": "18753"
+    }
+  ],
+  "language": "EN",
+  "format": {
+    "duration": "PT15m",
+    "id": "960",
+    "title": "Byte Size"
+  },
+  "summary": "",
+  "id": "18959",
+  "room": {
+    "title": "Auditorium",
+    "id": "19152"
+  },
+  "track": {
+    "title": "Architecture",
+    "id": "1251"
+  }
+}

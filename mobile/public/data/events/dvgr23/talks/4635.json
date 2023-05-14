@@ -1,0 +1,28 @@
+{
+  "room": {
+    "id": "2802",
+    "title": "Skalkotas"
+  },
+  "speakers": [
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-b23ea748-1aa2-43b4-9dc3-c2ca6a4eac97.jpeg",
+      "id": "3999",
+      "fullName": "Gerrit Grunwald",
+      "companyName": "Azul"
+    }
+  ],
+  "summary": "",
+  "id": "4635",
+  "language": "EN",
+  "title": "Welcome to the Jungle - A safari through the JVM landscape",
+  "track": {
+    "id": "2754",
+    "title": "Java"
+  },
+  "format": {
+    "title": "Conference",
+    "id": "953",
+    "duration": "PT40m"
+  },
+  "description": "<p>OpenJDK with it’s Java Virtual Machine is great but there is not only one flavour but many. There is Oracle OpenJDK, Eclipse Temurin, IBM Semeru, Amazon Corretto, Azul Zulu, Alibaba Dragonwell, Huawei Bi Sheng, Tencent Kona and many more. Did you ever ask yourself which one is better, faster, free or something similar? Or do you want to know where the differences are in those distributions, well then this session might bring some answers to your questions. It will give you an idea about what the JVM is and will cover all the available distributions not only of OpenJDK but also of GraalVM and will try to explain the differences and features of the available distributions. It will also try to give you an idea what JVM to use for specific use cases.</p>"
+}

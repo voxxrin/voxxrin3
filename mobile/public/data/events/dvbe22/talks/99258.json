@@ -1,0 +1,28 @@
+{
+  "summary": "",
+  "title": "Java *is* agile - OVERFLOW",
+  "track": {
+    "id": "2754",
+    "title": "Java"
+  },
+  "format": {
+    "id": "956",
+    "title": "Keynote",
+    "duration": "PT45m"
+  },
+  "id": "99258",
+  "room": {
+    "id": "4709",
+    "title": "Room 9"
+  },
+  "speakers": [
+    {
+      "fullName": "Venkat Subramaniam",
+      "companyName": "Agile Developer, Inc.",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-venkat_s.jpg",
+      "id": "47951"
+    }
+  ],
+  "description": "<p>Java *is* Agile</p>",
+  "language": "EN"
+}

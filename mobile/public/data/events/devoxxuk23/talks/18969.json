@@ -1,0 +1,34 @@
+{
+  "title": "Welcome to Devoxx UK",
+  "room": {
+    "title": "Gallery Hall",
+    "id": "19151"
+  },
+  "language": "EN",
+  "speakers": [
+    {
+      "companyName": "Oracle",
+      "photoUrl": "https://lh3.googleusercontent.com/a-/AOh14Gj1OS6OpAzuwBKwoUuCi9gxvNPvdmVA7nbW8lg3mg=s96-c",
+      "fullName": "Ana-Maria Mihalceanu",
+      "id": "1895"
+    },
+    {
+      "fullName": "Mark Hazell",
+      "id": "1855",
+      "photoUrl": "https://lh3.googleusercontent.com/a-/AOh14Gjv2Mo-16oK2Y8cB6wrT_L1vM0-fdX1n5CGGsR36g=s96-c",
+      "companyName": "Devoxx UK"
+    }
+  ],
+  "description": "<p>A run down of everything you can expect and need to know, so that you can have a fantastic experience at Devoxx UK 2023</p>",
+  "track": {
+    "title": "People & Culture",
+    "id": "1253"
+  },
+  "format": {
+    "duration": "PT20m",
+    "title": "Welcome",
+    "id": "19101"
+  },
+  "id": "18969",
+  "summary": ""
+}

@@ -1,0 +1,28 @@
+{
+  "summary": "",
+  "id": "3107",
+  "title": "Dead-Letter Queues in Event-Driven systems",
+  "description": "<p>Using a dead-letter queue is a very reasonable solution to deal with exceptional scenarios when dealing with message delivery.</p><p>Although commonplace, have you ever thought about the requirements of a dead-letter queue in an event-driven system?</p><p><br></p><p>Simply dead lettering a failure isn't sufficient.</p><p>What about the following message that might expect the previous message to be handled?</p><p>Or how do you decide when to reprocess entries within the queue?</p><p><br></p><p>This quick talk aims to shed some light on these specifics and why it is more complex than you might think.</p>",
+  "speakers": [
+    {
+      "id": "2860",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-1963e344-c72c-48d7-8639-57a7c78e0e3f.png",
+      "companyName": "AxonIQ",
+      "fullName": "Steven van Beelen"
+    }
+  ],
+  "room": {
+    "id": "19155",
+    "title": "Room D"
+  },
+  "format": {
+    "duration": "PT15m",
+    "title": "Byte Size",
+    "id": "960"
+  },
+  "language": "EN",
+  "track": {
+    "title": "Java",
+    "id": "2754"
+  }
+}

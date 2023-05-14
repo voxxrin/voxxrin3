@@ -1,0 +1,28 @@
+{
+  "speakers": [
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-4ca7eff3-ffc1-449c-bb92-bbc32440ba49.jpeg",
+      "id": "10757",
+      "companyName": "Diagrid",
+      "fullName": "Bilgin Ibryam"
+    }
+  ],
+  "room": {
+    "title": "Room B",
+    "id": "19154"
+  },
+  "format": {
+    "duration": "PT15m",
+    "title": "Byte Size",
+    "id": "960"
+  },
+  "title": "Deconstructing the Future of Application Architecture",
+  "language": "EN",
+  "description": "<p>Cloud computing is commoditising the full software stack except for the business logic. Once on-premise monolithic applications, transitioned first to containerised microservices, today are fully blending with the cloud services and even moving to the edge in some cases. In this talk, we go over the history and future of application architecture evolution, starting from hexagonal architecture, microservices, cloud-native architecture, functions, and edge middleware running on the CDN. By looking at past and present trends, we will explore what the future of application development may hold.&nbsp;</p>",
+  "summary": "",
+  "track": {
+    "title": "Architecture",
+    "id": "1251"
+  },
+  "id": "10895"
+}

@@ -1,0 +1,28 @@
+{
+  "format": {
+    "duration": "PT60m",
+    "title": "BOF",
+    "id": "954"
+  },
+  "room": {
+    "id": "4701",
+    "title": "BOF 1"
+  },
+  "speakers": [
+    {
+      "id": "17911",
+      "companyName": "ML6",
+      "photoUrl": "https://lh3.googleusercontent.com/a-/AFdZucr2YhazQdvf5G6iGJinCoYGRX6SuEdflNAagi7SLg=s96-c",
+      "fullName": "Robbe Sneyders"
+    }
+  ],
+  "language": "EN",
+  "id": "17961",
+  "title": "Connexion: API-first for all",
+  "track": {
+    "title": "Architecture",
+    "id": "1251"
+  },
+  "description": "<p><a href=\"https://github.com/spec-first/connexion\" rel=\"noopener noreferrer\" target=\"_blank\">Connexion</a> is a Python API-first framework that automagically handles HTTP requests based on an OpenAPI specification (~Swagger spec) of your API. Connexion starts from the API contract, maps the endpoints to your Python functions, and provides features such as security, serialization &amp; validation, all automatically configured based on the contract. This makes it unique, as many tools generate the specification based on your code instead. You can describe your REST API in as much detail as you want and Connexion guarantees that it will work as you specified. Connexion was originally developed by Zalando and recently released to the community. Previously, Connexion was built on top of Flask, but as of version 3.0, it works with almost any Python API framework by leveraging the standard ASGI interface.</p><p>In this talk we'll discuss:</p><ul><li>API-first as a development practice</li><li>The Connexion framework and features</li><li>ASGI middleware based architecture</li></ul>",
+  "summary": "API-first frameworks are a great way to develop your API. We'll discuss Connexion, a Python API-first framework that automagically handles HTTP requests based on an OpenAPI specification."
+}

@@ -1,0 +1,28 @@
+{
+  "speakers": [
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-MathisHammel.jpg",
+      "companyName": "CodinGame",
+      "id": "17651",
+      "fullName": "Mathis Hammel"
+    }
+  ],
+  "id": "18789",
+  "room": {
+    "title": "BOF 2",
+    "id": "4702"
+  },
+  "title": "Code Your First Video Game AI",
+  "track": {
+    "id": "2758",
+    "title": "Mind the Geek"
+  },
+  "language": "EN",
+  "format": {
+    "title": "Hands-on Lab",
+    "id": "968",
+    "duration": "PT180m"
+  },
+  "description": "<p><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">Have you ever wondered what it’s like to create an artificial intelligence for a video game?</span></p><p><br></p><p><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">In this workshop, you will learn and apply the main techniques used in the game industry to implement smart agents, such as the minimax algorithm or finite-state machines. There will also be a challenge where your AI can compete against others, and participants can win small prizes!</span></p><p><br></p><p><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">You can follow the workshop in almost any language, but Java/C++/Python/JavaScript are recommended.</span></p>",
+  "summary": ""
+}

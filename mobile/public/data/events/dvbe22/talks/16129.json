@@ -1,0 +1,34 @@
+{
+  "language": "EN",
+  "format": {
+    "duration": "PT50m",
+    "id": "951",
+    "title": "Conference"
+  },
+  "room": {
+    "title": "Room 8",
+    "id": "4711"
+  },
+  "id": "16129",
+  "track": {
+    "title": "Server Side Java",
+    "id": "1256"
+  },
+  "speakers": [
+    {
+      "companyName": "VMware",
+      "id": "16706",
+      "photoUrl": "https://avatars.githubusercontent.com/u/490484?v=4",
+      "fullName": "Stéphane Nicoll"
+    },
+    {
+      "photoUrl": "https://avatars.githubusercontent.com/u/103264?v=4",
+      "id": "16075",
+      "fullName": "Brian Clozel",
+      "companyName": "VMware"
+    }
+  ],
+  "summary": " This talk will give you a complete overview of the AOT efforts in Spring and how it can benefit you as a developer.",
+  "description": "<p><span style=\"color: rgb(0, 0, 0); background-color: transparent;\">Ahead Of Time and Native is a major topic for the upcoming Spring major releases. With this talk, you’ll get a complete tour of the AOT efforts and a glimpse at Spring Boot 3.0.</span></p><p><span style=\"color: rgb(0, 0, 0); background-color: transparent;\">After a successful experimental phase with the Spring Native project, the Spring team is bringing Ahead Of Time (AOT) support to Spring. The goal here is to enable GraalVM native use cases and improve JVM efficiency.</span></p><p><span style=\"color: rgb(0, 0, 0); background-color: transparent;\">During this talk, Stéphane and Brian will discuss the state of the AOT theme in the latest milestones of Spring Framework 6.0 and Spring Boot 3.0:</span></p><ul><li><span style=\"color: rgb(0, 0, 0); background-color: transparent;\">The design of the AOT engine</span></li><li><span style=\"color: rgb(0, 0, 0); background-color: transparent;\">How this new infrastructure can be used by libraries</span></li><li><span style=\"color: rgb(0, 0, 0); background-color: transparent;\">What to expect as an application developer</span></li></ul>",
+  "title": "Ahead Of Time and Native in Spring Boot 3.0"
+}

@@ -1,0 +1,22 @@
+.action-sheet-group {
+  /* Ios */
+
+  &.sc-ion-action-sheet-ios {
+    @media (prefers-color-scheme: dark) {
+      --background: var(--app-light-contrast);
+    }
+  }
+
+  .sc-ion-action-sheet-ios-h {
+    @media (prefers-color-scheme: dark) {
+      --button-background: var(--app-light-contrast);
+    }
+  }
+
+  .action-sheet-cancel.sc-ion-action-sheet-ios::after {
+    @media (prefers-color-scheme: dark) {
+      background: var(--app-medium-contrast);
+    }
+  }
+}
+

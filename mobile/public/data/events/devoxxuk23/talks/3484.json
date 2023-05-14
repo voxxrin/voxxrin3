@@ -1,0 +1,28 @@
+{
+  "track": {
+    "title": "DevNation Day",
+    "id": "15801"
+  },
+  "description": "<p><span style=\"color: rgb(0, 0, 0);\">Are you wondering how you can speed up your development and spend time on things that are actually interesting instead of waiting for code compilations and deployments, fidgeting with configurations, or spending hours tracking down bugs on production? Then this session might be for you!&nbsp;</span></p><p><br></p><p><span style=\"color: rgb(0, 0, 0);\">Join Kevin Dubois as he takes you through the inner &amp; outer development loop and shows you some interesting ways to simplify and accelerate development along the way.&nbsp;Through examples and explanations, Kevin will demonstrate an opinionated set of Open Source projects that can make your (developer) life more enjoyable and productive.&nbsp;</span></p><p><br></p><p><span style=\"color: rgb(0, 0, 0);\">Takeaways:</span></p><p><span style=\"color: rgb(0, 0, 0);\">Learn how to save time and increase developer joy by using projects such as Quarkus, Jbang, GPT, TestContainers, JReleaser, SDKMAN, MicroProfile, Jib, Podman Desktop, Micrometer and OpenTelemetry.</span></p>",
+  "title": "Java, Life is short!",
+  "language": "EN",
+  "summary": "",
+  "room": {
+    "id": "19154",
+    "title": "Room B"
+  },
+  "id": "3484",
+  "format": {
+    "duration": "PT50m",
+    "title": "Conference",
+    "id": "951"
+  },
+  "speakers": [
+    {
+      "photoUrl": "https://lh3.googleusercontent.com/a-/AOh14GgR-OfaLiyfLZNIKmUy6yqwz86OPOhP1QtssfiY=s96-c",
+      "fullName": "Kevin Dubois",
+      "companyName": "Red Hat",
+      "id": "3609"
+    }
+  ]
+}

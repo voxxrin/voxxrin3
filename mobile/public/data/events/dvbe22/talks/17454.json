@@ -1,0 +1,28 @@
+{
+  "id": "17454",
+  "speakers": [
+    {
+      "companyName": "CodinGame",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-MathisHammel.jpg",
+      "id": "17651",
+      "fullName": "Mathis Hammel"
+    }
+  ],
+  "room": {
+    "id": "4706",
+    "title": "Room 4"
+  },
+  "summary": "\nThisPersonDoesNotExist.com is a website that generates realistic fake profiles, and at a time when disinformation and manipulation of opinion spread through social networks, it is important to be equipped to spot fake identities. In this beginner-friendly conference, we'll cover the basics of machine learning, and a technique to generate almost undetectable fake faces yourself.",
+  "title": "How I built the world’s most efficient deepfake detector with $100",
+  "description": "<p><span style=\"color: rgb(0, 0, 0); background-color: transparent;\">ThisPersonDoesNotExist.com is an ultra-realistic face generator based on neural networks, frequently used by botnets to create realistic fake profiles on the internet.</span></p><p><span style=\"color: rgb(0, 0, 0); background-color: transparent;\">At a time when disinformation and manipulation of opinion spread through social networks, it is necessary to be equipped to spot fake identities, especially via their profile pictures which are the hardest elements to fake. During this talk, you will discover a method to detect images generated via ThisPersonDoesNotExist.com, with 100% reliability and even a way to know the exact time the photo was produced.</span></p><p><span style=\"color: rgb(0, 0, 0); background-color: transparent;\">The conference will focus on a technical challenge faced during the implementation of one of the attacks, which involves TensorFlow models leveraging features of a customized ElasticSearch instance, on very limited hardware.</span></p><p><span style=\"color: rgb(0, 0, 0); background-color: transparent;\">During this beginner-friendly conference, we'll also cover the basic machine learning concepts needed to make GANs work, and a technique to generate almost undetectable fake faces yourself.</span></p>",
+  "format": {
+    "duration": "PT50m",
+    "title": "Conference",
+    "id": "951"
+  },
+  "track": {
+    "title": "Mind the Geek",
+    "id": "2758"
+  },
+  "language": "EN"
+}

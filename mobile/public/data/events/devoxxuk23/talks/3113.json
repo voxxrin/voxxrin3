@@ -1,0 +1,40 @@
+{
+  "speakers": [
+    {
+      "companyName": "TNG Technology Consulting GmbH",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-634d5544-9be5-450f-a604-b8ce7cada4e3.png",
+      "fullName": "Jonas Mayer",
+      "id": "2864"
+    },
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-c72d5481-2139-4d76-9f00-b39f6d9d41cc.jpg",
+      "fullName": "Thomas Endres",
+      "id": "2865",
+      "companyName": "TNG Technology Consuling GmbH"
+    },
+    {
+      "photoUrl": "https://lh3.googleusercontent.com/a-/AOh14GjGcYTE-_pF_oeJADkJM-uRg-204Pe8dEkpqIWXrw=s96-c",
+      "fullName": "Martin Förtsch",
+      "id": "2863",
+      "companyName": "TNG Technology Consulting GmbH"
+    }
+  ],
+  "title": "Brain Computer Interfaces Demystified - Can thoughts take over control?",
+  "summary": "",
+  "room": {
+    "id": "19152",
+    "title": "Auditorium"
+  },
+  "format": {
+    "duration": "PT50m",
+    "title": "Conference",
+    "id": "951"
+  },
+  "description": "<p>What if a Brain Computer Interface (BCI) could translate your thoughts into commands, to control software or hardware? The TNG Innovation Hacking Team worked with various brain computer interfaces and is trying to develop such software. An interesting device in this environment is the OpenBCI, which provides programming interfaces for e.g. C + +, Python, Java and R.</p><p><br></p><p>The lecture gives an overview of different BCI manufacturers and types, as well as their different approaches to record and interpret brain waves. The team took up the challenge to use techniques from artificial intelligence, which support the evaluation of brain currents from electroencephalography (EEG). The speakers present prototypical showcases including such devices as OpenBCI, EMotive Epoc-X and NextMind, sharing their experience with the audience.</p><p><br></p><p>In this exciting and entertaining lecture you will get an introduction to the world of mind control. The speakers will focus in particular on the deep learning techniques used in this application. The introduction of e.g. evolutionary strategies in the form of genetic algorithms for the optimization of artificial, neural networks round off the presentation.</p>",
+  "id": "3113",
+  "track": {
+    "title": "Data & AI",
+    "id": "1252"
+  },
+  "language": "EN"
+}

@@ -1,0 +1,28 @@
+{
+  "format": {
+    "id": "959",
+    "title": "Deep Dive",
+    "duration": "PT180m"
+  },
+  "speakers": [
+    {
+      "id": "2055",
+      "fullName": "Vasco Veloso",
+      "photoUrl": "https://lh3.googleusercontent.com/a-/AOh14GgGjkmxX3-8t9JpDqTC2_TyP_2O5nG7b5frkhT0UQ=s96-c",
+      "companyName": "ING Bank NL"
+    }
+  ],
+  "track": {
+    "id": "1701",
+    "title": "Development Practices"
+  },
+  "language": "EN",
+  "description": "<p>Most developers have written or used concurrent code during their careers. Those who use Java are probably familiar with the traditional unit of concurrency: the Thread. Kotlin brought first-class support to a different concurrency paradigm, called coroutines. These were developed in the sixties… Why are they relevant again, 50 years later? Let’s find out!</p><p>This session intends to demonstrate the differences between concurrency models based on threads and concurrency models based on coroutines. We will discuss what coroutines are and what they are not, and answer questions such as:</p><ul><li>How different are coroutines and Threads?</li><li>Are there any new pitfalls that developers should be aware of?</li><li>Do the traditional synchronization methods available in the JRE still apply?</li></ul><p>During the session, we’ll present several hands-on exercises that allow participants to see with their own eyes the way how coroutines work and experience the differences and similarities between Kotlin and Java concurrency models. We’ll discuss the performance, memory usage, and complexity of both models.</p><p>At the end of this session, participants will have a good grasp of the paradigm shift that Kotlin coroutines brought to the JVM.</p><p><em>(Pre)requisites</em></p><p>Participants may bring their own laptop if they want to follow along with the code.</p><p>We expect participants to have some notions of threading, concurrency, parallelism, and synchronization. Participants only need a basic working knowledge of the Kotlin language.</p>",
+  "title": "Threading lightly with Kotlin",
+  "id": "2260",
+  "room": {
+    "id": "4708",
+    "title": "Room 6"
+  },
+  "summary": "This session intends to demonstrate the differences between concurrency models based on threads and concurrency models based on coroutines. We will discuss what coroutines are and what they are not, and answer questions such as:\n\n- How different are coroutines and Threads?\n- Are there any new pitfalls that developers should be aware of?\n- Do the traditional synchronization methods available in the JRE still apply?"
+}

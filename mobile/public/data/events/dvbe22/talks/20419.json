@@ -1,0 +1,28 @@
+{
+  "id": "20419",
+  "track": {
+    "id": "1256",
+    "title": "Server Side Java"
+  },
+  "title": "Supercharge your Native Image applications in 5 steps!",
+  "format": {
+    "id": "957",
+    "duration": "PT30m",
+    "title": "Tools-in-Action"
+  },
+  "description": "<p>You've probably heard of GraalVM Native Image and how it is great for startup time &amp; memory consumption, but do you know how to use<span style=\"color: rgb(0, 0, 0);\"> it to the fullest in practice? In this session we'll look at developing and testing Native Image applications, optimizing their performance, working with metadata, monitoring, and more!</span></p>",
+  "speakers": [
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-305e3338-b29b-4d78-a485-3fccf6f7786e.jpg",
+      "fullName": "Alina Yurenko",
+      "companyName": "Oracle Labs",
+      "id": "20069"
+    }
+  ],
+  "room": {
+    "title": "Room 4",
+    "id": "4706"
+  },
+  "summary": "",
+  "language": "EN"
+}

@@ -1,0 +1,40 @@
+{
+  "language": "EN",
+  "track": {
+    "title": "Server Side Java",
+    "id": "1256"
+  },
+  "format": {
+    "title": "Hands-on Lab",
+    "id": "968",
+    "duration": "PT180m"
+  },
+  "summary": "In this 3h long workshop you will bring your own laptop, install all the needed tools and be ready to develop three microservices: one written with Quarkus, one with Spring Boot and one with Micronaut. Add some business logic, access a database in a reactive and imperative manner, run them on HotSpot, compile them with GraalVM, containerize them with Docker and deploy them to the cloud. Then, add some load testing, scale and monitor them. At",
+  "speakers": [
+    {
+      "id": "16709",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-9172a206-60e8-43c2-bc0c-ca18a69b85cd.jpg",
+      "fullName": "Yohan Lasorsa",
+      "companyName": "Microsoft"
+    },
+    {
+      "companyName": "Microsoft",
+      "fullName": "Mark Heckler",
+      "id": "11308",
+      "photoUrl": "https://lh3.googleusercontent.com/a-/AOh14GhzjJeYX3TK8uizrhJt7qsmV1LSuJxiAY-zTThcxK8=s96-c"
+    },
+    {
+      "companyName": "Microsoft",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-15009991-118a-4670-834a-3c73b9ab4188.png",
+      "fullName": "Antonio Goncalves",
+      "id": "13311"
+    }
+  ],
+  "title": "Quarkus, Micronaut and Spring Boot fighting in the Cloud",
+  "room": {
+    "id": "4701",
+    "title": "BOF 1"
+  },
+  "id": "13115",
+  "description": "<p><em style=\"background-color: transparent; color: rgb(0, 0, 0);\">On the right corner, Quarkus, goes into his challenge against Micronaut the lightweight champion, and pound-for-pound with Spring Boot the best microservice framework in the world. Who will win the world “Cloud Native Java Runtime” title fight?</em></p><p><br></p><p><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">In this 3h long workshop you will bring your own laptop, install all the needed tools and be ready to develop from scratch three microservices: one written with Quarkus, one with Spring Boot and one with Micronaut. Add some business logic, access a database in a reactive and imperative manner, run them on HotSpot, compile them with GraalVM, containerize them with Docker and deploy them to the cloud. Then, add some load testing, scale and monitor them. At the end of this workshop you will know which of these microservices is the most appropriate in terms of performance, resource consumption, and startup time… or maybe you won’t ;o)</span></p><p><br></p><p><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">For this workshop you will need to install:</span></p><ul><li><span style=\"background-color: transparent;\">Git</span></li><li><span style=\"background-color: transparent;\">Java 11, Java 17 and GraalVM</span></li><li><span style=\"background-color: transparent;\">Your own IDE</span></li><li><span style=\"background-color: transparent;\">Docker desktop</span></li><li><span style=\"background-color: transparent;\">An HTTP client (cUrl, wget, Postman)</span></li><li><span style=\"background-color: transparent;\">Have a Docker Hub account</span></li><li><span style=\"background-color: transparent;\">Have a GitHub account</span></li><li><span style=\"background-color: transparent;\">Have an Azure account (we will give you some credits)</span></li></ul><p><br></p>"
+}

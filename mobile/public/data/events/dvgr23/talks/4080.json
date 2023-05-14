@@ -1,0 +1,28 @@
+{
+  "language": "EN",
+  "track": {
+    "id": "2754",
+    "title": "Java"
+  },
+  "room": {
+    "title": "Skalkotas",
+    "id": "2802"
+  },
+  "description": "<p>Everyone is talking about how Project Loom will make concurrency child's play. Instead of reactive or asynchronous systems, we make a gazillion virtual threads. This should be simpler, but it also has dangers. For example, what happens if one task takes longer than expected? Or if it blocks forever? How can we force a task to stop? Has Project Loom made the ordinary ConcurrentHashMap slower?</p><p><br></p><p>In this talk, we will show a brief introduction to Project Loom. We then look at how we can prepare our code bases so that the migration to Loom is easier. We show how long-running tasks impact the liveness of our system. We look at what type of code we will need to refactor so that it is ready when Loom lands.</p>",
+  "id": "4080",
+  "summary": "",
+  "format": {
+    "title": "Conference",
+    "duration": "PT40m",
+    "id": "953"
+  },
+  "speakers": [
+    {
+      "fullName": "Heinz Kabutz",
+      "companyName": null,
+      "id": "3970",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-5e5c7d3d-df50-47a3-a0d1-e266860c0f3c.jpg"
+    }
+  ],
+  "title": "Prepare for what \"Loom\"s ahead"
+}

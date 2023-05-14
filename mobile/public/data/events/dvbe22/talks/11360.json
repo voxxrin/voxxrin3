@@ -1,0 +1,28 @@
+{
+  "track": {
+    "title": "Server Side Java",
+    "id": "1256"
+  },
+  "summary": "",
+  "room": {
+    "title": "Room 9",
+    "id": "4709"
+  },
+  "speakers": [
+    {
+      "fullName": "Mark Heckler",
+      "id": "11308",
+      "photoUrl": "https://lh3.googleusercontent.com/a-/AOh14GhzjJeYX3TK8uizrhJt7qsmV1LSuJxiAY-zTThcxK8=s96-c",
+      "companyName": "Microsoft"
+    }
+  ],
+  "id": "11360",
+  "format": {
+    "duration": "PT180m",
+    "title": "Deep Dive",
+    "id": "959"
+  },
+  "description": "<p>In this session, you'll learn how to leverage proven patterns &amp; open source software to rapidly build a robust portfolio of microservices that provide a solid foundation for your dynamic and growing microservice architecture, then learn how to make the cloud do it for you so you can focus on your customers' needs. This session addresses vital points such as:</p><p>+ Configuration services</p><p>+ Microservice registration and discovery</p><p>+ Features for system resilience</p><p>+ Intelligent routing</p><p>+ Secure secret keeping</p><p>And more, depending on time available</p><p>The presenter will demonstrate how to develop, deploy, and manage microservices with tools employed by industry leaders to build resilient, scalable, &amp; available systems using Spring Cloud and Azure, but all concepts and constructs shown apply to various frameworks and cloud platforms.</p>",
+  "title": "Build Better, Deploy Faster: Spring Boot + Spring Cloud in the Cloud for frictionless Kubernetes-based Microservices",
+  "language": "EN"
+}

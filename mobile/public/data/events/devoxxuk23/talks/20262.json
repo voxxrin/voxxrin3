@@ -1,0 +1,28 @@
+{
+  "room": {
+    "id": "19154",
+    "title": "Room B"
+  },
+  "format": {
+    "id": "951",
+    "duration": "PT50m",
+    "title": "Conference"
+  },
+  "description": "<p>Deploying your applications to the cloud can be a very cost-efficient and energy-efficient method of hosting. But it can equally have no impact at all! We'll look at some factors affecting the sustainability of your cloud applications, and demo some ideas to ensure you get the lowest carbon footprint that you can.</p>",
+  "track": {
+    "id": "1251",
+    "title": "Architecture"
+  },
+  "title": "Beat the Greenwash: Strategies for a low-carbon cloud architecture",
+  "summary": "",
+  "speakers": [
+    {
+      "id": "20163",
+      "fullName": "Kamar Ali",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-764a64ec-2039-4158-8321-65babc8ba133.jpg",
+      "companyName": "Capgemini"
+    }
+  ],
+  "language": "EN",
+  "id": "20262"
+}

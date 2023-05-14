@@ -1,0 +1,28 @@
+{
+  "speakers": [
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-06e9b8db-67e0-406f-9034-5bcbfa299222.jpg",
+      "companyName": "OpenValue",
+      "fullName": "Jago de Vreede",
+      "id": "6776"
+    }
+  ],
+  "track": {
+    "title": "Data & AI",
+    "id": "1252"
+  },
+  "language": "EN",
+  "room": {
+    "title": "Room A",
+    "id": "19153"
+  },
+  "id": "7030",
+  "format": {
+    "title": "Conference",
+    "duration": "PT50m",
+    "id": "951"
+  },
+  "title": "Lessons learned using Machine Learning in Java",
+  "summary": "",
+  "description": "<p><span class=\"ql-cursor\">﻿</span><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">In this talk, I will share my journey of using machine learning in Java to build a visual recognition system that can identify Lego blocks. As a Java developer, I wanted to use Java for this project rather than Python, which is more commonly used for machine learning projects. I will explain the basics of machine learning and give an overview of the current Java libraries for machine learning and transferring pre-trained models. I will demonstrate how to train and modify existing models using transfer learning. The goal of the project is to create a Java solution that can identify the top 1000 most popular Lego bricks. I will explain all of this without using any complex mathematical formulas, making it accessible to those with no prior knowledge of machine learning.</span></p>"
+}

@@ -1,0 +1,28 @@
+{
+  "id": "20198",
+  "format": {
+    "duration": "PT15m",
+    "title": "Quickie",
+    "id": "960"
+  },
+  "title": "Blinking a LED with JBang and Pi4J on a Raspberry Pi in 15 minutes",
+  "room": {
+    "title": "Room 7",
+    "id": "4707"
+  },
+  "language": "EN",
+  "track": {
+    "id": "2758",
+    "title": "Mind the Geek"
+  },
+  "description": "<p>Ever wanted to experiment with electronic components combined with software? With Java, a Raspberry Pi, and Pi4J you can!</p><p>In this short session, we will go from zero to hero and control a LED with a single class to interact with a LED (and more?) that is connected to one of the magic pins of a Raspberry Pi.</p><p>By using JBang we don't even need to install Java, Maven, or any other tool. JBang and a text editor are all we need to create an application that can interact with the GPIO (General Purpose Input/Output) pins of the Raspberry Pi to control components, read states, handle events, etc.</p>",
+  "speakers": [
+    {
+      "fullName": "Frank Delporte",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-86202750-dd85-40ed-853f-feb5d5507a2f.jpg",
+      "companyName": "Azul",
+      "id": "13309"
+    }
+  ],
+  "summary": ""
+}

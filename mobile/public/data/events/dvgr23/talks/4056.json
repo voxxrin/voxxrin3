@@ -1,0 +1,28 @@
+{
+  "track": {
+    "title": "Architecture",
+    "id": "1251"
+  },
+  "speakers": [
+    {
+      "photoUrl": "https://lh3.googleusercontent.com/a-/AFdZucpKmvF9AQtSdjlnowzaJu-cQF7m_qoCuYAs1xV16-I=s96-c",
+      "id": "3954",
+      "companyName": "Novatec Consulting GmbH",
+      "fullName": "Matthias Haeussler"
+    }
+  ],
+  "title": "Distributed patterns compared: Frameworks vs. K8s vs. Service Mesh vs. eBPF",
+  "room": {
+    "title": "Banquet",
+    "id": "2801"
+  },
+  "id": "4056",
+  "description": "<p>Software Development based on a distributed (microservice) architecture provides both several advantages and new challenges. In order to take advantage of the distribution it requires implementation of service discovery, routing, load-balancing, resilience mechanisms and more.</p><p><br></p><p>Java frameworks like Micronaut, Quarkus or Spring Boot provide dedicated implementations for API Gateways, Service Registries, Circuit Breakers and many more. These functionalities are declared as code dependencies and need to be set at build time.</p><p><br></p><p>If the architecture is running on top of Kubernetes many of those features are provided out-of-the-box independent of the application. So-called service mesh implementations extend the Kubernetes functionality for getting more insights and control over the underlying network. A fairly new approach is emerging with the eBPF technology, which claims to enable service meshes with minimal overhead.</p><p><br></p><p>With this talk I want to compare the approaches to figure out if one, the other or a combination of them might make sense. The talk is split into a theoretical and a live-demo part.</p>",
+  "language": "EN",
+  "format": {
+    "duration": "PT40m",
+    "title": "Conference",
+    "id": "953"
+  },
+  "summary": ""
+}

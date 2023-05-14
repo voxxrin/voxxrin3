@@ -1,0 +1,28 @@
+{
+  "id": "19403",
+  "summary": "In this session, we will demo a novel way to profile or debug production workflows without the need to change a single line of code.",
+  "description": "<p><span style=\"color: rgb(0, 0, 0);\">Since JDK 11 Java Flight recorder is available to all of us through the OpenJDK. It gives visibility of what is happening in your code and under the hood of the JVM with an acceptable performance overhead.&nbsp;</span></p><p><span style=\"color: rgb(0, 0, 0);\">&nbsp;</span></p><p><span style=\"color: rgb(0, 0, 0);\">Serverless functions allow us to run code in the cloud without the need to worry about infrastructure, scalability, nor maintenance.&nbsp;</span></p><p><span style=\"color: rgb(0, 0, 0);\">They offer a lot of benefits but profiling or debugging production workflows does not come out of the box.</span></p><p><span style=\"color: rgb(0, 0, 0);\">&nbsp;</span></p><p><span style=\"color: rgb(0, 0, 0);\">In this session, we will demo a novel way how to do this, by generating JFR traces for a serverless function without the need to change a single line of code and analyse the result with Java Mission Control.&nbsp;</span></p><p><span style=\"color: rgb(0, 0, 0);\">&nbsp;</span></p><p><span style=\"color: rgb(0, 0, 0);\">It will not only show how the code itself behaves. But it also gives an idea what the cloud provider does with the JVM during the lifecycle of the serverless function.&nbsp;&nbsp;</span></p><p><span style=\"color: rgb(0, 0, 0);\">&nbsp;</span></p><p><span style=\"color: rgb(0, 0, 0);\">The demo will be on an AWS lambda, but the method can be generally applied on most other JVM based serverless functions.&nbsp;</span></p>",
+  "speakers": [
+    {
+      "id": "17945",
+      "fullName": "Steven Aerts",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-7c17f7e7-5e81-4b2b-8e16-b4e061304d9d.jpg",
+      "companyName": "Airties"
+    }
+  ],
+  "title": "Recording the Flight of Serverless Functions ",
+  "room": {
+    "id": "4708",
+    "title": "Room 6"
+  },
+  "track": {
+    "title": "Build & Deploy",
+    "id": "1254"
+  },
+  "language": "EN",
+  "format": {
+    "id": "957",
+    "title": "Tools-in-Action",
+    "duration": "PT30m"
+  }
+}

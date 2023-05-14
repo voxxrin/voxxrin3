@@ -1,0 +1,28 @@
+{
+  "room": {
+    "id": "19154",
+    "title": "Room B"
+  },
+  "language": "EN",
+  "id": "20266",
+  "summary": "",
+  "format": {
+    "id": "960",
+    "duration": "PT15m",
+    "title": "Byte Size"
+  },
+  "title": "The Java Agent: modifying Bytecode at runtime for fun and profit",
+  "description": "<p><span style=\"color: rgb(34, 34, 34);\">Java Agents are a powerful tool to instrument or modify your application at runtime. But how do they work? In this talk, I'll be going through how they work when configured at startup as well as attaching an agent to a running process.</span></p><p><br></p><p><span style=\"color: rgb(34, 34, 34);\">I'll show how the underlying Java Agent API works, how it can be used to both analyse an application and modify the application using a simple example of Bytecode modification to protect against Log4J and other vulnerabilities.</span></p>",
+  "speakers": [
+    {
+      "fullName": "Joseph Beeton",
+      "id": "20168",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-5dde7d04-7535-4fee-96ce-355692e54c90.png",
+      "companyName": "Contrast Security"
+    }
+  ],
+  "track": {
+    "title": "Java",
+    "id": "2754"
+  }
+}

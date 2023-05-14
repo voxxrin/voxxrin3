@@ -1,0 +1,28 @@
+{
+  "format": {
+    "id": "953",
+    "duration": "PT40m",
+    "title": "Conference"
+  },
+  "title": "Technical Documentation - How Can I Write Them Better and Why Should I Care?",
+  "speakers": [
+    {
+      "fullName": "Hila Fish",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-80ed85a6-1c3f-49d0-bab1-67857c882b23.jpeg",
+      "companyName": "",
+      "id": "2480"
+    }
+  ],
+  "language": "EN",
+  "track": {
+    "id": "1253",
+    "title": "People & Culture"
+  },
+  "room": {
+    "title": "Skalkotas",
+    "id": "2802"
+  },
+  "id": "2599",
+  "summary": "",
+  "description": "<p>Gathering pieces of information for a task or a project is a wasteful act and could result in duplicated work done by different people.</p><p>Onboarding, your ability to maintain code or infrastructure and systems handover - Documentation plays a crucial part in all these processes.</p><p>&nbsp;</p><p>In this talk, I’ll show you a structured way to write technical docs, without being a technical writer - So you will deliver highly valuable information to your audience, to your best ability.</p><p><span style=\"color: rgb(0, 0, 0);\">I’ll explain why should you care about these docs, how do they serve your best interests (Yes, there’s more than one!) and what a wide impact it could make on employees and even on your entire organization.</span></p>"
+}

@@ -1,0 +1,28 @@
+{
+  "track": {
+    "title": "Data & AI",
+    "id": "1252"
+  },
+  "description": "<p>Are you an adventurer? Do you want gold? Experience? Levels? Of course you do! And where do you get these things? The dungeon, where else? But, unfortunately, dungeons aren't setup for the convenience of adventurers who wish to extract these fine things. You have to wander about and get what you get.</p><p>But you’re also a developer. You could build a database of all the rooms with their content. Then you could query it and find the best route to get the gold and the experience and the levels. But how would you model this data and write these queries? The rooms. The corridors. The monsters. The sparkling hoozits. That’s a lot of entities to relate to each other. And that’s gonna be a monster of a SQL query. Whoa–look at that JOIN! Better get my text editor ready.</p><p>Or, you could use a graph database. A graph database allows you to model these relationships intuitively with nodes and edges. Being schema-free, you can evolve your graph as you encounter new things such as traps or secret doors. And, using the Cypher query language, you can write elegant and easy to understand queries that find the best routes to get the stuff adventures desire most.</p><p>In this talk, I’ll introduce you to the concepts of graph databases and compare how to solve this problem with a relational database and how a graph database makes it easier.</p><p>So come, have a flagon of mead as you learn about graph databases, optimize your dungeon crawl, and equip another weapon in your quest for better software!</p>",
+  "speakers": [
+    {
+      "fullName": "Guy Royse",
+      "companyName": "Redis",
+      "id": "16722",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-94aa0979-58a4-45bd-a91f-6cf47b5f6c0d.jpg"
+    }
+  ],
+  "summary": "This talk will introduce you to the concept of graph databases and how they can be used to solve problems related to the dungeon crawl, such as optimizing routes and finding best routes.",
+  "title": "Dungeons, Dragons, and Graph Databases",
+  "language": "EN",
+  "room": {
+    "title": "Room 7",
+    "id": "4707"
+  },
+  "id": "16784",
+  "format": {
+    "title": "Conference",
+    "duration": "PT50m",
+    "id": "951"
+  }
+}

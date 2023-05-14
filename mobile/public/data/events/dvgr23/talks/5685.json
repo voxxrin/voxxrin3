@@ -1,0 +1,28 @@
+{
+  "summary": "",
+  "title": "Exploring the land of IoT on Azure",
+  "track": {
+    "title": "Architecture",
+    "id": "1251"
+  },
+  "format": {
+    "title": "Conference",
+    "duration": "PT40m",
+    "id": "953"
+  },
+  "language": "EN",
+  "id": "5685",
+  "description": "<p><span style=\"color: rgb(103, 106, 108);\">IoT is not just about \"things\". What happens after data is collected from smarthomes, factories, electrical grids, buildings, security systems, and other things? The truth is IoT is more than \"Internet\" than \"Things\". Attend this presentation and we'll look at high-level architecture of an IoT deployment and how it's implemented in Azure land.</span></p>",
+  "speakers": [
+    {
+      "photoUrl": "https://lh3.googleusercontent.com/a/ALm5wu0VQvZ8CsYpUuTTNNKSL73_d3-iunNvb1UjaXzV_Vs=s96-c",
+      "id": "5851",
+      "companyName": "Spacee",
+      "fullName": "Ron Dagdag"
+    }
+  ],
+  "room": {
+    "id": "2801",
+    "title": "Banquet"
+  }
+}

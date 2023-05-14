@@ -1,0 +1,28 @@
+{
+  "id": "50051",
+  "summary": "",
+  "format": {
+    "title": "Conference",
+    "duration": "PT50m",
+    "id": "951"
+  },
+  "description": "<p><span style=\"color: rgb(34, 34, 34);\">Knowledge Graphs are becoming mission-critical across many industries. More recently, we are witnessing the application of Graph Data Science to Knowledge Graphs, offering powerful outcomes. But what does Graph Data Science stand for, and how does it turbocharge Knowledge Graphs?</span></p><p><span style=\"color: rgb(34, 34, 34);\">In this talk, we will illustrate the various methods and models of Graph Data Science being applied to Knowledge Graphs and how the Neo4j platform allows you to find implicit relationships in your graph, which are impossible to detect in any other way. You will learn how centrality algorithms as well as node embeddings uniquely capture the topology of your graph and how they are being used in drug discovery as well as various other industries. </span></p><p><span style=\"color: rgb(34, 34, 34);\">We will end the talk by showcasing how you can get started with Neo4j.</span></p>",
+  "title": "How Graph Data Science can turbocharge your Knowledge Graph",
+  "room": {
+    "id": "4705",
+    "title": "Room 3"
+  },
+  "language": "EN",
+  "track": {
+    "title": "Development Practices",
+    "id": "1701"
+  },
+  "speakers": [
+    {
+      "companyName": "Neo4j",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-dedb5257-9693-4f76-99f5-32f47c7c55d5.jpeg",
+      "fullName": "Kristof Neys",
+      "id": "49951"
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "track": {
+    "title": "People & Culture",
+    "id": "1253"
+  },
+  "title": "Attracting and retaining women in tech: going beyond the trend !",
+  "description": "<p>Women are underrepresented in the digital realm. Today, they represent only 28 to 30% of employees, all professions combined.</p><p>What happened in this professional sector, however dominated by women during its genesis? Would women no longer feel in their place or not?</p><p>Some disturbing findings:</p><ul><li>higher education leading to digital technology is invested in by men;</li><li>recruitment advertisements are not, as a rule, thought and written for women;</li><li>tech teams don't think about the deep needs of women or diversity;</li><li>women do not feel heard.</li></ul><p><br></p><p>Even if women communicate, it seems that we do not listen to them.</p><p>And what are the results? Migration to corollary professions, brown-out, disembodiment in the team, resignations, creation of FemTech.</p><p>On a diverse spectrum, they lead the creation of safe places as a room of community expression.</p><p>So, if you want to promote diversity beyond the trend, and you have understood that the helping women in tech is a breach in solving the issue of diversity and inclusion, take part in my talk!</p>",
+  "format": {
+    "duration": "PT50m",
+    "title": "Conference",
+    "id": "951"
+  },
+  "speakers": [
+    {
+      "companyName": "The Safe Place",
+      "fullName": "Marcy Ericka Charollois",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-0e502154-4d9c-4580-aaa5-f7466253ebbf.png",
+      "id": "18877"
+    }
+  ],
+  "room": {
+    "title": "Room 6",
+    "id": "4708"
+  },
+  "language": "EN",
+  "summary": "Women are underrepresented in the digital realm. Today, they represent only 28 to 30% of employees, all professions combined.",
+  "id": "19402"
+}

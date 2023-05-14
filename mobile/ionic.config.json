@@ -1,0 +1,7 @@
+{
+  "name": "voxxrin",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue-vite"
+}

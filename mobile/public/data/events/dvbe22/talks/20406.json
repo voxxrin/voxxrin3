@@ -1,0 +1,34 @@
+{
+  "summary": "",
+  "speakers": [
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-7259efee-8c6f-4a92-ae45-6c74eec85dd1.jpg",
+      "id": "20053",
+      "fullName": "Maurice Naftalin",
+      "companyName": null
+    },
+    {
+      "photoUrl": "https://lh3.googleusercontent.com/a-/AOh14GhsVIUuTR9Onoo-D8UMW5QId2Yw1V_EUvqdWdNQ0RQ=s96-c",
+      "fullName": "José Paumard",
+      "id": "16701",
+      "companyName": "Oracle"
+    }
+  ],
+  "format": {
+    "title": "Conference",
+    "id": "951",
+    "duration": "PT50m"
+  },
+  "language": "EN",
+  "description": "<p><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">The Java Collections Framework is the most widely used API – probably in your application too. You use it all the time, but do you really know your way around it? You can be surprised even by common classes like ArrayList and HashMap, let alone by the handling of null values or immutability in lesser-known classes. In this interactive session, we’ll look at some obvious code and its less-than-obvious effect. It’s up to you to guess the outcome! But everything will be explained, and you’ll end up knowing how to avoid pitfalls, both well-known and obscure, in using the Collections Framework.&nbsp;</span></p><p><br></p><p><br></p>",
+  "track": {
+    "title": "Java",
+    "id": "2754"
+  },
+  "title": "Java Collections Puzzlers",
+  "id": "20406",
+  "room": {
+    "id": "4710",
+    "title": "Room 5"
+  }
+}

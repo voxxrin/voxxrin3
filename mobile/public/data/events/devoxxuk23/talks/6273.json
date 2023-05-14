@@ -1,0 +1,28 @@
+{
+  "title": "It's not exactly rocket science:  A live demo of AWS GroundStation for near real-time earth observation",
+  "format": {
+    "duration": "PT50m",
+    "title": "Conference",
+    "id": "951"
+  },
+  "speakers": [
+    {
+      "id": "5538",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-89367842-72dd-4eec-8c7f-4126c16380d8.png",
+      "fullName": "Markus Ziller",
+      "companyName": "Amazon Web Services"
+    }
+  ],
+  "track": {
+    "title": "Mind the Geek",
+    "id": "2758"
+  },
+  "room": {
+    "title": "Room D",
+    "id": "19155"
+  },
+  "id": "6273",
+  "language": "EN",
+  "summary": "",
+  "description": "<p>In this session, I will do a live demo of an automated earth observation pipeline. We start with a live data downlink from JPSS-1, a last-gen NASA weather satellite, with AWS GroundStation. I will then show how to configure AWS GroundStation to communicate with a satellite and how to process the raw satellite data on AWS. Lastly, I show how ML can be used to gain immediate insights into satellite imagery</p>"
+}

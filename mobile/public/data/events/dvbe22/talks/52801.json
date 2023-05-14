@@ -1,0 +1,28 @@
+{
+  "speakers": [
+    {
+      "id": "52501",
+      "companyName": "ING",
+      "fullName": "Glenn ten Cate",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-cc727641-d117-49af-856a-c1d31d639cbb.png"
+    }
+  ],
+  "description": "<p>During our work as penetration testers we found that there are a lot of vulnerabilities being introduced in applications that could have been prevented in an early stage of development.</p><p>The latest trend in integrating security tooling into CI/CD pipelines. However, security tooling integrated in your security pipe-lines will not cover the whole attack surface. This is because the tooling can never understand the full context of the applications functions and logic. On the other hand, resources in the form of manual verification can often be scarce and expensive.&nbsp;</p><p>So what is the right balance and how can we make the most impact? By Guiding and training the developers and enabling them in writing secure software.</p><p>We created an online free to use, fully open-source platform that enables you to learn about building secure software using materials from the best resources available and practice them in hands-on labs. We currently have 3 different tracks that you can follow, Defensive secure coding, Offensive security testing and Infra security. Now you can have everything you need, training &amp; guidance for doing AppSec right!</p><p>This aim of this talk will be to guide everybody willing to take the maturity of their security in software development to a higher level.</p>",
+  "id": "52801",
+  "room": {
+    "title": "Room 3",
+    "id": "4705"
+  },
+  "summary": "",
+  "language": "EN",
+  "title": "SKF Keeper project - There is no right or wrong, only fun and boring",
+  "track": {
+    "title": "Security",
+    "id": "1255"
+  },
+  "format": {
+    "title": "Conference",
+    "duration": "PT50m",
+    "id": "951"
+  }
+}

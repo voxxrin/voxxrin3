@@ -1,0 +1,28 @@
+{
+  "description": "<p>Most of us do code reviews very often if not daily. However, how can we tell whether we are good reviewers or not? Do we review a code as robots? Do we keep in mind that we are reviewing the code of someone who invested time and knowledge to write this code, and thus deserves to get respectful feedback?</p><p>In this talk, we present the code review best practices and we answer the following questions: What to look for in a code review? How can we write useful reviews?</p><p>Furthermore, we explain the key tips for writing respectful and constructive code review feedback. To discover more about all these points and more, come and see our talk.</p>",
+  "room": {
+    "id": "4707",
+    "title": "Room 7"
+  },
+  "speakers": [
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-MahaALSayasneh.jpg",
+      "companyName": "Elastic",
+      "id": "18851",
+      "fullName": "Maha Alsayasneh"
+    }
+  ],
+  "format": {
+    "id": "960",
+    "duration": "PT15m",
+    "title": "Quickie"
+  },
+  "summary": "",
+  "language": "EN",
+  "title": "How To Review Someone's Code While Not Being A Jerk!",
+  "track": {
+    "id": "1701",
+    "title": "Development Practices"
+  },
+  "id": "18760"
+}

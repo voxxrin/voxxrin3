@@ -1,0 +1,28 @@
+{
+  "description": "<p>I’ve given talks at software conferences about quantum computing and the amazing properties and possibilities of quantum bits (qubits). However: It is now time to give the regular old binary bit the love that it deserves.</p><p>During this talk we will dive into bits and booleans, the foundation of modern computing and the building block of your entire career. We’ll look at truth tables, bit masking, bit twiddling, NAND gates, how to store and manipulate data (like floating point numbers) in binary and finally we'll take a look at the powerful concept of boolean satisfiability &amp; SAT solvers.</p>",
+  "room": {
+    "id": "4708",
+    "title": "Room 6"
+  },
+  "format": {
+    "duration": "PT50m",
+    "id": "951",
+    "title": "Conference"
+  },
+  "speakers": [
+    {
+      "companyName": "OpenValue",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-79cf8270-b923-4a6c-9baf-ffdd40aadb6f.jpg",
+      "fullName": "Roy van Rijn",
+      "id": "9401"
+    }
+  ],
+  "title": "Ode to the mighty Bit",
+  "language": "EN",
+  "summary": "",
+  "id": "9451",
+  "track": {
+    "title": "Mind the Geek",
+    "id": "2758"
+  }
+}

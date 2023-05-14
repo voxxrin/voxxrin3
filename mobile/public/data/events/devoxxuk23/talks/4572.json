@@ -1,0 +1,28 @@
+{
+  "language": "EN",
+  "speakers": [
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-c3aa8a9d-fbae-475a-b664-b9f3bcde2e2a.jpeg",
+      "companyName": "the/experts.",
+      "fullName": "Maik Kingma",
+      "id": "4703"
+    }
+  ],
+  "format": {
+    "title": "Mini Lab",
+    "id": "1351",
+    "duration": "PT60m"
+  },
+  "track": {
+    "title": "Architecture",
+    "id": "1251"
+  },
+  "room": {
+    "title": "Coding Cafe",
+    "id": "19158"
+  },
+  "summary": "",
+  "id": "4572",
+  "title": "Tackle Eventual Consistency with Domain Events",
+  "description": "<p>Writing an application that follows the eventual consistency pattern requires a different way of thinking (and coding). Applying Domain-Driven Design (DDD) equally requires a shift in your way of working. DDD encourages you to use eventual consistency as a way to improve the performance, scalability, or flexibility of your system.</p><p>This mini lab will give a short and concise hands-on introduction on how to apply the Domain Event pattern in a Spring Boot application and achieve eventually consistent behaviour.</p><p>In DDD, a domain event is an occurrence that is meaningful to the domain and has an associated set of implications. Domain events are a way of representing the changing state of the domain. They provide a means for different parts of the system to communicate and respond to changes in the domain in a decoupled or loosely-coupled manner. Our system becomes event-driven.</p><p>Event-Driven architectures become increasingly relevant in our world, where the race to the public cloud has already begun and we as developers need to think more and more in distributed contexts. Performance, Scalability and Flexibility play a crucial role in this.</p><p><br></p><p><br></p><p><br></p>"
+}

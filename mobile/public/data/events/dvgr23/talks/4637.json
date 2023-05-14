@@ -1,0 +1,28 @@
+{
+  "title": "Develop Modern and Lightweight Cloud Applications with Jakarta EE 10",
+  "description": "<p><strong style=\"color: rgb(86, 156, 214);\">Jakarta EE 10</strong> is packed with new features for simple development of modern, lightweight enterprise Java applications for the Cloud. The new Jakarta EE Core Profile enables developers to develop microservices with Jakarta EE technologies with runtimes smaller than ever. Jakarta EE Core Profile even makes it possible to compile Jakarta EE applications to native images to reduce the footprint even further.</p><p><br></p><p>In this session, we will explore the new features of Jakarta EE 10 in an interactive way packed with live code demos. Among the features we will go through are the new reflection-free programming model introduced in <em>*CDI 4.0 Lite*</em> and the new Java SE Bootstrap API in <em>*Jakarta RESTful Web Services 3.1*</em>. But there will be more, so make sure you join this session to get it all!</p><p><br></p><p>We will even take a peek into the looking glass to see what we can expect from <strong style=\"color: rgb(86, 156, 214);\">Jakarta EE 11.</strong></p>",
+  "room": {
+    "title": "MC2",
+    "id": "2804"
+  },
+  "id": "4637",
+  "speakers": [
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-691bec8b-9913-41b9-a5e5-884956642004.png",
+      "id": "4000",
+      "companyName": "Eclipse Foundation",
+      "fullName": "Ivar Grimstad"
+    }
+  ],
+  "track": {
+    "title": "Server Side Java",
+    "id": "1256"
+  },
+  "summary": "",
+  "format": {
+    "id": "953",
+    "duration": "PT40m",
+    "title": "Conference"
+  },
+  "language": "EN"
+}

@@ -1,0 +1,28 @@
+{
+  "description": "<p><span style=\"color: rgb(0, 0, 0);\">Reeps One returns to the Devoxx UK stage to kick off our 10th edition in a truly unique way</span></p>",
+  "track": {
+    "title": "Mind the Geek",
+    "id": "2758"
+  },
+  "title": "Special Guest Performance",
+  "speakers": [
+    {
+      "fullName": "Reeps One",
+      "companyName": null,
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-e3a039b2-38f4-46c4-8f1e-1125ec0fd2c9.png",
+      "id": "20162"
+    }
+  ],
+  "language": "EN",
+  "summary": "",
+  "room": {
+    "title": "Gallery Hall",
+    "id": "19151"
+  },
+  "format": {
+    "title": "Opening",
+    "duration": "PT10m",
+    "id": "20651"
+  },
+  "id": "20260"
+}

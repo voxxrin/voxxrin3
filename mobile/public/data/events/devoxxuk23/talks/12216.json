@@ -1,0 +1,28 @@
+{
+  "track": {
+    "id": "1252",
+    "title": "Data & AI"
+  },
+  "format": {
+    "duration": "PT30m",
+    "id": "957",
+    "title": "Tools-in-Action"
+  },
+  "speakers": [
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-5aaa2c0e-235b-468c-8f98-a47bdf0dc7ab.jpg",
+      "fullName": "Mary Grygleski",
+      "id": "1881",
+      "companyName": "DataStax"
+    }
+  ],
+  "summary": "",
+  "room": {
+    "title": "Room B",
+    "id": "19154"
+  },
+  "id": "12216",
+  "title": "Building An Efficient Streaming Data Pipeline with Apache Cassandra and Apache Pulsar",
+  "description": "<p><span style=\"color: rgb(51, 62, 72);\">Event Streaming is one of the most important software technologies in the current computing era as it enables systems to process huge volumes of data in blazingly high speed and in real-time. It is indeed the \"glue\" that can connect data to flow through disparate systems and pipelines that are typical in cloud environments. Leveraging on the Pub/Sub pattern for the message flow, and designed with the cloud in mind, Apache Pulsar has emerged as a powerful distributed messaging and event streaming platform in recent years. With its flexible and decoupled messaging style, it can integrate and work well with many other modern-day libraries and frameworks.</span></p><p><br></p><p><span style=\"color: rgb(51, 62, 72);\">In this session, we will build a modern, efficient streaming data pipeline using Apache Pulsar and Apache Cassandra. Apache Pulsar will handle the data ingest. The external data that comes in will be used for further processing by Pulsar Functions that will in turn reference the tables in Cassandra as the data lookup sources. The results of the transformed data will then be egressed and sent to an Astra DB sink. We will also examine to see how we can further optimize the entire processing pipeline.</span></p><p><br></p>",
+  "language": "EN"
+}

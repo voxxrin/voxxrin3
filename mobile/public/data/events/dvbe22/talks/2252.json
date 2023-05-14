@@ -1,0 +1,34 @@
+{
+  "id": "2252",
+  "title": "The Hitchhiker’s Guide to a Great Developer Career",
+  "room": {
+    "title": "Room 5",
+    "id": "4710"
+  },
+  "track": {
+    "id": "1253",
+    "title": "People & Culture"
+  },
+  "description": "<p>As developers, our job is to write great code, test code, deploy code, fix code, and even delete code, but nobody told us that there is much more to it if we want to have a great developer career.</p><p>In this talk, Helen and Sven will share their successes and failures during their 20-year careers to date working for various technology companies. You’ll learn about growing your personal brand (what is it good for?), the trials and tribulations of different roles (so many choices), becoming a manager (or not), mentoring and sponsoring (they are not the same thing), how to care for yourself (prevent burnout), and lots more career advice.</p><p>You'll hear about their inevitable bumps in the road (or downright failures), as well as their successes. As it turns out, having a great developer career is not all about the technology and the code; it's also about you and the people around you!</p>",
+  "format": {
+    "duration": "PT50m",
+    "id": "951",
+    "title": "Conference"
+  },
+  "speakers": [
+    {
+      "id": "2053",
+      "companyName": "Atlassian",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-c076a95d-c8f2-4a18-9700-86b9228dee14.jpg",
+      "fullName": "Sven Peters"
+    },
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-b825f11f-01f8-4315-8b17-b94a0215899a.jpg",
+      "companyName": "JetBrains",
+      "id": "2557",
+      "fullName": "Helen Scott"
+    }
+  ],
+  "language": "EN",
+  "summary": ""
+}

@@ -1,0 +1,28 @@
+{
+  "format": {
+    "duration": "PT180m",
+    "id": "959",
+    "title": "Deep Dive"
+  },
+  "room": {
+    "title": "Room 4",
+    "id": "4706"
+  },
+  "track": {
+    "title": "Java",
+    "id": "2754"
+  },
+  "summary": "",
+  "id": "19441",
+  "description": "<p>When it comes to performance, many developers take for granted statements (myths) that are not always valid, no longer correct, or were never accurate.</p><p>Performance and benchmarking were always tough topics, and in languages such as java and scala, there are so many layers between code and machine that any analysis seems futile.&nbsp;</p><p>We will, however, try to do this and check a few exciting examples of scala code snippets down to the \"bare metal\".</p><p>We will use recent JVM versions, including graal and some valuable tools such as</p><p>jitwatch, javap, gc logs, jmh, performance counters.&nbsp;</p><p>The next time someone claims something about performance, you can measure and check it.</p>",
+  "language": "EN",
+  "speakers": [
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-92a813da-8f39-4f0b-9d4b-7cf6a6961ca7.png",
+      "id": "18895",
+      "fullName": "Jarek Ratajski",
+      "companyName": "Digital Asset"
+    }
+  ],
+  "title": "from Java and Scala to assembly"
+}

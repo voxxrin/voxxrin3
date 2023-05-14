@@ -1,0 +1,28 @@
+{
+  "language": "EN",
+  "format": {
+    "id": "951",
+    "duration": "PT50m",
+    "title": "Conference"
+  },
+  "id": "10438",
+  "title": "10 Best Practices for Writing Documentation (For Those Who Would Rather Do Anything Else)",
+  "room": {
+    "title": "Gallery Hall",
+    "id": "19151"
+  },
+  "summary": "",
+  "speakers": [
+    {
+      "companyName": "Grammarly",
+      "fullName": "Lauren Schaefer",
+      "id": "9945",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-c31db0f4-4024-4807-bf0f-f3b17fa2a817.jpeg"
+    }
+  ],
+  "track": {
+    "title": "Dev Craft",
+    "id": "1701"
+  },
+  "description": "<p><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">When I joined my current team, I discovered that writing external documentation was part of my role. While I had experience writing tech blogs, writing documentation felt like an entirely new skill. And I didn't love it. </span></p><p><br></p><p><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">Chances are good you've written documentation previously or will need to in the future. Perhaps you’re writing official documentation for your users or something more informal, like internal documentation for your teammates or a GitHub readme.</span></p><p><br></p><p><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">In this session, I’ll share ten best practices for writing documentation. You’ll leave with the knowledge you need to successfully write documentation your readers will enjoy, and you’ll possibly even be excited about the prospect of doing so.</span></p><p><br></p><p><br></p>"
+}

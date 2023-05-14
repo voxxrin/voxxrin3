@@ -1,0 +1,28 @@
+{
+  "speakers": [
+    {
+      "id": "14122",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-014b27f1-3820-49eb-a957-424dfcc3ba4e.jpg",
+      "companyName": "ASML",
+      "fullName": "Alexey Nesterenko"
+    }
+  ],
+  "description": "<p>Lithography drives semiconductor world and out moderns way of life. Noone can imagine his/hers life without: computer, smartphone, YouTube, smartwatch, etc. At the same time everyone expects that every year all those electronics miracles will become more powerful, bring even more features, get smaller (ideally invisible). ASML lithography scanners (Twinscans) are used to produce 85% of all chips (CPUs, RAM, SSDs, NAND, bluetooth, sensors, etc) made on silicon.</p><p>ASML scanners have multiple computers inside with multiple operating systems, running software stack of &gt;50 mil lines of code on multiple languages from C till Python and Julia. Those scanners are able to position silicon wafers with nanometer accuracy and several G of acceleration. To create, improve, and maintain the huge sw stack ASML has &gt;1000 engineers, spread across multiple continents, timezones, cultural backgrounds.</p><p><img src=\"https://media-exp1.licdn.com/dms/image/C5622AQE_PIdXHgV7hQ/feedshare-shrink_800/0/1576227436689?e=1656547200&amp;v=beta&amp;t=FjCWLUncRcWM5iB7HLtFi6-xgT8Dqwy7k3fukqhj9pw\" alt=\"Sri Vadivelu - Senior Equipment Engineer-EUV - ASML | LinkedIn\"></p><p>This talk will give insights on how sw integration is organized/implemented at ASML:</p><ul><li>Automated developer delivery pipeline to main archive</li><li>Every day new version is created and tested (fully automatically)</li><li>Late bug detection (after integration) and automatic removal of bad deliveries</li><li>Utilizing power of <a href=\"https://cloud.google.com/customers/asml\" rel=\"noopener noreferrer\" target=\"_blank\"><strong>Google cloud</strong></a> for testing</li><li>Utilizing power of Microsoft Azure/ InfluxDB/Grafana to enable 24/7 monitoring with alerts for \"non self recoverable\" disasters</li><li>Wide landscape of multiple services that all have to work together to enable 24/7 integration/ build/install/testing/test results analysis</li></ul><p>Also interesting (and quite unique) aspect of : \"Lithography scanner lifetime &gt;30 years, and customer wants to get new sw features/have support\" will be explored. Not many companies in the whole world have such constrains.</p>",
+  "id": "14179",
+  "track": {
+    "id": "1251",
+    "title": "Architecture"
+  },
+  "summary": "ASML lithography scanners are used to produce 85% of all chips (CPUs, RAM, SSDs, NAND, bluetooth, sensors, etc) made on silicon. ASML scanners have multiple computers inside with multiple operating systems, running software stack of >50 mil lines of code on multiple languages from C till Python and Julia. Those scanners are able to position silicon wafers with nanometer accuracy and several G of acceleration.",
+  "room": {
+    "title": "Room 6",
+    "id": "4708"
+  },
+  "title": "CI/CD pipeline that enables Moore’s law and and propels the world to the future",
+  "language": "EN",
+  "format": {
+    "duration": "PT50m",
+    "title": "Conference",
+    "id": "951"
+  }
+}

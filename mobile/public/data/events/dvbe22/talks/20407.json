@@ -1,0 +1,28 @@
+{
+  "title": "Serverless machine learning systems with Hopsworks and Github Actions",
+  "summary": "In this session, we show you how to build an operational prediction service using only Python and free serverless services. The service is called CJSurf and it has a website that shows predictions of wave heights of surfing at a beach in Ireland. It is updated every 6 hours (https://github.com/jimdowling/cjsurf).",
+  "track": {
+    "title": "Data & AI",
+    "id": "1252"
+  },
+  "language": "EN",
+  "room": {
+    "id": "4706",
+    "title": "Room 4"
+  },
+  "id": "20407",
+  "format": {
+    "title": "Tools-in-Action",
+    "id": "957",
+    "duration": "PT30m"
+  },
+  "description": "<p><span style=\"color: rgb(103, 106, 108);\">In this session, we show you how to build an operational prediction service using only Python and free serverless services. The service is called CJSurf and it has a website that shows predictions of wave heights of surfing at a beach in Ireland. It is updated every 6 hours (</span><a href=\"https://github.com/jimdowling/cjsurf\" rel=\"noopener noreferrer\" target=\"_blank\" style=\"color: rgb(51, 122, 183);\">https://github.com/jimdowling/cjsurf</a><span style=\"color: rgb(103, 106, 108);\">).</span></p><p><br></p><p><span style=\"color: rgb(103, 106, 108);\">A prediction service is an analytical or operational machine learning system that receives new data regularly, manages versioned features and models, produces predictions on a schedule or on-demand, and serves predictions to end users or services. We will show how we built CJSurf with feature pipelines and batch prediction pipelines run in Github Actions, features and models managed by Hopsworks, and a user interface built in Streamlit. In total, there are only 4 Jupyter notebooks and 1 Python program. We will show how the system follows best practice in MLOps with regard to automated testing, versioning, and A/B testing. We hope this session can encourage Data Scientists to consider moving beyond only training models to building prediction services to show the value of our work to stakeholders.</span></p>",
+  "speakers": [
+    {
+      "companyName": "Hopsworks",
+      "fullName": "Jim Dowling",
+      "id": "20098",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-33ae4548-392d-4aaf-8e1c-c48384d03f02.jpg"
+    }
+  ]
+}

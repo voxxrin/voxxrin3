@@ -1,0 +1,999 @@
+{
+  "timeSlots": [
+    {
+      "break": {
+        "icon": "ticket",
+        "title": "Registration & Breakfast",
+        "room": {
+          "id": "4703",
+          "title": "Exhibition Hall"
+        }
+      },
+      "start": "2022-10-10T06:30:00Z",
+      "end": "2022-10-10T07:30:00Z",
+      "id": "2022-10-10T06:30:00Z--2022-10-10T07:30:00Z",
+      "type": "break"
+    },
+    {
+      "talks": [
+        {
+          "speakers": [
+            {
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-4a1db4b4-4467-44c4-826a-d56da4422c1f.png",
+              "companyName": "DataStax",
+              "fullName": "Cedrick Lunven",
+              "id": "16071"
+            }
+          ],
+          "format": {
+            "duration": "PT180m",
+            "id": "959",
+            "title": "Deep Dive"
+          },
+          "language": "EN",
+          "id": "16122",
+          "title": "A Java developer Journey into Apache Cassandra™",
+          "track": {
+            "id": "1252",
+            "title": "Data & AI"
+          },
+          "room": {
+            "id": "4706",
+            "title": "Room 4"
+          }
+        },
+        {
+          "speakers": [
+            {
+              "photoUrl": "https://lh3.googleusercontent.com/a-/AOh14Gg_Bh0qPu9IacN04zSz_cGNJ-MhXalm7imI2nI85n0=s96-c",
+              "companyName": "Microsoft",
+              "fullName": "Bruno Borges",
+              "id": "5254"
+            }
+          ],
+          "format": {
+            "duration": "PT180m",
+            "id": "959",
+            "title": "Deep Dive"
+          },
+          "language": "EN",
+          "id": "5304",
+          "title": "Secrets of Performance Tuning Java on Kubernetes",
+          "track": {
+            "id": "1254",
+            "title": "Build & Deploy"
+          },
+          "room": {
+            "id": "4710",
+            "title": "Room 5"
+          }
+        },
+        {
+          "speakers": [
+            {
+              "photoUrl": "https://lh3.googleusercontent.com/a-/AOh14GgGjkmxX3-8t9JpDqTC2_TyP_2O5nG7b5frkhT0UQ=s96-c",
+              "companyName": "ING Bank NL",
+              "fullName": "Vasco Veloso",
+              "id": "2055"
+            }
+          ],
+          "format": {
+            "duration": "PT180m",
+            "id": "959",
+            "title": "Deep Dive"
+          },
+          "language": "EN",
+          "id": "2260",
+          "title": "Threading lightly with Kotlin",
+          "track": {
+            "id": "1701",
+            "title": "Development Practices"
+          },
+          "room": {
+            "id": "4708",
+            "title": "Room 6"
+          }
+        },
+        {
+          "speakers": [
+            {
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-7fa20ebb-cedc-454e-9f71-8bcfc68fce77.jpg",
+              "companyName": "University Gustave Eiffel",
+              "fullName": "Remi Forax",
+              "id": "17306"
+            },
+            {
+              "photoUrl": "https://lh3.googleusercontent.com/a-/AOh14GhsVIUuTR9Onoo-D8UMW5QId2Yw1V_EUvqdWdNQ0RQ=s96-c",
+              "companyName": "Oracle",
+              "fullName": "José Paumard",
+              "id": "16701"
+            }
+          ],
+          "format": {
+            "duration": "PT180m",
+            "id": "959",
+            "title": "Deep Dive"
+          },
+          "language": "EN",
+          "id": "16751",
+          "title": "Loom is Blooming",
+          "track": {
+            "id": "2754",
+            "title": "Java"
+          },
+          "room": {
+            "id": "4711",
+            "title": "Room 8"
+          }
+        },
+        {
+          "speakers": [
+            {
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-894c1781-d8c3-4fc6-bcd8-d53e678f3a7e.jpg",
+              "companyName": "Okta",
+              "fullName": "Deepu K Sasidharan",
+              "id": "14902"
+            }
+          ],
+          "format": {
+            "duration": "PT180m",
+            "id": "959",
+            "title": "Deep Dive"
+          },
+          "language": "EN",
+          "id": "14952",
+          "title": "Build and deploy cloud native Java microservices on Kubernetes with Istio service mesh",
+          "track": {
+            "id": "1254",
+            "title": "Build & Deploy"
+          },
+          "room": {
+            "id": "4709",
+            "title": "Room 9"
+          }
+        },
+        {
+          "speakers": [
+            {
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-MathisHammel.jpg",
+              "companyName": "CodinGame",
+              "fullName": "Mathis Hammel",
+              "id": "17651"
+            }
+          ],
+          "format": {
+            "duration": "PT180m",
+            "id": "968",
+            "title": "Hands-on Lab"
+          },
+          "language": "EN",
+          "id": "18789",
+          "title": "Code Your First Video Game AI",
+          "track": {
+            "id": "2758",
+            "title": "Mind the Geek"
+          },
+          "room": {
+            "id": "4702",
+            "title": "BOF 2"
+          }
+        },
+        {
+          "speakers": [
+            {
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-5f10121c-5bdb-4adc-9d71-60eef2a5c107.jpg",
+              "companyName": "Miro",
+              "fullName": "William Bishop",
+              "id": "20553"
+            },
+            {
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-18874341-dcd1-4092-8e56-1e13be85be38.png",
+              "companyName": "Miro",
+              "fullName": "Frederico Estrela Gaiva",
+              "id": "49402"
+            }
+          ],
+          "format": {
+            "duration": "PT180m",
+            "id": "968",
+            "title": "Hands-on Lab"
+          },
+          "language": "EN",
+          "id": "20414",
+          "title": "Building Reusable Server Components in React 18",
+          "track": {
+            "id": "2760",
+            "title": "UI & UX"
+          },
+          "room": {
+            "id": "4701",
+            "title": "BOF 1"
+          }
+        }
+      ],
+      "start": "2022-10-10T07:30:00Z",
+      "end": "2022-10-10T10:30:00Z",
+      "id": "2022-10-10T07:30:00Z--2022-10-10T10:30:00Z",
+      "type": "talks"
+    },
+    {
+      "break": {
+        "icon": "restaurant",
+        "title": "Lunch",
+        "room": {
+          "id": "4703",
+          "title": "Exhibition Hall"
+        }
+      },
+      "start": "2022-10-10T10:30:00Z",
+      "end": "2022-10-10T11:30:00Z",
+      "id": "2022-10-10T10:30:00Z--2022-10-10T11:30:00Z",
+      "type": "break"
+    },
+    {
+      "talks": [
+        {
+          "speakers": [
+            {
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-92a813da-8f39-4f0b-9d4b-7cf6a6961ca7.png",
+              "companyName": "Digital Asset",
+              "fullName": "Jarek Ratajski",
+              "id": "18895"
+            }
+          ],
+          "format": {
+            "duration": "PT180m",
+            "id": "959",
+            "title": "Deep Dive"
+          },
+          "language": "EN",
+          "id": "19441",
+          "title": "from Java and Scala to assembly",
+          "track": {
+            "id": "2754",
+            "title": "Java"
+          },
+          "room": {
+            "id": "4706",
+            "title": "Room 4"
+          }
+        },
+        {
+          "speakers": [
+            {
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-a94d4174-4b1e-4ef0-bd62-eccde75c1c67.jpg",
+              "companyName": "Oracle",
+              "fullName": "Graeme Rocher",
+              "id": "17941"
+            }
+          ],
+          "format": {
+            "duration": "PT180m",
+            "id": "959",
+            "title": "Deep Dive"
+          },
+          "language": "EN",
+          "id": "17999",
+          "title": "GraalVM Cloud Native & Micronaut® Deep Dive",
+          "track": {
+            "id": "1256",
+            "title": "Server Side Java"
+          },
+          "room": {
+            "id": "4710",
+            "title": "Room 5"
+          }
+        },
+        {
+          "speakers": [
+            {
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-c17421bd-2e4c-4c20-ad15-1ec0c43cc986.jpeg",
+              "companyName": "Gradle",
+              "fullName": "Louis Jacomet",
+              "id": "10552"
+            },
+            {
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-6f96b6df-d31b-4794-9c17-f9b5907526b6.jpg",
+              "companyName": "Gradle Inc.",
+              "fullName": "Kyle Moore",
+              "id": "49102"
+            }
+          ],
+          "format": {
+            "duration": "PT180m",
+            "id": "959",
+            "title": "Deep Dive"
+          },
+          "language": "EN",
+          "id": "19409",
+          "title": "Gradle: Give your build some love, it will be returned!",
+          "track": {
+            "id": "1254",
+            "title": "Build & Deploy"
+          },
+          "room": {
+            "id": "4708",
+            "title": "Room 6"
+          }
+        },
+        {
+          "speakers": [
+            {
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-3ae18efe-25d0-4059-b46a-3ddc7fa93d5b.png",
+              "companyName": "Red Hat",
+              "fullName": "Edoardo Vacchi",
+              "id": "11305"
+            }
+          ],
+          "format": {
+            "duration": "PT180m",
+            "id": "959",
+            "title": "Deep Dive"
+          },
+          "language": "EN",
+          "id": "11355",
+          "title": "Write You An Actor (System) For Great Good! (with JBang, JDK 19, records, pattern matching and virtual threads!)",
+          "track": {
+            "id": "2754",
+            "title": "Java"
+          },
+          "room": {
+            "id": "4711",
+            "title": "Room 8"
+          }
+        },
+        {
+          "speakers": [
+            {
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-84155e87-b889-4c4a-8a85-000165c95b9c.jpg",
+              "companyName": "Open Elements",
+              "fullName": "Hendrik Ebbers",
+              "id": "20551"
+            },
+            {
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-56f7222f-03cc-446b-ac39-ca438b532442.jpg",
+              "companyName": "Swirlds Labs Inc.",
+              "fullName": "Michael Heinrichs",
+              "id": "20555"
+            }
+          ],
+          "format": {
+            "duration": "PT180m",
+            "id": "959",
+            "title": "Deep Dive"
+          },
+          "language": "EN",
+          "id": "20409",
+          "title": "Blockchain, NFT and smart contracts for my (Java) application",
+          "track": {
+            "id": "1255",
+            "title": "Security"
+          },
+          "room": {
+            "id": "4709",
+            "title": "Room 9"
+          }
+        },
+        {
+          "speakers": [
+            {
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-d6c99034-c240-460e-b155-923dac6796c9.jpg",
+              "companyName": "Luminis",
+              "fullName": "Nico Krijnen",
+              "id": "2801"
+            },
+            {
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-21227b6c-410a-4ca4-bf3f-abf209696c04.jpg",
+              "companyName": "Luminis",
+              "fullName": "Jettro Coenradie",
+              "id": "12102"
+            }
+          ],
+          "format": {
+            "duration": "PT180m",
+            "id": "968",
+            "title": "Hands-on Lab"
+          },
+          "language": "EN",
+          "id": "3401",
+          "title": "How the right architecture helps you make big changes",
+          "track": {
+            "id": "1251",
+            "title": "Architecture"
+          },
+          "room": {
+            "id": "4702",
+            "title": "BOF 2"
+          }
+        },
+        {
+          "speakers": [
+            {
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-315c3b2f-6849-4967-a1dd-034fbc596713.jpg",
+              "companyName": "Amazon Web Services",
+              "fullName": "Dennis Kieselhorst",
+              "id": "6556"
+            },
+            {
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-374aae2e-1c8d-4f2d-bc1b-c7f2ae85f3c7.jpeg",
+              "companyName": "AWS - Amazon Web Services",
+              "fullName": "Maximilian Schellhorn",
+              "id": "6557"
+            }
+          ],
+          "format": {
+            "duration": "PT180m",
+            "id": "968",
+            "title": "Hands-on Lab"
+          },
+          "language": "EN",
+          "id": "6665",
+          "title": " From Serverful to Serverless Java with AWS Lambda",
+          "track": {
+            "id": "1256",
+            "title": "Server Side Java"
+          },
+          "room": {
+            "id": "4701",
+            "title": "BOF 1"
+          }
+        }
+      ],
+      "start": "2022-10-10T11:30:00Z",
+      "end": "2022-10-10T14:30:00Z",
+      "id": "2022-10-10T11:30:00Z--2022-10-10T14:30:00Z",
+      "type": "talks"
+    },
+    {
+      "break": {
+        "icon": "cafe",
+        "title": "Break",
+        "room": {
+          "id": "4703",
+          "title": "Exhibition Hall"
+        }
+      },
+      "start": "2022-10-10T14:30:00Z",
+      "end": "2022-10-10T14:50:00Z",
+      "id": "2022-10-10T14:30:00Z--2022-10-10T14:50:00Z",
+      "type": "break"
+    },
+    {
+      "talks": [
+        {
+          "speakers": [
+            {
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-33ae4548-392d-4aaf-8e1c-c48384d03f02.jpg",
+              "companyName": "Hopsworks",
+              "fullName": "Jim Dowling",
+              "id": "20098"
+            }
+          ],
+          "format": {
+            "duration": "PT30m",
+            "id": "957",
+            "title": "Tools-in-Action"
+          },
+          "language": "EN",
+          "id": "20407",
+          "title": "Serverless machine learning systems with Hopsworks and Github Actions",
+          "track": {
+            "id": "1252",
+            "title": "Data & AI"
+          },
+          "room": {
+            "id": "4706",
+            "title": "Room 4"
+          }
+        },
+        {
+          "speakers": [
+            {
+              "photoUrl": "https://lh3.googleusercontent.com/a-/AOh14GghdlsQf-LeH_np8EgyP0zMkqdtdA3aeHvPYsYOag=s96-c",
+              "companyName": "Red Hat",
+              "fullName": "Sébastien Blanc",
+              "id": "12107"
+            }
+          ],
+          "format": {
+            "duration": "PT30m",
+            "id": "957",
+            "title": "Tools-in-Action"
+          },
+          "language": "EN",
+          "id": "12251",
+          "title": "Access your brain with an API",
+          "track": {
+            "id": "2758",
+            "title": "Mind the Geek"
+          },
+          "room": {
+            "id": "4710",
+            "title": "Room 5"
+          }
+        },
+        {
+          "speakers": [
+            {
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-7c17f7e7-5e81-4b2b-8e16-b4e061304d9d.jpg",
+              "companyName": "Airties",
+              "fullName": "Steven Aerts",
+              "id": "17945"
+            }
+          ],
+          "format": {
+            "duration": "PT30m",
+            "id": "957",
+            "title": "Tools-in-Action"
+          },
+          "language": "EN",
+          "id": "19403",
+          "title": "Recording the Flight of Serverless Functions ",
+          "track": {
+            "id": "1254",
+            "title": "Build & Deploy"
+          },
+          "room": {
+            "id": "4708",
+            "title": "Room 6"
+          }
+        },
+        {
+          "speakers": [
+            {
+              "photoUrl": "https://lh3.googleusercontent.com/a-/AOh14GgN510I9aTJCXXheO5eACMeO9JnLaTcczDUm6D3Vg=s96-c",
+              "companyName": "Red Hat",
+              "fullName": "Alex Soto",
+              "id": "14126"
+            }
+          ],
+          "format": {
+            "duration": "PT30m",
+            "id": "957",
+            "title": "Tools-in-Action"
+          },
+          "language": "EN",
+          "id": "14958",
+          "title": "Playwright. Your Next Java Test Framework for automating Web tests",
+          "track": {
+            "id": "1701",
+            "title": "Development Practices"
+          },
+          "room": {
+            "id": "4711",
+            "title": "Room 8"
+          }
+        },
+        {
+          "speakers": [
+            {
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-davinkevin.jpg",
+              "companyName": "Gradle",
+              "fullName": "Kevin Davin",
+              "id": "12651"
+            }
+          ],
+          "format": {
+            "duration": "PT30m",
+            "id": "957",
+            "title": "Tools-in-Action"
+          },
+          "language": "EN",
+          "id": "12703",
+          "title": "Let's kustomize our manifests with style 🤩!",
+          "track": {
+            "id": "1254",
+            "title": "Build & Deploy"
+          },
+          "room": {
+            "id": "4709",
+            "title": "Room 9"
+          }
+        }
+      ],
+      "start": "2022-10-10T14:50:00Z",
+      "end": "2022-10-10T15:20:00Z",
+      "id": "2022-10-10T14:50:00Z--2022-10-10T15:20:00Z",
+      "type": "talks"
+    },
+    {
+      "talks": [
+        {
+          "speakers": [
+            {
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-16b8d467-cf33-432b-b8b8-efdb61851e80.jpg",
+              "companyName": "AtomicJar",
+              "fullName": "Kevin Wittek",
+              "id": "53457"
+            },
+            {
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-79137f03-07db-4363-a029-37b25157a407.jpg",
+              "companyName": "AtomicJar",
+              "fullName": "Piotr Przybyl",
+              "id": "20054"
+            }
+          ],
+          "format": {
+            "duration": "PT180m",
+            "id": "968",
+            "title": "Hands-on Lab"
+          },
+          "language": "EN",
+          "id": "56501",
+          "title": "Rethinking integration testing with Testcontainers",
+          "track": {
+            "id": "1256",
+            "title": "Server Side Java"
+          },
+          "room": {
+            "id": "4701",
+            "title": "BOF 1"
+          }
+        }
+      ],
+      "start": "2022-10-10T14:50:00Z",
+      "end": "2022-10-10T17:50:00Z",
+      "id": "2022-10-10T14:50:00Z--2022-10-10T17:50:00Z",
+      "type": "talks"
+    },
+    {
+      "break": {
+        "icon": "cafe",
+        "title": "Break",
+        "room": {
+          "id": "4703",
+          "title": "Exhibition Hall"
+        }
+      },
+      "start": "2022-10-10T15:20:00Z",
+      "end": "2022-10-10T15:35:00Z",
+      "id": "2022-10-10T15:20:00Z--2022-10-10T15:35:00Z",
+      "type": "break"
+    },
+    {
+      "talks": [
+        {
+          "speakers": [
+            {
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-79df3b61-c8ff-4aca-b411-12179d2d9908.jpg",
+              "companyName": "Betclic",
+              "fullName": "Etienne Puissant",
+              "id": "16711"
+            },
+            {
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-b37ca819-8b2c-4740-b352-e2f99d69b189.jpg",
+              "companyName": "Betclic",
+              "fullName": "Jozwiak Nicolas",
+              "id": "16078"
+            }
+          ],
+          "format": {
+            "duration": "PT30m",
+            "id": "957",
+            "title": "Tools-in-Action"
+          },
+          "language": "EN",
+          "id": "16135",
+          "title": "How Betclic is using its Datalake to generate some load tests and simulate sports events ?",
+          "track": {
+            "id": "1251",
+            "title": "Architecture"
+          },
+          "room": {
+            "id": "4706",
+            "title": "Room 4"
+          }
+        },
+        {
+          "speakers": [
+            {
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-e2d0a411-82fc-4b9d-9386-1f45495f942d.jpg",
+              "companyName": "JDriven",
+              "fullName": "Tim te Beek",
+              "id": "14907"
+            }
+          ],
+          "format": {
+            "duration": "PT30m",
+            "id": "957",
+            "title": "Tools-in-Action"
+          },
+          "language": "EN",
+          "id": "16776",
+          "title": "Major migrations made easy",
+          "track": {
+            "id": "2754",
+            "title": "Java"
+          },
+          "room": {
+            "id": "4710",
+            "title": "Room 5"
+          }
+        },
+        {
+          "speakers": [
+            {
+              "photoUrl": "https://lh3.googleusercontent.com/a/AATXAJzfOobol8kyXlaSJ_MGXJQ0aK_4G9nq5xU-n1IN=s96-c",
+              "companyName": "Oracle",
+              "fullName": "Ana Maria Mihalceanu",
+              "id": "12109"
+            }
+          ],
+          "format": {
+            "duration": "PT30m",
+            "id": "957",
+            "title": "Tools-in-Action"
+          },
+          "language": "EN",
+          "id": "16762",
+          "title": "Helm vs. Kustomize: the frenemies that soothe Kubernetes",
+          "track": {
+            "id": "1254",
+            "title": "Build & Deploy"
+          },
+          "room": {
+            "id": "4708",
+            "title": "Room 6"
+          }
+        },
+        {
+          "speakers": [
+            {
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-72e570f5-4192-43fd-a9f4-a3ed698895f5.jpg",
+              "companyName": "Craftsmen",
+              "fullName": "Michel Schudel",
+              "id": "11303"
+            }
+          ],
+          "format": {
+            "duration": "PT30m",
+            "id": "957",
+            "title": "Tools-in-Action"
+          },
+          "language": "EN",
+          "id": "14160",
+          "title": "Testing an onion architecture, done right",
+          "track": {
+            "id": "1701",
+            "title": "Development Practices"
+          },
+          "room": {
+            "id": "4711",
+            "title": "Room 8"
+          }
+        },
+        {
+          "speakers": [
+            {
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-25dd8d22-3668-4f2d-b5e8-757660bcfab4.jpeg",
+              "companyName": "GitHub",
+              "fullName": "Chris Reddington",
+              "id": "20084"
+            }
+          ],
+          "format": {
+            "duration": "PT30m",
+            "id": "957",
+            "title": "Tools-in-Action"
+          },
+          "language": "EN",
+          "id": "20184",
+          "title": "From 'It works on my machine' to 'It was written by a machine' - GitHub Codespaces & Copilot",
+          "track": {
+            "id": "1701",
+            "title": "Development Practices"
+          },
+          "room": {
+            "id": "4709",
+            "title": "Room 9"
+          }
+        }
+      ],
+      "start": "2022-10-10T15:35:00Z",
+      "end": "2022-10-10T16:05:00Z",
+      "id": "2022-10-10T15:35:00Z--2022-10-10T16:05:00Z",
+      "type": "talks"
+    },
+    {
+      "break": {
+        "icon": "cafe",
+        "title": "Break",
+        "room": {
+          "id": "4703",
+          "title": "Exhibition Hall"
+        }
+      },
+      "start": "2022-10-10T16:05:00Z",
+      "end": "2022-10-10T16:20:00Z",
+      "id": "2022-10-10T16:05:00Z--2022-10-10T16:20:00Z",
+      "type": "break"
+    },
+    {
+      "talks": [
+        {
+          "speakers": [
+            {
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-305e3338-b29b-4d78-a485-3fccf6f7786e.jpg",
+              "companyName": "Oracle Labs",
+              "fullName": "Alina Yurenko",
+              "id": "20069"
+            }
+          ],
+          "format": {
+            "duration": "PT30m",
+            "id": "957",
+            "title": "Tools-in-Action"
+          },
+          "language": "EN",
+          "id": "20419",
+          "title": "Supercharge your Native Image applications in 5 steps!",
+          "track": {
+            "id": "1256",
+            "title": "Server Side Java"
+          },
+          "room": {
+            "id": "4706",
+            "title": "Room 4"
+          }
+        },
+        {
+          "speakers": [
+            {
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-315c3b2f-6849-4967-a1dd-034fbc596713.jpg",
+              "companyName": "Amazon Web Services",
+              "fullName": "Dennis Kieselhorst",
+              "id": "6556"
+            }
+          ],
+          "format": {
+            "duration": "PT30m",
+            "id": "957",
+            "title": "Tools-in-Action"
+          },
+          "language": "EN",
+          "id": "6906",
+          "title": "OpenTelemetry – An Observability Framework for Cloud-Native Software",
+          "track": {
+            "id": "1254",
+            "title": "Build & Deploy"
+          },
+          "room": {
+            "id": "4710",
+            "title": "Room 5"
+          }
+        },
+        {
+          "speakers": [
+            {
+              "photoUrl": "https://lh3.googleusercontent.com/a-/AOh14GjX5_p9WoIyquGbe49ex0PC4ShRGPIYxSn-WGTXbw=s96-c",
+              "companyName": "GROUP9",
+              "fullName": "Jaap Coomans",
+              "id": "2806"
+            }
+          ],
+          "format": {
+            "duration": "PT30m",
+            "id": "957",
+            "title": "Tools-in-Action"
+          },
+          "language": "EN",
+          "id": "2959",
+          "title": "Fairies, Fakers and Factories: boost you tests with better test data",
+          "track": {
+            "id": "1701",
+            "title": "Development Practices"
+          },
+          "room": {
+            "id": "4708",
+            "title": "Room 6"
+          }
+        },
+        {
+          "speakers": [
+            {
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-913d465c-02de-4b1c-9768-2dbeb1129963.jpeg",
+              "companyName": "Red Hat",
+              "fullName": "Peter Palaga",
+              "id": "14105"
+            }
+          ],
+          "format": {
+            "duration": "PT30m",
+            "id": "957",
+            "title": "Tools-in-Action"
+          },
+          "language": "EN",
+          "id": "16755",
+          "title": "Maven, my life is short!",
+          "track": {
+            "id": "1701",
+            "title": "Development Practices"
+          },
+          "room": {
+            "id": "4711",
+            "title": "Room 8"
+          }
+        },
+        {
+          "speakers": [
+            {
+              "photoUrl": "https://avatars.githubusercontent.com/u/1758817?v=4",
+              "companyName": null,
+              "fullName": "Pieter-Jan Drouillon",
+              "id": "12854"
+            }
+          ],
+          "format": {
+            "duration": "PT30m",
+            "id": "957",
+            "title": "Tools-in-Action"
+          },
+          "language": "EN",
+          "id": "13702",
+          "title": "No more John Doe: realistic mock data with mockaroo",
+          "track": {
+            "id": "1701",
+            "title": "Development Practices"
+          },
+          "room": {
+            "id": "4709",
+            "title": "Room 9"
+          }
+        }
+      ],
+      "start": "2022-10-10T16:20:00Z",
+      "end": "2022-10-10T16:50:00Z",
+      "id": "2022-10-10T16:20:00Z--2022-10-10T16:50:00Z",
+      "type": "talks"
+    },
+    {
+      "break": {
+        "icon": "cafe",
+        "title": "Break",
+        "room": {
+          "id": "4703",
+          "title": "Exhibition Hall"
+        }
+      },
+      "start": "2022-10-10T16:50:00Z",
+      "end": "2022-10-10T17:05:00Z",
+      "id": "2022-10-10T16:50:00Z--2022-10-10T17:05:00Z",
+      "type": "break"
+    },
+    {
+      "talks": [
+        {
+          "speakers": [
+            {
+              "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-37d323d7-c380-4d71-b37a-17b84be9ddd2.jpg",
+              "companyName": "Red Hat",
+              "fullName": "Dimitris Andreadis",
+              "id": "1855"
+            }
+          ],
+          "format": {
+            "duration": "PT60m",
+            "id": "954",
+            "title": "BOF"
+          },
+          "language": "EN",
+          "id": "1904",
+          "title": "Quarkus Community BOF",
+          "track": {
+            "id": "1256",
+            "title": "Server Side Java"
+          },
+          "room": {
+            "id": "4702",
+            "title": "BOF 2"
+          }
+        }
+      ],
+      "start": "2022-10-10T17:05:00Z",
+      "end": "2022-10-10T18:05:00Z",
+      "id": "2022-10-10T17:05:00Z--2022-10-10T18:05:00Z",
+      "type": "talks"
+    }
+  ],
+  "day": "monday"
+}

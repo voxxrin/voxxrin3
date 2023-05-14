@@ -1,0 +1,34 @@
+{
+  "language": "EN",
+  "track": {
+    "title": "Security",
+    "id": "1255"
+  },
+  "title": "Blockchain, NFT and smart contracts for my (Java) application",
+  "description": "<p>Within the last years distributed ledger technologies like Blockchain and Hashgraph have become more and more a part of our modern world. By the success of Bitcoin the interest in such technologies has grown rapidly and buzzwords like Non-Fungible Token (NFT), Web 3.0, and Cryptocurrency are used wherever possible. But in the developer community not all people like this hype, and distributed ledger technologies often are seen as buzzwords for managers or outright scams. Unfortunately some questionable use cases for NFTs has been pushed by the media and most people think NFT is synonymous with speculative assets like bored apes!</p><p>In this session we will show use cases of distributed ledger technologies that go beyond cryptocurrency or speculative PNGs. Public services have been established that let you use the real benefits of distributed ledger technologies in enterprise applications without implementing a custom blockchain network. Whether you want to transfer assets that represent physical goods or need to handle immutable recording with a fast ordering public ledger. All this can be achieved by using open services that are based on leading and public distributed ledgers like Hedera or Ethereum. In several Java examples we will present real world use cases that use open services of public distributed ledger networks. You will see that the usage of such services not only externalize complex workflows but also help to make your application way more sustainable and secure.</p>",
+  "room": {
+    "id": "4709",
+    "title": "Room 9"
+  },
+  "format": {
+    "id": "959",
+    "title": "Deep Dive",
+    "duration": "PT180m"
+  },
+  "id": "20409",
+  "speakers": [
+    {
+      "companyName": "Open Elements",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-84155e87-b889-4c4a-8a85-000165c95b9c.jpg",
+      "fullName": "Hendrik Ebbers",
+      "id": "20551"
+    },
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-56f7222f-03cc-446b-ac39-ca438b532442.jpg",
+      "id": "20555",
+      "companyName": "Swirlds Labs Inc.",
+      "fullName": "Michael Heinrichs"
+    }
+  ],
+  "summary": "In this session we will show use cases of distributed ledger technologies that go beyond cryptocurrency or speculative PNGs. Public services have been established that let you use the real benefits of distributed ledger technologies in enterprise applications without implementing a custom blockchain network. Whether you want to transfer assets that represent physical goods or need to handle immutable recording with a fast ordering public ledger. All this can be achieved by using open services that are based on leading and public distributed ledgers like Hedera or Ethereum. In several"
+}

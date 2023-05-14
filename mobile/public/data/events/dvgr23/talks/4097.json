@@ -1,0 +1,28 @@
+{
+  "format": {
+    "title": "Conference",
+    "id": "953",
+    "duration": "PT40m"
+  },
+  "speakers": [
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-473aa723-fa36-4448-9c96-21c68b392161.jpg",
+      "fullName": "Simon Ritter",
+      "id": "3978",
+      "companyName": "Azul"
+    }
+  ],
+  "language": "EN",
+  "id": "4097",
+  "summary": "",
+  "room": {
+    "title": "Banquet",
+    "id": "2801"
+  },
+  "title": "The Art of Java Language Pattern Matching",
+  "description": "<p>The goal of project Amber within OpenJDK is to explore the inclusion of smaller, productivity-oriented Java language features.&nbsp;One part of this that has delivered new functionality in recent versions is <em>pattern matching</em>.</p><p><br></p><p>Pattern matching combines application code logic to test if an expression has a specific type or structure and extract components of its state for processing.</p><p><br></p><p>Pattern matching is now well embedded in the Java language using the following features, defined by JDK Enhancement Proposals (JEPs)</p><p><br></p><p>·&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Pattern matching for instanceof (JEP 305, 375, 394, 433)</p><p>·&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Pattern matching for switch (JEP 406, 420, 427)</p><p>·&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Record patterns (JEP 405, 432)</p><p><br></p><p>In this session, we’ll look at the details of these new language features and a more general look at pattern matching.&nbsp;We’ll also explore future features in this area such as array patterns, which may be included in a subsequent Java release.</p><p><br></p><p>By the end of the session, you’ll be ready to use these powerful new features.</p>",
+  "track": {
+    "title": "Java",
+    "id": "2754"
+  }
+}

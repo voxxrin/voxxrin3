@@ -1,0 +1,28 @@
+{
+  "id": "2358",
+  "track": {
+    "title": "Architecture",
+    "id": "1251"
+  },
+  "title": "Event Sourcing - what could possibly go wrong?",
+  "format": {
+    "duration": "PT50m",
+    "title": "Conference",
+    "id": "951"
+  },
+  "language": "EN",
+  "speakers": [
+    {
+      "id": "2558",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-0a938836-c5dc-47c1-8cc9-cfed5d7452ce.jpg",
+      "companyName": "Lightbend",
+      "fullName": "Andrzej Ludwikowski"
+    }
+  ],
+  "summary": "This presentation is a summary of my experience with Event Sourcing gathered while working on 5 different commercial products. Instead of theoretical aspects, I will focus on possible challenges with ES implementation.",
+  "description": "<p><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">Yet another presentation about Event Sourcing? Yes and no. Event Sourcing is a really great concept. Some could say it’s a Holy Grail of the software architecture. I might agree with that, while remembering that everything comes with a price. This session is a summary of my experience with ES gathered while working on 5 different commercial products. Instead of theoretical aspects, I will focus on possible challenges with ES implementation. What could explode (very often with delayed ignition)? How and where to store events effectively? What are possible schema evolution solutions? How to achieve the highest level of scalability and live with eventual consistency? And many other interesting topics that you might face when experimenting with ES.</span></p><p><br></p><p><br></p>",
+  "room": {
+    "title": "Room 5",
+    "id": "4710"
+  }
+}

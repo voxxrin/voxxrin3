@@ -1,0 +1,28 @@
+{
+  "summary": "",
+  "speakers": [
+    {
+      "id": "10161",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-a74bb04d-78dd-4917-9e65-61424631e77d.jpg",
+      "companyName": "Amity",
+      "fullName": "Eliza Camber"
+    }
+  ],
+  "description": "<p><span style=\"color: rgb(34, 34, 34);\">In today's world, time is a valuable resource. Using tools that can reduce the time required for specific tasks is essential for maximizing productivity and achieving business goals. A tool of such was recently released and disrupted the entire business world: ChatGTP.&nbsp;ChatGPT's capabilities to generate coherent and relevant content can produce more compelling and persuasive presentations. In this session, we will discuss how we can leverage ChatGPT, and other AI tools, to improve the quality and delivery of any presentation, enhance audience engagement, and reduce our cognitive load.</span></p>",
+  "language": "EN",
+  "id": "10361",
+  "title": "Using ChatGTP for technical & non technical presentations",
+  "format": {
+    "title": "Conference",
+    "duration": "PT40m",
+    "id": "953"
+  },
+  "room": {
+    "title": "Skalkotas",
+    "id": "2802"
+  },
+  "track": {
+    "title": "Mind the Geek",
+    "id": "2758"
+  }
+}

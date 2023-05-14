@@ -1,0 +1,28 @@
+{
+  "description": "<p>Spring Boot streamlines Java and Kotlin development with its developer-first focus. By simplifying dependency management and deployment, providing unmatched autoconfiguration capabilities, and leveraging convention over configuration at every opportunity, developers can focus nearly all of their efforts on designing, developing, and delivering amazing software. This is the happy path, and it is wide.</p><p><br></p><p>Good developers write good code, but great developers can diagnose the inevitable issues that arise in complex software systems. When your code takes the road less traveled, how can you quickly identify, isolate, and resolve the problem, not the symptoms? How can you move from good to great?</p><p><br></p><p>In this session, the presenter will take you on a live-coding adventure(TM) into the hidden passageways of your Spring Boot application. Topics covered may include (but are not limited to) the following, depending upon time available:</p><p><br></p><ul><li>Application startup, including autoconfiguration steps/process</li><li>Bean initialization and configuration</li><li>Debugging local apps via IDE</li><li>Remote debugging container applications</li><li>Tracing distributed apps</li><li>Debugging reactive code</li></ul><p><br></p><p>Come to this session to get a deeper understanding of your Spring Boot apps and level up your debugging skills!</p>",
+  "format": {
+    "title": "Conference",
+    "duration": "PT50m",
+    "id": "951"
+  },
+  "language": "EN",
+  "room": {
+    "title": "Room 8",
+    "id": "4711"
+  },
+  "summary": "This is a live coding adventure into the hidden passageways of your Spring Boot application.",
+  "speakers": [
+    {
+      "fullName": "Mark Heckler",
+      "id": "11308",
+      "companyName": "Microsoft",
+      "photoUrl": "https://lh3.googleusercontent.com/a-/AOh14GhzjJeYX3TK8uizrhJt7qsmV1LSuJxiAY-zTThcxK8=s96-c"
+    }
+  ],
+  "track": {
+    "title": "Server Side Java",
+    "id": "1256"
+  },
+  "title": "Das Boot: Diving into Debugging Spring Boot Applications",
+  "id": "11361"
+}

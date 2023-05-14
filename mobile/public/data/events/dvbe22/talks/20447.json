@@ -1,0 +1,34 @@
+{
+  "language": "EN",
+  "description": "<p><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">The combination of Spring and Kotlin is a winning combo for building modern, reactive, and productive servers.&nbsp; This talk will walk through how Spring &amp; Kotlin fit together with coroutines, R2DBC, Testcontainers, and Kotlin/JS for the web UI.&nbsp; Come for Kotlin, stay for the ASCII art! </span></p>",
+  "id": "20447",
+  "summary": "",
+  "speakers": [
+    {
+      "companyName": "Google",
+      "id": "20076",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-7cb8faf8-352c-47f3-9761-1538d529283a.jpg",
+      "fullName": "James Ward"
+    },
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-2d11dea4-b418-4ab7-8535-adbc96b05753.jpg",
+      "id": "20588",
+      "fullName": "Josh Long",
+      "companyName": "VMware"
+    }
+  ],
+  "format": {
+    "id": "951",
+    "title": "Conference",
+    "duration": "PT50m"
+  },
+  "track": {
+    "id": "1256",
+    "title": "Server Side Java"
+  },
+  "title": "Spring + Kotlin = Modern + Reactive + Productive",
+  "room": {
+    "id": "4710",
+    "title": "Room 5"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "description": "<p>Do you also feel like it’s hard to keep up with all the new tools and frameworks coming your way? You are not alone! By choosing IT, you are choosing to learn for the rest of your life…&nbsp;<em>not an easy task</em>.</p><p><br></p><p><strong>In this session we’ll look into some concepts that will help you get the most out of your efforts to learn new shiny stuff!</strong></p><p><br></p><p>We’ll go over a couple of example projects and give you some guidelines to keep learning without being overwhelmed by the flood of new technologies.</p>",
+  "title": "Learning Through Tinkering",
+  "room": {
+    "id": "19152",
+    "title": "Auditorium"
+  },
+  "language": "EN",
+  "format": {
+    "title": "Conference",
+    "id": "951",
+    "duration": "PT50m"
+  },
+  "summary": "",
+  "speakers": [
+    {
+      "companyName": "Info Support NV",
+      "fullName": "Tom Cools",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-e49cea16-73f6-4c58-8836-445b907e241f.jpg",
+      "id": "2862"
+    }
+  ],
+  "track": {
+    "id": "1253",
+    "title": "People & Culture"
+  },
+  "id": "3111"
+}

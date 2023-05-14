@@ -1,0 +1,28 @@
+{
+  "summary": "",
+  "id": "11652",
+  "speakers": [
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-ad167ba4-9ec8-4115-af55-867741c9cb10.jpg",
+      "id": "11552",
+      "companyName": "PwC Greece, Enterprise Digital",
+      "fullName": "Harry Tsavdaris"
+    }
+  ],
+  "room": {
+    "id": "2803",
+    "title": "MC3"
+  },
+  "title": "Scalable platform for public sector heavy workloads",
+  "format": {
+    "duration": "PT15m",
+    "title": "Quickie",
+    "id": "960"
+  },
+  "description": "<p><span style=\"color: rgb(0, 0, 0);\">Public Sector had a very bad track record when it comes to its platforms' scalability. Focusing on the business logic and disregarding the quality attributes of the solutions was the modus operandi. In this session, will be presented a cloud native scalable platform hosted on Azure able to serve multi-million transactions per day. This platform delivered all the social benefits distributed in Greece after the pandemic.</span></p>",
+  "track": {
+    "title": "Cloud, Containers & Infrastructure",
+    "id": "1402"
+  },
+  "language": "EN"
+}

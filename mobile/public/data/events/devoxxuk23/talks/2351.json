@@ -1,0 +1,28 @@
+{
+  "track": {
+    "title": "Java",
+    "id": "2754"
+  },
+  "format": {
+    "id": "957",
+    "title": "Tools-in-Action",
+    "duration": "PT30m"
+  },
+  "title": "Debugging with IntelliJ IDEA",
+  "language": "EN",
+  "speakers": [
+    {
+      "fullName": "Anton Arhipov",
+      "id": "1893",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-e4193564-00fd-40bd-b620-6105dbef5ef5.jpg",
+      "companyName": "JetBrains"
+    }
+  ],
+  "id": "2351",
+  "description": "<p><span style=\"background-color: rgba(0, 0, 0, 0.05); color: rgb(15, 15, 15);\">Historically debuggers were used to help locate and fix bugs. Nowadays, the debugger in IntelliJ IDEA can help you do much more than that. We’ll show how the debugger helps make the development process more productive. </span></p><p><span style=\"background-color: rgba(0, 0, 0, 0.05); color: rgb(15, 15, 15);\">We’ll explain how some debugger features like lambdas debugging, smart step into, and async stack traces work and how it is possible only because of the tight integration with other IDE features.</span></p><p><span style=\"background-color: rgba(0, 0, 0, 0.05); color: rgb(15, 15, 15);\">You will also learn new ways to use the IntelliJ IDEA debugger in your everyday work.</span></p>",
+  "summary": "",
+  "room": {
+    "id": "19151",
+    "title": "Gallery Hall"
+  }
+}

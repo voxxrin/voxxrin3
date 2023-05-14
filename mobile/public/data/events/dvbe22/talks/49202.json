@@ -1,0 +1,28 @@
+{
+  "room": {
+    "id": "4708",
+    "title": "Room 6"
+  },
+  "language": "EN",
+  "title": "Database Hacking 101: Building fast bulk import in Java + C",
+  "summary": "",
+  "speakers": [
+    {
+      "id": "39051",
+      "companyName": "QuestDB",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-38cd39e3-2ed3-4088-b928-15bab71eb480.jpeg",
+      "fullName": "Vlad Ilyushchenko"
+    }
+  ],
+  "description": "<p>QuestDB is an open source time-series database with a focus on performance, written mostly in JAVA. The engineers at QuestDB use every trick in the bag to make sure their Time Series Database is as fast as possible. They recently explored how to speed up their CSV file imports, and ended up making extensive use of io_uring.</p><p>In this talk, Vlad Ilyushchenko (Co-Founder &amp; CTO at QuestDB, and performance geek) will explain how they use io_uring to speed up CSV imports, why they use it at QuestDB and how much gain you can expect when adopting it. Lastly, Vlad will present benchmarks with io_uring as well as some of the implementation details.</p>",
+  "id": "49202",
+  "track": {
+    "title": "Server Side Java",
+    "id": "1256"
+  },
+  "format": {
+    "title": "Conference",
+    "duration": "PT50m",
+    "id": "951"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "language": "EN",
+  "title": "Keep your dependencies in check",
+  "track": {
+    "title": "Build & Deploy",
+    "id": "1254"
+  },
+  "id": "3475",
+  "summary": "",
+  "room": {
+    "title": "Room A",
+    "id": "19153"
+  },
+  "description": "<p><span style=\"color: rgb(0, 0, 0);\">If Log4Shell, Spring4Shell, etc. have taught us anything, it's that we need to keep our dependencies up to date. But updating our applications can take a lot of time. How do we stay on top of that, while also continuing to deliver business value?</span></p><p><br></p><p><span style=\"color: rgb(0, 0, 0);\">Luckily, there are plenty of tools that can help us with this, from our IDE (IntelliJ IDEA) and build tools (Maven &amp; Gradle) to bots (Dependabot, Renovate, Snyk Open Source) and migration tools (like OpenRewrite), that can automatically create changes on our repositories. Let's go over some of the different options, so we can make informed choices about what's best for us in a particular situation.</span></p>",
+  "speakers": [
+    {
+      "companyName": "JetBrains",
+      "id": "2900",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-cccba746-2c62-4eee-ad68-9b4ba02c4e0a.jpeg",
+      "fullName": "Marit van Dijk"
+    }
+  ],
+  "format": {
+    "title": "Conference",
+    "duration": "PT50m",
+    "id": "951"
+  }
+}

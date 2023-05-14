@@ -1,0 +1,28 @@
+{
+  "speakers": [
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-d04b848a-7b45-47c8-9b0a-7008a722754e.png",
+      "id": "2881",
+      "fullName": "Johan Janssen",
+      "companyName": "ASML"
+    }
+  ],
+  "description": "<p>The speaker has never seen the deck they are about to give a talk on.</p><p>There are 20 slides and they auto-advance every 15 seconds.</p><p>The result should be a fast and fun presentation which lasts just 5&nbsp;minutes.</p><p>What could possibly go wrong?</p>",
+  "track": {
+    "id": "2758",
+    "title": "Mind the Geek"
+  },
+  "title": "Blind Ignite Session",
+  "summary": "",
+  "id": "18954",
+  "format": {
+    "id": "958",
+    "title": "Ignite",
+    "duration": "PT5m"
+  },
+  "language": "EN",
+  "room": {
+    "id": "19153",
+    "title": "Room A"
+  }
+}

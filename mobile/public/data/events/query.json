@@ -1,0 +1,146 @@
+[
+  {
+    "timezone": "Europe/London",
+    "id": "devoxxuk23",
+    "description": "Devoxx UK is a space for developers to learn, sharpen their skills and get hands-on experience with the latest tech. At this 3-day conference we bring together a diverse group of inspiring speakers from around the world to cover the most vital developer-focused topics, latest technology advances and delve into some fascinating ideas.",
+    "keywords": [
+      "Devoxx",
+      "Java",
+      "Kotlin",
+      "Cloud",
+      "Big data",
+      "Web"
+    ],
+    "location": {
+      "country": "United Kingdom",
+      "city": "London"
+    },
+    "websiteUrl": "https://www.devoxx.co.uk",
+    "title": "Devoxx UK 2023",
+    "days": [
+      {
+        "localDate": "2023-05-10",
+        "id": "wednesday"
+      },
+      {
+        "id": "thursday",
+        "localDate": "2023-05-11"
+      },
+      {
+        "id": "friday",
+        "localDate": "2023-05-12"
+      }
+    ],
+    "theming": {
+      "colors": {
+        "primaryHex": "#F78327",
+        "primaryContrastHex": "#FFFFFF",
+        "secondaryHex": "#3880FF",
+        "secondaryContrastHex": "#FFFFFF",
+        "tertiaryHex": "#0F0F0F",
+        "tertiaryContrastHex": "#FFFFFF"
+      }
+    },
+    "logoUrl": "https://devoxx.be/wp-content/uploads/2019/05/DEVOXX-Name-Only-TransparentBackground.png",
+    "backgroundUrl": "https://www.devoxx.co.uk/wp-content/uploads/2023/02/D23-header-for-web.jpg"
+  },
+  {
+    "title": "Devoxx Belgium 2022",
+    "description": "Devoxx Belgium 2022 (19th edition), a 5-days technology conference, saw over 3,200 attendees. To our surprise, all conference and combi tickets were sold out in just 5 minutes!",
+    "location": {
+      "city": "Antwerp",
+      "country": "Belgium"
+    },
+    "days": [
+      {
+        "id": "monday",
+        "localDate": "2022-10-10"
+      },
+      {
+        "id": "tuesday",
+        "localDate": "2022-10-11"
+      },
+      {
+        "localDate": "2022-10-12",
+        "id": "wednesday"
+      },
+      {
+        "localDate": "2022-10-13",
+        "id": "thursday"
+      },
+      {
+        "localDate": "2022-10-14",
+        "id": "friday"
+      }
+    ],
+    "keywords": [
+      "Devoxx",
+      "Java",
+      "Kotlin",
+      "Cloud",
+      "Big data",
+      "Web"
+    ],
+    "timezone": "Europe/Paris",
+    "id": "dvbe22",
+    "websiteUrl": "https://devoxx.be",
+    "logoUrl": "https://devoxx.be/wp-content/uploads/2019/05/DEVOXX-Name-Only-TransparentBackground.png",
+    "backgroundUrl": "https://devoxx.be/wp-content/uploads/2022/10/cover.jpg",
+    "theming": {
+      "colors": {
+        "primaryHex": "#F78125",
+        "primaryContrastHex": "#FFFFFF",
+        "secondaryHex": "#3880FF",
+        "secondaryContrastHex": "#FFFFFF",
+        "tertiaryHex": "#202020",
+        "tertiaryContrastHex": "#FFFFFF"
+      }
+    }
+  },
+  {
+    "title": "Devoxx Greece 2023",
+    "description": "Devoxx Greece 2023 takes place for the very first time from May 4th until the 6th in the Athens Megaron International Conference Center.",
+    "location": {
+      "city": "Athens",
+      "country": "Greece"
+    },
+    "id": "dvgr23",
+    "timezone": "Europe/Athens",
+    "keywords": [
+      "Devoxx",
+      "Java",
+      "Kotlin",
+      "Cloud",
+      "Big data",
+      "Web"
+    ],
+    "websiteUrl": "https://devoxx.gr",
+    "days": [
+      {
+        "id": "thursday",
+        "localDate": "2023-05-04"
+      },
+      {
+        "id": "friday",
+        "localDate": "2023-05-05"
+      },
+      {
+        "localDate": "2023-05-06",
+        "id": "saturday"
+      }
+    ],
+    "theming": {
+      "colors": {
+        "primaryHex": "#7D51FB",
+        "primaryContrastHex": "#FFFFFF",
+        "secondaryHex": "#E90866",
+        "secondaryContrastHex": "#FFFFFF",
+        "tertiaryHex": "#202020",
+        "tertiaryContrastHex": "#FFFFFF"
+      }
+    },
+    "logoUrl": "https://devoxx.be/wp-content/uploads/2019/05/DEVOXX-Name-Only-TransparentBackground.png",
+    "backgroundUrl": "https://devoxx.gr/wp-content/uploads/2022/11/VDAthens_3593.jpg",
+    "peopleDescription": "1000+ attendees"
+  }
+]

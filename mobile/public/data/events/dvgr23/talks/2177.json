@@ -1,0 +1,28 @@
+{
+  "id": "2177",
+  "format": {
+    "title": "Conference",
+    "duration": "PT40m",
+    "id": "953"
+  },
+  "language": "EN",
+  "title": "The monolith must die! - How to convince managers",
+  "description": "<p>You have a code monolith. Yey, congrats! - Oh, you don't want to have a monolith? Why not?</p><p><br></p><p>For years, we have mostly talked about how to move from monolith to microservices on a technical level. To me, also the business view is interesting and important. Let's discuss when the breakdown of a monolith is worth investing money and developer time. This will provide you with all the arguments for the next round of management discussions.</p><p><br></p><p>As scientific foundation, we will use the DORA metrics by Google.</p>",
+  "speakers": [
+    {
+      "photoUrl": null,
+      "fullName": "Anja Kunkel",
+      "id": "2210",
+      "companyName": "Mister Spex"
+    }
+  ],
+  "room": {
+    "id": "2803",
+    "title": "MC3"
+  },
+  "summary": "",
+  "track": {
+    "id": "1251",
+    "title": "Architecture"
+  }
+}

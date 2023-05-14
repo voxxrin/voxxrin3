@@ -1,0 +1,28 @@
+{
+  "title": "How to gain value from SAST tools in SDLC: Most common findings and mitigations.",
+  "language": "EN",
+  "track": {
+    "id": "1255",
+    "title": "Security"
+  },
+  "id": "4622",
+  "format": {
+    "id": "953",
+    "duration": "PT40m",
+    "title": "Conference"
+  },
+  "description": "<p><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">Shifting security left has become an important concern for Software Development Life Cycle. SAST tools is a way of achieving the integration of security checks in the earlier phases of the development.</span></p><p><br></p><p><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">In this talk, we are going to see how SAST tools add value to the development process in order to make sure that teams develop more secure code. SAST tools can help a developer have visibility on the security posture of the system and help them set specific goals.</span></p><p><br></p><p><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">In addition, we are going to discuss what are the most common findings according to our experience. Our clients come from several sectors like finance, banking and telecommunications. In the past year we have worked with at least 10 different developer teams from 10 different systems on a regular basis. What we do is monitor the systems in terms of SAST findings using Checkmarx and an assessment done by SIG Security model. In every cycle we as consultants filter out the false positive findings and help the teams prioritise the most critical. When needed we propose solutions and appropriate mitigations. In this presentation all the gained experience is going to be presented and additionally examples of mitigations of the most common findings will be given.</span></p><p><br></p><p><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">Our goal is to give the developers the perspective of how to integrate SAST tools in their daily work and use them to produce more secure software.</span></p><p><br></p><p><br></p>",
+  "speakers": [
+    {
+      "fullName": "Stella Varvarigou",
+      "id": "3990",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-4beeaf72-7ecf-42be-8b09-e33eebd01d70.png",
+      "companyName": "code4thought"
+    }
+  ],
+  "summary": "",
+  "room": {
+    "id": "2804",
+    "title": "MC2"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "room": {
+    "title": "Room 4",
+    "id": "4706"
+  },
+  "speakers": [
+    {
+      "id": "49101",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-c515710e-ebe1-4f54-809b-dd2358b827a4.jpeg",
+      "companyName": "Teckro",
+      "fullName": "Igor De Souza"
+    },
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-5a73e194-0cdc-4fa7-b3cc-1fc86148e558.jpg",
+      "companyName": "Mastercard",
+      "id": "17902",
+      "fullName": "Rafael del Nero"
+    }
+  ],
+  "description": "<p><span style=\"color: rgb(38, 50, 56);\">Duke needs your help in navigating through the Delta Quadrant. Join us on this incredible journey visiting new features of the JDK 18 system as well as the best features of previous versions of Java. During this journey, you can improve your craft as an engineer. These short challenges will keep your katas going at warp speed! Solve the puzzles to learn the full power of the Java language. Apply the techniques, and develop concise code where bugs will have a hard time hiding. Come to this session to boldly go where no Duke has gone before!</span></p>",
+  "track": {
+    "id": "2754",
+    "title": "Java"
+  },
+  "format": {
+    "title": "Conference",
+    "id": "951",
+    "duration": "PT50m"
+  },
+  "id": "17954",
+  "language": "EN",
+  "title": "Duke’s Star Trek with Java 18 Code Challenges",
+  "summary": ""
+}

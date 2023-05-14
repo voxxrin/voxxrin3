@@ -1,0 +1,76 @@
+/** App Voxxrin Specifics Variables **/
+
+/* CSS Variables */
+:root {
+    /* Color Fix */
+    --app-voxxrin: #E90866;
+    --app-voxxrin-rgb: 233, 8, 102;
+    --app-voxxrin-contrast: #ffffff;
+    --app-voxxrin-contrast-rgb: 255, 255, 255;
+    --app-voxxrin-shade: #c10553;
+    --app-voxxrin-tint: #f1287e;
+
+    --app-beige-dark: #A3998F;
+    --app-beige-medium: #EDE7E1;
+    --app-beige-light: #F5F3F0;
+    --app-beige-line: #DDD6CE;
+
+    --app-grey-dark: #807C76;
+    --app-grey-medium: #B1B1B1;
+    --app-grey-light: #EEEEEE;
+    --app-grey-line: #DCDCDC;
+
+    --app-white-transparent: 255, 255, 255, 0.3;
+    --app-white: #FFFFFF;
+    --app-white-90: #FFFFFF;
+
+    --app-primary: #0F0F0F;
+    --app-primary-rgb: 15, 15, 15, 1;
+    --app-primary-contrast: #ffffff;
+    --app-primary-contrast-rgb: 255, 255, 255;
+    --app-primary-shade: #404040;
+    --app-primary-tint: #656463;
+
+    --app-background: #F7F6F0;
+
+    /* STYLES */
+    --app-shadow-light: 0 2px 4px rgba(0, 0, 0, 0.15);
+
+    /* METRICS */
+    --app-gutters: 16px;
+    --app-gutters-medium: 12px;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --app-beige-dark: rgba(227, 227, 227, 0.9);
+        --app-beige-medium: #EDE7E1;
+        --app-beige-light: #F5F3F0;
+        --app-beige-line: #4a506a;
+
+        --app-background: #141923;
+        --app-dark-contrast: #242935;
+        --app-dark-contrast-rgb: 20, 25, 35;
+        --app-medium-contrast: #242935;
+        --app-medium-contrast-rgb: 36, 41, 53;
+        --app-light-contrast: #3a3d51;
+        --app-light-contrast-rgb: 58, 61, 81;
+        --app-line-contrast: #4a506a;
+        --app-line-contrast-rgb: 74, 80, 106;
+    }
+}
+
+/**
+ * PATH
+ * **************************************************************************************** >
+ */
+
+/** Images path */
+$path-img :                                  '../assets/images/' !default;
+$path-jpg :                                  '#{$path-img}jpg/' !default;
+$path-png :                                  '#{$path-img}png/' !default;
+$path-svg :                                  '#{$path-img}svg/' !default;
+$path-gif :                                  '#{$path-img}gif/' !default;
+
+/** Fonts path */
+$path-font:                                   '../assets/fonts/' !default;

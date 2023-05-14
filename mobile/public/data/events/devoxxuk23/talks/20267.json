@@ -1,0 +1,28 @@
+{
+  "title": "Technology and AI is changing Astrophotography",
+  "speakers": [
+    {
+      "id": "20170",
+      "companyName": "Velo Payments",
+      "fullName": "John Davies",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-36a5d09b-3931-4ae7-9158-005f94cf2215.jpg"
+    }
+  ],
+  "track": {
+    "id": "2758",
+    "title": "Mind the Geek"
+  },
+  "language": "EN",
+  "summary": "",
+  "description": "<p>The Photography industry has taken a plunge, a serious plunge. Many of the well known manufacturers are no longer producing new cameras, popular sites like DPReview, around for 25 years, are being closed.&nbsp;</p><p><br></p><p>However, one area that is booming is Astrophotography. New companies are springing up, today’s technology is bringing what used to only be possible with a massive telescope at the top of a mountain in Tenerife to amateur astronomers in light polluted cities like London.</p><p><br></p><p>Java geek and CTO, John Davies, studied Astrophysics at UCL some 40 years ago, he’ll go through some of the maths, technology, equipment and code to produce stunning images from London.</p>",
+  "id": "20267",
+  "room": {
+    "title": "Exec Centre",
+    "id": "19156"
+  },
+  "format": {
+    "title": "Byte Size",
+    "id": "960",
+    "duration": "PT15m"
+  }
+}

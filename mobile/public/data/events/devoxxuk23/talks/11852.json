@@ -1,0 +1,34 @@
+{
+  "language": "EN",
+  "format": {
+    "duration": "PT30m",
+    "id": "957",
+    "title": "Tools-in-Action"
+  },
+  "description": "<p><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">Log4Shell and SpringShell were reminders that a big part of the code we use in our systems is not ours&nbsp; and that the maintainers we rely on have a significant responsibility.&nbsp;</span></p><p><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">The </span><a href=\"https://www.federalregister.gov/documents/2021/05/17/2021-10460/improving-the-nations-cybersecurity\" rel=\"noopener noreferrer\" target=\"_blank\" style=\"background-color: transparent; color: rgb(17, 85, 204);\">US President’s Executive order 140028</a><span style=\"background-color: transparent; color: rgb(0, 0, 0);\"> brought to the public the need for improving the nation’s cybersecurity. It was also the start of the </span><a href=\"https://blog.crashoverride.com/the-sbom-frenzy-is-premature\" rel=\"noopener noreferrer\" target=\"_blank\" style=\"background-color: transparent; color: rgb(17, 85, 204);\">SBOM frenzy</a><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">, which was only accentuated by the congress bill on </span><a href=\"https://www.congress.gov/bill/117th-congress/senate-bill/4913\" rel=\"noopener noreferrer\" target=\"_blank\" style=\"background-color: transparent; color: rgb(17, 85, 204);\">Securing Open Source Software Act of 2022</a><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">.&nbsp;</span></p><p><br></p><p><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">Great! We have the silver bullet to all supply chain issues: the Software Bill Of Materials. Are we done?&nbsp; Sadly no. Using SBOMs effectively requires learning about:</span></p><p><br></p><ul><li><span style=\"background-color: transparent;\">What&nbsp; an SBOM can tell us, and how can it help us?&nbsp;</span></li><li><span style=\"background-color: transparent;\">What tools to use?</span></li><li><span style=\"background-color: transparent;\">How to use them?&nbsp;</span></li><li><span style=\"background-color: transparent;\">How do they work?</span></li><li><span style=\"background-color: transparent;\">What are the related formats?</span></li></ul><p><br></p><p><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">This session will respond to each of these questions. We will also look behind the scenes and explain how an SBOM helps with vulnerability resolution more effectively than dependency scanning and why SBOMs offer more general protection.&nbsp;&nbsp;</span></p><p><br></p><p><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">The practical examples will be focused on the following:</span></p><ul><li><span style=\"background-color: transparent;\">Syft - for SBOM generation and transformations</span></li><li><span style=\"background-color: transparent;\">Grype vs bomber - for vulnerability scanning and intelligence gathering</span></li></ul>",
+  "id": "11852",
+  "room": {
+    "id": "19153",
+    "title": "Room A"
+  },
+  "track": {
+    "title": "Security",
+    "id": "1255"
+  },
+  "summary": "",
+  "title": "A radiography of a SBOM vulnerability scanner",
+  "speakers": [
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-9ecd366c-21ce-4773-a5a2-554892f5693e.jpeg",
+      "id": "10774",
+      "fullName": "Olimpiu POP",
+      "companyName": "mindit.io"
+    },
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-59fbdaa6-a5dc-4b85-8584-8aac58d9cb9d.jpg",
+      "fullName": "Steve Poole",
+      "companyName": "Sonatype",
+      "id": "1869"
+    }
+  ]
+}

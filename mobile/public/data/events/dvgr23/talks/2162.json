@@ -1,0 +1,28 @@
+{
+  "id": "2162",
+  "room": {
+    "id": "2802",
+    "title": "Skalkotas"
+  },
+  "title": "Fault Handling with retry and circuit breaker design patterns",
+  "description": "<p><span style=\"color: rgb(0, 0, 0);\">In this talk, I will show you a step-by-step process of building two simple Spring Boot 3 Services and working with the Resilience4j library to ensure we can handle any transient faults that may occur when one service calls the other. I will discuss the different ways to expose your microservices. What is Retry Policy? What is Circuit Breaker Policy? What is Infrastructure-based resiliency? And how to implement them in Spring Boot 3 apps.</span></p>",
+  "language": "EN",
+  "track": {
+    "title": "Server Side Java",
+    "id": "1256"
+  },
+  "format": {
+    "title": "Conference",
+    "duration": "PT40m",
+    "id": "953"
+  },
+  "speakers": [
+    {
+      "companyName": "inmeta",
+      "fullName": "Devlin Duldulao",
+      "id": "2204",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-3a8e00e6-c5ec-4c45-8812-557dd65a2923.jpeg"
+    }
+  ],
+  "summary": ""
+}

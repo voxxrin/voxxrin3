@@ -1,0 +1,28 @@
+{
+  "language": "EN",
+  "title": "Bias in Machine Learning",
+  "format": {
+    "id": "960",
+    "duration": "PT15m",
+    "title": "Byte Size"
+  },
+  "speakers": [
+    {
+      "companyName": "Holistic AI",
+      "id": "9926",
+      "fullName": "Roseline Polle",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-1dd37d7a-f40a-4b04-8256-398444429f6e.jpg"
+    }
+  ],
+  "description": "<p>Historically, performance metrics such as accuracy have been used as a measure of how good a Machine Learning model performs. Growing concerns about the impact of traditional algorithm on individuals (related to Bias, Privacy and Explainability) have changed this in recent years, and best practice now requires Data Scientists to be aware of how such new considerations can be integrated into their model pipeline. Regulation are catching up as well, notably with texts such as the EU draft AI regulation and the NYC bias audit mandate, which mandates company that do automated recruitment on individuals in NYC to have a third-party bias audit done.</p><p><br></p><p>In this talk, I give an overview of some techniques and libraries available to measure and mitigate Bias in a typical ML classification setting. I will also mention other types of algorithms such as clustering and recommender systems.</p>",
+  "id": "10138",
+  "room": {
+    "title": "Exec Centre",
+    "id": "19156"
+  },
+  "summary": "",
+  "track": {
+    "title": "Data & AI",
+    "id": "1252"
+  }
+}

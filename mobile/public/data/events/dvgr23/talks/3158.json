@@ -1,0 +1,28 @@
+{
+  "id": "3158",
+  "language": "EN",
+  "track": {
+    "id": "1253",
+    "title": "People & Culture"
+  },
+  "speakers": [
+    {
+      "id": "2469",
+      "fullName": "Cassandra Faris",
+      "photoUrl": "https://lh3.googleusercontent.com/a-/AOh14GjJwKbihrrw_4cw6NXgnJpxA8JmpCOEBmB1gRM7Hg=s96-c",
+      "companyName": "Kasten by Veeam"
+    }
+  ],
+  "title": "Purposeful Personal Branding",
+  "summary": "",
+  "description": "<p>If you have an online presence, you have a personal brand. Most of us didn’t intend to create a brand when we made our first websites and social media profiles. They were just fun ways to share our lives and meet people. Now, they’re networking and career growth tools. In this talk, you’ll hear about people whose brands helped them become respected developers, managers, and community leaders. You’ll learn how to use your online presence to advance your career. You’ll also pick up best practices, common mistakes, and tips for balancing professional and personal content. Intentional personal branding opens the door to endless opportunities. Come see how to make that happen!</p>",
+  "format": {
+    "id": "953",
+    "title": "Conference",
+    "duration": "PT40m"
+  },
+  "room": {
+    "title": "Skalkotas",
+    "id": "2802"
+  }
+}

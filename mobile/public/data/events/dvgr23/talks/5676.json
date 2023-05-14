@@ -1,0 +1,28 @@
+{
+  "summary": "",
+  "description": "<p>More and more companies are implementing multi &amp; hybrid cloud strategies. As the complexity of the underlying infrastructure grows, so does the difficulty of managing Kubernetes clusters and applying best practices. In this presentation we'll explore the most important benefits of adopting a hybrid Kubernetes approach, as well as the difficulties to implement these approaches. We'll then dive deeper into patterns of scaling Kubernetes infrastructure, exploring concepts like vcluster and federated clusters. Finally, we'll see different tools that help us manage Kubernetes deployments while adopting a hybrid cloud approach</p>",
+  "room": {
+    "id": "2802",
+    "title": "Skalkotas"
+  },
+  "speakers": [
+    {
+      "id": "5187",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-01bc1b58-4a8a-4615-88a0-ef9d3c59f5b2.jpeg",
+      "fullName": "George Hantzaras",
+      "companyName": "MongoDB"
+    }
+  ],
+  "title": "Managing Kubernetes in hybrid and multi cloud environments",
+  "format": {
+    "id": "953",
+    "title": "Conference",
+    "duration": "PT40m"
+  },
+  "track": {
+    "id": "1402",
+    "title": "Cloud, Containers & Infrastructure"
+  },
+  "id": "5676",
+  "language": "EN"
+}

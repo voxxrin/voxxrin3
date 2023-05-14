@@ -1,0 +1,286 @@
+<template>
+  <ion-page>
+    <ion-content :fullscreen="true">
+      <current-event-header v-if="event" :event="event"/>
+      <ion-header class="stickyHeader">
+        <ion-toolbar>
+          <ion-title class="stickyHeader-title" slot="start" >{{ LL.Schedule() }}</ion-title>
+          <ion-button class="ion-margin-end" slot="end" shape="round" size="small" fill="outline" color="primary">
+            <ion-icon src="/assets/icons/solid/settings-cog.svg"></ion-icon>
+          </ion-button>
+          <ion-button slot="end" shape="round" size="small">
+            <ion-icon src="/assets/icons/line/search-line.svg"></ion-icon>
+          </ion-button>
+        </ion-toolbar>
+      </ion-header>
+
+      <day-selector
+          :selected="currentlySelectedDay"
+          :days="currentConferenceDescriptor?.days || []"
+          @day-selected="(day) => changeDayTo(day)">
+      </day-selector>
+
+      <ion-accordion-group :multiple="true" v-if="currentConferenceDescriptor && currentlySelectedDay" :value="expandedTimeslotIds">
+          <time-slot-accordion :day-id="currentlySelectedDay.id"
+              v-for="(timeslot, index) in timeslots" :key="timeslot.id.value"
+              :timeslot-feedback="timeslot.feedback" :timeslot="timeslot"
+              :event="currentConferenceDescriptor"
+              @add-timeslot-feedback-clicked="(ts) => showAlertForTimeslot(ts)"
+              @click="() => toggleExpandedTimeslot(timeslot)">
+          </time-slot-accordion>
+      </ion-accordion-group>
+
+      <ion-fab vertical="bottom" horizontal="end" slot="fixed" v-if="missingFeedbacksPastTimeslots.length>0">
+        <ion-fab-button @click="(ev) => fixAnimationOnFabClosing(ev.target)">
+          <ion-icon src="/assets/icons/line/comment-line-add.svg"></ion-icon>
+        </ion-fab-button>
+        <ion-fab-list side="top" class="listFeedbackSlot">
+          <div class="listFeedbackSlot-item" v-for="(missingFeedbacksPastTimeslot, index) in missingFeedbacksPastTimeslots" :key="missingFeedbacksPastTimeslot.timeslot.id.value"
+               @click="() => showAlertForTimeslot(missingFeedbacksPastTimeslot.timeslot)">
+            <ion-label>{{ missingFeedbacksPastTimeslot.start }} <ion-icon aria-hidden="true" src="assets/icons/line/chevron-right-line.svg"></ion-icon>
+              {{ missingFeedbacksPastTimeslot.end }}</ion-label>
+            <ion-icon class="plusIndicator" aria-hidden="true" src="assets/icons/solid/plus.svg"></ion-icon>
+          </div>
+        </ion-fab-list>
+      </ion-fab>
+    </ion-content>
+  </ion-page>
+</template>
+
+<script setup lang="ts">
+import {
+    IonFabButton,
+    IonFab,
+    IonFabList,
+    IonAccordionGroup,
+    alertController,
+} from '@ionic/vue';
+import {useRoute, useRouter} from "vue-router";
+import {onMounted, ref, watch} from "vue";
+import {
+    fetchSchedule,
+    watchCurrentSchedule
+} from "@/state/CurrentSchedule";
+import CurrentEventHeader from "@/components/CurrentEventHeader.vue";
+import {getRouteParamsValue, isRefDefined, useInterval} from "@/views/vue-utils";
+import {EventId} from "@/models/VoxxrinEvent";
+import {VoxxrinDay} from "@/models/VoxxrinDay";
+import {
+    filterTimeslotsToAutoExpandBasedOn,
+    getTimeslotLabel,
+    getTimeslotTimingProgress,
+    VoxxrinScheduleTimeSlot
+} from "@/models/VoxxrinSchedule";
+import {
+    useCurrentConferenceDescriptor
+} from "@/state/CurrentConferenceDescriptor";
+import DaySelector from "@/components/DaySelector.vue";
+import {findDefaultConferenceDay, findVoxxrinDay} from "@/models/VoxxrinConferenceDescriptor";
+import TimeSlotAccordion from "@/components/TimeSlotAccordion.vue";
+import {VoxxrinTimeslotFeedback} from "@/models/VoxxrinFeedback";
+import {useCurrentClock} from "@/state/CurrentClock";
+import {typesafeI18n} from "@/i18n/i18n-vue";
+
+const router = useRouter();
+const route = useRoute();
+const eventId = new EventId(getRouteParamsValue(route, 'eventId')!);
+const event = useCurrentConferenceDescriptor(eventId);
+
+const { LL } = typesafeI18n()
+
+const currentConferenceDescriptor = useCurrentConferenceDescriptor(eventId);
+
+const currentlySelectedDay = ref<VoxxrinDay|undefined>(isRefDefined(currentConferenceDescriptor)?findDefaultConferenceDay(currentConferenceDescriptor.value):undefined)
+const changeDayTo = (day: VoxxrinDay) => {
+    currentlySelectedDay.value = day;
+}
+
+const timeslots = ref<Array<VoxxrinScheduleTimeSlot & {feedback: VoxxrinTimeslotFeedback|undefined}>>([]);
+const missingFeedbacksPastTimeslots = ref<Array<{start: string, end: string, timeslot: VoxxrinScheduleTimeSlot}>>([])
+const expandedTimeslotIds = ref<string[]>([])
+
+onMounted(async () => {
+    console.log(`SchedulePage mounted !`)
+    useInterval(recomputeMissingFeedbacksList, {seconds:10}, {immediate: true})
+})
+
+watchCurrentSchedule((currentSchedule) => {
+    if(currentSchedule && isRefDefined(currentConferenceDescriptor)) {
+        timeslots.value = currentSchedule.timeSlots.map((ts, idx) => {
+            // yes that's weird ... but looks like TS is not very smart here 🤔
+            if(ts.type === 'break') {
+                return {...ts, feedback: idx%2===0?getTimeslotLabel(ts):undefined};
+            } else {
+                return {...ts, feedback: idx%2===0?getTimeslotLabel(ts):undefined};
+            }
+        });
+        recomputeMissingFeedbacksList();
+
+        currentlySelectedDay.value = findVoxxrinDay(currentConferenceDescriptor.value, currentSchedule.day)
+
+        // Deferring expanded timeslots so that :
+        // 1/ we don't load the DOM too much when open a schedule
+        // 2/ this allows to show the auto-expand animation to the user
+        setTimeout(() => {
+            expandedTimeslotIds.value = filterTimeslotsToAutoExpandBasedOn(currentSchedule.timeSlots, useCurrentClock().zonedDateTimeISO())
+                .map(ts => ts.id.value);
+        }, 500)
+    }
+});
+
+watch([currentlySelectedDay, currentConferenceDescriptor], async ([selectedDay, conferenceDescriptor]) => {
+    if(conferenceDescriptor !== undefined) {
+        fetchSchedule(conferenceDescriptor, (selectedDay || conferenceDescriptor.days[0]).id);
+    }
+}, {immediate: true})
+
+function recomputeMissingFeedbacksList() {
+    missingFeedbacksPastTimeslots.value = timeslots.value.filter(ts => {
+        return ts.type === 'talks'
+            && !ts.feedback
+            && getTimeslotTimingProgress(ts, useCurrentClock().zonedDateTimeISO()).status === 'past'
+    }).map(timeslot => {
+        const labels = getTimeslotLabel(timeslot)
+        return {timeslot, start: labels.start, end: labels.end };
+    });
+}
+
+async function showAlertForTimeslot(timeslot: VoxxrinScheduleTimeSlot) {
+    const alert = await alertController.create({
+        header: 'Not implemented yet !',
+        message: 'Providing feedback for a timeslot is not implemented (yet)'
+    });
+    alert.present();
+}
+
+// Crappy hack in order to have a pretty ion-fab-list closing animation
+// Basically, we need to avoid changing display:flex => none on ion-fab-list *as soon as* the ion-fab-button
+// becomes inactive
+// This workaround keeps the display:flex property, until the animation is finished, putting back the
+// display:none after ~1s
+function fixAnimationOnFabClosing($el: HTMLElement) {
+    const $ionFab: HTMLIonFabElement|null = $el.closest('ion-fab');
+    const $fabButton: HTMLIonFabButtonElement|null|undefined = $ionFab?.querySelector('ion-fab-button')
+    const $missingFeedbacksList: HTMLIonFabListElement|null|undefined = $ionFab?.querySelector('ion-fab-list')
+    if($fabButton && $missingFeedbacksList) {
+        if($fabButton.classList.contains('fab-button-close-active')) {
+            $missingFeedbacksList.classList.add('temporarily-displayed-during-inactive-animation')
+            setTimeout(() => {
+                $missingFeedbacksList.classList.remove('temporarily-displayed-during-inactive-animation')
+            }, 1000)
+        }
+    }
+}
+
+function toggleExpandedTimeslot(timeslot: VoxxrinScheduleTimeSlot) {
+    const expandedTimeslotIdsIndex = expandedTimeslotIds.value.indexOf(timeslot.id.value)
+    if(expandedTimeslotIdsIndex === -1) {
+        expandedTimeslotIds.value.push(timeslot.id.value);
+    } else {
+        expandedTimeslotIds.value.splice(expandedTimeslotIdsIndex, 1);
+    }
+}
+</script>
+
+<style scoped lang="scss">
+
+  $ion-fab-button-height: 56px;
+
+  ion-fab-button {
+    --background: var(--voxxrin-event-theme-colors-secondary-hex);
+    --color: var(--voxxrin-event-theme-colors-secondary-contrast-hex);
+
+    height: $ion-fab-button-height;
+  }
+
+  ion-accordion-group {
+    margin-bottom: $ion-fab-button-height;
+  }
+
+  ion-toolbar {
+    position: sticky;
+    top: 0;
+  }
+
+  .listFeedbackSlot {
+    &.temporarily-displayed-during-inactive-animation {
+      display: flex;
+    }
+    flex-direction: column;
+    row-gap: 12px;
+    right: 2px;
+    pointer-events: none;
+
+    &.fab-list-active {
+      pointer-events: inherit;
+
+      .listFeedbackSlot-item {
+        visibility: visible;
+
+        @for $i from 0 through 1000 {
+          animation: slide-left 140ms cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+          animation-timing-function: ease-in-out;
+
+          &:nth-child(#{$i}) {
+            animation-delay: $i * calc(80ms / 6);
+          }
+        }
+      }
+    }
+
+    &-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 164px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      background-color: var(--voxxrin-event-theme-colors-secondary-contrast-hex);
+      border: 1px solid var(--app-beige-line);
+      filter: drop-shadow(-4px 0px 4px rgba(0, 0, 0, 0.15));
+
+      @media (prefers-color-scheme: dark) {
+        background-color: var(--voxxrin-event-theme-colors-tertiary-hex);
+        border: none;
+      }
+
+      @for $i from 0 through 1000 {
+        animation: slide-left-revert 140ms cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+        animation-timing-function: ease-in-out;
+
+        &:nth-child(#{$i}) {
+          animation-delay: $i * calc(-80ms / 6);
+        }
+      }
+
+      ion-label {
+        display: flex;
+        align-items: center;
+        font-weight: bold;
+        color: var(--app-primary-shade);
+
+        @media (prefers-color-scheme: dark) {
+          color: var(--app-white);
+        }
+      }
+
+      .plusIndicator {
+        height: 24px;
+        width: 24px;
+        background-color: var(--voxxrin-event-theme-colors-secondary-hex);
+        border-radius: 24px;
+        color: var(--voxxrin-event-theme-colors-secondary-contrast-hex);
+      }
+    }
+  }
+
+  @keyframes slide-left {
+    0% { transform: translateX(120%);}
+    100% { transform: translateX(0);}
+  }
+
+  @keyframes slide-left-revert {
+    0% {transform: translateX(0);}
+    100% { transform: translateX(120%);}
+  }
+</style>

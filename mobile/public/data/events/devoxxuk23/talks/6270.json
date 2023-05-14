@@ -1,0 +1,28 @@
+{
+  "room": {
+    "title": "Auditorium",
+    "id": "19152"
+  },
+  "track": {
+    "title": "People & Culture",
+    "id": "1253"
+  },
+  "summary": "",
+  "title": "Distributed teams that actually work?",
+  "id": "6270",
+  "description": "<p>Distributed teams are becoming the norm in many companies nowadays, but do they work? Do you really need to spend most of your time in video meetings to make things happen?</p><p>Based on more than twenty years of experience in Open Source projects and distributed enterprise teams, this talk presents a number of key concepts that will allow you to <em>actually</em> make these things work. Asynchronous decision making tools &amp; techniques, communication patterns that foster clarity &amp; concision, the right tools for the right job - many learnings from successful Open Source projects apply to all organizations, and they've been honed through many years of practice.</p><p>This talk will help you focus on the key aspects of what makes distributed teams work, in a way that can be adapted to your own environment. There's no one-size-fits-all in this, but understanding the basic principles helps tremendously, and Open Source communities are a great starting point for that.</p>",
+  "speakers": [
+    {
+      "id": "5543",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-d74a9933-702f-49ac-bf72-0206a4ce87bc.jpg",
+      "fullName": "Bertrand Delacretaz",
+      "companyName": "Adobe & Apache"
+    }
+  ],
+  "language": "EN",
+  "format": {
+    "title": "Conference",
+    "duration": "PT50m",
+    "id": "951"
+  }
+}

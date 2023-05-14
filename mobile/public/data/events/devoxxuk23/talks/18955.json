@@ -1,0 +1,28 @@
+{
+  "format": {
+    "id": "958",
+    "title": "Ignite",
+    "duration": "PT5m"
+  },
+  "room": {
+    "title": "Room A",
+    "id": "19153"
+  },
+  "speakers": [
+    {
+      "fullName": "Bertrand Delacretaz",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-d74a9933-702f-49ac-bf72-0206a4ce87bc.jpg",
+      "companyName": "Adobe & Apache",
+      "id": "5543"
+    }
+  ],
+  "summary": "",
+  "language": "EN",
+  "track": {
+    "title": "Mind the Geek",
+    "id": "2758"
+  },
+  "title": "Blind Ignite Session",
+  "description": "<p>The speaker has never seen the deck they are about to give a talk on.</p><p>There are 20 slides and they auto-advance every 15 seconds.</p><p>The result should be a fast and fun presentation which lasts just 5&nbsp;minutes.</p><p>What could possibly go wrong?</p>",
+  "id": "18955"
+}

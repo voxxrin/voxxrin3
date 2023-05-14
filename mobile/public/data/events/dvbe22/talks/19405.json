@@ -1,0 +1,40 @@
+{
+  "id": "19405",
+  "track": {
+    "title": "People & Culture",
+    "id": "1253"
+  },
+  "summary": "",
+  "language": "EN",
+  "room": {
+    "title": "BOF 2",
+    "id": "4702"
+  },
+  "format": {
+    "title": "BOF",
+    "id": "954",
+    "duration": "PT60m"
+  },
+  "title": "Belgian JVM Lovers Unite: The User Groups need you!",
+  "speakers": [
+    {
+      "id": "18900",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-40db6bdf-6e0e-4ce8-93a7-37c03d360f44.jpg",
+      "fullName": "Renato Cavalcanti",
+      "companyName": "Lightbend"
+    },
+    {
+      "id": "18887",
+      "fullName": "Olivier Hubaut",
+      "companyName": "T.M.P. Solution",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-ohubaut.jpg"
+    },
+    {
+      "fullName": "Tom Cools",
+      "companyName": "Info Support NV",
+      "id": "14107",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-d04118f8-5b55-4d2f-9c2c-9d61ef2c76ee.jpg"
+    }
+  ],
+  "description": "<p>It’s crystal clear that the JVM-world is better place when we build, learn and discover things together. User Groups are great places to connect with other JVM lovers, share knowledge and have some nerdy fun… but they are nothing without you!</p><p>We invite everyone with an interest in the JVM community experience in Belgium to an open discussion<span style=\"color: rgb(0, 0, 0);\">&nbsp;</span>on the present and future of JVM related User Groups. You don't have to be a community leader or Java Champion to contribute, everyone is welcome to share their amazing ideas, hopeful wishes and daring dreams!</p><p>User Groups are a valuable part of our ecosystem and they get even better when we work together. So now it's time to unite and make Belgium an even better place for JVM-lovers!</p>"
+}

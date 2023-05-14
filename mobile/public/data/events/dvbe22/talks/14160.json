@@ -1,0 +1,28 @@
+{
+  "summary": "",
+  "speakers": [
+    {
+      "companyName": "Craftsmen",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-72e570f5-4192-43fd-a9f4-a3ed698895f5.jpg",
+      "fullName": "Michel Schudel",
+      "id": "11303"
+    }
+  ],
+  "room": {
+    "id": "4711",
+    "title": "Room 8"
+  },
+  "title": "Testing an onion architecture, done right",
+  "format": {
+    "id": "957",
+    "duration": "PT30m",
+    "title": "Tools-in-Action"
+  },
+  "id": "14160",
+  "description": "<p><strong>Hexagonal, or onion, architectures are perfect for separating domain logic from access to that logic, and resources the logic needs.</strong></p><p><strong>But how to test such an architecture?</strong></p><p>In this session, you'll see a pragmatic yet robust approach to testing such an architecture, with a live coding demo using a Spring Boot application.</p><p>We'll find a correct balance between unit tests and IT tests. We'll look at different tools for IT tests, and we'll also take a look at granularity of unit tests: do you *really* need to test every class separately?</p><p><em>After this session, you''ll have a better understanding in how to balance unit tests and IT tests for optimal coverage and execution speed.</em></p>",
+  "track": {
+    "title": "Development Practices",
+    "id": "1701"
+  },
+  "language": "EN"
+}

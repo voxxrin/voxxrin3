@@ -1,0 +1,28 @@
+{
+  "summary": "",
+  "id": "48053",
+  "title": "Java *is* agile",
+  "description": "<p>It's so refreshing to see a group being agile in the world where so many talk about doing agile. The announcement of the six months release cycle was met with skepticism. But, Java has delivered consistently since that announcement. Let's dig in and learn how we can benefit from the amazing recent changes.</p>",
+  "speakers": [
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-venkat_s.jpg",
+      "fullName": "Venkat Subramaniam",
+      "companyName": "Agile Developer, Inc.",
+      "id": "47951"
+    }
+  ],
+  "format": {
+    "title": "Keynote",
+    "duration": "PT45m",
+    "id": "956"
+  },
+  "track": {
+    "id": "2754",
+    "title": "Java"
+  },
+  "language": "EN",
+  "room": {
+    "title": "Room 8",
+    "id": "4711"
+  }
+}

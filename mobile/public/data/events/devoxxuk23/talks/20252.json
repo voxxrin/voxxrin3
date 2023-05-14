@@ -1,0 +1,28 @@
+{
+  "title": "Efficiency boost! How to tackle Tech Debt on a large system",
+  "description": "<p>When working on complex systems, inefficiencies can creep in – generally caused by an evolution of a component beyond the scope of its original purpose. This can make</p><p>engineering new features difficult and introduce risk.</p><p>If you’ve ever worked on systems like this, you will know how hard it is to address Tech Debt while developing new features: the equivalent of changing the wheels on a moving car.</p><p><br></p><p>In this session, I will describe how we improved developer efficiency on a complex service running in AWS covering:</p><p>- How to start, setting principals and goals</p><p>- Which tech we used and how we used it</p><p>- What changed/got better as a result</p>",
+  "track": {
+    "title": "Build & Deploy",
+    "id": "1254"
+  },
+  "summary": "",
+  "id": "20252",
+  "room": {
+    "title": "Room A",
+    "id": "19153"
+  },
+  "language": "EN",
+  "format": {
+    "duration": "PT50m",
+    "id": "951",
+    "title": "Conference"
+  },
+  "speakers": [
+    {
+      "companyName": "The Data Shed",
+      "fullName": "Joe Stringer",
+      "id": "20155",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-05791d07-0ef2-46e6-a951-9e378c9450ca.jpeg"
+    }
+  ]
+}

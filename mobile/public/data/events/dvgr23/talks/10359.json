@@ -1,0 +1,28 @@
+{
+  "description": "<p>In this short presentation, we will take a look at the impact ,that excessive amount, of JS has at end users.</p><p>We will approach the topic of performance from the perspective of a simple user and realize the standards needed to be set in order to offer those less fortunate than us financially, a great experience.</p>",
+  "id": "10359",
+  "title": "Budgeting JS for your Users",
+  "room": {
+    "id": "2802",
+    "title": "Skalkotas"
+  },
+  "language": "EN",
+  "format": {
+    "title": "Quickie",
+    "duration": "PT15m",
+    "id": "960"
+  },
+  "track": {
+    "title": "UI & UX",
+    "id": "2760"
+  },
+  "summary": "",
+  "speakers": [
+    {
+      "id": "10162",
+      "fullName": "George Iliadis",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-696e41e4-a9f7-43a6-891c-b6b4c16ac1fd.jpeg",
+      "companyName": "OPAP"
+    }
+  ]
+}

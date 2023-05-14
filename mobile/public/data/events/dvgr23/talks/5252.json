@@ -1,0 +1,28 @@
+{
+  "title": "Finding needles in ever increasing haystacks - Scalability with Elasticsearch",
+  "format": {
+    "title": "Conference",
+    "id": "953",
+    "duration": "PT40m"
+  },
+  "description": "<p>The Elastic Stack tackles modern-day observability &amp; security demands of fast-paced searches in ever-increasing data volumes. Elasticsearch, sitting at the core of the Elastic Stack, is a leading distributed search and analytics engine. In this talk, we give an overview of what makes Elasticsearch distributed, efficient and resilient both on bare-metal and on the cloud. This includes an overview of advancements made in recent years. You will learn how: (a) data is ingested, sharded and replicated, (b) searches and aggregations are distributed, (c) recovery works in the event of failures. We conclude with the serverless cloud vision of Elasticsearch for unparallel scalability.</p>",
+  "language": "EN",
+  "speakers": [
+    {
+      "fullName": "Iraklis Psaroudakis",
+      "companyName": "Elastic",
+      "id": "5157",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-04e84c33-83d6-47e7-9782-d30e7613b0e0.jpg"
+    }
+  ],
+  "id": "5252",
+  "room": {
+    "title": "Skalkotas",
+    "id": "2802"
+  },
+  "summary": "",
+  "track": {
+    "id": "1251",
+    "title": "Architecture"
+  }
+}

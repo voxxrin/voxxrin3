@@ -1,0 +1,28 @@
+{
+  "language": "EN",
+  "room": {
+    "title": "Room 5",
+    "id": "4710"
+  },
+  "track": {
+    "title": "Architecture",
+    "id": "1251"
+  },
+  "title": "Caching beyond simple put and gets",
+  "description": "<p>First things first: when there is caching in the talk title, the famous quote from Phil Karlton must follow. So let's get this one out of the way: there are only two hard things in Computer Science -&nbsp;cache invalidation and naming things. </p><p><br></p><p>Yes, caching is hard. It looks simple at first glance, which leads to a simplistic design and implementation. The application starts slowing down: introduce some caches. Simple library, simply put, a few gets, simple invalidation logic (or maybe not). Fast forward, and we end up with even worse bottlenecks. Instead of fixing an issue, we've just covered it with yet another layer of mud:&nbsp;stalled data (already invalid) in services which cannot be scaled out (different data lands on different nodes) and traded latency and read-access time for risk of actually losing the data (eventual writes). </p><p><br></p><p>We obviously can do better! In this talk, we will walk through different use-cases (as cache design depends on the use-case) which might require caching. We will look at how caching can be designed and effectively implemented. For the sake of time and fast feedback look, the examples will run on top of Hazelcast managed service.</p>",
+  "summary": "Cache invalidation and naming things are the hard things in computer science. Caching can be hard, but it can be done well. In this talk, we will look at different use cases that might require caching, and we will discuss how to design and effectively implement caching in a Hazelcast-managed service.",
+  "format": {
+    "duration": "PT30m",
+    "title": "Tools-in-Action",
+    "id": "957"
+  },
+  "speakers": [
+    {
+      "fullName": "Jakub Marchwicki",
+      "companyName": "Hazelcast",
+      "id": "16723",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-1e683535-195f-445d-b1ac-3251469237f4.png"
+    }
+  ],
+  "id": "20449"
+}

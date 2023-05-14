@@ -1,0 +1,28 @@
+{
+  "room": {
+    "id": "2803",
+    "title": "MC3"
+  },
+  "track": {
+    "title": "Data & AI",
+    "id": "1252"
+  },
+  "format": {
+    "id": "953",
+    "duration": "PT40m",
+    "title": "Conference"
+  },
+  "summary": "",
+  "title": "The Data Lakhouse for Streaming Data - A talk for everyone who ❤️ data",
+  "speakers": [
+    {
+      "companyName": "Databricks",
+      "fullName": "Frank Munz",
+      "id": "5189",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-7f207541-9a38-418c-af0e-806a49448aa5.jpg"
+    }
+  ],
+  "language": "EN",
+  "id": "5657",
+  "description": "<p><strong style=\"background-color: transparent; color: rgb(0, 0, 0);\">The whole industry is talking about the Data Lakehouse, but what is it on a technical level beyond all the hype?</strong></p><p><br></p><p><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">On a data management level, data lakehouses combine the best elements of data lakes and data warehouses to deliver the reliability, strong governance, and performance of data warehouses with the openness, flexibility, and machine learning support of data lakes. Open source projects such as Delta Lake (</span><a href=\"https://github.com/delta-io\" rel=\"noopener noreferrer\" target=\"_blank\" style=\"background-color: transparent; color: rgb(0, 0, 0);\">https://github.com/delta-io</a><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">) and many others, turn your data lake into a data lakehouse and bring back ACID transactions, schema enforcement, upserts, efficient metadata handling, and even time travel!&nbsp;</span></p><p><br></p><p><strong style=\"background-color: transparent; color: rgb(0, 0, 0);\">But how far do you get with open source? And how does it support streaming data? What improvements can we expect in the near future?</strong></p><p><br></p><p><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">With a focus on streaming data, this presentation explores the open source table format, data ingestion, data pipelines, data quality, workflows, streaming data analysis and machine learning on the lakehouse.&nbsp; I will conclude with an outlook on project Lightspeed that brings predictable low latencies to Apache Spark Structured Streaming.</span></p><p><br></p><p><em style=\"background-color: transparent; color: rgb(0, 0, 0);\">I will show lot's of code and show the continuous ingestion of a live Twitter stream with a declarative, auto-scaling data pipeline for sentiment analysis with Hugging Face.</em></p><p><em style=\"background-color: transparent; color: rgb(0, 0, 0);\">This talk is for data architects who are not afraid of some code, for data engineers who love open source and cloud services, and for practitioners who enjoy a fun end-to-end demo. The Databricks Lakehouse is used for the demos.</em></p><p><br></p>"
+}

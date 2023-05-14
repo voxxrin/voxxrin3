@@ -1,0 +1,28 @@
+{
+  "format": {
+    "id": "953",
+    "duration": "PT40m",
+    "title": "Conference"
+  },
+  "summary": "",
+  "speakers": [
+    {
+      "companyName": "Contino",
+      "fullName": "Federico Fregosi",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-40cf2b6a-5e5e-462f-8ad1-1e6531c39004.jpg",
+      "id": "3601"
+    }
+  ],
+  "track": {
+    "title": "Architecture",
+    "id": "1251"
+  },
+  "id": "3178",
+  "description": "<p>Engineers at small and large companies are deploying their applications using managed Kubernetes services in the cloud because they are convinced it will enable them to migrate their workloads across providers easily. However, in reality, most container platforms are not feature-complete. So, the move comes with a series of external concerns that can make it problematic: e.g. monitoring, identity management, data gravity, deployment pipelines, dependent services, and many more!</p><p>In this talk, we’ll follow the migration journey of a demo application from AWS to GCP and we will identify a series of practical software development and system architecture best practices that you can follow to increase the level of portability of your Kube application.</p><p>Furthermore, we will consider configuration and components in the Kubernetes ecosystem that you can deploy to significantly simplify any platform lock-in constraints.</p>",
+  "title": "Kubernetes & The Myth of Multi-cloud",
+  "room": {
+    "title": "Banquet",
+    "id": "2801"
+  },
+  "language": "EN"
+}

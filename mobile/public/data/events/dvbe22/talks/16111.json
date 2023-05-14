@@ -1,0 +1,28 @@
+{
+  "language": "EN",
+  "track": {
+    "title": "Development Practices",
+    "id": "1701"
+  },
+  "room": {
+    "title": "Room 8",
+    "id": "4711"
+  },
+  "title": "Writing cleaner code with Domain-Driven Design",
+  "speakers": [
+    {
+      "companyName": "van der Slot Software",
+      "id": "16062",
+      "fullName": "Paul van der Slot",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-98f97dc8-78ab-4a81-b03b-ac54a9fde9f1.jpeg"
+    }
+  ],
+  "summary": "",
+  "format": {
+    "duration": "PT50m",
+    "title": "Conference",
+    "id": "951"
+  },
+  "id": "16111",
+  "description": "<p>I always thought that my code was fine. I took my time for naming things, wrote small classes/methods and tried to use other Clean Code practices. But after a job interview with a technical coach, I was pointed towards Domain-Driven Design (DDD) and some other design topics. I could learn a lot from it, said the technical coach. And I did! Since then, I started noticing how much parts of DDD could help with my day to day job. I will take you with me on my learning journey of Domain-Driven Design, and how it helped me improve my code. We will touch upon themes like Ubiquitous Language, Supple Design, Bounded Contexts and more. You can expect a talk with a lot of code examples and practical advise that you can use the next day.</p><p><br></p>"
+}

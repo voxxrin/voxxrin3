@@ -1,0 +1,28 @@
+{
+  "speakers": [
+    {
+      "id": "17928",
+      "fullName": "Tomasz Manugiewicz",
+      "companyName": "William Hill / Grand Parade",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-5bdffbb2-6d20-485d-a0e1-67872b8958d7.jpg"
+    }
+  ],
+  "format": {
+    "duration": "PT50m",
+    "title": "Conference",
+    "id": "951"
+  },
+  "description": "<p><span style=\"color: rgb(0, 0, 0);\">We want to be autonomous, to create and own our professional pathway.</span></p><p><span style=\"color: rgb(0, 0, 0);\"> </span></p><p><span style=\"color: rgb(0, 0, 0);\">During my talk I will show you that companies really need autonomous engineers and teams as the autonomy is crucial for effective software design. </span></p><p><span style=\"color: rgb(0, 0, 0);\">I will also share with you my tips on how to establish and develop your autonomy based on my experience of working with IT organizations.</span></p><p><span style=\"color: rgb(0, 0, 0);\"> </span></p><p><span style=\"color: rgb(0, 0, 0);\">If you are curious what the secret sauce of autonomy is, come and join my session.</span></p>",
+  "title": "Unlock your autonomy. Improve your software design.",
+  "summary": "",
+  "track": {
+    "title": "People & Culture",
+    "id": "1253"
+  },
+  "id": "20412",
+  "room": {
+    "id": "4706",
+    "title": "Room 4"
+  },
+  "language": "EN"
+}

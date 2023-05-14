@@ -1,0 +1,28 @@
+{
+  "format": {
+    "title": "Byte Size",
+    "id": "960",
+    "duration": "PT15m"
+  },
+  "summary": "",
+  "id": "20257",
+  "track": {
+    "title": "Dev Craft",
+    "id": "1701"
+  },
+  "language": "EN",
+  "room": {
+    "id": "19155",
+    "title": "Room D"
+  },
+  "speakers": [
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-49171b83-5b71-4801-b00c-ba2a92f2ca51.jpg",
+      "id": "18754",
+      "companyName": "Vonage",
+      "fullName": "Sina Madani"
+    }
+  ],
+  "title": "Checked Exceptions: The Bad and the Ugly",
+  "description": "<p>Whether we like them or not, checked exceptions have always been part of the Java Language Specification. By default, exceptions in Java are a compile-time construct, requiring code that throws exceptions to explicitly handle or propagate them. These checked exceptions are a hotly debated feature, with many arguing that they are more often than not a burden compared to unchecked (runtime) exceptions. In this talk, we will explore the drawbacks of checked exceptions and why they should be avoided in most cases, especially in public APIs</p>"
+}

@@ -1,0 +1,28 @@
+{
+  "description": "<p>Conferences love to show you the latest and greatest framework versions and language features. But those new technologies can feel a world away back at work. And it can be hard to justify the time spent to upgrade something that’s not broken, such as JUnit 4.</p><p><br></p><p>What if you could migrate in mere minutes? With OpenRewrite you can! A collection of fine grained recipes combine to achieve large scale migrations of frameworks and tools related to the JVM. And since it uses an abstract syntax tree, refactorings are guaranteed safe.</p><p><br></p><p>Upgrade Spring, Micronaut and Quarkus. Adopt JUnit 5; switch to AssertJ. Replace Log4j with Logback. Fix Checkstyle violations. A world of quick and easy migrations awaits!</p>",
+  "language": "EN",
+  "id": "3126",
+  "room": {
+    "id": "19155",
+    "title": "Room D"
+  },
+  "speakers": [
+    {
+      "companyName": "Moderne",
+      "id": "2871",
+      "fullName": "Tim te Beek",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-587d46fe-baf6-4c0d-b470-52debdaa15ff.jpg"
+    }
+  ],
+  "format": {
+    "duration": "PT30m",
+    "title": "Tools-in-Action",
+    "id": "957"
+  },
+  "track": {
+    "title": "Programming Languages",
+    "id": "1401"
+  },
+  "title": "Major migrations made easy",
+  "summary": ""
+}

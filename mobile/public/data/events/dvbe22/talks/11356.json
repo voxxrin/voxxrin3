@@ -1,0 +1,28 @@
+{
+  "track": {
+    "title": "UI & UX",
+    "id": "2760"
+  },
+  "summary": "",
+  "speakers": [
+    {
+      "id": "11306",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-b5ff4f2e-212e-4e10-8aed-fcde657f3a92.jpg",
+      "companyName": "AngularArchitects",
+      "fullName": "Rainer Hahnekamp"
+    }
+  ],
+  "title": "Future of Frontend Development",
+  "id": "11356",
+  "language": "EN",
+  "room": {
+    "title": "Room 9",
+    "id": "4709"
+  },
+  "format": {
+    "duration": "PT50m",
+    "title": "Conference",
+    "id": "951"
+  },
+  "description": "<p><span style=\"color: rgb(0, 0, 0);\">For the last couple of years, React, Vue &amp; Angular have positioned themselves as the \"Big 3\" frameworks for frontend development. They still add new features, but not at that rate compared to the early days. Did we already reach the peak?</span></p><p><span style=\"color: rgb(0, 0, 0);\">On the contrary! Svelte's compiler approach, React's Server Components or esbuild's performance (via not using JavaScript) are groundbreaking changes that will shape the next generation. If the \"Big 3\" will adopt or vanish, is another topic...</span></p><p><span style=\"color: rgb(0, 0, 0);\">Join my talk and see how these new approaches are expanding the frontiers even more.</span></p>"
+}

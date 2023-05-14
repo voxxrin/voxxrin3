@@ -1,0 +1,187 @@
+{
+  "id": "dvbe22",
+  "title": "Devoxx Belgium 2022",
+  "headingTitle": "DevoxxBE 22",
+  "description": "Devoxx Belgium 2022 (19th edition), a 5-days technology conference, saw over 3,200 attendees. To our surprise, all conference and combi tickets were sold out in just 5 minutes!",
+  "days": [
+    { "id":"monday", "localDate": "2022-10-10" },
+    { "id":"tuesday", "localDate": "2022-10-11" },
+    { "id":"wednesday", "localDate": "2022-10-12" },
+    { "id":"thursday", "localDate": "2022-10-13" },
+    { "id":"friday", "localDate": "2022-10-14" }
+  ],
+  "timezone": "Europe/Brussels",
+  "keywords": [
+    "Devoxx",
+    "Java",
+    "Kotlin",
+    "Cloud",
+    "Big data",
+    "Web"
+  ],
+  "location": {
+    "city": "Antwerp",
+    "country": "Belgium"
+  },
+  "features": {
+    "roomsDisplayed": true,
+    "favoritesEnabled": true,
+    "remindMeOnceVideosAreAvailableEnabled": true,
+    "hideLanguages": [],
+    "ratings": {
+      "bingo": {
+        "enabled": true,
+        "choices": [
+          {
+            "id": "interesting",
+            "label": "Very interesting"
+          },
+          {
+            "id": "too-much-code",
+            "label": "Too much code"
+          },
+          {
+            "id": "lacking-demos",
+            "label": "Lacking demos"
+          }
+        ]
+      },
+      "scale": {
+        "enabled": true,
+        "icon": "star",
+        "max": 5
+      },
+      "free-text": {
+        "enabled": true,
+        "maxLength": 400
+      },
+      "custom-scale": {
+        "enabled": true,
+        "choices": [
+          {
+            "id": "smiling_face",
+            "icon": "smiling_face"
+          },
+          {
+            "id": "neutral_face",
+            "icon": "neutral_face"
+          },
+          {
+            "id": "confused_face",
+            "icon": "confused_face"
+          }
+        ]
+      }
+    }
+  },
+  "talkFormats": [
+    {
+      "id": "951",
+      "title": "Conference",
+      "duration": "PT50m",
+      "themeColor": "#69BE72"
+    },
+    {
+      "id": "959",
+      "title": "Deep Dive",
+      "duration": "PT180m",
+      "themeColor": "#DA8DE0"
+    },
+    {
+      "id": "968",
+      "title": "Hands-on Lab",
+      "duration": "PT180m",
+      "themeColor": "#7D51FB"
+    },
+    {
+      "id": "957",
+      "title": "Tools-in-Action",
+      "duration": "PT30m",
+      "themeColor": "#199F8F"
+    },
+    {
+      "id": "954",
+      "title": "BOF",
+      "duration": "PT60m",
+      "themeColor": "#165CE3"
+    },
+    {
+      "id": "4901",
+      "title": "Keynote",
+      "duration": "PT30m",
+      "themeColor": "#935A59"
+    },
+    {
+      "id": "956",
+      "title": "Keynote",
+      "duration": "PT45m",
+      "themeColor": "#D6B304"
+    },
+    {
+      "id": "45001",
+      "title": "Lunch Talks",
+      "duration": "PT40m",
+      "themeColor": "#C21146"
+    },
+    {
+      "id": "960",
+      "title": "Quickie",
+      "duration": "PT15m",
+      "themeColor": "#EA7872"
+    }
+  ],
+  "talkTracks": [
+    { "id": "1252", "title": "Data & AI", "themeColor": "#165CE3" },
+    { "id": "1254", "title": "Build & Deploy", "themeColor": "#EA7872" },
+    { "id": "1701", "title": "Development Practices", "themeColor": "#935A59" },
+    { "id": "2754", "title": "Java", "themeColor": "#3EDDEF" },
+    { "id": "2758", "title": "Mind the Geek", "themeColor": "#69BE72" },
+    { "id": "2760", "title": "UI & UX", "themeColor": "#DA8DE0" },
+    { "id": "1256", "title": "Server Side Java", "themeColor": "#7D51FB" },
+    { "id": "1255", "title": "Security", "themeColor": "#199F8F" },
+    { "id": "1251", "title": "Architecture", "themeColor": "#D6B304" },
+    { "id": "1253", "title": "People & Culture", "themeColor": "#C21146" }
+  ],
+  "supportedTalkLanguages": [
+    {
+      "id": "en",
+      "label": "EN",
+      "themeColor": "#165CE3"
+    },
+    {
+      "id": "fr",
+      "label": "FR",
+      "themeColor": "#165CE3"
+    }
+  ],
+  "rooms": [
+    { "id": "4706", "title": "Room 4" },
+    { "id": "4710", "title": "Room 5" },
+    { "id": "4708", "title": "Room 6" },
+    { "id": "4711", "title": "Room 8" },
+    { "id": "4709", "title": "Room 9" },
+    { "id": "4702", "title": "BOF 2" },
+    { "id": "4701", "title": "BOF 1" },
+    { "id": "4704", "title": "Room 10" },
+    { "id": "4705", "title": "Room 3" },
+    { "id": "4707", "title": "Room 7" }
+  ],
+  "theming": {
+    "colors": {
+      "primaryHex": "#F78125",
+      "primaryContrastHex": "#FFFFFF",
+      "secondaryHex": "#3880FF",
+      "secondaryContrastHex": "#FFFFFF",
+      "tertiaryHex": "#202020",
+      "tertiaryContrastHex": "#FFFFFF"
+    }
+  },
+  "infos": {
+    "venuePicture": "https://acme.com/venue-picture.png",
+    "eventDescription": "hello *world* !"
+  },
+  "websiteUrl": "https://devoxx.be",
+  "logoUrl": "https://devoxx.be/wp-content/uploads/2019/05/DEVOXX-Name-Only-TransparentBackground.png",
+  "backgroundUrl": "https://devoxx.be/wp-content/uploads/2022/10/cover.jpg",
+  "peopleDescription": null
+}

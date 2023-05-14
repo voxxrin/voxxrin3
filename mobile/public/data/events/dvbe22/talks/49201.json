@@ -1,0 +1,28 @@
+{
+  "room": {
+    "title": "Room 10",
+    "id": "4704"
+  },
+  "format": {
+    "id": "951",
+    "title": "Conference",
+    "duration": "PT50m"
+  },
+  "description": "<p>When you build an application you will undoubtedly need to integrate it with other applications and systems.&nbsp;The Apache Camel project’s goal is to simplify the way we do integration, using the book “Enterprise Integration Patterns” as the gold standard.&nbsp;</p><p>Apache Camel has been around for a while, but it is more relevant now than it has ever been.&nbsp;In this session we’ll show you how Camel can leverage Quarkus’ fast startup time and developer experience.&nbsp;</p><p>As a bonus it can make use of technologies like serverless computing (eg. Knative) and data streaming (eg. Kafka), to remove bottlenecks, integrate faster and better than ever before, and save resources and money on top of it.</p><p>Attendees should come away from this event with the following:</p><ul><li>Understanding of what Serverless Enterprise Integration means and how to deliver better software faster</li><li>How serverless technologies like Knative can optimize resource usage and scale rapidly to respond to fluctuating demand</li><li>How the next iteration of Apache Camel (based on Quarkus) can leverage serverless computing and event driven architectures to do integration when and where it’s needed</li></ul><p><br></p>",
+  "title": "Serverless Integration with Camel Quarkus",
+  "summary": "",
+  "track": {
+    "title": "Server Side Java",
+    "id": "1256"
+  },
+  "id": "49201",
+  "language": "EN",
+  "speakers": [
+    {
+      "companyName": "Red Hat",
+      "id": "2059",
+      "photoUrl": "https://lh3.googleusercontent.com/a-/AOh14GgR-OfaLiyfLZNIKmUy6yqwz86OPOhP1QtssfiY=s96-c",
+      "fullName": "Kevin Dubois"
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "summary": "",
+  "speakers": [
+    {
+      "id": "20158",
+      "companyName": "Couchbase",
+      "fullName": "Georgina Martin",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-fc50a4a8-1b7f-4bc2-afd7-f1f4cb0e9420.jpg"
+    }
+  ],
+  "title": "An Experiment in Machine Learning on the Edge",
+  "language": "EN",
+  "description": "<p>With the wide availability of sufficient computing power today, even on mobile and edge devices, along with a plethora of pre-trained models to choose from, the rate of adoption of AI and Machine Learning (ML) techniques will only increase. The question is, how do we go about utilising today's advanced knowledge and novel techniques when building mobile and edge applications?</p><p>Most examples available to learn the implementation of ML as a developer are focused on server applications, but what if you don't have a server? What if your code is deployed at the edge? How then would you use ML models?</p><p>In this talk, we will see how you can query an ML model directly from an offline mobile application. Additionally, we will look into how the database you choose to use for an application can make a huge difference in your ability to leverage these techniques.</p><p><br></p><p><br></p>",
+  "format": {
+    "duration": "PT15m",
+    "id": "960",
+    "title": "Byte Size"
+  },
+  "id": "20254",
+  "room": {
+    "id": "19155",
+    "title": "Room D"
+  },
+  "track": {
+    "id": "1252",
+    "title": "Data & AI"
+  }
+}

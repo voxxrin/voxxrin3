@@ -1,0 +1,28 @@
+{
+  "language": "EN",
+  "id": "52805",
+  "speakers": [
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-2f0e0723-602a-4ffa-aaec-70206356e2b5.jpg",
+      "fullName": "Raimund Broechler",
+      "id": "53451",
+      "companyName": "Netcompany-Intrasoft"
+    }
+  ],
+  "room": {
+    "id": "4706",
+    "title": "Room 4"
+  },
+  "title": "Creating innovation portfolios in a leading European IT Solutions and Services Group",
+  "description": "<p>The presentation gives an overview on how innovation portfolios can be created using Netcompany-Intrasoft’s state-of-the-art Research and Innovation Development department, with the experience gained through its multi-sector collaborative research project portfolio. At Netcompany-Intrasoft, we recognize that the capability to drive innovation successfully within the market is a crucial competitive advantage. Innovation is key to shape the technological landscape in Europe and lay the ground for economic growth and social welfare.</p><p>Research at Netcompany-Intrasoft is conducted by internal research and development experts, in conjunction with prestigious Universities and Research Institutions, and acclaimed industrial partners that ensure the articulation of emerging ICT trends into innovative and exploitable research outcomes. As a result, we offer an interdisciplinary centre of competence on the effects, use and applications of ICT in our targeted markets with a medium to long-term agenda.</p><p>Product lifecycles are becoming shorter and shorter. Customisation/adaptation to client specific solutions are offering new niche market chances competing with mass market solutions. This is especially true for software solutions that are penetrating all possible markets from automotive to health and food. Marketplaces for example move from pure product selling to product selling combined with product specific IT services (i.e. maintenance). In such new business models ad-hoc multi stakeholder collaboration are build, where the IT solution provider is from another company and ad-hoc business models are created within the marketplaces</p>",
+  "track": {
+    "title": "People & Culture",
+    "id": "1253"
+  },
+  "summary": "",
+  "format": {
+    "duration": "PT50m",
+    "title": "Conference",
+    "id": "951"
+  }
+}

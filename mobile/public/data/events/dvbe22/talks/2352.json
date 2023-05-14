@@ -1,0 +1,28 @@
+{
+  "room": {
+    "title": "Room 8",
+    "id": "4711"
+  },
+  "summary": "OAuth2 is a protocol that helps protect users from unauthorized access to their data. This talk will help you to understand the basics of this protocol, including the new version 2.1.",
+  "id": "2352",
+  "description": "<p>It is very difficult today to deploy an application on the web without dealing with OAuth2. Designed to better protect users, this authorization delegation protocol has become a standard in the industry.</p><p>However, haven't you cried trying to understand the concepts of OAuth2? Let's be honest, this is quite easy to get lost between the different roles and the multitude of flows of this protocol. And its complexity has discouraged more than one! However we can't deliver without it, so we try to setup some OAuth flow and usually... this is really painful.</p><p>But don't worry, whether you have a tech profile or not, this talk will help you to finally understand the intricacies of OAuth simply, including the new version 2.1, using analogies from everyday life!</p>",
+  "format": {
+    "title": "Conference",
+    "duration": "PT50m",
+    "id": "951"
+  },
+  "title": "OAUTH 2.1 explained simply (even if you are not a developer) !",
+  "speakers": [
+    {
+      "companyName": "Shodo",
+      "id": "1857",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-fb98680e-aa8b-415c-8986-960de612e04e.png",
+      "fullName": "Julien Topçu"
+    }
+  ],
+  "track": {
+    "title": "Security",
+    "id": "1255"
+  },
+  "language": "EN"
+}

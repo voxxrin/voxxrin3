@@ -1,0 +1,28 @@
+{
+  "title": "GraalVM Cloud Native & Micronaut® Deep Dive",
+  "summary": "",
+  "language": "EN",
+  "track": {
+    "id": "1256",
+    "title": "Server Side Java"
+  },
+  "speakers": [
+    {
+      "fullName": "Graeme Rocher",
+      "companyName": "Oracle",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-a94d4174-4b1e-4ef0-bd62-eccde75c1c67.jpg",
+      "id": "17941"
+    }
+  ],
+  "format": {
+    "duration": "PT180m",
+    "title": "Deep Dive",
+    "id": "959"
+  },
+  "id": "17999",
+  "description": "<p>This session is for developers looking to go beyond the basics with Micronaut®, a microservices and serverless framework for Java, Kotlin, and Groovy.</p><p>Taking an extensive look at how advanced features such as dependency injection (DI), aspect-oriented programming (AOP), and ahead-of-time (AOT) compilation work, the creator of the Micronaut framework, Graeme Rocher, will walk attendees through the Micronaut framework’s elegant programming model and how to rapidly build compelling Microservice applications.</p><p>Graeme will also demonstrate how the Micronaut framework can be combined with GraalVM Native Image to produce fast, efficient and optimized Cloud Native Microservices that ensure maximum Cloud portability.</p><p><br></p>",
+  "room": {
+    "id": "4710",
+    "title": "Room 5"
+  }
+}

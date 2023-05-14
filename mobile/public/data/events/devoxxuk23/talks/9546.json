@@ -1,0 +1,28 @@
+{
+  "summary": "",
+  "language": "EN",
+  "room": {
+    "title": "Room A",
+    "id": "19153"
+  },
+  "title": "Common java security issues and their remediations",
+  "speakers": [
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-f9310ab2-26b7-464e-b845-7c25ca678c94.jpeg",
+      "id": "9906",
+      "fullName": "Solene Butruille",
+      "companyName": "BlackRock"
+    }
+  ],
+  "track": {
+    "title": "Security",
+    "id": "1255"
+  },
+  "description": "<p>Every year, several entities around the world are victims of cybersecurity attacks. Data breaches are affecting every domain, from the healthcare to the financial world. All of those succeeded attacks are coming with a cost which is consistenly increasing, reaching an average of 4.35 million dollars in 2022 <span style=\"color: rgb(0, 0, 0);\">(</span><em style=\"color: rgb(0, 0, 0);\">Cost of a Data Breach Report 2022</em><span style=\"color: rgb(0, 0, 0);\">)</span>.</p><p><br></p><p>In this talk, we will walk through the most common java security flaws nowadays in application code reviews. The flaws we will discuss about are as follow :</p><p><br></p><p><br></p><p><br></p><p><br></p><ul><li>SQL injections --&gt; parametrized queries</li><li>XXE (XML external entity) --&gt; disable external entity resolution</li><li>XSS (Cross-site scripting) --&gt; white list / input sanitization</li><li>OS Command Injection --&gt; trying to avoid it / white list / input sanitization</li><li>Direct Object Reference --&gt; access control</li></ul><p><br></p><p>For each one of them, we will start by looking at a vulnerable website and how to exploit the flaw. Then, we will take a look at the code and see why it is vulnerable. Finally, we will see how to remediate the issue and make the application safe, fixing the vulnerable website in live !</p><p><br></p><p>To finish the talk, I will briefly present some of the most common third party softwares that can be use in order to find issues in your code (Veracode, netsparker, apiiro ...)</p>",
+  "id": "9546",
+  "format": {
+    "id": "957",
+    "title": "Tools-in-Action",
+    "duration": "PT30m"
+  }
+}

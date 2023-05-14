@@ -1,0 +1,34 @@
+{
+  "description": "<p>Before Docker, configuring the environment for integration testing was painful - people were using fake database implementations, mocking servers, usually it was not cross-platform as well. However, than to Docker, now we can quickly prepare the environment for our tests.</p><p>In this lab, I would like to show how you can use Testcontainers - a popular testing library that harnesses Docker to easily, reliably, spin up test dependencies.</p><p>You’ll go through the process adding powerful integration tests to your codebase (we’ll use a Spring Boot app) without the headache of managing external service dependencies manually. And get acquainted with all necessary Testcontainers concepts to write elegant, efficient, and reliable integration tests.</p>",
+  "summary": "",
+  "format": {
+    "duration": "PT180m",
+    "id": "968",
+    "title": "Hands-on Lab"
+  },
+  "room": {
+    "title": "BOF 1",
+    "id": "4701"
+  },
+  "language": "EN",
+  "speakers": [
+    {
+      "id": "53457",
+      "fullName": "Kevin Wittek",
+      "companyName": "AtomicJar",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-16b8d467-cf33-432b-b8b8-efdb61851e80.jpg"
+    },
+    {
+      "id": "20054",
+      "companyName": "AtomicJar",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-79137f03-07db-4363-a029-37b25157a407.jpg",
+      "fullName": "Piotr Przybyl"
+    }
+  ],
+  "id": "56501",
+  "track": {
+    "id": "1256",
+    "title": "Server Side Java"
+  },
+  "title": "Rethinking integration testing with Testcontainers"
+}

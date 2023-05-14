@@ -1,0 +1,28 @@
+{
+  "summary": "",
+  "room": {
+    "id": "4711",
+    "title": "Room 8"
+  },
+  "track": {
+    "id": "2754",
+    "title": "Java"
+  },
+  "title": "No more Xmx! - Adaptable Heap Sizing for Containerized Java Applications",
+  "format": {
+    "title": "Conference",
+    "duration": "PT50m",
+    "id": "951"
+  },
+  "speakers": [
+    {
+      "fullName": "Jonathan Joo",
+      "id": "20589",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-ecf7ae88-0fb6-40da-b292-54f8265596af.jpg",
+      "companyName": "Google"
+    }
+  ],
+  "description": "<p>Have you ever run Java in a container? Are you tired of tuning Xmx? If so, this talk is for you! (And even if not, this talk is still for you!)</p><p>Come learn about Google's solution to memory management of Java programs inside a container. Currently, the configuration of Java applications is tricky and error-prone; incorrectly-valued flags can have significant performance and cost impact. In practice, the most problematic flag misconfiguration is the maxiumum Java heap size (--Xmx). A new project within Google, called Adaptable Heap Sizing (AHS), boldly removes the need to manually tune and set a maximum heap size, and instead automatically adjusts Java heap usage based on container limits and container usage. Furthermore, AHS improves the stability of Java applications by significantly reducing the likelihood of memory-related runtime errors, while often reducing memory usage as well.</p><p>Attend this talk to learn more about Java memory in a container, the history of memory issues at Google, and how we came up with a solution to these problems!</p>",
+  "language": "EN",
+  "id": "20741"
+}

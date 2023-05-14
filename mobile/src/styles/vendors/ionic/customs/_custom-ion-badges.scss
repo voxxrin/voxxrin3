@@ -1,0 +1,35 @@
+/* Custom Ionic badge component */
+
+ion-badge {
+    display: flex;
+    align-items: center;
+    border-radius: 4px;
+    height: 28px;
+    column-gap: 4px;
+    font-weight: normal;
+
+    @media (prefers-color-scheme: dark) {
+        --background: rgba(var(--app-dark-contrast-rgb));
+    }
+
+    ion-icon {
+        font-size: 18px;
+    }
+}
+
+/* Badge Tracks */
+
+.trackBadge {
+    display: flex;
+    align-items: center;
+    border-radius: 8px;
+    font-weight: 600;
+    font-style: normal;
+    font-size: 11px;
+
+    ion-icon {
+        --color: white;
+        opacity: 0.5;
+        font-size: 13px;
+    }
+}

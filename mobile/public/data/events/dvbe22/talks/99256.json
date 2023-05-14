@@ -1,0 +1,28 @@
+{
+  "track": {
+    "title": "Data & AI",
+    "id": "1252"
+  },
+  "id": "99256",
+  "format": {
+    "title": "Keynote",
+    "id": "956",
+    "duration": "PT45m"
+  },
+  "room": {
+    "id": "4706",
+    "title": "Room 4"
+  },
+  "language": "EN",
+  "description": "<p><span style=\"color: rgb(29, 29, 29);\">Artificial Intelligence: You Are Here</span></p>",
+  "summary": "",
+  "speakers": [
+    {
+      "fullName": "Alan D. Thompson",
+      "id": "37001",
+      "companyName": "LifeArchitect.ai",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-e4e9befa-5c81-49da-9877-6239f8630a1d.jpg"
+    }
+  ],
+  "title": "Overflow"
+}

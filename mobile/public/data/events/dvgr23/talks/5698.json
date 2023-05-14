@@ -1,0 +1,28 @@
+{
+  "title": "“Unlocking the power of Big Data, Analytics & AI” - Payzy by Cosmote",
+  "id": "5698",
+  "summary": "",
+  "format": {
+    "id": "953",
+    "title": "Conference",
+    "duration": "PT40m"
+  },
+  "language": "EN",
+  "track": {
+    "id": "1252",
+    "title": "Data & AI"
+  },
+  "room": {
+    "title": "MC3",
+    "id": "2803"
+  },
+  "speakers": [
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-52ba790f-d93a-460c-be5a-a4bb5019f105.png",
+      "id": "5184",
+      "companyName": "Cognity",
+      "fullName": "Konstantinos Megalokonomos"
+    }
+  ],
+  "description": "<p class=\"ql-align-justify\">A new era in electronic transactions is arriving in Greece via the new “Payzy by Cosmote” mobile app. Payzy offers a holistic digital solution, allowing users to cover everyday purchases &amp; bills, while also carrying out transactions with their friends &amp; family via their mobile phone, quickly, easily and securely. With this mobile app Cosmote is dynamically entering the e-transaction and mobile payment services market, on-boarding ~100,000 users in a couple of months since its official release.</p><p class=\"ql-align-justify\"><br></p><p class=\"ql-align-justify\">Behind the scenes, Payzy is a mobile app built with an impressive stack of some of the latest, most innovative and cutting edge technologies. Focusing on the subjects of Big Data, Analytics and AI, a series of solutions have been developed using state-of-the-art, open-source tools that form part of the Payzy technical ecosystem. Diving into the tech side of the app, among other things one will find a conversational assistant, a recommendation system, a search engine and an analytics end to end solution all of which are continuous works in progress, growing, evolving, embracing new technologies and tackling new challenges as they emerge.</p>"
+}

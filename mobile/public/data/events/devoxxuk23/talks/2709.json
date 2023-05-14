@@ -1,0 +1,28 @@
+{
+  "title": "Developer Joy – How great teams get s%*t done",
+  "track": {
+    "title": "Dev Craft",
+    "id": "1701"
+  },
+  "language": "EN",
+  "room": {
+    "title": "Gallery Hall",
+    "id": "19151"
+  },
+  "format": {
+    "duration": "PT20m",
+    "id": "955",
+    "title": "Opening Keynote"
+  },
+  "summary": "",
+  "id": "2709",
+  "speakers": [
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-4f84e9ca-c147-4c7c-87a7-102a4f96f0a6.jpg",
+      "companyName": "Atlassian",
+      "id": "1860",
+      "fullName": "Sven Peters"
+    }
+  ],
+  "description": "<p>Software development has become more complex over the years: Building and running a distributed architecture in the cloud, ensuring observability, and keeping a healthy balance between dev speed and code quality isn’t easy. They say' Just be agile, practice DevOps, and increase developer productivity' but does that really solve the problem?</p><p>Join Sven and learn how great software teams measure and improve their developer experience, coordinate work across teams, reduce wait times, and create a healthy and joyful engineering culture. Instead of focusing just on developer productivity we shouldn’t lose sight of what makes this craft fun for engineers.</p>"
+}

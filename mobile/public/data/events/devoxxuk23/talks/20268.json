@@ -1,0 +1,28 @@
+{
+  "speakers": [
+    {
+      "id": "3642",
+      "fullName": "Paula Kennedy",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-8726a4b9-5f17-4c82-bf4a-3bc0765932b0.jpg",
+      "companyName": "Syntasso"
+    }
+  ],
+  "room": {
+    "id": "19154",
+    "title": "Room B"
+  },
+  "description": "<p>Platform Engineering as a practice is growing in popularity but as with any new idea, confusion abounds. What exactly is a platform and where do the boundaries of responsibility lie? Should a platform be considered as a way for developers to provision the infrastructure they need or should it offer more? Must it be highly opinionated or instead allow teams to make any and all technology choices?</p><p>Whilst trying to avoid the classic answer of “it depends”, Paula will provide advice on how to consider these questions within the context of your organisation. She will share practices from the many Platform Teams that she has worked with and highlight examples of those highest performing teams.</p><p>Within this talk, attendees will hear:</p><p>- A definition of platform and suggestions on writing a platform mission statement specific to your organisation</p><p>- A review of the path to production that most teams face and guidance on where collaboration and clearly defined contracts between teams can make that path easier to navigate</p><p>- An outline of the different approaches that organisations take around flexibility vs. consistency and the pros and cons of each.</p>",
+  "format": {
+    "duration": "PT15m",
+    "title": "Byte Size",
+    "id": "960"
+  },
+  "title": "From Infrastructure to App Deployment: Where Does a Platform Start and End?",
+  "language": "EN",
+  "summary": "",
+  "id": "20268",
+  "track": {
+    "title": "Build & Deploy",
+    "id": "1254"
+  }
+}

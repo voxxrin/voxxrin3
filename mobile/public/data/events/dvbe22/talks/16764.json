@@ -1,0 +1,34 @@
+{
+  "room": {
+    "id": "4708",
+    "title": "Room 6"
+  },
+  "description": "<p>You've probably seen these new smartphones with foldable screens, like the Samsung Galaxy Fold, or with two screens like the Surface Duo. They're already on the market, so it's up to you to update and rethink your web apps for these devices! But how? Where to start? Fortunately, the web is constantly evolving and has already started adapting for these new devices, thanks to new APIs.</p><p>In this talk, we'll explore why and how leveraging multiple screens can help you create new user experiences for your web apps, by diving into new and experimental web features. We'll also have a look at how we can adapt existing apps for these new devices while trying to avoid dealing with the quirkiness of these new CSS and JavaScript primitives.</p>",
+  "track": {
+    "id": "2760",
+    "title": "UI & UX"
+  },
+  "speakers": [
+    {
+      "companyName": "Microsoft",
+      "id": "16709",
+      "fullName": "Yohan Lasorsa",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-9172a206-60e8-43c2-bc0c-ca18a69b85cd.jpg"
+    },
+    {
+      "fullName": "Olivier Leplus",
+      "photoUrl": "https://lh3.googleusercontent.com/a-/AOh14GjF6jwddA2Cbx-7yJ7stFGwdoFwFIL-6d5VcxKJakw=s96-c",
+      "id": "16714",
+      "companyName": "AWS"
+    }
+  ],
+  "language": "EN",
+  "title": "Building multi-screen experiences for the mobile web",
+  "id": "16764",
+  "summary": "",
+  "format": {
+    "id": "957",
+    "title": "Tools-in-Action",
+    "duration": "PT30m"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "format": {
+    "title": "Conference",
+    "id": "951",
+    "duration": "PT50m"
+  },
+  "room": {
+    "title": "Auditorium",
+    "id": "19152"
+  },
+  "speakers": [
+    {
+      "fullName": "Victor Rentea",
+      "id": "9920",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-9f9e1015-cfb3-4df2-b063-aeda4941e955.jpg",
+      "companyName": "Independent"
+    }
+  ],
+  "description": "<p>If tests are hard to write, the production design is crappy – goes an old saying. Indeed, writing unit tests gives you one of the most comprehensive, yet brutal, feedback about the design of your production code, but if it comes too late, many developers can’t stand it anymore and they will either stop testing or test more superficially. At the other extreme, others struggle to write contrived, fragile tests full of mocks that end up frustrating more than helping them. This talk reviews the main hints that unit tests provide you, from the most obvious improvements to some of the most subtle design principles.</p>",
+  "summary": "",
+  "title": "Your Unit Tests are Trying To Tell You Something ",
+  "id": "18958",
+  "language": "EN",
+  "track": {
+    "title": "Dev Craft",
+    "id": "1701"
+  }
+}

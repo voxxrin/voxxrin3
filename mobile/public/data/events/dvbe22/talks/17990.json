@@ -1,0 +1,28 @@
+{
+  "id": "17990",
+  "speakers": [
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-71a10081-e125-41fd-a466-fa6de4ef040d.jpeg",
+      "fullName": "Simone de Gijt",
+      "id": "17933",
+      "companyName": "OpenValue"
+    }
+  ],
+  "format": {
+    "duration": "PT30m",
+    "title": "Tools-in-Action",
+    "id": "957"
+  },
+  "title": "Plugin and Play with Kotlin",
+  "description": "<p>How to verify your Kotlin project in a Kotlin way? What linter, code coverage tool and static code analysis plugin to use?! We might know our Java counterparts for this, but what to do when you write your talks in Kotlin?&nbsp;</p><p>Kotlin is designed to fully interoperate with Java, mainly provoked by the fact that the JVM version of Kotlin's standard library depends on the Java Class Library. Nevertheless, Kotlin’s standard library has some new tricks which are not supported by Java. Therefore, the Java verification tools might not interpret all the cool new stuff that we’re writing in Kotlin in the right way.</p><p>In this talk we’ll go over some plugins (Kover and Detekt) that are specifically designed for the Kotlin language to fully support your Kotlin project!</p>",
+  "room": {
+    "title": "Room 9",
+    "id": "4709"
+  },
+  "language": "EN",
+  "track": {
+    "id": "2754",
+    "title": "Java"
+  },
+  "summary": ""
+}

@@ -1,0 +1,28 @@
+{
+  "track": {
+    "id": "2758",
+    "title": "Mind the Geek"
+  },
+  "language": "EN",
+  "summary": "",
+  "id": "18952",
+  "speakers": [
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-5a3bb8e9-fba3-4cdb-bba2-7131a44c3ad2.jpg",
+      "id": "3608",
+      "fullName": "Scott Sosna",
+      "companyName": "Datasite"
+    }
+  ],
+  "format": {
+    "id": "958",
+    "duration": "PT5m",
+    "title": "Ignite"
+  },
+  "room": {
+    "id": "19153",
+    "title": "Room A"
+  },
+  "description": "<p><span style=\"color: rgb(0, 0, 0);\">Sounds like a geeky Dr. Seuss children’s book without any chance of becoming one, I’ll (very quickly) take you through all the hardware I’ve used (played with), from teletype dumb terminals to tablets and everything in between.&nbsp;Entertaining as well as allowing you to appreciate how much better things are today, despite how much we scream at our IDE!</span></p>",
+  "title": "The Hardware I Have Seen!"
+}

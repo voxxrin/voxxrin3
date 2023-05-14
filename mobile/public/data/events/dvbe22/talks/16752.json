@@ -1,0 +1,28 @@
+{
+  "title": "Why don't you create your next application without a database?",
+  "speakers": [
+    {
+      "fullName": "Rudy De Busscher",
+      "companyName": null,
+      "photoUrl": "https://lh3.googleusercontent.com/a-/AOh14GiP6y6lu8syC6FW7kJv_ivnPnbIa2SnEVwR1n4b=s96-c",
+      "id": "16702"
+    }
+  ],
+  "summary": "MicroStream is a new, revolutionary way of storing data within the JVM. It eliminates the impedance mismatch between the Java object-oriented world and the external data storage, and allows you to query the data instances within the JVM memory extremely quickly and with low latency.",
+  "room": {
+    "id": "4710",
+    "title": "Room 5"
+  },
+  "language": "EN",
+  "description": "<p>Within every application, data plays a very important role. Currently, we always use a database or a No-SQL solution to store our data externally to the Java process. But this comes with a cost, the impedance mismatch between the object-oriented world of Java and the external data storage. And developers spend a lot of time creating the mapping, writing queries, and optimizing the retrieval from the external system.</p><p>With MicroStream the data instances within the JVM memory ARE your database. You can query them using the getter methods and the Stream API with extremely high performance and low latency as no mapping or external retrieval is needed. Your Java objects survive the JVM restart because they are serialized to disk for example with a new, from the ground built up very secure serialization solution.</p><p>In this session, you will learn about the revolutionizing way of data storage with MicroStream. The basic principles, how it works, and demos are part of the agenda of this session.</p>",
+  "track": {
+    "title": "Java",
+    "id": "2754"
+  },
+  "format": {
+    "duration": "PT50m",
+    "title": "Conference",
+    "id": "951"
+  },
+  "id": "16752"
+}

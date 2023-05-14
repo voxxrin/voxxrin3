@@ -1,0 +1,28 @@
+{
+  "format": {
+    "id": "959",
+    "title": "Deep Dive",
+    "duration": "PT180m"
+  },
+  "description": "<p>Apache Cassandra™ is a distributed NoSQL distributed database deployed extensively at web giants like Apple, Netflix or Uber.</p><p><br></p><p>During this deep-dive session, we will give you everything you need to master this technology: from architecture to data modeling, from drivers to best practices. Through practical labs requiring no installation, we will browse and run applications implemented with Spring Boot, Quarkus, and Micronaut in order to see how Apache Cassandra™ can be used in modern java applications. Take home 3 working projects at home.</p>",
+  "room": {
+    "id": "4706",
+    "title": "Room 4"
+  },
+  "summary": "",
+  "language": "EN",
+  "speakers": [
+    {
+      "companyName": "DataStax",
+      "fullName": "Cedrick Lunven",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-4a1db4b4-4467-44c4-826a-d56da4422c1f.png",
+      "id": "16071"
+    }
+  ],
+  "id": "16122",
+  "track": {
+    "id": "1252",
+    "title": "Data & AI"
+  },
+  "title": "A Java developer Journey into Apache Cassandra™"
+}

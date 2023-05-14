@@ -1,0 +1,34 @@
+{
+  "id": "10363",
+  "description": "<p>Ever since we started writing code in the fifties of the previous century, managers and project managers have tried to discipline and structure the way we work. However, no matter how many consultants and coaches are hired to implement increasingly complex process frameworks and methodologies, developers and testers always come up with new simplistic approaches.</p><p><br></p><p>During this inspirational keynote talk, Kim and Sander will deal with Flow: the worst software development methodology in history ever, taking inspiration from the worst principles and practices from methodologies such as waterfall, RUP, Scrum, Kanban, Lean, BDD, LeSS, SAFe, Spotify and of course everything continuous. Don’t let project failure take you by surprise, be certain!</p><p><br></p><p>Make sure not to miss this unique opportunity to take the Flow exam, and become a Flow Certified Resource too!</p>",
+  "format": {
+    "title": "Keynote",
+    "id": "994",
+    "duration": "PT50m"
+  },
+  "language": "EN",
+  "track": {
+    "title": "Development Practices",
+    "id": "1701"
+  },
+  "speakers": [
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-5b309e6c-eda1-4e37-99a5-69af4bca8653.jpg",
+      "fullName": "Sander Hoogendoorn",
+      "id": "10164",
+      "companyName": "iBOOD"
+    },
+    {
+      "fullName": "Kim van Wilgen",
+      "companyName": "Schuberg Philis",
+      "id": "10165",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-ec317fbd-6c10-477f-a4c8-137e4a45f4be.jpg"
+    }
+  ],
+  "summary": "",
+  "title": "Flow: the worst software development approach in history",
+  "room": {
+    "id": "2801",
+    "title": "Banquet"
+  }
+}

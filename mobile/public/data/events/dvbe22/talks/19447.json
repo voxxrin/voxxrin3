@@ -1,0 +1,28 @@
+{
+  "speakers": [
+    {
+      "id": "20058",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-d59d71eb-9798-4e7c-bb5b-a12560f00cd7.jpg",
+      "fullName": "Josian Chevalier",
+      "companyName": "Shodo"
+    }
+  ],
+  "format": {
+    "title": "Conference",
+    "id": "951",
+    "duration": "PT50m"
+  },
+  "description": "<p><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">Domain Driven Design is in every mouth. Ultimate silver bullet, buzzword machine, it’s starting to sound like a must do for every start-ups. But how do you get started to generate value quickly?</span></p><p><br></p><p><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">What if the answer wasn’t the aggregates, value-objects, domain events and other popular tactical patterns, but rather in understanding the domain? That would be convenient, as DDD offers tools allowing us to grasp the domain and modelize it correctly.</span></p><p><br></p><p><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">Let us discover together the strategic patterns - the most important part of Domain Driven Design - that will offer the best returns on investment. This will help you adopt this philosophy smoothly, far from the hype and technical difficulties.</span></p>",
+  "title": "Getting started with Domain Driven Design without fighting the wrong battles",
+  "track": {
+    "id": "1701",
+    "title": "Development Practices"
+  },
+  "room": {
+    "title": "Room 5",
+    "id": "4710"
+  },
+  "id": "19447",
+  "language": "EN",
+  "summary": ""
+}

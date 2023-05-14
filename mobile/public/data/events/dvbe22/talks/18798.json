@@ -1,0 +1,34 @@
+{
+  "id": "18798",
+  "speakers": [
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-f86fa5e0-1e58-4549-b5e3-936e2959707b.jpeg",
+      "companyName": "iO",
+      "fullName": "Mark van der Linden",
+      "id": "18873"
+    },
+    {
+      "id": "13502",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-3bc63935-5bcf-4046-af5e-165e2f5b781f.jpg",
+      "companyName": "iO",
+      "fullName": "Lucien Immink"
+    }
+  ],
+  "title": "You shall not password ",
+  "language": "EN",
+  "room": {
+    "title": "Room 9",
+    "id": "4709"
+  },
+  "summary": "In these modern times of real privacy protection and increased server-side security, a key risk can still be defined as “relying on a single word or phrase to protect all of one’s data”. Consider a password a secret you happily seem to share with the world wide web. Ponder the thought: if you start sharing your secret, can it still be considered a secret?",
+  "description": "<p>In these modern times of real privacy protection and increased server-side security, a key risk can still be defined as “relying on a single word or phrase to protect all of one’s data”. Consider a password a secret you happily seem to share with the world wide web. Ponder the thought: <em>if you start sharing your secret, can it still be considered a secret?&nbsp;</em>&nbsp;</p><p>During this session, iO experts <strong>Mark</strong> and <strong>Lucien</strong> take you through a multitude of security measures that don’t rely on the use of passwords. They’ll share the reasons why we should move away from passwords and how you can easily implement Web Authentication to provide your users with a simple and more secure way of authentication.&nbsp;&nbsp;</p><p>Welcome, to the age of passwordless authentication!&nbsp;</p><p><strong>In short:</strong>&nbsp;</p><ul><li><strong>FIDO:</strong> let’s solve the world’s password problem, together&nbsp;</li><li><strong>Web Authentication</strong>: there once was… a credential management API&nbsp;</li><li><strong>Authenticators: </strong><em>‘And who might you be?’</em>&nbsp;</li></ul>",
+  "format": {
+    "id": "951",
+    "title": "Conference",
+    "duration": "PT50m"
+  },
+  "track": {
+    "id": "1255",
+    "title": "Security"
+  }
+}

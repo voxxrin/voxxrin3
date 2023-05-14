@@ -1,0 +1,28 @@
+{
+  "id": "20161",
+  "title": "A 1.5MB Java Container App? Yes you can!",
+  "format": {
+    "duration": "PT30m",
+    "title": "Tools-in-Action",
+    "id": "957"
+  },
+  "description": "<p>Containers are increasing the way Java applications are packaged and deployed. There are lots of qualities desirable in a containerized application like fast startup and low memory and CPU requirements, but size and security are also important considerations.&nbsp;Moving big container images around a network will increase the time it takes to start up a new K8s pod or launch a container, and \"just enough operating system\" container images with reduced attack surface area are also preferable. So what’s the smallest possible Java container image?&nbsp;In this session we’ll demonstrate how to build containerized Java applications small as a mere 1.5MB!&nbsp;Using <a href=\"https://www.graalvm.org/native-image/\" rel=\"noopener noreferrer\" target=\"_blank\">GraalVM Native Image</a> ahead-of-time compilation and static linking with <a href=\"https://musl.libc.org/\" rel=\"noopener noreferrer\" target=\"_blank\">musl</a> libc we can shrink down and strip out all the unnecessary bits that bloat a typical Java apps and deploy them in lightweight and security focused container images like <a href=\"https://alpinelinux.org/\" rel=\"noopener noreferrer\" target=\"_blank\">Alpine</a> and&nbsp;<a href=\"https://github.com/GoogleContainerTools/distroless\" rel=\"noopener noreferrer\" target=\"_blank\">distroless</a>–even <a href=\"https://hub.docker.com/_/scratch\" rel=\"noopener noreferrer\" target=\"_blank\">scratch</a>!</p>",
+  "summary": "Containerized Java applications are becoming more popular, but size and security are still important considerations. In this session, we'll demonstrate how to build a small Java container image using GraalVM Native Image and musl libc.",
+  "speakers": [
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-2b6aff9e-f1b7-4aa4-b585-4ed758c38b42.jpg",
+      "companyName": "Oracle",
+      "id": "20067",
+      "fullName": "Shaun Smith"
+    }
+  ],
+  "room": {
+    "id": "4709",
+    "title": "Room 9"
+  },
+  "track": {
+    "title": "Java",
+    "id": "2754"
+  },
+  "language": "EN"
+}

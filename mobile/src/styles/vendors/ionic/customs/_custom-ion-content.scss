@@ -1,0 +1,13 @@
+/* Custom Ionic content component */
+
+ion-content {
+    --background: var(--app-background);
+}
+
+
+.availableEventsList {
+    .list-md {
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+}

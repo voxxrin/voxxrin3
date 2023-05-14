@@ -1,0 +1,28 @@
+{
+  "room": {
+    "id": "4706",
+    "title": "Room 4"
+  },
+  "description": "<p>Rare are the companies that don't exploit their data today, but also rare are those that have succeeded in scaling up its use and putting data at the heart of their activity.</p><p>We are now entering the era of Data At Scale: the first successes of data projects and products are arriving and lessons have been learned from the mistakes made. The wish is now to go to the next level: promote the launch of tens or hundreds of data use cases in parallel. In other words : being Data Centric.</p><p>Except that this next level is a path strewn with pitfalls, it is a profound change that must be carried out, both organizationally, technologically and methodologically speaking.</p><p>In this talk, we'll present you 10 pitfalls to avoid in order to make this scaling up a success. From strategic organization to team sizing and good data product development practices, each component will have its share of potential errors. You may recognize yourself in some, and be able to anticipate and be proactive for others.</p><p>Let's find out !</p>",
+  "format": {
+    "id": "951",
+    "title": "Conference",
+    "duration": "PT50m"
+  },
+  "track": {
+    "id": "1252",
+    "title": "Data & AI"
+  },
+  "summary": "Avoid 10 pitfalls when scaling up data use cases.",
+  "title": "Data At Scale - 10 pitfalls holding you back bringing value from data at scale",
+  "language": "EN",
+  "id": "19401",
+  "speakers": [
+    {
+      "companyName": "Hymaïa",
+      "fullName": "Yoann Benoit",
+      "id": "14112",
+      "photoUrl": "https://lh3.googleusercontent.com/a-/AOh14GibI70L4ukC_S2JCsy8RW5agSf1G4dnvyNBnj8n=s96-c"
+    }
+  ]
+}

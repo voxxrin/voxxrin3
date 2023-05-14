@@ -1,0 +1,28 @@
+{
+  "language": "EN",
+  "track": {
+    "id": "2754",
+    "title": "Java"
+  },
+  "title": "Java and Rust",
+  "format": {
+    "title": "Conference",
+    "id": "951",
+    "duration": "PT50m"
+  },
+  "summary": "",
+  "room": {
+    "id": "4704",
+    "title": "Room 10"
+  },
+  "speakers": [
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-3fc14c94-4cdb-4992-88b9-aff52e27902a.jpeg",
+      "companyName": "Amazon",
+      "id": "51051",
+      "fullName": "Yishai Galatzer"
+    }
+  ],
+  "id": "57403",
+  "description": "<p>Java&nbsp;is an established language, with advanced VMs, robust package libraries, mature frameworks, dynamic&nbsp;and&nbsp;reflective capabilities, a large tooling selection,&nbsp;and&nbsp;a sizeable developer ecosystem.&nbsp;Rust&nbsp;is a younger systems programming language that can have small memory footprint, low CPU utilization, offer low latencies&nbsp;and&nbsp;have small application sizes.</p><ul><li>But how do these characteristics pan out in the real world?</li><li>How easy is it to take advantage of them?</li><li>Is one language “better” than the other?</li><li>Are they really so different?</li></ul><p>In this talk we will take a journey with the two languages&nbsp;and&nbsp;we will review our experience in designing&nbsp;and&nbsp;building a sample application with the same requirements in both&nbsp;Rust&nbsp;and&nbsp;Java. We will compare the development experiences&nbsp;and&nbsp;how they each perform. We’ll share our thoughts&nbsp;and&nbsp;conclusions on where&nbsp;Rust&nbsp;and&nbsp;Java&nbsp;could be improved.&nbsp;And&nbsp;we’ll talk about how we see each being used in the future.</p><p>&nbsp;</p>"
+}

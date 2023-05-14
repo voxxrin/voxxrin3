@@ -1,0 +1,28 @@
+{
+  "id": "14953",
+  "summary": "Module support is now optional in Angular 14, and standalone components are now the component of choice for Angular applications. This release also introduces composition APIs, dynamic form handling, and a new way to title single page applications. This talk will cover these new features and how they might change the way we architect our applications.",
+  "track": {
+    "title": "UI & UX",
+    "id": "2760"
+  },
+  "description": "<p>Angular 14 was released in June 2022, and this version announce that modules will become optional.</p><p>Oh wouuahhh, until now modules were th basics concepts of an Angular application. The entire architecture of our applications revolved under this concepts. To summary, modules were a central part of Angular application.</p><p>Since Angular 14, it's the component that occupy this role. These specifics components are called \"Standalone Components\"</p><p>However this release brings many other features, all very interesting such as:</p><ul><li>composition API by injection</li><li>types forms and new APIs to manage dynamic form</li><li>a new way to manage the title of our single page application</li></ul><p>How will these new features change the way we architect our applications. How to integrate them into our existings applications ? Will the module become deprecated ?</p><p>This talk answer to these questions by explaning all the concepts with exemples.</p>",
+  "room": {
+    "id": "4707",
+    "title": "Room 7"
+  },
+  "language": "EN",
+  "speakers": [
+    {
+      "companyName": "SFEIR",
+      "fullName": "Nicolas FRIZZARIN",
+      "id": "14901",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-21b91a2e-2ef8-446f-9ca5-f389c5270b38.jpg"
+    }
+  ],
+  "title": "The next generation of Angular Applications",
+  "format": {
+    "duration": "PT50m",
+    "id": "951",
+    "title": "Conference"
+  }
+}

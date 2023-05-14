@@ -1,0 +1,28 @@
+{
+  "summary": "",
+  "id": "17960",
+  "track": {
+    "id": "2760",
+    "title": "UI & UX"
+  },
+  "language": "EN",
+  "format": {
+    "duration": "PT50m",
+    "id": "951",
+    "title": "Conference"
+  },
+  "room": {
+    "title": "Room 6",
+    "id": "4708"
+  },
+  "title": "Taking your web app offline (in a good sense)",
+  "description": "<p><span style=\"color: rgb(103, 106, 108);\">Web as an application platform is amazing: evergreen browsers or some form of webviews exist almost on every device with UI, we have native APIs to access the hardware, we use versatile language with the excellent tooling, we are the huge (the largest ever) developer community after all! But the web historically tightly coupled with the connection state... In my session, we confirm: the modern web APIs and some best practices allow us to build offline-first web apps: always available, caring about data consumption, preserving and sync, providing UX which is comparable (if not better) to the native apps, regardless of the connection. Plus, the current state of the tooling makes it possible to add these features in a fast and reliable way. Let's explore the offline web in a very practical manner - by building the offline-first app!</span></p>",
+  "speakers": [
+    {
+      "companyName": "Microsoft",
+      "fullName": "Maxim Salnikov",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-6f9d4123-6609-4595-a78b-47d447674000.jpg",
+      "id": "17912"
+    }
+  ]
+}

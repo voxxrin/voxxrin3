@@ -1,0 +1,34 @@
+{
+  "summary": "",
+  "track": {
+    "title": "Development Practices",
+    "id": "1701"
+  },
+  "format": {
+    "id": "951",
+    "title": "Conference",
+    "duration": "PT50m"
+  },
+  "language": "EN",
+  "description": "<p>Have you ever wondered why your microservices break in production after all the tests have passed during CI/CD? Have you ever wondered if you’re testing too much or too little? If you want to learn about common pitfalls and how to catch them at build time rather than at runtime, this session is for you!</p><p>In this session we’ll share some common battle scars from our experiences in the field. Additionally, we will introduce the testing pyramid and explain why it is important in helping to continuously deploy microservices independently without fear. We will demonstrate, through a test-driven development approach, how the combination of Pact contract testing combined with Quarkus developer joy can help prevent your microservices from breaking in production.</p>",
+  "speakers": [
+    {
+      "fullName": "Holly Cummins",
+      "companyName": "Red Hat",
+      "id": "16716",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-034a75fe-ef5a-49b0-a207-7f8da2a46e32.jpg"
+    },
+    {
+      "id": "6559",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-3251589d-79c8-4a63-a1aa-8414612e98a2.png",
+      "companyName": "Red Hat",
+      "fullName": "Eric Deandrea"
+    }
+  ],
+  "room": {
+    "id": "4710",
+    "title": "Room 5"
+  },
+  "title": "How to avoid common pitfalls with modern microservices testing",
+  "id": "6661"
+}

@@ -1,0 +1,28 @@
+{
+  "room": {
+    "title": "MC3",
+    "id": "2803"
+  },
+  "language": "EN",
+  "description": "<p>Quarkus is the perfect stack to build functions. The reduced memory usage keeps the Cloud bill low, and the very fast startup provides a great user experience. </p><p>But did you know that Quarkus provides lots of goodies to deploy your applications to AWS Lambda: automatic packaging and deployment, native support, SnapStart integration, access to others AWS services (like dynamodb), and so on?</p><p><br></p><p>This quickie is a pure live coding demo showing how you can develop and deploy functions to AWS Lambda in Java and native.  It covers the offered development model and lives to reload, the integration of AWS services, and the packaging and deployment. </p>",
+  "id": "5287",
+  "format": {
+    "title": "Quickie",
+    "id": "960",
+    "duration": "PT15m"
+  },
+  "title": "Quarkus on AWS Lambda",
+  "speakers": [
+    {
+      "id": "5174",
+      "companyName": "Red Hat",
+      "photoUrl": "https://lh3.googleusercontent.com/a/AEdFTp6wwYfyf-jirCZcLGCpJuhoZcFlzd4lH3XHkPu5-A=s96-c",
+      "fullName": "Clement Escoffier"
+    }
+  ],
+  "summary": "",
+  "track": {
+    "id": "1256",
+    "title": "Server Side Java"
+  }
+}

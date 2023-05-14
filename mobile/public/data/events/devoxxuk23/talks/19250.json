@@ -1,0 +1,21 @@
+{
+  "room": {
+    "title": "Room D",
+    "id": "19155"
+  },
+  "description": "",
+  "summary": "",
+  "language": "EN",
+  "id": "19250",
+  "format": {
+    "title": "UnConference Session",
+    "duration": "PT45m",
+    "id": "19103"
+  },
+  "track": {
+    "id": "19103",
+    "title": "UnConference Session"
+  },
+  "title": "",
+  "speakers": []
+}

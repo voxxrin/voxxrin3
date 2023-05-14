@@ -1,0 +1,28 @@
+{
+  "speakers": [
+    {
+      "id": "9905",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-6e03aeb9-1d1c-4da7-a22c-c4471d9547f2.jpg",
+      "fullName": "Einar Høst",
+      "companyName": "NAV"
+    }
+  ],
+  "description": "<p><span style=\"background-color: rgb(255, 255, 255); color: rgb(51, 51, 51);\">Technical debt is not primarily caused by incompetent developers, architecture astronauts, unrealistic UX people or even stupid project managers. What causes it then? It is a symptom of weak abstractions, which stems from insufficient understanding and modelling of the problem domain. These inadequacies are compounded by organizational inertia and communication problems. This means that we cannot hope to address our so-called technical debt by virtuous coding alone. In order to avoid technical bankruptcy, we must step away from the keyboard and start addressing the complex mess of human issues that ultimately affect the software we are making.</span></p>",
+  "summary": "",
+  "id": "9549",
+  "track": {
+    "title": "Architecture",
+    "id": "1251"
+  },
+  "title": "Technical debt isn't technical",
+  "format": {
+    "id": "951",
+    "title": "Conference",
+    "duration": "PT50m"
+  },
+  "language": "EN",
+  "room": {
+    "title": "Gallery Hall",
+    "id": "19151"
+  }
+}

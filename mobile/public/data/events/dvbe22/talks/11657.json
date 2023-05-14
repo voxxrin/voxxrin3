@@ -1,0 +1,34 @@
+{
+  "format": {
+    "title": "Conference",
+    "id": "951",
+    "duration": "PT50m"
+  },
+  "description": "<p>LITTIL started as an initiative of Devoxx4Kids Netherlands during the covid period. How can we teach children programming while we are all limited by the covid regulations.</p><p>In this talk we show how we started with LITTIL as a greenfield open source project to bring our IT volunteers in contact with primary schools. Why? We support small Devoxx4Kids days in the classroom.</p><p>Let me show you what we build and how we love to let people all over the world use this platform for free. After this talk I hope not only the Netherlands will bring these great Devoxx4Kids days to their schools, but also other countries.</p>",
+  "room": {
+    "title": "Room 4",
+    "id": "4706"
+  },
+  "language": "EN",
+  "track": {
+    "title": "People & Culture",
+    "id": "1253"
+  },
+  "summary": "",
+  "id": "11657",
+  "speakers": [
+    {
+      "companyName": "ABNAMRO",
+      "fullName": "Eddy Vos",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-a8b775c0-4e41-4cbe-ab8f-2e55dea3cd8c.jpg",
+      "id": "11605"
+    },
+    {
+      "companyName": "CRV",
+      "fullName": "Pepijn Schildkamp",
+      "id": "61401",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-02dccde4-741b-4041-b4a7-678fc01a2f56.png"
+    }
+  ],
+  "title": "LITTIL step for man, big step for mankind"
+}

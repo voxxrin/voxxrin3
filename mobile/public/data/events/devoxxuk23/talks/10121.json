@@ -1,0 +1,28 @@
+{
+  "room": {
+    "id": "19156",
+    "title": "Exec Centre"
+  },
+  "description": "<p><span style=\"background-color: rgb(248, 248, 248); color: rgb(29, 28, 29);\">Finally: Project Loom has been officially announced for Java 19 as a preview feature! Loom will be a game-changer for the JVM’s concurrency model, delivering ‘reactive’ characteristics out of the box without the need for complex concurrency abstractions.</span></p><p><br></p><p><span style=\"background-color: rgb(248, 248, 248); color: rgb(29, 28, 29);\">Regarding Kotlin, the concurrency features project Loom offers are already available through Coroutines. So the question is: Will Loom make Coroutines obsolete, catapulting Coroutine code to the realm of legacy from one day to another? </span></p><p><br></p><p><span style=\"background-color: rgb(248, 248, 248); color: rgb(29, 28, 29);\">In this talk, we will try to answer this question and learn a great deal about modern concurrency. Starting with a global introduction to how Loom achieves lightweight concurrency, I will compare essential characteristics with Coroutines, such as suspend calls, structured concurrency, and context propagation across Threads. Live-coded examples will illustrate the pros and cons of the different approaches and give you a better understanding of the underlying concurrency concepts. Moreover, light will be shed on whether it makes sense to combine Loom with Coroutines.</span></p><p><br></p><p><span style=\"background-color: rgb(248, 248, 248); color: rgb(29, 28, 29);\">At the end of the talk, you have gained a good understanding of what Loom will mean for Java and how it will impact Kotlin, so you are ready for the next ‘big thing’ on the JVM&nbsp;.</span></p>",
+  "format": {
+    "id": "951",
+    "title": "Conference",
+    "duration": "PT50m"
+  },
+  "title": "Project Loom & Kotlin: Will Coroutines become obsolete?",
+  "id": "10121",
+  "language": "EN",
+  "track": {
+    "title": "Programming Languages",
+    "id": "1401"
+  },
+  "summary": "",
+  "speakers": [
+    {
+      "id": "9913",
+      "fullName": "Urs Peter",
+      "companyName": "Xebia",
+      "photoUrl": "https://lh3.googleusercontent.com/a-/AOh14GjMMs__VKc1LYCk_iSnUWDZSLxxGWfEqU5i8cVv3Q=s96-c"
+    }
+  ]
+}

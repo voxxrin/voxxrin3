@@ -1,0 +1,42 @@
+.infoMessage {
+  display: block;
+  padding: var(--app-gutters);
+
+  &-title {
+    display: block;
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--app-primary-shade);
+
+    @media (prefers-color-scheme: dark) {
+      color: var(--app-white);
+    }
+  }
+
+  &-subTitle {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 16px;
+    color: var(--app-beige-dark);
+
+    @media (prefers-color-scheme: dark) {
+      color: var(--app-light-contrast);
+    }
+  }
+
+  &-icon {
+    margin: 16px auto;
+    font-size: 64px;
+    color: var(--app-beige-dark);
+
+    @media (prefers-color-scheme: dark) {
+      color: var(--app-light-contrast);
+    }
+  }
+
+  &-illustration {
+    display: block;
+    margin: 16px auto;
+    width: 144px;
+  }
+}

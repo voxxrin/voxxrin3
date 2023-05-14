@@ -1,0 +1,28 @@
+{
+  "summary": "",
+  "id": "5606",
+  "track": {
+    "title": "Architecture",
+    "id": "1251"
+  },
+  "format": {
+    "id": "951",
+    "title": "Conference",
+    "duration": "PT50m"
+  },
+  "language": "EN",
+  "room": {
+    "id": "19152",
+    "title": "Auditorium"
+  },
+  "speakers": [
+    {
+      "fullName": "Karen Huaulme",
+      "companyName": "MongoDB",
+      "id": "5502",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-830527f1-13d1-44c9-ab9d-0e77fe48cb16.png"
+    }
+  ],
+  "title": "Game Changer: Build Search Into Your Applications Like a Pro",
+  "description": "<p><span style=\"background-color: transparent;\">Join us in this demo-heavy, football-themed session as, with just a few clicks and keystrokes, we unravel the mystery behind the search bar. Inspired by our World Cup delirium, our demo will allow users to scour across an expansive player dataset to find the best players with the most impossible-to-spell names. Teaming up the lightning-fast Apache Lucene with a MongoDB, developers will learn dream search functionality while building their own dream team.</span></p><p><span style=\"background-color: transparent;\">We get the ball rolling equipped with only a search box, sliders and checkboxes in a code sandbox. In no time, developers will leave with a fully-managed, hosted app and the confidence to send all your application users’ search queries straight to the back of the net! Autocomplete, wildcard, and filters to find Ibrahimović, Błaszczykowski, and Szczęsny? No problem!</span></p>"
+}

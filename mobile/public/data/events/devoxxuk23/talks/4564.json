@@ -1,0 +1,34 @@
+{
+  "room": {
+    "id": "19156",
+    "title": "Exec Centre"
+  },
+  "description": "<p><em>\" Viktor continues his research on HexTech magic to find a cure. Heimerdinger is </em><em style=\"color: rgb(36, 36, 36);\">a</em><em style=\"color: rgb(24, 24, 24);\">ware</em><em style=\"color: rgb(12, 12, 12);\">&nbsp;of&nbsp;the </em><em style=\"color: rgb(24, 24, 24);\">pote</em><em style=\"color: rgb(36, 36, 36);\">ntia</em><em style=\"color: rgb(48, 48, 48);\">l </em><em style=\"color: rgb(24, 24, 24);\">r</em><em style=\"color: rgb(12, 12, 12);\">is</em><em style=\"color: rgb(0, 0, 0);\">ks and tries to</em><em style=\"color: rgb(60, 60, 60);\">&nbsp;control this power </em><em>!!!\"</em></p><p><br></p><p><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">You </span>are invited to this talk where tech meets sparkling creativity, presented by two characters from the Netflix show Arcane : <span style=\"color: rgb(0, 0, 0);\">Viktor and Heimerdinger in Cosplay !</span></p><p><br></p><p><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">Cospl</span>ay combines artistic and craft skills for costumes making, but with electronic and IT infrastructure it becomes next level !!!</p><p><br></p><p>After a brief introduction to Cosplay, we will explain in details the building of the costumes and props on stage and you will be able to interact with us with commonly used IT tools.</p><p><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">C</span>ome to learn in a funny way !</p>",
+  "format": {
+    "id": "951",
+    "title": "Conference",
+    "duration": "PT50m"
+  },
+  "track": {
+    "title": "Mind the Geek",
+    "id": "2758"
+  },
+  "title": "Cosplay and tech : the great adventure 🚀",
+  "language": "EN",
+  "summary": "",
+  "speakers": [
+    {
+      "id": "4148",
+      "companyName": "IKO-BOX",
+      "fullName": "Pierre TIBULLE",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-ee275940-8b5a-40ca-bdd4-0ed69a0ec887.jpg"
+    },
+    {
+      "photoUrl": "https://lh3.googleusercontent.com/a/AEdFTp4zMa5P_8i6FxBAAbHqK9uEjMLU5QJ3_lLbWu6FoRs=s96-c",
+      "companyName": "OVHcloud",
+      "id": "4951",
+      "fullName": "Thierry Chantier"
+    }
+  ],
+  "id": "4564"
+}

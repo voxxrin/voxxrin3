@@ -1,0 +1,34 @@
+{
+  "format": {
+    "duration": "PT180m",
+    "id": "968",
+    "title": "Hands-on Lab"
+  },
+  "track": {
+    "title": "Java",
+    "id": "2754"
+  },
+  "id": "20155",
+  "title": "GraalVM Native Image Bootcamp",
+  "speakers": [
+    {
+      "companyName": "Oracle",
+      "fullName": "Kris Foster",
+      "id": "20066",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-53a07033-f2dc-476a-ae5a-a00c4f843678.jpg"
+    },
+    {
+      "fullName": "Shaun Smith",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-2b6aff9e-f1b7-4aa4-b585-4ed758c38b42.jpg",
+      "id": "20067",
+      "companyName": "Oracle"
+    }
+  ],
+  "room": {
+    "id": "4702",
+    "title": "BOF 2"
+  },
+  "summary": "",
+  "language": "EN",
+  "description": "<p>What do Quarkus, Spring Native, Micronaut, and Helidon have in common?&nbsp;They all support GraalVM Native Image ahead-of-time (AOT) compilation to transform applications into a native machine executables that starts almost instantaneously, provides peak performance with no warmup, and require less memory and less CPU.&nbsp;It's perfect for containerized workloads and microservices where maximizing startup time and minimizing required resources is critical.&nbsp;In this workshop we'll provide a practical introduction to GraalVM Native Image AOT covering how it works, what it can do, when to use it, and how to tune and debug applications.</p><p>Topics include: building with Maven and Gradle, static and dynamic linking, containerization,&nbsp;configuration, working with resources, profile guided optimization, garbage collection options, and JUnit testing and debugging native executables</p><p><br></p>"
+}

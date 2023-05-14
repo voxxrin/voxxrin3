@@ -1,0 +1,49 @@
+/* Custom Ionic form component */
+
+/* Input */
+
+ion-input {
+
+  &.sc-ion-input-md-h {
+    min-height: 44px !important;
+  }
+
+  &.searchInput {
+    position: relative;
+    --background: var(--app-white);
+    --color:  var(--app-primary);
+    --border-width: 2px;
+    border: 1px solid var(--app-beige-line);
+    border-radius: 8px;
+    --placeholder-color: var(--app-beige-dark);
+    --placeholder-opacity: 1;
+    --border-radius: 8px;
+    --padding-bottom: 10px;
+    --padding-end: 10px;
+    --padding-start: 10px;
+    --padding-top: 10px;
+
+    @media (prefers-color-scheme: dark) {
+      --background: var(--app-dark-contrast);
+    }
+
+    &.has-focus {
+      box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+      border-color: var(--app-beige-dark);
+
+      ion-icon {
+        color: var(--app-voxxrin);
+      }
+    }
+
+    ion-icon {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translate(0, -50%);
+      color: var(--app-beige-dark);
+      font-size: 28px;
+      z-index: 1;
+    }
+  }
+}

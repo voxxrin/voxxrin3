@@ -1,0 +1,34 @@
+{
+  "track": {
+    "title": "Architecture",
+    "id": "1251"
+  },
+  "summary": "Betclic is using some technologies to ensure a flawless continuity of service during the Euro 2020 football excitement.",
+  "description": "<p class=\"ql-align-justify\">Sports betting is growing a lot since few years in Europ. All actors in the domain are confronted to the same issue : how to ensure a flawless continuity of service whereas systems requests are exponentially increasing ? Climax of the phenomenon, Euro 2020 football excitement.&nbsp;</p><p class=\"ql-align-justify\">At Betclic, we enhanced our platforms and took upstream right decisions : we set up some observability process, monitoring and load tests. These ones allowed us to support more than 100 millions of logins in 1 month without service interruption. We’ll also present how we are preparing football World Cup 2022.&nbsp;</p><p class=\"ql-align-justify\">Come to discover tools which allowed us to manage that big growth in an optimal way, and to experience our sport events in peaceful way.&nbsp;</p><p><br></p>",
+  "id": "16134",
+  "speakers": [
+    {
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-79df3b61-c8ff-4aca-b411-12179d2d9908.jpg",
+      "companyName": "Betclic",
+      "fullName": "Etienne Puissant",
+      "id": "16711"
+    },
+    {
+      "id": "16078",
+      "companyName": "Betclic",
+      "fullName": "Jozwiak Nicolas",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-b37ca819-8b2c-4740-b352-e2f99d69b189.jpg"
+    }
+  ],
+  "room": {
+    "id": "4705",
+    "title": "Room 3"
+  },
+  "language": "EN",
+  "format": {
+    "title": "Lunch Talks",
+    "duration": "PT40m",
+    "id": "45001"
+  },
+  "title": "How to handle 100,000,000 logins without service interruption ? Betclic will relate his football Euro 2020"
+}

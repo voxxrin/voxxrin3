@@ -1,0 +1,28 @@
+{
+  "format": {
+    "duration": "PT15m",
+    "title": "Quickie",
+    "id": "960"
+  },
+  "id": "20403",
+  "summary": "KCctl is a modern command line client for interacting with Kafka Connect. You can use it for registering and updating connectors, examining their status, retrieving and resetting their offsets, and much more.",
+  "speakers": [
+    {
+      "id": "20089",
+      "photoUrl": "https://lh3.googleusercontent.com/a-/AOh14GihCBYp1plXFDKfAchzpn7tZkBlhGUg3kD7xvlSjw=s96-c",
+      "companyName": "Red Hat",
+      "fullName": "Gunnar Morling"
+    }
+  ],
+  "language": "EN",
+  "title": "Taming Kafka Connect with kcctl",
+  "track": {
+    "id": "1701",
+    "title": "Development Practices"
+  },
+  "description": "<p>It's the year 2022, and we're still struggling with the idiosyncrasies of curl and memorizing (and typing!) long REST URLs when working with Kafka Connect?! That can't be right! But don't despair, cuddly help is coming in form of kcctl 🐻.</p><p>kcctl is a modern command-line client for interacting with Kafka Connect, modelled along the semantics of kubectl from Kubernetes. You can use kcctl for registering and updating connectors, examining their status, retrieving and resetting their offsets, and much more. All with short and concise commands, with tab completion and nicely coloured output along the way.</p><p>Join us for this live demo to see kcctl in action, also touching on some advanced tricks like templating and setting up multiple connectors at once using jsonnet. You'll learn how kcctl sparks joy and boosts your productivity when interacting with Kafka Connect from your shell.</p>",
+  "room": {
+    "title": "Room 9",
+    "id": "4709"
+  }
+}

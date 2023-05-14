@@ -1,0 +1,28 @@
+{
+  "track": {
+    "title": "Mind the Geek",
+    "id": "2758"
+  },
+  "title": "How to train machine learning agents to do fun and absurd things using Unity3D",
+  "description": "<p><span style=\"color: black;\">While machine learning is often used for image recognition, speech recognition and the such, people tend to forget that there is another industry making full use of machine learning. The games industry. Within the games industry companies have been using machine learning to train their NPCs (non-player characters) a plethora of things. From basic combat behavior to full blown city building. During this session Alexander will show you what you can expect from using machine learning agents in Unity3D, an industry standard game engine. Alexander will demonstrate how to implement basic machine learning agents in Unity and how to train them! But the agents won't be trained to do standard stuff. From matrix bullet dodging to headbanging, we can train our agents to do the most absurd and fun things!</span></p>",
+  "room": {
+    "title": "Room 9",
+    "id": "4709"
+  },
+  "language": "EN",
+  "speakers": [
+    {
+      "companyName": "JDriven",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-1b1c1e03-700a-45cd-a13e-48e5df78f5ee.jpg",
+      "fullName": "Alexander Chatzizacharias",
+      "id": "16712"
+    }
+  ],
+  "format": {
+    "title": "Conference",
+    "duration": "PT50m",
+    "id": "951"
+  },
+  "summary": "This session will show you how to use machine learning agents in Unity3D to train your NPCs to do some wild and absurd things.",
+  "id": "16767"
+}

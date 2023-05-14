@@ -1,0 +1,28 @@
+{
+  "summary": "This talk will explore how to optimize Java applications running on Kubernetes, including JVM ergonomics, CPU throttling, Garbage Collectors, and how to best scale vertically or horizontally for performance and cost-efficiency.",
+  "description": "<p><span style=\"color: black;\">Initially, getting Java to run on Kubernetes may seem complicated, but after a few lines of YAML and a bit of work with Docker, you will wonder what all that fuss was. It is easy! Then you start looking at the performance of your Java app in one core, one GB of memory container, and this is when it all very quickly gets murky. Ops, SREs, and Java developers need to be aware of the JVM's inner works when deciding on how to resource their applications. Without this knowledge, it isn't easy to know whether it is best to scale vertically or horizontally for performance and costs. This talk will explore JVM ergonomics, CPU throttling, Garbage Collectors, and how using this knowledge can help you increase performance while reducing costs in the cloud.</span></p>",
+  "format": {
+    "title": "Deep Dive",
+    "duration": "PT180m",
+    "id": "959"
+  },
+  "track": {
+    "title": "Build & Deploy",
+    "id": "1254"
+  },
+  "room": {
+    "title": "Room 5",
+    "id": "4710"
+  },
+  "title": "Secrets of Performance Tuning Java on Kubernetes",
+  "language": "EN",
+  "speakers": [
+    {
+      "id": "5254",
+      "fullName": "Bruno Borges",
+      "photoUrl": "https://lh3.googleusercontent.com/a-/AOh14Gg_Bh0qPu9IacN04zSz_cGNJ-MhXalm7imI2nI85n0=s96-c",
+      "companyName": "Microsoft"
+    }
+  ],
+  "id": "5304"
+}

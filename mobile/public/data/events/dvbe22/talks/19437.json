@@ -1,0 +1,28 @@
+{
+  "room": {
+    "id": "4707",
+    "title": "Room 7"
+  },
+  "title": "Building ML workflows with Java, Python & Apache Beam",
+  "speakers": [
+    {
+      "fullName": "Robbe Sneyders",
+      "photoUrl": "https://lh3.googleusercontent.com/a-/AFdZucr2YhazQdvf5G6iGJinCoYGRX6SuEdflNAagi7SLg=s96-c",
+      "companyName": "ML6",
+      "id": "17911"
+    }
+  ],
+  "description": "<p><a href=\"https://beam.apache.org/\" rel=\"noopener noreferrer\" target=\"_blank\">Apache Beam</a> is an open-source, unified programming model for batch and streaming data processing pipelines that provides a variety of language SDKs such as Python, Java, Go, and more. This enables the creation of multi-language pipelines where each step can be implemented in the most suitable language. This enables collaboration between teams with different language preferences, and across domains with different default languages, such as Java for data processing and Python for ML modeling.</p><p>In this talk we'll look at the Apache Beam framework and how to use it to orchestrate batch and streaming ML workflows with Python and Java components.</p>",
+  "summary": "",
+  "language": "EN",
+  "track": {
+    "title": "Data & AI",
+    "id": "1252"
+  },
+  "format": {
+    "id": "951",
+    "duration": "PT50m",
+    "title": "Conference"
+  },
+  "id": "19437"
+}

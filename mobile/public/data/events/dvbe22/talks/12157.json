@@ -1,0 +1,28 @@
+{
+  "language": "EN",
+  "format": {
+    "duration": "PT15m",
+    "title": "Quickie",
+    "id": "960"
+  },
+  "summary": "How to learn architecture? There are plenty of books and training sessions about this subject. The best thing is to practice! In the same way as coding dojos, I will present to you architecture katas. There are created by Ted Neward (http://blogs.tedneward.com/). His idea came from the following observation: \"So how are we supposed to get great architects, if they only get the chance to architect fewer than a half-dozen times in",
+  "title": "Architecture Katas : Improve your system architecture design skills in a funny way !",
+  "description": "<p>How to learn architecture ? How to improve in this field ? How do we recognize a good or a bad architecture ?</p><p>There are plenty of books and training sessions about this subject. The best thing is to practice!</p><p>In the same way as coding dojos, I will present to you architecture katas. There are created by Ted Neward (http://blogs.tedneward.com/). His idea came from the following observation :</p><p>\"So how are we supposed to get great architects, if they only get the chance to architect fewer than a half-dozen times in their career?\"</p><p>One solution to this issue could be to practice regularly on several topics to gain experience.</p><p>After a brief introduction of how to start designing an architecture, I will present architecture katas, and the conduct. </p><p>To conclude, after this first try I will present the benefits I had benefited.</p>",
+  "id": "12157",
+  "track": {
+    "title": "Architecture",
+    "id": "1251"
+  },
+  "room": {
+    "title": "BOF 1",
+    "id": "4701"
+  },
+  "speakers": [
+    {
+      "fullName": "Alexandre Touret",
+      "id": "12105",
+      "companyName": "Worldline",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-2d7bbbaa-3b73-44af-b52f-b3509c4b213e.png"
+    }
+  ]
+}

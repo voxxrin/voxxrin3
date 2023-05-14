@@ -1,0 +1,28 @@
+{
+  "description": "<p><span style=\"color: black;\">Marko is HTML re-imagined as a language for building dynamic and reactive user interfaces. Just about any valid HTML is valid Marko, but Marko extends the HTML language to allow building modern applications in a declarative way: it's like HTML and JavaScript had a perfect baby that grew up to be awesome. I would like to introduce you in practice to this&nbsp;fascinating&nbsp;framework and share some best practices; I will also present my pet project based on Marko.</span></p>",
+  "format": {
+    "id": "960",
+    "duration": "PT15m",
+    "title": "Quickie"
+  },
+  "summary": "",
+  "speakers": [
+    {
+      "id": "10156",
+      "fullName": "Mikhail Matveev",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-df8810a3-50fb-4edd-9871-8405ce1c24f6.jpg",
+      "companyName": "Deutsche Telekom (T-Digital)"
+    }
+  ],
+  "room": {
+    "id": "2804",
+    "title": "MC2"
+  },
+  "track": {
+    "id": "2760",
+    "title": "UI & UX"
+  },
+  "title": "The Marko web framework as a full-fledged alternative to React",
+  "id": "10355",
+  "language": "EN"
+}

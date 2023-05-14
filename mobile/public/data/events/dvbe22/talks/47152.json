@@ -1,0 +1,28 @@
+{
+  "title": "What's in my AI? A Comprehensive Analysis of Datasets Used to Train GPT-1, GPT-2, GPT-3, GPT-NeoX-20B, Megatron-11B, MT-NLG, and Gopher",
+  "language": "EN",
+  "track": {
+    "title": "Data & AI",
+    "id": "1252"
+  },
+  "room": {
+    "id": "4705",
+    "title": "Room 3"
+  },
+  "speakers": [
+    {
+      "fullName": "Alan D. Thompson",
+      "companyName": "LifeArchitect.ai",
+      "id": "37001",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-e4e9befa-5c81-49da-9877-6239f8630a1d.jpg"
+    }
+  ],
+  "description": "<p>Pre-trained transformer language models have become a stepping stone towards artificial general intelligence (AGI), with some researchers reporting that AGI may evolve from our current language model technology. While these models are trained on increasingly larger datasets, the documentation of basic metrics including dataset size, dataset token count, and specific details of content is lacking. Notwithstanding proposed standards for documentation of dataset composition and collection, nearly all major research labs have fallen behind in disclosing details of datasets used in model training. The research synthesized here covers the period from 2018 to early 2022, and represents a comprehensive view of all datasets—including major components Wikipedia and Common Crawl—of selected language models from GPT-1 to Gopher.</p><p><a href=\"https://lifearchitect.ai/whats-in-my-ai/\" rel=\"noopener noreferrer\" target=\"_blank\" style=\"color: rgb(17, 85, 204);\">https://lifearchitect.ai/whats-in-my-ai/</a></p>",
+  "id": "47152",
+  "summary": "",
+  "format": {
+    "duration": "PT50m",
+    "id": "951",
+    "title": "Conference"
+  }
+}

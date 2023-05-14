@@ -1,0 +1,28 @@
+{
+  "room": {
+    "title": "Room 10",
+    "id": "4704"
+  },
+  "speakers": [
+    {
+      "id": "47951",
+      "fullName": "Venkat Subramaniam",
+      "companyName": "Agile Developer, Inc.",
+      "photoUrl": "https://devoxxian-image-thumbnails.s3-eu-west-1.amazonaws.com/profile-venkat_s.jpg"
+    }
+  ],
+  "summary": "",
+  "format": {
+    "duration": "PT180m",
+    "title": "Deep Dive",
+    "id": "959"
+  },
+  "track": {
+    "id": "2754",
+    "title": "Java"
+  },
+  "title": "Exception Handling in Functional and Reactive Programming - Overflow",
+  "language": "EN",
+  "id": "90051",
+  "description": "<p><span style=\"color: rgb(29, 29, 29);\">Functional and reactive programming is gaining popularity and use. One hurdle developers face using these approaches is in exception handling. Dealing with exceptions in these styles is confusing in the beginning and is often messy and error prone. In this presentation we will step back and take a closer look at exception handling, about their role in functional and reactive programming, and discuss the dos and don'ts for exception handling. We will learn using concrete examples and live coding to illustrate the problem and the possible solutions.</span></p>"
+}

@@ -1,0 +1,34 @@
+{
+  "room": {
+    "id": "4711",
+    "title": "Room 8"
+  },
+  "title": "Introducing Spring Framework 6.0",
+  "speakers": [
+    {
+      "fullName": "Stéphane Nicoll",
+      "photoUrl": "https://avatars.githubusercontent.com/u/490484?v=4",
+      "id": "16706",
+      "companyName": "VMware"
+    },
+    {
+      "id": "16075",
+      "fullName": "Brian Clozel",
+      "companyName": "VMware",
+      "photoUrl": "https://avatars.githubusercontent.com/u/103264?v=4"
+    }
+  ],
+  "language": "EN",
+  "id": "16131",
+  "description": "<p>The next generation of Spring applications is almost here!</p><p>Spring Framework 6.0 brings an exciting new baseline for the entire Spring ecosystem: Java 17, Jakarta EE 9+. This is the foundation for Spring Boot 3.0 and the beginning of new major themes, ranging from AOT/Native to Observability.</p><p><br></p><p>During this presentation, Stéphane and Brian will cover the main topics of this new release:</p><ul><li>the new Java 17 and Jakarta EE 9 baseline</li><li>the AOT/Native efforts for GraalVM native applications and efficient JVM apps</li><li>the Spring Observability initiative and what it means for various components like RestTemplate, web controllers...</li><li>the new Java interface clients for HTTP and other transports</li><li>Support for RFC 7807 problem details</li><li>and more!</li></ul>",
+  "track": {
+    "id": "1256",
+    "title": "Server Side Java"
+  },
+  "summary": "This presentation will cover the main topics of Spring Framework 6.0: the new Java 17 and Jakarta EE 9 baseline, the AOT/Native efforts for GraalVM native applications and efficient JVM apps, the Spring Observability initiative and what it means for various components like RestTemplate, web controllers... and more!",
+  "format": {
+    "id": "951",
+    "title": "Conference",
+    "duration": "PT50m"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "track": {
+    "title": "Mind the Geek",
+    "id": "2758"
+  },
+  "language": "EN",
+  "title": "Access your brain with an API",
+  "description": "<p><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">In the beginning, we had the keyboard, the mouse, and the joystick. Then came gyroscopes, voice recognition, and more. There are multiple ways to interact with a machine; but could we someday be able to capture the frequencies emitted by our brain, process them, and make them available as an API? Deploy a pod on a cluster just by thinking about it?</span></p><p><br></p><p><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">A California startup has released a brain helmet that can capture our brain's electrical activity and has made available an SDK that allows you to create applications and services with this new form of interface: the brain.</span></p><p><br></p><p><span style=\"background-color: transparent; color: rgb(0, 0, 0);\">After a quick explanation of how our brain works, we will see in the form of mini demos how the SDK works and the perspectives it opens up—for accessibility in particular.</span></p><p><br></p><p><br></p>",
+  "summary": "There is a brain helmet that can capture our brain's electrical activity and has made available an SDK that allows you to create applications and services with this new form of interface: the brain. After a quick explanation of how our brain works, we will see in the form of mini demos how the SDK works and the perspectives it opens up—for accessibility in particular.",
+  "room": {
+    "id": "4710",
+    "title": "Room 5"
+  },
+  "id": "12251",
+  "format": {
+    "id": "957",
+    "title": "Tools-in-Action",
+    "duration": "PT30m"
+  },
+  "speakers": [
+    {
+      "id": "12107",
+      "companyName": "Red Hat",
+      "fullName": "Sébastien Blanc",
+      "photoUrl": "https://lh3.googleusercontent.com/a-/AOh14GghdlsQf-LeH_np8EgyP0zMkqdtdA3aeHvPYsYOag=s96-c"
+    }
+  ]
+}
