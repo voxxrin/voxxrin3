@@ -1,4 +1,4 @@
-import {Ref, ref, watch} from "vue";
+import {Ref, ref, watchEffect} from "vue";
 import {DailySchedule} from "../../../shared/dayly-schedule.firestore";
 import {
     createVoxxrinDailyScheduleFromFirestore,
@@ -20,7 +20,7 @@ export function unsetCurrentSchedule() {
 
 export const useSchedule = (conferenceDescriptor: Ref<VoxxrinConferenceDescriptor | undefined>, dayId: Ref<DayId | undefined>) => {
     clearFirestoreWatch();
-    watch([conferenceDescriptor, dayId], () => {
+    watchEffect(() => {
         clearFirestoreWatch();
         if (conferenceDescriptor.value && dayId.value) {
             const docPath = `events/${conferenceDescriptor.value.id.value}/days/${dayId.value.value}`
@@ -36,6 +36,6 @@ export const useSchedule = (conferenceDescriptor: Ref<VoxxrinConferenceDescripto
         } else {
             CURRENT_SCHEDULE.value = undefined;
         }
-    }, {immediate: true})
+    })
     return CURRENT_SCHEDULE
 }
