@@ -25,7 +25,6 @@ import CurrentEventStatus from "@/components/CurrentEventStatus.vue";
 import {PropType} from "vue";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {useTabbedPageNav} from "@/state/useTabbedPageNav";
-import {unsetCurrentSchedule} from "@/state/CurrentSchedule";
 
 const router = useIonRouter();
 const props = defineProps({
@@ -51,7 +50,8 @@ function backButtonClicked() {
     } else if (backBtnAction === 'triggerEventExit') {
         // Triggering tabbed page's back, and not current tab's
         triggerTabbedPageGoBack(() => {
-            unsetCurrentSchedule();
+            // TODO: unset current conf descriptor
+            // unsetCurrentSchedule();
             return Promise.resolve();
         });
     }

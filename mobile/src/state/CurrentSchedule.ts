@@ -1,41 +1,28 @@
-import {Ref, ref, watchEffect} from "vue";
+import {Ref, computed, unref} from "vue";
 import {DailySchedule} from "../../../shared/dayly-schedule.firestore";
-import {
-    createVoxxrinDailyScheduleFromFirestore,
-    VoxxrinDailySchedule
-} from "@/models/VoxxrinSchedule";
+import {createVoxxrinDailyScheduleFromFirestore} from "@/models/VoxxrinSchedule";
 import {DayId} from "@/models/VoxxrinDay";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
-import {doc, onSnapshot} from "firebase/firestore";
+import {DocumentReference, doc} from "firebase/firestore";
 import {db} from "@/state/firebase";
+import {useFirestore} from "@vueuse/firebase";
 
+export function useSchedule(
+            conferenceDescriptorRef: Ref<VoxxrinConferenceDescriptor | undefined>, 
+            dayIdRef: Ref<DayId | undefined>) {
 
-const CURRENT_SCHEDULE = ref<VoxxrinDailySchedule|undefined>(undefined);
-let clearFirestoreWatch = () => {}
-
-export function unsetCurrentSchedule() {
-    clearFirestoreWatch();
-    CURRENT_SCHEDULE.value = undefined;
-}
-
-export const useSchedule = (conferenceDescriptor: Ref<VoxxrinConferenceDescriptor | undefined>, dayId: Ref<DayId | undefined>) => {
-    clearFirestoreWatch();
-    watchEffect(() => {
-        clearFirestoreWatch();
-        if (conferenceDescriptor.value && dayId.value) {
-            const docPath = `events/${conferenceDescriptor.value.id.value}/days/${dayId.value.value}`
-            const d = doc(db, docPath)
-            clearFirestoreWatch = onSnapshot(d, docSnapshot => {
-                    const firestoreDailySchedule: DailySchedule = docSnapshot.data() as DailySchedule
-                    console.debug(`timeslots fetched from  ${docPath}:`, firestoreDailySchedule.timeSlots);
-                    CURRENT_SCHEDULE.value = 
-                        createVoxxrinDailyScheduleFromFirestore(conferenceDescriptor.value!, firestoreDailySchedule);
-                }, err => {
-                    console.log(`Encountered error: ${err}`);
-                });
-        } else {
-            CURRENT_SCHEDULE.value = undefined;
-        }
+    const document = computed(() => {
+        const conf = unref(conferenceDescriptorRef),
+            dayId = unref(dayIdRef);
+        return conf && dayId && 
+            (doc(db, `events/${conf.id.value}/days/${dayId.value}`) as DocumentReference<DailySchedule>)
     })
-    return CURRENT_SCHEDULE
+
+    const firestoreDailySchedule = useFirestore(document, undefined)
+
+    return computed(() => {
+        const conf = unref(conferenceDescriptorRef), 
+            schedule = unref(firestoreDailySchedule);
+        return conf && schedule && createVoxxrinDailyScheduleFromFirestore(conf, schedule)
+    })
 }
