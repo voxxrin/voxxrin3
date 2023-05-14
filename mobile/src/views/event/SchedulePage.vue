@@ -75,7 +75,7 @@ import {
     useCurrentConferenceDescriptor
 } from "@/state/CurrentConferenceDescriptor";
 import DaySelector from "@/components/DaySelector.vue";
-import {findDefaultConferenceDay, findVoxxrinDay} from "@/models/VoxxrinConferenceDescriptor";
+import {findBestAutoselectableConferenceDay, findVoxxrinDay} from "@/models/VoxxrinConferenceDescriptor";
 import TimeSlotAccordion from "@/components/TimeSlotAccordion.vue";
 import {VoxxrinTimeslotFeedback} from "@/models/VoxxrinFeedback";
 import {useCurrentClock} from "@/state/CurrentClock";
@@ -90,7 +90,7 @@ const { LL } = typesafeI18n()
 
 const currentConferenceDescriptor = useCurrentConferenceDescriptor(eventId);
 
-const currentlySelectedDayId = ref<DayId|undefined>(isRefDefined(currentConferenceDescriptor)?findDefaultConferenceDay(currentConferenceDescriptor.value).id:undefined)
+const currentlySelectedDayId = ref<DayId|undefined>(isRefDefined(currentConferenceDescriptor)?findBestAutoselectableConferenceDay(currentConferenceDescriptor.value).id:undefined)
 const changeDayTo = (day: VoxxrinDay) => {
     currentlySelectedDayId.value = day.id;
 }
