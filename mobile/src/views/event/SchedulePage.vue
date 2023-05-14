@@ -72,7 +72,7 @@ import {
     useCurrentConferenceDescriptor
 } from "@/state/CurrentConferenceDescriptor";
 import DaySelector from "@/components/DaySelector.vue";
-import {findDefaultConferenceDay, findVoxxrinDay} from "@/models/VoxxrinConferenceDescriptor";
+import {findBestAutoselectableConferenceDay, findVoxxrinDay} from "@/models/VoxxrinConferenceDescriptor";
 import TimeSlotAccordion from "@/components/TimeSlotAccordion.vue";
 import {VoxxrinTimeslotFeedback} from "@/models/VoxxrinFeedback";
 import {useCurrentClock} from "@/state/CurrentClock";
@@ -105,7 +105,7 @@ onMounted(async () => {
 watch(currentConferenceDescriptor, (confDescriptor) => {
   console.debug(`current conf descriptor changed`, currentConferenceDescriptor.value, currentlySelectedDayId.value)
   if (confDescriptor && !currentlySelectedDayId.value) {
-      currentlySelectedDayId.value = findDefaultConferenceDay(confDescriptor).id;
+      currentlySelectedDayId.value = findBestAutoselectableConferenceDay(confDescriptor).id;
   }
 }, {immediate: true})
 
