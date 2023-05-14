@@ -91,7 +91,7 @@ export function findVoxxrinDay(conferenceDescriptor: VoxxrinConferenceDescriptor
     return conferenceDescriptor.days[dayIndex];
 }
 
-export function findDefaultConferenceDay(conferenceDescriptor: VoxxrinConferenceDescriptor) {
+export function findDefaultConferenceDay(conferenceDescriptor: VoxxrinConferenceDescriptor): VoxxrinDay {
     const today = toISOLocalDate(useCurrentClock().zonedDateTimeISO())
     const confDayMatchingToday = conferenceDescriptor.days.find(d => d.localDate === today)
     return confDayMatchingToday || conferenceDescriptor.days[0];

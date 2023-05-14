@@ -15,13 +15,13 @@
       </ion-header>
 
       <day-selector
-          :selected="currentlySelectedDay"
+          :selected-day-id="currentlySelectedDayId"
           :days="currentConferenceDescriptor?.days || []"
           @day-selected="(day) => changeDayTo(day)">
       </day-selector>
 
-      <ion-accordion-group :multiple="true" v-if="currentConferenceDescriptor && currentlySelectedDay" :value="expandedTimeslotIds">
-          <time-slot-accordion :day-id="currentlySelectedDay.id"
+      <ion-accordion-group :multiple="true" v-if="currentConferenceDescriptor && currentlySelectedDayId" :value="expandedTimeslotIds">
+          <time-slot-accordion :day-id="currentlySelectedDayId"
               v-for="(timeslot, index) in timeslots" :key="timeslot.id.value"
               :timeslot-feedback="timeslot.feedback" :timeslot="timeslot"
               :event="currentConferenceDescriptor"
@@ -64,7 +64,7 @@ import {
 import CurrentEventHeader from "@/components/CurrentEventHeader.vue";
 import {getRouteParamsValue, isRefDefined, useInterval} from "@/views/vue-utils";
 import {EventId} from "@/models/VoxxrinEvent";
-import {VoxxrinDay} from "@/models/VoxxrinDay";
+import {DayId, VoxxrinDay} from "@/models/VoxxrinDay";
 import {
     filterTimeslotsToAutoExpandBasedOn,
     getTimeslotLabel,
@@ -90,9 +90,9 @@ const { LL } = typesafeI18n()
 
 const currentConferenceDescriptor = useCurrentConferenceDescriptor(eventId);
 
-const currentlySelectedDay = ref<VoxxrinDay|undefined>(isRefDefined(currentConferenceDescriptor)?findDefaultConferenceDay(currentConferenceDescriptor.value):undefined)
+const currentlySelectedDayId = ref<DayId|undefined>(isRefDefined(currentConferenceDescriptor)?findDefaultConferenceDay(currentConferenceDescriptor.value).id:undefined)
 const changeDayTo = (day: VoxxrinDay) => {
-    currentlySelectedDay.value = day;
+    currentlySelectedDayId.value = day.id;
 }
 
 const timeslots = ref<Array<VoxxrinScheduleTimeSlot & {feedback: VoxxrinTimeslotFeedback|undefined}>>([]);
@@ -116,7 +116,7 @@ watchCurrentSchedule((currentSchedule) => {
         });
         recomputeMissingFeedbacksList();
 
-        currentlySelectedDay.value = findVoxxrinDay(currentConferenceDescriptor.value, currentSchedule.day)
+        currentlySelectedDayId.value = findVoxxrinDay(currentConferenceDescriptor.value, currentSchedule.day).id
 
         // Deferring expanded timeslots so that :
         // 1/ we don't load the DOM too much when open a schedule
@@ -128,9 +128,9 @@ watchCurrentSchedule((currentSchedule) => {
     }
 });
 
-watch([currentlySelectedDay, currentConferenceDescriptor], async ([selectedDay, conferenceDescriptor]) => {
+watch([currentlySelectedDayId, currentConferenceDescriptor], async ([selectedDayId, conferenceDescriptor]) => {
     if(conferenceDescriptor !== undefined) {
-        fetchSchedule(conferenceDescriptor, (selectedDay || conferenceDescriptor.days[0]).id);
+        fetchSchedule(conferenceDescriptor, selectedDayId || conferenceDescriptor.days[0].id);
     }
 }, {immediate: true})
 

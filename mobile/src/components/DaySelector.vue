@@ -3,7 +3,7 @@
     <ion-item  v-for="(day, index) in formattedDays" :key="index" :class="{past: today.localeCompare(day.localDate) === 1}">
       <div class="dayList-content">
         <ion-button class="dayList-button" @click="$emit('day-selected', day)" :class="{
-          selected: day.id.isSameThan(selected?.id),
+          selected: day.id.isSameThan(selectedDayId),
           past: today.localeCompare(day.localDate) === 1,
           today: today.localeCompare(day.localDate) === 0,
           future: today.localeCompare(day.localDate) === -1,
@@ -20,7 +20,7 @@
 
 <script setup lang="ts">
 import {computed, PropType, ref, watch} from "vue";
-import {VoxxrinDay} from "@/models/VoxxrinDay";
+import {DayId, VoxxrinDay} from "@/models/VoxxrinDay";
 import {localDateToReadableParts, toISOLocalDate} from "@/models/DatesAndTime";
 import {useCurrentUserLocale} from "@/state/useCurrentUserLocale";
 import {useInterval} from "@/views/vue-utils";
@@ -36,8 +36,8 @@ const props = defineProps({
         required: true,
         type: Array as PropType<VoxxrinDay[]>,
     },
-    selected: {
-        type: Object as PropType<VoxxrinDay|undefined>
+    selectedDayId: {
+        type: Object as PropType<DayId|undefined>
     }
 });
 
