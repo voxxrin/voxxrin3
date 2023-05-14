@@ -50,7 +50,7 @@ function backButtonClicked() {
     } else if (backBtnAction === 'triggerEventExit') {
         // Triggering tabbed page's back, and not current tab's
         triggerTabbedPageGoBack(() => {
-            // TODO: unset current conf descriptor
+            // TODO: check the expected behavior, seems to work without doing anything
             // unsetCurrentSchedule();
             return Promise.resolve();
         });
