@@ -6,10 +6,11 @@ import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor"
 import {DocumentReference, doc} from "firebase/firestore";
 import {db} from "@/state/firebase";
 import {useFirestore} from "@vueuse/firebase";
+import {Unreffable} from "@/views/vue-utils";
 
 export function useSchedule(
-            conferenceDescriptorRef: Ref<VoxxrinConferenceDescriptor | undefined>, 
-            dayIdRef: Ref<DayId | undefined>) {
+            conferenceDescriptorRef: Unreffable<VoxxrinConferenceDescriptor | undefined>,
+            dayIdRef: Unreffable<DayId | undefined>) {
 
     const document = computed(() => {
         const conf = unref(conferenceDescriptorRef),

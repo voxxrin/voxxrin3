@@ -107,7 +107,6 @@
 </template>
 
 <script setup lang="ts">
-import CurrentEventHeader from "@/components/CurrentEventHeader.vue";
 import {useRoute} from "vue-router";
 import {EventId} from "@/models/VoxxrinEvent";
 import {getRouteParamsValue, isRefDefined} from "@/views/vue-utils";
@@ -122,6 +121,7 @@ import {computed, watch} from "vue";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {IonBadge, IonAvatar, IonText} from "@ionic/vue";
 import {business} from "ionicons/icons";
+import {useSchedule} from "@/state/CurrentSchedule";
 
 const route = useRoute();
 const eventId = new EventId(getRouteParamsValue(route, 'eventId')!);
@@ -131,7 +131,9 @@ const event = useCurrentConferenceDescriptor(eventId);
 
 const { talkNotes, toggleFavorite, toggleWatchLater} = useUserTalkNotes(eventId, dayId, talkId)
 const { eventTalkStats } = useEventTalkStats(eventId, dayId, talkId)
-const { talk } = useEventTalk(eventId, dayId, talkId);
+// TODO: to be removed once we don't need schedule
+const dailySchedule = useSchedule(event, dayId)
+const { talkDetails: talk } = useEventTalk(event, dailySchedule, talkId);
 const { LL } = typesafeI18n()
 
 const timeslotLabel = computed(() => {
