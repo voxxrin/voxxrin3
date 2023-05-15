@@ -56,14 +56,14 @@ export const crawl = async (eventId:string) => {
       } as ListableEvent
 
     const event: FullEvent = { id: eventId, info: eventInfo, daySchedules: [], talkStats: [], talks: []}
-    for (const day of days) {
+    await Promise.all(days.map(async day => {
         const {daySchedule, talkStats, talks} = await crawlDevoxxDay(eventId, day.id)
-        event.daySchedules.push(daySchedule)        
+        event.daySchedules.push(daySchedule)
         event.talkStats.push({day: day.id, stats: talkStats})
         for (const talk of talks) {
             event.talks.push(talk)
         }
-    }
+    }))
     return event
 }
 
