@@ -1,43 +1,41 @@
-import {EventId} from "@/models/VoxxrinEvent";
-import {DayId} from "@/models/VoxxrinDay";
 import {
     createVoxxrinDetailedTalkFromFirestore,
     TalkId,
-    VoxxrinDetailedTalk,
 } from "@/models/VoxxrinTalk";
-import {ref, Ref} from "vue";
-import {DetailedTalk, Talk} from "../../../shared/dayly-schedule.firestore";
-import {useCurrentConferenceDescriptor} from "@/state/CurrentConferenceDescriptor";
-import {fetchSchedule} from "@/state/CurrentSchedule";
+import {computed, unref} from "vue";
+import {DetailedTalk} from "../../../shared/dayly-schedule.firestore";
+import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
+import {doc, DocumentReference} from "firebase/firestore";
+import {db} from "@/state/firebase";
+import {useFirestore} from "@vueuse/firebase";
+import {
+    VoxxrinDailySchedule
+} from "@/models/VoxxrinSchedule";
+import {Unreffable} from "@/views/vue-utils";
 
 
-export type TalkHook = {
-    talk: Ref<VoxxrinDetailedTalk|undefined>,
-}
+export function useEventTalk(
+    conferenceDescriptorRef: Unreffable<VoxxrinConferenceDescriptor | undefined>,
+    // TODO: Remove this once we put start/end times on /events/:eventId/talks/:talkId firestore entry
+    dailyScheduleRef: Unreffable<VoxxrinDailySchedule | undefined>,
+    talkIdRef: Unreffable<TalkId | undefined>) {
 
-const CACHED_TALKS_HOOKS = new Map<string, TalkHook>()
+    const document = computed(() => {
+        const conf = unref(conferenceDescriptorRef),
+            talkId = unref(talkIdRef);
+        return conf && talkId &&
+            (doc(db, `events/${conf.id.value}/talks/${talkId.value}`) as DocumentReference<DetailedTalk>)
+    })
 
-export function useEventTalk(eventId: EventId, day: DayId, talkId: TalkId): TalkHook {
-    const cacheKey = `${eventId.value}||${day.value}||${talkId.value}`
-    if(!CACHED_TALKS_HOOKS.has(cacheKey)) {
-        let talkRef: TalkHook['talk'] = ref();
+    const firestoreDetailedTalk = useFirestore(document, undefined)
 
-        const hook: TalkHook = {
-            talk: talkRef,
-        };
-
-        fetch(`/data/events/${eventId.value}/talks/${talkId.value}.json`)
-            .then(resp => resp.json())
-            .then(async (firestoreTalk: DetailedTalk) => {
-                const confDescriptor = useCurrentConferenceDescriptor(eventId);
-                if(confDescriptor.value) {
-                    const schedule = await fetchSchedule(confDescriptor.value, day);
-                    talkRef.value = createVoxxrinDetailedTalkFromFirestore(confDescriptor.value, schedule, firestoreTalk);
-                }
-            })
-
-        CACHED_TALKS_HOOKS.set(cacheKey, hook);
+    return {
+        talkDetails: computed(() => {
+            const conf = unref(conferenceDescriptorRef),
+                dailySchedule = unref(dailyScheduleRef),
+                talkDetails = unref(firestoreDetailedTalk);
+            return conf && talkDetails && dailySchedule
+                && createVoxxrinDetailedTalkFromFirestore(conf, dailySchedule, talkDetails)
+        })
     }
-
-    return CACHED_TALKS_HOOKS.get(cacheKey)!;
 }

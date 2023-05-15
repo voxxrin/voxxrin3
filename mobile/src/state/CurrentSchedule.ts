@@ -1,58 +1,29 @@
-import {ref, watch} from "vue";
-import {
-    DailySchedule,
-} from "../../../shared/dayly-schedule.firestore";
-import {
-    createVoxxrinDailyScheduleFromFirestore,
-    VoxxrinDailySchedule
-} from "@/models/VoxxrinSchedule";
+import {Ref, computed, unref} from "vue";
+import {DailySchedule} from "../../../shared/dayly-schedule.firestore";
+import {createVoxxrinDailyScheduleFromFirestore} from "@/models/VoxxrinSchedule";
 import {DayId} from "@/models/VoxxrinDay";
-import {findVoxxrinDay, VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
-import {useFetchJsonDebouncer} from "@/state/state-utilities";
-import {storeDailyCachedSchedule, useDailyCachedSchedule} from "@/state/CachedSchedules";
-import {match} from "ts-pattern";
+import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
+import {DocumentReference, doc} from "firebase/firestore";
+import {db} from "@/state/firebase";
+import {useFirestore} from "@vueuse/firebase";
+import {Unreffable} from "@/views/vue-utils";
 
+export function useSchedule(
+            conferenceDescriptorRef: Unreffable<VoxxrinConferenceDescriptor | undefined>,
+            dayIdRef: Unreffable<DayId | undefined>) {
 
-const CURRENT_SCHEDULE = ref<VoxxrinDailySchedule|undefined>(undefined);
+    const document = computed(() => {
+        const conf = unref(conferenceDescriptorRef),
+            dayId = unref(dayIdRef);
+        return conf && dayId && 
+            (doc(db, `events/${conf.id.value}/days/${dayId.value}`) as DocumentReference<DailySchedule>)
+    })
 
-export const useCurrentSchedule = () => CURRENT_SCHEDULE.value;
+    const firestoreDailySchedule = useFirestore(document, undefined)
 
-export const watchCurrentSchedule = (callback: (currentSchedule: (VoxxrinDailySchedule | undefined)) => void,) => {
-    watch(CURRENT_SCHEDULE, callback, {immediate: true});
-}
-
-export function unsetCurrentSchedule() {
-    CURRENT_SCHEDULE.value = undefined;
-}
-
-export const fetchSchedule = async (conferenceDescriptor: VoxxrinConferenceDescriptor, dayId: DayId) => {
-    // Avoiding to fetch schedule if the one already loaded matches the one expected
-    if(
-        !CURRENT_SCHEDULE.value?.eventId.isSameThan(conferenceDescriptor.id)
-        || !CURRENT_SCHEDULE.value?.day.isSameThan(dayId)
-    ) {
-        const day = findVoxxrinDay(conferenceDescriptor, dayId)
-        const voxxrinDailySchedule = await match(useDailyCachedSchedule(conferenceDescriptor.id, dayId))
-            .with(undefined, async () => {
-                const firestoreDailySchedule: DailySchedule = await useFetchJsonDebouncer(
-                    'daily-schedule',
-                    `events/${conferenceDescriptor.id.value}/days/${day.id.value}`,
-                    `/data/events/${conferenceDescriptor.id.value}/days/${day.id.value}.json`
-                );
-                console.debug(`timeslots fetched:`, firestoreDailySchedule.timeSlots)
-                const voxxrinSchedule = createVoxxrinDailyScheduleFromFirestore(conferenceDescriptor, firestoreDailySchedule);
-
-                // Caching schedule
-                storeDailyCachedSchedule(conferenceDescriptor.id, dayId, voxxrinSchedule);
-
-                return voxxrinSchedule;
-            })
-            .otherwise(async cachedDailySchedule =>
-                Promise.resolve(cachedDailySchedule.schedule())
-            )
-
-        CURRENT_SCHEDULE.value = voxxrinDailySchedule;
-    }
-
-    return CURRENT_SCHEDULE.value;
+    return computed(() => {
+        const conf = unref(conferenceDescriptorRef), 
+            schedule = unref(firestoreDailySchedule);
+        return conf && schedule && createVoxxrinDailyScheduleFromFirestore(conf, schedule)
+    })
 }

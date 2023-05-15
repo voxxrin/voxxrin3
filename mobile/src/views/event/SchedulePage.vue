@@ -56,11 +56,8 @@ import {
     alertController,
 } from '@ionic/vue';
 import {useRoute, useRouter} from "vue-router";
-import {onMounted, ref, watch} from "vue";
-import {
-    fetchSchedule,
-    watchCurrentSchedule
-} from "@/state/CurrentSchedule";
+import {computed, onMounted, ref, watch} from "vue";
+import {useSchedule} from "@/state/CurrentSchedule";
 import CurrentEventHeader from "@/components/CurrentEventHeader.vue";
 import {getRouteParamsValue, isRefDefined, useInterval} from "@/views/vue-utils";
 import {EventId} from "@/models/VoxxrinEvent";
@@ -90,11 +87,12 @@ const { LL } = typesafeI18n()
 
 const currentConferenceDescriptor = useCurrentConferenceDescriptor(eventId);
 
-const currentlySelectedDayId = ref<DayId|undefined>(isRefDefined(currentConferenceDescriptor)?findBestAutoselectableConferenceDay(currentConferenceDescriptor.value).id:undefined)
+const currentlySelectedDayId = ref<DayId|undefined>(undefined)
 const changeDayTo = (day: VoxxrinDay) => {
     currentlySelectedDayId.value = day.id;
 }
 
+const currentSchedule = useSchedule(currentConferenceDescriptor, currentlySelectedDayId)
 const timeslots = ref<Array<VoxxrinScheduleTimeSlot & {feedback: VoxxrinTimeslotFeedback|undefined}>>([]);
 const missingFeedbacksPastTimeslots = ref<Array<{start: string, end: string, timeslot: VoxxrinScheduleTimeSlot}>>([])
 const expandedTimeslotIds = ref<string[]>([])
@@ -104,7 +102,14 @@ onMounted(async () => {
     useInterval(recomputeMissingFeedbacksList, {seconds:10}, {immediate: true})
 })
 
-watchCurrentSchedule((currentSchedule) => {
+watch(currentConferenceDescriptor, (confDescriptor) => {
+  console.debug(`current conf descriptor changed`, currentConferenceDescriptor.value, currentlySelectedDayId.value)
+  if (confDescriptor && !currentlySelectedDayId.value) {
+      currentlySelectedDayId.value = findBestAutoselectableConferenceDay(confDescriptor).id;
+  }
+}, {immediate: true})
+
+watch(currentSchedule, (currentSchedule) => {
     if(currentSchedule && isRefDefined(currentConferenceDescriptor)) {
         timeslots.value = currentSchedule.timeSlots.map((ts, idx) => {
             // yes that's weird ... but looks like TS is not very smart here 🤔
@@ -126,13 +131,7 @@ watchCurrentSchedule((currentSchedule) => {
                 .map(ts => ts.id.value);
         }, 500)
     }
-});
-
-watch([currentlySelectedDayId, currentConferenceDescriptor], async ([selectedDayId, conferenceDescriptor]) => {
-    if(conferenceDescriptor !== undefined) {
-        fetchSchedule(conferenceDescriptor, selectedDayId || conferenceDescriptor.days[0].id);
-    }
-}, {immediate: true})
+}, {immediate: true});
 
 function recomputeMissingFeedbacksList() {
     missingFeedbacksPastTimeslots.value = timeslots.value.filter(ts => {
