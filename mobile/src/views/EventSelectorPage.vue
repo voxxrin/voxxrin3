@@ -70,7 +70,6 @@ import {
 } from '@ionic/vue';
 import {EventId, ListableVoxxrinEvent, searchEvents} from "@/models/VoxxrinEvent";
 import {fetchConferenceDescriptor} from "@/state/CurrentConferenceDescriptor";
-import {fetchAvailableEvents, watchCurrentAvailableEvents} from "@/state/CurrentAvailableEvents";
 import {ref, Ref, watch} from "vue";
 import AvailableEventsList from "@/components/AvailableEventsList.vue";
 import {presentActionSheetController} from "@/views/vue-utils";
@@ -80,15 +79,12 @@ import {
     ActionSheetButton
 } from "@ionic/core/dist/types/components/action-sheet/action-sheet-interface";
 import PinnedEventSelector from "@/components/PinnedEventSelector.vue";
+import {useAvailableEvents} from "@/state/useAvailableEvents";
 
 const router = useIonRouter();
 const { LL } = typesafeI18n()
 
-const availableEventsRef: Ref<ListableVoxxrinEvent[]> = ref([]);
-watchCurrentAvailableEvents(updatedAvailableEvents => {
-    availableEventsRef.value = updatedAvailableEvents;
-})
-fetchAvailableEvents();
+const { listableEvents: availableEventsRef } = useAvailableEvents();
 
 const pinnedEventIdsRef = ref<EventId[]>([]);
 
@@ -97,9 +93,11 @@ const searchCriteriaRef = ref<{ terms: string|undefined, includePastEvents: bool
 const filteredPinnedEvents: Ref<ListableVoxxrinEvent[]> = ref([]);
 const filteredAvailableEvents: Ref<ListableVoxxrinEvent[]> = ref([]);
 watch([availableEventsRef, searchCriteriaRef, pinnedEventIdsRef], ([availableEvents, searchCriteria, pinnedEventIds]) => {
-    const {events, pinnedEvents} = searchEvents(availableEvents, searchCriteria, pinnedEventIds)
-    filteredAvailableEvents.value = events;
-    filteredPinnedEvents.value = pinnedEvents;
+    if(availableEvents) {
+        const {events, pinnedEvents} = searchEvents(availableEvents, searchCriteria, pinnedEventIds)
+        filteredAvailableEvents.value = events;
+        filteredPinnedEvents.value = pinnedEvents;
+    }
 }, {immediate: true})
 
 async function selectEvent(eventId: EventId) {
