@@ -8,12 +8,21 @@ import { FullEvent } from "../../models/Event";
 import { ISODatetime, ISOLocalDate } from "../../../../../shared/type-utils";
 import { Day, ListableEvent } from "../../../../../shared/event-list.firestore";
 import { Temporal } from "@js-temporal/polyfill";
+import {FULL_DESCRIPTOR_PARSER} from "../crawl-kind";
+import {z} from "zod";
 
 const axios = require('axios');
 
 const daysOfWeek = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
 
-export const crawl = async (eventId:string) => {
+export const DEVOXX_DESCRIPTOR_PARSER = FULL_DESCRIPTOR_PARSER.omit({
+    // All these fields can be extracted from the devoxx API
+    title: true, description: true, days: true,
+    timezone: true, location: true, talkFormats: true,
+    rooms: true,
+})
+
+export const crawl = async (eventId: string, descriptor: z.infer<typeof DEVOXX_DESCRIPTOR_PARSER>) => {
     const res = await axios.get(`https://${eventId}.cfp.dev/api/public/event`)
     const e: CfpEvent = res.data;
 
@@ -33,26 +42,17 @@ export const crawl = async (eventId:string) => {
         id: eventId,
         title: e.name,
         description: e.description,
-        peopleDescription: "",
+        peopleDescription: descriptor.peopleDescription,
         timezone: e.timezone,
         start: start,
         end: end,
         days: days,
-        logoUrl: guessLogoUrl(e),
+        logoUrl: descriptor.logoUrl,
         backgroundUrl: e.eventImageURL,
         websiteUrl: e.website,
         location: { city: e.locationCity, country: e.locationCountry },
-        theming: {
-            colors: {
-                primaryHex: "#F78327",
-                primaryContrastHex: "#FFFFFF",
-                secondaryHex: "#3880FF",
-                secondaryContrastHex: "#FFFFFF",
-                tertiaryHex: "#0F0F0F",
-                tertiaryContrastHex: "#FFFFFF"
-            }
-        },
-        keywords: [ "Devoxx", "Java", "Kotlin", "Cloud", "Big data", "Web" ]
+        theming: descriptor.theming,
+        keywords: descriptor.keywords
       } as ListableEvent
 
     const event: FullEvent = { id: eventId, info: eventInfo, daySchedules: [], talkStats: [], talks: []}
@@ -182,7 +182,3 @@ const crawlDevoxxDay = async (eventId: string, day: string) => {
     info("devoxx day crawling done for " + day)
     return {daySchedule, talkStats, talks}
 }
-
-// TODO - improve that
-const guessLogoUrl = (e: CfpEvent) => 
-    "https://devoxx.be/wp-content/uploads/2019/05/DEVOXX-Name-Only-TransparentBackground.png"

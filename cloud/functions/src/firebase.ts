@@ -6,6 +6,10 @@ export const info = function(msg:string) {
     logger.info(msg, {structuredData: true})
 }
 
+export const error = function(msg:string) {
+    logger.error(msg, {structuredData: true})
+}
+
 initializeApp();
 
 export const db = getFirestore();

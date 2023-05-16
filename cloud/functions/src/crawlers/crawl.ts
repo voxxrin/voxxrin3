@@ -1,27 +1,50 @@
-import * as _ from "lodash";
-
-import {db, info} from "../firebase"
-import {crawl as crawlDevoxx} from "./devoxx/crawler"
+import {db, info, error} from "../firebase"
+import {crawl as crawlDevoxx, DEVOXX_DESCRIPTOR_PARSER} from "./devoxx/crawler"
 import { FullEvent } from "../models/Event";
+import {FIREBASE_CRAWLER_DESCRIPTOR_PARSER, CrawlerKind} from "./crawl-kind";
+import {z} from "zod";
+
+
+const CRAWLERS: CrawlerKind<z.ZodType>[] = [
+    { kind: 'devoxx', crawlerImpl: crawlDevoxx, descriptorParser: DEVOXX_DESCRIPTOR_PARSER }
+]
 
 const crawlAll = async function() {
     info("Starting crawling");
+    const start = Date.now();
 
     const events: Array<{id: string}> = []
 
-    const snapshot = await db.collection("crawlers/devoxx/events").where("crawl", "==", true).get();
-    if (snapshot.empty) {
+    const fbCrawlerDescriptorSnapshot = await db.collection("crawlers")
+        .where("crawl", "==", true)
+        .get();
+    if (fbCrawlerDescriptorSnapshot.empty) {
         info("no events to crawl")
     } else {
-        await Promise.all(snapshot.docs.map(async doc => {
-            info("crawling devoxx event " + doc.id)
-            const event = await crawlDevoxx(doc.id)
-            await saveEvent(event)
-            events.push({id: event.id})
+        await Promise.all(fbCrawlerDescriptorSnapshot.docs.map(async doc => {
+            try {
+                const firebaseCrawlerDescriptor = FIREBASE_CRAWLER_DESCRIPTOR_PARSER.parse(doc.data());
+                const crawler = CRAWLERS.find(c => c.kind === firebaseCrawlerDescriptor.kind);
+                if(!crawler) {
+                    error(`Error: no crawler found for kind: ${firebaseCrawlerDescriptor.kind} (with id=${doc.id})`)
+                    return;
+                }
+
+                info(`crawling event ${doc.id} of type [${firebaseCrawlerDescriptor.kind}]...`)
+                const crawlerDescriptorContent = await fetch(firebaseCrawlerDescriptor.descriptorUrl).then(resp => resp.json());
+                const crawlerKindDescriptor = crawler.descriptorParser.parse(crawlerDescriptorContent);
+
+                const event = await crawler.crawlerImpl(doc.id, crawlerKindDescriptor);
+                await saveEvent(event)
+                events.push({id: event.id})
+            }catch(e: any) {
+                error(`Error during crawler with id ${doc.id}: ${e?.toString()}`)
+            }
         }))
     }
 
-    info("Crawling done");
+    const end = Date.now();
+    info(`Crawling done in ${(end-start)/1000}s`);
     return events
 };
 
