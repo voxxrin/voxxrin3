@@ -167,13 +167,13 @@ const crawlDevoxxDay = async (eventId: string, day: string) => {
                     talkStats.push({id: i.proposal?.id.toString(), totalFavoritesCount: i.totalFavourites})
                 }
                 const scheduleTalk = toScheduleTalk(i)
-                const talk = {
+                const talk: DetailedTalk = {
                     ...scheduleTalk, 
                     start: start as ISODatetime,
                     end: end as ISODatetime,
                     summary: i.proposal?.summary ?? "",
                     description: i.proposal?.description ?? ""
-                } as DetailedTalk
+                }
                 talks.push(talk)
             })
         }
