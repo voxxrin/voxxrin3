@@ -1,38 +1,38 @@
-import {ref} from "vue";
+import {computed, ref, unref} from "vue";
 import {
     createVoxxrinConferenceDescriptor,
-    VoxxrinConferenceDescriptor
 } from "@/models/VoxxrinConferenceDescriptor";
 import {EventId} from "@/models/VoxxrinEvent";
 import {ConferenceDescriptor} from "../../../shared/conference-descriptor.firestore";
-import {useFetchJsonDebouncer} from "@/state/state-utilities";
+import {Unreffable} from "@/views/vue-utils";
+import {collection, doc, DocumentReference} from "firebase/firestore";
+import {db} from "@/state/firebase";
+import {useDocument} from "vuefire";
 
+export function useConferenceDescriptor(
+    eventIdRef: Unreffable<EventId | undefined>) {
 
-const CURRENT_CONFERENCE_DESCRIPTOR = ref<VoxxrinConferenceDescriptor|undefined>(undefined);
+    const firestoreConferenceDescriptorSource = computed(() => {
+        const eventId = unref(eventIdRef);
+        if(!eventId) {
+            return undefined;
+        }
 
-export const useCurrentConferenceDescriptor = (eventId: EventId) => {
-    fetchConferenceDescriptor(eventId);
-    return CURRENT_CONFERENCE_DESCRIPTOR;
-}
-export const fetchConferenceDescriptor = async (eventId: EventId) => {
-    // Avoiding to fetch conference descriptor if the one already loaded matches the one expected
-    if(
-        !CURRENT_CONFERENCE_DESCRIPTOR.value?.id.isSameThan(eventId)
-    ) {
-        const firestoreConferenceDescriptor: ConferenceDescriptor = await useFetchJsonDebouncer(
-            'conference-descriptor',
-            eventId.value,
-            `/data/events/${eventId.value}/conference-descriptor/self.json`
-        );
-        console.debug(`conference descriptor fetched:`, firestoreConferenceDescriptor)
+        return doc(collection(doc(collection(db, 'events'), eventId.value), 'event-descriptor'), 'self') as DocumentReference<ConferenceDescriptor & {__initialId: string}>
+    });
 
-        defineCurrentConferenceDescriptorFromFirestore(firestoreConferenceDescriptor);
-    }
+    const firestoreConferenceDescriptorRef = useDocument(firestoreConferenceDescriptorSource);
 
-    return CURRENT_CONFERENCE_DESCRIPTOR.value;
-}
+    return {
+        conferenceDescriptor: computed(() => {
+            const firestoreConferenceDescriptor = unref(firestoreConferenceDescriptorRef);
 
-const defineCurrentConferenceDescriptorFromFirestore = (firestoreConfDesc: ConferenceDescriptor) => {
-    const voxxrinConfDescriptor = createVoxxrinConferenceDescriptor(firestoreConfDesc);
-    CURRENT_CONFERENCE_DESCRIPTOR.value = voxxrinConfDescriptor;
+            if(!firestoreConferenceDescriptor) {
+                return undefined;
+            }
+
+            const confDescriptor = createVoxxrinConferenceDescriptor(firestoreConferenceDescriptor)
+            return confDescriptor;
+        })
+    };
 }

@@ -23,12 +23,12 @@
 
 <script setup lang="ts">
   import CurrentEventHeader from "@/components/CurrentEventHeader.vue";
-  import {useCurrentConferenceDescriptor} from "@/state/CurrentConferenceDescriptor";
   import {EventId} from "@/models/VoxxrinEvent";
   import {getRouteParamsValue} from "@/views/vue-utils";
   import {useRoute} from "vue-router";
+  import {useConferenceDescriptor} from "@/state/CurrentConferenceDescriptor";
 
   const route = useRoute();
   const eventId = new EventId(getRouteParamsValue(route, 'eventId')!);
-  const event = useCurrentConferenceDescriptor(eventId);
+  const {conferenceDescriptor: event} = useConferenceDescriptor(eventId);
 </script>

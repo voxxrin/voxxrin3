@@ -69,7 +69,6 @@ import {
     useIonRouter
 } from '@ionic/vue';
 import {EventId, ListableVoxxrinEvent, searchEvents} from "@/models/VoxxrinEvent";
-import {fetchConferenceDescriptor} from "@/state/CurrentConferenceDescriptor";
 import {ref, Ref, watch} from "vue";
 import AvailableEventsList from "@/components/AvailableEventsList.vue";
 import {presentActionSheetController} from "@/views/vue-utils";
@@ -101,8 +100,6 @@ watch([availableEventsRef, searchCriteriaRef, pinnedEventIdsRef], ([availableEve
 }, {immediate: true})
 
 async function selectEvent(eventId: EventId) {
-    await fetchConferenceDescriptor(eventId);
-
     router.push(`/events/${eventId.value}`);
 }
 

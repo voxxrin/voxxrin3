@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 import App from './App.vue'
+import {app as firebaseApp} from './state/firebase'
 import router from './router';
 import globalComponents from './global-components';
 import { i18nPlugin } from './i18n/i18n-vue'
@@ -29,11 +30,19 @@ import './styles/main.scss'
 import {detectLocale} from "@/i18n/i18n-util";
 import {navigatorDetector} from "typesafe-i18n/detectors";
 import {loadLocaleAsync} from "@/i18n/i18n-util.async";
+import {VueFire, VueFireAuth} from "vuefire";
 
-const app = createApp(App)
+const app = createApp(App);
+app
   .use(IonicVue)
   .use(router)
-  .use(globalComponents);
+  .use(globalComponents)
+  .use(VueFire, {
+    firebaseApp,
+    modules: [
+        VueFireAuth()
+    ]
+  });
 
 // const detectedLocale = detectLocale(navigatorDetector)
 const detectedLocale = 'en';

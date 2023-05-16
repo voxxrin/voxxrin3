@@ -41,14 +41,14 @@ import {ref} from "vue";
 import {useRoute} from "vue-router";
 import {getRouteParamsValue} from "@/views/vue-utils";
 import {EventId} from "@/models/VoxxrinEvent";
-import {useCurrentConferenceDescriptor} from "@/state/CurrentConferenceDescriptor";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {useTabbedPageNav} from "@/state/useTabbedPageNav";
+import {useConferenceDescriptor} from "@/state/CurrentConferenceDescriptor";
 
 const router = useIonRouter();
 const route = useRoute();
 const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')!));
-const event = useCurrentConferenceDescriptor(eventId.value);
+const {conferenceDescriptor: event} = useConferenceDescriptor(eventId);
 
 const { LL } = typesafeI18n()
 

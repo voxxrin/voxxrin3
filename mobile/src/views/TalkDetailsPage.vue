@@ -110,7 +110,6 @@
 import {useRoute} from "vue-router";
 import {EventId} from "@/models/VoxxrinEvent";
 import {getRouteParamsValue, isRefDefined} from "@/views/vue-utils";
-import {useCurrentConferenceDescriptor} from "@/state/CurrentConferenceDescriptor";
 import {useUserTalkNotes} from "@/state/useUserTalkNotes";
 import {DayId} from "@/models/VoxxrinDay";
 import {TalkId} from "@/models/VoxxrinTalk";
@@ -122,17 +121,18 @@ import {typesafeI18n} from "@/i18n/i18n-vue";
 import {IonBadge, IonAvatar, IonText} from "@ionic/vue";
 import {business} from "ionicons/icons";
 import {useSchedule} from "@/state/CurrentSchedule";
+import {useConferenceDescriptor} from "@/state/CurrentConferenceDescriptor";
 
 const route = useRoute();
 const eventId = new EventId(getRouteParamsValue(route, 'eventId')!);
 const dayId = new DayId(getRouteParamsValue(route, 'dayId')!);
 const talkId = new TalkId(getRouteParamsValue(route, 'talkId')!);
-const event = useCurrentConferenceDescriptor(eventId);
+const {conferenceDescriptor: event} = useConferenceDescriptor(eventId);
 
 const { talkNotes, toggleFavorite, toggleWatchLater} = useUserTalkNotes(eventId, dayId, talkId)
 const { eventTalkStats } = useEventTalkStats(eventId, dayId, talkId)
 // TODO: to be removed once we don't need schedule
-const dailySchedule = useSchedule(event, dayId)
+const { schedule: dailySchedule } = useSchedule(event, dayId)
 const { talkDetails: talk } = useEventTalk(event, dailySchedule, talkId);
 const { LL } = typesafeI18n()
 

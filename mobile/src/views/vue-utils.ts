@@ -17,7 +17,7 @@ export const getRouteParamsValue = (route: RouteLocationNormalizedLoaded, paramN
 }
 
 export function isRefDefined<T>(ref: Ref<T | undefined>): ref is Ref<T> {
-    return (ref.value !== undefined);
+    return unref(ref) !== undefined;
 }
 export function isRefUndefined<T>(ref: Ref<T | undefined>): ref is Ref<undefined> {
     return (ref.value === undefined);
