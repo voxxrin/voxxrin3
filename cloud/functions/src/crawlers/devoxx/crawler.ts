@@ -3,13 +3,14 @@ import * as _ from "lodash";
 
 import { CfpEvent, DevoxxScheduleItem, DevoxxScheduleSpeakerInfo } from "./types"
 import { DailySchedule, DetailedTalk, Speaker, Talk } from "../../../../../shared/dayly-schedule.firestore"
-import { TalkStats } from "../../../../../shared/feedbacks.firestore";
+import {DayTalksStats, TalkStats} from "../../../../../shared/feedbacks.firestore";
 import { FullEvent } from "../../models/Event";
 import { ISODatetime, ISOLocalDate } from "../../../../../shared/type-utils";
 import { Day, ListableEvent } from "../../../../../shared/event-list.firestore";
 import { Temporal } from "@js-temporal/polyfill";
 import {FULL_DESCRIPTOR_PARSER} from "../crawl-kind";
 import {z} from "zod";
+import {ConferenceDescriptor} from "../../../../../shared/conference-descriptor.firestore";
 
 const axios = require('axios');
 
@@ -55,15 +56,46 @@ export const crawl = async (eventId: string, descriptor: z.infer<typeof DEVOXX_D
         keywords: descriptor.keywords
       } as ListableEvent
 
-    const event: FullEvent = { id: eventId, info: eventInfo, daySchedules: [], talkStats: [], talks: []}
+    const eventTalks: Talk[] = [],
+        eventTalkStats: DayTalksStats[] = [],
+        daySchedules: DailySchedule[] = [],
+        eventRooms: ConferenceDescriptor['rooms'] = [],
+        eventTalkFormats: ConferenceDescriptor['talkFormats'] = [];
     await Promise.all(days.map(async day => {
-        const {daySchedule, talkStats, talks} = await crawlDevoxxDay(eventId, day.id)
-        event.daySchedules.push(daySchedule)
-        event.talkStats.push({day: day.id, stats: talkStats})
+        const {daySchedule, talkStats, talks, rooms, talkFormats} = await crawlDevoxxDay(eventId, day.id)
+        daySchedules.push(daySchedule)
+        eventTalkStats.push({day: day.id, stats: talkStats})
         for (const talk of talks) {
-            event.talks.push(talk)
+            eventTalks.push(talk)
         }
+        rooms.forEach(r => {
+            if(!eventRooms.find(er => er.id === r.id)) {
+                eventRooms.push(r);
+            }
+        })
+        talkFormats.forEach(tf => {
+            if(!eventTalkFormats.find(etf => etf.id === tf.id)) {
+                eventTalkFormats.push(tf);
+            }
+        })
     }))
+
+    const eventDescriptor: ConferenceDescriptor = {
+        ...eventInfo,
+        headingTitle: descriptor.headingTitle,
+        features: descriptor.features,
+        talkFormats: eventTalkFormats,
+        talkTracks: descriptor.talkTracks,
+        supportedTalkLanguages: descriptor.supportedTalkLanguages,
+        rooms: eventRooms,
+        infos: descriptor.infos
+    }
+
+    const event: FullEvent = {
+        id: eventId, info: eventInfo, daySchedules,
+        talkStats: eventTalkStats, talks: eventTalks,
+        conferenceDescriptor: eventDescriptor
+    }
     return event
 }
 
@@ -81,10 +113,25 @@ const crawlDevoxxDay = async (eventId: string, day: string) => {
 
     const talks: Talk[] = []
 
+    const rooms: ConferenceDescriptor['rooms'] = [];
+    const talkFormats: ConferenceDescriptor['talkFormats'] = [];
+
     const slots = _.groupBy(schedules, (s:DevoxxScheduleItem) => {return s.fromDate + "--" + s.toDate})
 
     const toScheduleTalk = function(item: DevoxxScheduleItem) {
         const proposal = item.proposal
+
+        if(!rooms.find(r => r.id === item.room.id.toString())) {
+            rooms.push({ id: item.room.id.toString(), title: item.room.name });
+        }
+        if(!talkFormats.find(tf => tf.id === item.sessionType.id.toString())) {
+            talkFormats.push({
+                id: item.sessionType.id.toString(), title: item.sessionType.name,
+                duration: `PT${item.sessionType.duration}m`,
+                themeColor: item.sessionType.cssColor
+            });
+        }
+
         const base = {
             room: {
                 id: item.room.id.toString(),
@@ -180,5 +227,5 @@ const crawlDevoxxDay = async (eventId: string, day: string) => {
     })
 
     info("devoxx day crawling done for " + day)
-    return {daySchedule, talkStats, talks}
+    return {daySchedule, talkStats, talks, rooms, talkFormats}
 }

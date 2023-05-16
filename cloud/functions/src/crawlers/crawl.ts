@@ -77,6 +77,10 @@ const saveEvent = async function(event: FullEvent) {
                 .set(talkStatWithDay.stat)
         })
     )
+
+    await firestoreEvent.collection('event-descriptor')
+        .doc('self')
+        .set(event.conferenceDescriptor);
 }
 
 export default crawlAll;
