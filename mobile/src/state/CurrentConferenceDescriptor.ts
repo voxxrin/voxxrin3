@@ -31,7 +31,16 @@ export function useConferenceDescriptor(
                 return undefined;
             }
 
-            const confDescriptor = createVoxxrinConferenceDescriptor(firestoreConferenceDescriptor)
+            const confDescriptor = createVoxxrinConferenceDescriptor({
+                ...firestoreConferenceDescriptor,
+                // firestore's document key always overrides document's data().id field (if it exists)
+                // In our case for event-descriptor, document key and document.id are going to be different, that's
+                // why we want to re-set firestoreConferenceDescriptor.id to initial firestore document's id
+                //
+                // See https://github.com/vuejs/vuefire/issues/558
+                // and https://github.com/vueuse/vueuse/issues/2033#issuecomment-1549922919
+                id: firestoreConferenceDescriptor.__initialId
+            })
             return confDescriptor;
         })
     };
