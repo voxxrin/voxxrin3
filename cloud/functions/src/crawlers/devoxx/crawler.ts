@@ -2,7 +2,7 @@ import {info} from "../../firebase";
 import * as _ from "lodash";
 
 import { CfpEvent, DevoxxScheduleItem, DevoxxScheduleSpeakerInfo } from "./types"
-import { DailySchedule, Speaker, Talk } from "../../../../../shared/dayly-schedule.firestore"
+import { DailySchedule, DetailedTalk, Speaker, Talk } from "../../../../../shared/dayly-schedule.firestore"
 import { TalkStats } from "../../../../../shared/feedbacks.firestore";
 import { FullEvent } from "../../models/Event";
 import { ISODatetime, ISOLocalDate } from "../../../../../shared/type-utils";
@@ -167,8 +167,10 @@ const crawlDevoxxDay = async (eventId: string, day: string) => {
                     talkStats.push({id: i.proposal?.id.toString(), totalFavoritesCount: i.totalFavourites})
                 }
                 const scheduleTalk = toScheduleTalk(i)
-                const talk = {
+                const talk: DetailedTalk = {
                     ...scheduleTalk, 
+                    start: start as ISODatetime,
+                    end: end as ISODatetime,
                     summary: i.proposal?.summary ?? "",
                     description: i.proposal?.description ?? ""
                 }
