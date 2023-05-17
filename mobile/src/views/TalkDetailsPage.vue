@@ -120,8 +120,9 @@ import {computed, watch} from "vue";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {IonBadge, IonAvatar, IonText} from "@ionic/vue";
 import {business} from "ionicons/icons";
-import {useSchedule} from "@/state/CurrentSchedule";
 import {useConferenceDescriptor} from "@/state/CurrentConferenceDescriptor";
+import {formatHourMinutes} from "@/models/DatesAndTime";
+import {Temporal} from "temporal-polyfill";
 
 const route = useRoute();
 const eventId = new EventId(getRouteParamsValue(route, 'eventId')!);
@@ -131,14 +132,15 @@ const {conferenceDescriptor: event} = useConferenceDescriptor(eventId);
 
 const { talkNotes, toggleFavorite, toggleWatchLater} = useUserTalkNotes(eventId, dayId, talkId)
 const { eventTalkStats } = useEventTalkStats(eventId, dayId, talkId)
-// TODO: to be removed once we don't need schedule
-const { schedule: dailySchedule } = useSchedule(event, dayId)
-const { talkDetails: talk } = useEventTalk(event, dailySchedule, talkId);
+const { talkDetails: talk } = useEventTalk(event, talkId);
 const { LL } = typesafeI18n()
 
 const timeslotLabel = computed(() => {
-    if(isRefDefined(talk)) {
-        return getTimeslotLabel(talk.value.timeslot)
+    if(isRefDefined(talk) && isRefDefined(event)) {
+        return {
+            start: formatHourMinutes(Temporal.ZonedDateTime.from(`${talk.value.start}[${event.value.timezone}]`)),
+            end: formatHourMinutes(Temporal.ZonedDateTime.from(`${talk.value.end}[${event.value.timezone}]`)),
+        }
     } else {
         return undefined;
     }

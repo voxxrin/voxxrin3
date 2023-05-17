@@ -16,8 +16,6 @@ import {useDocument} from "vuefire";
 
 export function useEventTalk(
     conferenceDescriptorRef: Unreffable<VoxxrinConferenceDescriptor | undefined>,
-    // TODO: Remove this once we put start/end times on /events/:eventId/talks/:talkId firestore entry
-    dailyScheduleRef: Unreffable<VoxxrinDailySchedule | undefined>,
     talkIdRef: Unreffable<TalkId | undefined>) {
 
     const firestoreTalkDetailsSource = computed(() => {
@@ -36,14 +34,13 @@ export function useEventTalk(
     return {
         talkDetails: computed(() => {
             const conf = unref(conferenceDescriptorRef),
-                dailySchedule = unref(dailyScheduleRef),
                 firestoreTalkDetails = unref(firestoreTalkDetailsRef);
 
-            if(!conf || !dailySchedule || !firestoreTalkDetails) {
+            if(!conf || !firestoreTalkDetails) {
                 return undefined;
             }
 
-            const talkDetails = createVoxxrinDetailedTalkFromFirestore(conf, dailySchedule, firestoreTalkDetails);
+            const talkDetails = createVoxxrinDetailedTalkFromFirestore(conf, firestoreTalkDetails);
             return talkDetails;
         })
     };

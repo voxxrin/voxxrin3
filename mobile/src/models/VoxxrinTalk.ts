@@ -12,6 +12,7 @@ import {
 } from "@/models/VoxxrinConferenceDescriptor";
 import {match} from "ts-pattern";
 import {VoxxrinDailySchedule, VoxxrinScheduleTimeSlot} from "@/models/VoxxrinSchedule";
+import {ISODatetime} from "../../../shared/type-utils";
 
 export class TalkId extends ValueObject<string>{ _talkIdClassDiscriminator!: never; }
 
@@ -29,8 +30,9 @@ export type VoxxrinDetailedTalk = Replace<VoxxrinTalk, {
         speakerBio: string
     }>,
 }> & {
+    start: ISODatetime,
+    end: ISODatetime,
     description: string;
-    timeslot: VoxxrinScheduleTimeSlot;
 }
 
 export function createVoxxrinTalkFromFirestore(event: VoxxrinConferenceDescriptor, firestoreTalk: Talk) {
@@ -53,26 +55,19 @@ export function createVoxxrinTalkFromFirestore(event: VoxxrinConferenceDescripto
         id: new TalkId(firestoreTalk.id)
     }
 }
-export function createVoxxrinDetailedTalkFromFirestore(event: VoxxrinConferenceDescriptor, dailySchedule: VoxxrinDailySchedule, firestoreTalk: DetailedTalk): VoxxrinDetailedTalk {
+export function createVoxxrinDetailedTalkFromFirestore(event: VoxxrinConferenceDescriptor, firestoreTalk: DetailedTalk): VoxxrinDetailedTalk {
     const talk = createVoxxrinTalkFromFirestore(event, firestoreTalk);
-    const timeslot = dailySchedule.timeSlots.find(ts => {
-        return ts.type === 'talks'
-            && ts.talks.findIndex(talkCandidate => talkCandidate.id.isSameThan(talk.id)) !== -1
-    })
-
-    if(!timeslot) {
-        throw new Error(`No timeslot found in schedule for talk ${talk.id.value} during detailed talk creation from firestore`);
-    }
 
     return {
         ...talk,
+        start: firestoreTalk.start,
+        end: firestoreTalk.end,
         speakers: talk.speakers.map(s => ({
             ...s,
             // TODO: removed this hardcoded value
             speakerBio: `<strong>Here</strong>: the speaker's bio summary (we don't have it yet)`
         })),
         description: firestoreTalk.description,
-        timeslot
     };
 }
 
