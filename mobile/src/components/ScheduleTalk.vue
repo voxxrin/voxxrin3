@@ -57,7 +57,7 @@ import {
   IonThumbnail,
 } from '@ionic/vue';
 import { VoxxrinTalk} from "@/models/VoxxrinTalk";
-import {useCurrentConferenceDescriptor} from "@/state/CurrentConferenceDescriptor";
+import {useCurrentConferenceDescriptor} from "@/state/useConferenceDescriptor";
 import {useRoute} from "vue-router";
 import {EventId} from "@/models/VoxxrinEvent";
 import {getRouteParamsValue} from "@/views/vue-utils";

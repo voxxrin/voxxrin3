@@ -25,7 +25,7 @@ import {localDateToReadableParts, toISOLocalDate} from "@/models/DatesAndTime";
 import {useCurrentUserLocale} from "@/state/useCurrentUserLocale";
 import {useInterval} from "@/views/vue-utils";
 import {ISOLocalDate} from "../../../shared/type-utils";
-import {useCurrentClock} from "@/state/CurrentClock";
+import {useCurrentClock} from "@/state/useCurrentClock";
 
 defineEmits<{
     (e: 'day-selected', day: VoxxrinDay): void

@@ -120,7 +120,7 @@ import {computed, watch} from "vue";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {IonBadge, IonAvatar, IonText} from "@ionic/vue";
 import {business} from "ionicons/icons";
-import {useConferenceDescriptor} from "@/state/CurrentConferenceDescriptor";
+import {useConferenceDescriptor} from "@/state/useConferenceDescriptor";
 import {formatHourMinutes} from "@/models/DatesAndTime";
 import {Temporal} from "temporal-polyfill";
 

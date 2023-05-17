@@ -43,7 +43,7 @@ import {getRouteParamsValue} from "@/views/vue-utils";
 import {EventId} from "@/models/VoxxrinEvent";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {useTabbedPageNav} from "@/state/useTabbedPageNav";
-import {useConferenceDescriptor} from "@/state/CurrentConferenceDescriptor";
+import {useConferenceDescriptor} from "@/state/useConferenceDescriptor";
 
 const router = useIonRouter();
 const route = useRoute();

@@ -8,7 +8,7 @@ import {EventId, toVoxxrinEventTheme, VoxxrinEventTheme} from "@/models/VoxxrinE
 import {Replace} from "@/models/type-utils";
 import {Temporal} from "temporal-polyfill";
 import {match} from "ts-pattern";
-import {useCurrentClock} from "@/state/CurrentClock";
+import {useCurrentClock} from "@/state/useCurrentClock";
 import {toHMMDuration, toISOLocalDate, zonedDateTimeRangeOf} from "@/models/DatesAndTime";
 
 export type VoxxrinConferenceDescriptor = Replace<ConferenceDescriptor, {

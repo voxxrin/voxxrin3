@@ -57,7 +57,7 @@ import {
 } from '@ionic/vue';
 import {useRoute, useRouter} from "vue-router";
 import {onMounted, ref, watch} from "vue";
-import {useSchedule} from "@/state/CurrentSchedule";
+import {useSchedule} from "@/state/useSchedule";
 import CurrentEventHeader from "@/components/CurrentEventHeader.vue";
 import {getRouteParamsValue, isRefDefined, useInterval} from "@/views/vue-utils";
 import {EventId} from "@/models/VoxxrinEvent";
@@ -72,9 +72,9 @@ import DaySelector from "@/components/DaySelector.vue";
 import {findBestAutoselectableConferenceDay, findVoxxrinDay} from "@/models/VoxxrinConferenceDescriptor";
 import TimeSlotAccordion from "@/components/TimeSlotAccordion.vue";
 import {VoxxrinTimeslotFeedback} from "@/models/VoxxrinFeedback";
-import {useCurrentClock} from "@/state/CurrentClock";
+import {useCurrentClock} from "@/state/useCurrentClock";
 import {typesafeI18n} from "@/i18n/i18n-vue";
-import {useConferenceDescriptor} from "@/state/CurrentConferenceDescriptor";
+import {useConferenceDescriptor} from "@/state/useConferenceDescriptor";
 
 const router = useRouter();
 const route = useRoute();
