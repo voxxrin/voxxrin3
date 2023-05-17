@@ -3,6 +3,7 @@ import {crawl as crawlDevoxx, DEVOXX_DESCRIPTOR_PARSER} from "./devoxx/crawler"
 import { FullEvent } from "../models/Event";
 import {FIREBASE_CRAWLER_DESCRIPTOR_PARSER, CrawlerKind} from "./crawl-kind";
 import {z} from "zod";
+const axios = require('axios');
 
 
 const CRAWLERS: CrawlerKind<z.ZodType>[] = [
@@ -31,7 +32,7 @@ const crawlAll = async function() {
                 }
 
                 info(`crawling event ${doc.id} of type [${firebaseCrawlerDescriptor.kind}]...`)
-                const crawlerDescriptorContent = await fetch(firebaseCrawlerDescriptor.descriptorUrl).then(resp => resp.json());
+                const crawlerDescriptorContent = (await axios.get(firebaseCrawlerDescriptor.descriptorUrl)).data
                 const crawlerKindDescriptor = crawler.descriptorParser.parse(crawlerDescriptorContent);
 
                 const event = await crawler.crawlerImpl(doc.id, crawlerKindDescriptor);

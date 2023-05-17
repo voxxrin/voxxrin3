@@ -19,8 +19,10 @@ const daysOfWeek = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'sat
 export const DEVOXX_DESCRIPTOR_PARSER = FULL_DESCRIPTOR_PARSER.omit({
     // All these fields can be extracted from the devoxx API
     title: true, description: true, days: true,
-    timezone: true, location: true, talkFormats: true,
-    rooms: true,
+    timezone: true, location: true,
+    // We're not putting tracks here even though we can get them from devoxx API
+    // because we need a theme color for them that are currently *not* provided by the API
+    talkFormats: true, rooms: true,
 })
 
 export const crawl = async (eventId: string, descriptor: z.infer<typeof DEVOXX_DESCRIPTOR_PARSER>) => {
