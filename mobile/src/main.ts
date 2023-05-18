@@ -30,27 +30,32 @@ import './styles/main.scss'
 import {detectLocale} from "@/i18n/i18n-util";
 import {navigatorDetector} from "typesafe-i18n/detectors";
 import {loadLocaleAsync} from "@/i18n/i18n-util.async";
-import {VueFire, VueFireAuth} from "vuefire";
+import {useFirebaseAuth, VueFire, VueFireAuth} from "vuefire";
+import { signInAnonymously } from 'firebase/auth';
 
 const app = createApp(App);
 app
   .use(IonicVue)
-  .use(router)
-  .use(globalComponents)
   .use(VueFire, {
     firebaseApp,
     modules: [
         VueFireAuth()
     ]
-  });
+  }).use(router)
+  .use(globalComponents)
+
 
 // const detectedLocale = detectLocale(navigatorDetector)
 const detectedLocale = 'en';
 
-const localeLoadedPromise= loadLocaleAsync(detectedLocale);
+loadLocaleAsync(detectedLocale);
 
-router.isReady().then(async () => {
-  await localeLoadedPromise;
-  app.use(i18nPlugin, detectedLocale);
-  app.mount('#app');
-});
+const auth = useFirebaseAuth()!
+
+Promise.all([
+    loadLocaleAsync(detectedLocale).then(() => app.use(i18nPlugin, detectedLocale)),
+    router.isReady(),
+    signInAnonymously(auth)
+]).then(async ([_1, _2]) => {
+    app.mount('#app');
+})
