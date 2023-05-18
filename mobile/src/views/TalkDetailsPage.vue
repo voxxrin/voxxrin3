@@ -31,7 +31,7 @@
               <ion-icon class="favorite-btn-icon" v-if="!talkNotes.isFavorite" aria-hidden="true" src="/assets/icons/line/bookmark-line-favorite.svg"></ion-icon>
               <ion-icon class="favorite-btn-icon" v-if="talkNotes.isFavorite" aria-hidden="true" src="/assets/icons/solid/bookmark-favorite.svg"></ion-icon>
             </ion-button>
-            <ion-label class="favorite-btn-nb" v-if="eventTalkStats.totalFavoritesCount !== undefined">{{
+            <ion-label class="favorite-btn-nb" v-if="eventTalkStats !== undefined">{{
                 eventTalkStats.totalFavoritesCount
               }}</ion-label>
           </div>
@@ -113,9 +113,7 @@ import {getRouteParamsValue, isRefDefined} from "@/views/vue-utils";
 import {useUserTalkNotes} from "@/state/useUserTalkNotes";
 import {DayId} from "@/models/VoxxrinDay";
 import {TalkId} from "@/models/VoxxrinTalk";
-import {useEventTalkStats} from "@/state/useEventTalkStats";
 import {useEventTalk} from "@/state/useEventTalk";
-import {getTimeslotLabel} from "@/models/VoxxrinSchedule";
 import {computed, watch} from "vue";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {IonBadge, IonAvatar, IonText} from "@ionic/vue";
@@ -130,8 +128,7 @@ const dayId = new DayId(getRouteParamsValue(route, 'dayId')!);
 const talkId = new TalkId(getRouteParamsValue(route, 'talkId')!);
 const {conferenceDescriptor: event} = useConferenceDescriptor(eventId);
 
-const { talkNotes, toggleFavorite, toggleWatchLater} = useUserTalkNotes(eventId, dayId, talkId)
-const { eventTalkStats } = useEventTalkStats(eventId, dayId, talkId)
+const { eventTalkStats, talkNotes, toggleFavorite, toggleWatchLater} = useUserTalkNotes(eventId, dayId, talkId)
 const { talkDetails: talk } = useEventTalk(event, talkId);
 const { LL } = typesafeI18n()
 

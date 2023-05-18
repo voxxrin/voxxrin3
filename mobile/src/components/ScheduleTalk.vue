@@ -42,7 +42,7 @@
           <ion-button class="btnTalk favorite-btn" @click.stop="() => toggleFavorite()">
             <ion-icon class="favorite-btn-icon" v-if="!talkNotes.isFavorite" aria-hidden="true" src="/assets/icons/line/bookmark-line-favorite.svg"></ion-icon>
             <ion-icon class="favorite-btn-icon" v-if="talkNotes.isFavorite" aria-hidden="true" src="/assets/icons/solid/bookmark-favorite.svg"></ion-icon>
-            <ion-label class="favorite-btn-nb" v-if="eventTalkStats.totalFavoritesCount!==undefined">{{ eventTalkStats.totalFavoritesCount }}</ion-label>
+            <ion-label class="favorite-btn-nb" v-if="eventTalkStats !== undefined">{{ eventTalkStats.totalFavoritesCount }}</ion-label>
           </ion-button>
         </div>
       </div>
@@ -51,19 +51,17 @@
 </template>
 
 <script setup lang="ts">
-import {PropType, ref, watch} from "vue";
+import {PropType} from "vue";
 import {
   IonBadge,
   IonThumbnail,
 } from '@ionic/vue';
 import { VoxxrinTalk} from "@/models/VoxxrinTalk";
-import {useCurrentConferenceDescriptor} from "@/state/useConferenceDescriptor";
 import {useRoute} from "vue-router";
 import {EventId} from "@/models/VoxxrinEvent";
 import {getRouteParamsValue} from "@/views/vue-utils";
 import {useUserTalkNotes} from "@/state/useUserTalkNotes";
 import {DayId} from "@/models/VoxxrinDay";
-import {useEventTalkStats} from "@/state/useEventTalkStats";
 import {useTabbedPageNav} from "@/state/useTabbedPageNav";
 
 
@@ -81,8 +79,7 @@ const props = defineProps({
 const route = useRoute();
 const eventId = new EventId(getRouteParamsValue(route, 'eventId')!);
 
-const { talkNotes, toggleFavorite, toggleWatchLater} = useUserTalkNotes(eventId, props.dayId!, props.talk!.id)
-const { eventTalkStats } = useEventTalkStats(eventId, props.dayId!, props.talk!.id)
+const { eventTalkStats, talkNotes, toggleFavorite, toggleWatchLater} = useUserTalkNotes(eventId, props.dayId, props.talk.id)
 
 const { triggerTabbedPageNavigate } = useTabbedPageNav();
 

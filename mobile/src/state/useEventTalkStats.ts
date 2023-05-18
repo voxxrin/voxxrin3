@@ -1,49 +1,78 @@
 import {EventId} from "@/models/VoxxrinEvent";
 import {DayId} from "@/models/VoxxrinDay";
 import {TalkId} from "@/models/VoxxrinTalk";
-import {ref, Ref} from "vue";
+import {computed, ref, Ref, unref, watch} from "vue";
+import {Unreffable} from "@/views/vue-utils";
+import {collection, doc, DocumentReference} from "firebase/firestore";
+import {db} from "@/state/firebase";
+import {TalkStats} from "../../../shared/feedbacks.firestore";
+import {useDocument} from "vuefire";
+import {createVoxxrinTalkStatsFromFirestore} from "@/models/VoxxrinTalkStats";
 
 
-export type TalkEventStatsHook = {
-    eventTalkStats: Ref<{
-        readonly talkId: TalkId,
-        readonly totalFavoritesCount: number|undefined
-    }>,
-    incrementTotalFavoritesCount: () => void,
-    decrementTotalFavoritesCount: () => void,
-}
+export function useTalkStats(eventIdRef: Unreffable<EventId | undefined>,
+           // FIXME: talk stats should not be dependent on days, in case talk is moved from
+           // one day to another
+           dayIdRef: Unreffable<DayId | undefined>,
+           talkIdRef: Unreffable<TalkId | undefined>) {
 
-const CACHED_EVENTS_STATS_HOOKS = new Map<string, TalkEventStatsHook>()
+    const firestoreTalkStatsSource = computed(() => {
+        const eventId = unref(eventIdRef),
+            dayId = unref(dayIdRef),
+            talkId = unref(talkIdRef);
 
-export function useEventTalkStats(eventId: EventId, day: DayId, talkId: TalkId): TalkEventStatsHook {
-    const cacheKey = `${eventId.value}||${day.value}||${talkId.value}`
-    if(!CACHED_EVENTS_STATS_HOOKS.has(cacheKey)) {
-        let eventTalkStatsRef: TalkEventStatsHook['eventTalkStats'] = ref({
-            talkId,
-            totalFavoritesCount: Math.ceil(Math.random()*50)
-        });
-
-        const incrementTotalFavoritesCount = () => {
-            eventTalkStatsRef.value = {
-                ...eventTalkStatsRef.value,
-                totalFavoritesCount: (eventTalkStatsRef.value.totalFavoritesCount || 0)+1
-            }
-        }
-        const decrementTotalFavoritesCount = () => {
-            eventTalkStatsRef.value = {
-                ...eventTalkStatsRef.value,
-                totalFavoritesCount: (eventTalkStatsRef.value.totalFavoritesCount || 0)-1
-            }
+        if(!eventId || !dayId || !talkId) {
+            return undefined;
         }
 
-        const hook: TalkEventStatsHook = {
-            eventTalkStats: eventTalkStatsRef,
-            incrementTotalFavoritesCount,
-            decrementTotalFavoritesCount
-        };
+        return doc(collection(doc(collection(doc(collection(db, 'events'), eventId.value), 'days'), dayId.value), 'talksStats'), talkId.value) as DocumentReference<TalkStats>
+    });
 
-        CACHED_EVENTS_STATS_HOOKS.set(cacheKey, hook);
-    }
+    const firestoreTalkStatsRef = useDocument(firestoreTalkStatsSource);
 
-    return CACHED_EVENTS_STATS_HOOKS.get(cacheKey)!;
+    // This ref is used to store an increment/decrement of the total number of votes *in memory*
+    //
+    // This can be useful when there is some delay between user fav/unfav is propagated to total talk stats
+    // in firestore, due to either offline usage, or deferred total count of the total talk stats
+    //
+    // Important note: this is only an "in-memory" count, meaning that if app is refreshed or restarted
+    // this count will be lost until user gets back online and his fav/unfav is taken into consideration
+    // into firestore
+    const inMemoryDeltaUntilFirestoreRefreshRef = ref(0);
+    watch([firestoreTalkStatsRef], ([firestoreTalkStats]) => {
+        // Resetting local delta everytime we receive a firestore refresh
+        inMemoryDeltaUntilFirestoreRefreshRef.value = 0;
+    })
+
+    return {
+        eventTalkStats: computed(() => {
+            const talkId = unref(talkIdRef);
+            const firestoreTalkStats = unref(firestoreTalkStatsRef);
+            const localDeltaUntilFirestoreRefresh = unref(inMemoryDeltaUntilFirestoreRefreshRef);
+
+            if(talkId === undefined) {
+                return undefined;
+            }
+
+            const firestoreTotalFavoritesCount = firestoreTalkStats?.totalFavoritesCount || 0;
+
+            const voxxrinStats = createVoxxrinTalkStatsFromFirestore({
+                id: talkId.value,
+                totalFavoritesCount: firestoreTotalFavoritesCount
+            });
+
+            return {
+                ...voxxrinStats,
+                totalFavoritesCount: voxxrinStats.totalFavoritesCount + localDeltaUntilFirestoreRefresh
+            }
+        }),
+        incrementInMemoryTotalFavoritesCount: () => {
+            // Note: for whatever reason, localDeltaUntilFirestoreRefreshRef.value++ doesn't trigger ref update
+            inMemoryDeltaUntilFirestoreRefreshRef.value = inMemoryDeltaUntilFirestoreRefreshRef.value+1;
+        },
+        decrementInMemoryTotalFavoritesCount: () => {
+            // Note: for whatever reason, localDeltaUntilFirestoreRefreshRef.value-- doesn't trigger ref update
+            inMemoryDeltaUntilFirestoreRefreshRef.value = inMemoryDeltaUntilFirestoreRefreshRef.value-1;
+        }
+    };
 }
