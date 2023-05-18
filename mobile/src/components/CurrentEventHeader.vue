@@ -15,7 +15,7 @@
         <current-event-status :event="event"></current-event-status>
       </div>
     </ion-toolbar>
-    <img src="/assets/images/jpg/card-conf-cover-devoxx.jpg">
+    <img :src="event?.backgroundUrl">
   </ion-header>
 </template>
 
