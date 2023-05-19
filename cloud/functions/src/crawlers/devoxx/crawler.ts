@@ -1,7 +1,12 @@
 import {info} from "../../firebase";
 import * as _ from "lodash";
 
-import { CfpEvent, DevoxxScheduleItem, DevoxxScheduleSpeakerInfo } from "./types"
+import {
+    CfpEvent,
+    DevoxxScheduleItem,
+    DevoxxScheduleProposal,
+    DevoxxScheduleSpeakerInfo
+} from "./types"
 import { DailySchedule, DetailedTalk, Speaker, Talk } from "../../../../../shared/dayly-schedule.firestore"
 import {DayTalksStats, TalkStats} from "../../../../../shared/feedbacks.firestore";
 import { FullEvent } from "../../models/Event";
@@ -113,16 +118,14 @@ const crawlDevoxxDay = async (eventId: string, day: string) => {
 
     const talkStats: TalkStats[] = []
 
-    const talks: Talk[] = []
+    const detailedTalks: DetailedTalk[] = []
 
     const rooms: ConferenceDescriptor['rooms'] = [];
     const talkFormats: ConferenceDescriptor['talkFormats'] = [];
 
     const slots = _.groupBy(schedules, (s:DevoxxScheduleItem) => {return s.fromDate + "--" + s.toDate})
 
-    const toScheduleTalk = function(item: DevoxxScheduleItem) {
-        const proposal = item.proposal
-
+    const toScheduleTalk = function(item: DevoxxScheduleItem, start: ISODatetime, end: ISODatetime) {
         if(!rooms.find(r => r.id === item.room.id.toString())) {
             rooms.push({ id: item.room.id.toString(), title: item.room.name });
         }
@@ -134,7 +137,21 @@ const crawlDevoxxDay = async (eventId: string, day: string) => {
             });
         }
 
-        const base = {
+        if(!item.proposal) {
+            return { talk:undefined, detailedTalk: undefined};
+        }
+
+        const talk: Talk = {
+            id: item.proposal.id.toString(),
+            title: item.proposal.title,
+            speakers: item.proposal.speakers.map((s:DevoxxScheduleSpeakerInfo) => {
+                return {
+                    id: s.id.toString(),
+                    fullName: s.fullName,
+                    companyName: s.company,
+                    photoUrl: s.imageUrl
+                } as Speaker
+            }),
             room: {
                 id: item.room.id.toString(),
                 title: item.room.name
@@ -142,41 +159,24 @@ const crawlDevoxxDay = async (eventId: string, day: string) => {
             format: {
                 id: item.sessionType.id.toString(),
                 title: item.sessionType.name,
-                duration: "PT" + item.sessionType.duration + "m"
+                duration: `PT${item.sessionType.duration}m`
             },
-        }
-        if (proposal) {
-            return {
-                id: proposal.id.toString(),
-                title: proposal.title,
-                speakers: proposal.speakers.map((s:DevoxxScheduleSpeakerInfo) => {
-                    return {
-                        id: s.id.toString(),
-                        fullName: s.fullName,
-                        companyName: s.company,
-                        photoUrl: s.imageUrl
-                    } as Speaker
-                }),
-                ...base,
-                track: {
-                    id: proposal.track.id.toString(),
-                    title: proposal.track.name
-                },
-                language: "EN"
-            } as Talk
-        } else {
-            return {
-                id: item.id.toString(),
-                title: "",
-                speakers: [],
-                ...base,
-                track: {
-                    id: item.sessionType.id.toString(), // TODO - see if we need to make track optional
-                    title: item.sessionType.name
-                },
-                language: "EN"
-            } as Talk
-        }
+            track: {
+                id: item.proposal.track.id.toString(),
+                title: item.proposal.track.name
+            },
+            language: "EN"
+        };
+
+        const detailedTalk: DetailedTalk = {
+            ...talk,
+            start: start as ISODatetime,
+            end: end as ISODatetime,
+            summary: item.proposal.summary || "",
+            description: item.proposal.description || ""
+        };
+
+        return { talk, detailedTalk };
     }
 
     _.forIn(slots, (items: DevoxxScheduleItem[], key: string) => {
@@ -204,30 +204,29 @@ const crawlDevoxxDay = async (eventId: string, day: string) => {
             }
             )
         } else {
+            const talks = items.reduce((talks, item) => {
+                const {talk, detailedTalk} = toScheduleTalk(item, start as ISODatetime, end as ISODatetime);
+                if(talk && detailedTalk) {
+                    if (item.totalFavourites !== undefined) {
+                        talkStats.push({id: talk.id, totalFavoritesCount: item.totalFavourites})
+                    }
+
+                    talks.push(talk);
+                    detailedTalks.push(detailedTalk);
+                }
+                return talks;
+            }, [] as Talk[]);
+
             daySchedule.timeSlots.push({
                 id: key as any,
                 start: start as ISODatetime,
                 end: end as ISODatetime,
                 type: "talks",
-                talks: items.map(toScheduleTalk)
-            })
-            items.forEach((i) => {
-                if (i.totalFavourites !== undefined && i.proposal?.id !== undefined) {
-                    talkStats.push({id: i.proposal?.id.toString(), totalFavoritesCount: i.totalFavourites})
-                }
-                const scheduleTalk = toScheduleTalk(i)
-                const talk: DetailedTalk = {
-                    ...scheduleTalk, 
-                    start: start as ISODatetime,
-                    end: end as ISODatetime,
-                    summary: i.proposal?.summary ?? "",
-                    description: i.proposal?.description ?? ""
-                }
-                talks.push(talk)
+                talks
             })
         }
     })
 
     info("devoxx day crawling done for " + day)
-    return {daySchedule, talkStats, talks, rooms, talkFormats}
+    return {daySchedule, talkStats, talks: detailedTalks, rooms, talkFormats }
 }
