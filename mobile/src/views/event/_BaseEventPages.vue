@@ -37,7 +37,7 @@ import {
     IonRouterOutlet,
     useIonRouter,
 } from '@ionic/vue';
-import {ref} from "vue";
+import {computed, ref} from "vue";
 import {useRoute} from "vue-router";
 import {getRouteParamsValue} from "@/views/vue-utils";
 import {EventId} from "@/models/VoxxrinEvent";
@@ -47,7 +47,7 @@ import {useConferenceDescriptor} from "@/state/useConferenceDescriptor";
 
 const router = useIonRouter();
 const route = useRoute();
-const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')!));
+const eventId = computed(() => new EventId(getRouteParamsValue(route, 'eventId')));
 const {conferenceDescriptor: event} = useConferenceDescriptor(eventId);
 
 const { LL } = typesafeI18n()

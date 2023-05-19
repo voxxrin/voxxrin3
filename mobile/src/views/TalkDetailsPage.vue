@@ -123,9 +123,9 @@ import {formatHourMinutes} from "@/models/DatesAndTime";
 import {Temporal} from "temporal-polyfill";
 
 const route = useRoute();
-const eventId = new EventId(getRouteParamsValue(route, 'eventId')!);
-const dayId = new DayId(getRouteParamsValue(route, 'dayId')!);
-const talkId = new TalkId(getRouteParamsValue(route, 'talkId')!);
+const eventId = computed(() => new EventId(getRouteParamsValue(route, 'eventId')));
+const dayId = computed(() => new DayId(getRouteParamsValue(route, 'dayId')));
+const talkId = computed(() => new TalkId(getRouteParamsValue(route, 'talkId')));
 const {conferenceDescriptor: event} = useConferenceDescriptor(eventId);
 
 const { eventTalkStats, talkNotes, toggleFavorite, toggleWatchLater} = useUserTalkNotes(eventId, dayId, talkId)

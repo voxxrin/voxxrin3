@@ -27,8 +27,9 @@
   import {getRouteParamsValue} from "@/views/vue-utils";
   import {useRoute} from "vue-router";
   import {useConferenceDescriptor} from "@/state/useConferenceDescriptor";
+  import {computed} from "vue";
 
   const route = useRoute();
-  const eventId = new EventId(getRouteParamsValue(route, 'eventId')!);
+  const eventId = computed(() => new EventId(getRouteParamsValue(route, 'eventId')));
   const {conferenceDescriptor: event} = useConferenceDescriptor(eventId);
 </script>

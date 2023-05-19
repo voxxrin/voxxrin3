@@ -21,7 +21,7 @@ export function useTalkStats(eventIdRef: Unreffable<EventId | undefined>,
             dayId = unref(dayIdRef),
             talkId = unref(talkIdRef);
 
-        if(!eventId || !dayId || !talkId) {
+        if(!eventId || !eventId.value || !dayId || !dayId.value || !talkId || !talkId.value) {
             return undefined;
         }
 
@@ -50,7 +50,7 @@ export function useTalkStats(eventIdRef: Unreffable<EventId | undefined>,
             const firestoreTalkStats = unref(firestoreTalkStatsRef);
             const localDeltaUntilFirestoreRefresh = unref(inMemoryDeltaUntilFirestoreRefreshRef);
 
-            if(talkId === undefined) {
+            if(talkId === undefined || talkId.value === undefined) {
                 return undefined;
             }
 

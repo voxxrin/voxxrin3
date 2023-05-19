@@ -24,7 +24,7 @@ export function useUserTalkNotes(
             dayId = unref(dayIdRef),
             user = unref(userRef);
 
-        if(!eventId || !dayId || !user) {
+        if(!eventId || !eventId.value || !dayId || !dayId.value || !user) {
             return undefined;
         }
 
@@ -43,7 +43,7 @@ export function useUserTalkNotes(
         const talkId = unref(talkIdRef),
             firestoreUserTalkNotes = unref(firestoreUserTalkNotesRef);
 
-        if(!talkId) {
+        if(!talkId || !talkId.value) {
             return undefined;
         }
 
@@ -100,7 +100,7 @@ export function useUserTalkNotes(
             dayId = unref(dayIdRef),
             user = unref(userRef);
 
-        if(!user || !dayId) {
+        if(!user || !dayId || !dayId.value) {
             console.warn(`${callContextName}() called with an undefined user/dayId`)
             return;
         }

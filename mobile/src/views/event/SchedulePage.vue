@@ -56,7 +56,7 @@ import {
     alertController,
 } from '@ionic/vue';
 import {useRoute, useRouter} from "vue-router";
-import {onMounted, ref, watch} from "vue";
+import {computed, onMounted, ref, watch} from "vue";
 import {useSchedule} from "@/state/useSchedule";
 import CurrentEventHeader from "@/components/CurrentEventHeader.vue";
 import {getRouteParamsValue, isRefDefined, useInterval} from "@/views/vue-utils";
@@ -78,7 +78,7 @@ import {useConferenceDescriptor} from "@/state/useConferenceDescriptor";
 
 const router = useRouter();
 const route = useRoute();
-const eventId = new EventId(getRouteParamsValue(route, 'eventId')!);
+const eventId = computed(() => new EventId(getRouteParamsValue(route, 'eventId')));
 const {conferenceDescriptor: event} = useConferenceDescriptor(eventId);
 
 const { LL } = typesafeI18n()

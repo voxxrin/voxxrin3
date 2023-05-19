@@ -52,7 +52,7 @@
 </template>
 
 <script setup lang="ts">
-import {PropType} from "vue";
+import {computed, PropType} from "vue";
 import {
   IonBadge,
   IonThumbnail,
@@ -78,7 +78,7 @@ const props = defineProps({
 })
 
 const route = useRoute();
-const eventId = new EventId(getRouteParamsValue(route, 'eventId')!);
+const eventId = computed(() => new EventId(getRouteParamsValue(route, 'eventId')));
 
 const { eventTalkStats, talkNotes, toggleFavorite, toggleWatchLater} = useUserTalkNotes(eventId, props.dayId, props.talk.id)
 
@@ -96,7 +96,7 @@ const theme = {
 
 function openTalkDetails() {
     if(props.dayId && props.talk) {
-        triggerTabbedPageNavigate(`/events/${eventId.value}/days/${props.dayId.value}/talks/${props.talk.id.value}/details`, "forward", "push");
+        triggerTabbedPageNavigate(`/events/${eventId.value.value}/days/${props.dayId.value}/talks/${props.talk.id.value}/details`, "forward", "push");
     }
 }
 </script>

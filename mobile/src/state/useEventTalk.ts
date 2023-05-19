@@ -22,7 +22,7 @@ export function useEventTalk(
         const conferenceDescriptor = unref(conferenceDescriptorRef),
             talkId = unref(talkIdRef);
 
-        if(!conferenceDescriptor || !talkId) {
+        if(!conferenceDescriptor || !talkId || !talkId.value) {
             return undefined;
         }
 

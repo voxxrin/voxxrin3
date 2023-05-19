@@ -14,7 +14,7 @@ export function useConferenceDescriptor(
 
     const firestoreConferenceDescriptorSource = computed(() => {
         const eventId = unref(eventIdRef);
-        if(!eventId) {
+        if(!eventId || !eventId.value) {
             return undefined;
         }
 
