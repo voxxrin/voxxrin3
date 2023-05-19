@@ -1,19 +1,19 @@
 <template>
-    <ion-item class="eventItem" :style="{
-        '--voxxrin-event-background-url': `url('${event?.backgroundUrl}')`,
-        '--voxxrin-event-logo-url': `url('${event?.logoUrl}')`,
-        '--voxxrin-event-theme-colors-primary-hex': event?.theming.colors.primaryHex,
-        '--voxxrin-event-theme-colors-primary-rgb': event?.theming.colors.primaryRGB,
-        '--voxxrin-event-theme-colors-primary-contrast-hex': event?.theming.colors.primaryContrastHex,
-        '--voxxrin-event-theme-colors-primary-contrast-rgb': event?.theming.colors.primaryContrastRGB,
-        '--voxxrin-event-theme-colors-secondary-hex': event?.theming.colors.secondaryHex,
-        '--voxxrin-event-theme-colors-secondary-rgb': event?.theming.colors.secondaryRGB,
-        '--voxxrin-event-theme-colors-secondary-contrast-hex': event?.theming.colors.secondaryContrastHex,
-        '--voxxrin-event-theme-colors-secondary-contrast-rgb': event?.theming.colors.secondaryContrastRGB,
-        '--voxxrin-event-theme-colors-tertiary-hex': event?.theming.colors.tertiaryHex,
-        '--voxxrin-event-theme-colors-tertiary-rgb': event?.theming.colors.tertiaryRGB,
-        '--voxxrin-event-theme-colors-tertiary-contrast-hex': event?.theming.colors.tertiaryContrastHex,
-        '--voxxrin-event-theme-colors-tertiary-contrast-rgb': event?.theming.colors.tertiaryContrastRGB,
+    <ion-item class="eventItem" v-if="event" :style="{
+        '--voxxrin-event-background-url': `url('${event.backgroundUrl}')`,
+        '--voxxrin-event-logo-url': `url('${event.logoUrl}')`,
+        '--voxxrin-event-theme-colors-primary-hex': event.theming.colors.primaryHex,
+        '--voxxrin-event-theme-colors-primary-rgb': event.theming.colors.primaryRGB,
+        '--voxxrin-event-theme-colors-primary-contrast-hex': event.theming.colors.primaryContrastHex,
+        '--voxxrin-event-theme-colors-primary-contrast-rgb': event.theming.colors.primaryContrastRGB,
+        '--voxxrin-event-theme-colors-secondary-hex': event.theming.colors.secondaryHex,
+        '--voxxrin-event-theme-colors-secondary-rgb': event.theming.colors.secondaryRGB,
+        '--voxxrin-event-theme-colors-secondary-contrast-hex': event.theming.colors.secondaryContrastHex,
+        '--voxxrin-event-theme-colors-secondary-contrast-rgb': event.theming.colors.secondaryContrastRGB,
+        '--voxxrin-event-theme-colors-tertiary-hex': event.theming.colors.tertiaryHex,
+        '--voxxrin-event-theme-colors-tertiary-rgb': event.theming.colors.tertiaryRGB,
+        '--voxxrin-event-theme-colors-tertiary-contrast-hex': event.theming.colors.tertiaryContrastHex,
+        '--voxxrin-event-theme-colors-tertiary-contrast-rgb': event.theming.colors.tertiaryContrastRGB,
     }" @click="$emit('event-clicked', event)">
       <ion-ripple-effect type="bounded"></ion-ripple-effect>
       <div class="eventItem-logoContainer">

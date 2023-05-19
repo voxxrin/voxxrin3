@@ -1,9 +1,6 @@
 import {RouteLocationNormalizedLoaded} from "vue-router";
-import {ComponentInternalInstance, onUnmounted, ref, Ref, watch} from "vue";
+import {onUnmounted, Ref, unref} from "vue";
 import {Temporal} from "temporal-polyfill";
-import {
-    ActionSheetButton
-} from "@ionic/core/dist/types/components/action-sheet/action-sheet-interface";
 import {actionSheetController, ActionSheetOptions} from "@ionic/vue";
 
 // Ensure that we only get a single value from route params
@@ -20,7 +17,7 @@ export const getRouteParamsValue = (route: RouteLocationNormalizedLoaded, paramN
 }
 
 export function isRefDefined<T>(ref: Ref<T | undefined>): ref is Ref<T> {
-    return (ref.value !== undefined);
+    return unref(ref) !== undefined;
 }
 export function isRefUndefined<T>(ref: Ref<T | undefined>): ref is Ref<undefined> {
     return (ref.value === undefined);
@@ -49,3 +46,5 @@ export async function presentActionSheetController(
 
     return result.data;
 }
+
+export type Unreffable<T> = T | Ref<T>

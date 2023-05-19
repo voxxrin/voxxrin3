@@ -1,5 +1,6 @@
 <template>
   <ion-card class="talkCard"
+            v-if="talkNotes"
             :class="{ container: true, 'is-favorited': talkNotes.isFavorite, 'to-watch-later': talkNotes.watchLater }"
             @click="() => openTalkDetails()">
     <div class="talkCard-head">
@@ -34,15 +35,15 @@
       <div class="talkCard-footer-actions">
         <div class="watchLater">
           <ion-button class="btnTalk watch-later-btn" @click.stop="() => toggleWatchLater()">
-            <ion-icon v-if="!talkNotes.watchLater" aria-hidden="true" src="/assets/icons/line/video-line.svg"></ion-icon>
-            <ion-icon v-if="talkNotes.watchLater" aria-hidden="true" src="/assets/icons/solid/video.svg"></ion-icon>
+            <ion-icon v-if="!talkNotes?.watchLater" aria-hidden="true" src="/assets/icons/line/video-line.svg"></ion-icon>
+            <ion-icon v-if="!!talkNotes?.watchLater" aria-hidden="true" src="/assets/icons/solid/video.svg"></ion-icon>
           </ion-button>
         </div>
         <div class="favorite">
           <ion-button class="btnTalk favorite-btn" @click.stop="() => toggleFavorite()">
-            <ion-icon class="favorite-btn-icon" v-if="!talkNotes.isFavorite" aria-hidden="true" src="/assets/icons/line/bookmark-line-favorite.svg"></ion-icon>
-            <ion-icon class="favorite-btn-icon" v-if="talkNotes.isFavorite" aria-hidden="true" src="/assets/icons/solid/bookmark-favorite.svg"></ion-icon>
-            <ion-label class="favorite-btn-nb" v-if="eventTalkStats.totalFavoritesCount!==undefined">{{ eventTalkStats.totalFavoritesCount }}</ion-label>
+            <ion-icon class="favorite-btn-icon" v-if="!talkNotes?.isFavorite" aria-hidden="true" src="/assets/icons/line/bookmark-line-favorite.svg"></ion-icon>
+            <ion-icon class="favorite-btn-icon" v-if="!!talkNotes?.isFavorite" aria-hidden="true" src="/assets/icons/solid/bookmark-favorite.svg"></ion-icon>
+            <ion-label class="favorite-btn-nb" v-if="eventTalkStats !== undefined">{{ eventTalkStats.totalFavoritesCount }}</ion-label>
           </ion-button>
         </div>
       </div>
@@ -51,19 +52,17 @@
 </template>
 
 <script setup lang="ts">
-import {PropType, ref, watch} from "vue";
+import {computed, PropType} from "vue";
 import {
   IonBadge,
   IonThumbnail,
 } from '@ionic/vue';
 import { VoxxrinTalk} from "@/models/VoxxrinTalk";
-import {useCurrentConferenceDescriptor} from "@/state/CurrentConferenceDescriptor";
 import {useRoute} from "vue-router";
 import {EventId} from "@/models/VoxxrinEvent";
 import {getRouteParamsValue} from "@/views/vue-utils";
 import {useUserTalkNotes} from "@/state/useUserTalkNotes";
 import {DayId} from "@/models/VoxxrinDay";
-import {useEventTalkStats} from "@/state/useEventTalkStats";
 import {useTabbedPageNav} from "@/state/useTabbedPageNav";
 
 
@@ -79,10 +78,9 @@ const props = defineProps({
 })
 
 const route = useRoute();
-const eventId = new EventId(getRouteParamsValue(route, 'eventId')!);
+const eventId = computed(() => new EventId(getRouteParamsValue(route, 'eventId')));
 
-const { talkNotes, toggleFavorite, toggleWatchLater} = useUserTalkNotes(eventId, props.dayId!, props.talk!.id)
-const { eventTalkStats } = useEventTalkStats(eventId, props.dayId!, props.talk!.id)
+const { eventTalkStats, talkNotes, toggleFavorite, toggleWatchLater} = useUserTalkNotes(eventId, props.dayId, props.talk.id)
 
 const { triggerTabbedPageNavigate } = useTabbedPageNav();
 
@@ -98,7 +96,7 @@ const theme = {
 
 function openTalkDetails() {
     if(props.dayId && props.talk) {
-        triggerTabbedPageNavigate(`/events/${eventId.value}/days/${props.dayId.value}/talks/${props.talk.id.value}/details`, "forward", "push");
+        triggerTabbedPageNavigate(`/events/${eventId.value.value}/days/${props.dayId.value}/talks/${props.talk.id.value}/details`, "forward", "push");
     }
 }
 </script>

@@ -30,7 +30,10 @@ export type Talk = {
     room: Room
 }
 export type DetailedTalk = Talk & {
-    description: string;
+    start: ISODatetime,
+    end: ISODatetime,
+    summary: string,
+    description: string
 }
 
 export type ScheduleTimeSlot<START extends ISODatetime = ISODatetime, END extends ISODatetime = ISODatetime> = {

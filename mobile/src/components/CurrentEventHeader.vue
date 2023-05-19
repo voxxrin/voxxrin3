@@ -15,7 +15,7 @@
         <current-event-status :event="event"></current-event-status>
       </div>
     </ion-toolbar>
-    <img src="/assets/images/jpg/card-conf-cover-devoxx.jpg">
+    <img :src="event?.backgroundUrl">
   </ion-header>
 </template>
 
@@ -25,7 +25,6 @@ import CurrentEventStatus from "@/components/CurrentEventStatus.vue";
 import {PropType} from "vue";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {useTabbedPageNav} from "@/state/useTabbedPageNav";
-import {unsetCurrentSchedule} from "@/state/CurrentSchedule";
 
 const router = useIonRouter();
 const props = defineProps({
@@ -51,7 +50,8 @@ function backButtonClicked() {
     } else if (backBtnAction === 'triggerEventExit') {
         // Triggering tabbed page's back, and not current tab's
         triggerTabbedPageGoBack(() => {
-            unsetCurrentSchedule();
+            // TODO: check the expected behavior, seems to work without doing anything
+            // unsetCurrentSchedule();
             return Promise.resolve();
         });
     }

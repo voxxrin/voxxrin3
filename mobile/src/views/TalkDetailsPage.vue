@@ -16,7 +16,7 @@
           '--voxxrin-event-theme-colors-tertiary-contrast-hex': event.theming.colors.tertiaryContrastHex,
           '--voxxrin-event-theme-colors-tertiary-contrast-rgb': event.theming.colors.tertiaryContrastRGB,
     }">
-      <ion-header class="stickyHeader" :class="{ 'is-favorited': talkNotes.isFavorite, 'to-watch-later': talkNotes.watchLater }">
+      <ion-header class="stickyHeader" v-if="talkNotes" :class="{ 'is-favorited': talkNotes.isFavorite, 'to-watch-later': talkNotes.watchLater }">
         <ion-toolbar>
           <ion-button class="stickyHeader-close" shape="round" slot="start" size="small" fill="outline" @click="$router.back()">
             <ion-icon src="/assets/icons/solid/close.svg"></ion-icon>
@@ -31,7 +31,7 @@
               <ion-icon class="favorite-btn-icon" v-if="!talkNotes.isFavorite" aria-hidden="true" src="/assets/icons/line/bookmark-line-favorite.svg"></ion-icon>
               <ion-icon class="favorite-btn-icon" v-if="talkNotes.isFavorite" aria-hidden="true" src="/assets/icons/solid/bookmark-favorite.svg"></ion-icon>
             </ion-button>
-            <ion-label class="favorite-btn-nb" v-if="eventTalkStats.totalFavoritesCount !== undefined">{{
+            <ion-label class="favorite-btn-nb" v-if="eventTalkStats !== undefined">{{
                 eventTalkStats.totalFavoritesCount
               }}</ion-label>
           </div>
@@ -107,36 +107,37 @@
 </template>
 
 <script setup lang="ts">
-import CurrentEventHeader from "@/components/CurrentEventHeader.vue";
 import {useRoute} from "vue-router";
 import {EventId} from "@/models/VoxxrinEvent";
 import {getRouteParamsValue, isRefDefined} from "@/views/vue-utils";
-import {useCurrentConferenceDescriptor} from "@/state/CurrentConferenceDescriptor";
 import {useUserTalkNotes} from "@/state/useUserTalkNotes";
 import {DayId} from "@/models/VoxxrinDay";
 import {TalkId} from "@/models/VoxxrinTalk";
-import {useEventTalkStats} from "@/state/useEventTalkStats";
 import {useEventTalk} from "@/state/useEventTalk";
-import {getTimeslotLabel} from "@/models/VoxxrinSchedule";
 import {computed, watch} from "vue";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {IonBadge, IonAvatar, IonText} from "@ionic/vue";
 import {business} from "ionicons/icons";
+import {useConferenceDescriptor} from "@/state/useConferenceDescriptor";
+import {formatHourMinutes} from "@/models/DatesAndTime";
+import {Temporal} from "temporal-polyfill";
 
 const route = useRoute();
-const eventId = new EventId(getRouteParamsValue(route, 'eventId')!);
-const dayId = new DayId(getRouteParamsValue(route, 'dayId')!);
-const talkId = new TalkId(getRouteParamsValue(route, 'talkId')!);
-const event = useCurrentConferenceDescriptor(eventId);
+const eventId = computed(() => new EventId(getRouteParamsValue(route, 'eventId')));
+const dayId = computed(() => new DayId(getRouteParamsValue(route, 'dayId')));
+const talkId = computed(() => new TalkId(getRouteParamsValue(route, 'talkId')));
+const {conferenceDescriptor: event} = useConferenceDescriptor(eventId);
 
-const { talkNotes, toggleFavorite, toggleWatchLater} = useUserTalkNotes(eventId, dayId, talkId)
-const { eventTalkStats } = useEventTalkStats(eventId, dayId, talkId)
-const { talk } = useEventTalk(eventId, dayId, talkId);
+const { eventTalkStats, talkNotes, toggleFavorite, toggleWatchLater} = useUserTalkNotes(eventId, dayId, talkId)
+const { talkDetails: talk } = useEventTalk(event, talkId);
 const { LL } = typesafeI18n()
 
 const timeslotLabel = computed(() => {
-    if(isRefDefined(talk)) {
-        return getTimeslotLabel(talk.value.timeslot)
+    if(isRefDefined(talk) && isRefDefined(event)) {
+        return {
+            start: formatHourMinutes(Temporal.ZonedDateTime.from(`${talk.value.start}[${event.value.timezone}]`)),
+            end: formatHourMinutes(Temporal.ZonedDateTime.from(`${talk.value.end}[${event.value.timezone}]`)),
+        }
     } else {
         return undefined;
     }

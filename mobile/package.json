@@ -34,12 +34,15 @@
     "@capacitor/status-bar": "5.0.0",
     "@ionic/vue": "7.0.4",
     "@ionic/vue-router": "7.0.4",
+    "@vueuse/core": "^10.1.2",
+    "firebase": "^9.22.0",
     "ionicons": "7.0.0",
     "temporal-polyfill": "0.1.1",
     "ts-pattern": "4.2.2",
     "typesafe-i18n": "5.24.3",
     "vue": "3.2.47",
-    "vue-router": "4.1.6"
+    "vue-router": "4.1.6",
+    "vuefire": "3.1.0"
   },
   "devDependencies": {
     "@capacitor/cli": "5.0.0",
@@ -57,8 +60,16 @@
     "ts-essentials": "9.3.1",
     "typescript": "5.0.4",
     "vite": "4.1.4",
+    "vite-plugin-pwa": "0.14.7",
     "vitest": "0.30.1",
-    "vue-tsc": "1.0.24"
+    "vue-tsc": "1.0.24",
+    "workbox-build": "6.5.4",
+    "workbox-core": "6.5.4",
+    "workbox-expiration": "6.5.4",
+    "workbox-precaching": "6.5.4",
+    "workbox-routing": "6.5.4",
+    "workbox-strategies": "6.5.4",
+    "workbox-window": "6.5.4"
   },
   "description": "An Ionic project",
   "license": "Apache-2.0"

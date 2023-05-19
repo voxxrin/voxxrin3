@@ -15,16 +15,16 @@
       </ion-header>
 
       <day-selector
-          :selected="currentlySelectedDay"
-          :days="currentConferenceDescriptor?.days || []"
+          :selected-day-id="currentlySelectedDayId"
+          :days="event?.days || []"
           @day-selected="(day) => changeDayTo(day)">
       </day-selector>
 
-      <ion-accordion-group :multiple="true" v-if="currentConferenceDescriptor && currentlySelectedDay" :value="expandedTimeslotIds">
-          <time-slot-accordion :day-id="currentlySelectedDay.id"
+      <ion-accordion-group :multiple="true" v-if="event && currentlySelectedDayId" :value="expandedTimeslotIds">
+          <time-slot-accordion :day-id="currentlySelectedDayId"
               v-for="(timeslot, index) in timeslots" :key="timeslot.id.value"
               :timeslot-feedback="timeslot.feedback" :timeslot="timeslot"
-              :event="currentConferenceDescriptor"
+              :event="event"
               @add-timeslot-feedback-clicked="(ts) => showAlertForTimeslot(ts)"
               @click="() => toggleExpandedTimeslot(timeslot)">
           </time-slot-accordion>
@@ -56,45 +56,39 @@ import {
     alertController,
 } from '@ionic/vue';
 import {useRoute, useRouter} from "vue-router";
-import {onMounted, ref, watch} from "vue";
-import {
-    fetchSchedule,
-    watchCurrentSchedule
-} from "@/state/CurrentSchedule";
+import {computed, onMounted, ref, watch} from "vue";
+import {useSchedule} from "@/state/useSchedule";
 import CurrentEventHeader from "@/components/CurrentEventHeader.vue";
 import {getRouteParamsValue, isRefDefined, useInterval} from "@/views/vue-utils";
 import {EventId} from "@/models/VoxxrinEvent";
-import {VoxxrinDay} from "@/models/VoxxrinDay";
+import {DayId, VoxxrinDay} from "@/models/VoxxrinDay";
 import {
     filterTimeslotsToAutoExpandBasedOn,
     getTimeslotLabel,
     getTimeslotTimingProgress,
     VoxxrinScheduleTimeSlot
 } from "@/models/VoxxrinSchedule";
-import {
-    useCurrentConferenceDescriptor
-} from "@/state/CurrentConferenceDescriptor";
 import DaySelector from "@/components/DaySelector.vue";
-import {findDefaultConferenceDay, findVoxxrinDay} from "@/models/VoxxrinConferenceDescriptor";
+import {findBestAutoselectableConferenceDay, findVoxxrinDay} from "@/models/VoxxrinConferenceDescriptor";
 import TimeSlotAccordion from "@/components/TimeSlotAccordion.vue";
 import {VoxxrinTimeslotFeedback} from "@/models/VoxxrinFeedback";
-import {useCurrentClock} from "@/state/CurrentClock";
+import {useCurrentClock} from "@/state/useCurrentClock";
 import {typesafeI18n} from "@/i18n/i18n-vue";
+import {useConferenceDescriptor} from "@/state/useConferenceDescriptor";
 
 const router = useRouter();
 const route = useRoute();
-const eventId = new EventId(getRouteParamsValue(route, 'eventId')!);
-const event = useCurrentConferenceDescriptor(eventId);
+const eventId = computed(() => new EventId(getRouteParamsValue(route, 'eventId')));
+const {conferenceDescriptor: event} = useConferenceDescriptor(eventId);
 
 const { LL } = typesafeI18n()
 
-const currentConferenceDescriptor = useCurrentConferenceDescriptor(eventId);
-
-const currentlySelectedDay = ref<VoxxrinDay|undefined>(isRefDefined(currentConferenceDescriptor)?findDefaultConferenceDay(currentConferenceDescriptor.value):undefined)
+const currentlySelectedDayId = ref<DayId|undefined>(undefined)
 const changeDayTo = (day: VoxxrinDay) => {
-    currentlySelectedDay.value = day;
+    currentlySelectedDayId.value = day.id;
 }
 
+const { schedule: currentSchedule } = useSchedule(event, currentlySelectedDayId)
 const timeslots = ref<Array<VoxxrinScheduleTimeSlot & {feedback: VoxxrinTimeslotFeedback|undefined}>>([]);
 const missingFeedbacksPastTimeslots = ref<Array<{start: string, end: string, timeslot: VoxxrinScheduleTimeSlot}>>([])
 const expandedTimeslotIds = ref<string[]>([])
@@ -104,8 +98,15 @@ onMounted(async () => {
     useInterval(recomputeMissingFeedbacksList, {seconds:10}, {immediate: true})
 })
 
-watchCurrentSchedule((currentSchedule) => {
-    if(currentSchedule && isRefDefined(currentConferenceDescriptor)) {
+watch([event, currentlySelectedDayId], ([confDescriptor, selectedDayId]) => {
+  console.debug(`current conf descriptor changed`, confDescriptor, selectedDayId)
+  if (confDescriptor && !selectedDayId) {
+      currentlySelectedDayId.value = findBestAutoselectableConferenceDay(confDescriptor).id;
+  }
+}, {immediate: true})
+
+watch([event, currentSchedule], ([confDescriptor, currentSchedule]) => {
+    if(currentSchedule && confDescriptor) {
         timeslots.value = currentSchedule.timeSlots.map((ts, idx) => {
             // yes that's weird ... but looks like TS is not very smart here 🤔
             if(ts.type === 'break') {
@@ -116,7 +117,7 @@ watchCurrentSchedule((currentSchedule) => {
         });
         recomputeMissingFeedbacksList();
 
-        currentlySelectedDay.value = findVoxxrinDay(currentConferenceDescriptor.value, currentSchedule.day)
+        currentlySelectedDayId.value = findVoxxrinDay(confDescriptor, currentSchedule.day).id
 
         // Deferring expanded timeslots so that :
         // 1/ we don't load the DOM too much when open a schedule
@@ -126,13 +127,7 @@ watchCurrentSchedule((currentSchedule) => {
                 .map(ts => ts.id.value);
         }, 500)
     }
-});
-
-watch([currentlySelectedDay, currentConferenceDescriptor], async ([selectedDay, conferenceDescriptor]) => {
-    if(conferenceDescriptor !== undefined) {
-        fetchSchedule(conferenceDescriptor, (selectedDay || conferenceDescriptor.days[0]).id);
-    }
-}, {immediate: true})
+}, {immediate: true});
 
 function recomputeMissingFeedbacksList() {
     missingFeedbacksPastTimeslots.value = timeslots.value.filter(ts => {
