@@ -1,5 +1,4 @@
 /// <reference types="vitest" />
-import legacy from '@vitejs/plugin-legacy'
 import vue from '@vitejs/plugin-vue'
 import { VitePWA } from 'vite-plugin-pwa'
 import path from 'path'
@@ -11,7 +10,6 @@ export default defineConfig(({ command, mode }) => {
   const config: UserConfigExport = {
     plugins: [
       vue(),
-      legacy(),
       VitePWA({
         devOptions: {
           enabled: isDevMode,
