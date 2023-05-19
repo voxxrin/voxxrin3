@@ -7,6 +7,7 @@ import {
     persistentLocalCache,
     persistentMultipleTabManager,
 } from "firebase/firestore";
+import {firestoreDefaultConverter, globalFirestoreOptions} from "vuefire";
 
 
 export const app = initializeApp({
@@ -32,3 +33,16 @@ export const db = getFirestore(app);
 if (location.hostname === "localhost" && import.meta.env.DEV && import.meta.env.VITE_USE_LOCAL_FIREBASE_INSTANCE === 'true') {
     connectFirestoreEmulator(db, 'localhost', 8080);
 }
+
+globalFirestoreOptions.converter = {
+    // the default converter just returns the data: (data) => data
+    toFirestore: firestoreDefaultConverter.toFirestore,
+    fromFirestore: (snapshot, options) => {
+        const data = firestoreDefaultConverter.fromFirestore(snapshot, options);
+        if(data && snapshot.data()?.id !== undefined && snapshot.data()?.id !== data.id) {
+            data.__initialId = snapshot.data().id
+        }
+        return data
+    },
+};
+

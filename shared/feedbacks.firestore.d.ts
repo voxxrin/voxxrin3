@@ -6,12 +6,12 @@ export type TalkStats = {
 export type UserTalkNotes = {
     talkId: string,
     isFavorite: boolean,
-    watchLater?: boolean,
+    watchLater: boolean|null,
     ratings: {
-        bingo?: string[],
-        scale?: number
+        bingo: string[]|null,
+        scale: number|null
     },
-    comment?: string
+    comment: string|null
 }
 
 export type DayTalksStats = {

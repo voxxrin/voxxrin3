@@ -3,7 +3,7 @@ import {Replace} from "@/models/type-utils";
 import {EventTheme, ListableEvent} from "../../../shared/event-list.firestore";
 import {DayId, VoxxrinDay} from "@/models/VoxxrinDay";
 import {Temporal} from "temporal-polyfill";
-import {useCurrentClock} from "@/state/CurrentClock";
+import {useCurrentClock} from "@/state/useCurrentClock";
 import {zonedDateTimeRangeOf} from "@/models/DatesAndTime";
 
 export class EventId extends ValueObject<string>{ _eventIdClassDiscriminator!: never; }

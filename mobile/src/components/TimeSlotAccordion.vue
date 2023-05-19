@@ -58,7 +58,7 @@ import {
 } from "@/models/VoxxrinSchedule";
 import {VoxxrinTimeslotFeedback} from "@/models/VoxxrinFeedback";
 import {useInterval} from "@/views/vue-utils";
-import {useCurrentClock} from "@/state/CurrentClock";
+import {useCurrentClock} from "@/state/useCurrentClock";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import TalkFormatGroupsBreakdown from "@/components/TalkFormatGroupsBreakdown.vue";
 import ScheduleBreak from "@/components/ScheduleBreak.vue";

@@ -6,6 +6,8 @@ import { FieldValue } from "firebase-admin/firestore";
 import { UserDayTalksNotes } from "../../../../../shared/feedbacks.firestore";
 
 export const onUserTalksNoteUpdate = functions.firestore
+    // FIXME: don't make talk notes on a per-day basis because if the talk is moved
+    // from one day to another
     .document("users/{userId}/events/{eventId}/talksNotes/{day}")
     .onUpdate((change, context) => {
         const userId = context.params.userId;
