@@ -3,17 +3,29 @@ import * as _ from "lodash";
 
 import { CfpEvent, DevoxxScheduleItem, DevoxxScheduleSpeakerInfo } from "./types"
 import { DailySchedule, DetailedTalk, Speaker, Talk } from "../../../../../shared/dayly-schedule.firestore"
-import { TalkStats } from "../../../../../shared/feedbacks.firestore";
+import {DayTalksStats, TalkStats} from "../../../../../shared/feedbacks.firestore";
 import { FullEvent } from "../../models/Event";
 import { ISODatetime, ISOLocalDate } from "../../../../../shared/type-utils";
 import { Day, ListableEvent } from "../../../../../shared/event-list.firestore";
 import { Temporal } from "@js-temporal/polyfill";
+import {FULL_DESCRIPTOR_PARSER} from "../crawl-kind";
+import {z} from "zod";
+import {ConferenceDescriptor} from "../../../../../shared/conference-descriptor.firestore";
 
 const axios = require('axios');
 
 const daysOfWeek = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
 
-export const crawl = async (eventId:string) => {
+export const DEVOXX_DESCRIPTOR_PARSER = FULL_DESCRIPTOR_PARSER.omit({
+    // All these fields can be extracted from the devoxx API
+    title: true, description: true, days: true,
+    timezone: true, location: true,
+    // We're not putting tracks here even though we can get them from devoxx API
+    // because we need a theme color for them that are currently *not* provided by the API
+    talkFormats: true, rooms: true,
+})
+
+export const crawl = async (eventId: string, descriptor: z.infer<typeof DEVOXX_DESCRIPTOR_PARSER>) => {
     const res = await axios.get(`https://${eventId}.cfp.dev/api/public/event`)
     const e: CfpEvent = res.data;
 
@@ -33,36 +45,58 @@ export const crawl = async (eventId:string) => {
         id: eventId,
         title: e.name,
         description: e.description,
-        peopleDescription: "",
+        peopleDescription: descriptor.peopleDescription,
         timezone: e.timezone,
         start: start,
         end: end,
         days: days,
-        logoUrl: guessLogoUrl(e),
+        logoUrl: descriptor.logoUrl,
         backgroundUrl: e.eventImageURL,
         websiteUrl: e.website,
         location: { city: e.locationCity, country: e.locationCountry },
-        theming: {
-            colors: {
-                primaryHex: "#F78327",
-                primaryContrastHex: "#FFFFFF",
-                secondaryHex: "#3880FF",
-                secondaryContrastHex: "#FFFFFF",
-                tertiaryHex: "#0F0F0F",
-                tertiaryContrastHex: "#FFFFFF"
-            }
-        },
-        keywords: [ "Devoxx", "Java", "Kotlin", "Cloud", "Big data", "Web" ]
+        theming: descriptor.theming,
+        keywords: descriptor.keywords
       } as ListableEvent
 
-    const event: FullEvent = { id: eventId, info: eventInfo, daySchedules: [], talkStats: [], talks: []}
-    for (const day of days) {
-        const {daySchedule, talkStats, talks} = await crawlDevoxxDay(eventId, day.id)
-        event.daySchedules.push(daySchedule)        
-        event.talkStats.push({day: day.id, stats: talkStats})
+    const eventTalks: Talk[] = [],
+        eventTalkStats: DayTalksStats[] = [],
+        daySchedules: DailySchedule[] = [],
+        eventRooms: ConferenceDescriptor['rooms'] = [],
+        eventTalkFormats: ConferenceDescriptor['talkFormats'] = [];
+    await Promise.all(days.map(async day => {
+        const {daySchedule, talkStats, talks, rooms, talkFormats} = await crawlDevoxxDay(eventId, day.id)
+        daySchedules.push(daySchedule)
+        eventTalkStats.push({day: day.id, stats: talkStats})
         for (const talk of talks) {
-            event.talks.push(talk)
+            eventTalks.push(talk)
         }
+        rooms.forEach(r => {
+            if(!eventRooms.find(er => er.id === r.id)) {
+                eventRooms.push(r);
+            }
+        })
+        talkFormats.forEach(tf => {
+            if(!eventTalkFormats.find(etf => etf.id === tf.id)) {
+                eventTalkFormats.push(tf);
+            }
+        })
+    }))
+
+    const eventDescriptor: ConferenceDescriptor = {
+        ...eventInfo,
+        headingTitle: descriptor.headingTitle,
+        features: descriptor.features,
+        talkFormats: eventTalkFormats,
+        talkTracks: descriptor.talkTracks,
+        supportedTalkLanguages: descriptor.supportedTalkLanguages,
+        rooms: eventRooms,
+        infos: descriptor.infos
+    }
+
+    const event: FullEvent = {
+        id: eventId, info: eventInfo, daySchedules,
+        talkStats: eventTalkStats, talks: eventTalks,
+        conferenceDescriptor: eventDescriptor
     }
     return event
 }
@@ -81,10 +115,25 @@ const crawlDevoxxDay = async (eventId: string, day: string) => {
 
     const talks: Talk[] = []
 
+    const rooms: ConferenceDescriptor['rooms'] = [];
+    const talkFormats: ConferenceDescriptor['talkFormats'] = [];
+
     const slots = _.groupBy(schedules, (s:DevoxxScheduleItem) => {return s.fromDate + "--" + s.toDate})
 
     const toScheduleTalk = function(item: DevoxxScheduleItem) {
         const proposal = item.proposal
+
+        if(!rooms.find(r => r.id === item.room.id.toString())) {
+            rooms.push({ id: item.room.id.toString(), title: item.room.name });
+        }
+        if(!talkFormats.find(tf => tf.id === item.sessionType.id.toString())) {
+            talkFormats.push({
+                id: item.sessionType.id.toString(), title: item.sessionType.name,
+                duration: `PT${item.sessionType.duration}m`,
+                themeColor: item.sessionType.cssColor
+            });
+        }
+
         const base = {
             room: {
                 id: item.room.id.toString(),
@@ -180,9 +229,5 @@ const crawlDevoxxDay = async (eventId: string, day: string) => {
     })
 
     info("devoxx day crawling done for " + day)
-    return {daySchedule, talkStats, talks}
+    return {daySchedule, talkStats, talks, rooms, talkFormats}
 }
-
-// TODO - improve that
-const guessLogoUrl = (e: CfpEvent) => 
-    "https://devoxx.be/wp-content/uploads/2019/05/DEVOXX-Name-Only-TransparentBackground.png"
