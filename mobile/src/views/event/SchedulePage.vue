@@ -74,12 +74,12 @@ import TimeSlotAccordion from "@/components/TimeSlotAccordion.vue";
 import {VoxxrinTimeslotFeedback} from "@/models/VoxxrinFeedback";
 import {useCurrentClock} from "@/state/useCurrentClock";
 import {typesafeI18n} from "@/i18n/i18n-vue";
-import {useConferenceDescriptor} from "@/state/useConferenceDescriptor";
+import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
 
 const router = useRouter();
 const route = useRoute();
 const eventId = computed(() => new EventId(getRouteParamsValue(route, 'eventId')));
-const {conferenceDescriptor: event} = useConferenceDescriptor(eventId);
+const {conferenceDescriptor: event} = useSharedConferenceDescriptor(eventId);
 
 const { LL } = typesafeI18n()
 

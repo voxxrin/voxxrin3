@@ -8,6 +8,7 @@ import {Unreffable} from "@/views/vue-utils";
 import {collection, doc, DocumentReference} from "firebase/firestore";
 import {db} from "@/state/firebase";
 import {useDocument} from "vuefire";
+import {createSharedComposable} from "@vueuse/core";
 
 export function useConferenceDescriptor(
     eventIdRef: Unreffable<EventId | undefined>) {
@@ -45,3 +46,5 @@ export function useConferenceDescriptor(
         })
     };
 }
+
+export const useSharedConferenceDescriptor = createSharedComposable(useConferenceDescriptor);

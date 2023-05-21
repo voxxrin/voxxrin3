@@ -8,6 +8,7 @@ import {db} from "@/state/firebase";
 import {TalkStats} from "../../../shared/feedbacks.firestore";
 import {useDocument} from "vuefire";
 import {createVoxxrinTalkStatsFromFirestore} from "@/models/VoxxrinTalkStats";
+import {createSharedComposable} from "@vueuse/core";
 
 
 export function useTalkStats(eventIdRef: Unreffable<EventId | undefined>,
@@ -76,3 +77,5 @@ export function useTalkStats(eventIdRef: Unreffable<EventId | undefined>,
         }
     };
 }
+
+export const useSharedTalkStats = createSharedComposable(useTalkStats)

@@ -12,6 +12,7 @@ import {
 } from "@/models/VoxxrinSchedule";
 import {Unreffable} from "@/views/vue-utils";
 import {useDocument} from "vuefire";
+import {createSharedComposable} from "@vueuse/core";
 
 
 export function useEventTalk(
@@ -45,3 +46,5 @@ export function useEventTalk(
         })
     };
 }
+
+export const useSharedEventTalk = createSharedComposable(useEventTalk);
