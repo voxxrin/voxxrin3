@@ -96,7 +96,7 @@
                 </span>
               </div>
               <div class="speakerInfo-description">
-                <div v-html="speaker.speakerBio"></div>
+                <div v-html="speaker.bio"></div>
               </div>
             </div>
           </ion-item>

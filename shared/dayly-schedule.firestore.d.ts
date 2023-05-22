@@ -18,7 +18,9 @@ export type Speaker = {
     photoUrl: string,
     companyName: string,
     fullName: string,
-    id: string
+    id: string,
+    bio: string,
+    social: Array<{type: "twitter"|"linkedin"|"mastodon", url: string}>
 }
 export type Talk = {
     speakers: Speaker[],
