@@ -57,7 +57,7 @@ import {
 } from '@ionic/vue';
 import {useRoute, useRouter} from "vue-router";
 import {computed, onMounted, ref, watch} from "vue";
-import {useSchedule} from "@/state/useSchedule";
+import {prepareSchedules, useSchedule} from "@/state/useSchedule";
 import CurrentEventHeader from "@/components/CurrentEventHeader.vue";
 import {getRouteParamsValue, isRefDefined, useInterval} from "@/views/vue-utils";
 import {EventId} from "@/models/VoxxrinEvent";
@@ -74,12 +74,12 @@ import TimeSlotAccordion from "@/components/TimeSlotAccordion.vue";
 import {VoxxrinTimeslotFeedback} from "@/models/VoxxrinFeedback";
 import {useCurrentClock} from "@/state/useCurrentClock";
 import {typesafeI18n} from "@/i18n/i18n-vue";
-import {useConferenceDescriptor} from "@/state/useConferenceDescriptor";
+import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
 
 const router = useRouter();
 const route = useRoute();
 const eventId = computed(() => new EventId(getRouteParamsValue(route, 'eventId')));
-const {conferenceDescriptor: event} = useConferenceDescriptor(eventId);
+const {conferenceDescriptor: event} = useSharedConferenceDescriptor(eventId);
 
 const { LL } = typesafeI18n()
 
@@ -102,6 +102,13 @@ watch([event, currentlySelectedDayId], ([confDescriptor, selectedDayId]) => {
   console.debug(`current conf descriptor changed`, confDescriptor, selectedDayId)
   if (confDescriptor && !selectedDayId) {
       currentlySelectedDayId.value = findBestAutoselectableConferenceDay(confDescriptor).id;
+
+      // Pre-loading other days data in the background, for 2 main reasons :
+      // - navigation to other days will be quickier
+      // - if user switches to offline without navigating to these days, information will be in his cache anyway
+      const otherDayIds = confDescriptor.days.filter(day => !day.id.isSameThan(currentlySelectedDayId.value)).map(d => d.id);
+      console.log(`Preparing schedule data for other days than currently selected one (${otherDayIds.map(id => id.value).join(", ")})`)
+      prepareSchedules(confDescriptor, otherDayIds);
   }
 }, {immediate: true})
 

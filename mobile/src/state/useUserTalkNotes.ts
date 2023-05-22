@@ -2,7 +2,7 @@ import {EventId} from "@/models/VoxxrinEvent";
 import {DayId} from "@/models/VoxxrinDay";
 import {TalkId} from "@/models/VoxxrinTalk";
 import {computed, Ref, unref} from "vue";
-import {useTalkStats} from "@/state/useEventTalkStats";
+import {useSharedTalkStats} from "@/state/useEventTalkStats";
 import {useCurrentUser, useDocument} from "vuefire";
 import {Unreffable} from "@/views/vue-utils";
 import {collection, doc, DocumentReference, setDoc, updateDoc, arrayUnion } from "firebase/firestore";
@@ -35,7 +35,7 @@ export function useUserTalkNotes(
         ) as DocumentReference<UserDayTalksNotes>
     });
 
-    const { eventTalkStats, incrementInMemoryTotalFavoritesCount, decrementInMemoryTotalFavoritesCount } = useTalkStats(eventIdRef, dayIdRef, talkIdRef)
+    const { eventTalkStats, incrementInMemoryTotalFavoritesCount, decrementInMemoryTotalFavoritesCount } = useSharedTalkStats(eventIdRef, dayIdRef, talkIdRef)
 
     const firestoreUserTalkNotesRef = useDocument(firestoreUserTalkNotesSource);
 
@@ -168,4 +168,13 @@ export function useUserTalkNotes(
         toggleFavorite,
         toggleWatchLater
     };
+}
+
+export function prepareUserTalkNotes(
+    eventId: EventId,
+    dayAndTalkIds: Array<{dayId: DayId, talkId: TalkId}>
+) {
+    dayAndTalkIds.forEach(dayAndTalkId => {
+        useUserTalkNotes(eventId, dayAndTalkId.dayId, dayAndTalkId.talkId);
+    })
 }

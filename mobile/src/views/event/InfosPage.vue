@@ -24,10 +24,10 @@
   import {useRoute} from "vue-router";
   import {EventId} from "@/models/VoxxrinEvent";
   import {getRouteParamsValue} from "@/views/vue-utils";
-  import {useConferenceDescriptor} from "@/state/useConferenceDescriptor";
+  import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
   import {computed} from "vue";
 
   const route = useRoute();
   const eventId = computed(() => new EventId(getRouteParamsValue(route, 'eventId')));
-  const {conferenceDescriptor: event} = useConferenceDescriptor(eventId);
+  const {conferenceDescriptor: event} = useSharedConferenceDescriptor(eventId);
 </script>

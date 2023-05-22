@@ -1,7 +1,7 @@
 import {sortBy, ValueObject} from "@/models/utils";
 import {Break, DetailedTalk, Talk} from "../../../shared/dayly-schedule.firestore";
 import {RoomId, VoxxrinRoom} from "@/models/VoxxrinRoom";
-import {SpeakerId, VoxxrinSpeaker} from "@/models/VoxxrinSpeaker";
+import {SpeakerId, VoxxrinDetailedSpeaker, VoxxrinSimpleSpeaker} from "@/models/VoxxrinSpeaker";
 import {TalkFormatId, VoxxrinTalkFormat} from "@/models/VoxxrinTalkFormat";
 import {TrackId, VoxxrinTrack} from "@/models/VoxxrinTrack";
 import {Replace} from "@/models/type-utils";
@@ -18,7 +18,7 @@ export class TalkId extends ValueObject<string>{ _talkIdClassDiscriminator!: nev
 
 export type VoxxrinBreak = Replace<Break, {room: VoxxrinRoom}>
 export type VoxxrinTalk = Replace<Talk, {
-    speakers: VoxxrinSpeaker[],
+    speakers: VoxxrinSimpleSpeaker[],
     format: VoxxrinTalkFormat,
     track: VoxxrinTrack,
     room: VoxxrinRoom,
@@ -26,9 +26,7 @@ export type VoxxrinTalk = Replace<Talk, {
 }>
 
 export type VoxxrinDetailedTalk = Replace<VoxxrinTalk, {
-    speakers: Array<VoxxrinSpeaker & {
-        speakerBio: string
-    }>,
+    speakers: Array<VoxxrinDetailedSpeaker>,
 }> & {
     start: ISODatetime,
     end: ISODatetime,
@@ -40,7 +38,7 @@ export function createVoxxrinTalkFromFirestore(event: VoxxrinConferenceDescripto
     const track = findTrack(event, new TrackId(firestoreTalk.track.id));
     const room = findRoom(event, new RoomId(firestoreTalk.room.id));
 
-    return {
+    const talk: VoxxrinTalk = {
         language: firestoreTalk.language,
         title: firestoreTalk.title,
         speakers: firestoreTalk.speakers.map(sp => ({
@@ -54,21 +52,22 @@ export function createVoxxrinTalkFromFirestore(event: VoxxrinConferenceDescripto
         room,
         id: new TalkId(firestoreTalk.id)
     }
+    return talk;
 }
 export function createVoxxrinDetailedTalkFromFirestore(event: VoxxrinConferenceDescriptor, firestoreTalk: DetailedTalk): VoxxrinDetailedTalk {
     const talk = createVoxxrinTalkFromFirestore(event, firestoreTalk);
 
-    return {
+    const detailedTalk: VoxxrinDetailedTalk = {
         ...talk,
         start: firestoreTalk.start,
         end: firestoreTalk.end,
-        speakers: talk.speakers.map(s => ({
-            ...s,
-            // TODO: removed this hardcoded value
-            speakerBio: `<strong>Here</strong>: the speaker's bio summary (we don't have it yet)`
+        speakers: firestoreTalk.speakers.map(sp => ({
+            ...sp,
+            id: new SpeakerId(sp.id)
         })),
         description: firestoreTalk.description,
     };
+    return detailedTalk;
 }
 
 

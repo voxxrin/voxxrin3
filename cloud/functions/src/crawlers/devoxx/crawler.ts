@@ -145,12 +145,15 @@ const crawlDevoxxDay = async (eventId: string, day: string) => {
             id: item.proposal.id.toString(),
             title: item.proposal.title,
             speakers: item.proposal.speakers.map((s:DevoxxScheduleSpeakerInfo) => {
-                return {
+                const speaker: Speaker = {
                     id: s.id.toString(),
                     fullName: s.fullName,
                     companyName: s.company,
-                    photoUrl: s.imageUrl
-                } as Speaker
+                    photoUrl: s.imageUrl,
+                    bio: s.bio,
+                    social: s.twitterHandle?[{type: "twitter", url: `https://twitter.com/${s.twitterHandle}`}]:[]
+                }
+                return speaker;
             }),
             room: {
                 id: item.room.id.toString(),

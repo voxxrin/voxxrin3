@@ -96,7 +96,7 @@
                 </span>
               </div>
               <div class="speakerInfo-description">
-                <div v-html="speaker.speakerBio"></div>
+                <div v-html="speaker.bio"></div>
               </div>
             </div>
           </ion-item>
@@ -113,12 +113,12 @@ import {getRouteParamsValue, isRefDefined} from "@/views/vue-utils";
 import {useUserTalkNotes} from "@/state/useUserTalkNotes";
 import {DayId} from "@/models/VoxxrinDay";
 import {TalkId} from "@/models/VoxxrinTalk";
-import {useEventTalk} from "@/state/useEventTalk";
+import {useSharedEventTalk} from "@/state/useEventTalk";
 import {computed, watch} from "vue";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {IonBadge, IonAvatar, IonText} from "@ionic/vue";
 import {business} from "ionicons/icons";
-import {useConferenceDescriptor} from "@/state/useConferenceDescriptor";
+import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
 import {formatHourMinutes} from "@/models/DatesAndTime";
 import {Temporal} from "temporal-polyfill";
 
@@ -126,10 +126,10 @@ const route = useRoute();
 const eventId = computed(() => new EventId(getRouteParamsValue(route, 'eventId')));
 const dayId = computed(() => new DayId(getRouteParamsValue(route, 'dayId')));
 const talkId = computed(() => new TalkId(getRouteParamsValue(route, 'talkId')));
-const {conferenceDescriptor: event} = useConferenceDescriptor(eventId);
+const {conferenceDescriptor: event} = useSharedConferenceDescriptor(eventId);
 
 const { eventTalkStats, talkNotes, toggleFavorite, toggleWatchLater} = useUserTalkNotes(eventId, dayId, talkId)
-const { talkDetails: talk } = useEventTalk(event, talkId);
+const { talkDetails: talk } = useSharedEventTalk(event, talkId);
 const { LL } = typesafeI18n()
 
 const timeslotLabel = computed(() => {
