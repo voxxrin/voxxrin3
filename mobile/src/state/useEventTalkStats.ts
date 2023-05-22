@@ -78,4 +78,13 @@ export function useTalkStats(eventIdRef: Unreffable<EventId | undefined>,
     };
 }
 
+export function prepareTalkStats(
+    eventId: EventId,
+    dayAndTalkIds: Array<{dayId: DayId, talkId: TalkId}>
+) {
+    dayAndTalkIds.forEach(dayAndTalkId => {
+        useTalkStats(eventId, dayAndTalkId.dayId, dayAndTalkId.talkId);
+    })
+}
+
 export const useSharedTalkStats = createSharedComposable(useTalkStats)

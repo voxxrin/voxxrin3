@@ -47,4 +47,13 @@ export function useEventTalk(
     };
 }
 
+export function prepareEventTalks(
+    conferenceDescriptor: VoxxrinConferenceDescriptor,
+    talkIds: Array<TalkId>
+) {
+    talkIds.forEach(talkId => {
+        useEventTalk(conferenceDescriptor, talkId);
+    })
+}
+
 export const useSharedEventTalk = createSharedComposable(useEventTalk);

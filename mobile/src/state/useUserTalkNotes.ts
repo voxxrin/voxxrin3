@@ -169,3 +169,12 @@ export function useUserTalkNotes(
         toggleWatchLater
     };
 }
+
+export function prepareUserTalkNotes(
+    eventId: EventId,
+    dayAndTalkIds: Array<{dayId: DayId, talkId: TalkId}>
+) {
+    dayAndTalkIds.forEach(dayAndTalkId => {
+        useUserTalkNotes(eventId, dayAndTalkId.dayId, dayAndTalkId.talkId);
+    })
+}
