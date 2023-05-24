@@ -1,13 +1,13 @@
 import {db, info, error} from "../firebase"
-import {crawl as crawlDevoxx, DEVOXX_DESCRIPTOR_PARSER} from "./devoxx/crawler"
+import {DEVOXX_CRAWLER} from "./devoxx/crawler"
 import { FullEvent } from "../models/Event";
 import {FIREBASE_CRAWLER_DESCRIPTOR_PARSER, CrawlerKind} from "./crawl-kind";
 import {z} from "zod";
 const axios = require('axios');
 
 
-const CRAWLERS: CrawlerKind<z.ZodType>[] = [
-    { kind: 'devoxx', crawlerImpl: crawlDevoxx, descriptorParser: DEVOXX_DESCRIPTOR_PARSER }
+const CRAWLERS: CrawlerKind<any>[] = [
+    DEVOXX_CRAWLER,
 ]
 
 const crawlAll = async function() {

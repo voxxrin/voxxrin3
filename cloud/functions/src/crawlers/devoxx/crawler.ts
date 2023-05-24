@@ -13,15 +13,14 @@ import { FullEvent } from "../../models/Event";
 import { ISODatetime, ISOLocalDate } from "../../../../../shared/type-utils";
 import { Day, ListableEvent } from "../../../../../shared/event-list.firestore";
 import { Temporal } from "@js-temporal/polyfill";
-import {FULL_DESCRIPTOR_PARSER} from "../crawl-kind";
+import {CrawlerKind, FULL_DESCRIPTOR_PARSER} from "../crawl-kind";
 import {z} from "zod";
 import {ConferenceDescriptor} from "../../../../../shared/conference-descriptor.firestore";
-
-const axios = require('axios');
+import axios from "axios";
 
 const daysOfWeek = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
 
-export const DEVOXX_DESCRIPTOR_PARSER = FULL_DESCRIPTOR_PARSER.omit({
+const DEVOXX_DESCRIPTOR_PARSER = FULL_DESCRIPTOR_PARSER.omit({
     // All these fields can be extracted from the devoxx API
     title: true, description: true, days: true,
     timezone: true, location: true,
@@ -30,81 +29,86 @@ export const DEVOXX_DESCRIPTOR_PARSER = FULL_DESCRIPTOR_PARSER.omit({
     talkFormats: true, rooms: true,
 })
 
-export const crawl = async (eventId: string, descriptor: z.infer<typeof DEVOXX_DESCRIPTOR_PARSER>) => {
-    const res = await axios.get(`https://${eventId}.cfp.dev/api/public/event`)
-    const e: CfpEvent = res.data;
+export const DEVOXX_CRAWLER: CrawlerKind<typeof DEVOXX_DESCRIPTOR_PARSER> = {
+    kind: 'devoxx',
+    descriptorParser: DEVOXX_DESCRIPTOR_PARSER,
+    crawlerImpl: async (eventId: string, descriptor: z.infer<typeof DEVOXX_DESCRIPTOR_PARSER>) => {
+        const res = await axios.get(`https://${eventId}.cfp.dev/api/public/event`)
+        const e: CfpEvent = res.data;
 
-    const start = e.fromDate.substring(0, 10) as ISOLocalDate
-    const end = e.toDate.substring(0, 10) as ISOLocalDate
+        const start = e.fromDate.substring(0, 10) as ISOLocalDate
+        const end = e.toDate.substring(0, 10) as ISOLocalDate
 
-    // collect days
-    const days: Day[] = []    
-    for(let d:Temporal.PlainDate = Temporal.PlainDate.from(start); ; d = d.add({days: 1})) {
-        days.push({id: daysOfWeek[d.dayOfWeek - 1], localDate: d.toString() as ISOLocalDate})
-        if (d.toString() == end) {
-            break;
-        }
-    }    
-
-    const eventInfo = {
-        id: eventId,
-        title: e.name,
-        description: e.description,
-        peopleDescription: descriptor.peopleDescription,
-        timezone: e.timezone,
-        start: start,
-        end: end,
-        days: days,
-        logoUrl: descriptor.logoUrl,
-        backgroundUrl: e.eventImageURL,
-        websiteUrl: e.website,
-        location: { city: e.locationCity, country: e.locationCountry },
-        theming: descriptor.theming,
-        keywords: descriptor.keywords
-      } as ListableEvent
-
-    const eventTalks: Talk[] = [],
-        eventTalkStats: DayTalksStats[] = [],
-        daySchedules: DailySchedule[] = [],
-        eventRooms: ConferenceDescriptor['rooms'] = [],
-        eventTalkFormats: ConferenceDescriptor['talkFormats'] = [];
-    await Promise.all(days.map(async day => {
-        const {daySchedule, talkStats, talks, rooms, talkFormats} = await crawlDevoxxDay(eventId, day.id)
-        daySchedules.push(daySchedule)
-        eventTalkStats.push({day: day.id, stats: talkStats})
-        for (const talk of talks) {
-            eventTalks.push(talk)
-        }
-        rooms.forEach(r => {
-            if(!eventRooms.find(er => er.id === r.id)) {
-                eventRooms.push(r);
+        // collect days
+        const days: Day[] = []
+        for(let d:Temporal.PlainDate = Temporal.PlainDate.from(start); ; d = d.add({days: 1})) {
+            days.push({id: daysOfWeek[d.dayOfWeek - 1], localDate: d.toString() as ISOLocalDate})
+            if (d.toString() == end) {
+                break;
             }
-        })
-        talkFormats.forEach(tf => {
-            if(!eventTalkFormats.find(etf => etf.id === tf.id)) {
-                eventTalkFormats.push(tf);
+        }
+
+        const eventInfo = {
+            id: eventId,
+            title: e.name,
+            description: e.description,
+            peopleDescription: descriptor.peopleDescription,
+            timezone: e.timezone,
+            start: start,
+            end: end,
+            days: days,
+            logoUrl: descriptor.logoUrl,
+            backgroundUrl: e.eventImageURL,
+            websiteUrl: e.website,
+            location: { city: e.locationCity, country: e.locationCountry },
+            theming: descriptor.theming,
+            keywords: descriptor.keywords
+        } as ListableEvent
+
+        const eventTalks: DetailedTalk[] = [],
+            eventTalkStats: DayTalksStats[] = [],
+            daySchedules: DailySchedule[] = [],
+            eventRooms: ConferenceDescriptor['rooms'] = [],
+            eventTalkFormats: ConferenceDescriptor['talkFormats'] = [];
+        await Promise.all(days.map(async day => {
+            const {daySchedule, talkStats, talks, rooms, talkFormats} = await crawlDevoxxDay(eventId, day.id)
+            daySchedules.push(daySchedule)
+            eventTalkStats.push({day: day.id, stats: talkStats})
+            for (const talk of talks) {
+                eventTalks.push(talk)
             }
-        })
-    }))
+            rooms.forEach(r => {
+                if(!eventRooms.find(er => er.id === r.id)) {
+                    eventRooms.push(r);
+                }
+            })
+            talkFormats.forEach(tf => {
+                if(!eventTalkFormats.find(etf => etf.id === tf.id)) {
+                    eventTalkFormats.push(tf);
+                }
+            })
+        }))
 
-    const eventDescriptor: ConferenceDescriptor = {
-        ...eventInfo,
-        headingTitle: descriptor.headingTitle,
-        features: descriptor.features,
-        talkFormats: eventTalkFormats,
-        talkTracks: descriptor.talkTracks,
-        supportedTalkLanguages: descriptor.supportedTalkLanguages,
-        rooms: eventRooms,
-        infos: descriptor.infos
-    }
+        const eventDescriptor: ConferenceDescriptor = {
+            ...eventInfo,
+            headingTitle: descriptor.headingTitle,
+            features: descriptor.features,
+            talkFormats: eventTalkFormats,
+            talkTracks: descriptor.talkTracks,
+            supportedTalkLanguages: descriptor.supportedTalkLanguages,
+            rooms: eventRooms,
+            infos: descriptor.infos
+        }
 
-    const event: FullEvent = {
-        id: eventId, info: eventInfo, daySchedules,
-        talkStats: eventTalkStats, talks: eventTalks,
-        conferenceDescriptor: eventDescriptor
+        const event: FullEvent = {
+            id: eventId, info: eventInfo, daySchedules,
+            talkStats: eventTalkStats, talks: eventTalks,
+            conferenceDescriptor: eventDescriptor
+        }
+        return event
     }
-    return event
-}
+};
+
 
 const crawlDevoxxDay = async (eventId: string, day: string) => {
     const res = await axios.get(`https://${eventId}.cfp.dev/api/public/schedules/${day}`)
