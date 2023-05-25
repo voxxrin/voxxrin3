@@ -16,7 +16,7 @@ import {z} from "zod";
 import {ConferenceDescriptor} from "../../../../../shared/conference-descriptor.firestore";
 import axios from "axios";
 import {EVENT_DESCRIPTOR_PARSER, TALK_FORMAT_PARSER} from "../crawler-parsers";
-import {CrawlerKind} from "../crawl";
+import {CrawlerKind, TALK_FORMAT_FALLBACK_COLORS} from "../crawl";
 
 const daysOfWeek = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
 
@@ -137,7 +137,7 @@ const crawlDevoxxDay = async (eventId: string, day: string) => {
             talkFormats.push({
                 id: item.sessionType.id.toString(), title: item.sessionType.name,
                 duration: `PT${item.sessionType.duration}m`,
-                themeColor: item.sessionType.cssColor
+                themeColor: item.sessionType.cssColor || TALK_FORMAT_FALLBACK_COLORS[talkFormats.length % TALK_FORMAT_FALLBACK_COLORS.length]
             });
         }
 

@@ -16,6 +16,20 @@ const CRAWLERS: CrawlerKind<any>[] = [
     DEVOXX_CRAWLER,
 ]
 
+export const TALK_FORMAT_FALLBACK_COLORS: HexColor[] = [
+    "#165CE3", "#EA7872", "#935A59", "#3EDDEF",
+    "#69BE72", "#DA8DE0", "#7D51FB", "#199F8F",
+    "#D6B304", "#C21146"
+];
+export const TALK_TRACK_FALLBACK_COLORS: HexColor[] = [
+    "#165CE3", "#EA7872", "#935A59", "#3EDDEF",
+    "#69BE72", "#DA8DE0", "#7D51FB", "#199F8F",
+    "#D6B304", "#C21146"
+];
+export const LANGUAGE_FALLBACK_COLORS: HexColor[] = [
+    "#165CE3"
+];
+
 const crawlAll = async function() {
     info("Starting crawling");
     const start = Date.now();

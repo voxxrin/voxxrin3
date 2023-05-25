@@ -19,7 +19,7 @@ export interface DevoxxScheduleItem {
           duration: number,
           isPause: boolean,
           description: string,
-          cssColor: HexColor
+          cssColor?: HexColor|undefined
         },
         proposal?: DevoxxScheduleProposal,
         timezone: string,
