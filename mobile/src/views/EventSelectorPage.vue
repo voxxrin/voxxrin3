@@ -218,10 +218,10 @@ function removeEventFromPinnedEvents(event: ListableVoxxrinEvent) {
     flex-direction: row;
     column-gap: 12px;
     padding: 12px var( --app-gutters-medium);
+    border-bottom: 1px solid var(--app-beige-line);
     background-color: var(--app-background);
     backdrop-filter: blur(2px);
-    border-bottom: none;
-    z-index: 1;
+    z-index: 999;
 
     .conferenceToggle {
       display: flex;

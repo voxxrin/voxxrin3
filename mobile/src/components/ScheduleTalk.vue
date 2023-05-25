@@ -21,7 +21,8 @@
       <div class="pictures">
         <div class="picturesItem" v-for="(speaker, index) in talk.speakers" :key="index">
           <ion-thumbnail>
-            <img :src="speaker.photoUrl" />
+            <img :src="speaker.photoUrl" v-if="speaker.photoUrl"/>
+            <img src="/assets/images/svg/avatar-shadow.svg" v-if="!speaker.photoUrl"/>
           </ion-thumbnail>
         </div>
       </div>
