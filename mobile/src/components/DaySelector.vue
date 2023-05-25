@@ -16,6 +16,31 @@
       </div>
     </ion-item>
   </ion-list>
+  <!--TODO Swith mode when only day -->
+  <ion-item class="onlyDay"
+            v-for="(day, index) in formattedDays"
+            v-if="false">
+    <ion-icon src="/assets/icons/solid/calendar.svg"></ion-icon>
+    <strong class="day">{{day.formatted.day}}</strong>
+    <span class="month">{{day.formatted.month}}</span>
+  </ion-item>
+
+  <!--TODO Swith mode when > 3 days -->
+  <ion-item class="multiDay"
+            v-for="(day, index) in formattedDays"
+            v-if="false">
+    <ion-grid>
+      <ion-row class="ion-align-items-center">
+        <ion-col class="multiDay-pick">
+          <a class="multiDay-pick-link _active">Today</a>
+          <a class="multiDay-pick-link">Tommowow</a>
+        </ion-col>
+        <ion-col size="4">
+          <ion-select></ion-select>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-item>
 </template>
 
 <script setup lang="ts">
@@ -204,6 +229,81 @@ const formattedDays = computed(() => {
         }
 
         &.selected { @extend %selected;}
+      }
+    }
+  }
+
+  .onlyDay {
+    position: relative;
+    --padding-start: 0;
+    --padding-end: 0;
+    --border-style: none;
+    align-items: baseline;
+
+    @media (prefers-color-scheme: dark) {
+      --background: rgba(var(--app-medium-contrast-rgb), 0.5);
+    }
+
+    ion-icon {
+      position: absolute;
+      top: -2px;
+      left: -14px;
+      display: inline-block;
+      font-size: 58px;
+      color: var(--app-primary);
+      opacity: 0.1;
+      z-index: -1;
+
+      @media (prefers-color-scheme: dark) {
+        color: var(--app-white);
+      }
+    }
+
+    .day {
+      display: flex;
+      align-items: center;
+      padding :{
+        top: 8px;
+        bottom: 8px;
+        left: 16px;
+        right: 8px;
+      }
+
+      font-size: 34px;
+      font-weight: 900;
+      color: var(--voxxrin-event-theme-colors-primary-hex);
+    }
+
+    .month {
+      font-size: 24px;
+      --color: var(--app-primary);
+    }
+  }
+
+  .multiDay {
+    position: relative;
+    --border-style: none;
+    align-items: baseline;
+
+    @media (prefers-color-scheme: dark) {
+      --background: rgba(var(--app-medium-contrast-rgb), 0.5);
+    }
+
+    ion-grid { padding: 0;}
+
+    &-pick {
+      display: flex;
+      flex-direction: row;
+      padding: 0;
+      column-gap: 16px;
+
+      &-link {
+        font-size: 16px;
+
+        &._active {
+          font-weight: bold;
+          color: var(--voxxrin-event-theme-colors-primary-hex);
+        }
       }
     }
   }
