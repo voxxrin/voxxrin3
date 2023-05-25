@@ -193,6 +193,15 @@ export const DAILY_SCHEDULE_PARSER = z.object({
     timeSlots: z.array(SCHEDULE_TIME_SLOT_PARSER)
 })
 
+export const FULL_EVENT_PARSER = z.object({
+    id: z.string(),
+    conferenceDescriptor: EVENT_DESCRIPTOR_PARSER,
+    info: LISTABLE_EVENT_PARSER,
+    daySchedules: z.array(DAILY_SCHEDULE_PARSER),
+    talkStats: z.array(DAILY_TALKS_STATS_PARSER),
+    talks: z.array(DETAILED_TALK_PARSER)
+})
+
 export const FIREBASE_CRAWLER_DESCRIPTOR_PARSER = z.object({
     kind: z.string(),
     descriptorUrl: z.string(),
