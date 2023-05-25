@@ -37,7 +37,7 @@
             :pinned-events="filteredPinnedEvents" @event-selected="(event) => selectEvent(event.id)">
           <template #no-pinned-events>
             <div class="infoMessage ion-text-center">
-              <img class="infoMessage-illustration" src="/assets/images/svg/illu-list-pinned.svg">
+              <ion-icon class="infoMessage-iconIllu" src="/assets/images/svg/illu-list-pinned.svg"></ion-icon>
               <span class="infoMessage-title">{{ LL.No_pinned_events_available_yet() }}</span>
               <span class="infoMessage-subTitle">{{ LL.Add_from_the_list_below() }}</span>
             </div>
@@ -51,7 +51,7 @@
             :pinned-events="pinnedEventIdsRef" @event-pin-toggled="eventPinToggled">
           <template #no-event>
             <div class="infoMessage ion-text-center">
-              <ion-icon class="infoMessage-icon" aria-hidden="true" src="/assets/icons/solid/checkbox-list-detail.svg"></ion-icon>
+              <ion-icon class="infoMessage-iconIllu" src="/assets/images/svg/illu-no-result.svg"></ion-icon>
               <span class="infoMessage-title">{{ LL.No_conference_registered_yet() }}</span>
             </div>
           </template>

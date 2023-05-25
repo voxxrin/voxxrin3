@@ -9,7 +9,7 @@
             {{talkBreak.room.title}}
           </div>
         </div>
-        <ion-icon class="breakIcon" :icon="icons[talkBreak.icon]"></ion-icon>
+        <ion-icon class="breakIcon" :src="icons[talkBreak.icon]"></ion-icon>
       </div>
     </ion-card>
   </div>
