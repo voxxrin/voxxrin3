@@ -15,11 +15,11 @@ export type TalkFormat = {
     title: string
 }
 export type Speaker = {
-    photoUrl: string,
-    companyName: string,
+    photoUrl?: string|undefined|null,
+    companyName?: string|undefined|null,
     fullName: string,
     id: string,
-    bio: string,
+    bio?: string|undefined|null,
     social: Array<{type: "twitter"|"linkedin"|"mastodon", url: string}>
 }
 export type Talk = {
@@ -38,11 +38,17 @@ export type DetailedTalk = Talk & {
     description: string
 }
 
-export type ScheduleTimeSlot<START extends ISODatetime = ISODatetime, END extends ISODatetime = ISODatetime> = {
+type TimeSlotBase<START extends ISODatetime = ISODatetime, END extends ISODatetime = ISODatetime> = {
     start: START,
     end: END,
     id: `${START}--${END}`,
-} & ( {type: 'break', break: Break} | {type: 'talks', talks: Talk[]} )
+}
+
+export type BreakTimeSlot = TimeSlotBase & { type: 'break', break: Break }
+export type TalksTimeSlot = TimeSlotBase & { type: 'talks', talks: Talk[] }
+
+export type ScheduleTimeSlot = BreakTimeSlot | TalksTimeSlot
+
 
 export type DailySchedule = {
     day: string;

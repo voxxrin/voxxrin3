@@ -19,7 +19,7 @@ export type Day = {
 export type ListableEvent = {
     id: string;
     title: string,
-    description: string|undefined,
+    description?: string|undefined|null,
     days: Array<Day>,
     timezone: string,
     keywords: string[],
@@ -27,7 +27,7 @@ export type ListableEvent = {
         country: string,
         city: string
     },
-    peopleDescription: string|undefined,
+    peopleDescription?: string|undefined|null,
     backgroundUrl: string,
     logoUrl: string,
     websiteUrl: string,

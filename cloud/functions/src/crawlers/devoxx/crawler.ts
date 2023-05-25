@@ -4,7 +4,6 @@ import * as _ from "lodash";
 import {
     CfpEvent,
     DevoxxScheduleItem,
-    DevoxxScheduleProposal,
     DevoxxScheduleSpeakerInfo
 } from "./types"
 import { DailySchedule, DetailedTalk, Speaker, Talk } from "../../../../../shared/dayly-schedule.firestore"
@@ -13,14 +12,15 @@ import { FullEvent } from "../../models/Event";
 import { ISODatetime, ISOLocalDate } from "../../../../../shared/type-utils";
 import { Day, ListableEvent } from "../../../../../shared/event-list.firestore";
 import { Temporal } from "@js-temporal/polyfill";
-import {CrawlerKind, FULL_DESCRIPTOR_PARSER} from "../crawl-kind";
 import {z} from "zod";
 import {ConferenceDescriptor} from "../../../../../shared/conference-descriptor.firestore";
 import axios from "axios";
+import {EVENT_DESCRIPTOR_PARSER, TALK_FORMAT_PARSER} from "../crawler-parsers";
+import {CrawlerKind} from "../crawl";
 
 const daysOfWeek = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
 
-const DEVOXX_DESCRIPTOR_PARSER = FULL_DESCRIPTOR_PARSER.omit({
+const DEVOXX_DESCRIPTOR_PARSER = EVENT_DESCRIPTOR_PARSER.omit({
     // All these fields can be extracted from the devoxx API
     title: true, description: true, days: true,
     timezone: true, location: true,
@@ -58,7 +58,7 @@ export const DEVOXX_CRAWLER: CrawlerKind<typeof DEVOXX_DESCRIPTOR_PARSER> = {
             end: end,
             days: days,
             logoUrl: descriptor.logoUrl,
-            backgroundUrl: e.eventImageURL,
+            backgroundUrl: e.eventImageURL || descriptor.backgroundUrl,
             websiteUrl: e.website,
             location: { city: e.locationCity, country: e.locationCountry },
             theming: descriptor.theming,

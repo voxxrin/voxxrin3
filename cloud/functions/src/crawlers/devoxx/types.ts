@@ -1,5 +1,7 @@
 // cfp
 
+import {HexColor} from "../../../../../shared/type-utils";
+
 export interface DevoxxScheduleItem {
         id: number,
         fromDate: string,
@@ -17,7 +19,7 @@ export interface DevoxxScheduleItem {
           duration: number,
           isPause: boolean,
           description: string,
-          cssColor: string
+          cssColor: HexColor
         },
         proposal?: DevoxxScheduleProposal,
         timezone: string,
