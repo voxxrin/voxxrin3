@@ -1,12 +1,14 @@
 /* Custom Ionic button component */
 
 ion-button {
+    //* Adjust Color
     &.button-default {
         @media (prefers-color-scheme: dark) {
             --background: var(--app-dark-contrast);
         }
     }
 
+    //* Adjust Type
     &.button-solid {
         @media (prefers-color-scheme: dark) {
             --background: var(--app-white);
@@ -14,7 +16,12 @@ ion-button {
         }
     }
 
-   &.button-round {
+    &.button-outline {
+        --border-width: 2px;
+    }
+
+    //* Adjust Shapes
+    &.button-round {
        &.button-default {
            --border-radius: 42px;
            --padding-start: 0;
@@ -34,14 +41,17 @@ ion-button {
        }
    }
 
-    &.button-outline {
-        --border-width: 2px;
+    //* Adjust Size
+    &.button-small {
+        height: 44px !important;
+        width: 44px !important;;
     }
 
+    //* Specific
     &.btnUser  { --background: rgba(var(--app-white-transparent));}
 }
 
-
+//* Btn Float
 ion-fab {
     ion-fab-button {
 
