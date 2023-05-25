@@ -37,8 +37,8 @@ export default defineConfig(({ command, mode }) => {
             sizes: "512x512",
             type: "image/png"
           }],
-          background_color: "#31d53d",
-          theme_color: "#31d53d"
+          background_color: "#F7F6F0",
+          theme_color: "#F7F6F0"
         }
       })
     ],
