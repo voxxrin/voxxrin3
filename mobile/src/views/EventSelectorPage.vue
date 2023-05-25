@@ -31,7 +31,7 @@
       </ion-header>
 
       <div class="conferenceContent">
-        <ion-item-divider>{{ LL.Pinned_events() }}</ion-item-divider>
+        <ion-item-divider class="no-border-top">{{ LL.Pinned_events() }}</ion-item-divider>
         <pinned-event-selector
             class="pinnedEventSelector"
             :pinned-events="filteredPinnedEvents" @event-selected="(event) => selectEvent(event.id)">
