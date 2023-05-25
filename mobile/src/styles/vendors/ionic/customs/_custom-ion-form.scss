@@ -8,6 +8,12 @@ ion-input {
     min-height: 44px !important;
   }
 
+  &.has-focus {
+    .input-highlight.sc-ion-input-md {
+      display: none !important;
+    }
+  }
+
   &.searchInput {
     position: relative;
     --background: var(--app-white);
@@ -25,6 +31,7 @@ ion-input {
 
     @media (prefers-color-scheme: dark) {
       --background: var(--app-dark-contrast);
+      --color:  var(--app-white);
     }
 
     &.has-focus {
