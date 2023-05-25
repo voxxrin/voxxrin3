@@ -9,7 +9,7 @@
             {{talkBreak.room.title}}
           </div>
         </div>
-        <ion-icon class="breakIcon" :src="icons[talkBreak.icon]"></ion-icon>
+        <ion-icon class="breakIcon" :src="'/assets/images/svg/' + talkBreak.icon + '.svg'" aria-hidden="true"></ion-icon>
       </div>
     </ion-card>
   </div>
@@ -113,9 +113,10 @@ const props = defineProps({
     }
 
     .breakIcon {
-      padding: 0 16px;
-      font-size: 34px;
+      padding: 0 8px 0 16px;
+      font-size: 64px;
       color: var(--app-primary-shade);
+
 
       @media (prefers-color-scheme: dark) {
         color: var(--app-white);
