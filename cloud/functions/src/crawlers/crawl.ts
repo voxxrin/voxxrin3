@@ -2,6 +2,7 @@ import {db, info, error} from "../firebase"
 import {DEVOXX_CRAWLER} from "./devoxx/crawler"
 import { FullEvent } from "../models/Event";
 import {z} from "zod";
+import {LA_PRODUCT_CONF_CRAWLER} from "./la-product-conf/crawler";
 import {FIREBASE_CRAWLER_DESCRIPTOR_PARSER} from "./crawler-parsers";
 import {HexColor} from "../../../../shared/type-utils";
 const axios = require('axios');
@@ -14,6 +15,7 @@ export type CrawlerKind<ZOD_TYPE extends z.ZodType> = {
 
 const CRAWLERS: CrawlerKind<any>[] = [
     DEVOXX_CRAWLER,
+    LA_PRODUCT_CONF_CRAWLER,
 ]
 
 export const TALK_FORMAT_FALLBACK_COLORS: HexColor[] = [

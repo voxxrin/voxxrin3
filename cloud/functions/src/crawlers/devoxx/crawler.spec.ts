@@ -17,7 +17,7 @@ describe('devoxx crawlers', () => {
         }
     })
 
-    const devoxxEvents = [{
+    const events = [{
         id: 'dvgr23', confName: `Devoxx Greece 23`,
         descriptorUrl: `https://gist.githubusercontent.com/fcamblor/9947fc134714855116c2afd8c1856303/raw/voxxrin3-dvgr23-crawler-descriptor.json`
     }, {
@@ -27,11 +27,11 @@ describe('devoxx crawlers', () => {
         id: 'dvbe22', confName: `Devoxx Belgium 22`,
         descriptorUrl: `https://gist.githubusercontent.com/fcamblor/9947fc134714855116c2afd8c1856303/raw/voxxrin3-dvbe22-crawler-descriptor.json`
     }] as const;
-    devoxxEvents.forEach(devoxxEvent => {
-        it(`Loading ${devoxxEvent.confName} schedule`, async () => {
-            const descriptorResp = await axios.get(devoxxEvent.descriptorUrl);
+    events.forEach(event => {
+        it(`Loading ${event.confName} schedule`, async () => {
+            const descriptorResp = await axios.get(event.descriptorUrl);
             const descriptor = DEVOXX_CRAWLER.descriptorParser.parse(descriptorResp.data)
-            const result = await DEVOXX_CRAWLER.crawlerImpl(devoxxEvent.id, descriptor);
+            const result = await DEVOXX_CRAWLER.crawlerImpl(event.id, descriptor);
             FULL_EVENT_PARSER.parse(result);
         })
     })
