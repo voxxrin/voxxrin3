@@ -21,6 +21,12 @@ ion-button {
         --background-activated: var(--app-beige-light);
         --color-activated: var(--app-primary);
 
+        &.md {
+            --background-activated-opacity: 1;
+            --background-focused-opacity: 0;
+            --background-hover-opacity: 0;
+        }
+
         @media (prefers-color-scheme: dark) {
             --background-activated: var(--app-line-contrast);
             --color-activated: var(--app-white);
