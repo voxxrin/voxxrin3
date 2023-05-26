@@ -278,15 +278,6 @@ ion-accordion {
       }
     }
 
-    ::v-deep .ion-accordion-toggle-icon {
-      font-size: 24px;
-      color: var(--app-beige-dark) !important;
-
-      @media (prefers-color-scheme: dark) {
-        color: var(--app-line-contrast) !important;
-      }
-    }
-
     ._accordion-icon._past-icon {
       display: inline-block;
       color: var(--app-primary-tint);
@@ -309,12 +300,6 @@ ion-accordion {
 
     ._accordion-icon._ongoing-icon { display: inline-block; }
     ._ongoing-progress { display: block; }
-
-    ::v-deep .ion-accordion-toggle-icon {
-      font-size: 24px;
-      color: var(--app-white) !important;
-    }
-
     ._accordion-icon { color: var(--app-white) !important;}
   }
 
@@ -330,15 +315,6 @@ ion-accordion {
       }
 
       ion-label { color: var(--app-white);}
-    }
-
-    ::v-deep .ion-accordion-toggle-icon {
-      font-size: 24px;
-      color: var(--app-white) !important;
-
-      @media (prefers-color-scheme: dark) {
-        color: var(--app-medium-contrast);
-      }
     }
 
     ._accordion-icon._future-icon { display: inline-block; }

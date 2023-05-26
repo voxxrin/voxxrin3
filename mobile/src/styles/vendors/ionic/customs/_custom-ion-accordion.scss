@@ -1,0 +1,27 @@
+.ion-accordion-toggle-icon {
+  font-size: 24px;
+  color: var(--app-beige-dark);
+  margin-inline-start: 12px;
+
+  @media (prefers-color-scheme: dark) {
+    color: var(--app-line-contrast);
+  }
+}
+
+/* Adjust color chevron accordion for TimeSlot State */
+
+._ongoing {
+  .ion-accordion-toggle-icon {
+    color: var(--app-white) !important;
+  }
+}
+
+._future {
+  .ion-accordion-toggle-icon {
+    color: var(--app-white) !important;
+
+    @media (prefers-color-scheme: dark) {
+      color: var(--app-medium-contrast);
+    }
+  }
+}
