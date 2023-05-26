@@ -6,6 +6,10 @@ ion-header  {
         top: -1px;
         border-bottom: 1px solid var(--app-beige-line);
 
+        &.header-ios ion-toolbar:last-of-type {
+            --border-width: 0;
+        }
+
         @media (prefers-color-scheme: dark) {
             border-bottom: none;
         }

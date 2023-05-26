@@ -101,8 +101,9 @@ const formattedDays = computed(() => {
     overflow-x: auto;
     margin-left: -44px;
     margin-right: -34px;
+    padding: 0;
     background: var(--voxxrin-event-theme-colors-primary-contrast-hex);
-    box-shadow: rgba(var(--voxxrin-event-theme-colors-primary-contrast-rgb), 0.15);
+    box-shadow: rgba(99, 99, 99, 0.2) 0 2px 8px 0;
 
     @media (prefers-color-scheme: dark) {
       background: rgba(var(--app-medium-contrast-rgb), 0.5);
@@ -162,7 +163,6 @@ const formattedDays = computed(() => {
       align-items: center;
       height: 44px;
       width: 44px;
-      margin: 8px 0;
       --border-radius: 44px;
       --border-width: 1px;
       --border-style: solid;
