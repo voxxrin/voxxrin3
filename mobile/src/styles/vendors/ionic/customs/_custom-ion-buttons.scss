@@ -18,6 +18,13 @@ ion-button {
 
     &.button-outline {
         --border-width: 2px;
+        --background-activated: var(--app-beige-light);
+        --color-activated: var(--app-primary);
+
+        @media (prefers-color-scheme: dark) {
+            --background-activated: var(--app-line-contrast);
+            --color-activated: var(--app-white);
+        }
     }
 
     //* Adjust Shapes
