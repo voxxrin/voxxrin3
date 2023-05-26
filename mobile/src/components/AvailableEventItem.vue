@@ -111,9 +111,14 @@ const isPinnedRef = computed(() => {
         transform: translate(-50%, -50%);
         height: 100%;
         width: 100%;
-        background: radial-gradient(circle,rgba(255,255,255,0) 0, rgba(var(--voxxrin-event-theme-colors-primary-rgb),1) 140%);
+        background: radial-gradient(circle,rgba(255,255,255,0) -100%, rgba(var(--voxxrin-event-theme-colors-primary-rgb),1) 140%);
         content: '';
         z-index: -1;
+      }
+
+      ion-img {
+        filter: progid:DXImageTransform.Microsoft.BasicImage(invert=1);
+        zoom: 1;
       }
     }
   }

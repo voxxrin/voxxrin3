@@ -167,6 +167,7 @@ function removeEventFromPinnedEvents(event: ListableVoxxrinEvent) {
     justify-content: space-between;
     padding: 24px var( --app-gutters-medium) 0 var( --app-gutters-medium);
     background: var(--app-background);
+    z-index: 9999;
 
     &:after {
       display: none;

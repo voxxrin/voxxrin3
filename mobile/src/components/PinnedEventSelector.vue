@@ -107,7 +107,7 @@ defineEmits<{
     background-image: linear-gradient(to bottom, var(--voxxrin-event-theme-colors-primary-hex) 50%, transparent 200%),var(--voxxrin-event-background-url);
     contain: initial;
     overflow: visible;
-    filter: drop-shadow(0px 4px 24px rgba(0, 0, 0, 0.16));
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     transition: 140ms;
     animation: scale-up-center 140ms cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
 
