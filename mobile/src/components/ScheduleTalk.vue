@@ -42,9 +42,11 @@
         </div>
         <div class="favorite">
           <ion-button class="btnTalk favorite-btn" @click.stop="() => toggleFavorite()" v-if="conferenceDescriptor?.features.favoritesEnabled">
-            <ion-icon class="favorite-btn-icon" v-if="!talkNotes?.isFavorite" aria-hidden="true" src="/assets/icons/line/bookmark-line-favorite.svg"></ion-icon>
-            <ion-icon class="favorite-btn-icon" v-if="!!talkNotes?.isFavorite" aria-hidden="true" src="/assets/icons/solid/bookmark-favorite.svg"></ion-icon>
-            <ion-label class="favorite-btn-nb" v-if="eventTalkStats !== undefined">{{ eventTalkStats.totalFavoritesCount }}</ion-label>
+            <span class="favorite-btn-group">
+               <ion-icon class="favorite-btn-group-icon" v-if="!talkNotes?.isFavorite" aria-hidden="true" src="/assets/icons/line/bookmark-line-favorite.svg"></ion-icon>
+              <ion-icon class="favorite-btn-group-icon" v-if="!!talkNotes?.isFavorite" aria-hidden="true" src="/assets/icons/solid/bookmark-favorite.svg"></ion-icon>
+              <ion-label class="favorite-btn-group-nb" v-if="eventTalkStats !== undefined">{{ eventTalkStats.totalFavoritesCount }}</ion-label>
+            </span>
           </ion-button>
         </div>
       </div>
@@ -356,10 +358,14 @@ function openTalkDetails() {
       }
     }
 
-    .btnTalk {
+    .favorite, .watchLater {
       height: 100%;
-      min-height: 48px;
-      width: 58px;
+    }
+
+    .btnTalk {
+      height: 100% !important;
+      min-height: 55px !important;
+      width: 58px !important;
       margin: 0;
       --border-radius: 0;
       --background: white;
@@ -381,23 +387,28 @@ function openTalkDetails() {
       .favorite-btn {
         --size: 28px;
 
-        &-icon {
-          position: relative;
-          top: -6px;
-          font-size: 26px;
-        }
+        &-group {
+          display: flex;
+          flex-direction: column;
+          row-gap: 4px;
+          justify-content: center;
 
-        &-nb {
-          position: absolute;
-          bottom: 5px;
-          font-size: 11px;
-          font-weight: 700;
+          &-icon {
+            position: relative;
+            font-size: 26px;
+          }
+
+          &-nb {
+            font-size: 14px;
+            font-weight: 700;
+          }
         }
       }
     }
 
     &-actions {
       display: flex;
+      align-items: end;
     }
   }
 }
