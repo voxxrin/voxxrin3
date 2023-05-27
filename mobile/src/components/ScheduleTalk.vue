@@ -207,17 +207,23 @@ function openTalkDetails() {
     }
 
     .talkCard-footer {
+      background-color: rgba(white, 0.5);
       border-width: 2px;
       border-color: var(--app-primary-shade);
       border-bottom: none;
 
       @media (prefers-color-scheme: dark) {
+        background-color: rgba(var(--app-light-contrast-rgb), 0.6);
         border-color: var(--app-white);
       }
 
       .btnTalk {
         border-width: 2px;
         border-color: var(--app-primary-shade);
+
+        @media (prefers-color-scheme: dark) {
+          border-color: var(--app-white);
+        }
       }
     }
   }
@@ -368,7 +374,7 @@ function openTalkDetails() {
       width: 58px !important;
       margin: 0;
       --border-radius: 0;
-      --background: white;
+      --background: rgba(white, 0.5);
       --color: var(--app-primary);
       border-left: 1px solid var(--app-grey-line);
       font-size: 18px;
@@ -379,7 +385,7 @@ function openTalkDetails() {
       --box-shadow: none;
 
       @media (prefers-color-scheme: dark) {
-        --background: var(--app-light-contrast);
+        --background: rgba(white, 0.2);
         --color: var(--app-white);
         border-left: 1px solid var(--app-line-contrast);
       }
