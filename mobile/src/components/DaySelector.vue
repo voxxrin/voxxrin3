@@ -1,6 +1,12 @@
 <template>
-  <ion-list class="dayList">
-    <ion-item  v-for="(day, index) in formattedDays" :key="index" :class="{past: today.localeCompare(day.localDate) === 1}">
+  <ion-item class="onlyDay" v-if="formattedDays.length === 1">
+    <ion-icon src="/assets/icons/solid/calendar.svg"></ion-icon>
+    <strong class="day">{{formattedDays[0].formatted.day}}</strong>
+    <span class="month">{{formattedDays[0].formatted.month}}</span>
+  </ion-item>
+
+  <ion-list class="dayList" v-if="formattedDays.length > 1 && formattedDays.length <=3 ">
+    <ion-item  v-for="(day, index) in formattedDays" :key="day.id.value" :class="{past: today.localeCompare(day.localDate) === 1}">
       <div class="dayList-content">
         <ion-button class="dayList-button" @click="$emit('day-selected', day)" :class="{
           selected: day.id.isSameThan(selectedDayId),
@@ -16,27 +22,25 @@
       </div>
     </ion-item>
   </ion-list>
-  <!--TODO Swith mode when only day -->
-  <ion-item class="onlyDay"
-            v-for="(day, index) in formattedDays"
-            v-if="false">
-    <ion-icon src="/assets/icons/solid/calendar.svg"></ion-icon>
-    <strong class="day">{{day.formatted.day}}</strong>
-    <span class="month">{{day.formatted.month}}</span>
-  </ion-item>
 
-  <!--TODO Swith mode when > 3 days -->
-  <ion-item class="multiDay"
-            v-for="(day, index) in formattedDays"
-            v-if="false">
+  <ion-item class="multiDay" v-if="formattedDays.length > 3">
     <ion-grid>
       <ion-row class="ion-align-items-center">
         <ion-col class="multiDay-pick">
-          <a class="multiDay-pick-link _active">Today</a>
-          <a class="multiDay-pick-link">Tommowow</a>
+          <a :class="{ 'multiDay-pick-link': true, _active: today.localeCompare(selectedDay.localDate) === 0 }"
+             @click="$emit('day-selected', findDayByLocalDate(today))"
+          >{{ LL.Today() }}</a>
+          <a :class="{ 'multiDay-pick-link': true, _active: tomorrow.localeCompare(selectedDay.localDate) === 0 }"
+             @click="$emit('day-selected', findDayByLocalDate(tomorrow))"
+          >{{ LL.Tomorrow() }}</a>
         </ion-col>
         <ion-col size="4">
-          <ion-select></ion-select>
+          <ion-select :value="selectedDayId?.value" @ionChange="$emit('day-selected', findDayByIdValue($event.detail.value))">
+            <ion-select-option
+                v-for="(day, index) in formattedDays" :key="day.id.value"
+                :value="day.id.value"
+            >{{day.formatted.full}}</ion-select-option>
+          </ion-select>
         </ion-col>
       </ion-row>
     </ion-grid>
@@ -51,6 +55,10 @@ import {useCurrentUserLocale} from "@/state/useCurrentUserLocale";
 import {useInterval} from "@/views/vue-utils";
 import {ISOLocalDate} from "../../../shared/type-utils";
 import {useCurrentClock} from "@/state/useCurrentClock";
+import {IonGrid, IonCol, IonSelect, IonRow, IonSelectOption} from "@ionic/vue";
+import {typesafeI18n} from "@/i18n/i18n-vue";
+
+const { LL } = typesafeI18n()
 
 defineEmits<{
     (e: 'day-selected', day: VoxxrinDay): void
@@ -66,9 +74,15 @@ const props = defineProps({
     }
 });
 
+const selectedDay = computed(() => {
+    return props.days.find(d => d.id.isSameThan(props.selectedDayId));
+})
 const today = ref<ISOLocalDate>("0000-00-00")
+const tomorrow = ref<ISOLocalDate>("0000-00-00")
 useInterval(() => {
-    today.value = toISOLocalDate(useCurrentClock().zonedDateTimeISO())
+    let todayZDT = useCurrentClock().zonedDateTimeISO();
+    today.value = toISOLocalDate(todayZDT)
+    tomorrow.value = toISOLocalDate(todayZDT.add({days:1}))
 }, {minutes:1}, { immediate: true })
 
 const formattedDays = computed(() => {
@@ -77,6 +91,13 @@ const formattedDays = computed(() => {
         formatted: localDateToReadableParts(d.localDate, useCurrentUserLocale())
     }))
 })
+
+function findDayByIdValue(dayIdValue: string) {
+    return props.days?.find(day => day.id.value === dayIdValue);
+}
+function findDayByLocalDate(localDate: string) {
+    return props.days?.find(day => day.localDate === localDate);
+}
 
 </script>
 

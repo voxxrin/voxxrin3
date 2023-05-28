@@ -28,7 +28,9 @@ const en = {
 	Speakers: `Speakers`,
 	Welcome_to: `Welcome to`,
 	Hello_xxx: `Hello, {name:string}`,
-	Add_from_the_list_below: `Add from the list below`
+	Add_from_the_list_below: `Add from the list below`,
+	Today: 'Today',
+	Tomorrow: 'Tomorrow',
 } satisfies BaseTranslation
 
 export default en
