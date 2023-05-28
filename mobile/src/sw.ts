@@ -6,6 +6,9 @@ import {precacheAndRoute} from "workbox-precaching";
 
 declare let self: ServiceWorkerGlobalScope
 
+// TODO: comment this line if you want to debug workbox (very verbose!) logs in the console
+self.__WB_DISABLE_DEV_LOGS = true
+
 precacheAndRoute(self.__WB_MANIFEST);
 setDefaultHandler(new NetworkOnly())
 
