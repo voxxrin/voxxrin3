@@ -5,7 +5,7 @@
     <span class="month">{{formattedDays[0].formatted.month}}</span>
   </ion-item>
 
-  <ion-list class="dayList" v-if="formattedDays.length > 1 && formattedDays.length <=3 ">
+  <ion-list class="dayList" v-if="formattedDays.length > 1">
     <ion-item  v-for="(day, index) in formattedDays" :key="day.id.value" :class="{past: today.localeCompare(day.localDate) === 1}">
       <div class="dayList-content">
         <ion-button class="dayList-button" @click="$emit('day-selected', day)" :class="{
@@ -23,28 +23,28 @@
     </ion-item>
   </ion-list>
 
-  <ion-item class="multiDay" v-if="formattedDays.length > 3">
-    <ion-grid>
-      <ion-row class="ion-align-items-center">
-        <ion-col class="multiDay-pick">
-          <a :class="{ 'multiDay-pick-link': true, _active: today.localeCompare(selectedDay.localDate) === 0 }"
-             @click="$emit('day-selected', findDayByLocalDate(today))"
-          >{{ LL.Today() }}</a>
-          <a :class="{ 'multiDay-pick-link': true, _active: tomorrow.localeCompare(selectedDay.localDate) === 0 }"
-             @click="$emit('day-selected', findDayByLocalDate(tomorrow))"
-          >{{ LL.Tomorrow() }}</a>
-        </ion-col>
-        <ion-col size="4">
-          <ion-select :value="selectedDayId?.value" @ionChange="$emit('day-selected', findDayByIdValue($event.detail.value))">
-            <ion-select-option
-                v-for="(day, index) in formattedDays" :key="day.id.value"
-                :value="day.id.value"
-            >{{day.formatted.full}}</ion-select-option>
-          </ion-select>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-  </ion-item>
+<!--  <ion-item class="multiDay" v-if="formattedDays.length > 3">-->
+<!--    <ion-grid>-->
+<!--      <ion-row class="ion-align-items-center">-->
+<!--        <ion-col class="multiDay-pick">-->
+<!--          <a :class="{ 'multiDay-pick-link': true, _active: today.localeCompare(selectedDay.localDate) === 0 }"-->
+<!--             @click="$emit('day-selected', findDayByLocalDate(today))"-->
+<!--          >{{ LL.Today() }}</a>-->
+<!--          <a :class="{ 'multiDay-pick-link': true, _active: tomorrow.localeCompare(selectedDay.localDate) === 0 }"-->
+<!--             @click="$emit('day-selected', findDayByLocalDate(tomorrow))"-->
+<!--          >{{ LL.Tomorrow() }}</a>-->
+<!--        </ion-col>-->
+<!--        <ion-col size="4">-->
+<!--          <ion-select :value="selectedDayId?.value" @ionChange="$emit('day-selected', findDayByIdValue($event.detail.value))">-->
+<!--            <ion-select-option-->
+<!--                v-for="(day, index) in formattedDays" :key="day.id.value"-->
+<!--                :value="day.id.value"-->
+<!--            >{{day.formatted.full}}</ion-select-option>-->
+<!--          </ion-select>-->
+<!--        </ion-col>-->
+<!--      </ion-row>-->
+<!--    </ion-grid>-->
+<!--  </ion-item>-->
 </template>
 
 <script setup lang="ts">
@@ -55,7 +55,7 @@ import {useCurrentUserLocale} from "@/state/useCurrentUserLocale";
 import {useInterval} from "@/views/vue-utils";
 import {ISOLocalDate} from "../../../shared/type-utils";
 import {useCurrentClock} from "@/state/useCurrentClock";
-import {IonGrid, IonCol, IonSelect, IonRow, IonSelectOption} from "@ionic/vue";
+import {IonGrid} from "@ionic/vue";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 
 const { LL } = typesafeI18n()
