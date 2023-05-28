@@ -45,6 +45,7 @@ export function useUserPreferences() {
                 pinnedEventIds: [],
                 showPastEvents: false
             }
+            await setDoc(firestoreUserPrefDoc, firestoreUserPref);
         }
 
         await call(firestoreUserPref, firestoreUserPrefDoc);
