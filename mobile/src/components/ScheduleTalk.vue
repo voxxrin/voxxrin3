@@ -19,9 +19,10 @@
     <div class="talkCard-content">
       <div class="title">{{talk.title}}</div>
       <div class="pictures">
-        <div class="picturesItem" v-for="(speaker, index) in talk.speakers" :key="index">
+        <div class="picturesItem" v-for="(speaker, index) in talk.speakers" :key="speaker.id.value">
           <ion-thumbnail>
-            <img :src="speaker.photoUrl" />
+            <img :src="speaker.photoUrl" v-if="speaker.photoUrl"/>
+            <img src="/assets/images/svg/avatar-shadow.svg" v-if="!speaker.photoUrl"/>
           </ion-thumbnail>
         </div>
       </div>
@@ -34,16 +35,18 @@
       </div>
       <div class="talkCard-footer-actions">
         <div class="watchLater">
-          <ion-button class="btnTalk watch-later-btn" @click.stop="() => toggleWatchLater()">
+          <ion-button class="btnTalk watch-later-btn" @click.stop="() => toggleWatchLater()" v-if="conferenceDescriptor?.features.remindMeOnceVideosAreAvailableEnabled">
             <ion-icon v-if="!talkNotes?.watchLater" aria-hidden="true" src="/assets/icons/line/video-line.svg"></ion-icon>
             <ion-icon v-if="!!talkNotes?.watchLater" aria-hidden="true" src="/assets/icons/solid/video.svg"></ion-icon>
           </ion-button>
         </div>
         <div class="favorite">
-          <ion-button class="btnTalk favorite-btn" @click.stop="() => toggleFavorite()">
-            <ion-icon class="favorite-btn-icon" v-if="!talkNotes?.isFavorite" aria-hidden="true" src="/assets/icons/line/bookmark-line-favorite.svg"></ion-icon>
-            <ion-icon class="favorite-btn-icon" v-if="!!talkNotes?.isFavorite" aria-hidden="true" src="/assets/icons/solid/bookmark-favorite.svg"></ion-icon>
-            <ion-label class="favorite-btn-nb" v-if="eventTalkStats !== undefined">{{ eventTalkStats.totalFavoritesCount }}</ion-label>
+          <ion-button class="btnTalk favorite-btn" @click.stop="() => toggleFavorite()" v-if="conferenceDescriptor?.features.favoritesEnabled">
+            <span class="favorite-btn-group">
+               <ion-icon class="favorite-btn-group-icon" v-if="!talkNotes?.isFavorite" aria-hidden="true" src="/assets/icons/line/bookmark-line-favorite.svg"></ion-icon>
+              <ion-icon class="favorite-btn-group-icon" v-if="!!talkNotes?.isFavorite" aria-hidden="true" src="/assets/icons/solid/bookmark-favorite.svg"></ion-icon>
+              <ion-label class="favorite-btn-group-nb" v-if="eventTalkStats !== undefined">{{ eventTalkStats.totalFavoritesCount }}</ion-label>
+            </span>
           </ion-button>
         </div>
       </div>
@@ -64,6 +67,7 @@ import {getRouteParamsValue} from "@/views/vue-utils";
 import {useUserTalkNotes} from "@/state/useUserTalkNotes";
 import {DayId} from "@/models/VoxxrinDay";
 import {useTabbedPageNav} from "@/state/useTabbedPageNav";
+import {useConferenceDescriptor} from "@/state/useConferenceDescriptor";
 
 
 const props = defineProps({
@@ -80,6 +84,7 @@ const props = defineProps({
 const route = useRoute();
 const eventId = computed(() => new EventId(getRouteParamsValue(route, 'eventId')));
 
+const { conferenceDescriptor } = useConferenceDescriptor(eventId);
 const { eventTalkStats, talkNotes, toggleFavorite, toggleWatchLater} = useUserTalkNotes(eventId, props.dayId, props.talk.id)
 
 const { triggerTabbedPageNavigate } = useTabbedPageNav();
@@ -202,17 +207,23 @@ function openTalkDetails() {
     }
 
     .talkCard-footer {
+      background-color: rgba(white, 0.5);
       border-width: 2px;
       border-color: var(--app-primary-shade);
       border-bottom: none;
 
       @media (prefers-color-scheme: dark) {
+        background-color: rgba(var(--app-light-contrast-rgb), 0.6);
         border-color: var(--app-white);
       }
 
       .btnTalk {
         border-width: 2px;
         border-color: var(--app-primary-shade);
+
+        @media (prefers-color-scheme: dark) {
+          border-color: var(--app-white);
+        }
       }
     }
   }
@@ -353,13 +364,17 @@ function openTalkDetails() {
       }
     }
 
-    .btnTalk {
+    .favorite, .watchLater {
       height: 100%;
-      min-height: 48px;
-      width: 58px;
+    }
+
+    .btnTalk {
+      height: 100% !important;
+      min-height: 55px !important;
+      width: 58px !important;
       margin: 0;
       --border-radius: 0;
-      --background: white;
+      --background: rgba(white, 0.5);
       --color: var(--app-primary);
       border-left: 1px solid var(--app-grey-line);
       font-size: 18px;
@@ -370,7 +385,7 @@ function openTalkDetails() {
       --box-shadow: none;
 
       @media (prefers-color-scheme: dark) {
-        --background: var(--app-light-contrast);
+        --background: rgba(white, 0.2);
         --color: var(--app-white);
         border-left: 1px solid var(--app-line-contrast);
       }
@@ -378,23 +393,28 @@ function openTalkDetails() {
       .favorite-btn {
         --size: 28px;
 
-        &-icon {
-          position: relative;
-          top: -6px;
-          font-size: 26px;
-        }
+        &-group {
+          display: flex;
+          flex-direction: column;
+          row-gap: 4px;
+          justify-content: center;
 
-        &-nb {
-          position: absolute;
-          bottom: 5px;
-          font-size: 11px;
-          font-weight: 700;
+          &-icon {
+            position: relative;
+            font-size: 26px;
+          }
+
+          &-nb {
+            font-size: 14px;
+            font-weight: 700;
+          }
         }
       }
     }
 
     &-actions {
       display: flex;
+      align-items: end;
     }
   }
 }

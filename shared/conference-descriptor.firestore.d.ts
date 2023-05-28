@@ -1,4 +1,5 @@
 import {ListableEvent} from "./event-list.firestore";
+import {HexColor} from "./type-utils";
 
 export type ConferenceDescriptor = ListableEvent & {
     headingTitle: string,
@@ -10,9 +11,9 @@ export type ConferenceDescriptor = ListableEvent & {
         hideLanguages: string[],
         ratings: {},
     },
-    talkFormats: Array<{ id: string, title: string, duration: `PT${number}m`, themeColor: string }>,
-    talkTracks: Array<{ id: string, title: string, themeColor: string }>,
-    supportedTalkLanguages: Array<{ id: string, label: string, themeColor: string }>,
+    talkFormats: Array<{ id: string, title: string, duration: `PT${number}m`, themeColor: HexColor }>,
+    talkTracks: Array<{ id: string, title: string, themeColor: HexColor }>,
+    supportedTalkLanguages: Array<{ id: string, label: string, themeColor: HexColor }>,
     rooms: Array<{ id: string, title: string }>,
     infos: {
         venuePicture: string,

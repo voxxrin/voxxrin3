@@ -128,6 +128,14 @@ type RootTranslation = {
 	 * A​d​d​ ​f​r​o​m​ ​t​h​e​ ​l​i​s​t​ ​b​e​l​o​w
 	 */
 	Add_from_the_list_below: string
+	/**
+	 * T​o​d​a​y
+	 */
+	Today: string
+	/**
+	 * T​o​m​o​r​r​o​w
+	 */
+	Tomorrow: string
 }
 
 export type TranslationFunctions = {
@@ -243,6 +251,14 @@ export type TranslationFunctions = {
 	 * Add from the list below
 	 */
 	Add_from_the_list_below: () => LocalizedString
+	/**
+	 * Today
+	 */
+	Today: () => LocalizedString
+	/**
+	 * Tomorrow
+	 */
+	Tomorrow: () => LocalizedString
 }
 
 export type Formatters = {}

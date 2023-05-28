@@ -16,7 +16,7 @@
           '--voxxrin-event-theme-colors-tertiary-rgb': pinnedEvent.theming.colors.tertiaryRGB,
           '--voxxrin-event-theme-colors-tertiary-contrast-hex': pinnedEvent.theming.colors.tertiaryContrastHex,
           '--voxxrin-event-theme-colors-tertiary-contrast-rgb': pinnedEvent.theming.colors.tertiaryContrastRGB,
-      }" v-for="(pinnedEvent, index) in pinnedEvents" :key="index"
+      }" v-for="(pinnedEvent, index) in pinnedEvents" :key="pinnedEvent.id.value"
                 @click="$emit('event-selected', pinnedEvent)">
         <current-event-status :event="pinnedEvent"/>
         <div>
@@ -107,8 +107,8 @@ defineEmits<{
     background-image: linear-gradient(to bottom, var(--voxxrin-event-theme-colors-primary-hex) 50%, transparent 200%),var(--voxxrin-event-background-url);
     contain: initial;
     overflow: visible;
-    filter: drop-shadow(0px 4px 24px rgba(0, 0, 0, 0.16));
-    transition: 80ms ease-in-out;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    transition: 140ms;
     animation: scale-up-center 140ms cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
 
     &:before {
@@ -124,18 +124,17 @@ defineEmits<{
     }
 
     &:active {
-      transition: 80ms ease-in-out !important;
-      transform: scale(0.95) !important;
+      transition: 140ms;
+      transform: scale(0.97) !important;
       box-shadow: rgba(99, 99, 99, 0.2) 0 2px 8px 0;
     }
 
     ion-badge {
       position: absolute;
-      right: -6px;
-      top: -2px;
+      right: 0;
+      top: 0;
       padding: 0 16px;
-      transform: scale(0.9);
-      border-radius: 0 18px 0 8px;
+      border-radius: 0 16px 0 8px;
     }
 
     &-head {
@@ -192,12 +191,13 @@ defineEmits<{
     }
 
     .logo {
-      padding: var(--app-gutters);
+      padding: 8px var(--app-gutters);
       background: linear-gradient(90deg, rgba(255,255,255,1) 59%, rgba(255,255,255,0) 100%);
       border-radius: 0 0 var(--app-gutters) var(--app-gutters);
       z-index: 1;
 
       ion-img {
+        height: 38px;
         width: 94px;
       }
     }

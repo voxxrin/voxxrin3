@@ -24,20 +24,20 @@
         <ion-toggle :enable-on-off-labels="true"
                     labelPlacement="end"
                     @ionChange="(ev) => includePastEventUpdated(ev.target.checked)"
-                    :checked="searchCriteriaRef.includePastEvents"
+                    :checked="userPreferences?.showPastEvents"
                    class="conferenceToggle">
           <span class="conferenceToggle-label">{{ LL.Past_events() }}</span>
         </ion-toggle>
       </ion-header>
 
       <div class="conferenceContent">
-        <ion-item-divider>{{ LL.Pinned_events() }}</ion-item-divider>
+        <ion-item-divider class="no-border-top">{{ LL.Pinned_events() }}</ion-item-divider>
         <pinned-event-selector
             class="pinnedEventSelector"
             :pinned-events="filteredPinnedEvents" @event-selected="(event) => selectEvent(event.id)">
           <template #no-pinned-events>
             <div class="infoMessage ion-text-center">
-              <img class="infoMessage-illustration" src="/assets/images/svg/illu-list-pinned.svg">
+              <ion-icon class="infoMessage-iconIllu" src="/assets/images/svg/illu-list-pinned.svg"></ion-icon>
               <span class="infoMessage-title">{{ LL.No_pinned_events_available_yet() }}</span>
               <span class="infoMessage-subTitle">{{ LL.Add_from_the_list_below() }}</span>
             </div>
@@ -51,7 +51,7 @@
             :pinned-events="pinnedEventIdsRef" @event-pin-toggled="eventPinToggled">
           <template #no-event>
             <div class="infoMessage ion-text-center">
-              <ion-icon class="infoMessage-icon" aria-hidden="true" src="/assets/icons/solid/checkbox-list-detail.svg"></ion-icon>
+              <ion-icon class="infoMessage-iconIllu" src="/assets/images/svg/illu-no-result.svg"></ion-icon>
               <span class="infoMessage-title">{{ LL.No_conference_registered_yet() }}</span>
             </div>
           </template>
@@ -69,7 +69,7 @@ import {
     useIonRouter
 } from '@ionic/vue';
 import {EventId, ListableVoxxrinEvent, searchEvents} from "@/models/VoxxrinEvent";
-import {ref, Ref, watch} from "vue";
+import {computed, ref, Ref, watch} from "vue";
 import AvailableEventsList from "@/components/AvailableEventsList.vue";
 import {presentActionSheetController} from "@/views/vue-utils";
 import {Browser} from "@capacitor/browser";
@@ -79,21 +79,29 @@ import {
 } from "@ionic/core/dist/types/components/action-sheet/action-sheet-interface";
 import PinnedEventSelector from "@/components/PinnedEventSelector.vue";
 import {useAvailableEvents} from "@/state/useAvailableEvents";
+import {useSharedUserPreferences} from "@/state/useUserPreferences";
 
 const router = useIonRouter();
 const { LL } = typesafeI18n()
 
 const { listableEvents: availableEventsRef } = useAvailableEvents();
 
-const pinnedEventIdsRef = ref<EventId[]>([]);
+const { userPreferences, pinEvent, unpinEvent, togglePastEvent } = useSharedUserPreferences();
 
-const searchCriteriaRef = ref<{ terms: string|undefined, includePastEvents: boolean}>({ terms: undefined, includePastEvents: false });
+const pinnedEventIdsRef = computed(() => {
+    return userPreferences.value?.pinnedEventIds || [];
+})
+
+const searchTerms = ref<string|undefined>(undefined);
 
 const filteredPinnedEvents: Ref<ListableVoxxrinEvent[]> = ref([]);
 const filteredAvailableEvents: Ref<ListableVoxxrinEvent[]> = ref([]);
-watch([availableEventsRef, searchCriteriaRef, pinnedEventIdsRef], ([availableEvents, searchCriteria, pinnedEventIds]) => {
+watch([availableEventsRef, searchTerms, pinnedEventIdsRef, userPreferences], ([availableEvents, searchTerms, pinnedEventIds, userPreferences]) => {
     if(availableEvents) {
-        const {events, pinnedEvents} = searchEvents(availableEvents, searchCriteria, pinnedEventIds)
+        const {events, pinnedEvents} = searchEvents(availableEvents, {
+            terms: searchTerms,
+            includePastEvents: !!userPreferences?.showPastEvents
+        }, pinnedEventIds)
         filteredAvailableEvents.value = events;
         filteredPinnedEvents.value = pinnedEvents;
     }
@@ -104,17 +112,17 @@ async function selectEvent(eventId: EventId) {
 }
 
 function searchTextUpdated(searchText: string) {
-    searchCriteriaRef.value = {...searchCriteriaRef.value, terms: searchText}
+    searchTerms.value = searchText;
 }
 
 function includePastEventUpdated(includePastEvents: boolean) {
-    searchCriteriaRef.value = {...searchCriteriaRef.value, includePastEvents }
+    togglePastEvent(includePastEvents);
 }
 
 async function showEventActions(event: ListableVoxxrinEvent) {
     const result = await presentActionSheetController({
         header: 'Actions',
-        buttons: ([pinnedEventIdsRef.value.includes(event.id)?{
+        buttons: ([event.id.isIncludedIntoArray(pinnedEventIdsRef.value)?{
             text: LL.value.Remove_from_pinned_events(),
             data: {action: 'remove-from-pinned-events'},
         }:{
@@ -133,9 +141,9 @@ async function showEventActions(event: ListableVoxxrinEvent) {
     if(result?.action === 'visit-website') {
         Browser.open({url: event.websiteUrl})
     } else if(result?.action === 'add-to-pinned-events') {
-        addEventToPinnedEvents(event);
+        pinEvent(event.id);
     } else if(result?.action === 'remove-from-pinned-events') {
-        removeEventFromPinnedEvents(event);
+        unpinEvent(event.id);
     } else if(result?.action === 'cancel') {
 
     } else {
@@ -145,17 +153,10 @@ async function showEventActions(event: ListableVoxxrinEvent) {
 
 function eventPinToggled(event: ListableVoxxrinEvent, transitionType: 'unpinned-to-pinned'|'pinned-to-unpinned') {
     if(transitionType === 'unpinned-to-pinned') {
-        addEventToPinnedEvents(event);
+        pinEvent(event.id);
     } else {
-        removeEventFromPinnedEvents(event);
+        unpinEvent(event.id);
     }
-}
-
-function addEventToPinnedEvents(event: ListableVoxxrinEvent) {
-    pinnedEventIdsRef.value = [...pinnedEventIdsRef.value, event.id];
-}
-function removeEventFromPinnedEvents(event: ListableVoxxrinEvent) {
-    pinnedEventIdsRef.value = pinnedEventIdsRef.value.filter(ev => !ev.isSameThan(event.id));
 }
 </script>
 
@@ -167,6 +168,7 @@ function removeEventFromPinnedEvents(event: ListableVoxxrinEvent) {
     justify-content: space-between;
     padding: 24px var( --app-gutters-medium) 0 var( --app-gutters-medium);
     background: var(--app-background);
+    z-index: 9999;
 
     &:after {
       display: none;
@@ -218,10 +220,10 @@ function removeEventFromPinnedEvents(event: ListableVoxxrinEvent) {
     flex-direction: row;
     column-gap: 12px;
     padding: 12px var( --app-gutters-medium);
+    border-bottom: 1px solid var(--app-beige-line);
     background-color: var(--app-background);
     backdrop-filter: blur(2px);
-    border-bottom: none;
-    z-index: 1;
+    z-index: 999;
 
     .conferenceToggle {
       display: flex;

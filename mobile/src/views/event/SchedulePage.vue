@@ -4,8 +4,8 @@
       <current-event-header v-if="event" :event="event"/>
       <ion-header class="stickyHeader">
         <ion-toolbar>
-          <ion-title class="stickyHeader-title" slot="start" >{{ LL.Schedule() }}</ion-title>
-          <ion-button class="ion-margin-end" slot="end" shape="round" size="small" fill="outline" color="primary">
+          <ion-title class="stickyHeader-title" slot="start">{{ LL.Schedule() }}</ion-title>
+          <ion-button class="ion-margin-end" slot="end" shape="round" size="small" fill="outline">
             <ion-icon src="/assets/icons/solid/settings-cog.svg"></ion-icon>
           </ion-button>
           <ion-button slot="end" shape="round" size="small">

@@ -22,12 +22,12 @@
             <ion-icon src="/assets/icons/solid/close.svg"></ion-icon>
           </ion-button>
           <ion-title class="stickyHeader-title" slot="start" >Talk details</ion-title>
-          <ion-button class="btnTalkAction _watchLater" slot="end" shape="round" fill="outline"  @click.stop="() => toggleWatchLater()">
+          <ion-button class="btnTalkAction _watchLater" slot="end" shape="round" fill="outline"  @click.stop="() => toggleWatchLater()" v-if="event?.features.remindMeOnceVideosAreAvailableEnabled">
             <ion-icon v-if="!talkNotes.watchLater" aria-hidden="true" src="/assets/icons/line/video-line.svg"></ion-icon>
             <ion-icon v-if="talkNotes.watchLater" aria-hidden="true" src="/assets/icons/solid/video.svg"></ion-icon>
           </ion-button>
           <div class="favoriteGroup" slot="end">
-            <ion-button class="btnTalkAction _favorite" shape="round" fill="outline" @click.stop="() => toggleFavorite()">
+            <ion-button class="btnTalkAction _favorite" shape="round" fill="outline" @click.stop="() => toggleFavorite()" v-if="event?.features.favoritesEnabled">
               <ion-icon class="favorite-btn-icon" v-if="!talkNotes.isFavorite" aria-hidden="true" src="/assets/icons/line/bookmark-line-favorite.svg"></ion-icon>
               <ion-icon class="favorite-btn-icon" v-if="talkNotes.isFavorite" aria-hidden="true" src="/assets/icons/solid/bookmark-favorite.svg"></ion-icon>
             </ion-button>
@@ -83,7 +83,7 @@
           <span class="divider-separator"></span>
         </div>
         <ion-list class="talkDetails-speakers-list">
-          <ion-item v-for="(speaker, index) in talk?.speakers" :key="index">
+          <ion-item v-for="(speaker, index) in talk?.speakers" :key="speaker.id.value">
             <ion-avatar>
               <img :src="speaker.photoUrl" />
             </ion-avatar>
