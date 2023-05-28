@@ -10,6 +10,10 @@ export class ValueObject<T> {
 
         return this.value === other.value;
     }
+
+    isIncludedIntoArray<VO extends ValueObject<T>>(array: VO[]): boolean {
+        return array.map(vo => vo.value).includes(this.value);
+    }
 }
 
 export function sortBy<T, H extends string|number>(arr: T[], hash: (val: T) => H) {

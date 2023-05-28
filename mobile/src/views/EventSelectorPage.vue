@@ -69,7 +69,7 @@ import {
     useIonRouter
 } from '@ionic/vue';
 import {EventId, ListableVoxxrinEvent, searchEvents} from "@/models/VoxxrinEvent";
-import {ref, Ref, watch} from "vue";
+import {computed, ref, Ref, watch} from "vue";
 import AvailableEventsList from "@/components/AvailableEventsList.vue";
 import {presentActionSheetController} from "@/views/vue-utils";
 import {Browser} from "@capacitor/browser";
@@ -79,13 +79,18 @@ import {
 } from "@ionic/core/dist/types/components/action-sheet/action-sheet-interface";
 import PinnedEventSelector from "@/components/PinnedEventSelector.vue";
 import {useAvailableEvents} from "@/state/useAvailableEvents";
+import {useUserPreferences} from "@/state/useUserPreferences";
 
 const router = useIonRouter();
 const { LL } = typesafeI18n()
 
 const { listableEvents: availableEventsRef } = useAvailableEvents();
 
-const pinnedEventIdsRef = ref<EventId[]>([]);
+const { userPreferences, pinEvent, unpinEvent } = useUserPreferences();
+
+const pinnedEventIdsRef = computed(() => {
+    return userPreferences.value?.pinnedEventIds || [];
+})
 
 const searchCriteriaRef = ref<{ terms: string|undefined, includePastEvents: boolean}>({ terms: undefined, includePastEvents: false });
 
@@ -114,7 +119,7 @@ function includePastEventUpdated(includePastEvents: boolean) {
 async function showEventActions(event: ListableVoxxrinEvent) {
     const result = await presentActionSheetController({
         header: 'Actions',
-        buttons: ([pinnedEventIdsRef.value.includes(event.id)?{
+        buttons: ([event.id.isIncludedIntoArray(pinnedEventIdsRef.value)?{
             text: LL.value.Remove_from_pinned_events(),
             data: {action: 'remove-from-pinned-events'},
         }:{
@@ -133,9 +138,9 @@ async function showEventActions(event: ListableVoxxrinEvent) {
     if(result?.action === 'visit-website') {
         Browser.open({url: event.websiteUrl})
     } else if(result?.action === 'add-to-pinned-events') {
-        addEventToPinnedEvents(event);
+        pinEvent(event.id);
     } else if(result?.action === 'remove-from-pinned-events') {
-        removeEventFromPinnedEvents(event);
+        unpinEvent(event.id);
     } else if(result?.action === 'cancel') {
 
     } else {
@@ -145,17 +150,10 @@ async function showEventActions(event: ListableVoxxrinEvent) {
 
 function eventPinToggled(event: ListableVoxxrinEvent, transitionType: 'unpinned-to-pinned'|'pinned-to-unpinned') {
     if(transitionType === 'unpinned-to-pinned') {
-        addEventToPinnedEvents(event);
+        pinEvent(event.id);
     } else {
-        removeEventFromPinnedEvents(event);
+        unpinEvent(event.id);
     }
-}
-
-function addEventToPinnedEvents(event: ListableVoxxrinEvent) {
-    pinnedEventIdsRef.value = [...pinnedEventIdsRef.value, event.id];
-}
-function removeEventFromPinnedEvents(event: ListableVoxxrinEvent) {
-    pinnedEventIdsRef.value = pinnedEventIdsRef.value.filter(ev => !ev.isSameThan(event.id));
 }
 </script>
 
