@@ -19,7 +19,7 @@
     <div class="talkCard-content">
       <div class="title">{{talk.title}}</div>
       <div class="pictures">
-        <div class="picturesItem" v-for="(speaker, index) in talk.speakers" :key="index">
+        <div class="picturesItem" v-for="(speaker, index) in talk.speakers" :key="speaker.id.value">
           <ion-thumbnail>
             <img :src="speaker.photoUrl" v-if="speaker.photoUrl"/>
             <img src="/assets/images/svg/avatar-shadow.svg" v-if="!speaker.photoUrl"/>

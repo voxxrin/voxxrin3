@@ -1,7 +1,7 @@
 <template>
   <div v-if="events.length>0">
     <ion-list>
-      <available-event-item :pinned-events="pinnedEvents" v-for="(event, index) in events" :key="index"
+      <available-event-item :pinned-events="pinnedEvents" v-for="(event, index) in events" :key="event.id.value"
               :event="event"
               @event-pin-toggled="(ev, transitionType) => $emit('event-pin-toggled', ev, transitionType)"
               @event-clicked="$emit('event-clicked', $event)">

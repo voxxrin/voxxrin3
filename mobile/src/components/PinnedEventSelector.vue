@@ -16,7 +16,7 @@
           '--voxxrin-event-theme-colors-tertiary-rgb': pinnedEvent.theming.colors.tertiaryRGB,
           '--voxxrin-event-theme-colors-tertiary-contrast-hex': pinnedEvent.theming.colors.tertiaryContrastHex,
           '--voxxrin-event-theme-colors-tertiary-contrast-rgb': pinnedEvent.theming.colors.tertiaryContrastRGB,
-      }" v-for="(pinnedEvent, index) in pinnedEvents" :key="index"
+      }" v-for="(pinnedEvent, index) in pinnedEvents" :key="pinnedEvent.id.value"
                 @click="$emit('event-selected', pinnedEvent)">
         <current-event-status :event="pinnedEvent"/>
         <div>
