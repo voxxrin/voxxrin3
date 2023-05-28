@@ -2,7 +2,7 @@
   <ion-card class="talkCard"
             v-if="talkNotes"
             :class="{ container: true, 'is-favorited': talkNotes.isFavorite, 'to-watch-later': talkNotes.watchLater }"
-            @click="() => openTalkDetails()">
+            @click="$emit('talk-clicked', talk)">
     <div class="talkCard-head">
       <div class="track">
         <ion-badge class="trackBadge">
@@ -10,10 +10,7 @@
         </ion-badge>
       </div>
 
-      <div class="room">
-        <ion-icon aria-hidden="true" src="/assets/icons/solid/map-marker.svg"></ion-icon>
-        {{talk.room.title}}
-      </div>
+      <slot name="upper-right" :talk="talk"></slot>
     </div>
 
     <div class="talkCard-content">
@@ -33,23 +30,7 @@
         <ion-icon src="/assets/icons/solid/megaphone.svg"></ion-icon>
         <span class="speakers-list">{{displayedSpeakers}}</span>
       </div>
-      <div class="talkCard-footer-actions">
-        <div class="watchLater">
-          <ion-button class="btnTalk watch-later-btn" @click.stop="() => toggleWatchLater()" v-if="conferenceDescriptor?.features.remindMeOnceVideosAreAvailableEnabled">
-            <ion-icon v-if="!talkNotes?.watchLater" aria-hidden="true" src="/assets/icons/line/video-line.svg"></ion-icon>
-            <ion-icon v-if="!!talkNotes?.watchLater" aria-hidden="true" src="/assets/icons/solid/video.svg"></ion-icon>
-          </ion-button>
-        </div>
-        <div class="favorite">
-          <ion-button class="btnTalk favorite-btn" @click.stop="() => toggleFavorite()" v-if="conferenceDescriptor?.features.favoritesEnabled">
-            <span class="favorite-btn-group">
-               <ion-icon class="favorite-btn-group-icon" v-if="!talkNotes?.isFavorite" aria-hidden="true" src="/assets/icons/line/bookmark-line-favorite.svg"></ion-icon>
-              <ion-icon class="favorite-btn-group-icon" v-if="!!talkNotes?.isFavorite" aria-hidden="true" src="/assets/icons/solid/bookmark-favorite.svg"></ion-icon>
-              <ion-label class="favorite-btn-group-nb" v-if="eventTalkStats !== undefined">{{ eventTalkStats.totalFavoritesCount }}</ion-label>
-            </span>
-          </ion-button>
-        </div>
-      </div>
+      <slot name="footer-actions" :talk="talk" :talkNotesHook="{ eventTalkStats, talkNotes, toggleFavorite, toggleWatchLater }" />
     </div>
   </ion-card>
 </template>
@@ -66,8 +47,8 @@ import {EventId} from "@/models/VoxxrinEvent";
 import {getRouteParamsValue} from "@/views/vue-utils";
 import {useUserTalkNotes} from "@/state/useUserTalkNotes";
 import {DayId} from "@/models/VoxxrinDay";
-import {useTabbedPageNav} from "@/state/useTabbedPageNav";
 import {useConferenceDescriptor} from "@/state/useConferenceDescriptor";
+import {UserTalkNotes} from "../../../shared/feedbacks.firestore";
 
 
 const props = defineProps({
@@ -81,13 +62,15 @@ const props = defineProps({
   }
 })
 
+defineEmits<{
+    (e: 'talk-clicked', talk: VoxxrinTalk): void,
+}>()
+
 const route = useRoute();
 const eventId = computed(() => new EventId(getRouteParamsValue(route, 'eventId')));
 
 const { conferenceDescriptor } = useConferenceDescriptor(eventId);
-const { eventTalkStats, talkNotes, toggleFavorite, toggleWatchLater} = useUserTalkNotes(eventId, props.dayId, props.talk.id)
-
-const { triggerTabbedPageNavigate } = useTabbedPageNav();
+const { eventTalkStats, talkNotes, toggleFavorite, toggleWatchLater} = useUserTalkNotes(eventId, props.dayId, props.talk?.id)
 
 const displayedSpeakers = props.talk!.speakers
     .map(s => `${s.fullName}${s.companyName?` (${s.companyName})`:``}`)
@@ -97,12 +80,6 @@ const theme = {
   track: {
     color: props.talk!.track.themeColor
   }
-}
-
-function openTalkDetails() {
-    if(props.dayId && props.talk) {
-        triggerTabbedPageNavigate(`/events/${eventId.value.value}/days/${props.dayId.value}/talks/${props.talk.id.value}/details`, "forward", "push");
-    }
 }
 </script>
 
@@ -199,6 +176,7 @@ function openTalkDetails() {
       border: 2px solid var(--app-primary-shade);
     }
 
+    /* TODO RLZ: to remove (or move) at a higher level ? */
     ion-button.favorite-btn {
       --background: var(--voxxrin-event-theme-colors-primary-hex);
       --color: var(--voxxrin-event-theme-colors-primary-contrast-hex);
@@ -364,6 +342,7 @@ function openTalkDetails() {
       }
     }
 
+    /* TODO RLZ: to remove (or move) at a higher level ? */
     .favorite, .watchLater {
       height: 100%;
     }

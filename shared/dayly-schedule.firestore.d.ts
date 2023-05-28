@@ -38,7 +38,7 @@ export type DetailedTalk = Talk & {
     description: string
 }
 
-type TimeSlotBase<START extends ISODatetime = ISODatetime, END extends ISODatetime = ISODatetime> = {
+export type TimeSlotBase<START extends ISODatetime = ISODatetime, END extends ISODatetime = ISODatetime> = {
     start: START,
     end: END,
     id: `${START}--${END}`,

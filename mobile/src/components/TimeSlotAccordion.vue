@@ -34,9 +34,35 @@
 
     <div class="ion-padding accordion-content" slot="content">
       <schedule-break v-if="timeslot.type==='break'" :event="event" :talk-break="timeslot.break"></schedule-break>
-      <talk-format-groups-breakdown :day-id="dayId" :event="event"
-          v-if="timeslot.type==='talks'" :talks="timeslot.talks"
-      ></talk-format-groups-breakdown>
+      <talk-format-groups-breakdown
+          :day-id="dayId" :event="event" v-if="timeslot.type==='talks'"
+          :talks="timeslot.talks" @talkClicked="openTalkDetails($event)">
+        <template #talk-card-upper-right="{ talk }">
+          <div class="room">
+            <ion-icon aria-hidden="true" src="/assets/icons/solid/map-marker.svg"></ion-icon>
+            {{talk.room.title}}
+          </div>
+        </template>
+        <template #talk-card-footer-actions="{ talk, talkNotesHook }">
+          <div class="talkCard-footer-actions">
+            <div class="watchLater">
+              <ion-button class="btnTalk watch-later-btn" @click.stop="() => talkNotesHook.toggleWatchLater()" v-if="conferenceDescriptor?.features.remindMeOnceVideosAreAvailableEnabled">
+                <ion-icon v-if="!talkNotesHook.talkNotes?.watchLater" aria-hidden="true" src="/assets/icons/line/video-line.svg"></ion-icon>
+                <ion-icon v-if="!!talkNotesHook.talkNotes?.watchLater" aria-hidden="true" src="/assets/icons/solid/video.svg"></ion-icon>
+              </ion-button>
+            </div>
+            <div class="favorite">
+              <ion-button class="btnTalk favorite-btn" @click.stop="() => talkNotesHook.toggleFavorite()" v-if="conferenceDescriptor?.features.favoritesEnabled">
+                <span class="favorite-btn-group">
+                  <ion-icon class="favorite-btn-group-icon" v-if="!talkNotesHook.talkNotes?.isFavorite" aria-hidden="true" src="/assets/icons/line/bookmark-line-favorite.svg"></ion-icon>
+                  <ion-icon class="favorite-btn-group-icon" v-if="!!talkNotesHook.talkNotes?.isFavorite" aria-hidden="true" src="/assets/icons/solid/bookmark-favorite.svg"></ion-icon>
+                  <ion-label class="favorite-btn-group-nb" v-if="talkNotesHook.eventTalkStats !== undefined">{{ talkNotesHook.eventTalkStats.totalFavoritesCount }}</ion-label>
+                </span>
+              </ion-button>
+            </div>
+          </div>
+        </template>
+      </talk-format-groups-breakdown>
     </div>
   </ion-accordion>
 </template>
@@ -64,6 +90,9 @@ import TalkFormatGroupsBreakdown from "@/components/TalkFormatGroupsBreakdown.vu
 import ScheduleBreak from "@/components/ScheduleBreak.vue";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {DayId} from "@/models/VoxxrinDay";
+import {useConferenceDescriptor} from "@/state/useConferenceDescriptor";
+import {VoxxrinTalk} from "@/models/VoxxrinTalk";
+import {useTabbedPageNav} from "@/state/useTabbedPageNav";
 
 const props = defineProps({
   dayId: {
@@ -90,6 +119,8 @@ defineEmits<{
 
 const { LL } = typesafeI18n()
 
+const { conferenceDescriptor } = useConferenceDescriptor(props.event?.id);
+
 const progress = ref<TimeslotTimingProgress>()
 useInterval(() => {
   if(props.timeslot) {
@@ -99,6 +130,13 @@ useInterval(() => {
 
 const timeslotLabel = getTimeslotLabel(props.timeslot!);
 
+const { triggerTabbedPageNavigate } = useTabbedPageNav();
+
+function openTalkDetails(talk: VoxxrinTalk) {
+    if(props.dayId && props.event && talk) {
+        triggerTabbedPageNavigate(`/events/${props.event.id.value}/days/${props.dayId.value}/talks/${talk.id.value}/details`, "forward", "push");
+    }
+}
 </script>
 
 <style lang="scss" scoped>

@@ -9,7 +9,14 @@
         <span class="listTalks-divider-separator"></span>
       </ion-item-divider>
       <ion-item class="listTalks-item" v-for="(talk) in perFormatGroup.talks" :key="talk.id.value">
-        <schedule-talk :talk="talk" :day-id="dayId"></schedule-talk>
+        <schedule-talk :talk="talk" :day-id="dayId" @talkClicked="$emit('talk-clicked', $event)">
+          <template #upper-right="{ talk }">
+            <slot name="talk-card-upper-right" :talk="talk" />
+          </template>
+          <template #footer-actions="{ talk, talkNotesHook }">
+            <slot name="talk-card-footer-actions" :talk="talk" :talkNotesHook="talkNotesHook" />
+          </template>
+        </schedule-talk>
       </ion-item>
     </ion-item-group>
   </ion-list>
@@ -25,6 +32,7 @@ import {sortThenGroupByFormat, VoxxrinTalk} from "@/models/VoxxrinTalk";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import ScheduleTalk from "@/components/ScheduleTalk.vue";
 import {DayId} from "@/models/VoxxrinDay";
+import {UserTalkNotes} from "../../../shared/feedbacks.firestore";
 
 
 const props = defineProps({
@@ -41,6 +49,10 @@ const props = defineProps({
         type: Object as PropType<VoxxrinConferenceDescriptor>
     }
 })
+
+defineEmits<{
+    (e: 'talk-clicked', talk: VoxxrinTalk): void,
+}>()
 
 const perFormatGroups = computed(() => sortThenGroupByFormat(props.talks!, props.event!));
 
