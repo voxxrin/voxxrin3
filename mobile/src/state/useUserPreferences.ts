@@ -10,6 +10,7 @@ import {
 import {db} from "@/state/firebase";
 import {UserPreferences} from "../../../shared/user-preferences.firestore";
 import {VoxxrinUserPreferences} from "@/models/VoxxrinUser";
+import {createSharedComposable} from "@vueuse/core";
 
 export function useUserPreferences() {
 
@@ -98,3 +99,5 @@ export function useUserPreferences() {
         pinEvent, unpinEvent
     };
 }
+
+export const useSharedUserPreferences = createSharedComposable(useUserPreferences);
