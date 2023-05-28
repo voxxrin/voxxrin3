@@ -24,7 +24,7 @@
         <ion-toggle :enable-on-off-labels="true"
                     labelPlacement="end"
                     @ionChange="(ev) => includePastEventUpdated(ev.target.checked)"
-                    :checked="searchCriteriaRef.includePastEvents"
+                    :checked="userPreferences?.showPastEvents"
                    class="conferenceToggle">
           <span class="conferenceToggle-label">{{ LL.Past_events() }}</span>
         </ion-toggle>
@@ -79,26 +79,29 @@ import {
 } from "@ionic/core/dist/types/components/action-sheet/action-sheet-interface";
 import PinnedEventSelector from "@/components/PinnedEventSelector.vue";
 import {useAvailableEvents} from "@/state/useAvailableEvents";
-import {useUserPreferences} from "@/state/useUserPreferences";
+import {useSharedUserPreferences} from "@/state/useUserPreferences";
 
 const router = useIonRouter();
 const { LL } = typesafeI18n()
 
 const { listableEvents: availableEventsRef } = useAvailableEvents();
 
-const { userPreferences, pinEvent, unpinEvent } = useUserPreferences();
+const { userPreferences, pinEvent, unpinEvent, togglePastEvent } = useSharedUserPreferences();
 
 const pinnedEventIdsRef = computed(() => {
     return userPreferences.value?.pinnedEventIds || [];
 })
 
-const searchCriteriaRef = ref<{ terms: string|undefined, includePastEvents: boolean}>({ terms: undefined, includePastEvents: false });
+const searchTerms = ref<string|undefined>(undefined);
 
 const filteredPinnedEvents: Ref<ListableVoxxrinEvent[]> = ref([]);
 const filteredAvailableEvents: Ref<ListableVoxxrinEvent[]> = ref([]);
-watch([availableEventsRef, searchCriteriaRef, pinnedEventIdsRef], ([availableEvents, searchCriteria, pinnedEventIds]) => {
+watch([availableEventsRef, searchTerms, pinnedEventIdsRef, userPreferences], ([availableEvents, searchTerms, pinnedEventIds, userPreferences]) => {
     if(availableEvents) {
-        const {events, pinnedEvents} = searchEvents(availableEvents, searchCriteria, pinnedEventIds)
+        const {events, pinnedEvents} = searchEvents(availableEvents, {
+            terms: searchTerms,
+            includePastEvents: !!userPreferences?.showPastEvents
+        }, pinnedEventIds)
         filteredAvailableEvents.value = events;
         filteredPinnedEvents.value = pinnedEvents;
     }
@@ -109,11 +112,11 @@ async function selectEvent(eventId: EventId) {
 }
 
 function searchTextUpdated(searchText: string) {
-    searchCriteriaRef.value = {...searchCriteriaRef.value, terms: searchText}
+    searchTerms.value = searchText;
 }
 
 function includePastEventUpdated(includePastEvents: boolean) {
-    searchCriteriaRef.value = {...searchCriteriaRef.value, includePastEvents }
+    togglePastEvent(includePastEvents);
 }
 
 async function showEventActions(event: ListableVoxxrinEvent) {
