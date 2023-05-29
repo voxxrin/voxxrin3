@@ -216,6 +216,7 @@ const theme = {
     background-color: rgba(white, 0.6);
 
     @media (prefers-color-scheme: dark) {
+      background-color: rgba(white, 0.05);
       border : {
         top: 1px solid var(--app-line-contrast);
         bottom: 1px solid var(--app-line-contrast);
@@ -252,7 +253,6 @@ const theme = {
 }
 
 //* States card talk *//
-
 ::v-deep {
   &.is-highlighted {
     border : {
@@ -339,12 +339,16 @@ const theme = {
       border-bottom: none;
 
       @media (prefers-color-scheme: dark) {
-        border-color: var(--app-white);
+        border-color: var(--app-white) !important;
       }
 
       .btnTalk {
         border-width: 2px;
         border-color: var(--voxxrin-event-theme-colors-secondary-hex);
+
+        @media (prefers-color-scheme: dark) {
+          border-color: var(--app-white) !important;
+        }
       }
     }
 
