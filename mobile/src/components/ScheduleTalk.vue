@@ -255,9 +255,9 @@ const theme = {
 ::v-deep {
   &.is-highlighted {
     border : {
-      top: 2px solid var(--app-primary-shade);
-      bottom: 2px solid var(--app-primary-shade);
-      right: 2px solid var(--app-primary-shade);
+      top: 2px solid var(--voxxrin-event-theme-colors-secondary-hex);
+      bottom: 2px solid var(--voxxrin-event-theme-colors-secondary-hex);
+      right: 2px solid var(--voxxrin-event-theme-colors-secondary-hex);
     }
 
     @media (prefers-color-scheme: dark) {
@@ -265,6 +265,41 @@ const theme = {
         top: 2px solid var(--app-white);
         bottom: 2px solid var(--app-white);
         right: 2px solid var(--app-white);
+      }
+    }
+
+    &.is-favorited {
+      border : {
+        top: 2px solid var(--app-primary-shade);
+        bottom: 2px solid var(--app-primary-shade);
+        right: 2px solid var(--app-primary-shade);
+      }
+
+      @media (prefers-color-scheme: dark) {
+        border : {
+          top: 2px solid var(--app-white);
+          bottom: 2px solid var(--app-white);
+          right: 2px solid var(--app-white);
+        }
+      }
+
+      &:before {
+        background: rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.6);
+      }
+
+      .talkCard-footer {
+        border-width: 2px;
+        border-color: var(--app-primary-shade);
+        border-bottom: none;
+
+        @media (prefers-color-scheme: dark) {
+          border-color: var(--app-white);
+        }
+
+        .btnTalk {
+          border-width: 2px;
+          border-color: var(--app-primary-shade);
+        }
       }
     }
 
@@ -286,6 +321,7 @@ const theme = {
       right: 0;
       bottom: 0;
       background-image: url('assets/images/png/texture-favorited.png');
+      background-repeat: no-repeat;
       transform: scale(1);
       opacity: 0.5;
       mix-blend-mode: overlay;
@@ -296,20 +332,14 @@ const theme = {
       }
     }
 
-    &.is-favorited {
-      &:before {
-        background: rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.6);
-      }
-    }
-
     ion-thumbnail {
       background-color: var(--app-background);
-      border: 2px solid var(--app-primary-shade);
+      border: 2px solid var(--voxxrin-event-theme-colors-secondary-hex);
     }
 
     .talkCard-footer {
       border-width: 2px;
-      border-color: var(--app-primary-shade);
+      border-color: var(--voxxrin-event-theme-colors-secondary-hex);
       border-bottom: none;
 
       @media (prefers-color-scheme: dark) {
@@ -318,7 +348,7 @@ const theme = {
 
       .btnTalk {
         border-width: 2px;
-        border-color: var(--app-primary-shade);
+        border-color: var(--voxxrin-event-theme-colors-secondary-hex);
       }
     }
 
