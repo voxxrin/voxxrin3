@@ -129,12 +129,19 @@ watch([event, currentSchedule], ([confDescriptor, currentSchedule]) => {
         currentlySelectedDayId.value = findVoxxrinDay(confDescriptor, currentSchedule.day).id
 
         // Deferring expanded timeslots so that :
-        // 1/ we don't load the DOM too much when open a schedule
+        // 1/ we don't load the DOM too much when opening a schedule
         // 2/ this allows to show the auto-expand animation to the user
+        const autoExpandableTimeslotIds = filterTimeslotsToAutoExpandBasedOn(currentSchedule.timeSlots, useCurrentClock().zonedDateTimeISO())
+            .map(ts => ts.id.value)
         setTimeout(() => {
-            expandedTimeslotIds.value = filterTimeslotsToAutoExpandBasedOn(currentSchedule.timeSlots, useCurrentClock().zonedDateTimeISO())
-                .map(ts => ts.id.value);
-        }, 500)
+            // Only expanding firt 2 auto-expandable timeslots first (no need to auto-expand others which
+            // will be outside the viewport
+            expandedTimeslotIds.value = autoExpandableTimeslotIds.slice(0, 3);
+        }, 300)
+        setTimeout(() => {
+            // Waiting a little bit and expanding those timeslots outside the viewport...
+            expandedTimeslotIds.value = autoExpandableTimeslotIds.slice(0);
+        }, 1200)
     }
 }, {immediate: true});
 
