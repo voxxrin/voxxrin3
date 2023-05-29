@@ -1,9 +1,7 @@
 <template>
   <div>
-    {{talks.length}} talks here !
-
     <talk-format-groups-breakdown
-        :event="eventDescriptor" :talks="talks" :is-highlighted="(talk, talkNotes) => talk.id.isSameThan(selectedTalkId)"
+        :event="eventDescriptor" :talks="displayedTalks" :is-highlighted="(talk, talkNotes) => talk.id.isSameThan(selectedTalkId)"
         @talkClicked="updateSelected($event)">
       <template #talk-card-upper-right="{ talk }">
         <div>
@@ -28,16 +26,19 @@
         </div>
       </template>
     </talk-format-groups-breakdown>
-
+    <ion-button @click="() => showUnfavoritedTalksRef = true" v-if="!showUnfavoritedTalksRef">
+      {{LL.Show_non_favorited_talks({ nrOfNonFavoritedTalks: nonFavoritedTalksCount })}} <strong>({{nonFavoritedTalksCount}})</strong>
+    </ion-button>
   </div>
 </template>
 
 <script setup lang="ts">
-import {computed, Prop, PropType, ref, unref} from "vue";
+import {computed, Prop, PropType, Ref, ref, unref} from "vue";
 import {TalkId, VoxxrinTalk} from "@/models/VoxxrinTalk";
 import TalkFormatGroupsBreakdown from "@/components/TalkFormatGroupsBreakdown.vue";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {typesafeI18n} from "@/i18n/i18n-vue";
+import {useUserEventAllFavoritedTalkIds} from "@/state/useUserTalkNotes";
 
 const { LL } = typesafeI18n()
 
@@ -70,6 +71,29 @@ function updateSelected(talk: VoxxrinTalk) {
         selectedTalkId.value = talk.id;
     }
 }
+
+const { allUserFavoritedTalkIds: allUserFavoritedTalkIdsRef } = useUserEventAllFavoritedTalkIds(props.eventDescriptor?.id)
+
+const showUnfavoritedTalksRef = ref<boolean>(false);
+
+const displayedTalks: Ref<VoxxrinTalk[]> = computed(() => {
+    const showUnfavoritedTalks = unref(showUnfavoritedTalksRef),
+        allUserFavoritedTalkIds = unref(allUserFavoritedTalkIdsRef);
+
+    if(!props.talks) {
+        return []
+    }
+
+    return props.talks.filter(talk => showUnfavoritedTalks || talk.id.isIncludedIntoArray(allUserFavoritedTalkIds));
+})
+
+const nonFavoritedTalksCount = computed(() => {
+    if(!props.talks) {
+        return 0;
+    }
+
+    return props.talks.length - displayedTalks.value.length;
+})
 
 </script>
 

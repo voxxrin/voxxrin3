@@ -35,7 +35,8 @@ const en = {
 	Pick_the_talk_you_attended: 'Pick the talk you attended',
 	Currently_selected_timeslot: 'Currently selected timeslot',
 	Overlapping_timeslots: '{nrOfOverlappingSlots} Overlapping time slot{{nrOfOverlappingSlots:s}}',
-	In_favorites: 'In favorites'
+	In_favorites: 'In favorites',
+	Show_non_favorited_talks: 'Show non-favorited talk{{nrOfNonFavoritedTalks:s}}'
 } satisfies BaseTranslation
 
 export default en

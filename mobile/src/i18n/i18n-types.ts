@@ -157,6 +157,10 @@ type RootTranslation = {
 	 * I​n​ ​f​a​v​o​r​i​t​e​s
 	 */
 	In_favorites: string
+	/**
+	 * S​h​o​w​ ​n​o​n​-​f​a​v​o​r​i​t​e​d​ ​t​a​l​k​{​{​s​}​}
+	 */
+	Show_non_favorited_talks: string
 }
 
 export type TranslationFunctions = {
@@ -300,6 +304,10 @@ export type TranslationFunctions = {
 	 * In favorites
 	 */
 	In_favorites: () => LocalizedString
+	/**
+	 * Show non-favorited talk{{s}}
+	 */
+	Show_non_favorited_talks: (arg: { nrOfNonFavoritedTalks: number | string | boolean }) => LocalizedString
 }
 
 export type Formatters = {}
