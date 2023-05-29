@@ -1,7 +1,7 @@
 <template>
   <ion-card class="talkCard"
             v-if="talkNotes"
-            :class="{ container: true, 'is-favorited': talkNotes.isFavorite, 'to-watch-later': talkNotes.watchLater }"
+            :class="{ container: true, 'is-highlighted': isHighlighted(talk, talkNotes), 'is-favorited': talkNotes.isFavorite, 'to-watch-later': talkNotes.watchLater }"
             @click="$emit('talk-clicked', talk)">
     <div class="talkCard-head">
       <div class="track">
@@ -59,6 +59,10 @@ const props = defineProps({
   talk: {
     required: true,
     type: Object as PropType<VoxxrinTalk>
+  },
+  isHighlighted: {
+      required: true,
+      type: Function as PropType<(talk: VoxxrinTalk, talkNotes: UserTalkNotes) => boolean>
   }
 })
 
@@ -117,6 +121,10 @@ const theme = {
     position: absolute;
     content: '';
     z-index: -1;
+  }
+
+  &.is-highlighted {
+    /* TODO RLZ: Move proper .is-favorite selector content here */
   }
 
   &.is-favorited  {

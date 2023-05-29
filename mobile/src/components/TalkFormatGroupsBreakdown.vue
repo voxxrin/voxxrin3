@@ -9,7 +9,7 @@
         <span class="listTalks-divider-separator"></span>
       </ion-item-divider>
       <ion-item class="listTalks-item" v-for="(talk) in perFormatGroup.talks" :key="talk.id.value">
-        <schedule-talk :talk="talk" :day-id="dayId" @talkClicked="$emit('talk-clicked', $event)">
+        <schedule-talk :talk="talk" :day-id="dayId" @talkClicked="$emit('talk-clicked', $event)" :is-highlighted="isHighlighted">
           <template #upper-right="{ talk }">
             <slot name="talk-card-upper-right" :talk="talk" />
           </template>
@@ -47,6 +47,10 @@ const props = defineProps({
     event: {
         required: true,
         type: Object as PropType<VoxxrinConferenceDescriptor>
+    },
+    isHighlighted: {
+        required: true,
+        type: Function as PropType<(talk: VoxxrinTalk, talkNotes: UserTalkNotes) => boolean>
     }
 })
 

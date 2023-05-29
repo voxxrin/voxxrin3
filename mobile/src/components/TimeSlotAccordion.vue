@@ -36,7 +36,8 @@
       <schedule-break v-if="timeslot.type==='break'" :event="event" :talk-break="timeslot.break"></schedule-break>
       <talk-format-groups-breakdown
           :day-id="dayId" :event="event" v-if="timeslot.type==='talks'"
-          :talks="timeslot.talks" @talkClicked="openTalkDetails($event)">
+          :talks="timeslot.talks" @talkClicked="openTalkDetails($event)"
+          :is-highlighted="(talk, talkNotes) => talkNotes.isFavorite">
         <template #talk-card-upper-right="{ talk }">
           <div class="room">
             <ion-icon aria-hidden="true" src="/assets/icons/solid/map-marker.svg"></ion-icon>
