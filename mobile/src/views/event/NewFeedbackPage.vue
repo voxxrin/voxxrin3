@@ -2,38 +2,52 @@
 <template>
   <ion-page>
     <ion-content :fullscreen="true" v-if="confDescriptorRef && dayIdRef">
-      <ion-header>
+      <ion-header class="stickyHeader">
         <ion-toolbar>
-          <ion-title slot="start" >{{LL.Add_Feedback()}}</ion-title>
+        <ion-button class="stickyHeader-close" shape="round" slot="start" size="small" fill="outline" @click="$router.back()">
+          <ion-icon src="/assets/icons/line/arrow-left-line.svg"></ion-icon>
+        </ion-button>
+        <ion-title class="stickyHeader-title" slot="start">{{LL.Add_Feedback()}}</ion-title>
         </ion-toolbar>
-        <h2>
-          <ion-icon :icon="calendar" />
-          {{labelledTimeslotRef?.label.date.full}}
+      </ion-header>
 
-          <ion-icon :icon="timeOutline" />
+      <ion-header class="subHeader">
+        <div class="subHeader-schedule">
+          <ion-icon class="_accordion-icon _future-icon" aria-hidden="true" src="assets/icons/solid/calendar.svg"></ion-icon>
+          <ion-label>{{labelledTimeslotRef?.label.date.full}}</ion-label>
+        </div>
+        <div class="subHeader-timeSlot">
+          <ion-icon aria-hidden="true" src="/assets/icons/solid/clock.svg"></ion-icon>
           {{labelledTimeslotRef?.label.full}}
-        </h2>
-        <h3>
-          <span>1</span>
-          {{LL.Pick_the_talk_you_attended()}}
-        </h3>
+        </div>
       </ion-header>
 
       <div>
-        <h4>
-          {{LL.Currently_selected_timeslot()}}
-          <div class="slotOverlay" v-if="labelledTimeslotRef?.overlappingTimeSlots.length > 0">
-            <ion-icon aria-hidden="true" src="assets/icons/solid/slot-overlay.svg"></ion-icon>
-            <span>
+        <ion-header class="pickTalkDivider">
+          <div class="pickTalkDivider-start">
+            <span class="pickTalkDivider-title">{{LL.Currently_selected_timeslot()}}</span>
+            <small><strong>1</strong> {{LL.Pick_the_talk_you_attended()}}</small>
+          </div>
+
+          <div class="pickTalkDivider-end">
+            <div class="slotOverlay" v-if="labelledTimeslotRef?.overlappingTimeSlots.length > 0">
+              <ion-icon aria-hidden="true" src="assets/icons/solid/slot-overlay.svg"></ion-icon>
+              <span class="slotOverlay-txt">
                 <small>{{LL.Overlaps_x_slot_label()}}</small>
                 <strong>{{LL.Overlaps_x_slot_value({nrOfOverlappingSlots: labelledTimeslotRef?.overlappingTimeSlots.length})}}</strong>
               </span>
+            </div>
+            <ion-label v-if="timeslotLabel">
+              <span class="slot-schedule-start">{{timeslotLabel.start}}</span>
+              <ion-icon class="slot-schedule-icon" aria-hidden="true" src="assets/icons/line/chevron-right-line.svg"></ion-icon>
+              <span class="slot-schedule-end">{{timeslotLabel.end}}</span>
+            </ion-label>
           </div>
-        </h4>
-        <feedback-talk-selector :talks="labelledTimeslotRef?.talks || []" :day-id="dayIdRef" :event-descriptor="confDescriptorRef">
-        </feedback-talk-selector>
-      </div>
-      <div>
+        </ion-header>
+        <div>
+          <feedback-talk-selector :talks="labelledTimeslotRef?.talks || []" :day-id="dayIdRef" :event-descriptor="confDescriptorRef">
+          </feedback-talk-selector>
+        </div>
         <h4>{{LL.Overlapping_timeslots({ nrOfOverlappingSlots: labelledTimeslotRef?.overlappingTimeSlots.length })}}</h4>
         <ion-accordion-group>
           <ion-accordion v-for="(overlappingTimeslot, index) in overlappingTimeslots" :key="overlappingTimeslot.id.value">
@@ -129,3 +143,33 @@ const overlappingTimeslots = computed((): Array<LabelledTimeslot> => {
 })
 
 </script>
+
+
+<style scoped lang="scss">
+  .pickTalkDivider {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    row-gap: 4px;
+    padding: 8px 16px;
+    background: var(--app-primary);
+    color: white;
+
+    &-start {
+      display: flex;
+      flex-direction: column;
+      row-gap: 4px;
+    }
+
+    &-end {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    &-title {
+      font-size: 18px;
+      font-weight: bold !important;
+    }
+  }
+</style>
