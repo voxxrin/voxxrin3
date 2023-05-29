@@ -53,7 +53,7 @@ import {
     IonFab,
     IonFabList,
     IonAccordionGroup,
-    alertController,
+    alertController, useIonRouter,
 } from '@ionic/vue';
 import {useRoute, useRouter} from "vue-router";
 import {computed, onMounted, ref, watch} from "vue";
@@ -76,7 +76,7 @@ import {useCurrentClock} from "@/state/useCurrentClock";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
 
-const router = useRouter();
+const router = useIonRouter();
 const route = useRoute();
 const eventId = computed(() => new EventId(getRouteParamsValue(route, 'eventId')));
 const {conferenceDescriptor: event} = useSharedConferenceDescriptor(eventId);
@@ -157,11 +157,7 @@ function recomputeMissingFeedbacksList() {
 }
 
 async function showAlertForTimeslot(timeslot: VoxxrinScheduleTimeSlot) {
-    const alert = await alertController.create({
-        header: 'Not implemented yet !',
-        message: 'Providing feedback for a timeslot is not implemented (yet)'
-    });
-    alert.present();
+    router.navigate(`/events/${eventId.value.value}/new-feedback-for-day/${currentlySelectedDayId.value?.value}/and-timeslot/${timeslot.id.value}`, "forward", "push");
 }
 
 // Crappy hack in order to have a pretty ion-fab-list closing animation

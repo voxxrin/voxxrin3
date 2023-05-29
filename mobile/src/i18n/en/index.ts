@@ -31,6 +31,11 @@ const en = {
 	Add_from_the_list_below: `Add from the list below`,
 	Today: 'Today',
 	Tomorrow: 'Tomorrow',
+	Add_Feedback: 'Add Feedback',
+	Pick_the_talk_you_attended: 'Pick the talk you attended',
+	Currently_selected_timeslot: 'Currently selected timeslot',
+	Overlapping_timeslots: '{nrOfOverlappingSlots} Overlapping time slot{{nrOfOverlappingSlots:s}}',
+	In_favorites: 'In favorites'
 } satisfies BaseTranslation
 
 export default en

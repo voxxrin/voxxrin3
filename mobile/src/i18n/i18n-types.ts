@@ -136,6 +136,27 @@ type RootTranslation = {
 	 * T​o​m​o​r​r​o​w
 	 */
 	Tomorrow: string
+	/**
+	 * A​d​d​ ​F​e​e​d​b​a​c​k
+	 */
+	Add_Feedback: string
+	/**
+	 * P​i​c​k​ ​t​h​e​ ​t​a​l​k​ ​y​o​u​ ​a​t​t​e​n​d​e​d
+	 */
+	Pick_the_talk_you_attended: string
+	/**
+	 * C​u​r​r​e​n​t​l​y​ ​s​e​l​e​c​t​e​d​ ​t​i​m​e​s​l​o​t
+	 */
+	Currently_selected_timeslot: string
+	/**
+	 * {​n​r​O​f​O​v​e​r​l​a​p​p​i​n​g​S​l​o​t​s​}​ ​O​v​e​r​l​a​p​p​i​n​g​ ​t​i​m​e​ ​s​l​o​t​{​{​s​}​}
+	 * @param {string | number | boolean} nrOfOverlappingSlots
+	 */
+	Overlapping_timeslots: RequiredParams<'nrOfOverlappingSlots'>
+	/**
+	 * I​n​ ​f​a​v​o​r​i​t​e​s
+	 */
+	In_favorites: string
 }
 
 export type TranslationFunctions = {
@@ -259,6 +280,26 @@ export type TranslationFunctions = {
 	 * Tomorrow
 	 */
 	Tomorrow: () => LocalizedString
+	/**
+	 * Add Feedback
+	 */
+	Add_Feedback: () => LocalizedString
+	/**
+	 * Pick the talk you attended
+	 */
+	Pick_the_talk_you_attended: () => LocalizedString
+	/**
+	 * Currently selected timeslot
+	 */
+	Currently_selected_timeslot: () => LocalizedString
+	/**
+	 * {nrOfOverlappingSlots} Overlapping time slot{{s}}
+	 */
+	Overlapping_timeslots: (arg: { nrOfOverlappingSlots: string | number | boolean }) => LocalizedString
+	/**
+	 * In favorites
+	 */
+	In_favorites: () => LocalizedString
 }
 
 export type Formatters = {}
