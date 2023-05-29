@@ -106,9 +106,11 @@ watch([event, currentlySelectedDayId], ([confDescriptor, selectedDayId]) => {
       // Pre-loading other days data in the background, for 2 main reasons :
       // - navigation to other days will be quickier
       // - if user switches to offline without navigating to these days, information will be in his cache anyway
-      const otherDayIds = confDescriptor.days.filter(day => !day.id.isSameThan(currentlySelectedDayId.value)).map(d => d.id);
-      console.log(`Preparing schedule data for other days than currently selected one (${otherDayIds.map(id => id.value).join(", ")})`)
-      prepareSchedules(confDescriptor, otherDayIds);
+      setTimeout(() => {
+          const otherDayIds = confDescriptor.days.filter(day => !day.id.isSameThan(currentlySelectedDayId.value)).map(d => d.id);
+          console.log(`Preparing schedule data for other days than currently selected one (${otherDayIds.map(id => id.value).join(", ")})`)
+          prepareSchedules(confDescriptor, otherDayIds);
+      }, 5000)
   }
 }, {immediate: true})
 
