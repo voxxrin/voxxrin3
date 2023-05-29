@@ -3,7 +3,7 @@ export type TalkStats = {
     totalFavoritesCount: number
 }
 
-export type UserTalkNotes = {
+export type TalkNote = {
     talkId: string,
     isFavorite: boolean,
     watchLater: boolean|null,
@@ -16,6 +16,5 @@ export type UserTalkNotes = {
 
 export type UserTalkNote = {
     userId: string,
-    note: UserTalkNotes
-    talkId: string,
+    note: TalkNote,
 }

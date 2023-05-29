@@ -31,7 +31,7 @@ import {
 import {sortThenGroupByFormat, VoxxrinTalk} from "@/models/VoxxrinTalk";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import ScheduleTalk from "@/components/ScheduleTalk.vue";
-import {UserTalkNotes} from "../../../shared/feedbacks.firestore";
+import {TalkNote} from "../../../shared/feedbacks.firestore";
 
 
 const props = defineProps({
@@ -45,7 +45,7 @@ const props = defineProps({
     },
     isHighlighted: {
         required: true,
-        type: Function as PropType<(talk: VoxxrinTalk, talkNotes: UserTalkNotes) => boolean>
+        type: Function as PropType<(talk: VoxxrinTalk, talkNotes: TalkNote) => boolean>
     }
 })
 

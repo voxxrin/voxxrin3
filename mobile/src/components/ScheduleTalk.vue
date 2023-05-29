@@ -47,7 +47,7 @@ import {EventId} from "@/models/VoxxrinEvent";
 import {getRouteParamsValue} from "@/views/vue-utils";
 import {useUserTalkNotes} from "@/state/useUserTalkNotes";
 import {useConferenceDescriptor} from "@/state/useConferenceDescriptor";
-import {UserTalkNotes} from "../../../shared/feedbacks.firestore";
+import {TalkNote} from "../../../shared/feedbacks.firestore";
 
 
 const props = defineProps({
@@ -57,7 +57,7 @@ const props = defineProps({
   },
   isHighlighted: {
       required: true,
-      type: Function as PropType<(talk: VoxxrinTalk, talkNotes: UserTalkNotes) => boolean>
+      type: Function as PropType<(talk: VoxxrinTalk, talkNotes: TalkNote) => boolean>
   }
 })
 

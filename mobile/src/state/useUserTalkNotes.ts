@@ -14,7 +14,7 @@ import {
     UpdateData
 } from "firebase/firestore";
 import {db} from "@/state/firebase";
-import {UserTalkNotes, UserTalkNote} from "../../../shared/feedbacks.firestore";
+import {TalkNote, UserTalkNote} from "../../../shared/feedbacks.firestore";
 
 export function useUserTalkNotes(
     eventIdRef: Unreffable<EventId | undefined>,
@@ -42,7 +42,7 @@ export function useUserTalkNotes(
 
     const firestoreUserTalkNotesRef = useDocument(firestoreUserTalkNotesSource);
 
-    const talkNotesRef: Ref<UserTalkNotes> = computed(() => {
+    const talkNoteRef: Ref<TalkNote> = computed(() => {
         const firestoreUserTalkNotes = unref(firestoreUserTalkNotesRef),
             talkId = unref(talkIdRef),
             user = unref(userRef);
@@ -65,8 +65,8 @@ export function useUserTalkNotes(
 
     const updateTalkNotesDocument = async (
         callContextName: string,
-        talkNoteUpdater: (talkNotes: UserTalkNotes) => Partial<UserTalkNotes>,
-        afterUpdate: (updatedTalkNotes: UserTalkNotes) => Promise<void>|void = () => {}
+        talkNoteUpdater: (talkNote: TalkNote) => Partial<TalkNote>,
+        afterUpdate: (updatedTalkNote: TalkNote) => Promise<void>|void = () => {}
     ) => {
         const firestoreUserTalkNotesDoc = unref(firestoreUserTalkNotesSource),
             firestoreUserTalkNotes = unref(firestoreUserTalkNotesRef),
@@ -83,7 +83,7 @@ export function useUserTalkNotes(
             return;
         }
 
-        const initialNote: UserTalkNotes = firestoreUserTalkNotes?.note || {
+        const initialNote: TalkNote = firestoreUserTalkNotes?.note || {
             talkId: talkId.value,
             isFavorite: false,
             watchLater: null,
@@ -102,7 +102,6 @@ export function useUserTalkNotes(
         if(!firestoreUserTalkNotes) {
             await setDoc(firestoreUserTalkNotesDoc, {
                 userId: user.uid,
-                talkId: talkId.value,
                 note: updatedTalkNotes
             });
         } else {
@@ -137,7 +136,7 @@ export function useUserTalkNotes(
 
     return {
         eventTalkStats,
-        talkNotes: talkNotesRef,
+        talkNotes: talkNoteRef,
         toggleFavorite,
         toggleWatchLater
     };
