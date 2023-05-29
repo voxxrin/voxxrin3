@@ -66,8 +66,10 @@ export function prepareSchedules(
                 if(timeslot.type === 'talks') {
                     timeslot.talks.forEach(talk => {
                         talk.speakers.forEach(speaker => {
-                            const avatarImage = new Image();
-                            avatarImage.src = speaker.photoUrl;
+                            if(speaker.photoUrl) {
+                                const avatarImage = new Image();
+                                avatarImage.src = speaker.photoUrl;
+                            }
                             // avatarImage.onload = () => {
                             //     console.log(`Avatar ${speaker.photoUrl} pre-loaded !`)
                             // };
