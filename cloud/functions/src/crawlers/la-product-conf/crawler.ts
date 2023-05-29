@@ -248,7 +248,6 @@ export const LA_PRODUCT_CONF_CRAWLER: CrawlerKind<typeof LA_PRODUCT_CONF_DESCRIP
 
         const fullEvent: FullEvent = {
             id: eventId,
-            talkStats: [],
             info: {
                 id: eventId,
                 title: descriptor.title,

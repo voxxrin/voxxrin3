@@ -96,22 +96,6 @@ const saveEvent = async function(event: FullEvent) {
             error(`Error while saving talk ${talk.id}: ${e?.toString()}`)
         }
     }));
-    await Promise.all(
-        event.talkStats
-            .flatMap(dailyTalksStat =>
-                dailyTalksStat.stats.map(stat => ({day: dailyTalksStat.day, stat: stat }))
-            ).map(async talkStatWithDay => {
-                try {
-                    // TODO: see if we really want to override stats each time we crawl
-                    await firestoreEvent
-                        .collection("days").doc(talkStatWithDay.day)
-                        .collection("talksStats").doc(talkStatWithDay.stat.id)
-                        .set(talkStatWithDay.stat)
-                }catch(e) {
-                    error(`Error while storing talk stats with day ${talkStatWithDay.day}: ${e?.toString()}`)
-                }
-        })
-    )
 
     try {
         await firestoreEvent.collection('event-descriptor')
