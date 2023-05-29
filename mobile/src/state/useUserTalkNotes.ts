@@ -2,13 +2,19 @@ import {EventId} from "@/models/VoxxrinEvent";
 import {DayId} from "@/models/VoxxrinDay";
 import {TalkId} from "@/models/VoxxrinTalk";
 import {computed, Ref, unref} from "vue";
-import {useSharedTalkStats} from "@/state/useEventTalkStats";
+import {useTalkStats} from "@/state/useEventTalkStats";
 import {useCurrentUser, useDocument} from "vuefire";
 import {Unreffable} from "@/views/vue-utils";
-import {collection, doc, DocumentReference, setDoc, updateDoc, arrayUnion } from "firebase/firestore";
+import {
+    collection,
+    doc,
+    DocumentReference,
+    setDoc,
+    updateDoc,
+    UpdateData
+} from "firebase/firestore";
 import {db} from "@/state/firebase";
-import {UserTalksNotes, UserTalkNotes} from "../../../shared/feedbacks.firestore";
-import {match, P} from "ts-pattern";
+import {UserTalkNotes, UserTalkNote} from "../../../shared/feedbacks.firestore";
 
 export function useUserTalkNotes(
     eventIdRef: Unreffable<EventId | undefined>,
@@ -18,85 +24,57 @@ export function useUserTalkNotes(
 
     const firestoreUserTalkNotesSource = computed(() => {
         const eventId = unref(eventIdRef),
-            user = unref(userRef);
+            user = unref(userRef),
+            talkId = unref(talkIdRef);
 
-        if(!eventId || !eventId.value || !user) {
+        if(!eventId || !eventId.value || !user || !talkId || !talkId.value) {
             return undefined;
         }
 
         return doc(collection(doc(collection(doc(collection(db,
-            'users'), user.uid),
-            'events'), eventId.value),
-            'talksNotes'), "all"
-        ) as DocumentReference<UserTalksNotes>
+                    'users'), user.uid),
+                'events'), eventId.value),
+            'talksNotes'), talkId.value
+        ) as DocumentReference<UserTalkNote>
     });
 
-    const { eventTalkStats, incrementInMemoryTotalFavoritesCount, decrementInMemoryTotalFavoritesCount } = useSharedTalkStats(eventIdRef, talkIdRef)
+    const { eventTalkStats, incrementInMemoryTotalFavoritesCount, decrementInMemoryTotalFavoritesCount } = useTalkStats(eventIdRef, talkIdRef)
 
     const firestoreUserTalkNotesRef = useDocument(firestoreUserTalkNotesSource);
 
-    const arrayTalkNotesRef = computed(() => {
-        const talkId = unref(talkIdRef),
-            firestoreUserTalkNotes = unref(firestoreUserTalkNotesRef);
+    const talkNotesRef: Ref<UserTalkNotes> = computed(() => {
+        const firestoreUserTalkNotes = unref(firestoreUserTalkNotesRef),
+            talkId = unref(talkIdRef),
+            user = unref(userRef);
 
-        if(!talkId || !talkId.value) {
-            return undefined;
+        if(firestoreUserTalkNotes) {
+            return firestoreUserTalkNotes.note;
         }
 
-        // Get index of notes if an entry already exists
-        const [maybeTalkNotesIndex, maybeFirestoreUserTalkNote] = match<[typeof firestoreUserTalkNotes], [number|undefined, UserTalkNotes|undefined]>([firestoreUserTalkNotes])
-            .with([P.nullish], ([_1]) => [undefined, undefined])
-            .with([P.not(P.nullish)], ([firestoreUserTalkNotes]) => {
-                const talkStatsIndex = firestoreUserTalkNotes.notes.findIndex(note => note.talkId === talkId.value);
-                if(talkStatsIndex === -1) {
-                    return [undefined, undefined];
-                } else {
-                    return [talkStatsIndex, firestoreUserTalkNotes.notes[talkStatsIndex]];
-                }
-            }).run();
-
-        // Returning existing entry or a new default default entry container
-        return match<[typeof maybeTalkNotesIndex, typeof maybeFirestoreUserTalkNote], {talkNotesIndex: number|undefined, talkNotes: UserTalkNotes}>([maybeTalkNotesIndex, maybeFirestoreUserTalkNote])
-            .with([P.any, P.nullish], ([_1, _2]) => {
-                // Fallback when no talk notes are found for current user/event/talk
-                return {
-                    talkNotesIndex: undefined,
-                    talkNotes: {
-                        talkId: talkId.value,
-                        isFavorite: false,
-                        watchLater: null,
-                        ratings: {
-                            bingo: null,
-                            scale: null
-                        },
-                        comment: null
-                    }
-                };
-            }).with([P.any, P.not(P.nullish)],  ([talkNotesIndex, talkNotes]) => {
-                return {
-                    talkNotesIndex,
-                    talkNotes
-                }
-            }).run();
-    });
-
-    const talkNotesRef = computed(() => {
-        const arrayTalkNotes = unref(arrayTalkNotesRef)
-        return arrayTalkNotes?.talkNotes;
+        return {
+            talkId: talkId?.value || '???',
+            isFavorite: false,
+            watchLater: null,
+            ratings: {
+                bingo: null,
+                scale: null
+            },
+            comment: null
+        };
     })
 
     const updateTalkNotesDocument = async (
         callContextName: string,
-        talkNoteUpdater: (talkNotes: UserTalkNotes) => UserTalkNotes,
+        talkNoteUpdater: (talkNotes: UserTalkNotes) => Partial<UserTalkNotes>,
         afterUpdate: (updatedTalkNotes: UserTalkNotes) => Promise<void>|void = () => {}
     ) => {
-        const arrayTalkNotes = unref(arrayTalkNotesRef),
-            firestoreUserTalkNotesDoc = unref(firestoreUserTalkNotesSource),
+        const firestoreUserTalkNotesDoc = unref(firestoreUserTalkNotesSource),
             firestoreUserTalkNotes = unref(firestoreUserTalkNotesRef),
+            talkId = unref(talkIdRef),
             user = unref(userRef);
 
-        if(!user) {
-            console.warn(`${callContextName}() called with an undefined user`)
+        if(!user || !talkId) {
+            console.warn(`${callContextName}() called with an undefined user/talkId`)
             return;
         }
 
@@ -105,34 +83,35 @@ export function useUserTalkNotes(
             return;
         }
 
-        if(!arrayTalkNotes) {
-            console.warn(`${callContextName}() called with an undefined arrayTalkNotes (is talkId defined ?)`)
-            return;
+        const initialNote: UserTalkNotes = firestoreUserTalkNotes?.note || {
+            talkId: talkId.value,
+            isFavorite: false,
+            watchLater: null,
+            ratings: {
+                bingo: null,
+                scale: null
+            },
+            comment: null
         }
 
-        const updatedTalkNotes = talkNoteUpdater(arrayTalkNotes.talkNotes);
-
-        // 3 cases :
-        // - no entry exist for current user / event / day
-        // - entry exist, but nothing exists for current talk id (we need to create e new note)
-        // - entry exist for talk, we need to update this entry
-        await match([firestoreUserTalkNotes, arrayTalkNotes.talkNotesIndex])
-            .with([P.nullish, P.any], async () => {
-                const dayTalksNotes: UserTalksNotes = {
-                    userId: user.uid,
-                    notes: [ updatedTalkNotes ]
-                };
-                await setDoc(firestoreUserTalkNotesDoc, dayTalksNotes);
-            }).with([P.not(P.nullish), P.nullish], async ([userTalkNotes, _]) => {
-                await updateDoc(firestoreUserTalkNotesDoc, { notes: arrayUnion(updatedTalkNotes) });
-            }).with([P.not(P.nullish), P.not(P.nullish)], async ([userTalkNotes, talkNotesIndex]) => {
-                // That's not an "atomic" update, but seems like we're only able to update arrays of simple
-                // values atomically (through arrayunion())
-                // Unfortunately, we're not able to provide any hash function to arrayunion(), so we'll consider
-                // there are very low chances the same user updates existing notes from the same event multiple times
-                userTalkNotes.notes[talkNotesIndex] = updatedTalkNotes;
-                await updateDoc(firestoreUserTalkNotesDoc, { notes: userTalkNotes.notes })
-            }).run();
+        const fieldsToUpdate = talkNoteUpdater(initialNote);
+        const updatedTalkNotes = {
+            ...initialNote,
+            ...fieldsToUpdate
+        }
+        if(!firestoreUserTalkNotes) {
+            await setDoc(firestoreUserTalkNotesDoc, {
+                userId: user.uid,
+                talkId: talkId.value,
+                note: updatedTalkNotes
+            });
+        } else {
+            const translatedUpdatedData = Object.entries(fieldsToUpdate).reduce((updated, [key, value]) => {
+                updated[`note.${key}`] = value;
+                return updated;
+            }, {} as UpdateData<any>)
+            await updateDoc(firestoreUserTalkNotesDoc, translatedUpdatedData);
+        }
 
         await afterUpdate(updatedTalkNotes);
     }
@@ -140,19 +119,19 @@ export function useUserTalkNotes(
     const toggleFavorite = async () => {
         await updateTalkNotesDocument(
             'toggleFavorite',
-            talkNotes => ({ ...talkNotes, isFavorite: !talkNotes.isFavorite }),
+            talkNotes => ({ isFavorite: !talkNotes.isFavorite }),
             updatedTalkNotes => {
-            if(updatedTalkNotes.isFavorite) {
-                incrementInMemoryTotalFavoritesCount();
-            } else {
-                decrementInMemoryTotalFavoritesCount();
-            }
-        });
+                if(updatedTalkNotes.isFavorite) {
+                    incrementInMemoryTotalFavoritesCount();
+                } else {
+                    decrementInMemoryTotalFavoritesCount();
+                }
+            });
     }
     const toggleWatchLater = async () => {
         await updateTalkNotesDocument(
             'toggleWatchLater',
-            talkNotes => ({ ...talkNotes, watchLater: !talkNotes.watchLater }),
+            talkNotes => ({ watchLater: !talkNotes.watchLater }),
         );
     }
 

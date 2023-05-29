@@ -14,12 +14,8 @@ export type UserTalkNotes = {
     comment: string|null
 }
 
-export type DayTalksStats = {
-    day: string,
-    stats: TalkStats[]
-}
-
-export type UserTalksNotes = {
+export type UserTalkNote = {
     userId: string,
-    notes: UserTalkNotes[]
+    note: UserTalkNotes
+    talkId: string,
 }
