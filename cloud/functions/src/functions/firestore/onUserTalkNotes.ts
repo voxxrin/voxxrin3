@@ -1,77 +1,67 @@
 import * as functions from "firebase-functions";
-import * as _ from "lodash";
 import { db, info } from "../../firebase"
 
 import { FieldValue } from "firebase-admin/firestore";
-import { UserDayTalksNotes } from "../../../../../shared/feedbacks.firestore";
+import {TalkStats, UserTalksNotes} from "../../../../../shared/feedbacks.firestore";
+
+async function upsertTalkStats(eventId: string, talkId: string, isFavorite: boolean) {
+    const existingTalksStatsEntryRef = db
+        .collection("events").doc(eventId)
+        .collection("talksStats").doc(talkId)
+
+    const existingTalksStatsEntry = await existingTalksStatsEntryRef.get()
+    if(existingTalksStatsEntry.exists) {
+        await existingTalksStatsEntryRef.update({totalFavoritesCount: FieldValue.increment(isFavorite ? 1 : -1)})
+    } else {
+        const newTalkStatsEntry: TalkStats = {
+            id: talkId,
+            totalFavoritesCount: isFavorite?1:0
+        }
+        await existingTalksStatsEntryRef.set(newTalkStatsEntry);
+    }
+}
 
 export const onUserTalksNoteUpdate = functions.firestore
-    // FIXME: don't make talk notes on a per-day basis because if the talk is moved
-    // from one day to another
-    .document("users/{userId}/events/{eventId}/talksNotes/{day}")
+    .document("users/{userId}/events/{eventId}/talksNotes/all")
     .onUpdate((change, context) => {
         const userId = context.params.userId;
         const eventId = context.params.eventId;
-        const day = context.params.day;
 
-        const beforeTalksNotes = change.before.data() as UserDayTalksNotes
-        const afterTalksNotes = change.after.data() as UserDayTalksNotes
+        const beforeTalksNotes = change.before.data() as UserTalksNotes
+        const afterTalksNotes = change.after.data() as UserTalksNotes
 
-        const promises = []
+        return Promise.all([
+            ...afterTalksNotes.notes.map(async afterTalkNote => {
+                const maybeBeforeTalkNote = beforeTalksNotes.notes.find((n) => { return n.talkId === afterTalkNote.talkId})
+                const wasFavorite = maybeBeforeTalkNote?.isFavorite ?? false
+                const isFavorite = afterTalkNote.isFavorite
 
-        for (const talkNotes of afterTalksNotes.notes) {
-            const before = beforeTalksNotes.notes.find((n) => { return n.talkId == talkNotes.talkId})
-            const wasFavorite = before?.isFavorite ?? false
-            const isFavorite = talkNotes.isFavorite
-    
-            if (wasFavorite != isFavorite) {
-                info(`favorite update by ${userId} on ${eventId} // ${talkNotes.talkId}: ${wasFavorite} => ${isFavorite}`);
-    
-                promises.push(
-                    db
-                        .collection("events").doc(eventId)
-                        .collection("days").doc(day)
-                        .collection("talksStats").doc(talkNotes.talkId)
-                        .update({totalFavoritesCount: FieldValue.increment(isFavorite ? 1 : -1)}));
-            }
-        }
+                if (wasFavorite != isFavorite) {
+                    info(`favorite update by ${userId} on ${eventId} // ${afterTalkNote.talkId}: ${wasFavorite} => ${isFavorite}`);
 
-        if (promises.length > 0) {
-            return Promise.all(promises)
-        } else {
-            return false
-        }
+                    await upsertTalkStats(eventId, afterTalkNote.talkId, isFavorite);
+                }
+            }),
+        ])
     });
 
 export const onUserTalksNoteCreate = functions.firestore
-    .document("users/{userId}/events/{eventId}/talksNotes/{day}")
+    .document("users/{userId}/events/{eventId}/talksNotes/all")
     .onCreate((change, context) => {
         const userId = context.params.userId;
         const eventId = context.params.eventId;
-        const day = context.params.day;
 
-        const talksNotes = change.data() as UserDayTalksNotes
+        const talksNotes = change.data() as UserTalksNotes
 
-        const promises = []
+        return Promise.all([
+            ...talksNotes.notes.map(async afterTalkNote => {
+                const isFavorite = afterTalkNote.isFavorite
 
-        for (const talkNotes of talksNotes.notes) {
-            const isFavorite = talkNotes.isFavorite
-    
-            if (isFavorite) {
-                info(`favorite create by ${userId} on ${eventId} // ${talkNotes.talkId}: ${isFavorite}`);
-    
-                promises.push(
-                    db
-                        .collection("events").doc(eventId)
-                        .collection("days").doc(day)
-                        .collection("talksStats").doc(talkNotes.talkId)
-                        .update({totalFavoritesCount: FieldValue.increment(1)}));
-            }
-        }
+                if (isFavorite) {
+                    info(`favorite create by ${userId} on ${eventId} // ${afterTalkNote.talkId}: ${isFavorite}`);
 
-        if (promises.length > 0) {
-            return Promise.all(promises)
-        } else {
-            return false
-        }
-    });    
+                    await upsertTalkStats(eventId, afterTalkNote.talkId, isFavorite);
+                }
+            })
+        ])
+    });

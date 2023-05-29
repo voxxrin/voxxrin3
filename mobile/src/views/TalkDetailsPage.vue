@@ -111,7 +111,6 @@ import {useRoute} from "vue-router";
 import {EventId} from "@/models/VoxxrinEvent";
 import {getRouteParamsValue, isRefDefined} from "@/views/vue-utils";
 import {useUserTalkNotes} from "@/state/useUserTalkNotes";
-import {DayId} from "@/models/VoxxrinDay";
 import {TalkId} from "@/models/VoxxrinTalk";
 import {useSharedEventTalk} from "@/state/useEventTalk";
 import {computed, watch} from "vue";
@@ -124,11 +123,10 @@ import {Temporal} from "temporal-polyfill";
 
 const route = useRoute();
 const eventId = computed(() => new EventId(getRouteParamsValue(route, 'eventId')));
-const dayId = computed(() => new DayId(getRouteParamsValue(route, 'dayId')));
 const talkId = computed(() => new TalkId(getRouteParamsValue(route, 'talkId')));
 const {conferenceDescriptor: event} = useSharedConferenceDescriptor(eventId);
 
-const { eventTalkStats, talkNotes, toggleFavorite, toggleWatchLater} = useUserTalkNotes(eventId, dayId, talkId)
+const { eventTalkStats, talkNotes, toggleFavorite, toggleWatchLater} = useUserTalkNotes(eventId, talkId)
 const { talkDetails: talk } = useSharedEventTalk(event, talkId);
 const { LL } = typesafeI18n()
 

@@ -12,21 +12,19 @@ import {createSharedComposable} from "@vueuse/core";
 
 
 export function useTalkStats(eventIdRef: Unreffable<EventId | undefined>,
-           // FIXME: talk stats should not be dependent on days, in case talk is moved from
-           // one day to another
-           dayIdRef: Unreffable<DayId | undefined>,
            talkIdRef: Unreffable<TalkId | undefined>) {
 
     const firestoreTalkStatsSource = computed(() => {
         const eventId = unref(eventIdRef),
-            dayId = unref(dayIdRef),
             talkId = unref(talkIdRef);
 
-        if(!eventId || !eventId.value || !dayId || !dayId.value || !talkId || !talkId.value) {
+        if(!eventId || !eventId.value || !talkId || !talkId.value) {
             return undefined;
         }
 
-        return doc(collection(doc(collection(doc(collection(db, 'events'), eventId.value), 'days'), dayId.value), 'talksStats'), talkId.value) as DocumentReference<TalkStats>
+        return doc(collection(doc(collection(db,
+            'events'), eventId.value),
+            'talksStats'), talkId.value) as DocumentReference<TalkStats>
     });
 
     const firestoreTalkStatsRef = useDocument(firestoreTalkStatsSource);
@@ -83,7 +81,7 @@ export function prepareTalkStats(
     dayAndTalkIds: Array<{dayId: DayId, talkId: TalkId}>
 ) {
     dayAndTalkIds.forEach(dayAndTalkId => {
-        useTalkStats(eventId, dayAndTalkId.dayId, dayAndTalkId.talkId);
+        useTalkStats(eventId, dayAndTalkId.talkId);
     })
 }
 

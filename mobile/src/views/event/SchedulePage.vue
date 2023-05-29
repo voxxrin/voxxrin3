@@ -21,7 +21,7 @@
       </day-selector>
 
       <ion-accordion-group :multiple="true" v-if="event && currentlySelectedDayId" :value="expandedTimeslotIds">
-          <time-slot-accordion :day-id="currentlySelectedDayId"
+          <time-slot-accordion
               v-for="(timeslot, index) in timeslots" :key="timeslot.id.value"
               :timeslot-feedback="timeslot.feedback" :timeslot="timeslot"
               :event="event"

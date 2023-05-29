@@ -19,8 +19,7 @@ export type DayTalksStats = {
     stats: TalkStats[]
 }
 
-export type UserDayTalksNotes = {
+export type UserTalksNotes = {
     userId: string,
-    day: string,
     notes: UserTalkNotes[]
 }

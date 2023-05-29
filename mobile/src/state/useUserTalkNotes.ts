@@ -7,35 +7,31 @@ import {useCurrentUser, useDocument} from "vuefire";
 import {Unreffable} from "@/views/vue-utils";
 import {collection, doc, DocumentReference, setDoc, updateDoc, arrayUnion } from "firebase/firestore";
 import {db} from "@/state/firebase";
-import {UserDayTalksNotes, UserTalkNotes} from "../../../shared/feedbacks.firestore";
+import {UserTalksNotes, UserTalkNotes} from "../../../shared/feedbacks.firestore";
 import {match, P} from "ts-pattern";
 
 export function useUserTalkNotes(
     eventIdRef: Unreffable<EventId | undefined>,
-    // FIXME: talk stats should not be dependent on days, in case talk is moved from
-    // one day to another
-    dayIdRef: Unreffable<DayId | undefined>,
     talkIdRef: Unreffable<TalkId | undefined>) {
 
     const userRef = useCurrentUser()
 
     const firestoreUserTalkNotesSource = computed(() => {
         const eventId = unref(eventIdRef),
-            dayId = unref(dayIdRef),
             user = unref(userRef);
 
-        if(!eventId || !eventId.value || !dayId || !dayId.value || !user) {
+        if(!eventId || !eventId.value || !user) {
             return undefined;
         }
 
         return doc(collection(doc(collection(doc(collection(db,
             'users'), user.uid),
             'events'), eventId.value),
-            'talksNotes'), dayId.value
-        ) as DocumentReference<UserDayTalksNotes>
+            'talksNotes'), "all"
+        ) as DocumentReference<UserTalksNotes>
     });
 
-    const { eventTalkStats, incrementInMemoryTotalFavoritesCount, decrementInMemoryTotalFavoritesCount } = useSharedTalkStats(eventIdRef, dayIdRef, talkIdRef)
+    const { eventTalkStats, incrementInMemoryTotalFavoritesCount, decrementInMemoryTotalFavoritesCount } = useSharedTalkStats(eventIdRef, talkIdRef)
 
     const firestoreUserTalkNotesRef = useDocument(firestoreUserTalkNotesSource);
 
@@ -97,11 +93,10 @@ export function useUserTalkNotes(
         const arrayTalkNotes = unref(arrayTalkNotesRef),
             firestoreUserTalkNotesDoc = unref(firestoreUserTalkNotesSource),
             firestoreUserTalkNotes = unref(firestoreUserTalkNotesRef),
-            dayId = unref(dayIdRef),
             user = unref(userRef);
 
-        if(!user || !dayId || !dayId.value) {
-            console.warn(`${callContextName}() called with an undefined user/dayId`)
+        if(!user) {
+            console.warn(`${callContextName}() called with an undefined user`)
             return;
         }
 
@@ -123,9 +118,8 @@ export function useUserTalkNotes(
         // - entry exist for talk, we need to update this entry
         await match([firestoreUserTalkNotes, arrayTalkNotes.talkNotesIndex])
             .with([P.nullish, P.any], async () => {
-                const dayTalksNotes: UserDayTalksNotes = {
+                const dayTalksNotes: UserTalksNotes = {
                     userId: user.uid,
-                    day: dayId.value,
                     notes: [ updatedTalkNotes ]
                 };
                 await setDoc(firestoreUserTalkNotesDoc, dayTalksNotes);
@@ -175,6 +169,6 @@ export function prepareUserTalkNotes(
     dayAndTalkIds: Array<{dayId: DayId, talkId: TalkId}>
 ) {
     dayAndTalkIds.forEach(dayAndTalkId => {
-        useUserTalkNotes(eventId, dayAndTalkId.dayId, dayAndTalkId.talkId);
+        useUserTalkNotes(eventId, dayAndTalkId.talkId);
     })
 }

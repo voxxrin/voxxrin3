@@ -46,16 +46,11 @@ import {useRoute} from "vue-router";
 import {EventId} from "@/models/VoxxrinEvent";
 import {getRouteParamsValue} from "@/views/vue-utils";
 import {useUserTalkNotes} from "@/state/useUserTalkNotes";
-import {DayId} from "@/models/VoxxrinDay";
 import {useConferenceDescriptor} from "@/state/useConferenceDescriptor";
 import {UserTalkNotes} from "../../../shared/feedbacks.firestore";
 
 
 const props = defineProps({
-  dayId: {
-      required: true,
-      type: Object as PropType<DayId>
-  },
   talk: {
     required: true,
     type: Object as PropType<VoxxrinTalk>
@@ -74,7 +69,7 @@ const route = useRoute();
 const eventId = computed(() => new EventId(getRouteParamsValue(route, 'eventId')));
 
 const { conferenceDescriptor } = useConferenceDescriptor(eventId);
-const { eventTalkStats, talkNotes, toggleFavorite, toggleWatchLater} = useUserTalkNotes(eventId, props.dayId, props.talk?.id)
+const { eventTalkStats, talkNotes, toggleFavorite, toggleWatchLater} = useUserTalkNotes(eventId, props.talk?.id)
 
 const displayedSpeakers = props.talk!.speakers
     .map(s => `${s.fullName}${s.companyName?` (${s.companyName})`:``}`)

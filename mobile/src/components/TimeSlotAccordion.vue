@@ -35,7 +35,7 @@
     <div class="ion-padding accordion-content" slot="content">
       <schedule-break v-if="timeslot.type==='break'" :event="event" :talk-break="timeslot.break"></schedule-break>
       <talk-format-groups-breakdown
-          :day-id="dayId" :event="event" v-if="timeslot.type==='talks'"
+          :event="event" v-if="timeslot.type==='talks'"
           :talks="timeslot.talks" @talkClicked="openTalkDetails($event)"
           :is-highlighted="(talk, talkNotes) => talkNotes.isFavorite">
         <template #talk-card-upper-right="{ talk }">
@@ -90,16 +90,11 @@ import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor"
 import TalkFormatGroupsBreakdown from "@/components/TalkFormatGroupsBreakdown.vue";
 import ScheduleBreak from "@/components/ScheduleBreak.vue";
 import {typesafeI18n} from "@/i18n/i18n-vue";
-import {DayId} from "@/models/VoxxrinDay";
 import {useConferenceDescriptor} from "@/state/useConferenceDescriptor";
 import {VoxxrinTalk} from "@/models/VoxxrinTalk";
 import {useTabbedPageNav} from "@/state/useTabbedPageNav";
 
 const props = defineProps({
-  dayId: {
-    required: true,
-    type: Object as PropType<DayId>
-  },
   timeslot: {
     required: true,
     type: Object as PropType<VoxxrinScheduleTimeSlot>
@@ -134,8 +129,8 @@ const timeslotLabel = getTimeslotLabel(props.timeslot!);
 const { triggerTabbedPageNavigate } = useTabbedPageNav();
 
 function openTalkDetails(talk: VoxxrinTalk) {
-    if(props.dayId && props.event && talk) {
-        triggerTabbedPageNavigate(`/events/${props.event.id.value}/days/${props.dayId.value}/talks/${talk.id.value}/details`, "forward", "push");
+    if(props.event && talk) {
+        triggerTabbedPageNavigate(`/events/${props.event.id.value}/talks/${talk.id.value}/details`, "forward", "push");
     }
 }
 </script>
