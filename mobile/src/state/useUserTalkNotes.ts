@@ -14,7 +14,7 @@ import {
     UpdateData
 } from "firebase/firestore";
 import {db} from "@/state/firebase";
-import {TalkNote, UserTalkNote} from "../../../shared/feedbacks.firestore";
+import {TalkNote, UserComputedEventInfos, UserTalkNote} from "../../../shared/feedbacks.firestore";
 
 export function useUserTalkNotes(
     eventIdRef: Unreffable<EventId | undefined>,
@@ -141,6 +141,45 @@ export function useUserTalkNotes(
         toggleWatchLater
     };
 }
+
+
+export function useUserEventAllFavoritedTalkIds(eventIdRef: Unreffable<EventId | undefined>) {
+
+    const userRef = useCurrentUser()
+
+    const firestoreUserAllFavoritedTalkIdsSource = computed(() => {
+        const eventId = unref(eventIdRef),
+            user = unref(userRef);
+
+        if(!eventId || !eventId.value || !user) {
+            return undefined;
+        }
+
+        return doc(collection(doc(collection(doc(collection(db,
+                    'users'), user.uid),
+                'events'), eventId.value),
+            '__computed'), "self"
+        ) as DocumentReference<UserComputedEventInfos>
+    });
+
+    const firestoreUserAllFavoritedTalkIdsRef = useDocument(firestoreUserAllFavoritedTalkIdsSource);
+
+    const allUserFavoritedTalkIdsRef: Ref<TalkId[]> = computed(() => {
+        const firestoreUserAllFavoritedTalkIds = unref(firestoreUserAllFavoritedTalkIdsRef);
+
+        if(!firestoreUserAllFavoritedTalkIds) {
+            return [];
+        }
+
+        return firestoreUserAllFavoritedTalkIds.favoritedTalkIds.map(id => new TalkId(id));
+    })
+
+    return {
+        allUserFavoritedTalkIds: allUserFavoritedTalkIdsRef
+    };
+}
+
+
 
 export function prepareUserTalkNotes(
     eventId: EventId,

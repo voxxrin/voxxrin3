@@ -18,3 +18,7 @@ export type UserTalkNote = {
     userId: string,
     note: TalkNote,
 }
+
+export type UserComputedEventInfos = {
+    favoritedTalkIds: string[];
+}
