@@ -287,19 +287,12 @@ const theme = {
         background: rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.6);
       }
 
+      ion-thumbnail { border: 2px solid var(--app-primary-shade);}
+
       .talkCard-footer {
-        border-width: 2px;
         border-color: var(--app-primary-shade);
-        border-bottom: none;
 
-        @media (prefers-color-scheme: dark) {
-          border-color: var(--app-white);
-        }
-
-        .btnTalk {
-          border-width: 2px;
-          border-color: var(--app-primary-shade);
-        }
+        .btnTalk { border-color: var(--app-primary-shade);}
       }
     }
 
@@ -322,6 +315,8 @@ const theme = {
       bottom: 0;
       background-image: url('assets/images/png/texture-favorited.png');
       background-repeat: no-repeat;
+      background-position: right;
+      background-size: cover;
       transform: scale(1);
       opacity: 0.5;
       mix-blend-mode: overlay;
