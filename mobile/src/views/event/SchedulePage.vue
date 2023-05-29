@@ -53,9 +53,8 @@ import {
     IonFab,
     IonFabList,
     IonAccordionGroup,
-    alertController, useIonRouter,
 } from '@ionic/vue';
-import {useRoute, useRouter} from "vue-router";
+import {useRoute} from "vue-router";
 import {computed, onMounted, ref, watch} from "vue";
 import {prepareSchedules, useSchedule} from "@/state/useSchedule";
 import CurrentEventHeader from "@/components/CurrentEventHeader.vue";
@@ -75,8 +74,8 @@ import {VoxxrinTimeslotFeedback} from "@/models/VoxxrinFeedback";
 import {useCurrentClock} from "@/state/useCurrentClock";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
+import {useTabbedPageNav} from "@/state/useTabbedPageNav";
 
-const router = useIonRouter();
 const route = useRoute();
 const eventId = computed(() => new EventId(getRouteParamsValue(route, 'eventId')));
 const {conferenceDescriptor: event} = useSharedConferenceDescriptor(eventId);
@@ -89,7 +88,9 @@ const changeDayTo = (day: VoxxrinDay) => {
 }
 
 const { schedule: currentSchedule } = useSchedule(event, currentlySelectedDayId)
-const timeslots = ref<Array<VoxxrinScheduleTimeSlot & {feedback: VoxxrinTimeslotFeedback|undefined}>>([]);
+
+type TalkTimeslotWithFeedback = VoxxrinScheduleTimeSlot & {label: ReturnType<typeof getTimeslotLabel>} & {feedback: VoxxrinTimeslotFeedback|undefined};
+const timeslots = ref<TalkTimeslotWithFeedback[]>([]);
 const missingFeedbacksPastTimeslots = ref<Array<{start: string, end: string, timeslot: VoxxrinScheduleTimeSlot}>>([])
 const expandedTimeslotIds = ref<string[]>([])
 
@@ -116,12 +117,14 @@ watch([event, currentlySelectedDayId], ([confDescriptor, selectedDayId]) => {
 
 watch([event, currentSchedule], ([confDescriptor, currentSchedule]) => {
     if(currentSchedule && confDescriptor) {
-        timeslots.value = currentSchedule.timeSlots.map((ts, idx) => {
+        timeslots.value = currentSchedule.timeSlots.map((ts: VoxxrinScheduleTimeSlot, idx): TalkTimeslotWithFeedback => {
+            const label = getTimeslotLabel(ts);
+            const feedback: VoxxrinTimeslotFeedback|undefined = idx%2===0?{id: ts.id}:undefined;
             // yes that's weird ... but looks like TS is not very smart here 🤔
-            if(ts.type === 'break') {
-                return {...ts, feedback: idx%2===0?getTimeslotLabel(ts):undefined};
+            if(ts.type === 'talks') {
+                return { ...ts, label, feedback };
             } else {
-                return {...ts, feedback: idx%2===0?getTimeslotLabel(ts):undefined};
+                return { ...ts, label, feedback };
             }
         });
         recomputeMissingFeedbacksList();
@@ -156,8 +159,10 @@ function recomputeMissingFeedbacksList() {
     });
 }
 
+const { triggerTabbedPageNavigate } = useTabbedPageNav();
+
 async function showAlertForTimeslot(timeslot: VoxxrinScheduleTimeSlot) {
-    router.navigate(`/events/${eventId.value.value}/new-feedback-for-day/${currentlySelectedDayId.value?.value}/and-timeslot/${timeslot.id.value}`, "forward", "push");
+    triggerTabbedPageNavigate(`/events/${eventId.value.value}/new-feedback-for-day/${currentlySelectedDayId.value?.value}/and-timeslot/${timeslot.id.value}`, "forward", "push");
 }
 
 // Crappy hack in order to have a pretty ion-fab-list closing animation

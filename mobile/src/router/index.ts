@@ -10,10 +10,10 @@ const routes: Array<RouteRecordRaw> = [
     { path: 'schedule', component: () => import('@/views/event/SchedulePage.vue') },
     { path: 'favorites', component: () => import('@/views/event/FavoritesPage.vue') },
     { path: 'feedbacks', component: () => import('@/views/event/FeedbacksPage.vue') },
-    { path: 'new-feedback-for-day/:dayId/and-timeslot/:timeslotId', component: () => import('@/views/event/NewFeedbackPage.vue') },
     { path: 'notifications', component: () => import('@/views/event/NotificationsPage.vue') },
     { path: 'infos', component: () => import('@/views/event/InfosPage.vue') },
   ]},
+  { path: '/events/:eventId/new-feedback-for-day/:dayId/and-timeslot/:timeslotId', component: () => import('@/views/event/NewFeedbackPage.vue') },
   { path: '/events/:eventId/talks/:talkId/details', component: () => import('@/views/TalkDetailsPage.vue') },
 ]
 
