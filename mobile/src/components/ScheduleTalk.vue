@@ -1,7 +1,7 @@
 <template>
   <ion-card class="talkCard"
             v-if="talkNotes"
-            :class="{ container: true, 'is-highlighted': isHighlighted(talk, talkNotes), 'is-favorited': talkNotes.isFavorite, 'to-watch-later': talkNotes.watchLater }"
+            :class="{ container: true, 'is-highlighted': isHighlighted(talk, talkNotes), 'is-favorited': talkNotes.isFavorite, 'is-to-watch-later': talkNotes.watchLater }"
             @click="$emit('talk-clicked', talk)">
     <div class="talkCard-head">
       <div class="track">
@@ -84,6 +84,7 @@ const theme = {
 
 <style lang="scss" scoped>
 
+//* Base styles card talk *//
 .talkCard {
   display: flex;
   flex-direction: column;
@@ -116,105 +117,6 @@ const theme = {
     position: absolute;
     content: '';
     z-index: -1;
-  }
-
-  &.is-highlighted {
-    /* TODO RLZ: Move proper .is-favorite selector content here */
-  }
-
-  &.is-favorited  {
-    border-top: 2px solid var(--app-primary-shade);
-    border-bottom: 2px solid var(--app-primary-shade);
-    border-right: 2px solid var(--app-primary-shade);
-
-    @media (prefers-color-scheme: dark) {
-      border-top: 2px solid var(--app-white);
-      border-bottom: 2px solid var(--app-white);
-      border-right: 2px solid var(--app-white);
-    }
-
-    &:before {
-      width: 40%;
-      height: 70%;
-      right: 0;
-      bottom: 0;
-      background: rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.6);
-      transform: scale(1);
-      opacity: 1;
-      filter: blur(32px);
-      animation: scale-in-center 0.1s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-    }
-
-    &:after {
-      width: 50%;
-      height: 100%;
-      right: 0;
-      bottom: 0;
-      background-image: url('assets/images/png/texture-favorited.png');
-      transform: scale(1);
-      opacity: 0.5;
-      mix-blend-mode: overlay;
-      animation: scale-in-center 0.1s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-
-      @media (prefers-color-scheme: dark) {
-        mix-blend-mode: difference;
-      }
-    }
-
-    @keyframes scale-in-center {
-      0% {
-        -webkit-transform: scale(0);
-        transform: scale(0);
-        opacity: 1;
-      }
-      100% {
-        -webkit-transform: scale(1);
-        transform: scale(1);
-        opacity: 1;
-      }
-    }
-
-    ion-thumbnail {
-      background-color: var(--app-background);
-      border: 2px solid var(--app-primary-shade);
-    }
-
-    /* TODO RLZ: to remove (or move) at a higher level ? */
-    ion-button.favorite-btn {
-      --background: var(--voxxrin-event-theme-colors-primary-hex);
-      --color: var(--voxxrin-event-theme-colors-primary-contrast-hex);
-      border-left: 1px solid var(--app-primary-shade);
-      --border-radius:  0 0 8px 0 !important;
-    }
-
-    .talkCard-footer {
-      background-color: rgba(white, 0.5);
-      border-width: 2px;
-      border-color: var(--app-primary-shade);
-      border-bottom: none;
-
-      @media (prefers-color-scheme: dark) {
-        background-color: rgba(var(--app-light-contrast-rgb), 0.6);
-        border-color: var(--app-white);
-      }
-
-      .btnTalk {
-        border-width: 2px;
-        border-color: var(--app-primary-shade);
-
-        @media (prefers-color-scheme: dark) {
-          border-color: var(--app-white);
-        }
-      }
-    }
-  }
-
-  &.to-watch-later {
-    ion-button.watch-later-btn {
-      --background: var(--voxxrin-event-theme-colors-secondary-hex);
-      --color: var(--voxxrin-event-theme-colors-secondary-contrast-hex);
-      border-left: 1px solid var(--voxxrin-event-theme-colors-secondary-hex);
-    }
   }
 
   &-head {
@@ -306,6 +208,7 @@ const theme = {
     display: flex;
     column-gap: 16px;
     justify-content: space-between;
+    background-color: rgba(white, 0.6);
     border : {
       top: 1px solid var(--app-grey-line);
       bottom: 1px solid var(--app-grey-line);
@@ -344,59 +247,116 @@ const theme = {
         transform: rotate(-16deg);
       }
     }
+  }
+}
 
-    /* TODO RLZ: to remove (or move) at a higher level ? */
-    .favorite, .watchLater {
-      height: 100%;
+//* States card talk *//
+
+::v-deep {
+  &.is-highlighted {
+    border : {
+      top: 2px solid var(--app-primary-shade);
+      bottom: 2px solid var(--app-primary-shade);
+      right: 2px solid var(--app-primary-shade);
     }
 
-    .btnTalk {
-      height: 100% !important;
-      min-height: 55px !important;
-      width: 58px !important;
-      margin: 0;
-      --border-radius: 0;
-      --background: rgba(white, 0.5);
-      --color: var(--app-primary);
-      border-left: 1px solid var(--app-grey-line);
-      font-size: 18px;
-      --padding-start: 0;
-      --padding-end: 0;
-      --background-activated-opacity: 0.1;
-      --background-hover-opacity: 0.1;
-      --box-shadow: none;
+    @media (prefers-color-scheme: dark) {
+      border : {
+        top: 2px solid var(--app-white);
+        bottom: 2px solid var(--app-white);
+        right: 2px solid var(--app-white);
+      }
+    }
+
+    &:before {
+      width: 40%;
+      height: 70%;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(331deg, rgba(var(--voxxrin-event-theme-colors-secondary-rgb), 0.6) 30%, rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.6) 80%);
+      transform: scale(1);
+      opacity: 1;
+      filter: blur(32px);
+      animation: scale-in-center 0.1s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+    }
+
+    &:after {
+      width: 50%;
+      height: 100%;
+      right: 0;
+      bottom: 0;
+      background-image: url('assets/images/png/texture-favorited.png');
+      transform: scale(1);
+      opacity: 0.5;
+      mix-blend-mode: overlay;
+      animation: scale-in-center 0.1s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
 
       @media (prefers-color-scheme: dark) {
-        --background: rgba(white, 0.2);
-        --color: var(--app-white);
-        border-left: 1px solid var(--app-line-contrast);
-      }
-
-      .favorite-btn {
-        --size: 28px;
-
-        &-group {
-          display: flex;
-          flex-direction: column;
-          row-gap: 4px;
-          justify-content: center;
-
-          &-icon {
-            position: relative;
-            font-size: 26px;
-          }
-
-          &-nb {
-            font-size: 14px;
-            font-weight: 700;
-          }
-        }
+        mix-blend-mode: difference;
       }
     }
 
-    &-actions {
-      display: flex;
-      align-items: end;
+    &.is-favorited {
+      &:before {
+        background: rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.6);
+      }
+    }
+
+    ion-thumbnail {
+      background-color: var(--app-background);
+      border: 2px solid var(--app-primary-shade);
+    }
+
+    .talkCard-footer {
+      border-width: 2px;
+      border-color: var(--app-primary-shade);
+      border-bottom: none;
+
+      @media (prefers-color-scheme: dark) {
+        border-color: var(--app-white);
+      }
+
+      .btnTalk {
+        border-width: 2px;
+        border-color: var(--app-primary-shade);
+      }
+    }
+
+    //* Change style type actions *//
+    ion-button {
+      &.favorite-btn {
+        --background: var(--voxxrin-event-theme-colors-primary-hex);
+        --color: var(--voxxrin-event-theme-colors-primary-contrast-hex);
+        border-left: 1px solid var(--app-primary-shade);
+        --border-radius:  0 0 8px 0 !important;
+      }
+
+      &.feedback-select-btn {
+        --background: var(--voxxrin-event-theme-colors-secondary-hex);
+        --color: var(--voxxrin-event-theme-colors-secondary-contrast-hex);
+        border-left: 1px solid var(--voxxrin-event-theme-colors-secondary-hex);
+      }
+    }
+  }
+
+  @keyframes scale-in-center {
+    0% {
+      -webkit-transform: scale(0);
+      transform: scale(0);
+      opacity: 1;
+    }
+    100% {
+      -webkit-transform: scale(1);
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  &.is-to-watch-later {
+    ion-button.watch-later-btn {
+      --background: var(--voxxrin-event-theme-colors-secondary-hex);
+      --color: var(--voxxrin-event-theme-colors-secondary-contrast-hex);
+      border-left: 1px solid var(--voxxrin-event-theme-colors-secondary-hex);
     }
   }
 }
