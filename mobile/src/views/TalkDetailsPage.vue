@@ -39,8 +39,8 @@
       </ion-header>
 
       <ion-text class="talkDetails">
-        <ion-header class="talkDetails-subHeader">
-          <div class="talkDetails-subHeader-schedule">
+        <ion-header class="subHeader">
+          <div class="subHeader-schedule">
             <ion-icon class="_accordion-icon _future-icon" aria-hidden="true" src="assets/icons/solid/clock.svg"></ion-icon>
             <ion-label v-if="timeslotLabel">
               <span class="slot-schedule-start">{{timeslotLabel.start}}</span>
@@ -48,7 +48,7 @@
               <span class="slot-schedule-end">{{timeslotLabel.end}}</span>
             </ion-label>
           </div>
-          <div class="talkDetails-subHeader-room">
+          <div class="subHeader-room">
             <ion-icon aria-hidden="true" src="/assets/icons/solid/map-marker.svg"></ion-icon>
             {{talk?.room.title}}
           </div>
@@ -157,50 +157,6 @@ const theme = computed(() => {
 
 <style lang="scss" scoped>
   .talkDetails {
-
-    &-subHeader {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      background-color: var(--app-beige-line);
-      padding: var(--app-gutters);
-      z-index: 0;
-
-      @media (prefers-color-scheme: dark) {
-        background-color: var(--app-light-contrast);
-      }
-
-      &-schedule, &-room {
-        display: flex;
-        align-items: center;
-        column-gap: 4px;
-        font-weight: 600;
-        color: var(--app-grey-dark);
-
-        @media (prefers-color-scheme: dark) {
-          color: var(--app-grey-light);
-        }
-
-        ion-label {
-          display: flex;
-          align-items: center;
-        }
-
-        .slot-schedule-icon {
-          width: 16px;
-          font-size: 16px;
-          opacity: 0.4;
-        }
-
-        ion-icon {
-          color: var(--app-primary-shade);
-
-          @media (prefers-color-scheme: dark) {
-            color: var(--app-white);
-          }
-        }
-      }
-    }
 
     &-title {
       font-weight: 900;
