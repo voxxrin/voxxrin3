@@ -364,6 +364,7 @@ function openTalkDetails(talk: VoxxrinTalk) {
     &-watchLater, &-favorite { height: 100%;}
 
     .btnTalk {
+      height: 100% !important;
       min-height: 55px !important;
       width: 58px !important;
       margin: 0;

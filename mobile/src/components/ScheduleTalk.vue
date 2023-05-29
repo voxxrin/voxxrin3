@@ -208,11 +208,12 @@ const theme = {
     display: flex;
     column-gap: 16px;
     justify-content: space-between;
-    background-color: rgba(white, 0.6);
+    border-radius: 0 0 12px 0;
     border : {
       top: 1px solid var(--app-grey-line);
       bottom: 1px solid var(--app-grey-line);
     }
+    background-color: rgba(white, 0.6);
 
     @media (prefers-color-scheme: dark) {
       border : {
