@@ -45,7 +45,7 @@
           </div>
         </ion-header>
         <div>
-          <feedback-talk-selector :talks="labelledTimeslotRef?.talks || []" :day-id="dayIdRef" :event-descriptor="confDescriptorRef">
+          <feedback-talk-selector :talks="labelledTimeslotRef?.talks || []" :event-descriptor="confDescriptorRef">
           </feedback-talk-selector>
         </div>
         <h4>{{LL.Overlapping_timeslots({ nrOfOverlappingSlots: labelledTimeslotRef?.overlappingTimeSlots.length })}}</h4>
@@ -58,7 +58,7 @@
               </ion-label>
             </ion-item>
             <div slot="content">
-              <feedback-talk-selector :talks="overlappingTimeslot.talks" :day-id="dayIdRef" :event-descriptor="confDescriptorRef">
+              <feedback-talk-selector :talks="overlappingTimeslot.talks" :event-descriptor="confDescriptorRef">
               </feedback-talk-selector>
             </div>
           </ion-accordion>

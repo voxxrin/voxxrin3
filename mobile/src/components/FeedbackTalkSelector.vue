@@ -3,7 +3,7 @@
     {{talks.length}} talks here !
 
     <talk-format-groups-breakdown
-        :event="eventDescriptor" :day-id="dayId" :talks="talks" :is-highlighted="(talk, talkNotes) => talk.id.isSameThan(selectedTalkId)"
+        :event="eventDescriptor" :talks="talks" :is-highlighted="(talk, talkNotes) => talk.id.isSameThan(selectedTalkId)"
         @talkClicked="updateSelected($event)">
       <template #talk-card-upper-right="{ talk }">
         <div>
@@ -37,11 +37,7 @@ import {computed, Prop, PropType, ref, unref} from "vue";
 import {TalkId, VoxxrinTalk} from "@/models/VoxxrinTalk";
 import TalkFormatGroupsBreakdown from "@/components/TalkFormatGroupsBreakdown.vue";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
-import {DayId} from "@/models/VoxxrinDay";
 import {typesafeI18n} from "@/i18n/i18n-vue";
-import {chatbox, chatboxOutline} from "ionicons/icons";
-import {EventId} from "@/models/VoxxrinEvent";
-import {useUserTalkNotes} from "@/state/useUserTalkNotes";
 
 const { LL } = typesafeI18n()
 
@@ -49,10 +45,6 @@ const props = defineProps({
     eventDescriptor: {
         required: true,
         type: Object as PropType<VoxxrinConferenceDescriptor>
-    },
-    dayId: {
-        required: true,
-        type: Object as PropType<DayId>
     },
     talks: {
         required: true,
