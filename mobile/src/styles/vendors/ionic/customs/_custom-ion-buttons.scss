@@ -1,6 +1,8 @@
 /* Custom Ionic button component */
 
 ion-button {
+    --border-radius: 54px;
+    
     //* Adjust Ionic Btn Color
     &.button-default {
         @media (prefers-color-scheme: dark) {

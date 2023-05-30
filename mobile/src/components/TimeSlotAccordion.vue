@@ -1,17 +1,19 @@
 <template>
-  <ion-accordion :value="timeslot.id.value" :class="{ [`_${progress?.status}`]: true, '_feedback-provided': !!timeslotFeedback, '_missing-feedback': !timeslotFeedback, '_is-break': timeslot.type==='break' }">
+  <ion-accordion :value="timeslot.id.value"
+                 class="slot-accordion"
+                 :class="{ [`_${progress?.status}`]: true, '_feedback-provided': !!timeslotFeedback, '_missing-feedback': !timeslotFeedback, '_is-break': timeslot.type==='break' }">
     <ion-item slot="header" color="light">
       <ion-ripple-effect type="bounded"></ion-ripple-effect>
       <ion-grid class="slot">
         <ion-row>
-          <ion-col class="slot-schedule">
+          <ion-col class="slotSchedule">
             <ion-icon class="_accordion-icon _ongoing-icon" aria-hidden="true" src="assets/icons/solid/timer.svg"></ion-icon>
             <ion-icon class="_accordion-icon _past-icon" aria-hidden="true" src="assets/icons/solid/backward-circle.svg"></ion-icon>
             <ion-icon class="_accordion-icon _future-icon" aria-hidden="true" src="assets/icons/solid/clock.svg"></ion-icon>
             <ion-label>
-              <span class="slot-schedule-start">{{timeslotLabel.start}}</span>
-              <ion-icon class="slot-schedule-icon" aria-hidden="true" src="assets/icons/line/chevron-right-line.svg"></ion-icon>
-              <span class="slot-schedule-end">{{timeslotLabel.end}}</span>
+              <span class="slotSchedule-start">{{timeslotLabel.start}}</span>
+              <ion-icon class="slotSchedule-icon" aria-hidden="true" src="assets/icons/line/chevron-right-line.svg"></ion-icon>
+              <span class="slotSchedule-end">{{timeslotLabel.end}}</span>
             </ion-label>
             <div class="slotOverlay" v-if="timeslot.type==='talks' && timeslot.overlappingTimeSlots.length > 0">
               <ion-icon aria-hidden="true" src="assets/icons/solid/slot-overlay.svg"></ion-icon>
@@ -227,32 +229,6 @@ function openTalkDetails(talk: VoxxrinTalk) {
           }
         }
 
-        .slotOverlay {
-          display: flex;
-          align-items: center;
-          column-gap: 4px;
-          padding: 2px 8px 2px 4px;
-          border-radius: 8px;
-          font-size: 12px;
-          font-weight: 500;
-          background-color: white;
-          color: var(--voxxrin-event-theme-colors-secondary-hex);
-
-          ion-icon {
-            font-size: 16px;
-          }
-
-          &-txt {
-            display: flex;
-            flex-direction: column;
-            line-height: 0.9;
-
-            small {
-              opacity: 0.8;
-            }
-          }
-        }
-
         &-actions {
           display: flex;
           align-items: center;
@@ -287,72 +263,6 @@ function openTalkDetails(talk: VoxxrinTalk) {
           color: var(--app-white);
         }
       }
-    }
-
-    // * States Accordion Divider *//
-    &._past {
-      @media (prefers-color-scheme: dark) {
-       border-bottom: 1px solid var(--app-light-contrast);
-      }
-
-      .ion-color-light {
-        --ion-color-base: var(--app-beige-line) !important;
-        --ripple-color: var(--app-beige-dark) !important;
-
-        @media (prefers-color-scheme: dark) {
-          --ion-color-base: var(--app-background) !important;
-        }
-
-        ion-label {
-          color: var(--app-primary-tint);
-
-          @media (prefers-color-scheme: dark) {
-            color: var(--app-white);
-          }
-        }
-      }
-
-      ._accordion-icon._past-icon {
-        display: inline-block;
-        color: var(--app-primary-tint);
-
-        @media (prefers-color-scheme: dark) {
-          color: rgba(white, 0.5);
-        }
-      }
-      &._missing-feedback:not(._is-break) ._missing-feedback { display: inline-block;}
-      &._feedback-provided:not(._is-break) ._provided-feedback {display: inline-block;}
-    }
-
-    &._ongoing {
-      .ion-color-light {
-        --ion-color-base:  var(--voxxrin-event-theme-colors-primary-hex) !important;
-        --ripple-color: var(--app-beige-dark) !important;
-
-        ion-label { color: var(--app-white);}
-      }
-
-      ._accordion-icon._ongoing-icon { display: inline-block; }
-      ._ongoing-progress { display: block; }
-      ._accordion-icon { color: var(--app-white) !important;}
-    }
-
-    &._future {
-      --color: var(--app-white);
-
-      .ion-color-light {
-        --ion-color-base: var(--app-primary-shade) !important;
-        --ripple-color: var(--app-primary) !important;
-
-        @media (prefers-color-scheme: dark) {
-          --ion-color-base: var(--app-light-contrast) !important;
-        }
-
-        ion-label { color: var(--app-white);}
-      }
-
-      ._accordion-icon._future-icon { display: inline-block; }
-      ._accordion-icon { color: var(--app-white) !important;}
     }
   }
 

@@ -4,7 +4,7 @@
         :event="eventDescriptor" :talks="displayedTalks" :is-highlighted="(talk, talkNotes) => talk.id.isSameThan(selectedTalkId)"
         @talkClicked="updateSelected($event)">
       <template #talk-card-upper-right="{ talk }">
-        <div>
+        <div class="talkFavorite">
           <ion-icon src="/assets/icons/solid/bookmark-favorite.svg" />
           {{ LL.In_favorites() }}
         </div>
@@ -26,9 +26,11 @@
         </div>
       </template>
     </talk-format-groups-breakdown>
-    <ion-button @click="() => showUnfavoritedTalksRef = true" v-if="!showUnfavoritedTalksRef">
-      {{LL.Show_non_favorited_talks({ nrOfNonFavoritedTalks: nonFavoritedTalksCount })}} <strong>({{nonFavoritedTalksCount}})</strong>
-    </ion-button>
+    <div class="showTalksContainer" v-if="!showUnfavoritedTalksRef">
+      <ion-button fill="outline" @click="() => showUnfavoritedTalksRef = true">
+        {{LL.Show_non_favorited_talks({ nrOfNonFavoritedTalks: nonFavoritedTalksCount })}} <strong>({{nonFavoritedTalksCount}})</strong>
+      </ion-button>
+    </div>
   </div>
 </template>
 
@@ -98,6 +100,17 @@ const nonFavoritedTalksCount = computed(() => {
 </script>
 
 <style lang="scss" scoped>
+
+  .talkFavorite {
+    display: flex;
+    justify-content: center;
+    column-gap: 4px;
+    color: var(--voxxrin-event-theme-colors-primary-hex);
+    font-weight: bold;
+
+    ion-icon { font-size: 18px;}
+  }
+
   //* Base style slot actions *//
   .talkActions {
     display: flex;
@@ -109,5 +122,11 @@ const nonFavoritedTalksCount = computed(() => {
       display: flex;
       align-items: end;
     }
+  }
+
+  .showTalksContainer {
+    background-color: var(--app-background);
+    padding: var(--app-gutters);
+    text-align: center;
   }
 </style>

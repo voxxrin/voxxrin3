@@ -59,7 +59,8 @@ const perFormatGroups = computed(() => sortThenGroupByFormat(props.talks!, props
 
 <style scoped lang="scss">
   .listTalks {
-    padding: 0;
+    background: var(--app-background);
+    padding: 0 var(--app-gutters);
     overflow: visible;
 
     &-divider {

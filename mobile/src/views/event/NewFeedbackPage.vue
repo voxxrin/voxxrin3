@@ -2,8 +2,6 @@
 <template>
   <ion-page>
     <ion-content :fullscreen="true" v-if="confDescriptorRef && dayIdRef && labelledTimeslotRef" :style="{
-          '--voxxrin-event-background-url': `url('${event.backgroundUrl}')`,
-          '--voxxrin-event-logo-url': `url('${event.logoUrl}')`,
           '--voxxrin-event-theme-colors-primary-hex': event.theming.colors.primaryHex,
           '--voxxrin-event-theme-colors-primary-rgb': event.theming.colors.primaryRGB,
           '--voxxrin-event-theme-colors-primary-contrast-hex': event.theming.colors.primaryContrastHex,
@@ -24,6 +22,11 @@
         </ion-button>
         <ion-title class="stickyHeader-title" slot="start">{{LL.Add_Feedback()}}</ion-title>
         </ion-toolbar>
+      </ion-header>
+
+      <ion-header class="stepHeader">
+        <span class="stepHeader-nb">1</span>
+        Pick the talk you attended
       </ion-header>
 
       <ion-header class="subHeader">
@@ -52,24 +55,31 @@
                 <strong>{{LL.Overlaps_x_slot_value({nrOfOverlappingSlots: labelledTimeslotRef.overlappingTimeSlots.length})}}</strong>
               </span>
             </div>
-            <ion-label v-if="labelledTimeslotRef.label">
-              <span class="slot-schedule-start">{{labelledTimeslotRef.label.start}}</span>
-              <ion-icon class="slot-schedule-icon" aria-hidden="true" src="assets/icons/line/chevron-right-line.svg"></ion-icon>
-              <span class="slot-schedule-end">{{labelledTimeslotRef.label.end}}</span>
-            </ion-label>
           </div>
+
+          <ion-label class="pickTalkDivider-timeSlotResume" v-if="labelledTimeslotRef.label">
+            <ion-icon aria-hidden="true" src="/assets/icons/solid/clock.svg"></ion-icon>
+            <span class="slot-schedule-start">{{labelledTimeslotRef.label.start}}</span>
+            <ion-icon class="slot-schedule-icon" aria-hidden="true" src="assets/icons/line/chevron-right-line.svg"></ion-icon>
+            <span class="slot-schedule-end">{{labelledTimeslotRef.label.end}}</span>
+          </ion-label>
         </ion-header>
         <div>
           <feedback-talk-selector :talks="labelledTimeslotRef.talks || []" :event-descriptor="confDescriptorRef">
           </feedback-talk-selector>
         </div>
         <div v-if="labelledTimeslotRef.overlappingTimeSlots.length">
-          <h4>{{LL.Overlapping_timeslots({ nrOfOverlappingSlots: labelledTimeslotRef.overlappingTimeSlots.length })}}</h4>
+          <ion-header class="pickTalkDivider">
+            <div class="pickTalkDivider-start">
+              <span class="pickTalkDivider-title">{{LL.Overlapping_timeslots({ nrOfOverlappingSlots: labelledTimeslotRef.overlappingTimeSlots.length })}}</span>
+            </div>
+          </ion-header>
+
           <ion-accordion-group>
-            <ion-accordion v-for="(overlappingTimeslot) in overlappingTimeslots" :key="overlappingTimeslot.id.value">
+            <ion-accordion class="slot-accordion" v-for="(overlappingTimeslot) in overlappingTimeslots" :key="overlappingTimeslot.id.value">
               <ion-item slot="header" color="light">
                 <ion-label>
-                  <ion-icon :icon="timeOutline" />
+                  <ion-icon aria-hidden="true" src="assets/icons/solid/slot-overlay.svg" />
                   {{overlappingTimeslot.label.full}}
                 </ion-label>
               </ion-item>
@@ -172,6 +182,7 @@ const overlappingTimeslots = computed((): Array<LabelledTimeslot> => {
     padding: 8px 16px;
     background: var(--app-primary);
     color: white;
+    z-index: 1;
 
     &-start {
       display: flex;
@@ -188,6 +199,20 @@ const overlappingTimeslots = computed((): Array<LabelledTimeslot> => {
     &-title {
       font-size: 18px;
       font-weight: bold !important;
+    }
+
+    &-timeSlotResume {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      column-gap: 2px;
+      position: absolute;
+      right: 0;
+      bottom: -8px;
+      border-radius: 0 0 0 8px;
+      padding: 4px 12px;
+      font-size: 12px;
+      background-color: var(--app-primary);
     }
   }
 </style>
