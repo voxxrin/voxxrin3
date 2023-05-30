@@ -11,7 +11,8 @@ ion-button {
 
     &.ion-color-medium {
         --ion-color-base: var(--app-beige-medium) !important;
-        --ion-color-contrast: var(--app-primary-shade);
+        --ion-color-contrast: var(--app-primary-shade) !important;
+        --background-activated: var(--app-beige-dark) !important;
         --border-color: var(--app-beige-line) !important;
         --border-width: 1px;
         --border-style: solid;
