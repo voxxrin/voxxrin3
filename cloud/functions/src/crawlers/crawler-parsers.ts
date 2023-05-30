@@ -131,8 +131,11 @@ export const SPEAKER_PARSER = z.object({
     social: z.array(z.object({
         type: z.union([
             z.literal('twitter'),
-            z.literal('linked'),
-            z.literal('mastodon')
+            z.literal('linkedin'),
+            z.literal('mastodon'),
+            z.literal('instagram'),
+            z.literal('youtube'),
+            z.literal('twitch'),
         ]),
         url: z.string()
     }))
@@ -174,11 +177,11 @@ export const BREAK_PARSER = z.object({
     room: ROOM_PARSER
 })
 
-export const BREAK_TIME_SLOT_PARSER = z.object({
+export const BREAK_TIME_SLOT_PARSER = TIME_SLOT_BASE_PARSER.extend({
     type: z.literal('break'),
     break: BREAK_PARSER
 })
-export const TALKS_TIME_SLOT_PARSER = z.object({
+export const TALKS_TIME_SLOT_PARSER = TIME_SLOT_BASE_PARSER.extend({
     type: z.literal('talks'),
     talks: z.array(TALK_PARSER)
 })
@@ -198,7 +201,6 @@ export const FULL_EVENT_PARSER = z.object({
     conferenceDescriptor: EVENT_DESCRIPTOR_PARSER,
     info: LISTABLE_EVENT_PARSER,
     daySchedules: z.array(DAILY_SCHEDULE_PARSER),
-    talkStats: z.array(DAILY_TALKS_STATS_PARSER),
     talks: z.array(DETAILED_TALK_PARSER)
 })
 
