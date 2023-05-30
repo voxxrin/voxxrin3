@@ -27,7 +27,7 @@
       </template>
     </talk-format-groups-breakdown>
     <div class="showTalksContainer" v-if="!showUnfavoritedTalksRef">
-      <ion-button fill="outline" @click="() => showUnfavoritedTalksRef = true">
+      <ion-button fill="outline" shape="round" @click="() => showUnfavoritedTalksRef = true">
         {{LL.Show_non_favorited_talks({ nrOfNonFavoritedTalks: nonFavoritedTalksCount })}} <strong>({{nonFavoritedTalksCount}})</strong>
       </ion-button>
     </div>

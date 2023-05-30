@@ -1,13 +1,20 @@
 /* Custom Ionic button component */
 
 ion-button {
-    --border-radius: 54px;
-    
+
     //* Adjust Ionic Btn Color
     &.button-default {
         @media (prefers-color-scheme: dark) {
             --background: var(--app-dark-contrast);
         }
+    }
+
+    &.ion-color-medium {
+        --ion-color-base: var(--app-beige-medium) !important;
+        --ion-color-contrast: var(--app-primary-shade);
+        --border-color: var(--app-beige-line) !important;
+        --border-width: 1px;
+        --border-style: solid;
     }
 
     //* Adjust Ionic Btn Type
@@ -50,17 +57,11 @@ ion-button {
            --border-radius: 42px;
            --padding-start: 0;
            --padding-end: 0;
-           width: 36px;
-           height: 36px;
+           height: 44px !important;
+           min-width: 44px !important;
            font-size: 16px;
        }
    }
-
-    //* Adjust Ionic Btn Size
-    &.button-small {
-        height: 44px !important;
-        width: 44px !important;;
-    }
 
     //* Add Specific Styles Voxxrin Button *//
     &.btnUser {

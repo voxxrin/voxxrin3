@@ -92,6 +92,23 @@
         </div>
       </div>
     </ion-content>
+    <ion-footer class="feedBackFooter">
+      <ion-toolbar>
+        <ion-button size="small" fill="outline" shape="round" expand="block">
+            <ion-icon slot="start" src="assets/icons/solid/video.svg"  aria-hidden="true"></ion-icon>
+              Subscribe redif on all favorited talks
+        </ion-button>
+        <div class="feedBackFooter-group">
+          <ion-button size="small" fill="solid" color="medium" shape="round" expand="block">Cancel</ion-button>
+          <ion-button size="small" fill="outline" shape="round" expand="block">
+            <span class="contentDidntAttendTalk">
+                I didn't attend any talk
+                <small>(during this time slot)</small>
+            </span>
+          </ion-button>
+        </div>
+      </ion-toolbar>
+    </ion-footer>
   </ion-page>
 </template>
 
@@ -172,7 +189,6 @@ const overlappingTimeslots = computed((): Array<LabelledTimeslot> => {
 
 </script>
 
-
 <style scoped lang="scss">
   .pickTalkDivider {
     display: flex;
@@ -214,5 +230,33 @@ const overlappingTimeslots = computed((): Array<LabelledTimeslot> => {
       font-size: 12px;
       background-color: var(--app-primary);
     }
+  }
+
+  .feedBackFooter {
+
+    ion-toolbar {
+      --background: var(--app-white);
+      --padding-top: 12px;
+      --padding-bottom: 8px;
+      --padding-start: 4px;
+      --padding-end: 4px;
+      --min-height: 44px;
+      box-shadow: 0px 3px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    &-group {
+      display: flex;
+      column-gap: 8px;
+      margin-top: 8px;
+
+      ion-button:first-child { width: 128px}
+      ion-button:last-child { flex: 1;}
+    }
+  }
+
+  .contentDidntAttendTalk {
+    display: inline-flex;
+    flex-direction: column;
+    row-gap: 2px;
   }
 </style>

@@ -6,14 +6,14 @@
       <ion-ripple-effect type="bounded"></ion-ripple-effect>
       <ion-grid class="slot">
         <ion-row>
-          <ion-col class="slotSchedule">
+          <ion-col class="slot-schedule">
             <ion-icon class="_accordion-icon _ongoing-icon" aria-hidden="true" src="assets/icons/solid/timer.svg"></ion-icon>
             <ion-icon class="_accordion-icon _past-icon" aria-hidden="true" src="assets/icons/solid/backward-circle.svg"></ion-icon>
             <ion-icon class="_accordion-icon _future-icon" aria-hidden="true" src="assets/icons/solid/clock.svg"></ion-icon>
             <ion-label>
-              <span class="slotSchedule-start">{{timeslotLabel.start}}</span>
-              <ion-icon class="slotSchedule-icon" aria-hidden="true" src="assets/icons/line/chevron-right-line.svg"></ion-icon>
-              <span class="slotSchedule-end">{{timeslotLabel.end}}</span>
+              <span class="slot-schedule-start">{{timeslotLabel.start}}</span>
+              <ion-icon class="slot-schedule-icon" aria-hidden="true" src="assets/icons/line/chevron-right-line.svg"></ion-icon>
+              <span class="slot-schedule-end">{{timeslotLabel.end}}</span>
             </ion-label>
             <div class="slotOverlay" v-if="timeslot.type==='talks' && timeslot.overlappingTimeSlots.length > 0">
               <ion-icon aria-hidden="true" src="assets/icons/solid/slot-overlay.svg"></ion-icon>
