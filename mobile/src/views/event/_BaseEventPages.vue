@@ -47,7 +47,7 @@ import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
 
 const router = useIonRouter();
 const route = useRoute();
-const eventId = computed(() => new EventId(getRouteParamsValue(route, 'eventId')));
+const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')));
 const {conferenceDescriptor: event} = useSharedConferenceDescriptor(eventId);
 
 const { LL } = typesafeI18n()

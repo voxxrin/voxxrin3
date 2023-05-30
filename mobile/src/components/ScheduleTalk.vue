@@ -36,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, PropType} from "vue";
+import {computed, PropType, ref} from "vue";
 import {
   IonBadge,
   IonThumbnail,
@@ -66,7 +66,7 @@ defineEmits<{
 }>()
 
 const route = useRoute();
-const eventId = computed(() => new EventId(getRouteParamsValue(route, 'eventId')));
+const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')));
 
 const { conferenceDescriptor } = useConferenceDescriptor(eventId);
 const { eventTalkStats, talkNotes, toggleFavorite, toggleWatchLater} = useUserTalkNotes(eventId, props.talk?.id)
