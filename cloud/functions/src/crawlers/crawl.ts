@@ -10,7 +10,7 @@ const axios = require('axios');
 
 export type CrawlerKind<ZOD_TYPE extends z.ZodType> = {
     kind: string,
-    crawlerImpl: (eventId: string, crawlerDescriptor: z.infer<ZOD_TYPE>) => Promise<FullEvent>,
+    crawlerImpl: (eventId: string, crawlerDescriptor: z.infer<ZOD_TYPE>, criteria: CrawlCriteria) => Promise<FullEvent>,
     descriptorParser: ZOD_TYPE
 }
 
@@ -34,7 +34,11 @@ export const LANGUAGE_FALLBACK_COLORS: HexColor[] = [
     "#165CE3"
 ];
 
-const crawlAll = async function() {
+export type CrawlCriteria = {
+    dayId?: string|undefined
+}
+
+const crawlAll = async function(criteria: CrawlCriteria) {
     info("Starting crawling");
     const start = Date.now();
 
@@ -59,7 +63,7 @@ const crawlAll = async function() {
                 const crawlerDescriptorContent = (await axios.get(firebaseCrawlerDescriptor.descriptorUrl)).data
                 const crawlerKindDescriptor = crawler.descriptorParser.parse(crawlerDescriptorContent);
 
-                const event = await crawler.crawlerImpl(doc.id, crawlerKindDescriptor);
+                const event = await crawler.crawlerImpl(doc.id, crawlerKindDescriptor, criteria);
                 await saveEvent(event)
                 events.push({id: event.id})
             }catch(e: any) {

@@ -9,14 +9,22 @@ import * as cheerio from 'cheerio';
 import {ConferenceDescriptor} from "../../../../../shared/conference-descriptor.firestore";
 import {Day} from "../../../../../shared/event-list.firestore";
 import axios from "axios";
-import {BREAK_PARSER, BREAK_TIME_SLOT_PARSER, EVENT_DESCRIPTOR_PARSER} from "../crawler-parsers";
-import {CrawlerKind} from "../crawl";
+import {
+    BREAK_PARSER,
+    BREAK_TIME_SLOT_PARSER,
+    DAY_PARSER,
+    EVENT_DESCRIPTOR_PARSER
+} from "../crawler-parsers";
+import {CrawlCriteria, CrawlerKind} from "../crawl";
 import {ISODatetime} from "../../../../../shared/type-utils";
 import {Temporal} from "@js-temporal/polyfill";
 
 const WEB2DAY_PARSER = EVENT_DESCRIPTOR_PARSER.omit({
     id: true
 }).extend({
+    days: z.array(DAY_PARSER.extend({
+        schedulePageElementId: z.string()
+    })),
     breaks: z.array(z.object({
         dayId: z.string(),
         breakTimeslot: BREAK_TIME_SLOT_PARSER.omit({ type: true, id: true }).extend({
@@ -41,11 +49,14 @@ function extractRangeFromTimeslot(rawTimeslot: string, day: Day, timezone: strin
 export const WEB2DAY_CRAWLER: CrawlerKind<typeof WEB2DAY_PARSER> = {
     kind: 'web2day',
     descriptorParser: WEB2DAY_PARSER,
-    crawlerImpl: async (eventId: string, descriptor: z.infer<typeof WEB2DAY_PARSER>): Promise<FullEvent> => {
+    crawlerImpl: async (eventId: string, descriptor: z.infer<typeof WEB2DAY_PARSER>, criteria: CrawlCriteria): Promise<FullEvent> => {
         const $schedulePage = cheerio.load((await axios.get(`https://web2day.co/programme/`, {responseType: 'text'})).data);
 
+        const days = criteria.dayId?descriptor.days.filter(d => d.id === criteria.dayId):descriptor.days;
+        const daySectionSelector = descriptor.days.find(d => d.id === criteria.dayId)?.schedulePageElementId
+
         const rawDetailedTalks = (await Promise.all(
-            $schedulePage('.event-link').map(async(_, eventLink) => {
+            $schedulePage(`${daySectionSelector?'#'+daySectionSelector:''} .event-link`).map(async(_, eventLink) => {
                 const $eventLink = $schedulePage(eventLink);
 
                 const talkUrl = $eventLink.attr()?.href;
@@ -195,7 +206,7 @@ export const WEB2DAY_CRAWLER: CrawlerKind<typeof WEB2DAY_PARSER> = {
             return detailedTalk;
         });
 
-        const dailySchedules: DailySchedule[] = descriptor.days.map(day => {
+        const dailySchedules: DailySchedule[] = days.map(day => {
             const talkTimeSlots: TalksTimeSlot[] = rawDetailedTalks.reduce((talkTimeSlots, rawTalk) => {
                 if(rawTalk!.day.id !== day.id) {
                     return talkTimeSlots;
