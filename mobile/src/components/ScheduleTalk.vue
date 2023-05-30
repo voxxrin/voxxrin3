@@ -46,7 +46,9 @@ import {useRoute} from "vue-router";
 import {EventId} from "@/models/VoxxrinEvent";
 import {getRouteParamsValue} from "@/views/vue-utils";
 import {useUserTalkNotes} from "@/state/useUserTalkNotes";
-import {useConferenceDescriptor} from "@/state/useConferenceDescriptor";
+import {
+    useSharedConferenceDescriptor
+} from "@/state/useConferenceDescriptor";
 import {TalkNote} from "../../../shared/feedbacks.firestore";
 
 
@@ -68,7 +70,7 @@ defineEmits<{
 const route = useRoute();
 const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')));
 
-const { conferenceDescriptor } = useConferenceDescriptor(eventId);
+const { conferenceDescriptor } = useSharedConferenceDescriptor(eventId);
 const { eventTalkStats, talkNotes, toggleFavorite, toggleWatchLater} = useUserTalkNotes(eventId, props.talk?.id)
 
 const displayedSpeakers = props.talk!.speakers
