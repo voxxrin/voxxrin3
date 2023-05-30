@@ -1,7 +1,22 @@
 
 <template>
   <ion-page>
-    <ion-content :fullscreen="true" v-if="confDescriptorRef && dayIdRef && labelledTimeslotRef">
+    <ion-content :fullscreen="true" v-if="confDescriptorRef && dayIdRef && labelledTimeslotRef" :style="{
+          '--voxxrin-event-background-url': `url('${event.backgroundUrl}')`,
+          '--voxxrin-event-logo-url': `url('${event.logoUrl}')`,
+          '--voxxrin-event-theme-colors-primary-hex': event.theming.colors.primaryHex,
+          '--voxxrin-event-theme-colors-primary-rgb': event.theming.colors.primaryRGB,
+          '--voxxrin-event-theme-colors-primary-contrast-hex': event.theming.colors.primaryContrastHex,
+          '--voxxrin-event-theme-colors-primary-contrast-rgb': event.theming.colors.primaryContrastRGB,
+          '--voxxrin-event-theme-colors-secondary-hex': event.theming.colors.secondaryHex,
+          '--voxxrin-event-theme-colors-secondary-rgb': event.theming.colors.secondaryRGB,
+          '--voxxrin-event-theme-colors-secondary-contrast-hex': event.theming.colors.secondaryContrastHex,
+          '--voxxrin-event-theme-colors-secondary-contrast-rgb': event.theming.colors.secondaryContrastRGB,
+          '--voxxrin-event-theme-colors-tertiary-hex': event.theming.colors.tertiaryHex,
+          '--voxxrin-event-theme-colors-tertiary-rgb': event.theming.colors.tertiaryRGB,
+          '--voxxrin-event-theme-colors-tertiary-contrast-hex': event.theming.colors.tertiaryContrastHex,
+          '--voxxrin-event-theme-colors-tertiary-contrast-rgb': event.theming.colors.tertiaryContrastRGB,
+    }">
       <ion-header class="stickyHeader">
         <ion-toolbar>
         <ion-button class="stickyHeader-close" shape="round" slot="start" size="small" fill="outline" @click="$router.back()">
@@ -88,11 +103,13 @@ import {useSchedule} from "@/state/useSchedule";
 import TalkFormatGroupsBreakdown from "@/components/TalkFormatGroupsBreakdown.vue";
 import {IonAccordion, IonAccordionGroup} from "@ionic/vue";
 import FeedbackTalkSelector from "@/components/FeedbackTalkSelector.vue";
+import {TalkId} from "@/models/VoxxrinTalk";
 
 const { LL } = typesafeI18n()
 
 const route = useRoute();
-
+const eventId = computed(() => new EventId(getRouteParamsValue(route, 'eventId')));
+const {conferenceDescriptor: event} = useSharedConferenceDescriptor(eventId);
 const eventIdRef = computed(() => new EventId(getRouteParamsValue(route, 'eventId')));
 const dayIdRef = computed(() => new DayId(getRouteParamsValue(route, 'dayId')));
 const timeslotIdRef = computed(() => new ScheduleTimeSlotId(getRouteParamsValue(route, 'timeslotId')));

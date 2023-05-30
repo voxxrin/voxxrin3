@@ -333,7 +333,7 @@ const theme = {
       }
 
       @media (prefers-color-scheme: dark) {
-        border : {
+        --border : {
           top: 2px solid var(--app-white);
           bottom: 2px solid var(--app-white);
           right: 2px solid var(--app-white);

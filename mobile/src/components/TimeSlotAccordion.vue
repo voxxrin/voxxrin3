@@ -326,7 +326,7 @@ function openTalkDetails(talk: VoxxrinTalk) {
 
     &._ongoing {
       .ion-color-light {
-        --ion-color-base:  var(--voxxrin-event-theme-colors-primary-hex) !important;;
+        --ion-color-base:  var(--voxxrin-event-theme-colors-primary-hex) !important;
         --ripple-color: var(--app-beige-dark) !important;
 
         ion-label { color: var(--app-white);}
