@@ -13,7 +13,7 @@ const routes: Array<RouteRecordRaw> = [
     { path: 'notifications', component: () => import('@/views/event/NotificationsPage.vue') },
     { path: 'infos', component: () => import('@/views/event/InfosPage.vue') },
   ]},
-  { path: '/events/:eventId/days/:dayId/talks/:talkId/details', component: () => import('@/views/TalkDetailsPage.vue') },
+  { path: '/events/:eventId/talks/:talkId/details', component: () => import('@/views/TalkDetailsPage.vue') },
 ]
 
 const router = createRouter({

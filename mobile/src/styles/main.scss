@@ -5,6 +5,9 @@
 @import "@/styles/utils/variables.scss";
 @import "@/styles/utils/_helpers.scss";
 
+/* ~ COMPONENTS*/
+@import "@/styles/components/_slotOverlay.scss";
+
 /* ~ BASE */
 @import "@/styles/base/base.scss";
 @import "@/styles/base/_typography.scss";

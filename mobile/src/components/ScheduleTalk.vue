@@ -1,8 +1,8 @@
 <template>
   <ion-card class="talkCard"
             v-if="talkNotes"
-            :class="{ container: true, 'is-favorited': talkNotes.isFavorite, 'to-watch-later': talkNotes.watchLater }"
-            @click="() => openTalkDetails()">
+            :class="{ container: true, 'is-highlighted': isHighlighted(talk, talkNotes), 'is-favorited': talkNotes.isFavorite, 'is-to-watch-later': talkNotes.watchLater }"
+            @click="$emit('talk-clicked', talk)">
     <div class="talkCard-head">
       <div class="track">
         <ion-badge class="trackBadge">
@@ -10,10 +10,7 @@
         </ion-badge>
       </div>
 
-      <div class="room">
-        <ion-icon aria-hidden="true" src="/assets/icons/solid/map-marker.svg"></ion-icon>
-        {{talk.room.title}}
-      </div>
+      <slot name="upper-right" :talk="talk"></slot>
     </div>
 
     <div class="talkCard-content">
@@ -33,23 +30,7 @@
         <ion-icon src="/assets/icons/solid/megaphone.svg"></ion-icon>
         <span class="speakers-list">{{displayedSpeakers}}</span>
       </div>
-      <div class="talkCard-footer-actions">
-        <div class="watchLater">
-          <ion-button class="btnTalk watch-later-btn" @click.stop="() => toggleWatchLater()" v-if="conferenceDescriptor?.features.remindMeOnceVideosAreAvailableEnabled">
-            <ion-icon v-if="!talkNotes?.watchLater" aria-hidden="true" src="/assets/icons/line/video-line.svg"></ion-icon>
-            <ion-icon v-if="!!talkNotes?.watchLater" aria-hidden="true" src="/assets/icons/solid/video.svg"></ion-icon>
-          </ion-button>
-        </div>
-        <div class="favorite">
-          <ion-button class="btnTalk favorite-btn" @click.stop="() => toggleFavorite()" v-if="conferenceDescriptor?.features.favoritesEnabled">
-            <span class="favorite-btn-group">
-               <ion-icon class="favorite-btn-group-icon" v-if="!talkNotes?.isFavorite" aria-hidden="true" src="/assets/icons/line/bookmark-line-favorite.svg"></ion-icon>
-              <ion-icon class="favorite-btn-group-icon" v-if="!!talkNotes?.isFavorite" aria-hidden="true" src="/assets/icons/solid/bookmark-favorite.svg"></ion-icon>
-              <ion-label class="favorite-btn-group-nb" v-if="eventTalkStats !== undefined">{{ eventTalkStats.totalFavoritesCount }}</ion-label>
-            </span>
-          </ion-button>
-        </div>
-      </div>
+      <slot name="footer-actions" :talk="talk" :talkNotesHook="{ eventTalkStats, talkNotes, toggleFavorite, toggleWatchLater }" />
     </div>
   </ion-card>
 </template>
@@ -65,29 +46,30 @@ import {useRoute} from "vue-router";
 import {EventId} from "@/models/VoxxrinEvent";
 import {getRouteParamsValue} from "@/views/vue-utils";
 import {useUserTalkNotes} from "@/state/useUserTalkNotes";
-import {DayId} from "@/models/VoxxrinDay";
-import {useTabbedPageNav} from "@/state/useTabbedPageNav";
 import {useConferenceDescriptor} from "@/state/useConferenceDescriptor";
+import {TalkNote} from "../../../shared/feedbacks.firestore";
 
 
 const props = defineProps({
-  dayId: {
-      required: true,
-      type: Object as PropType<DayId>
-  },
   talk: {
     required: true,
     type: Object as PropType<VoxxrinTalk>
+  },
+  isHighlighted: {
+      required: true,
+      type: Function as PropType<(talk: VoxxrinTalk, talkNotes: TalkNote) => boolean>
   }
 })
+
+defineEmits<{
+    (e: 'talk-clicked', talk: VoxxrinTalk): void,
+}>()
 
 const route = useRoute();
 const eventId = computed(() => new EventId(getRouteParamsValue(route, 'eventId')));
 
 const { conferenceDescriptor } = useConferenceDescriptor(eventId);
-const { eventTalkStats, talkNotes, toggleFavorite, toggleWatchLater} = useUserTalkNotes(eventId, props.dayId, props.talk.id)
-
-const { triggerTabbedPageNavigate } = useTabbedPageNav();
+const { eventTalkStats, talkNotes, toggleFavorite, toggleWatchLater} = useUserTalkNotes(eventId, props.talk?.id)
 
 const displayedSpeakers = props.talk!.speakers
     .map(s => `${s.fullName}${s.companyName?` (${s.companyName})`:``}`)
@@ -98,16 +80,11 @@ const theme = {
     color: props.talk!.track.themeColor
   }
 }
-
-function openTalkDetails() {
-    if(props.dayId && props.talk) {
-        triggerTabbedPageNavigate(`/events/${eventId.value.value}/days/${props.dayId.value}/talks/${props.talk.id.value}/details`, "forward", "push");
-    }
-}
 </script>
 
 <style lang="scss" scoped>
 
+//* Base styles card talk *//
 .talkCard {
   display: flex;
   flex-direction: column;
@@ -140,100 +117,6 @@ function openTalkDetails() {
     position: absolute;
     content: '';
     z-index: -1;
-  }
-
-  &.is-favorited  {
-    border-top: 2px solid var(--app-primary-shade);
-    border-bottom: 2px solid var(--app-primary-shade);
-    border-right: 2px solid var(--app-primary-shade);
-
-    @media (prefers-color-scheme: dark) {
-      border-top: 2px solid var(--app-white);
-      border-bottom: 2px solid var(--app-white);
-      border-right: 2px solid var(--app-white);
-    }
-
-    &:before {
-      width: 40%;
-      height: 70%;
-      right: 0;
-      bottom: 0;
-      background: rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.6);
-      transform: scale(1);
-      opacity: 1;
-      filter: blur(32px);
-      animation: scale-in-center 0.1s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-    }
-
-    &:after {
-      width: 50%;
-      height: 100%;
-      right: 0;
-      bottom: 0;
-      background-image: url('assets/images/png/texture-favorited.png');
-      transform: scale(1);
-      opacity: 0.5;
-      mix-blend-mode: overlay;
-      animation: scale-in-center 0.1s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-
-      @media (prefers-color-scheme: dark) {
-        mix-blend-mode: difference;
-      }
-    }
-
-    @keyframes scale-in-center {
-      0% {
-        -webkit-transform: scale(0);
-        transform: scale(0);
-        opacity: 1;
-      }
-      100% {
-        -webkit-transform: scale(1);
-        transform: scale(1);
-        opacity: 1;
-      }
-    }
-
-    ion-thumbnail {
-      background-color: var(--app-background);
-      border: 2px solid var(--app-primary-shade);
-    }
-
-    ion-button.favorite-btn {
-      --background: var(--voxxrin-event-theme-colors-primary-hex);
-      --color: var(--voxxrin-event-theme-colors-primary-contrast-hex);
-      border-left: 1px solid var(--app-primary-shade);
-      --border-radius:  0 0 8px 0 !important;
-    }
-
-    .talkCard-footer {
-      background-color: rgba(white, 0.5);
-      border-width: 2px;
-      border-color: var(--app-primary-shade);
-      border-bottom: none;
-
-      @media (prefers-color-scheme: dark) {
-        background-color: rgba(var(--app-light-contrast-rgb), 0.6);
-        border-color: var(--app-white);
-      }
-
-      .btnTalk {
-        border-width: 2px;
-        border-color: var(--app-primary-shade);
-
-        @media (prefers-color-scheme: dark) {
-          border-color: var(--app-white);
-        }
-      }
-    }
-  }
-
-  &.to-watch-later {
-    ion-button.watch-later-btn {
-      --background: var(--voxxrin-event-theme-colors-secondary-hex);
-      --color: var(--voxxrin-event-theme-colors-secondary-contrast-hex);
-      border-left: 1px solid var(--voxxrin-event-theme-colors-secondary-hex);
-    }
   }
 
   &-head {
@@ -325,12 +208,15 @@ function openTalkDetails() {
     display: flex;
     column-gap: 16px;
     justify-content: space-between;
+    border-radius: 0 0 12px 0;
     border : {
       top: 1px solid var(--app-grey-line);
       bottom: 1px solid var(--app-grey-line);
     }
+    background-color: rgba(white, 0.6);
 
     @media (prefers-color-scheme: dark) {
+      background-color: rgba(white, 0.05);
       border : {
         top: 1px solid var(--app-line-contrast);
         bottom: 1px solid var(--app-line-contrast);
@@ -363,58 +249,144 @@ function openTalkDetails() {
         transform: rotate(-16deg);
       }
     }
+  }
+}
 
-    .favorite, .watchLater {
-      height: 100%;
+//* States card talk *//
+::v-deep {
+  &.is-highlighted {
+    border : {
+      top: 2px solid var(--voxxrin-event-theme-colors-secondary-hex);
+      bottom: 2px solid var(--voxxrin-event-theme-colors-secondary-hex);
+      right: 2px solid var(--voxxrin-event-theme-colors-secondary-hex);
     }
 
-    .btnTalk {
-      height: 100% !important;
-      min-height: 55px !important;
-      width: 58px !important;
-      margin: 0;
-      --border-radius: 0;
-      --background: rgba(white, 0.5);
-      --color: var(--app-primary);
-      border-left: 1px solid var(--app-grey-line);
-      font-size: 18px;
-      --padding-start: 0;
-      --padding-end: 0;
-      --background-activated-opacity: 0.1;
-      --background-hover-opacity: 0.1;
-      --box-shadow: none;
+    @media (prefers-color-scheme: dark) {
+      border : {
+        top: 2px solid var(--app-white);
+        bottom: 2px solid var(--app-white);
+        right: 2px solid var(--app-white);
+      }
+    }
 
-      @media (prefers-color-scheme: dark) {
-        --background: rgba(white, 0.2);
-        --color: var(--app-white);
-        border-left: 1px solid var(--app-line-contrast);
+    &.is-favorited {
+      border : {
+        top: 2px solid var(--app-primary-shade);
+        bottom: 2px solid var(--app-primary-shade);
+        right: 2px solid var(--app-primary-shade);
       }
 
-      .favorite-btn {
-        --size: 28px;
+      @media (prefers-color-scheme: dark) {
+        border : {
+          top: 2px solid var(--app-white);
+          bottom: 2px solid var(--app-white);
+          right: 2px solid var(--app-white);
+        }
+      }
 
-        &-group {
-          display: flex;
-          flex-direction: column;
-          row-gap: 4px;
-          justify-content: center;
+      &:before {
+        background: rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.6);
+      }
 
-          &-icon {
-            position: relative;
-            font-size: 26px;
-          }
+      ion-thumbnail { border: 2px solid var(--app-primary-shade);}
 
-          &-nb {
-            font-size: 14px;
-            font-weight: 700;
-          }
+      .talkCard-footer {
+        border-color: var(--app-primary-shade);
+
+        .btnTalk { border-color: var(--app-primary-shade);}
+      }
+    }
+
+    &:before {
+      width: 40%;
+      height: 70%;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(331deg, rgba(var(--voxxrin-event-theme-colors-secondary-rgb), 0.6) 30%, rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.6) 80%);
+      transform: scale(1);
+      opacity: 1;
+      filter: blur(32px);
+      animation: scale-in-center 0.1s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+    }
+
+    &:after {
+      width: 50%;
+      height: 100%;
+      right: 0;
+      bottom: 0;
+      background-image: url('assets/images/png/texture-favorited.png');
+      background-repeat: no-repeat;
+      background-position: right;
+      background-size: cover;
+      transform: scale(1);
+      opacity: 0.5;
+      mix-blend-mode: overlay;
+      animation: scale-in-center 0.1s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+
+      @media (prefers-color-scheme: dark) {
+        mix-blend-mode: difference;
+      }
+    }
+
+    ion-thumbnail {
+      background-color: var(--app-background);
+      border: 2px solid var(--voxxrin-event-theme-colors-secondary-hex);
+    }
+
+    .talkCard-footer {
+      border-width: 2px;
+      border-color: var(--voxxrin-event-theme-colors-secondary-hex);
+      border-bottom: none;
+
+      @media (prefers-color-scheme: dark) {
+        border-color: var(--app-white) !important;
+      }
+
+      .btnTalk {
+        border-width: 2px;
+        border-color: var(--voxxrin-event-theme-colors-secondary-hex);
+
+        @media (prefers-color-scheme: dark) {
+          border-color: var(--app-white) !important;
         }
       }
     }
 
-    &-actions {
-      display: flex;
-      align-items: end;
+    //* Change style type actions *//
+    ion-button {
+      &.favorite-btn {
+        --background: var(--voxxrin-event-theme-colors-primary-hex);
+        --color: var(--voxxrin-event-theme-colors-primary-contrast-hex);
+        border-left: 1px solid var(--app-primary-shade);
+        --border-radius:  0 0 8px 0 !important;
+      }
+
+      &.feedback-select-btn {
+        --background: var(--voxxrin-event-theme-colors-secondary-hex);
+        --color: var(--voxxrin-event-theme-colors-secondary-contrast-hex);
+        border-left: 1px solid var(--voxxrin-event-theme-colors-secondary-hex);
+      }
+    }
+  }
+
+  @keyframes scale-in-center {
+    0% {
+      -webkit-transform: scale(0);
+      transform: scale(0);
+      opacity: 1;
+    }
+    100% {
+      -webkit-transform: scale(1);
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  &.is-to-watch-later {
+    ion-button.watch-later-btn {
+      --background: var(--voxxrin-event-theme-colors-secondary-hex);
+      --color: var(--voxxrin-event-theme-colors-secondary-contrast-hex);
+      border-left: 1px solid var(--voxxrin-event-theme-colors-secondary-hex);
     }
   }
 }

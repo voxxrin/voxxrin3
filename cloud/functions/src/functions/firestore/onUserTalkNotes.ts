@@ -1,77 +1,91 @@
 import * as functions from "firebase-functions";
-import * as _ from "lodash";
 import { db, info } from "../../firebase"
 
 import { FieldValue } from "firebase-admin/firestore";
-import { UserDayTalksNotes } from "../../../../../shared/feedbacks.firestore";
+import {
+    TalkStats,
+    UserComputedEventInfos,
+    UserTalkNote
+} from "../../../../../shared/feedbacks.firestore";
+import {firestore} from "firebase-admin";
+import DocumentReference = firestore.DocumentReference;
+
+async function upsertTalkStats(eventId: string, talkId: string, isFavorite: boolean) {
+    const existingTalksStatsEntryRef = db
+        .collection("events").doc(eventId)
+        .collection("talksStats").doc(talkId)
+
+    const existingTalksStatsEntry = await existingTalksStatsEntryRef.get()
+    if(existingTalksStatsEntry.exists) {
+        await existingTalksStatsEntryRef.update({totalFavoritesCount: FieldValue.increment(isFavorite ? 1 : -1)})
+    } else {
+        const newTalkStatsEntry: TalkStats = {
+            id: talkId,
+            totalFavoritesCount: isFavorite?1:0
+        }
+        await existingTalksStatsEntryRef.set(newTalkStatsEntry);
+    }
+}
+
+async function updateUserTalkAllFavorites(userId: string, eventId: string, talkId: string, isFavorite: boolean) {
+    const existingUserTalkComputedRef = db
+        .collection("users").doc(userId)
+        .collection("events").doc(eventId)
+        .collection("__computed").doc("self") as DocumentReference<UserComputedEventInfos>;
+
+    const existingUserTalkComputedDoc = await existingUserTalkComputedRef.get()
+    if(existingUserTalkComputedDoc.exists) {
+        const updatedFavorites = isFavorite
+            ?Array.from(new Set((existingUserTalkComputedDoc.data()?.favoritedTalkIds||[]).concat(talkId)))
+            :(existingUserTalkComputedDoc.data()?.favoritedTalkIds||[]).filter(favoritedTalkId => favoritedTalkId !== talkId);
+
+        await existingUserTalkComputedRef.update({ favoritedTalkIds: updatedFavorites });
+    } else {
+        await existingUserTalkComputedRef.set({
+            favoritedTalkIds: isFavorite?[talkId]:[]
+        });
+    }
+}
 
 export const onUserTalksNoteUpdate = functions.firestore
-    // FIXME: don't make talk notes on a per-day basis because if the talk is moved
-    // from one day to another
-    .document("users/{userId}/events/{eventId}/talksNotes/{day}")
-    .onUpdate((change, context) => {
+    .document("users/{userId}/events/{eventId}/talksNotes/{talkId}")
+    .onUpdate(async (change, context) => {
         const userId = context.params.userId;
         const eventId = context.params.eventId;
-        const day = context.params.day;
+        const talkId = context.params.talkId;
 
-        const beforeTalksNotes = change.before.data() as UserDayTalksNotes
-        const afterTalksNotes = change.after.data() as UserDayTalksNotes
+        const beforeTalkNote = change.before.data() as UserTalkNote
+        const afterTalkNote = change.after.data() as UserTalkNote
 
-        const promises = []
+        const wasFavorite = beforeTalkNote.note.isFavorite;
+        const isFavorite = afterTalkNote.note.isFavorite;
 
-        for (const talkNotes of afterTalksNotes.notes) {
-            const before = beforeTalksNotes.notes.find((n) => { return n.talkId == talkNotes.talkId})
-            const wasFavorite = before?.isFavorite ?? false
-            const isFavorite = talkNotes.isFavorite
-    
-            if (wasFavorite != isFavorite) {
-                info(`favorite update by ${userId} on ${eventId} // ${talkNotes.talkId}: ${wasFavorite} => ${isFavorite}`);
-    
-                promises.push(
-                    db
-                        .collection("events").doc(eventId)
-                        .collection("days").doc(day)
-                        .collection("talksStats").doc(talkNotes.talkId)
-                        .update({totalFavoritesCount: FieldValue.increment(isFavorite ? 1 : -1)}));
-            }
-        }
+        if (wasFavorite != isFavorite) {
+            info(`favorite update by ${userId} on ${eventId} // ${talkId}: ${wasFavorite} => ${isFavorite}`);
 
-        if (promises.length > 0) {
-            return Promise.all(promises)
-        } else {
-            return false
+            await Promise.all([
+                upsertTalkStats(eventId, talkId, isFavorite),
+                updateUserTalkAllFavorites(userId, eventId, talkId, isFavorite),
+            ])
         }
     });
 
 export const onUserTalksNoteCreate = functions.firestore
-    .document("users/{userId}/events/{eventId}/talksNotes/{day}")
-    .onCreate((change, context) => {
+    .document("users/{userId}/events/{eventId}/talksNotes/{talkId}")
+    .onCreate(async (change, context) => {
         const userId = context.params.userId;
         const eventId = context.params.eventId;
-        const day = context.params.day;
+        const talkId = context.params.talkId;
 
-        const talksNotes = change.data() as UserDayTalksNotes
+        const talkNote = change.data() as UserTalkNote
+        const isFavorite = talkNote.note.isFavorite;
 
-        const promises = []
+        if(isFavorite) {
+            info(`favorite create by ${userId} on ${eventId} // ${talkId}: ${isFavorite}`);
 
-        for (const talkNotes of talksNotes.notes) {
-            const isFavorite = talkNotes.isFavorite
-    
-            if (isFavorite) {
-                info(`favorite create by ${userId} on ${eventId} // ${talkNotes.talkId}: ${isFavorite}`);
-    
-                promises.push(
-                    db
-                        .collection("events").doc(eventId)
-                        .collection("days").doc(day)
-                        .collection("talksStats").doc(talkNotes.talkId)
-                        .update({totalFavoritesCount: FieldValue.increment(1)}));
-            }
+            await Promise.all([
+                upsertTalkStats(eventId, talkId, isFavorite),
+                updateUserTalkAllFavorites(userId, eventId, talkId, isFavorite),
+            ])
         }
-
-        if (promises.length > 0) {
-            return Promise.all(promises)
-        } else {
-            return false
-        }
-    });    
+    });

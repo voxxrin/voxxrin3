@@ -23,11 +23,7 @@ export function useSchedule(
         const conferenceDescriptor = unref(conferenceDescriptorRef),
             dayId = unref(dayIdRef);
 
-        if(!conferenceDescriptor || !dayId) {
-            return undefined;
-        }
-
-        return dailyScheduleDocument(conferenceDescriptor.id, dayId);
+        return dailyScheduleDocument(conferenceDescriptor, dayId);
     });
 
     const firestoreDailyScheduleRef = useDocument(firestoreDailyScheduleSource)
@@ -47,8 +43,12 @@ export function useSchedule(
     };
 }
 
-function dailyScheduleDocument(eventId: EventId, dayId: DayId) {
-    return doc(collection(doc(collection(db, 'events'), eventId.value), 'days'), dayId.value) as DocumentReference<DailySchedule>;
+function dailyScheduleDocument(eventDescriptor: VoxxrinConferenceDescriptor|undefined, dayId: DayId|undefined) {
+    if(!eventDescriptor || !eventDescriptor.id || !eventDescriptor.id.value || !dayId || !dayId.value) {
+        return undefined;
+    }
+
+    return doc(collection(doc(collection(db, 'events'), eventDescriptor.id.value), 'days'), dayId.value) as DocumentReference<DailySchedule>;
 }
 
 export function prepareSchedules(
@@ -58,16 +58,18 @@ export function prepareSchedules(
     dayIds.forEach(async dayId => {
         useSchedule(conferenceDescriptor, dayId);
 
-        if(navigator.onLine) {
-            const dailyScheduleDoc = dailyScheduleDocument(conferenceDescriptor.id, dayId);
+        const dailyScheduleDoc = dailyScheduleDocument(conferenceDescriptor, dayId)
+        if(navigator.onLine && dailyScheduleDoc) {
             const dailyScheduleSnapshot = await getDoc(dailyScheduleDoc);
 
             const dayAndTalkIds = dailyScheduleSnapshot.data()?.timeSlots.reduce((dayAndTalkIds, timeslot) => {
                 if(timeslot.type === 'talks') {
                     timeslot.talks.forEach(talk => {
                         talk.speakers.forEach(speaker => {
-                            const avatarImage = new Image();
-                            avatarImage.src = speaker.photoUrl;
+                            if(speaker.photoUrl) {
+                                const avatarImage = new Image();
+                                avatarImage.src = speaker.photoUrl;
+                            }
                             // avatarImage.onload = () => {
                             //     console.log(`Avatar ${speaker.photoUrl} pre-loaded !`)
                             // };

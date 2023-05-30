@@ -20,7 +20,7 @@ export type Speaker = {
     fullName: string,
     id: string,
     bio?: string|undefined|null,
-    social: Array<{type: "twitter"|"linkedin"|"mastodon", url: string}>
+    social: Array<{type: "twitter"|"linkedin"|"mastodon"|"instagram"|"youtube"|"twitch", url: string}>
 }
 export type Talk = {
     speakers: Speaker[],
@@ -38,7 +38,7 @@ export type DetailedTalk = Talk & {
     description: string
 }
 
-type TimeSlotBase<START extends ISODatetime = ISODatetime, END extends ISODatetime = ISODatetime> = {
+export type TimeSlotBase<START extends ISODatetime = ISODatetime, END extends ISODatetime = ISODatetime> = {
     start: START,
     end: END,
     id: `${START}--${END}`,

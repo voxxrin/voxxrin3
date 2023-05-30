@@ -5,17 +5,19 @@ import {z} from "zod";
 import {LA_PRODUCT_CONF_CRAWLER} from "./la-product-conf/crawler";
 import {FIREBASE_CRAWLER_DESCRIPTOR_PARSER} from "./crawler-parsers";
 import {HexColor} from "../../../../shared/type-utils";
+import {WEB2DAY_CRAWLER} from "./web2day/crawler";
 const axios = require('axios');
 
 export type CrawlerKind<ZOD_TYPE extends z.ZodType> = {
     kind: string,
-    crawlerImpl: (eventId: string, crawlerDescriptor: z.infer<ZOD_TYPE>) => Promise<FullEvent>,
+    crawlerImpl: (eventId: string, crawlerDescriptor: z.infer<ZOD_TYPE>, criteria: CrawlCriteria) => Promise<FullEvent>,
     descriptorParser: ZOD_TYPE
 }
 
 const CRAWLERS: CrawlerKind<any>[] = [
     DEVOXX_CRAWLER,
     LA_PRODUCT_CONF_CRAWLER,
+    WEB2DAY_CRAWLER
 ]
 
 export const TALK_FORMAT_FALLBACK_COLORS: HexColor[] = [
@@ -32,7 +34,11 @@ export const LANGUAGE_FALLBACK_COLORS: HexColor[] = [
     "#165CE3"
 ];
 
-const crawlAll = async function() {
+export type CrawlCriteria = {
+    dayId?: string|undefined
+}
+
+const crawlAll = async function(criteria: CrawlCriteria) {
     info("Starting crawling");
     const start = Date.now();
 
@@ -57,7 +63,7 @@ const crawlAll = async function() {
                 const crawlerDescriptorContent = (await axios.get(firebaseCrawlerDescriptor.descriptorUrl)).data
                 const crawlerKindDescriptor = crawler.descriptorParser.parse(crawlerDescriptorContent);
 
-                const event = await crawler.crawlerImpl(doc.id, crawlerKindDescriptor);
+                const event = await crawler.crawlerImpl(doc.id, crawlerKindDescriptor, criteria);
                 await saveEvent(event)
                 events.push({id: event.id})
             }catch(e: any) {
@@ -96,22 +102,6 @@ const saveEvent = async function(event: FullEvent) {
             error(`Error while saving talk ${talk.id}: ${e?.toString()}`)
         }
     }));
-    await Promise.all(
-        event.talkStats
-            .flatMap(dailyTalksStat =>
-                dailyTalksStat.stats.map(stat => ({day: dailyTalksStat.day, stat: stat }))
-            ).map(async talkStatWithDay => {
-                try {
-                    // TODO: see if we really want to override stats each time we crawl
-                    await firestoreEvent
-                        .collection("days").doc(talkStatWithDay.day)
-                        .collection("talksStats").doc(talkStatWithDay.stat.id)
-                        .set(talkStatWithDay.stat)
-                }catch(e) {
-                    error(`Error while storing talk stats with day ${talkStatWithDay.day}: ${e?.toString()}`)
-                }
-        })
-    )
 
     try {
         await firestoreEvent.collection('event-descriptor')

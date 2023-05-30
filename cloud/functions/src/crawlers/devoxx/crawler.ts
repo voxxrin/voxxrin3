@@ -7,7 +7,7 @@ import {
     DevoxxScheduleSpeakerInfo
 } from "./types"
 import { DailySchedule, DetailedTalk, Speaker, Talk } from "../../../../../shared/dayly-schedule.firestore"
-import {DayTalksStats, TalkStats} from "../../../../../shared/feedbacks.firestore";
+import {TalkStats} from "../../../../../shared/feedbacks.firestore";
 import { FullEvent } from "../../models/Event";
 import { ISODatetime, ISOLocalDate } from "../../../../../shared/type-utils";
 import { Day, ListableEvent } from "../../../../../shared/event-list.firestore";
@@ -66,14 +66,12 @@ export const DEVOXX_CRAWLER: CrawlerKind<typeof DEVOXX_DESCRIPTOR_PARSER> = {
         } as ListableEvent
 
         const eventTalks: DetailedTalk[] = [],
-            eventTalkStats: DayTalksStats[] = [],
             daySchedules: DailySchedule[] = [],
             eventRooms: ConferenceDescriptor['rooms'] = [],
             eventTalkFormats: ConferenceDescriptor['talkFormats'] = [];
         await Promise.all(days.map(async day => {
             const {daySchedule, talkStats, talks, rooms, talkFormats} = await crawlDevoxxDay(eventId, day.id)
             daySchedules.push(daySchedule)
-            eventTalkStats.push({day: day.id, stats: talkStats})
             for (const talk of talks) {
                 eventTalks.push(talk)
             }
@@ -102,8 +100,7 @@ export const DEVOXX_CRAWLER: CrawlerKind<typeof DEVOXX_DESCRIPTOR_PARSER> = {
 
         const event: FullEvent = {
             id: eventId, info: eventInfo, daySchedules,
-            talkStats: eventTalkStats, talks: eventTalks,
-            conferenceDescriptor: eventDescriptor
+            talks: eventTalks, conferenceDescriptor: eventDescriptor
         }
         return event
     }

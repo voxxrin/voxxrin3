@@ -3,7 +3,7 @@ export type TalkStats = {
     totalFavoritesCount: number
 }
 
-export type UserTalkNotes = {
+export type TalkNote = {
     talkId: string,
     isFavorite: boolean,
     watchLater: boolean|null,
@@ -14,13 +14,11 @@ export type UserTalkNotes = {
     comment: string|null
 }
 
-export type DayTalksStats = {
-    day: string,
-    stats: TalkStats[]
+export type UserTalkNote = {
+    userId: string,
+    note: TalkNote,
 }
 
-export type UserDayTalksNotes = {
-    userId: string,
-    day: string,
-    notes: UserTalkNotes[]
+export type UserComputedEventInfos = {
+    favoritedTalkIds: string[];
 }

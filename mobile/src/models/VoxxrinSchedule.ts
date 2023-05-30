@@ -1,4 +1,9 @@
-import {DailySchedule, ScheduleTimeSlot} from "../../../shared/dayly-schedule.firestore";
+import {
+    BreakTimeSlot,
+    DailySchedule,
+    ScheduleTimeSlot, TalksTimeSlot,
+    TimeSlotBase
+} from "../../../shared/dayly-schedule.firestore";
 import {
     createVoxxrinTalkFromFirestore,
     VoxxrinBreak,
@@ -13,22 +18,30 @@ import {Replace} from "@/models/type-utils";
 import {
     VoxxrinConferenceDescriptor
 } from "@/models/VoxxrinConferenceDescriptor";
-import {formatHourMinutes} from "@/models/DatesAndTime";
+import {formatHourMinutes, localDateToReadableParts} from "@/models/DatesAndTime";
 import {NumberRange, sortBy, ValueObject} from "@/models/utils";
+import {useCurrentUserLocale} from "@/state/useCurrentUserLocale";
 
 export class ScheduleTimeSlotId extends ValueObject<string>{ _scheduleTimeSlotIdClassDiscriminator!: never; }
 
-export type VoxxrinScheduleTimeSlot = Replace<Omit<ScheduleTimeSlot, "break"|"talks">, {
+type VoxxrinTimeSlotBase = Replace<TimeSlotBase, {
     start: Temporal.ZonedDateTime,
     end: Temporal.ZonedDateTime,
     id: ScheduleTimeSlotId
-} & (
-    {type: 'break', break: VoxxrinBreak}
-    | {
-        type: 'talks', talks: VoxxrinTalk[],
-        overlappingTimeSlots: ScheduleTimeSlotId[]
-    }
-)>;
+}>;
+
+export type VoxxrinScheduleBreakTimeSlot = Replace<BreakTimeSlot, VoxxrinTimeSlotBase & {
+    type: 'break',
+    break: VoxxrinBreak
+}>
+
+export type VoxxrinScheduleTalksTimeSlot = Replace<TalksTimeSlot, VoxxrinTimeSlotBase & {
+    type: 'talks',
+    talks: VoxxrinTalk[],
+    overlappingTimeSlots: ScheduleTimeSlotId[]
+}>
+
+export type VoxxrinScheduleTimeSlot = VoxxrinScheduleBreakTimeSlot | VoxxrinScheduleTalksTimeSlot;
 
 export type VoxxrinDailySchedule = {
     eventId: EventId;
@@ -67,8 +80,14 @@ export function getTimeslotLabel(timeslot: VoxxrinScheduleTimeSlot) {
         id: timeslot.id,
         start,
         end,
-        full: `${start} -> ${end}`
+        full: `${start} -> ${end}`,
+        date: localDateToReadableParts(timeslot.start, useCurrentUserLocale())
     }
+}
+
+export function findTalksTimeslotById(dailySchedule: VoxxrinDailySchedule, timeslotId: ScheduleTimeSlotId) {
+    const talkTimeslots = dailySchedule.timeSlots.filter(ts => ts.type === 'talks') as VoxxrinScheduleTalksTimeSlot[];
+    return talkTimeslots.find(tts => tts.id.isSameThan(timeslotId));
 }
 
 export function filterTimeslotsToAutoExpandBasedOn(timeslots: VoxxrinScheduleTimeSlot[], now: Temporal.ZonedDateTime) {
