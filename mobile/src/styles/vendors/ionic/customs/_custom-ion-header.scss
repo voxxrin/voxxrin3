@@ -50,31 +50,34 @@ ion-header  {
             column-gap: 16px;
         }
 
-        &.to-watch-later {
-            .btnTalkAction._watchLater {
-                --background: var(--voxxrin-event-theme-colors-secondary-hex);
-                --background-activated: var(--voxxrin-event-theme-colors-secondary-hex);
-                --color-activated: var(--app-white);
-                --color: var(--app-white);
-            }
-        }
 
-        &.is-favorited {
-            .btnTalkAction._favorite {
-                --background: var(--voxxrin-event-theme-colors-primary-hex);
-                --background-activated: var(--voxxrin-event-theme-colors-primary-hex);
-                --color-activated: var(--app-white);
-                --border-color:  var(--voxxrin-event-theme-colors-primary-hex);
-                --color: var(--app-white);
+        ::v-deep {
+            &._has-watch-later {
+                .btnTalkAction._watchLater {
+                    --background: var(--voxxrin-event-theme-colors-secondary-hex);
+                    --background-activated: var(--voxxrin-event-theme-colors-secondary-hex);
+                    --color-activated: var(--app-white);
+                    --color: var(--app-white);
+                }
             }
 
-            .favorite-btn-nb {
-                background: var(--app-primary) !important;
-                color: var(--app-white);
+            &._has-favorited {
+                .btnTalkAction._favorite {
+                    --background: var(--voxxrin-event-theme-colors-primary-hex);
+                    --background-activated: var(--voxxrin-event-theme-colors-primary-hex);
+                    --color-activated: var(--app-white);
+                    --border-color:  var(--voxxrin-event-theme-colors-primary-hex);
+                    --color: var(--app-white);
+                }
 
-                @media (prefers-color-scheme: dark) {
-                    background: var(--app-white) !important;
-                    color: var(--app-primary);
+                .favorite-btn-nb {
+                    background: var(--app-primary) !important;
+                    color: var(--app-white);
+
+                    @media (prefers-color-scheme: dark) {
+                        background: var(--app-white) !important;
+                        color: var(--app-primary);
+                    }
                 }
             }
         }

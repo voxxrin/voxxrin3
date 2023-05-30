@@ -47,17 +47,17 @@
         <template #talk-card-footer-actions="{ talk, talkNotesHook }">
           <div class="talkActions">
             <div class="talkActions-watchLater">
-              <ion-button class="btnTalk watch-later-btn" @click.stop="() => talkNotesHook.toggleWatchLater()" v-if="conferenceDescriptor?.features.remindMeOnceVideosAreAvailableEnabled">
+              <ion-button class="btnTalk btn-watchLater" @click.stop="() => talkNotesHook.toggleWatchLater()" v-if="conferenceDescriptor?.features.remindMeOnceVideosAreAvailableEnabled">
                 <ion-icon v-if="!talkNotesHook.talkNotes?.watchLater" aria-hidden="true" src="/assets/icons/line/video-line.svg"></ion-icon>
                 <ion-icon v-if="!!talkNotesHook.talkNotes?.watchLater" aria-hidden="true" src="/assets/icons/solid/video.svg"></ion-icon>
               </ion-button>
             </div>
             <div class="talkActions-favorite">
-              <ion-button class="btnTalk favorite-btn" @click.stop="() => talkNotesHook.toggleFavorite()" v-if="conferenceDescriptor?.features.favoritesEnabled">
-                <span class="favorite-btn-group">
-                  <ion-icon class="favorite-btn-group-icon" v-if="!talkNotesHook.talkNotes?.isFavorite" aria-hidden="true" src="/assets/icons/line/bookmark-line-favorite.svg"></ion-icon>
-                  <ion-icon class="favorite-btn-group-icon" v-if="!!talkNotesHook.talkNotes?.isFavorite" aria-hidden="true" src="/assets/icons/solid/bookmark-favorite.svg"></ion-icon>
-                  <ion-label class="favorite-btn-group-nb" v-if="talkNotesHook.eventTalkStats !== undefined">{{ talkNotesHook.eventTalkStats.totalFavoritesCount }}</ion-label>
+              <ion-button class="btnTalk btn-favorite" @click.stop="() => talkNotesHook.toggleFavorite()" v-if="conferenceDescriptor?.features.favoritesEnabled">
+                <span class="btn-favorite-group">
+                  <ion-icon class="btn-favorite-group-icon" v-if="!talkNotesHook.talkNotes?.isFavorite" aria-hidden="true" src="/assets/icons/line/bookmark-line-favorite.svg"></ion-icon>
+                  <ion-icon class="btn-favorite-group-icon" v-if="!!talkNotesHook.talkNotes?.isFavorite" aria-hidden="true" src="/assets/icons/solid/bookmark-favorite.svg"></ion-icon>
+                  <ion-label class="btn-favorite-group-nb" v-if="talkNotesHook.eventTalkStats !== undefined">{{ talkNotesHook.eventTalkStats.totalFavoritesCount }}</ion-label>
                 </span>
               </ion-button>
             </div>
@@ -362,50 +362,6 @@ function openTalkDetails(talk: VoxxrinTalk) {
     flex-direction: row;
 
     &-watchLater, &-favorite { height: 100%;}
-
-    .btnTalk {
-      height: 100% !important;
-      min-height: 55px !important;
-      width: 58px !important;
-      margin: 0;
-      --border-radius: 0;
-      --background: rgba(white, 0.5);
-      --color: var(--app-primary);
-      border-left: 1px solid var(--app-grey-line);
-      font-size: 20px;
-      --padding-start: 0;
-      --padding-end: 0;
-      --background-activated-opacity: 0.1;
-      --background-hover-opacity: 0.1;
-      --box-shadow: none;
-
-      @media (prefers-color-scheme: dark) {
-        --background: rgba(white, 0.2);
-        --color: var(--app-white);
-        border-left: 1px solid var(--app-line-contrast);
-      }
-
-      .favorite-btn {
-        --size: 28px;
-
-        &-group {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          row-gap: 4px;
-
-          &-icon {
-            position: relative;
-            font-size: 26px;
-          }
-
-          &-nb {
-            font-size: 14px;
-            font-weight: 700;
-          }
-        }
-      }
-    }
 
     &-actions {
       display: flex;

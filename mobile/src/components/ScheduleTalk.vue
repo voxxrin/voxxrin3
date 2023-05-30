@@ -1,7 +1,7 @@
 <template>
   <ion-card class="talkCard"
             v-if="talkNotes"
-            :class="{ container: true, 'is-highlighted': isHighlighted(talk, talkNotes), 'is-favorited': talkNotes.isFavorite, 'is-to-watch-later': talkNotes.watchLater }"
+            :class="{ container: true, '_is-highlighted': isHighlighted(talk, talkNotes), '_has-favorited': talkNotes.isFavorite, '_has-to-watch-later': talkNotes.watchLater }"
             @click="$emit('talk-clicked', talk)">
     <div class="talkCard-head">
       <div class="track">
@@ -250,11 +250,10 @@ const theme = {
       }
     }
   }
-}
 
-//* States card talk *//
-::v-deep {
-  &.is-highlighted {
+  //* States card talk *//
+
+  &._is-highlighted {
     border : {
       top: 2px solid var(--voxxrin-event-theme-colors-secondary-hex);
       bottom: 2px solid var(--voxxrin-event-theme-colors-secondary-hex);
@@ -266,34 +265,6 @@ const theme = {
         top: 2px solid var(--app-white);
         bottom: 2px solid var(--app-white);
         right: 2px solid var(--app-white);
-      }
-    }
-
-    &.is-favorited {
-      border : {
-        top: 2px solid var(--app-primary-shade);
-        bottom: 2px solid var(--app-primary-shade);
-        right: 2px solid var(--app-primary-shade);
-      }
-
-      @media (prefers-color-scheme: dark) {
-        border : {
-          top: 2px solid var(--app-white);
-          bottom: 2px solid var(--app-white);
-          right: 2px solid var(--app-white);
-        }
-      }
-
-      &:before {
-        background: rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.6);
-      }
-
-      ion-thumbnail { border: 2px solid var(--app-primary-shade);}
-
-      .talkCard-footer {
-        border-color: var(--app-primary-shade);
-
-        .btnTalk { border-color: var(--app-primary-shade);}
       }
     }
 
@@ -342,7 +313,8 @@ const theme = {
         border-color: var(--app-white) !important;
       }
 
-      .btnTalk {
+
+      ::v-deep .btnTalk {
         border-width: 2px;
         border-color: var(--voxxrin-event-theme-colors-secondary-hex);
 
@@ -352,41 +324,68 @@ const theme = {
       }
     }
 
+    //* Add paint stain style when card favorited or Pin Feedback *//
+    &._has-favorited {
+      border : {
+        top: 2px solid var(--app-primary-shade);
+        bottom: 2px solid var(--app-primary-shade);
+        right: 2px solid var(--app-primary-shade);
+      }
+
+      @media (prefers-color-scheme: dark) {
+        border : {
+          top: 2px solid var(--app-white);
+          bottom: 2px solid var(--app-white);
+          right: 2px solid var(--app-white);
+        }
+      }
+
+      &:before { background: rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.6);}
+
+      ion-thumbnail { border: 2px solid var(--app-primary-shade);}
+
+      .talkCard-footer {
+        border-color: var(--app-primary-shade);
+
+        ::v-deep .btnTalk { border-color: var(--app-primary-shade);}
+      }
+    }
+
+    @keyframes scale-in-center {
+      0% {
+        -webkit-transform: scale(0);
+        transform: scale(0);
+        opacity: 1;
+      }
+      100% {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    //* TODO - Start - Delete when btn is component *//
     //* Change style type actions *//
     ion-button {
-      &.favorite-btn {
+      &.btn-favorite {
         --background: var(--voxxrin-event-theme-colors-primary-hex);
         --color: var(--voxxrin-event-theme-colors-primary-contrast-hex);
         border-left: 1px solid var(--app-primary-shade);
         --border-radius:  0 0 8px 0 !important;
       }
 
-      &.feedback-select-btn {
+      &.btn-watchLater {
         --background: var(--voxxrin-event-theme-colors-secondary-hex);
         --color: var(--voxxrin-event-theme-colors-secondary-contrast-hex);
         border-left: 1px solid var(--voxxrin-event-theme-colors-secondary-hex);
       }
-    }
-  }
 
-  @keyframes scale-in-center {
-    0% {
-      -webkit-transform: scale(0);
-      transform: scale(0);
-      opacity: 1;
-    }
-    100% {
-      -webkit-transform: scale(1);
-      transform: scale(1);
-      opacity: 1;
-    }
-  }
-
-  &.is-to-watch-later {
-    ion-button.watch-later-btn {
-      --background: var(--voxxrin-event-theme-colors-secondary-hex);
-      --color: var(--voxxrin-event-theme-colors-secondary-contrast-hex);
-      border-left: 1px solid var(--voxxrin-event-theme-colors-secondary-hex);
+      &.btn-feedbackSelect {
+        --background: var(--voxxrin-event-theme-colors-secondary-hex);
+        --color: var(--voxxrin-event-theme-colors-secondary-contrast-hex);
+        border-left: 1px solid var(--voxxrin-event-theme-colors-secondary-hex);
+      }
+      //* END - Delete when btn is component *//
     }
   }
 }

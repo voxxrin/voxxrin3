@@ -1,14 +1,14 @@
 /* Custom Ionic button component */
 
 ion-button {
-    //* Adjust Color
+    //* Adjust Ionic Btn Color
     &.button-default {
         @media (prefers-color-scheme: dark) {
             --background: var(--app-dark-contrast);
         }
     }
 
-    //* Adjust Type
+    //* Adjust Ionic Btn Type
     &.button-solid {
         @media (prefers-color-scheme: dark) {
             --background: var(--app-white);
@@ -33,7 +33,7 @@ ion-button {
         }
     }
 
-    //* Adjust Shapes
+    //* Adjust Ionic Btn Shapes
     &.button-round {
        &.button-default {
            --border-radius: 42px;
@@ -54,17 +54,42 @@ ion-button {
        }
    }
 
-    //* Adjust Size
+    //* Adjust Ionic Btn Size
     &.button-small {
         height: 44px !important;
         width: 44px !important;;
     }
 
-    //* Specific
-    &.btnUser  { --background: rgba(var(--app-white-transparent));}
+    //* Add Specific Styles Voxxrin Button *//
+    &.btnUser {
+        --background: rgba(var(--app-white-transparent));
+    }
+
+    &.btnTalk {
+        height: 100% !important;
+        min-height: 55px !important;
+        width: 58px !important;
+        margin: 0;
+        --border-radius: 0;
+        --background: rgba(white, 0.5);
+        --color: var(--app-primary);
+        border-left: 1px solid var(--app-grey-line);
+        font-size: 20px;
+        --padding-start: 0;
+        --padding-end: 0;
+        --background-activated-opacity: 0.1;
+        --background-hover-opacity: 0.1;
+        --box-shadow: none;
+
+        @media (prefers-color-scheme: dark) {
+            --background: rgba(white, 0.2);
+            --color: var(--app-white);
+            border-left: 1px solid var(--app-line-contrast);
+        }
+    }
 }
 
-//* Btn Float
+//* Ionic Btn Float
 ion-fab {
     ion-fab-button {
 
