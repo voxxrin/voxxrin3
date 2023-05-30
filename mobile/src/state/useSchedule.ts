@@ -62,10 +62,13 @@ function dailyScheduleDocument(eventDescriptor: VoxxrinConferenceDescriptor|unde
 
 export function prepareSchedules(
     conferenceDescriptor: VoxxrinConferenceDescriptor,
-    dayIds: Array<DayId>
+    currentDayId: DayId,
+    otherDayIds: Array<DayId>
 ) {
-    dayIds.forEach(async dayId => {
-        useSchedule(conferenceDescriptor, dayId);
+    [currentDayId, ...otherDayIds].forEach(async dayId => {
+        if(dayId !== currentDayId) {
+            useSchedule(conferenceDescriptor, dayId);
+        }
 
         const dailyScheduleDoc = dailyScheduleDocument(conferenceDescriptor, dayId)
         if(navigator.onLine && dailyScheduleDoc) {
