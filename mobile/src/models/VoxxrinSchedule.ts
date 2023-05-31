@@ -144,7 +144,7 @@ export function createVoxxrinDailyScheduleFromFirestore(event: VoxxrinConference
         // I mean, 12345 duration will become 987654 here
         // (with 6 digits we're safe ... it represents a timeslot duration of 277h...)
         const complementedDuration = 999999 - duration;
-        return `${timeslot.start} || ${complementedDuration}`;
+        return `${timeslot.start.toInstant().toString()} || ${complementedDuration}`;
     })
 
     const voxxrinSchedule: VoxxrinDailySchedule = {
