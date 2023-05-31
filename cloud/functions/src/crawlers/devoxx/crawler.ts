@@ -6,7 +6,13 @@ import {
     DevoxxScheduleItem,
     DevoxxScheduleSpeakerInfo
 } from "./types"
-import { DailySchedule, DetailedTalk, Speaker, Talk } from "../../../../../shared/dayly-schedule.firestore"
+import {
+    Break,
+    DailySchedule,
+    DetailedTalk,
+    Speaker,
+    Talk
+} from "../../../../../shared/dayly-schedule.firestore"
 import {TalkStats} from "../../../../../shared/feedbacks.firestore";
 import { FullEvent } from "../../models/Event";
 import { ISODatetime, ISOLocalDate } from "../../../../../shared/type-utils";
@@ -17,6 +23,7 @@ import {ConferenceDescriptor} from "../../../../../shared/conference-descriptor.
 import axios from "axios";
 import {EVENT_DESCRIPTOR_PARSER, TALK_FORMAT_PARSER} from "../crawler-parsers";
 import {CrawlerKind, TALK_FORMAT_FALLBACK_COLORS} from "../crawl";
+import {match} from "ts-pattern";
 
 const daysOfWeek = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
 
@@ -192,6 +199,14 @@ const crawlDevoxxDay = async (eventId: string, day: string) => {
         }).join("\n  -") + "\n------------------");
 
         if (items.every((item: DevoxxScheduleItem) => { return item.sessionType.isPause })) {
+            const icon = match<string, Break['icon']>(items[0].sessionType.name.toLowerCase())
+                .when(sessionTypeName => sessionTypeName.includes('meet') || sessionTypeName.includes('greet'), () => 'beer')
+                .when(sessionTypeName => sessionTypeName.includes('movie'), () => 'film')
+                .when(sessionTypeName => sessionTypeName.includes('lunch'), () => 'restaurant')
+                .when(sessionTypeName => sessionTypeName.includes('registration'), () => 'ticket')
+                .when(sessionTypeName => sessionTypeName.includes('travel'), () => 'train')
+                .when(sessionTypeName => sessionTypeName.includes('coffee'), () => 'cafe')
+                .otherwise(() => 'cafe')
             daySchedule.timeSlots.push({
                 id: key as any,
                 start: start as ISODatetime,
@@ -203,7 +218,7 @@ const crawlDevoxxDay = async (eventId: string, day: string) => {
                         id: items[0].room.id.toString(),
                         title: items[0].room.name
                     },
-                    icon: "cafe" // TODO - guess that
+                    icon
                 }
             }
             )
