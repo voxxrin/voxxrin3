@@ -78,7 +78,7 @@ import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
 
 const router = useRouter();
 const route = useRoute();
-const eventId = computed(() => new EventId(getRouteParamsValue(route, 'eventId')));
+const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')));
 const {conferenceDescriptor: event} = useSharedConferenceDescriptor(eventId);
 
 const { LL } = typesafeI18n()
@@ -107,9 +107,11 @@ watch([event, currentlySelectedDayId], ([confDescriptor, selectedDayId]) => {
       // - navigation to other days will be quickier
       // - if user switches to offline without navigating to these days, information will be in his cache anyway
       setTimeout(() => {
-          const otherDayIds = confDescriptor.days.filter(day => !day.id.isSameThan(currentlySelectedDayId.value)).map(d => d.id);
-          console.log(`Preparing schedule data for other days than currently selected one (${otherDayIds.map(id => id.value).join(", ")})`)
-          prepareSchedules(confDescriptor, otherDayIds);
+          if(isRefDefined(currentlySelectedDayId)) {
+              const otherDayIds = confDescriptor.days.filter(day => !day.id.isSameThan(currentlySelectedDayId.value)).map(d => d.id);
+              console.log(`Preparing schedule data for other days than currently selected one (${otherDayIds.map(id => id.value).join(", ")})`)
+              prepareSchedules(confDescriptor, currentlySelectedDayId.value, otherDayIds);
+          }
       }, 5000)
   }
 }, {immediate: true})
