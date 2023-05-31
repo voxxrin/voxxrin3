@@ -127,7 +127,7 @@ export const WEB2DAY_CRAWLER: CrawlerKind<typeof WEB2DAY_PARSER> = {
                     minutesDuration, speakerUrls,
                 };
             }).toArray()
-        ));
+        )).filter(talk => talk?.title.indexOf("⚠️ CONFÉRENCE ANNULÉE ⚠️") === -1);
 
         const uniqueSpeakerUrls = Array.from(new Set(rawDetailedTalks.flatMap(t => t!.speakerUrls.map(sp => sp.speakerUrl))))
         const speakers = await Promise.all(uniqueSpeakerUrls.map(async spUrl => {
