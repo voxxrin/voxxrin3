@@ -73,15 +73,29 @@ export const WEB2DAY_CRAWLER: CrawlerKind<typeof WEB2DAY_PARSER> = {
 
                 const eventType = $talkPage(`.eventSingle-type`).text().trim()
                 const dayId = $talkPage(`.eventSingle-day`).text().trim()
-                const day = descriptor.days.find(d => d.id === dayId)!
+                const day = descriptor.days.find(d => d.id === dayId)
+                if(!day) {
+                    throw new Error(`No day found matching ${dayId} in descriptor.days (${descriptor.days.map(d => d.id).join(", ")})`)
+                }
+
                 const rawTimeslot = $talkPage(`.eventSingle-hour`).text().trim()
-                const {start, end} = extractRangeFromTimeslot(rawTimeslot, day, descriptor.timezone)!;
+                const {start, end} = extractRangeFromTimeslot(rawTimeslot, day, descriptor.timezone);
                 const minutesDuration = start.until(end).total('minutes')
                 const roomId = $talkPage(`.eventSingle-room`).text().trim()
-                const room = descriptor.rooms.find(r => r.id === roomId)!;
+                const room = descriptor.rooms.find(r => r.id === roomId);
+                if(!room) {
+                    throw new Error(`No room found matching ${roomId} in descriptor.rooms (${descriptor.rooms.map(r => r.id).join(", ")})`)
+                }
+
                 const universe = $talkPage(`.eventSingle-universe span`).text().trim()
                 const track = descriptor.talkTracks.find(t => t.id === universe)!;
+                if(!track) {
+                    throw new Error(`No track found matching ${universe} in descriptor.talkTracks (${descriptor.talkTracks.map(t => t.id).join(", ")})`)
+                }
                 const format = descriptor.talkFormats.find(f => f.id === `${eventType}@${minutesDuration}`)!
+                if(!format) {
+                    throw new Error(`No talk format found matching [${eventType}@${minutesDuration}] in descriptor.talkFormats (${descriptor.talkFormats.map(f => f.id).join(", ")})`)
+                }
 
                 let summary: string|null, title: string|null;
                 if(lang === 'EN') {
@@ -242,7 +256,8 @@ export const WEB2DAY_CRAWLER: CrawlerKind<typeof WEB2DAY_PARSER> = {
             }, [] as TalksTimeSlot[])
 
 
-            const breakTimeSlots: BreakTimeSlot[] = descriptor.breaks.filter(b => b.dayId === day.id)
+            const breakTimeSlots: BreakTimeSlot[] = descriptor.breaks
+                .filter(b => b.dayId === day.id)
                 .map(breakDescriptor => {
                     const breakTimeSlot: BreakTimeSlot = {
                         id: `${breakDescriptor.breakTimeslot.start}--${breakDescriptor.breakTimeslot.end}`,
