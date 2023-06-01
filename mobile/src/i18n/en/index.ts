@@ -36,7 +36,10 @@ const en = {
 	Currently_selected_timeslot: 'Currently selected timeslot',
 	Overlapping_timeslots: '{nrOfOverlappingSlots} Overlapping time slot{{nrOfOverlappingSlots:s}}',
 	In_favorites: 'In favorites',
-	Show_non_favorited_talks: 'Show non-favorited talk{{nrOfNonFavoritedTalks:s}}'
+	Show_non_favorited_talks: 'Show non-favorited talk{{nrOfNonFavoritedTalks:s}}',
+	Watch_later_all_favorited_talks: 'Watch later all favorited talks',
+	I_didnt_attend_any_talk: "I didn't attend any talk",
+	During_this_time_slot: "During this time slot",
 } satisfies BaseTranslation
 
 export default en

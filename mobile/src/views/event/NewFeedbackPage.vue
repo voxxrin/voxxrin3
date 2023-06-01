@@ -24,11 +24,6 @@
         </ion-toolbar>
       </ion-header>
 
-      <ion-header class="stepHeader">
-        <span class="stepHeader-nb">1</span>
-        Pick the talk you attended
-      </ion-header>
-
       <ion-header class="subHeader">
         <div class="subHeader-schedule">
           <ion-icon class="_accordion-icon _future-icon" aria-hidden="true" src="assets/icons/solid/calendar.svg"></ion-icon>
@@ -38,6 +33,11 @@
           <ion-icon aria-hidden="true" src="/assets/icons/solid/clock.svg"></ion-icon>
           {{labelledTimeslotRef.label.full}}
         </div>
+      </ion-header>
+
+      <ion-header class="stepHeader">
+        <span class="stepHeader-nb">1</span>
+        {{LL.Pick_the_talk_you_attended()}}
       </ion-header>
 
       <div>
@@ -65,7 +65,12 @@
           </ion-label>
         </ion-header>
         <div>
-          <feedback-talk-selector :talks="labelledTimeslotRef.talks || []" :event-descriptor="confDescriptorRef">
+          <feedback-talk-selector
+              :event-descriptor="confDescriptorRef"
+              :talks="labelledTimeslotRef.talks || []"
+              @talk-selected="selectTalk($event)"
+              @talk-deselected="deselectTalk()"
+          >
           </feedback-talk-selector>
         </div>
         <div v-if="labelledTimeslotRef.overlappingTimeSlots.length">
@@ -84,7 +89,12 @@
                 </ion-label>
               </ion-item>
               <div slot="content">
-                <feedback-talk-selector :talks="overlappingTimeslot.talks" :event-descriptor="confDescriptorRef">
+                <feedback-talk-selector
+                    :event-descriptor="confDescriptorRef"
+                    :talks="overlappingTimeslot.talks"
+                    @talk-selected="selectTalk($event)"
+                    @talk-deselected="deselectTalk()"
+                >
                 </feedback-talk-selector>
               </div>
             </ion-accordion>
@@ -94,16 +104,21 @@
     </ion-content>
     <ion-footer class="feedBackFooter">
       <ion-toolbar>
-        <ion-button size="small" fill="outline" shape="round" expand="block">
+        <ion-button size="small" fill="outline" shape="round" expand="block" v-if="event?.features.remindMeOnceVideosAreAvailableEnabled">
             <ion-icon slot="start" src="assets/icons/solid/video.svg"  aria-hidden="true"></ion-icon>
-              Subscribe redif on all favorited talks
+              {{LL.Watch_later_all_favorited_talks()}}
         </ion-button>
         <div class="feedBackFooter-group">
-          <ion-button size="small" fill="solid" color="medium" shape="round" expand="block">Cancel</ion-button>
-          <ion-button size="small" fill="outline" shape="round" expand="block">
+          <ion-button size="small" fill="solid" color="medium" shape="round" expand="block">{{ LL.Cancel() }}</ion-button>
+          <ion-button size="small" fill="outline" shape="round" expand="block" v-if="selectedTalk === undefined">
             <span class="contentDidntAttendTalk">
-                I didn't attend any talk
-                <small>(during this time slot)</small>
+              {{LL.I_didnt_attend_any_talk()}}
+                <small>({{ LL.During_this_time_slot() }})</small>
+            </span>
+          </ion-button>
+          <ion-button size="small" fill="solid" shape="round" expand="block" v-if="selectedTalk !== undefined" @click="rateSelectedTalk()">
+            <span class="contentDidntAttendTalk">
+              {{LL.Add_Feedback()}}
             </span>
           </ion-button>
         </div>
@@ -117,7 +132,7 @@ import {EventId} from "@/models/VoxxrinEvent";
 import {getRouteParamsValue} from "@/views/vue-utils";
 import {useRoute} from "vue-router";
 import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
-import {computed, unref} from "vue";
+import {computed, ref, Ref, unref} from "vue";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {calendar, timeOutline} from "ionicons/icons";
 import {DayId} from "@/models/VoxxrinDay";
@@ -127,10 +142,9 @@ import {
     ScheduleTimeSlotId, VoxxrinScheduleTalksTimeSlot
 } from "@/models/VoxxrinSchedule";
 import {useSchedule} from "@/state/useSchedule";
-import TalkFormatGroupsBreakdown from "@/components/TalkFormatGroupsBreakdown.vue";
 import {IonAccordion, IonAccordionGroup} from "@ionic/vue";
 import FeedbackTalkSelector from "@/components/FeedbackTalkSelector.vue";
-import {TalkId} from "@/models/VoxxrinTalk";
+import {VoxxrinTalk} from "@/models/VoxxrinTalk";
 
 const { LL } = typesafeI18n()
 
@@ -143,6 +157,14 @@ const timeslotIdRef = computed(() => new ScheduleTimeSlotId(getRouteParamsValue(
 const {conferenceDescriptor: confDescriptorRef } = useSharedConferenceDescriptor(eventIdRef);
 
 const { schedule: scheduleRef } = useSchedule(confDescriptorRef, dayIdRef)
+
+const selectedTalk: Ref<VoxxrinTalk|undefined> = ref(undefined)
+function selectTalk(talk: VoxxrinTalk) {
+    selectedTalk.value = talk;
+}
+function deselectTalk() {
+    selectedTalk.value = undefined;
+}
 
 type LabelledTimeslot = VoxxrinScheduleTalksTimeSlot & {label: ReturnType<typeof getTimeslotLabel>};
 

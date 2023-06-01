@@ -161,6 +161,18 @@ type RootTranslation = {
 	 * S​h​o​w​ ​n​o​n​-​f​a​v​o​r​i​t​e​d​ ​t​a​l​k​{​{​s​}​}
 	 */
 	Show_non_favorited_talks: string
+	/**
+	 * W​a​t​c​h​ ​l​a​t​e​r​ ​a​l​l​ ​f​a​v​o​r​i​t​e​d​ ​t​a​l​k​s
+	 */
+	Watch_later_all_favorited_talks: string
+	/**
+	 * I​ ​d​i​d​n​'​t​ ​a​t​t​e​n​d​ ​a​n​y​ ​t​a​l​k
+	 */
+	I_didnt_attend_any_talk: string
+	/**
+	 * D​u​r​i​n​g​ ​t​h​i​s​ ​t​i​m​e​ ​s​l​o​t
+	 */
+	During_this_time_slot: string
 }
 
 export type TranslationFunctions = {
@@ -308,6 +320,18 @@ export type TranslationFunctions = {
 	 * Show non-favorited talk{{s}}
 	 */
 	Show_non_favorited_talks: (arg: { nrOfNonFavoritedTalks: number | string | boolean }) => LocalizedString
+	/**
+	 * Watch later all favorited talks
+	 */
+	Watch_later_all_favorited_talks: () => LocalizedString
+	/**
+	 * I didn't attend any talk
+	 */
+	I_didnt_attend_any_talk: () => LocalizedString
+	/**
+	 * During this time slot
+	 */
+	During_this_time_slot: () => LocalizedString
 }
 
 export type Formatters = {}
