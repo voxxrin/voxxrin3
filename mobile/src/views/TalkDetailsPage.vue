@@ -272,32 +272,4 @@ const theme = computed(() => {
       }
     }
   }
-
-  .divider {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-
-    .titleDivider {
-      font-weight: bold;
-      color: var(--app-beige-dark);
-
-      @media (prefers-color-scheme: dark) {
-        opacity: 0.8;
-      }
-    }
-
-    .divider-separator {
-      display: block;
-      height: 1px;
-      width: 100%;
-      margin-left: 16px;
-      background-color: var(--app-beige-line);
-      flex: 1;
-
-      @media (prefers-color-scheme: dark) {
-        background-color: var(--app-line-contrast);
-      }
-    }
-  }
 </style>

@@ -1,7 +1,6 @@
 /* Custom Ionic form component */
 
 /* Input */
-
 ion-input {
 
   &.sc-ion-input-md-h {
@@ -52,5 +51,20 @@ ion-input {
       font-size: 28px;
       z-index: 1;
     }
+  }
+}
+
+/* Checkbox */
+ion-checkbox {
+  --checkbox-background: transparent;
+  --border-color: var(--app-grey-medium);
+  --checkbox-background-checked: var(--voxxrin-event-theme-colors-primary-hex);
+  --border-color-checked: var(--voxxrin-event-theme-colors-primary-hex);
+  --size: 24px;
+  color: var(--app-grey-dark);
+  font-weight: 600;
+
+  &.checkbox-checked {
+    color: var(--voxxrin-event-theme-colors-primary-hex);
   }
 }
