@@ -6,6 +6,28 @@ ion-header  {
         --padding-end: 16px;
     }
 
+    &.toolbarHeader {
+        border-bottom: none;
+
+        ion-toolbar {
+            --padding-top: 4px;
+            --padding-bottom: 4px;
+            --background: var(--app-white);
+
+            @media (prefers-color-scheme: dark) {
+                --background: var(--app-dark-contrast);
+            }
+        }
+
+        ion-title {
+            padding-inline: 0;
+            position: relative;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: left;
+        }
+    }
+
     &.stickyHeader {
         position: sticky;
         top: -1px;
@@ -37,7 +59,7 @@ ion-header  {
             }
         }
 
-        .stickyHeader-title {
+        ion-title {
             padding-inline: 0;
             position: relative;
             font-size: 18px;
@@ -132,6 +154,14 @@ ion-header  {
 
         @media (prefers-color-scheme: dark) {
             background-color: var(--app-light-contrast);
+        }
+
+        ion-title {
+            padding-inline: 0;
+            position: relative;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: left;
         }
 
         .subHeader-schedule, .subHeader-roomn, .subHeader-timeSlot {

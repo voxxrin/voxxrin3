@@ -2,9 +2,9 @@
   <ion-page>
     <ion-content :fullscreen="true">
       <current-event-header v-if="event" :event="event"/>
-      <ion-header class="stickyHeader">
+      <ion-header class="toolbarHeader">
         <ion-toolbar>
-          <ion-title class="stickyHeader-title" slot="start">{{ LL.Schedule() }}</ion-title>
+          <ion-title slot="start">{{ LL.Schedule() }}</ion-title>
           <ion-button class="ion-margin-end" slot="end" shape="round" size="small" fill="outline">
             <ion-icon src="/assets/icons/solid/settings-cog.svg"></ion-icon>
           </ion-button>
@@ -14,11 +14,13 @@
         </ion-toolbar>
       </ion-header>
 
-      <day-selector
-          :selected-day-id="currentlySelectedDayId"
-          :days="event?.days || []"
-          @day-selected="(day) => changeDayTo(day)">
-      </day-selector>
+      <ion-header class="stickyHeader">
+        <day-selector
+            :selected-day-id="currentlySelectedDayId"
+            :days="event?.days || []"
+            @day-selected="(day) => changeDayTo(day)">
+        </day-selector>
+      </ion-header>
 
       <ion-accordion-group :multiple="true" v-if="event && currentlySelectedDayId" :value="expandedTimeslotIds">
           <time-slot-accordion

@@ -6,7 +6,7 @@
 
       <ion-header class="stickyHeader">
         <ion-toolbar>
-          <ion-title class="stickyHeader-title" slot="start" >Feedbacks</ion-title>
+          <ion-title slot="start" >Feedbacks</ion-title>
           <ion-button slot="end" shape="round" size="small">
             <ion-icon src="/assets/icons/line/search-line.svg"></ion-icon>
           </ion-button>
