@@ -217,7 +217,7 @@ function rateSelectedTalk() {
       --padding-start: 4px;
       --padding-end: 4px;
       --min-height: 44px;
-      box-shadow: 0px 3px 20px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 3px 20px rgba(0, 0, 0, 0.5);
     }
 
     &-group {

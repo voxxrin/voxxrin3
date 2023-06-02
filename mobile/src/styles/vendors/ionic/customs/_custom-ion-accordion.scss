@@ -9,6 +9,8 @@
 }
 
 .slot-accordion {
+  border-bottom: 1px solid var(--app-beige-light);
+
   @media (prefers-color-scheme: dark) {
     border-bottom: 1px solid var(--app-light-contrast);
   }

@@ -1,6 +1,7 @@
 /* Custom Ionic button component */
 
 ion-button {
+    text-transform: inherit;
 
     //* Adjust Ionic Btn Color
     &.button-default {
