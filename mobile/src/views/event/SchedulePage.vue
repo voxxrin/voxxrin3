@@ -5,12 +5,18 @@
       <ion-header class="stickyHeader">
         <ion-toolbar>
           <ion-title class="stickyHeader-title" slot="start">{{ LL.Schedule() }}</ion-title>
-          <ion-input size="10" ref="$searchInput"
-               :debounce="300"
-               :placeholder="`${LL.Search()}...`"
-               :class="{ 'search-input': true, displayed: searchFieldDisplayed }"
-               @ionInput="(ev) => searchTermsRef = ''+ev.target.value"
-          />
+          <div v-if="searchFieldDisplayed" class="search-input">
+            <ion-input size="10" ref="$searchInput"
+                       :debounce="300"
+                       :placeholder="`${LL.Search()}...`"
+                       @ionInput="(ev) => searchTermsRef = ''+ev.target.value"
+            />
+            <ion-icon class="iconInput" src="/assets/icons/line/search-line.svg"></ion-icon>
+            <ion-button shape="round" size="small" fill="outline" @click="toggleSearchField()">
+              <ion-icon src="/assets/icons/line/close-line.svg"></ion-icon>
+            </ion-button>
+          </div>
+
           <ion-button class="ion-margin-end" slot="end" shape="round" size="small" fill="outline" @click="openSchedulePreferencesModal()">
             <ion-icon src="/assets/icons/solid/settings-cog.svg"></ion-icon>
           </ion-button>
@@ -83,6 +89,7 @@ import {typesafeI18n} from "@/i18n/i18n-vue";
 import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
 import {filterTalksMatching} from "@/models/VoxxrinTalk";
 import SchedulePreferencesModal from '@/components/modals/SchedulePreferencesModal.vue'
+import {search, searchOutline} from "ionicons/icons";
 
 const router = useRouter();
 const route = useRoute();
@@ -253,13 +260,6 @@ async function openSchedulePreferencesModal() {
   ion-toolbar {
     position: sticky;
     top: 0;
-  }
-
-  .search-input {
-    display: none;
-    &.displayed {
-      display: block;
-    }
   }
 
   .listFeedbackSlot {
