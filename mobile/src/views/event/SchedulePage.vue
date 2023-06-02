@@ -11,7 +11,7 @@
                :class="{ 'search-input': true, displayed: searchFieldDisplayed }"
                @ionInput="(ev) => searchTermsRef = ''+ev.target.value"
           />
-          <ion-button class="ion-margin-end" slot="end" shape="round" size="small" fill="outline">
+          <ion-button class="ion-margin-end" slot="end" shape="round" size="small" fill="outline" @click="openSchedulePreferencesModal()">
             <ion-icon src="/assets/icons/solid/settings-cog.svg"></ion-icon>
           </ion-button>
           <ion-button slot="end" shape="round" size="small" @click="toggleSearchField()">
@@ -59,7 +59,7 @@ import {
     IonFab,
     IonFabList,
     IonAccordionGroup,
-    alertController, IonInput,
+    alertController, IonInput, modalController,
 } from '@ionic/vue';
 import {useRoute, useRouter} from "vue-router";
 import {onMounted, ref, unref, watch} from "vue";
@@ -82,6 +82,7 @@ import {useCurrentClock} from "@/state/useCurrentClock";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
 import {filterTalksMatching} from "@/models/VoxxrinTalk";
+import SchedulePreferencesModal from '@/components/modals/SchedulePreferencesModal.vue'
 
 const router = useRouter();
 const route = useRoute();
@@ -221,6 +222,16 @@ function toggleSearchField() {
     } else {
         searchTermsRef.value = '';
     }
+}
+
+async function openSchedulePreferencesModal() {
+    const modal = await modalController.create({
+        component: SchedulePreferencesModal,
+    });
+    modal.present();
+
+    const { data, role } = await modal.onWillDismiss();
+    console.log(`TODO: Update schedule local preferences`)
 }
 </script>
 
