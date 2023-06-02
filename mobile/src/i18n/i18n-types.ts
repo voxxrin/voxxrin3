@@ -71,6 +71,10 @@ type RootTranslation = {
 	 */
 	Schedule: string
 	/**
+	 * S​e​a​r​c​h
+	 */
+	Search: string
+	/**
 	 * F​a​v​o​r​i​t​e​s
 	 */
 	Favorites: string
@@ -195,6 +199,10 @@ export type TranslationFunctions = {
 	 * Schedule
 	 */
 	Schedule: () => LocalizedString
+	/**
+	 * Search
+	 */
+	Search: () => LocalizedString
 	/**
 	 * Favorites
 	 */

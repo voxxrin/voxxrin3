@@ -15,6 +15,7 @@ const en = {
 	Visit_website: `Visit website`,
 	Cancel: `Cancel`,
 	Schedule: `Schedule`,
+	Search: `Search`,
 	Favorites: `Favorites`,
 	Feedbacks: `Feedbacks`,
 	Infos: `Infos`,

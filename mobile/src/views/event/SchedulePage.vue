@@ -5,10 +5,11 @@
       <ion-header class="stickyHeader">
         <ion-toolbar>
           <ion-title class="stickyHeader-title" slot="start">{{ LL.Schedule() }}</ion-title>
+          <ion-input size="10" :placeholder="`${LL.Search()}...`" :class="{ 'search-input': true, displayed: searchFieldDisplayed }"/>
           <ion-button class="ion-margin-end" slot="end" shape="round" size="small" fill="outline">
             <ion-icon src="/assets/icons/solid/settings-cog.svg"></ion-icon>
           </ion-button>
-          <ion-button slot="end" shape="round" size="small">
+          <ion-button slot="end" shape="round" size="small" @click="searchFieldDisplayed = !searchFieldDisplayed">
             <ion-icon src="/assets/icons/line/search-line.svg"></ion-icon>
           </ion-button>
         </ion-toolbar>
@@ -53,7 +54,7 @@ import {
     IonFab,
     IonFabList,
     IonAccordionGroup,
-    alertController,
+    alertController, IonInput,
 } from '@ionic/vue';
 import {useRoute, useRouter} from "vue-router";
 import {computed, onMounted, ref, watch} from "vue";
@@ -92,6 +93,7 @@ const { schedule: currentSchedule } = useSchedule(event, currentlySelectedDayId)
 const timeslots = ref<Array<VoxxrinScheduleTimeSlot & {feedback: VoxxrinTimeslotFeedback|undefined}>>([]);
 const missingFeedbacksPastTimeslots = ref<Array<{start: string, end: string, timeslot: VoxxrinScheduleTimeSlot}>>([])
 const expandedTimeslotIds = ref<string[]>([])
+const searchFieldDisplayed = ref(false);
 
 onMounted(async () => {
     console.log(`SchedulePage mounted !`)
@@ -213,6 +215,13 @@ function toggleExpandedTimeslot(timeslot: VoxxrinScheduleTimeSlot) {
   ion-toolbar {
     position: sticky;
     top: 0;
+  }
+
+  .search-input {
+    display: none;
+    &.displayed {
+      display: block;
+    }
   }
 
   .listFeedbackSlot {
