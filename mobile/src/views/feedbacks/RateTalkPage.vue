@@ -135,6 +135,11 @@ const {labelledTimeslotAndScheduleAndTalkRef} = useFindLabelledTimeslotContainin
   box-shadow: rgba(0, 0, 0, 0.25) 0px 1px 55px, rgba(0, 0, 0, 0.12) -3px -15px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 1px -5px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
   z-index: 1;
 
+  @media (prefers-color-scheme: dark) {
+    background-color: var(--app-dark-contrast);
+    border: 1px solid var(--app-line-contrast);
+  }
+
   ion-list {
     padding-top: 0;
     background: transparent;

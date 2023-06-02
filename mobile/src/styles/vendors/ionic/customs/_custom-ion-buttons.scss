@@ -18,6 +18,13 @@ ion-button {
         --border-color: var(--app-beige-line) !important;
         --border-width: 1px;
         --border-style: solid;
+
+        @media (prefers-color-scheme: dark) {
+            --ion-color-base: transparent !important;
+            --ion-color-contrast: var(--app-grey-medium) !important;
+            --background: transparent !important;
+            --border-color: var(--app-line-contrast) !important;
+        }
     }
 
     //* Adjust Ionic Btn Type

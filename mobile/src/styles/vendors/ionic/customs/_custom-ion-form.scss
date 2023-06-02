@@ -77,6 +77,11 @@ ion-textarea {
     --border-radius: var(--app-radius-form);
     border-radius: var(--app-radius-form);
     border: 1px solid var(--app-beige-line);
+
+    @media (prefers-color-scheme: dark) {
+      --border-color: var(--app-line-contrast);
+      --background: transparent;
+    }
   }
 }
 
@@ -88,7 +93,12 @@ ion-checkbox {
   --border-color-checked: var(--voxxrin-event-theme-colors-primary-hex);
   --size: 24px;
   color: var(--app-grey-dark);
-  font-weight: 600;
+  font-weight: 400;
+
+  @media (prefers-color-scheme: dark) {
+    --border-color: var(--app-line-contrast);
+    color: var(--app-grey-medium);
+  }
 
   &.checkbox-checked {
     color: var(--voxxrin-event-theme-colors-primary-hex);

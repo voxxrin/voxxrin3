@@ -2,12 +2,16 @@
 
   ion-toolbar {
     --background: var(--app-white);
-    --padding-top: 12px;
+    --padding-top: 8px;
     --padding-bottom: 8px;
     --padding-start: 4px;
     --padding-end: 4px;
     --min-height: 44px;
     box-shadow: 0 3px 20px rgba(0, 0, 0, 0.5);
+
+    @media (prefers-color-scheme: dark) {
+      --background: var(--app-background);
+    }
   }
 
   &-group {

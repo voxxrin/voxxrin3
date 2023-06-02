@@ -176,6 +176,10 @@ function rateSelectedTalk() {
     color: white;
     z-index: 1;
 
+    @media (prefers-color-scheme: dark) {
+      background: var(--app-light-contrast);
+    }
+
     &-start {
       display: flex;
       flex-direction: column;
@@ -205,6 +209,11 @@ function rateSelectedTalk() {
       padding: 4px 12px;
       font-size: 12px;
       background-color: var(--app-primary);
+      z-index: 1;
+
+      @media (prefers-color-scheme: dark) {
+        background: var(--app-light-contrast);
+      }
     }
   }
 
