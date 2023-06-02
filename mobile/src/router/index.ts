@@ -14,6 +14,7 @@ const routes: Array<RouteRecordRaw> = [
     { path: 'infos', component: () => import('@/views/event/InfosPage.vue') },
   ]},
   { path: '/events/:eventId/new-feedback-for-timeslot/:timeslotId', component: () => import('@/views/event/NewFeedbackPage.vue') },
+  { path: '/events/:eventId/rate-talk/:talkId', component: () => import('@/views/RateTalkPage.vue') },
   { path: '/events/:eventId/talks/:talkId/details', component: () => import('@/views/TalkDetailsPage.vue') },
 ]
 

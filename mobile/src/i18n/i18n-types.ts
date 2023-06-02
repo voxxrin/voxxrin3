@@ -173,6 +173,10 @@ type RootTranslation = {
 	 * D​u​r​i​n​g​ ​t​h​i​s​ ​t​i​m​e​ ​s​l​o​t
 	 */
 	During_this_time_slot: string
+	/**
+	 * S​h​a​r​e​ ​y​o​u​r​ ​f​e​e​d​b​a​c​k
+	 */
+	Share_your_feedback: string
 }
 
 export type TranslationFunctions = {
@@ -332,6 +336,10 @@ export type TranslationFunctions = {
 	 * During this time slot
 	 */
 	During_this_time_slot: () => LocalizedString
+	/**
+	 * Share your feedback
+	 */
+	Share_your_feedback: () => LocalizedString
 }
 
 export type Formatters = {}

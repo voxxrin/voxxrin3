@@ -150,6 +150,19 @@ const overlappingTimeslots = computed((): Array<LabelledTimeslot> => {
     return overlappingTS;
 })
 
+const {triggerTabbedPageNavigate} = useTabbedPageNav()
+
+function rateSelectedTalk() {
+    if(isRefUndefined(event) || isRefUndefined(selectedTalk)) {
+        console.warn(`rateSelectedTalk() triggered with empty event or selected talk !`)
+        return;
+    }
+
+    if(isRefDefined(event) && isRefDefined(selectedTalk)) {
+        triggerTabbedPageNavigate(`/events/${event.value.id.value}/rate-talk/${selectedTalk.value.id.value}`, 'forward', 'replace');
+    }
+}
+
 </script>
 
 <style scoped lang="scss">
