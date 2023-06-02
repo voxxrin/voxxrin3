@@ -20,6 +20,8 @@
     "run-prod-ios": "NODE_ENV=prod npx cap sync ios && NODE_ENV=prod npx cap run ios",
     "buildrun-prod-android": "npm run build && npm run run-prod-android",
     "buildrun-prod-ios": "npm run build && npm run run-prod-ios",
+    "buildsync-prod-android": "npm run build && NODE_ENV=prod npx cap sync android",
+    "buildsync-prod-ios": "npm run build && NODE_ENV=prod npx cap sync ios",
     "typesafe-i18n": "typesafe-i18n"
   },
   "dependencies": {
