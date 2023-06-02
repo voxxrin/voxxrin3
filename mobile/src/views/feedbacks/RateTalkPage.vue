@@ -59,7 +59,8 @@
               </div>
 
               <ion-textarea aria-label="Custom input"
-                            placeholder="Enter text">
+                            placeholder="Enter text"
+                            auto-grow>
               </ion-textarea>
             </div>
           </div>
