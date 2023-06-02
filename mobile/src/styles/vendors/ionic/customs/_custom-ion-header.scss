@@ -180,6 +180,10 @@ ion-header  {
             --padding-start: 54px;
             --background: var(--app-white);
             font-size: 18px;
+
+            @media (prefers-color-scheme: dark) {
+                --background: var(--app-medium-contrast);
+            }
         }
 
         ion-input:focus + ion-icon {
