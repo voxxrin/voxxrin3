@@ -85,7 +85,7 @@
         <ion-list class="talkDetails-speakers-list">
           <ion-item v-for="(speaker, index) in talk?.speakers" :key="speaker.id.value">
             <ion-avatar>
-              <img :src="speaker.photoUrl" />
+              <img :src="speaker.photoUrl===null?undefined:speaker.photoUrl" />
             </ion-avatar>
             <div class="speakerInfo">
               <div class="speakerInfo-name">
