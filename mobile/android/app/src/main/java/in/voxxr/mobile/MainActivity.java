@@ -1,4 +1,4 @@
-package com.voxxrin3.mobile;
+package in.voxxr.mobile;
 
 import com.getcapacitor.BridgeActivity;
 
