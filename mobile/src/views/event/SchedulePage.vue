@@ -119,7 +119,8 @@ watch([event, currentSchedule], ([confDescriptor, currentSchedule]) => {
     if(currentSchedule && confDescriptor) {
         timeslots.value = currentSchedule.timeSlots.map((ts: VoxxrinScheduleTimeSlot, idx): TalkTimeslotWithFeedback => {
             const label = getTimeslotLabel(ts);
-            const feedback: VoxxrinTimeslotFeedback|undefined = idx%2===0?{id: ts.id}:undefined;
+            // TODO: change me once feedback will be persisted
+            const feedback: VoxxrinTimeslotFeedback|undefined = undefined;
             // yes that's weird ... but looks like TS is not very smart here 🤔
             if(ts.type === 'talks') {
                 return { ...ts, label, feedback };
