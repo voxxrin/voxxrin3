@@ -5,7 +5,12 @@
       <ion-header class="stickyHeader">
         <ion-toolbar>
           <ion-title class="stickyHeader-title" slot="start">{{ LL.Schedule() }}</ion-title>
-          <ion-input size="10" :placeholder="`${LL.Search()}...`" :class="{ 'search-input': true, displayed: searchFieldDisplayed }"/>
+          <ion-input size="10"
+               :debounce="300"
+               :placeholder="`${LL.Search()}...`"
+               :class="{ 'search-input': true, displayed: searchFieldDisplayed }"
+               @ionInput="(ev) => searchTermsRef = ''+ev.target.value"
+          />
           <ion-button class="ion-margin-end" slot="end" shape="round" size="small" fill="outline">
             <ion-icon src="/assets/icons/solid/settings-cog.svg"></ion-icon>
           </ion-button>
@@ -23,7 +28,7 @@
 
       <ion-accordion-group :multiple="true" v-if="event && currentlySelectedDayId" :value="expandedTimeslotIds">
           <time-slot-accordion
-              v-for="(timeslot, index) in timeslots" :key="timeslot.id.value"
+              v-for="(timeslot, index) in timeslotsRef" :key="timeslot.id.value"
               :timeslot-feedback="timeslot.feedback" :timeslot="timeslot"
               :event="event"
               @add-timeslot-feedback-clicked="(ts) => showAlertForTimeslot(ts)"
@@ -57,10 +62,10 @@ import {
     alertController, IonInput,
 } from '@ionic/vue';
 import {useRoute, useRouter} from "vue-router";
-import {computed, onMounted, ref, watch} from "vue";
+import {onMounted, ref, unref, watch} from "vue";
 import {prepareSchedules, useSchedule} from "@/state/useSchedule";
 import CurrentEventHeader from "@/components/CurrentEventHeader.vue";
-import {getRouteParamsValue, isRefDefined, useInterval} from "@/views/vue-utils";
+import {getRouteParamsValue, isRefDefined, isRefUndefined, useInterval} from "@/views/vue-utils";
 import {EventId} from "@/models/VoxxrinEvent";
 import {DayId, VoxxrinDay} from "@/models/VoxxrinDay";
 import {
@@ -76,6 +81,7 @@ import {VoxxrinTimeslotFeedback} from "@/models/VoxxrinFeedback";
 import {useCurrentClock} from "@/state/useCurrentClock";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
+import {filterTalksMatching} from "@/models/VoxxrinTalk";
 
 const router = useRouter();
 const route = useRoute();
@@ -90,10 +96,11 @@ const changeDayTo = (day: VoxxrinDay) => {
 }
 
 const { schedule: currentSchedule } = useSchedule(event, currentlySelectedDayId)
-const timeslots = ref<Array<VoxxrinScheduleTimeSlot & {feedback: VoxxrinTimeslotFeedback|undefined}>>([]);
+const timeslotsRef = ref<Array<VoxxrinScheduleTimeSlot & {feedback: VoxxrinTimeslotFeedback|undefined}>>([]);
 const missingFeedbacksPastTimeslots = ref<Array<{start: string, end: string, timeslot: VoxxrinScheduleTimeSlot}>>([])
 const expandedTimeslotIds = ref<string[]>([])
 const searchFieldDisplayed = ref(false);
+const searchTermsRef = ref<string|undefined>(undefined);
 
 onMounted(async () => {
     console.log(`SchedulePage mounted !`)
@@ -118,16 +125,18 @@ watch([event, currentlySelectedDayId], ([confDescriptor, selectedDayId]) => {
   }
 }, {immediate: true})
 
-watch([event, currentSchedule], ([confDescriptor, currentSchedule]) => {
+watch([event, currentSchedule, searchTermsRef], ([confDescriptor, currentSchedule, searchTerms]) => {
     if(currentSchedule && confDescriptor) {
-        timeslots.value = currentSchedule.timeSlots.map((ts, idx) => {
+        timeslotsRef.value = currentSchedule.timeSlots.map((ts, idx) => {
             // yes that's weird ... but looks like TS is not very smart here 🤔
             if(ts.type === 'break') {
                 return {...ts, feedback: idx%2===0?getTimeslotLabel(ts):undefined};
             } else {
-                return {...ts, feedback: idx%2===0?getTimeslotLabel(ts):undefined};
+                const filteredTalks = filterTalksMatching(ts.talks, searchTerms);
+                return {...ts, talks: filteredTalks, feedback: idx%2===0?getTimeslotLabel(ts):undefined};
             }
-        });
+        }).filter(ts => ts.type === 'break' || (ts.type === 'talks' && ts.talks.length !== 0));
+
         recomputeMissingFeedbacksList();
 
         currentlySelectedDayId.value = findVoxxrinDay(confDescriptor, currentSchedule.day).id
@@ -150,7 +159,13 @@ watch([event, currentSchedule], ([confDescriptor, currentSchedule]) => {
 }, {immediate: true});
 
 function recomputeMissingFeedbacksList() {
-    missingFeedbacksPastTimeslots.value = timeslots.value.filter(ts => {
+    const timeslots = unref(timeslotsRef);
+    if(!timeslots) {
+        missingFeedbacksPastTimeslots.value = [];
+        return;
+    }
+
+    missingFeedbacksPastTimeslots.value = timeslots.filter(ts => {
         return ts.type === 'talks'
             && !ts.feedback
             && getTimeslotTimingProgress(ts, useCurrentClock().zonedDateTimeISO()).status === 'past'

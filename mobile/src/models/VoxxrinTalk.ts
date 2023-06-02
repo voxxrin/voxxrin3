@@ -86,3 +86,18 @@ export function sortThenGroupByFormat(talks: VoxxrinTalk[], confDescriptor: Voxx
             return talksGroupedByFormat;
         }, [] as Array<{format: VoxxrinTalkFormat, talks: VoxxrinTalk[]}>)
 }
+
+export function filterTalksMatching(talks: VoxxrinTalk[], searchTerms: string|undefined) {
+    return talks.filter(talk => {
+        if(!searchTerms) {
+            return true;
+        }
+
+        const talkSearchableContent = `
+            ${talk.title}
+            ${talk.speakers.map(sp => `${sp.fullName} ${sp.companyName}`).join("\n")}
+        `.toLowerCase()
+
+        return searchTerms.split(" ").every(searchTerm => talkSearchableContent.includes(searchTerm.toLowerCase()));
+    })
+}
