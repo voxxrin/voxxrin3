@@ -5,7 +5,7 @@
       <ion-header class="stickyHeader">
         <ion-toolbar>
           <ion-title class="stickyHeader-title" slot="start">{{ LL.Schedule() }}</ion-title>
-          <ion-input size="10"
+          <ion-input size="10" ref="$searchInput"
                :debounce="300"
                :placeholder="`${LL.Search()}...`"
                :class="{ 'search-input': true, displayed: searchFieldDisplayed }"
@@ -14,7 +14,7 @@
           <ion-button class="ion-margin-end" slot="end" shape="round" size="small" fill="outline">
             <ion-icon src="/assets/icons/solid/settings-cog.svg"></ion-icon>
           </ion-button>
-          <ion-button slot="end" shape="round" size="small" @click="searchFieldDisplayed = !searchFieldDisplayed">
+          <ion-button slot="end" shape="round" size="small" @click="toggleSearchField()">
             <ion-icon src="/assets/icons/line/search-line.svg"></ion-icon>
           </ion-button>
         </ion-toolbar>
@@ -101,6 +101,7 @@ const missingFeedbacksPastTimeslots = ref<Array<{start: string, end: string, tim
 const expandedTimeslotIds = ref<string[]>([])
 const searchFieldDisplayed = ref(false);
 const searchTermsRef = ref<string|undefined>(undefined);
+const $searchInput = ref<IonInput|undefined>(undefined);
 
 onMounted(async () => {
     console.log(`SchedulePage mounted !`)
@@ -208,6 +209,17 @@ function toggleExpandedTimeslot(timeslot: VoxxrinScheduleTimeSlot) {
         expandedTimeslotIds.value.push(timeslot.id.value);
     } else {
         expandedTimeslotIds.value.splice(expandedTimeslotIdsIndex, 1);
+    }
+}
+
+function toggleSearchField() {
+    searchFieldDisplayed.value = !searchFieldDisplayed.value
+    if(searchFieldDisplayed.value) {
+        if(isRefDefined($searchInput)) {
+            setTimeout(() => $searchInput.value.$el.setFocus(), 200);
+        }
+    } else {
+        searchTermsRef.value = '';
     }
 }
 </script>
