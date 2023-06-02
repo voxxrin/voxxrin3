@@ -162,7 +162,7 @@ function recomputeMissingFeedbacksList() {
 const { triggerTabbedPageNavigate } = useTabbedPageNav();
 
 async function showAlertForTimeslot(timeslot: VoxxrinScheduleTimeSlot) {
-    triggerTabbedPageNavigate(`/events/${eventId.value.value}/new-feedback-for-day/${currentlySelectedDayId.value?.value}/and-timeslot/${timeslot.id.value}`, "forward", "push");
+    triggerTabbedPageNavigate(`/events/${eventId.value.value}/new-feedback-for-timeslot/${timeslot.id.value}`, "forward", "push");
 }
 
 // Crappy hack in order to have a pretty ion-fab-list closing animation

@@ -13,7 +13,7 @@ const routes: Array<RouteRecordRaw> = [
     { path: 'notifications', component: () => import('@/views/event/NotificationsPage.vue') },
     { path: 'infos', component: () => import('@/views/event/InfosPage.vue') },
   ]},
-  { path: '/events/:eventId/new-feedback-for-day/:dayId/and-timeslot/:timeslotId', component: () => import('@/views/event/NewFeedbackPage.vue') },
+  { path: '/events/:eventId/new-feedback-for-timeslot/:timeslotId', component: () => import('@/views/event/NewFeedbackPage.vue') },
   { path: '/events/:eventId/talks/:talkId/details', component: () => import('@/views/TalkDetailsPage.vue') },
 ]
 
