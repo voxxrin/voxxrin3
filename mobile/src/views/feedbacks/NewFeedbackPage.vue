@@ -133,7 +133,7 @@ watch([confDescriptorRef, timeslotIdRef], async ([confDescriptor, timeslotId]) =
 
     const labelledTimeslotWithOverlappings = await findLabelledTimeslotWithOverlappingsForTimeslotId(confDescriptor, timeslotId);
     labelledTimeslotWithOverlappingsRef.value = labelledTimeslotWithOverlappings;
-})
+}, { immediate: true })
 
 const selectedTalk: Ref<VoxxrinTalk|undefined> = ref(undefined)
 function selectTalk(talk: VoxxrinTalk) {

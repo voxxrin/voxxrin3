@@ -104,7 +104,7 @@ watch([confDescriptorRef], async ([confDescriptor]) => {
 
     const labelledTimeslotWithTalk = await findLabelledTimeslotContainingTalk(confDescriptor, talkId);
     labelledTimeslotWithTalkRef.value = labelledTimeslotWithTalk;
-})
+}, { immediate: true })
 
 </script>
 
