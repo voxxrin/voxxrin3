@@ -36,7 +36,7 @@ const props = defineProps({
 })
 
 const $emits = defineEmits<{
-    (e: 'rating-selected', value: CustomIconChoiceEntry): void
+    (e: 'rating-selected', value: string|undefined): void
 }>()
 
 const { LL } = typesafeI18n()
@@ -44,8 +44,12 @@ const { LL } = typesafeI18n()
 const selectedId = ref<string|undefined>(undefined)
 
 function ratingSelected(choice: CustomIconChoiceEntry) {
-    selectedId.value = choice.id;
-    $emits('rating-selected', choice)
+    if(selectedId.value === choice.id) {
+        selectedId.value = undefined;
+    } else {
+        selectedId.value = choice.id;
+    }
+    $emits('rating-selected', selectedId.value)
 }
 </script>
 

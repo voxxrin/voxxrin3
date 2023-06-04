@@ -20,19 +20,13 @@
               <linear-rating
                   v-if="confDescriptorRef.features.ratings.scale.enabled"
                   :config="confDescriptorRef.features.ratings.scale"
-                  @rating-selected="ratings['linear-rating'] = $event.score"
+                  @rating-selected="ratings['linear-rating'] = $event?.score"
               ></linear-rating>
               <icon-based-rating
                   v-if="confDescriptorRef.features.ratings['custom-scale'].enabled"
                   :config="confDescriptorRef.features.ratings['custom-scale']"
-                  @rating-selected="ratings['custom-rating'] = $event.id"
+                  @rating-selected="ratings['custom-rating'] = $event"
               ></icon-based-rating>
-
-              <linear-rating
-                  v-if="confDescriptorRef.features.ratings.scale.enabled"
-                  :config="confDescriptorRef.features.ratings.scale"
-                  @rating-selected="ratings['linear-rating'] = $event.score"
-              ></linear-rating>
 
               <div class="divider" v-if="confDescriptorRef.features.ratings.bingo.enabled">
                 <span class="titleDivider">{{ LL.Quick_feedback() }} :</span>

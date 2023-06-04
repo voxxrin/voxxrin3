@@ -34,7 +34,7 @@ const props = defineProps({
 })
 
 const $emits = defineEmits<{
-    (e: 'rating-selected', value: { score: number, selectedLabel: string }): void
+    (e: 'rating-selected', value: undefined|{ score: number, selectedLabel: string }): void
 }>()
 
 const { LL } = typesafeI18n()
@@ -42,8 +42,12 @@ const { LL } = typesafeI18n()
 const selectedIndex = ref<number|undefined>(undefined)
 
 function ratingSelected(index: number) {
-    selectedIndex.value = index;
-    $emits('rating-selected', { score: index+1, selectedLabel: props.config!.labels[index] })
+    if(selectedIndex.value === index) {
+        selectedIndex.value = undefined;
+    } else {
+        selectedIndex.value = index;
+    }
+    $emits('rating-selected', selectedIndex.value===undefined?undefined:{ score: index+1, selectedLabel: props.config!.labels[index] })
 }
 </script>
 
