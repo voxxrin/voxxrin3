@@ -185,6 +185,10 @@ type RootTranslation = {
 	 * Q​u​i​c​k​ ​F​e​e​d​b​a​c​k
 	 */
 	Quick_feedback: string
+	/**
+	 * E​n​t​e​r​ ​s​o​m​e​ ​c​o​n​s​t​r​u​c​t​i​v​e​ ​f​o​r​ ​t​h​e​ ​s​p​e​a​k​e​r
+	 */
+	Enter_some_constructive_feedback_for_the_speaker: string
 }
 
 export type TranslationFunctions = {
@@ -356,6 +360,10 @@ export type TranslationFunctions = {
 	 * Quick Feedback
 	 */
 	Quick_feedback: () => LocalizedString
+	/**
+	 * Enter some constructive for the speaker
+	 */
+	Enter_some_constructive_feedback_for_the_speaker: () => LocalizedString
 }
 
 export type Formatters = {}

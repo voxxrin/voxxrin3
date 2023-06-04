@@ -45,14 +45,15 @@
                   @rating-selected="ratings['bingo'] = $event"
               ></quick-feedback-rating>
 
-              <div class="divider">
+              <div class="divider" v-if="confDescriptorRef.features.ratings['free-text'].enabled">
                 <span class="titleDivider">Free comment :</span>
                 <span class="divider-separator"></span>
               </div>
 
-              <ion-textarea aria-label="Custom input"
-                            placeholder="Enter text"
-                            auto-grow>
+              <ion-textarea v-if="confDescriptorRef.features.ratings['free-text'].enabled"
+                  :debounce="300"
+                  @ionInput="(ev) => ratings['free-text'] = ''+ev.target.value"
+                  aria-label="Custom input" :placeholder="LL.Enter_some_constructive_feedback_for_the_speaker()" auto-grow>
               </ion-textarea>
             </div>
           </div>
@@ -106,6 +107,7 @@ const labelledTimeslotWithTalkRef = ref<undefined | LabelledTimeslotWithTalk>(un
 const ratings = reactive({
     'linear-rating': undefined as number|undefined,
     bingo: [] as string[],
+    'free-text': undefined as null|string,
     'custom-rating': undefined as string|undefined
 })
 
