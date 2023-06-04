@@ -34,7 +34,7 @@ export type ConferenceDescriptor = ListableEvent & {
                 enabled: boolean,
                 choices: Array<{
                     id: string,
-                    icon: string,
+                    icon: "happy"|"sad"|"thumbs-up"|"hand-right"|"thumbs-down",
                 }>
             }
         },

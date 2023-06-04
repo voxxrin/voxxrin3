@@ -101,7 +101,7 @@ export const EVENT_DESCRIPTOR_PARSER = LISTABLE_EVENT_PARSER.extend({
                 enabled: z.boolean(),
                 choices: z.array(z.object({
                     id: z.string(),
-                    icon: z.enum(['smiling_face', 'neutral_face', 'confused_face'])
+                    icon: z.enum(["happy", "sad", "thumbs-up", "hand-right", "thumbs-down"])
                 }))
             })
         }),

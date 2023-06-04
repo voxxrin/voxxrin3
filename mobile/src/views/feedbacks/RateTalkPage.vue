@@ -11,8 +11,8 @@
               </schedule-talk>
             </div>
 
-            <div class="rateTalkForm" v-if="confDescriptorRef.features.ratings.scale.enabled">
-              <div class="divider">
+            <div class="rateTalkForm">
+              <div class="divider" v-if="confDescriptorRef.features.ratings.scale.enabled || confDescriptorRef.features.ratings['custom-scale'].enabled">
                 <span class="titleDivider">{{ LL.Rate_it() }} :</span>
                 <span class="divider-separator"></span>
               </div>
@@ -22,8 +22,19 @@
                   :config="confDescriptorRef.features.ratings.scale"
                   @rating-selected="ratings['linear-rating'] = $event.score"
               ></linear-rating>
+              <icon-based-rating
+                  v-if="confDescriptorRef.features.ratings['custom-scale'].enabled"
+                  :config="confDescriptorRef.features.ratings['custom-scale']"
+                  @rating-selected="ratings['custom-rating'] = $event.id"
+              ></icon-based-rating>
 
-              <div class="divider">
+              <linear-rating
+                  v-if="confDescriptorRef.features.ratings.scale.enabled"
+                  :config="confDescriptorRef.features.ratings.scale"
+                  @rating-selected="ratings['linear-rating'] = $event.score"
+              ></linear-rating>
+
+              <div class="divider" v-if="confDescriptorRef.features.ratings.bingo.enabled">
                 <span class="titleDivider">{{ LL.Quick_feedback() }} :</span>
                 <span class="divider-separator"></span>
               </div>
@@ -76,9 +87,10 @@ import {
     LabelledTimeslotWithTalk,
 } from "@/state/findTimeslot";
 import ScheduleTalk from "@/components/ScheduleTalk.vue";
-import {IonFooter, IonTextarea} from "@ionic/vue";
+import {IonFooter, IonInput, IonTextarea} from "@ionic/vue";
 import LinearRating from "@/components/ratings/LinearRating.vue";
 import QuickFeedbackRating from "@/components/ratings/QuickFeedbackRating.vue";
+import IconBasedRating from "@/components/ratings/IconBasedRating.vue";
 
 const { LL } = typesafeI18n()
 
@@ -94,6 +106,7 @@ const labelledTimeslotWithTalkRef = ref<undefined | LabelledTimeslotWithTalk>(un
 const ratings = reactive({
     'linear-rating': undefined as number|undefined,
     bingo: [] as string[],
+    'custom-rating': undefined as string|undefined
 })
 
 watch([confDescriptorRef], async ([confDescriptor]) => {
