@@ -1,5 +1,4 @@
 <template>
-  {{selectedChoices.join(", ")}}
   <ion-list>
     <ion-item v-for="(choice, index) in config.choices" :key="choice.id">
       <ion-checkbox justify="space-between"
