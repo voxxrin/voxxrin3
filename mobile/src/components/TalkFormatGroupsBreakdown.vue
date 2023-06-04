@@ -10,11 +10,11 @@
       </ion-item-divider>
       <ion-item class="listTalks-item" v-for="(talk) in perFormatGroup.talks" :key="talk.id.value">
         <schedule-talk :talk="talk" @talkClicked="$emit('talk-clicked', $event)" :is-highlighted="isHighlighted">
-          <template #upper-right="{ talk }">
-            <slot name="talk-card-upper-right" :talk="talk" />
+          <template #upper-right="upperRightContext">
+            <slot name="talk-card-upper-right" :talk="upperRightContext.talk" />
           </template>
-          <template #footer-actions="{ talk, talkNotesHook }">
-            <slot name="talk-card-footer-actions" :talk="talk" :talkNotesHook="talkNotesHook" />
+          <template #footer-actions="footerActionsContext">
+            <slot name="talk-card-footer-actions" :talk="footerActionsContext.talk" :talkNotesHook="footerActionsContext.talkNotesHook" />
           </template>
         </schedule-talk>
       </ion-item>

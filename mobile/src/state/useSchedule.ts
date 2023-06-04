@@ -1,4 +1,4 @@
-import {computed, unref} from "vue";
+import {computed, unref, watch} from "vue";
 import {DailySchedule} from "../../../shared/dayly-schedule.firestore";
 import {
     createVoxxrinDailyScheduleFromFirestore,
@@ -9,7 +9,6 @@ import {DocumentReference, doc, collection, getDoc} from "firebase/firestore";
 import {db} from "@/state/firebase";
 import {Unreffable} from "@/views/vue-utils";
 import {useDocument} from "vuefire";
-import {EventId} from "@/models/VoxxrinEvent";
 import {prepareEventTalks} from "@/state/useEventTalk";
 import {prepareTalkStats} from "@/state/useEventTalkStats";
 import {prepareUserTalkNotes} from "@/state/useUserTalkNotes";
@@ -18,6 +17,16 @@ import {TalkId} from "@/models/VoxxrinTalk";
 export function useSchedule(
             conferenceDescriptorRef: Unreffable<VoxxrinConferenceDescriptor | undefined>,
             dayIdRef: Unreffable<DayId | undefined>) {
+
+    console.debug(`useSchedule(${unref(conferenceDescriptorRef)?.id.value}, ${unref(dayIdRef)?.value})`)
+    watch(() => unref(conferenceDescriptorRef), (newVal, oldVal) => {
+        console.debug(`useSchedule[conferenceDescriptorRef] updated from [${oldVal?.id.value}] to [${newVal?.id.value}]`)
+    })
+    watch(() => unref(dayIdRef), (newVal, oldVal) => {
+        console.debug(`useSchedule[dayIdRef] updated from [${oldVal?.value}] to [${newVal?.value}]`)
+    })
+
+
 
     const firestoreDailyScheduleSource = computed(() => {
         const conferenceDescriptor = unref(conferenceDescriptorRef),
@@ -53,10 +62,13 @@ export function dailyScheduleDocument(eventDescriptor: VoxxrinConferenceDescript
 
 export function prepareSchedules(
     conferenceDescriptor: VoxxrinConferenceDescriptor,
-    dayIds: Array<DayId>
+    currentDayId: DayId,
+    otherDayIds: Array<DayId>
 ) {
-    dayIds.forEach(async dayId => {
-        useSchedule(conferenceDescriptor, dayId);
+    [currentDayId, ...otherDayIds].forEach(async dayId => {
+        if(dayId !== currentDayId) {
+            useSchedule(conferenceDescriptor, dayId);
+        }
 
         const dailyScheduleDoc = dailyScheduleDocument(conferenceDescriptor, dayId)
         if(navigator.onLine && dailyScheduleDoc) {

@@ -1,4 +1,4 @@
-import {computed, ref, unref} from "vue";
+import {computed, ref, unref, watch} from "vue";
 import {
     createVoxxrinConferenceDescriptor,
 } from "@/models/VoxxrinConferenceDescriptor";
@@ -12,6 +12,11 @@ import {createSharedComposable} from "@vueuse/core";
 
 export function useConferenceDescriptor(
     eventIdRef: Unreffable<EventId | undefined>) {
+
+    console.debug(`useConferenceDescriptor(${unref(eventIdRef)?.value})`)
+    watch(() => unref(eventIdRef), (newVal, oldVal) => {
+        console.debug(`useConferenceDescriptor[eventIdRef] updated from [${oldVal?.value}] to [${newVal?.value}]`)
+    })
 
     const firestoreConferenceDescriptorSource = computed(() => {
         const eventId = unref(eventIdRef);

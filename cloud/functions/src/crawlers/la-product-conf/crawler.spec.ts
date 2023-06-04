@@ -12,7 +12,7 @@ describe('la-product-conf crawler', () => {
         it(`Loading ${event.confName} schedule`, async () => {
             const descriptorResp = await axios.get(event.descriptorUrl);
             const descriptor = LA_PRODUCT_CONF_CRAWLER.descriptorParser.parse(descriptorResp.data)
-            const result = await LA_PRODUCT_CONF_CRAWLER.crawlerImpl(event.id, descriptor);
+            const result = await LA_PRODUCT_CONF_CRAWLER.crawlerImpl(event.id, descriptor, {});
             FULL_EVENT_PARSER.parse(result);
         })
     })

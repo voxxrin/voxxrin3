@@ -31,7 +31,7 @@ describe('devoxx crawlers', () => {
         it(`Loading ${event.confName} schedule`, async () => {
             const descriptorResp = await axios.get(event.descriptorUrl);
             const descriptor = DEVOXX_CRAWLER.descriptorParser.parse(descriptorResp.data)
-            const result = await DEVOXX_CRAWLER.crawlerImpl(event.id, descriptor);
+            const result = await DEVOXX_CRAWLER.crawlerImpl(event.id, descriptor, {});
             FULL_EVENT_PARSER.parse(result);
         })
     })

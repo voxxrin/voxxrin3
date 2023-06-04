@@ -92,7 +92,9 @@ import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor"
 import TalkFormatGroupsBreakdown from "@/components/TalkFormatGroupsBreakdown.vue";
 import ScheduleBreak from "@/components/ScheduleBreak.vue";
 import {typesafeI18n} from "@/i18n/i18n-vue";
-import {useConferenceDescriptor} from "@/state/useConferenceDescriptor";
+import {
+    useSharedConferenceDescriptor
+} from "@/state/useConferenceDescriptor";
 import {VoxxrinTalk} from "@/models/VoxxrinTalk";
 import {useTabbedPageNav} from "@/state/useTabbedPageNav";
 
@@ -117,7 +119,7 @@ defineEmits<{
 
 const { LL } = typesafeI18n()
 
-const { conferenceDescriptor } = useConferenceDescriptor(props.event?.id);
+const { conferenceDescriptor } = useSharedConferenceDescriptor(props.event?.id);
 
 const progress = ref<TimeslotTimingProgress>()
 useInterval(() => {
