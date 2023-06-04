@@ -6,7 +6,7 @@
     <ul class="linearRating-list">
       <li>
         <ion-button v-for="(label, index) in config.labels" :key="index" @click="ratingSelected(index)">
-          <ion-icon :icon="ICONS[config.icon]" :class="{ '_active': index <= selectedIndex}"></ion-icon>
+          <ion-icon :icon="ICONS[config.icon]" :class="{ '_active': selectedIndex !== undefined && index <= selectedIndex}"></ion-icon>
         </ion-button>
       </li>
     </ul>
