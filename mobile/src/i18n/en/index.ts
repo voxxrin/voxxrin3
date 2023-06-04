@@ -44,6 +44,7 @@ const en = {
 	Rate_it: "Rate it",
 	Quick_feedback: "Quick Feedback",
 	Enter_some_constructive_feedback_for_the_speaker: "Enter some constructive for the speaker",
+	Submit_Feedback: "Submit Feedback",
 } satisfies BaseTranslation
 
 export default en

@@ -51,7 +51,7 @@
               </div>
 
               <ion-textarea v-if="confDescriptorRef.features.ratings['free-text'].enabled"
-                  :debounce="300"
+                  :debounce="300" :maxlength="confDescriptorRef.features.ratings['free-text'].maxLength"
                   @ionInput="(ev) => ratings['free-text'] = ''+ev.target.value"
                   aria-label="Custom input" :placeholder="LL.Enter_some_constructive_feedback_for_the_speaker()" auto-grow>
               </ion-textarea>
@@ -65,8 +65,8 @@
       <ion-toolbar>
         <div class="feedBackFooter-group">
           <ion-button size="small" fill="solid" color="medium" shape="round" expand="block">{{ LL.Cancel() }}</ion-button>
-          <ion-button size="small" shape="round" color="tertiary" expand="block">
-            Submit Feedback
+          <ion-button size="small" shape="round" color="tertiary" expand="block" :disabled="!feedbackCanBeSubmitted">
+            {{ LL.Submit_Feedback() }}
           </ion-button>
         </div>
       </ion-toolbar>
@@ -79,7 +79,7 @@ import {EventId} from "@/models/VoxxrinEvent";
 import {getRouteParamsValue} from "@/views/vue-utils";
 import {useRoute} from "vue-router";
 import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
-import {computed, reactive, ref, watch} from "vue";
+import {computed, reactive, ref, unref, watch} from "vue";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {TalkId} from "@/models/VoxxrinTalk";
 import BaseFeedbackStep from "@/components/BaseFeedbackStep.vue";
@@ -120,6 +120,32 @@ watch([confDescriptorRef], async ([confDescriptor]) => {
     const labelledTimeslotWithTalk = await findLabelledTimeslotContainingTalk(confDescriptor, talkId);
     labelledTimeslotWithTalkRef.value = labelledTimeslotWithTalk;
 }, { immediate: true })
+
+const feedbackCanBeSubmitted = computed(() => {
+    const confDescriptor = unref(event);
+    if(!confDescriptor) {
+        return false;
+    }
+
+    if(confDescriptor.features.ratings.bingo.enabled && ratings.bingo.length===0) {
+        return false;
+    }
+    if(confDescriptor.features.ratings.scale.enabled && ratings["linear-rating"] === undefined) {
+        return false;
+    }
+    if(confDescriptor.features.ratings["custom-scale"].enabled && ratings["custom-rating"] === undefined) {
+        return false;
+    }
+    if(confDescriptor.features.ratings["free-text"].enabled
+        && !confDescriptor.features.ratings["bingo"].enabled
+        && !confDescriptor.features.ratings["scale"].enabled
+        && !confDescriptor.features.ratings["custom-scale"].enabled
+        && (ratings["free-text"] === undefined || ratings["free-text"]?.length < 3)) {
+        return false;
+    }
+
+    return true;
+})
 
 </script>
 

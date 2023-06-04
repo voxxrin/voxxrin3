@@ -189,6 +189,10 @@ type RootTranslation = {
 	 * E​n​t​e​r​ ​s​o​m​e​ ​c​o​n​s​t​r​u​c​t​i​v​e​ ​f​o​r​ ​t​h​e​ ​s​p​e​a​k​e​r
 	 */
 	Enter_some_constructive_feedback_for_the_speaker: string
+	/**
+	 * S​u​b​m​i​t​ ​F​e​e​d​b​a​c​k
+	 */
+	Submit_Feedback: string
 }
 
 export type TranslationFunctions = {
@@ -364,6 +368,10 @@ export type TranslationFunctions = {
 	 * Enter some constructive for the speaker
 	 */
 	Enter_some_constructive_feedback_for_the_speaker: () => LocalizedString
+	/**
+	 * Submit Feedback
+	 */
+	Submit_Feedback: () => LocalizedString
 }
 
 export type Formatters = {}
