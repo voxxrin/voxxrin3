@@ -181,6 +181,10 @@ type RootTranslation = {
 	 * R​a​t​e​ ​i​t
 	 */
 	Rate_it: string
+	/**
+	 * Q​u​i​c​k​ ​F​e​e​d​b​a​c​k
+	 */
+	Quick_feedback: string
 }
 
 export type TranslationFunctions = {
@@ -348,6 +352,10 @@ export type TranslationFunctions = {
 	 * Rate it
 	 */
 	Rate_it: () => LocalizedString
+	/**
+	 * Quick Feedback
+	 */
+	Quick_feedback: () => LocalizedString
 }
 
 export type Formatters = {}

@@ -17,34 +17,22 @@
                 <span class="divider-separator"></span>
               </div>
 
-              <feedback-linear-rating
+              <linear-rating
                   v-if="confDescriptorRef.features.ratings.scale.enabled"
                   :config="confDescriptorRef.features.ratings.scale"
                   @rating-selected="ratings['linear-rating'] = $event.score"
-              ></feedback-linear-rating>
+              ></linear-rating>
 
               <div class="divider">
-                <span class="titleDivider">Quick feedback :</span>
+                <span class="titleDivider">{{ LL.Quick_feedback() }} :</span>
                 <span class="divider-separator"></span>
               </div>
 
-              <ion-list>
-                <ion-item>
-                  <ion-checkbox justify="space-between">Too mush code</ion-checkbox>
-                </ion-item>
-                <ion-item>
-                  <ion-checkbox justify="space-between">Very interesting</ion-checkbox>
-                </ion-item>
-                <ion-item>
-                  <ion-checkbox justify="space-between">Tool long</ion-checkbox>
-                </ion-item>
-                <ion-item>
-                  <ion-checkbox justify="space-between">Amazing speakers</ion-checkbox>
-                </ion-item>
-                <ion-item>
-                  <ion-checkbox justify="space-between">I learnt something</ion-checkbox>
-                </ion-item>
-              </ion-list>
+              <quick-feedback-rating
+                  v-if="confDescriptorRef.features.ratings.bingo.enabled"
+                  :config="confDescriptorRef.features.ratings.bingo"
+                  @rating-selected="ratings['bingo'] = $event"
+              ></quick-feedback-rating>
 
               <div class="divider">
                 <span class="titleDivider">Free comment :</span>
@@ -88,7 +76,8 @@ import {
 } from "@/state/useFindTimeslot";
 import ScheduleTalk from "@/components/ScheduleTalk.vue";
 import {IonCheckbox, IonFooter, IonTextarea} from "@ionic/vue";
-import FeedbackLinearRating from "@/components/ratings/FeedbackLinearRating.vue";
+import LinearRating from "@/components/ratings/LinearRating.vue";
+import QuickFeedbackRating from "@/components/ratings/QuickFeedbackRating.vue";
 
 const { LL } = typesafeI18n()
 
@@ -102,7 +91,8 @@ const {conferenceDescriptor: confDescriptorRef } = useSharedConferenceDescriptor
 const {labelledTimeslotAndScheduleAndTalkRef} = useFindLabelledTimeslotContainingTalk(confDescriptorRef.value!, talkId);
 
 const ratings = reactive({
-    'linear-rating': undefined as number|undefined
+    'linear-rating': undefined as number|undefined,
+    bingo: [] as string[],
 })
 
 </script>

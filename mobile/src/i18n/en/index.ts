@@ -42,6 +42,7 @@ const en = {
 	During_this_time_slot: "During this time slot",
 	Share_your_feedback: "Share your feedback",
 	Rate_it: "Rate it",
+	Quick_feedback: "Quick Feedback",
 } satisfies BaseTranslation
 
 export default en
