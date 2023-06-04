@@ -1,8 +1,8 @@
 
 <template>
-  <ion-page v-if="confDescriptorRef && labelledTimeslotAndScheduleRef">
-    <base-feedback-step :step="1" :step-label="LL.Pick_the_talk_you_attended()"
-          :conf-descriptor="confDescriptorRef" :labelled-timeslot="labelledTimeslotAndScheduleRef.labelledTimeslot">
+  <ion-page v-if="confDescriptorRef && labelledTimeslotWithOverlappingsRef">
+    <base-feedback-step :step="1" :step-label="LL.Pick_the_talk_you_attended()" :conf-descriptor="confDescriptorRef"
+              :labelled-timeslot="labelledTimeslotWithOverlappingsRef.labelledTimeslot">
       <slot>
         <div>
           <ion-header class="pickTalkDivider">
@@ -12,40 +12,40 @@
             </div>
 
             <div class="pickTalkDivider-end">
-              <div class="slotOverlay" v-if="labelledTimeslotAndScheduleRef.labelledTimeslot.overlappingTimeSlots.length > 0">
+              <div class="slotOverlay" v-if="labelledTimeslotWithOverlappingsRef.overlappingLabelledTimeslots.length > 0">
                 <ion-icon aria-hidden="true" src="assets/icons/solid/slot-overlay.svg"></ion-icon>
                 <span class="slotOverlay-txt">
                 <small>{{LL.Overlaps_x_slot_label()}}</small>
-                <strong>{{LL.Overlaps_x_slot_value({nrOfOverlappingSlots: labelledTimeslotAndScheduleRef.labelledTimeslot.overlappingTimeSlots.length})}}</strong>
+                <strong>{{LL.Overlaps_x_slot_value({nrOfOverlappingSlots: labelledTimeslotWithOverlappingsRef.overlappingLabelledTimeslots.length})}}</strong>
               </span>
               </div>
             </div>
 
-            <ion-label class="pickTalkDivider-timeSlotResume" v-if="labelledTimeslotAndScheduleRef.labelledTimeslot.label">
+            <ion-label class="pickTalkDivider-timeSlotResume" v-if="labelledTimeslotWithOverlappingsRef.labelledTimeslot.label">
               <ion-icon aria-hidden="true" src="/assets/icons/solid/clock.svg"></ion-icon>
-              <span class="slot-schedule-start">{{labelledTimeslotAndScheduleRef.labelledTimeslot.label.start}}</span>
+              <span class="slot-schedule-start">{{labelledTimeslotWithOverlappingsRef.labelledTimeslot.label.start}}</span>
               <ion-icon class="slot-schedule-icon" aria-hidden="true" src="assets/icons/line/chevron-right-line.svg"></ion-icon>
-              <span class="slot-schedule-end">{{labelledTimeslotAndScheduleRef.labelledTimeslot.label.end}}</span>
+              <span class="slot-schedule-end">{{labelledTimeslotWithOverlappingsRef.labelledTimeslot.label.end}}</span>
             </ion-label>
           </ion-header>
           <div>
             <feedback-talk-selector
                 :event-descriptor="confDescriptorRef"
-                :talks="labelledTimeslotAndScheduleRef.labelledTimeslot.talks || []"
+                :talks="labelledTimeslotWithOverlappingsRef.labelledTimeslot.talks || []"
                 @talk-selected="selectTalk($event)"
                 @talk-deselected="deselectTalk()"
             >
             </feedback-talk-selector>
           </div>
-          <div v-if="labelledTimeslotAndScheduleRef.labelledTimeslot.overlappingTimeSlots.length">
+          <div v-if="labelledTimeslotWithOverlappingsRef.overlappingLabelledTimeslots.length">
             <ion-header class="pickTalkDivider">
               <div class="pickTalkDivider-start">
-                <span class="pickTalkDivider-title">{{LL.Overlapping_timeslots({ nrOfOverlappingSlots: labelledTimeslotAndScheduleRef.labelledTimeslot.overlappingTimeSlots.length })}}</span>
+                <span class="pickTalkDivider-title">{{LL.Overlapping_timeslots({ nrOfOverlappingSlots: labelledTimeslotWithOverlappingsRef.overlappingLabelledTimeslots.length })}}</span>
               </div>
             </ion-header>
 
             <ion-accordion-group>
-              <ion-accordion class="slot-accordion" v-for="(overlappingTimeslot) in overlappingTimeslots" :key="overlappingTimeslot.id.value">
+              <ion-accordion class="slot-accordion" v-for="(overlappingTimeslot) in labelledTimeslotWithOverlappingsRef.overlappingLabelledTimeslots" :key="overlappingTimeslot.id.value">
                 <ion-item slot="header" color="light">
                   <ion-label>
                     <ion-icon aria-hidden="true" src="assets/icons/solid/slot-overlay.svg" />
@@ -97,11 +97,9 @@ import {EventId} from "@/models/VoxxrinEvent";
 import {getRouteParamsValue, isRefDefined, isRefUndefined} from "@/views/vue-utils";
 import {useRoute} from "vue-router";
 import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
-import {computed, ref, Ref, unref} from "vue";
+import {computed, ref, Ref, unref, watch} from "vue";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {
-    findTalksTimeslotById,
-    getTimeslotLabel,
     ScheduleTimeSlotId
 } from "@/models/VoxxrinSchedule";
 import {IonAccordion, IonAccordionGroup, IonFooter, useIonRouter} from "@ionic/vue";
@@ -109,7 +107,11 @@ import FeedbackTalkSelector from "@/components/FeedbackTalkSelector.vue";
 import {VoxxrinTalk} from "@/models/VoxxrinTalk";
 import {useTabbedPageNav} from "@/state/useTabbedPageNav";
 import BaseFeedbackStep from "@/components/BaseFeedbackStep.vue";
-import {LabelledTimeslot, useFindLabelledTimeslot} from "@/state/useFindTimeslot";
+import {
+    findLabelledTimeslotWithOverlappingsForTimeslotId,
+    LabelledTimeslot,
+    LabelledTimeslotWithOverlappings
+} from "@/state/findTimeslot";
 
 const { LL } = typesafeI18n()
 
@@ -121,7 +123,17 @@ const eventIdRef = computed(() => new EventId(getRouteParamsValue(route, 'eventI
 const timeslotIdRef = computed(() => new ScheduleTimeSlotId(getRouteParamsValue(route, 'timeslotId')));
 const {conferenceDescriptor: confDescriptorRef } = useSharedConferenceDescriptor(eventIdRef);
 
-const {labelledTimeslotAndScheduleRef} = useFindLabelledTimeslot(confDescriptorRef.value!, timeslotIdRef.value);
+const labelledTimeslotWithOverlappingsRef = ref<undefined | LabelledTimeslotWithOverlappings>(undefined)
+
+watch([confDescriptorRef, timeslotIdRef], async ([confDescriptor, timeslotId]) => {
+    if(!confDescriptor || !timeslotId) {
+        labelledTimeslotWithOverlappingsRef.value = undefined;
+        return;
+    }
+
+    const labelledTimeslotWithOverlappings = await findLabelledTimeslotWithOverlappingsForTimeslotId(confDescriptor, timeslotId);
+    labelledTimeslotWithOverlappingsRef.value = labelledTimeslotWithOverlappings;
+})
 
 const selectedTalk: Ref<VoxxrinTalk|undefined> = ref(undefined)
 function selectTalk(talk: VoxxrinTalk) {
@@ -130,25 +142,6 @@ function selectTalk(talk: VoxxrinTalk) {
 function deselectTalk() {
     selectedTalk.value = undefined;
 }
-
-const overlappingTimeslots = computed((): Array<LabelledTimeslot> => {
-    const labelledTimeslotAndSchedule = unref(labelledTimeslotAndScheduleRef)
-
-    if(!labelledTimeslotAndSchedule) {
-        return [];
-    }
-
-    const overlappingTS = labelledTimeslotAndSchedule.labelledTimeslot.overlappingTimeSlots.map(timeslotId => {
-        const timeslot = findTalksTimeslotById(labelledTimeslotAndSchedule.schedule, timeslotId);
-        if(!timeslot) {
-            return undefined;
-        }
-
-        const labelledTimeslot: LabelledTimeslot = { ...timeslot, label: getTimeslotLabel(timeslot) };
-        return labelledTimeslot;
-    }).filter(ts => !!ts) as Array<LabelledTimeslot>;
-    return overlappingTS;
-})
 
 const {triggerTabbedPageNavigate} = useTabbedPageNav()
 

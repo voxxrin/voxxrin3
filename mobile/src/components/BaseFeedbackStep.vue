@@ -47,7 +47,7 @@
 import {PropType} from "vue";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
-import {LabelledTimeslot} from "@/state/useFindTimeslot";
+import {LabelledTimeslot} from "@/state/findTimeslot";
 
 const props = defineProps({
     step: {

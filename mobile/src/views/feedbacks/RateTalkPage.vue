@@ -1,13 +1,13 @@
 
 <template>
-  <ion-page v-if="confDescriptorRef && labelledTimeslotAndScheduleAndTalkRef">
+  <ion-page v-if="confDescriptorRef && labelledTimeslotWithTalkRef">
     <ion-content>
       <base-feedback-step :step="2" :step-label="LL.Share_your_feedback()"
-                          :conf-descriptor="confDescriptorRef" :labelled-timeslot="labelledTimeslotAndScheduleAndTalkRef.labelledTimeslot">
+                          :conf-descriptor="confDescriptorRef" :labelled-timeslot="labelledTimeslotWithTalkRef.labelledTimeslot">
         <slot>
           <div class="rateTalkView">
             <div class="rateTalkView-head">
-              <schedule-talk :is-highlighted="() => false" :talk="labelledTimeslotAndScheduleAndTalkRef.talk">
+              <schedule-talk :is-highlighted="() => false" :talk="labelledTimeslotWithTalkRef.talk">
               </schedule-talk>
             </div>
 
@@ -67,15 +67,16 @@ import {EventId} from "@/models/VoxxrinEvent";
 import {getRouteParamsValue} from "@/views/vue-utils";
 import {useRoute} from "vue-router";
 import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
-import {computed, reactive} from "vue";
+import {computed, reactive, ref, watch} from "vue";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {TalkId} from "@/models/VoxxrinTalk";
 import BaseFeedbackStep from "@/components/BaseFeedbackStep.vue";
 import {
-    useFindLabelledTimeslotContainingTalk
-} from "@/state/useFindTimeslot";
+    findLabelledTimeslotContainingTalk,
+    LabelledTimeslotWithTalk,
+} from "@/state/findTimeslot";
 import ScheduleTalk from "@/components/ScheduleTalk.vue";
-import {IonCheckbox, IonFooter, IonTextarea} from "@ionic/vue";
+import {IonFooter, IonTextarea} from "@ionic/vue";
 import LinearRating from "@/components/ratings/LinearRating.vue";
 import QuickFeedbackRating from "@/components/ratings/QuickFeedbackRating.vue";
 
@@ -88,11 +89,21 @@ const eventIdRef = computed(() => new EventId(getRouteParamsValue(route, 'eventI
 const talkId = new TalkId(getRouteParamsValue(route, 'talkId'));
 const {conferenceDescriptor: confDescriptorRef } = useSharedConferenceDescriptor(eventIdRef);
 
-const {labelledTimeslotAndScheduleAndTalkRef} = useFindLabelledTimeslotContainingTalk(confDescriptorRef.value!, talkId);
+const labelledTimeslotWithTalkRef = ref<undefined | LabelledTimeslotWithTalk>(undefined);
 
 const ratings = reactive({
     'linear-rating': undefined as number|undefined,
     bingo: [] as string[],
+})
+
+watch([confDescriptorRef], async ([confDescriptor]) => {
+    if(!confDescriptor) {
+        labelledTimeslotWithTalkRef.value = undefined;
+        return;
+    }
+
+    const labelledTimeslotWithTalk = await findLabelledTimeslotContainingTalk(confDescriptor, talkId);
+    labelledTimeslotWithTalkRef.value = labelledTimeslotWithTalk;
 })
 
 </script>
