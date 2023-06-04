@@ -1,5 +1,6 @@
 import {z, ZodLiteral} from "zod";
 import {ISODatetime, ISOLocalDate} from "../../../../shared/type-utils";
+import {ConferenceDescriptor} from "../../../../shared/conference-descriptor.firestore";
 
 
 export const HEX_COLOR_PARSER = z.string().regex(/#[0-9a-fA-F]{6}/gi) as unknown as ZodLiteral<`#${string}`>
@@ -89,7 +90,8 @@ export const EVENT_DESCRIPTOR_PARSER = LISTABLE_EVENT_PARSER.extend({
             scale: z.object({
                 enabled: z.boolean(),
                 icon: z.enum(['star', 'thumbs-up']),
-                max: z.number()
+                labels: z.array(z.string()).min(3).max(7)
+                    .transform(arr => arr as ConferenceDescriptor['features']['ratings']['scale']['labels']),
             }),
             'free-text': z.object({
                 enabled: z.boolean(),

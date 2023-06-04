@@ -40,7 +40,8 @@ const en = {
 	Watch_later_all_favorited_talks: 'Watch later all favorited talks',
 	I_didnt_attend_any_talk: "I didn't attend any talk",
 	During_this_time_slot: "During this time slot",
-	Share_your_feedback: "Share your feedback"
+	Share_your_feedback: "Share your feedback",
+	Rate_it: "Rate it",
 } satisfies BaseTranslation
 
 export default en

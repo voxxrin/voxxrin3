@@ -11,24 +11,17 @@
               </schedule-talk>
             </div>
 
-            <div class="rateTalkForm">
+            <div class="rateTalkForm" v-if="confDescriptorRef.features.ratings.scale.enabled">
               <div class="divider">
-                <span class="titleDivider">Rate it :</span>
+                <span class="titleDivider">{{ LL.Rate_it() }} :</span>
                 <span class="divider-separator"></span>
               </div>
 
-              <div class="ratingSelect">
-                <span class="ratingSelect-value">
-                  Great talk
-                </span>
-                <ul class="ratingSelect-list">
-                  <li><ion-button><ion-icon :icon="star" :class="{ '_active': true}"></ion-icon></ion-button></li>
-                  <li><ion-button><ion-icon :icon="star" :class="{ '_active': true}"></ion-icon></ion-button></li>
-                  <li><ion-button><ion-icon :icon="star" :class="{ '_active': true}"></ion-icon></ion-button></li>
-                  <li><ion-button><ion-icon :icon="starOutline" :class="{ '_active': false}"></ion-icon></ion-button></li>
-                  <li><ion-button><ion-icon :icon="starOutline" :class="{ '_active': false}"></ion-icon></ion-button></li>
-                </ul>
-              </div>
+              <feedback-linear-rating
+                  v-if="confDescriptorRef.features.ratings.scale.enabled"
+                  :config="confDescriptorRef.features.ratings.scale"
+                  @rating-selected="ratings['linear-rating'] = $event.score"
+              ></feedback-linear-rating>
 
               <div class="divider">
                 <span class="titleDivider">Quick feedback :</span>
@@ -86,7 +79,7 @@ import {EventId} from "@/models/VoxxrinEvent";
 import {getRouteParamsValue} from "@/views/vue-utils";
 import {useRoute} from "vue-router";
 import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
-import {computed, ref, onMounted} from "vue";
+import {computed, reactive} from "vue";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {TalkId} from "@/models/VoxxrinTalk";
 import BaseFeedbackStep from "@/components/BaseFeedbackStep.vue";
@@ -94,7 +87,8 @@ import {
     useFindLabelledTimeslotContainingTalk
 } from "@/state/useFindTimeslot";
 import ScheduleTalk from "@/components/ScheduleTalk.vue";
-import {star, starOutline} from "ionicons/icons";
+import {IonCheckbox, IonFooter, IonTextarea} from "@ionic/vue";
+import FeedbackLinearRating from "@/components/ratings/FeedbackLinearRating.vue";
 
 const { LL } = typesafeI18n()
 
@@ -106,6 +100,10 @@ const talkId = new TalkId(getRouteParamsValue(route, 'talkId'));
 const {conferenceDescriptor: confDescriptorRef } = useSharedConferenceDescriptor(eventIdRef);
 
 const {labelledTimeslotAndScheduleAndTalkRef} = useFindLabelledTimeslotContainingTalk(confDescriptorRef.value!, talkId);
+
+const ratings = reactive({
+    'linear-rating': undefined as number|undefined
+})
 
 </script>
 

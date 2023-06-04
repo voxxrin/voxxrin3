@@ -177,6 +177,10 @@ type RootTranslation = {
 	 * S​h​a​r​e​ ​y​o​u​r​ ​f​e​e​d​b​a​c​k
 	 */
 	Share_your_feedback: string
+	/**
+	 * R​a​t​e​ ​i​t
+	 */
+	Rate_it: string
 }
 
 export type TranslationFunctions = {
@@ -340,6 +344,10 @@ export type TranslationFunctions = {
 	 * Share your feedback
 	 */
 	Share_your_feedback: () => LocalizedString
+	/**
+	 * Rate it
+	 */
+	Rate_it: () => LocalizedString
 }
 
 export type Formatters = {}
