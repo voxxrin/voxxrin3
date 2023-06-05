@@ -20,12 +20,12 @@
               <linear-rating
                   v-if="confDescriptorRef.features.ratings.scale.enabled"
                   :config="confDescriptorRef.features.ratings.scale"
-                  @rating-selected="ratings['linear-rating'] = $event?.score"
+                  @rating-selected="feedback.ratings['linear-rating'] = $event?.score"
               ></linear-rating>
               <icon-based-rating
                   v-if="confDescriptorRef.features.ratings['custom-scale'].enabled"
                   :config="confDescriptorRef.features.ratings['custom-scale']"
-                  @rating-selected="ratings['custom-rating'] = $event"
+                  @rating-selected="feedback.ratings['custom-rating'] = $event"
               ></icon-based-rating>
 
               <div class="divider" v-if="confDescriptorRef.features.ratings.bingo.enabled">
@@ -36,17 +36,17 @@
               <quick-feedback-rating
                   v-if="confDescriptorRef.features.ratings.bingo.enabled"
                   :config="confDescriptorRef.features.ratings.bingo"
-                  @rating-selected="ratings['bingo'] = $event"
+                  @rating-selected="feedback.ratings['bingo'] = $event"
               ></quick-feedback-rating>
 
               <div class="divider" v-if="confDescriptorRef.features.ratings['free-text'].enabled">
-                <span class="titleDivider">Free comment :</span>
+                <span class="titleDivider">{{ LL.Free_comment() }} :</span>
                 <span class="divider-separator"></span>
               </div>
 
               <ion-textarea v-if="confDescriptorRef.features.ratings['free-text'].enabled"
                   :debounce="300" :maxlength="confDescriptorRef.features.ratings['free-text'].maxLength"
-                  @ionInput="(ev) => ratings['free-text'] = ''+ev.target.value"
+                  @ionInput="(ev) => feedback.comment = ''+ev.target.value"
                   aria-label="Custom input" :placeholder="LL.Enter_some_constructive_feedback_for_the_speaker()" auto-grow>
               </ion-textarea>
             </div>
@@ -59,7 +59,9 @@
       <ion-toolbar>
         <div class="feedBackFooter-group">
           <ion-button size="small" fill="solid" color="medium" shape="round" expand="block">{{ LL.Cancel() }}</ion-button>
-          <ion-button size="small" shape="round" color="tertiary" expand="block" :disabled="!feedbackCanBeSubmitted">
+          <ion-button size="small" shape="round" color="tertiary" expand="block"
+                @click="submitFeedback()"
+                :disabled="!feedbackCanBeSubmitted">
             {{ LL.Submit_Feedback() }}
           </ion-button>
         </div>
@@ -73,19 +75,22 @@ import {EventId} from "@/models/VoxxrinEvent";
 import {getRouteParamsValue} from "@/views/vue-utils";
 import {useRoute} from "vue-router";
 import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
-import {computed, reactive, ref, unref, watch} from "vue";
+import {computed, reactive, Ref, ref, unref, watch} from "vue";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {TalkId} from "@/models/VoxxrinTalk";
 import BaseFeedbackStep from "@/components/BaseFeedbackStep.vue";
 import {
     findLabelledTimeslotContainingTalk,
-    LabelledTimeslotWithTalk,
+    DailyLabelledTimeslotWithTalk,
 } from "@/state/findTimeslot";
 import ScheduleTalk from "@/components/ScheduleTalk.vue";
 import {IonFooter, IonInput, IonTextarea} from "@ionic/vue";
 import LinearRating from "@/components/ratings/LinearRating.vue";
 import QuickFeedbackRating from "@/components/ratings/QuickFeedbackRating.vue";
 import IconBasedRating from "@/components/ratings/IconBasedRating.vue";
+import {UserFeedback} from "../../../../shared/feedbacks.firestore";
+import {UnwrapNestedRefs} from "@vue/reactivity";
+import {useUserFeedbacks} from "@/state/useUserFeedbacks";
 
 const { LL } = typesafeI18n()
 
@@ -96,13 +101,19 @@ const eventIdRef = computed(() => new EventId(getRouteParamsValue(route, 'eventI
 const talkId = new TalkId(getRouteParamsValue(route, 'talkId'));
 const {conferenceDescriptor: confDescriptorRef } = useSharedConferenceDescriptor(eventIdRef);
 
-const labelledTimeslotWithTalkRef = ref<undefined | LabelledTimeslotWithTalk>(undefined);
+const labelledTimeslotWithTalkRef = ref<undefined | DailyLabelledTimeslotWithTalk>(undefined);
+const dayIdRef = computed(() => {
+    const labelledTimeslotWithTalk = unref(labelledTimeslotWithTalkRef);
+    return labelledTimeslotWithTalk?.dayId;
+})
 
-const ratings = reactive({
-    'linear-rating': undefined as number|undefined,
-    bingo: [] as string[],
-    'free-text': undefined as null|string,
-    'custom-rating': undefined as string|undefined
+const feedback: UnwrapNestedRefs<UserFeedback> = reactive({
+    ratings: {
+        'linear-rating': null,
+        'bingo': [],
+        'custom-rating': null
+    },
+    comment: null
 })
 
 watch([confDescriptorRef], async ([confDescriptor]) => {
@@ -121,25 +132,36 @@ const feedbackCanBeSubmitted = computed(() => {
         return false;
     }
 
-    if(confDescriptor.features.ratings.bingo.enabled && ratings.bingo.length===0) {
+    if(confDescriptor.features.ratings.bingo.enabled && feedback.ratings.bingo.length===0) {
         return false;
     }
-    if(confDescriptor.features.ratings.scale.enabled && ratings["linear-rating"] === undefined) {
+    if(confDescriptor.features.ratings.scale.enabled && feedback.ratings["linear-rating"] === null) {
         return false;
     }
-    if(confDescriptor.features.ratings["custom-scale"].enabled && ratings["custom-rating"] === undefined) {
+    if(confDescriptor.features.ratings["custom-scale"].enabled && feedback.ratings["custom-rating"] === null) {
         return false;
     }
     if(confDescriptor.features.ratings["free-text"].enabled
         && !confDescriptor.features.ratings["bingo"].enabled
         && !confDescriptor.features.ratings["scale"].enabled
         && !confDescriptor.features.ratings["custom-scale"].enabled
-        && (ratings["free-text"] === undefined || ratings["free-text"]?.length < 3)) {
+        && (feedback.comment?.length === null || feedback.comment.length < 3)) {
         return false;
     }
 
     return true;
 })
+
+const {userFeedbacks, updateTimeslotFeedback} = useUserFeedbacks(eventId, dayIdRef);
+
+async function submitFeedback() {
+    const labelledTimeslotWithTalk = unref(labelledTimeslotWithTalkRef);
+    if(!labelledTimeslotWithTalk) {
+        throw new Error(`Unexpected state: submitFeedback() called with empty labelledTimeslotWithTalk`)
+    }
+
+    await updateTimeslotFeedback(labelledTimeslotWithTalk.labelledTimeslot.id, labelledTimeslotWithTalk.talk.id, feedback);
+}
 
 </script>
 

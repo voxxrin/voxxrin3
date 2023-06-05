@@ -1,12 +1,12 @@
 <template>
   <div class="linearRating">
     <span class="linearRating-value">
-      <span v-if="selectedIndex !== undefined">{{config.labels[selectedIndex]}}</span>
+      <span v-if="selectedIndex !== null">{{config.labels[selectedIndex]}}</span>
     </span>
     <ul class="linearRating-list">
       <li>
         <ion-button v-for="(label, index) in config.labels" :key="index" @click="ratingSelected(index)">
-          <ion-icon :icon="ICONS[config.icon]" :class="{ '_active': selectedIndex !== undefined && index <= selectedIndex}"></ion-icon>
+          <ion-icon :icon="ICONS[config.icon]" :class="{ '_active': selectedIndex !== null && index <= selectedIndex}"></ion-icon>
         </ion-button>
       </li>
     </ul>
@@ -34,20 +34,20 @@ const props = defineProps({
 })
 
 const $emits = defineEmits<{
-    (e: 'rating-selected', value: undefined|{ score: number, selectedLabel: string }): void
+    (e: 'rating-selected', value: null|{ score: number, selectedLabel: string }): void
 }>()
 
 const { LL } = typesafeI18n()
 
-const selectedIndex = ref<number|undefined>(undefined)
+const selectedIndex = ref<number|null>(null)
 
 function ratingSelected(index: number) {
     if(selectedIndex.value === index) {
-        selectedIndex.value = undefined;
+        selectedIndex.value = null;
     } else {
         selectedIndex.value = index;
     }
-    $emits('rating-selected', selectedIndex.value===undefined?undefined:{ score: index+1, selectedLabel: props.config!.labels[index] })
+    $emits('rating-selected', selectedIndex.value===null?null:{ score: index+1, selectedLabel: props.config!.labels[index] })
 }
 </script>
 

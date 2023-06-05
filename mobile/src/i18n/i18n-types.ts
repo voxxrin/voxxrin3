@@ -193,6 +193,10 @@ type RootTranslation = {
 	 * S​u​b​m​i​t​ ​F​e​e​d​b​a​c​k
 	 */
 	Submit_Feedback: string
+	/**
+	 * F​r​e​e​ ​c​o​m​m​e​n​t
+	 */
+	Free_comment: string
 }
 
 export type TranslationFunctions = {
@@ -372,6 +376,10 @@ export type TranslationFunctions = {
 	 * Submit Feedback
 	 */
 	Submit_Feedback: () => LocalizedString
+	/**
+	 * Free comment
+	 */
+	Free_comment: () => LocalizedString
 }
 
 export type Formatters = {}

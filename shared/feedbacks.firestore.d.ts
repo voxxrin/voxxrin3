@@ -6,12 +6,7 @@ export type TalkStats = {
 export type TalkNote = {
     talkId: string,
     isFavorite: boolean,
-    watchLater: boolean|null,
-    ratings: {
-        bingo: string[]|null,
-        scale: number|null
-    },
-    comment: string|null
+    watchLater: boolean|null
 }
 
 export type UserTalkNote = {
@@ -21,4 +16,20 @@ export type UserTalkNote = {
 
 export type UserComputedEventInfos = {
     favoritedTalkIds: string[];
+}
+
+export type UserDailyFeedbacks = {
+    dayId: string,
+    feedbacks: Array<UserFeedback>
+}
+
+export type UserFeedback = {
+    timeslotId: string,
+    talkId: string,
+    ratings: {
+        'linear-rating': number | null,
+        'bingo': string[],
+        'custom-rating': string | null
+    },
+    comment: string | null
 }

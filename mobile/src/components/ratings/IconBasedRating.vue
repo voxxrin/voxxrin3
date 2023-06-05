@@ -3,7 +3,7 @@
     <ul class="iconBasedRating-list">
       <li>
         <ion-button v-for="(customIconChoice, index) in config.choices" :key="customIconChoice.id" @click="ratingSelected(customIconChoice)">
-          <ion-icon :icon="ICONS[customIconChoice.icon]" :class="{ '_active': selectedId !== undefined && customIconChoice.id === selectedId}"></ion-icon>
+          <ion-icon :icon="ICONS[customIconChoice.icon]" :class="{ '_active': selectedId !== null && customIconChoice.id === selectedId}"></ion-icon>
         </ion-button>
       </li>
     </ul>
@@ -36,16 +36,16 @@ const props = defineProps({
 })
 
 const $emits = defineEmits<{
-    (e: 'rating-selected', value: string|undefined): void
+    (e: 'rating-selected', value: string|null): void
 }>()
 
 const { LL } = typesafeI18n()
 
-const selectedId = ref<string|undefined>(undefined)
+const selectedId = ref<string|null>(null)
 
 function ratingSelected(choice: CustomIconChoiceEntry) {
     if(selectedId.value === choice.id) {
-        selectedId.value = undefined;
+        selectedId.value = null;
     } else {
         selectedId.value = choice.id;
     }
