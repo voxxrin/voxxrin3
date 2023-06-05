@@ -150,6 +150,9 @@ const feedbackCanBeSubmitted = computed(() => {
 }
 
 .rateTalkView {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
   background: var(--app-primary);
 
   &-head {
@@ -162,6 +165,7 @@ const feedbackCanBeSubmitted = computed(() => {
 }
 
 .rateTalkForm {
+  flex: 1;
   position: relative;
   padding: 24px var(--app-gutters) var(--app-gutters) var(--app-gutters);
   border-radius: 16px 16px 0 0;
@@ -172,20 +176,6 @@ const feedbackCanBeSubmitted = computed(() => {
   @media (prefers-color-scheme: dark) {
     background-color: var(--app-dark-contrast);
     border: 1px solid var(--app-line-contrast);
-  }
-
-  ion-list {
-    padding-top: 0;
-    background: transparent;
-
-    ion-item {
-      --background: transparent;
-      --padding-end: 0;
-
-      &:last-child {
-        --border-style: none;
-      }
-    }
   }
 }
 </style>

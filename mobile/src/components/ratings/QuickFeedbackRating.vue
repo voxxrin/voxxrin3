@@ -45,4 +45,18 @@ function ratingToggled(choiceId: string) {
 </script>
 
 <style scoped lang="scss">
+  ion-list {
+    margin-bottom: 16px;
+    padding-top: 0;
+    background: transparent;
+
+    ion-item {
+      --background: transparent !important;
+      --padding-end: 0;
+
+      &:last-child {
+        --border-style: none;
+      }
+    }
+  }
 </style>
