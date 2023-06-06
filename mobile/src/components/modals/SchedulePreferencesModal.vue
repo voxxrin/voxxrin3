@@ -2,25 +2,37 @@
   <ion-header>
     <ion-toolbar>
       <div class="ion-modal-title">
-        <ion-icon src="/assets/icons/solid/filter.svg"></ion-icon>
-        <ion-title>Filters talks</ion-title>
+        <ion-title>Settings list</ion-title>
+        <ion-badge class="round">1</ion-badge>
       </div>
-      <ion-button  @click="close()" slot="start" shape="round" size="default" fill="outline">
+      <ion-button @click="close()" slot="start" shape="round" size="small" fill="outline">
         <ion-icon src="/assets/icons/line/close-line.svg"></ion-icon>
       </ion-button>
     </ion-toolbar>
   </ion-header>
-  <ion-content class="ion-padding">
-    Hello world !
+  <ion-content>
+    <ion-list class="list-toggle">
+      <ion-item>
+        <ion-toggle>
+          <div class="ion-toggle-left">
+            <ion-icon aria-hidden="true" src="/assets/icons/solid/timer.svg"></ion-icon>
+            Hide today's past time-slots after 1h
+          </div>
+        </ion-toggle>
+      </ion-item>
+      <ion-item>
+        <ion-toggle>
+          <div class="ion-toggle-left">
+            <ion-icon aria-hidden="true" src="/assets/icons/solid/back-circle.svg"></ion-icon>
+            <div>
+              Hide past time-slots
+              <small>Including slots without feedback</small>
+            </div>
+          </div>
+        </ion-toggle>
+      </ion-item>
+    </ion-list>
   </ion-content>
-  <ion-footer>
-    <ion-button slot="start" shape="round" size="default" fill="outline">
-      <ion-icon src="/assets/icons/line/reload-line.svg"></ion-icon>
-    </ion-button>
-    <ion-button slot="end" size="default">
-      Apply filter
-    </ion-button>
-  </ion-footer>
 </template>
 
 <script lang="ts">
@@ -30,7 +42,7 @@ import {
     IonContent, IonHeader, IonInput, IonItem, IonTitle, IonToolbar,
     modalController,
 } from '@ionic/vue';
-import {defineComponent} from "vue";
+import {defineComponent, PropType} from "vue";
 
 export default defineComponent({
     components: {
@@ -43,8 +55,8 @@ export default defineComponent({
         },
     },
 });
-
 </script>
 
 <style lang="scss" scoped>
+
 </style>

@@ -343,4 +343,5 @@ async function openSchedulePreferencesModal() {
     0% {transform: translateX(0);}
     100% { transform: translateX(120%);}
   }
+
 </style>
