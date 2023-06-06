@@ -4,13 +4,15 @@ import { FullEvent } from "../models/Event";
 import {z} from "zod";
 import {LA_PRODUCT_CONF_CRAWLER} from "./la-product-conf/crawler";
 import {FIREBASE_CRAWLER_DESCRIPTOR_PARSER} from "./crawler-parsers";
-import {HexColor} from "../../../../shared/type-utils";
+import {HexColor, ISODatetime} from "../../../../shared/type-utils";
 import {WEB2DAY_CRAWLER} from "./web2day/crawler";
+import {match} from "ts-pattern";
+import {Temporal} from "@js-temporal/polyfill";
 const axios = require('axios');
 
 export type CrawlerKind<ZOD_TYPE extends z.ZodType> = {
     kind: string,
-    crawlerImpl: (eventId: string, crawlerDescriptor: z.infer<ZOD_TYPE>, criteria: CrawlCriteria) => Promise<FullEvent>,
+    crawlerImpl: (eventId: string, crawlerDescriptor: z.infer<ZOD_TYPE>, criteria: { dayIds?: string[]|undefined }) => Promise<FullEvent>,
     descriptorParser: ZOD_TYPE
 }
 
@@ -35,46 +37,64 @@ export const LANGUAGE_FALLBACK_COLORS: HexColor[] = [
 ];
 
 export type CrawlCriteria = {
-    dayId?: string|undefined
+    crawlingToken?: string|undefined;
+    dayIds?: string[]|undefined;
 }
 
 const crawlAll = async function(criteria: CrawlCriteria) {
+    if(!criteria.crawlingToken) {
+        throw new Error(`Missing crawlingToken mandatory query parameter !`)
+    }
+
     info("Starting crawling");
     const start = Date.now();
 
-    const events: Array<{id: string}> = []
-
     const fbCrawlerDescriptorSnapshot = await db.collection("crawlers")
-        .where("crawl", "==", true)
+        .where("crawlingKeys", "array-contains", criteria.crawlingToken)
         .get();
+
+
     if (fbCrawlerDescriptorSnapshot.empty) {
-        info("no events to crawl")
-    } else {
-        await Promise.all(fbCrawlerDescriptorSnapshot.docs.map(async doc => {
-            try {
-                const firebaseCrawlerDescriptor = FIREBASE_CRAWLER_DESCRIPTOR_PARSER.parse(doc.data());
-                const crawler = CRAWLERS.find(c => c.kind === firebaseCrawlerDescriptor.kind);
-                if(!crawler) {
-                    error(`Error: no crawler found for kind: ${firebaseCrawlerDescriptor.kind} (with id=${doc.id})`)
-                    return;
-                }
-
-                info(`crawling event ${doc.id} of type [${firebaseCrawlerDescriptor.kind}]...`)
-                const crawlerDescriptorContent = (await axios.get(firebaseCrawlerDescriptor.descriptorUrl)).data
-                const crawlerKindDescriptor = crawler.descriptorParser.parse(crawlerDescriptorContent);
-
-                const event = await crawler.crawlerImpl(doc.id, crawlerKindDescriptor, criteria);
-                await saveEvent(event)
-                events.push({id: event.id})
-            }catch(e: any) {
-                error(`Error during crawler with id ${doc.id}: ${e?.toString()}`)
-            }
-        }))
+        info(`No crawler found matching [${criteria.crawlingToken}] token !`)
+        return;
     }
 
-    const end = Date.now();
-    info(`Crawling done in ${(end-start)/1000}s`);
-    return events
+    const isAutoCrawling = criteria.crawlingToken.startsWith("auto:");
+    const matchingCrawlerDescriptors = fbCrawlerDescriptorSnapshot.docs.map((snap, _) => {
+        return {...FIREBASE_CRAWLER_DESCRIPTOR_PARSER.parse(snap.data()), id: snap.id }
+    }).filter(firestoreCrawler => {
+        return !isAutoCrawling
+            || Temporal.Now.instant().epochMilliseconds < Date.parse(firestoreCrawler.stopAutoCrawlingAfter)
+    });
+
+    return await Promise.all(matchingCrawlerDescriptors.map(async crawlerDescriptor => {
+        try {
+            const start = Temporal.Now.instant()
+
+            const crawler = CRAWLERS.find(c => c.kind === crawlerDescriptor.kind);
+            if(!crawler) {
+                error(`Error: no crawler found for kind: ${crawlerDescriptor.kind} (with id=${crawlerDescriptor.id})`)
+                return;
+            }
+
+            info(`crawling event ${crawlerDescriptor.id} of type [${crawlerDescriptor.kind}]...`)
+            const crawlerDescriptorContent = (await axios.get(crawlerDescriptor.descriptorUrl)).data
+            const crawlerKindDescriptor = crawler.descriptorParser.parse(crawlerDescriptorContent);
+
+            const event = await crawler.crawlerImpl(crawlerDescriptor.id, crawlerKindDescriptor, { dayIds: criteria.dayIds });
+            await saveEvent(event)
+
+            const end = Temporal.Now.instant()
+            return {
+                eventId: crawlerDescriptor.id,
+                days: event.daySchedules.map(ds => ds.day),
+                durationInSeconds: start.until(end).total('seconds')
+            }
+        }catch(e: any) {
+            error(`Error during crawler with id ${crawlerDescriptor.id}: ${e?.toString()}`)
+            throw e;
+        }
+    }))
 };
 
 const saveEvent = async function(event: FullEvent) {

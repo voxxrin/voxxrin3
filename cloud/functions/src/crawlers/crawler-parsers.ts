@@ -90,8 +90,8 @@ export const EVENT_DESCRIPTOR_PARSER = LISTABLE_EVENT_PARSER.extend({
             scale: z.object({
                 enabled: z.boolean(),
                 icon: z.enum(['star', 'thumbs-up']),
-                labels: z.array(z.string()).min(3).max(7)
-                    .transform(arr => arr as ConferenceDescriptor['features']['ratings']['scale']['labels']),
+                labels: z.array(z.string())
+                    .transform(arr => arr as ConferenceDescriptor['features']['ratings']['scale']['labels'])
             }),
             'free-text': z.object({
                 enabled: z.boolean(),
@@ -207,7 +207,8 @@ export const FULL_EVENT_PARSER = z.object({
 })
 
 export const FIREBASE_CRAWLER_DESCRIPTOR_PARSER = z.object({
-    kind: z.string(),
+    crawlingKeys: z.array(z.string()),
     descriptorUrl: z.string(),
-    crawl: z.boolean()
+    kind: z.string(),
+    stopAutoCrawlingAfter: ISO_DATETIME_PARSER,
 })
