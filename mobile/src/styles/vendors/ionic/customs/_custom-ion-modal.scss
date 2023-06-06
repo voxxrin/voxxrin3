@@ -1,0 +1,21 @@
+ion-modal {
+  .ion-modal-title {
+    display: flex;
+    align-items: center;
+    position: relative;
+
+    ion-icon {
+      font-size: 24px;
+    }
+    ion-title {
+      padding-inline: 4px;
+      font-size: 18px;
+      font-weight: bold;
+      text-align: left;
+    }
+  }
+
+  ion-content {
+    --background: var(--app-white);
+  }
+}
