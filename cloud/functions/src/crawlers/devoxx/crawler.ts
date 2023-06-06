@@ -39,7 +39,7 @@ const DEVOXX_DESCRIPTOR_PARSER = EVENT_DESCRIPTOR_PARSER.omit({
 export const DEVOXX_CRAWLER: CrawlerKind<typeof DEVOXX_DESCRIPTOR_PARSER> = {
     kind: 'devoxx',
     descriptorParser: DEVOXX_DESCRIPTOR_PARSER,
-    crawlerImpl: async (eventId: string, descriptor: z.infer<typeof DEVOXX_DESCRIPTOR_PARSER>) => {
+    crawlerImpl: async (eventId: string, descriptor: z.infer<typeof DEVOXX_DESCRIPTOR_PARSER>, criteria: { dayIds?: string[]|undefined }) => {
         const res = await axios.get(`https://${eventId}.cfp.dev/api/public/event`)
         const e: CfpEvent = res.data;
 
@@ -54,6 +54,10 @@ export const DEVOXX_CRAWLER: CrawlerKind<typeof DEVOXX_DESCRIPTOR_PARSER> = {
                 break;
             }
         }
+
+        const daysMatchingCriteria = days.filter(d => {
+            return !criteria.dayIds || criteria.dayIds.includes(d.id);
+        })
 
         const eventInfo = {
             id: eventId,
@@ -76,7 +80,7 @@ export const DEVOXX_CRAWLER: CrawlerKind<typeof DEVOXX_DESCRIPTOR_PARSER> = {
             daySchedules: DailySchedule[] = [],
             eventRooms: ConferenceDescriptor['rooms'] = [],
             eventTalkFormats: ConferenceDescriptor['talkFormats'] = [];
-        await Promise.all(days.map(async day => {
+        await Promise.all(daysMatchingCriteria.map(async day => {
             const {daySchedule, talkStats, talks, rooms, talkFormats} = await crawlDevoxxDay(eventId, day.id)
             daySchedules.push(daySchedule)
             for (const talk of talks) {

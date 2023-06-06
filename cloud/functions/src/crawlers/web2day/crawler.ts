@@ -49,11 +49,11 @@ function extractRangeFromTimeslot(rawTimeslot: string, day: Day, timezone: strin
 export const WEB2DAY_CRAWLER: CrawlerKind<typeof WEB2DAY_PARSER> = {
     kind: 'web2day',
     descriptorParser: WEB2DAY_PARSER,
-    crawlerImpl: async (eventId: string, descriptor: z.infer<typeof WEB2DAY_PARSER>, criteria: CrawlCriteria): Promise<FullEvent> => {
+    crawlerImpl: async (eventId: string, descriptor: z.infer<typeof WEB2DAY_PARSER>, criteria: { dayIds?: string[]|undefined }): Promise<FullEvent> => {
         const $schedulePage = cheerio.load((await axios.get(`https://web2day.co/programme/`, {responseType: 'text'})).data);
 
-        const days = criteria.dayId?descriptor.days.filter(d => d.id === criteria.dayId):descriptor.days;
-        const daySectionSelector = descriptor.days.find(d => d.id === criteria.dayId)?.schedulePageElementId
+        const days = criteria.dayIds?descriptor.days.filter(d => criteria.dayIds?.includes(d.id)):descriptor.days;
+        const daySectionSelector = descriptor.days.find(d => criteria.dayIds?.includes(d.id))?.schedulePageElementId
 
         const rawDetailedTalks = (await Promise.all(
             $schedulePage(`${daySectionSelector?'#'+daySectionSelector:''} .event-link`).map(async(_, eventLink) => {

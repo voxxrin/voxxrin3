@@ -207,7 +207,8 @@ export const FULL_EVENT_PARSER = z.object({
 })
 
 export const FIREBASE_CRAWLER_DESCRIPTOR_PARSER = z.object({
-    kind: z.string(),
+    crawlingKeys: z.array(z.string()),
     descriptorUrl: z.string(),
-    crawl: z.boolean()
+    kind: z.string(),
+    stopAutoCrawlingAfter: ISO_DATETIME_PARSER,
 })
