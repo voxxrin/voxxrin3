@@ -34,13 +34,15 @@ const DEVOXX_DESCRIPTOR_PARSER = EVENT_DESCRIPTOR_PARSER.omit({
     // We're not putting tracks here even though we can get them from devoxx API
     // because we need a theme color for them that are currently *not* provided by the API
     talkFormats: true, rooms: true,
+}).extend({
+    cfpId: z.string()
 })
 
 export const DEVOXX_CRAWLER: CrawlerKind<typeof DEVOXX_DESCRIPTOR_PARSER> = {
     kind: 'devoxx',
     descriptorParser: DEVOXX_DESCRIPTOR_PARSER,
     crawlerImpl: async (eventId: string, descriptor: z.infer<typeof DEVOXX_DESCRIPTOR_PARSER>, criteria: { dayIds?: string[]|undefined }) => {
-        const res = await axios.get(`https://${eventId}.cfp.dev/api/public/event`)
+        const res = await axios.get(`https://${descriptor.cfpId}.cfp.dev/api/public/event`)
         const e: CfpEvent = res.data;
 
         const start = e.fromDate.substring(0, 10) as ISOLocalDate
