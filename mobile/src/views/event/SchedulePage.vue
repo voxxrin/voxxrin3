@@ -1,5 +1,7 @@
 <template>
   <ion-page>
+    <!-- TODO Hide back drop when list ion-fab-btn is close -->
+    <ion-backdrop :visible="false"></ion-backdrop>
     <ion-content :fullscreen="true">
       <current-event-header v-if="event" :event="event"/>
       <ion-header class="toolbarHeader">
@@ -204,7 +206,6 @@ function toggleExpandedTimeslot(timeslot: VoxxrinScheduleTimeSlot) {
   ion-fab-button {
     --background: var(--voxxrin-event-theme-colors-secondary-hex);
     --color: var(--voxxrin-event-theme-colors-secondary-contrast-hex);
-
     height: $ion-fab-button-height;
   }
 
@@ -218,6 +219,9 @@ function toggleExpandedTimeslot(timeslot: VoxxrinScheduleTimeSlot) {
   }
 
   .listFeedbackSlot {
+    max-height: calc(74svh - 56px);
+    overflow-y: auto;
+
     &.temporarily-displayed-during-inactive-animation {
       display: flex;
     }
@@ -252,7 +256,6 @@ function toggleExpandedTimeslot(timeslot: VoxxrinScheduleTimeSlot) {
       border-radius: 8px;
       background-color: var(--voxxrin-event-theme-colors-secondary-contrast-hex);
       border: 1px solid var(--app-beige-line);
-      filter: drop-shadow(-4px 0px 4px rgba(0, 0, 0, 0.15));
 
       @media (prefers-color-scheme: dark) {
         background-color: var(--voxxrin-event-theme-colors-tertiary-hex);
@@ -297,5 +300,9 @@ function toggleExpandedTimeslot(timeslot: VoxxrinScheduleTimeSlot) {
   @keyframes slide-left-revert {
     0% {transform: translateX(0);}
     100% { transform: translateX(120%);}
+  }
+
+  ion-backdrop {
+    opacity: 0.5;
   }
 </style>
