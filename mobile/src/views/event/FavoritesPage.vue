@@ -12,9 +12,10 @@
         </ion-toolbar>
       </ion-header>
 
-      <p>
-        Favorites planned here !
-      </p>
+      <div class="infoMessage ion-text-center">
+        <ion-icon class="infoMessage-iconIllu" src="/assets/images/svg/illu-no-favorites.svg"></ion-icon>
+        <span class="infoMessage-title">No favorites yet</span>
+      </div>
 
     </ion-content>
   </ion-page>
