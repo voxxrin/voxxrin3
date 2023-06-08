@@ -4,10 +4,11 @@ import { FullEvent } from "../models/Event";
 import {z} from "zod";
 import {LA_PRODUCT_CONF_CRAWLER} from "./la-product-conf/crawler";
 import {FIREBASE_CRAWLER_DESCRIPTOR_PARSER} from "./crawler-parsers";
-import {HexColor, ISODatetime} from "../../../../shared/type-utils";
+import {HexColor} from "../../../../shared/type-utils";
 import {WEB2DAY_CRAWLER} from "./web2day/crawler";
 import {match} from "ts-pattern";
 import {Temporal} from "@js-temporal/polyfill";
+import {CAMPING_DES_SPEAKERS_CRAWLER} from "./camping-des-speakers/crawler";
 const axios = require('axios');
 
 export type CrawlerKind<ZOD_TYPE extends z.ZodType> = {
@@ -19,7 +20,8 @@ export type CrawlerKind<ZOD_TYPE extends z.ZodType> = {
 const CRAWLERS: CrawlerKind<any>[] = [
     DEVOXX_CRAWLER,
     LA_PRODUCT_CONF_CRAWLER,
-    WEB2DAY_CRAWLER
+    WEB2DAY_CRAWLER,
+    CAMPING_DES_SPEAKERS_CRAWLER
 ]
 
 export const TALK_FORMAT_FALLBACK_COLORS: HexColor[] = [
