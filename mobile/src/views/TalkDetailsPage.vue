@@ -92,7 +92,7 @@
                 {{speaker.fullName}}
                 <span class="speakerInfo-company" v-if="speaker.companyName">
                      <ion-icon aria-hidden="true" :icon="business"></ion-icon>
-                  ({{speaker.companyName}})
+                  {{speaker.companyName}}
                 </span>
               </div>
               <div class="speakerInfo-description">
