@@ -6,7 +6,6 @@ import {LA_PRODUCT_CONF_CRAWLER} from "./la-product-conf/crawler";
 import {FIREBASE_CRAWLER_DESCRIPTOR_PARSER} from "./crawler-parsers";
 import {HexColor} from "../../../../shared/type-utils";
 import {WEB2DAY_CRAWLER} from "./web2day/crawler";
-import {match} from "ts-pattern";
 import {Temporal} from "@js-temporal/polyfill";
 import {CAMPING_DES_SPEAKERS_CRAWLER} from "./camping-des-speakers/crawler";
 const axios = require('axios');
@@ -65,7 +64,7 @@ const crawlAll = async function(criteria: CrawlCriteria) {
     const matchingCrawlerDescriptors = fbCrawlerDescriptorSnapshot.docs.map((snap, _) => {
         return {...FIREBASE_CRAWLER_DESCRIPTOR_PARSER.parse(snap.data()), id: snap.id }
     }).filter(firestoreCrawler => {
-        return !isAutoCrawling
+        return isAutoCrawling
             || Temporal.Now.instant().epochMilliseconds < Date.parse(firestoreCrawler.stopAutoCrawlingAfter)
     });
 
