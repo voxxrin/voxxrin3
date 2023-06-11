@@ -20,6 +20,8 @@ export function useUserTalkNotes(
     eventIdRef: Unreffable<EventId | undefined>,
     talkIdRef: Unreffable<TalkId | undefined>) {
 
+    console.debug(`useUserTalkNotes(${unref(eventIdRef)?.value}, ${unref(talkIdRef)?.value})`)
+
     const userRef = useCurrentUser()
 
     const firestoreUserTalkNotesSource = computed(() => {
@@ -145,6 +147,7 @@ export function useUserTalkNotes(
 
 export function useUserEventAllFavoritedTalkIds(eventIdRef: Unreffable<EventId | undefined>) {
 
+    console.debug(`useUserEventAllFavoritedTalkIds(${unref(eventIdRef)?.value})`)
     const userRef = useCurrentUser()
 
     const firestoreUserAllFavoritedTalkIdsSource = computed(() => {

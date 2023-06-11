@@ -19,10 +19,10 @@ export function useEventTalk(
     console.debug(`useEventTalk(${unref(conferenceDescriptorRef)?.id.value}, ${unref(talkIdRef)?.value})`)
     watch(() => unref(conferenceDescriptorRef), (newVal, oldVal) => {
         console.debug(`useEventTalk[conferenceDescriptorRef] updated from [${oldVal?.id.value}] to [${newVal?.id.value}]`)
-    })
+    }, {immediate: true})
     watch(() => unref(talkIdRef), (newVal, oldVal) => {
         console.debug(`useEventTalk[talkIdRef] updated from [${oldVal?.value}] to [${newVal?.value}]`)
-    })
+    }, {immediate: true})
 
     const firestoreTalkDetailsSource = computed(() => {
         const conferenceDescriptor = unref(conferenceDescriptorRef),

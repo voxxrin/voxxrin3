@@ -13,6 +13,7 @@ import {createVoxxrinTalkStatsFromFirestore} from "@/models/VoxxrinTalkStats";
 export function useTalkStats(eventIdRef: Unreffable<EventId | undefined>,
            talkIdRef: Unreffable<TalkId | undefined>) {
 
+    console.debug(`useTalkStats(${unref(eventIdRef)?.value}, ${unref(talkIdRef)?.value})`)
     const firestoreTalkStatsSource = computed(() => {
         const eventId = unref(eventIdRef),
             talkId = unref(talkIdRef);
@@ -37,10 +38,11 @@ export function useTalkStats(eventIdRef: Unreffable<EventId | undefined>,
     // this count will be lost until user gets back online and his fav/unfav is taken into consideration
     // into firestore
     const inMemoryDeltaUntilFirestoreRefreshRef = ref(0);
-    watch([firestoreTalkStatsRef], ([firestoreTalkStats]) => {
+    watch(() => unref(firestoreTalkStatsRef), (newVal, oldVal) => {
+        console.debug(`useTalkStats(${unref(eventIdRef)?.value}, ${unref(talkIdRef)?.value})[firestoreTalkStatsRef] updated from [${oldVal?.id}] to [${newVal?.id}]`)
         // Resetting local delta everytime we receive a firestore refresh
         inMemoryDeltaUntilFirestoreRefreshRef.value = 0;
-    })
+    }, {immediate: true})
 
     return {
         eventTalkStats: computed(() => {

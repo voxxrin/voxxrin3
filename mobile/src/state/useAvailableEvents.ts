@@ -11,6 +11,7 @@ import {useCollection} from "vuefire";
 
 export function useAvailableEvents() {
 
+    console.debug(`useAvailableEvents()`)
     const firestoreListableEventsSource = computed(() =>
         collection(db, 'events') as CollectionReference<ListableEvent>
     );
