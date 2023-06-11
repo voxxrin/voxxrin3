@@ -9,7 +9,7 @@
         <span class="listTalks-divider-separator"></span>
       </ion-item-divider>
       <ion-item class="listTalks-item" v-for="(talk) in perFormatGroup.talks" :key="talk.id.value">
-        <schedule-talk :talk="talk" @talkClicked="$emit('talk-clicked', $event)" :is-highlighted="isHighlighted">
+        <schedule-talk :talk="talk" @talkClicked="$emit('talk-clicked', $event)" :is-highlighted="isHighlighted" :event="event">
           <template #upper-right="upperRightContext">
             <slot name="talk-card-upper-right" :talk="upperRightContext.talk" />
           </template>

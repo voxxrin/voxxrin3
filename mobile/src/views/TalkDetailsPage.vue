@@ -58,7 +58,7 @@
         <h1 class="talkDetails-title">{{talk?.title}}</h1>
         <div class="talkDetails-infos">
           <div class="talkDetails-infos-listTrack">
-          <ion-badge class="trackBadge" :style="{
+          <ion-badge v-if="event.talkTracks.length > 1" class="trackBadge" :style="{
               '--background': talk?.track.themeColor
           }">{{talk?.track.title}}</ion-badge>
           </div>
