@@ -28,7 +28,7 @@ export default defineConfig(({ command, mode }) => {
           swDest: 'sw.js',
         },
         manifest: {
-          name: "Voxxrin",
+          name: "Voxxrin - Your conference companion",
           short_name: "Voxxrin",
           start_url: "index.html",
           display: "standalone",
@@ -37,8 +37,8 @@ export default defineConfig(({ command, mode }) => {
             sizes: "512x512",
             type: "image/png"
           }],
-          background_color: "#F7F6F0",
-          theme_color: "#F7F6F0"
+          background_color: "#E30A63",
+          theme_color: "#E30A63"
         }
       })
     ],

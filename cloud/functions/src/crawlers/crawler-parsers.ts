@@ -1,5 +1,6 @@
 import {z, ZodLiteral} from "zod";
 import {ISODatetime, ISOLocalDate} from "../../../../shared/type-utils";
+import {ConferenceDescriptor} from "../../../../shared/conference-descriptor.firestore";
 
 
 export const HEX_COLOR_PARSER = z.string().regex(/#[0-9a-fA-F]{6}/gi) as unknown as ZodLiteral<`#${string}`>
@@ -55,7 +56,7 @@ export const EVENT_THEME_PARSER = z.object({
 export const LISTABLE_EVENT_PARSER = z.object({
     id: z.string(),
     title: z.string(),
-    description: z.string().nullish(),
+    description: z.string().nullable(),
     days: z.array(DAY_PARSER),
     timezone: z.string(),
     keywords: z.array(z.string()),
@@ -88,8 +89,9 @@ export const EVENT_DESCRIPTOR_PARSER = LISTABLE_EVENT_PARSER.extend({
             }),
             scale: z.object({
                 enabled: z.boolean(),
-                icon: z.enum(['star', 'thumbs-up']),
-                max: z.number()
+                icon: z.union([z.literal('star'), z.literal('thumbs-up')]),
+                labels: z.array(z.string())
+                    .transform(arr => arr as ConferenceDescriptor['features']['ratings']['scale']['labels'])
             }),
             'free-text': z.object({
                 enabled: z.boolean(),
@@ -99,7 +101,13 @@ export const EVENT_DESCRIPTOR_PARSER = LISTABLE_EVENT_PARSER.extend({
                 enabled: z.boolean(),
                 choices: z.array(z.object({
                     id: z.string(),
-                    icon: z.enum(['smiling_face', 'neutral_face', 'confused_face'])
+                    icon: z.union([
+                        z.literal("happy"),
+                        z.literal("sad"),
+                        z.literal("thumbs-up"),
+                        z.literal("hand-right"),
+                        z.literal("thumbs-down")
+                    ])
                 }))
             })
         }),
@@ -205,7 +213,8 @@ export const FULL_EVENT_PARSER = z.object({
 })
 
 export const FIREBASE_CRAWLER_DESCRIPTOR_PARSER = z.object({
-    kind: z.string(),
+    crawlingKeys: z.array(z.string()),
     descriptorUrl: z.string(),
-    crawl: z.boolean()
+    kind: z.string(),
+    stopAutoCrawlingAfter: ISO_DATETIME_PARSER,
 })

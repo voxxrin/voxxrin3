@@ -71,6 +71,10 @@ type RootTranslation = {
 	 */
 	Schedule: string
 	/**
+	 * S​e​a​r​c​h
+	 */
+	Search: string
+	/**
 	 * F​a​v​o​r​i​t​e​s
 	 */
 	Favorites: string
@@ -111,6 +115,10 @@ type RootTranslation = {
 	 * T​a​l​k​ ​s​u​m​m​a​r​y
 	 */
 	Talk_summary: string
+	/**
+	 * T​a​l​k​ ​d​e​t​a​i​l​s
+	 */
+	Talk_details: string
 	/**
 	 * S​p​e​a​k​e​r​s
 	 */
@@ -196,6 +204,10 @@ export type TranslationFunctions = {
 	 */
 	Schedule: () => LocalizedString
 	/**
+	 * Search
+	 */
+	Search: () => LocalizedString
+	/**
 	 * Favorites
 	 */
 	Favorites: () => LocalizedString
@@ -235,6 +247,10 @@ export type TranslationFunctions = {
 	 * Talk summary
 	 */
 	Talk_summary: () => LocalizedString
+	/**
+	 * Talk details
+	 */
+	Talk_details: () => LocalizedString
 	/**
 	 * Speakers
 	 */

@@ -6,16 +6,17 @@
 
       <ion-header class="stickyHeader">
         <ion-toolbar>
-          <ion-title class="stickyHeader-title" slot="start" >Feedbacks</ion-title>
+          <ion-title slot="start" >Feedbacks</ion-title>
           <ion-button slot="end" shape="round" size="small">
             <ion-icon src="/assets/icons/line/search-line.svg"></ion-icon>
           </ion-button>
         </ion-toolbar>
       </ion-header>
 
-      <p>
-        Feedbacks planned here !
-      </p>
+      <div class="infoMessage ion-text-center">
+        <ion-icon class="infoMessage-iconIllu" src="/assets/images/svg/illu-no-feedback.svg"></ion-icon>
+        <span class="infoMessage-title">No feedback yet</span>
+      </div>
 
     </ion-content>
   </ion-page>

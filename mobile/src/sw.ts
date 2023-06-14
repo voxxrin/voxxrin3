@@ -2,14 +2,17 @@ import {registerRoute, Route, setDefaultHandler} from 'workbox-routing';
 import {NetworkOnly, StaleWhileRevalidate} from 'workbox-strategies';
 import { ExpirationPlugin } from 'workbox-expiration';
 import {clientsClaim} from "workbox-core";
-import {precacheAndRoute} from "workbox-precaching";
+import {cleanupOutdatedCaches, precacheAndRoute} from "workbox-precaching";
 
 declare let self: ServiceWorkerGlobalScope
 
 // TODO: comment this line if you want to debug workbox (very verbose!) logs in the console
 self.__WB_DISABLE_DEV_LOGS = true
 
-precacheAndRoute(self.__WB_MANIFEST);
+cleanupOutdatedCaches()
+const wbManifest = self.__WB_MANIFEST
+precacheAndRoute(wbManifest);
+
 setDefaultHandler(new NetworkOnly())
 
 // A new route that matches same-origin image requests and handles

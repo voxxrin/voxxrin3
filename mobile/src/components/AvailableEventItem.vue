@@ -95,7 +95,7 @@ const isPinnedRef = computed(() => {
       display: flex;
       align-items: center;
       justify-content: center;
-      background-color: white;
+      background-color: var(--voxxrin-event-theme-colors-primary-contrast-hex);
       width: 68px;
       height: 68px;
       padding: 8px;

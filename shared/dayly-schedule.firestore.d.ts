@@ -1,4 +1,5 @@
 import type {ISODatetime} from "./type-utils";
+import {HexColor} from "./type-utils";
 
 export type Room = {id: string, title: string}
 
@@ -9,17 +10,19 @@ export type Break = {
 }
 
 export type Track = {id: string, title: string}
+export type ThemedTrack = Track & { themeColor: HexColor };
 export type TalkFormat = {
     duration: `PT${number}m`,
     id: string,
     title: string
 }
+export type ThemedTalkFormat = TalkFormat & { themeColor: HexColor }
 export type Speaker = {
-    photoUrl?: string|undefined|null,
-    companyName?: string|undefined|null,
+    photoUrl?: string|null,
+    companyName?: string|null,
     fullName: string,
     id: string,
-    bio?: string|undefined|null,
+    bio?: string|null,
     social: Array<{type: "twitter"|"linkedin"|"mastodon"|"instagram"|"youtube"|"twitch", url: string}>
 }
 export type Talk = {

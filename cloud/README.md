@@ -13,7 +13,7 @@ From `cloud/functions` directory:
 - If you want to access an existing Firestore instance in the cloud (instead of using local Firebase émulator):  
   - Run `npx firebase login` to authenticate on your Google account
   - Then access to a firebase project (create a new one or ask to join the team's one) - see https://firebase.google.com/docs/projects/learn-more?hl=en
-    `firebase use --add <FIREBASE_PROJECT_ID>` where `<FIREBASE_PROJECT_ID>` is the name of the firebase project
+    `npx firebase use --add <FIREBASE_PROJECT_ID>` where `<FIREBASE_PROJECT_ID>` is the name of the firebase project
 
 ## Development
 

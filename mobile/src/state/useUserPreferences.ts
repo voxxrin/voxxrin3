@@ -14,6 +14,8 @@ import {createSharedComposable} from "@vueuse/core";
 
 export function useUserPreferences() {
 
+    console.debug(`useUserPreferences()`)
+
     const userRef = useCurrentUser()
 
     const firestoreUserPreferencesSource = computed(() => {

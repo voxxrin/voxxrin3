@@ -3,10 +3,16 @@
 ion-badge {
     display: flex;
     align-items: center;
-    border-radius: 4px;
+    justify-content: center;
     height: 28px;
+    border-radius: 8px;
+    min-width: 28px;
     column-gap: 4px;
-    font-weight: normal;
+
+    &._small {
+        height: 18px;
+        min-width: 18px;
+    }
 
     @media (prefers-color-scheme: dark) {
         --background: rgba(var(--app-dark-contrast-rgb));

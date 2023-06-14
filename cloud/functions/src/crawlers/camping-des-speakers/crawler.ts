@@ -19,12 +19,9 @@ import {CrawlCriteria, CrawlerKind} from "../crawl";
 import {ISODatetime} from "../../../../../shared/type-utils";
 import {Temporal} from "@js-temporal/polyfill";
 
-const WEB2DAY_PARSER = EVENT_DESCRIPTOR_PARSER.omit({
+const CAMPING_DES_SPEAKERS_PARSER = EVENT_DESCRIPTOR_PARSER.omit({
     id: true
 }).extend({
-    days: z.array(DAY_PARSER.extend({
-        schedulePageElementId: z.string()
-    })),
     breaks: z.array(z.object({
         dayId: z.string(),
         breakTimeslot: BREAK_TIME_SLOT_PARSER.omit({ type: true, id: true }).extend({
@@ -38,78 +35,71 @@ function extractIdFromUrl(url: string) {
     return urlChunks[urlChunks.length-1] || urlChunks[urlChunks.length-2];
 }
 
-function extractRangeFromTimeslot(rawTimeslot: string, day: Day, timezone: string): { start: Temporal.ZonedDateTime, end: Temporal.ZonedDateTime } {
-    const [rawStart, rawEnd] = rawTimeslot.split(" - ");
-    return {
-        start: Temporal.ZonedDateTime.from(`${day.localDate}T${rawStart.replace("h", ":")}:00[${timezone}]`),
-        end: Temporal.ZonedDateTime.from(`${day.localDate}T${rawEnd.replace("h", ":")}:00[${timezone}]`),
+function extractRawTimeCoordinatesFrom(rawTimeCoords: string, confDescriptor: z.infer<typeof CAMPING_DES_SPEAKERS_PARSER>, talkId: string){
+    const [dayId, rawStartingTime, rawDurationWithMinutes] = rawTimeCoords.split(" - ")
+    const [ durationStr, ..._] = rawDurationWithMinutes.split(" ")
+    const minutes = Number(durationStr)
+
+    const day = confDescriptor.days.find(d => d.id === dayId)
+    if(!day) {
+        throw new Error(`Day [${dayId}] not found in conference descriptor for talk ${talkId}`);
     }
+    if(!minutes || isNaN(minutes)) {
+        throw new Error(`Invalid duration [${rawDurationWithMinutes}] for talk ${talkId}`);
+    }
+
+    const start = Temporal.ZonedDateTime.from(`${day.localDate}T${rawStartingTime.replace("h",":")}:00[${confDescriptor.timezone}]`),
+          end = start.add({ minutes })
+
+    return { day, start, end, duration: minutes };
 }
 
-export const WEB2DAY_CRAWLER: CrawlerKind<typeof WEB2DAY_PARSER> = {
-    kind: 'web2day',
-    descriptorParser: WEB2DAY_PARSER,
-    crawlerImpl: async (eventId: string, descriptor: z.infer<typeof WEB2DAY_PARSER>, criteria: { dayIds?: string[]|undefined }): Promise<FullEvent> => {
-        const $schedulePage = cheerio.load((await axios.get(`https://web2day.co/programme/`, {responseType: 'text'})).data);
+export const CAMPING_DES_SPEAKERS_CRAWLER: CrawlerKind<typeof CAMPING_DES_SPEAKERS_PARSER> = {
+    kind: 'camping-des-speakers',
+    descriptorParser: CAMPING_DES_SPEAKERS_PARSER,
+    crawlerImpl: async (eventId: string, descriptor: z.infer<typeof CAMPING_DES_SPEAKERS_PARSER>, criteria: { dayIds?: string[]|undefined }): Promise<FullEvent> => {
+        const $schedulePage = cheerio.load((await axios.get(`https://camping-speakers.fr/sessions/`, {responseType: 'text'})).data);
 
-        const days = criteria.dayIds?descriptor.days.filter(d => criteria.dayIds?.includes(d.id)):descriptor.days;
-        const daySectionSelector = descriptor.days.find(d => criteria.dayIds?.includes(d.id))?.schedulePageElementId
+        const days = descriptor.days;
 
         const rawDetailedTalks = (await Promise.all(
-            $schedulePage(`${daySectionSelector?'#'+daySectionSelector:''} .event-link`).map(async(_, eventLink) => {
-                const $eventLink = $schedulePage(eventLink);
+            $schedulePage(`.session h4 a` as string).map(async(_, sessionLink) => {
+                const $sessionLink = $schedulePage(sessionLink);
 
-                const talkUrl = $eventLink.attr()?.href;
+                const talkUrl = $sessionLink.attr()?.href;
 
                 if(!talkUrl) {
                     return undefined;
                 }
 
                 const talkId = extractIdFromUrl(talkUrl);
-                const $talkPage = cheerio.load((await axios.get(`${talkUrl}`, {responseType: 'text'})).data);
+                const $talkPage = cheerio.load((await axios.get(`https://camping-speakers.fr/sessions/${talkUrl}`, {responseType: 'text'})).data);
 
-                const flagUrl = $talkPage(`.eventSingle-flag`).attr()?.src;
-                const lang = flagUrl?(flagUrl.endsWith('france.svg')?'FR':'EN'):'FR';
+                // const eventType = $talkPage(`.eventSingle-type`).text().trim()
+                // const dayId = $talkPage(`.eventSingle-day`).text().trim()
+                const timeCoordinates = extractRawTimeCoordinatesFrom($talkPage(`.when`).text().trim(), descriptor, talkId)
 
-                const eventType = $talkPage(`.eventSingle-type`).text().trim()
-                const dayId = $talkPage(`.eventSingle-day`).text().trim()
-                const day = descriptor.days.find(d => d.id === dayId)
-                if(!day) {
-                    throw new Error(`No day found matching ${dayId} in descriptor.days (${descriptor.days.map(d => d.id).join(", ")})`)
-                }
-
-                const rawTimeslot = $talkPage(`.eventSingle-hour`).text().trim()
-                const {start, end} = extractRangeFromTimeslot(rawTimeslot, day, descriptor.timezone);
-                const minutesDuration = start.until(end).total('minutes')
-                const roomId = $talkPage(`.eventSingle-room`).text().trim()
+                const roomId = $talkPage(`.where`).text().trim()
                 const room = descriptor.rooms.find(r => r.id === roomId);
                 if(!room) {
                     throw new Error(`No room found matching ${roomId} in descriptor.rooms (${descriptor.rooms.map(r => r.id).join(", ")})`)
                 }
 
-                const universe = $talkPage(`.eventSingle-universe span`).text().trim()
-                const track = descriptor.talkTracks.find(t => t.id === universe)!;
+                const trackId = 'NoTrack'
+                const track = descriptor.talkTracks.find(t => t.id === trackId);
                 if(!track) {
-                    throw new Error(`No track found matching ${universe} in descriptor.talkTracks (${descriptor.talkTracks.map(t => t.id).join(", ")})`)
+                    throw new Error(`No track found matching ${trackId} in descriptor.talkTracks (${descriptor.talkTracks.map(t => t.id).join(", ")})`)
                 }
-                const format = descriptor.talkFormats.find(f => f.id === `${eventType}@${minutesDuration}`)!
+                const format = descriptor.talkFormats.find(f => f.duration === `PT${timeCoordinates.duration}m`)
                 if(!format) {
-                    throw new Error(`No talk format found matching [${eventType}@${minutesDuration}] in descriptor.talkFormats (${descriptor.talkFormats.map(f => f.id).join(", ")})`)
+                    throw new Error(`No talk format found matching duration [PT${timeCoordinates.duration}m] in descriptor.talkFormats (${descriptor.talkFormats.map(f => f.duration).join(", ")})`)
                 }
 
                 let summary: string|null, title: string|null;
-                if(lang === 'EN') {
-                    const enTalkUrl = talkUrl.replace("web2day.co/event", "web2day.co/en/event");
-                    const $enTalkPage = cheerio.load((await axios.get(`${enTalkUrl}`, {responseType: 'text'})).data);
+                summary = $talkPage(`.content`).html();
+                title = $talkPage(`h2`).text().trim();
 
-                    summary = $enTalkPage(`.eventSingle-desc`).html()
-                    title = $enTalkPage(`h1`).text().trim()
-                } else {
-                    summary = $talkPage(`.eventSingle-desc`).html()
-                    title = $talkPage(`h1`).text().trim()
-                }
-
-                const speakerUrls = $talkPage('.speakerList .speakerSingle-lnk').map( (_, speakerLink) => {
+                const speakerUrls = $talkPage(`.speakers a`).map( (_, speakerLink) => {
                     const speakerUrl = $talkPage(speakerLink).attr()?.href;
                     if(!speakerUrl) {
                         return undefined;
@@ -121,13 +111,13 @@ export const WEB2DAY_CRAWLER: CrawlerKind<typeof WEB2DAY_PARSER> = {
 
                 return {
                     talkId, room, track, title, summary,
-                    lang, format, day,
-                    start: start.toInstant().toString() as ISODatetime, startZDT: start,
-                    end: end.toInstant().toString() as ISODatetime, endZDT: end,
-                    minutesDuration, speakerUrls,
+                    lang: "FR", format, day: timeCoordinates.day,
+                    start: timeCoordinates.start.toInstant().toString() as ISODatetime, startZDT: timeCoordinates.start,
+                    end: timeCoordinates.end.toInstant().toString() as ISODatetime, endZDT: timeCoordinates.end,
+                    minutesDuration: timeCoordinates.duration, speakerUrls,
                 };
             }).toArray()
-        )).filter(talk => talk?.title.indexOf("⚠️ CONFÉRENCE ANNULÉE ⚠️") === -1);
+        ));
 
         const uniqueSpeakerUrls = Array.from(new Set(rawDetailedTalks.flatMap(t => t!.speakerUrls.map(sp => sp.speakerUrl))))
         const speakers = await Promise.all(uniqueSpeakerUrls.map(async spUrl => {
@@ -135,37 +125,10 @@ export const WEB2DAY_CRAWLER: CrawlerKind<typeof WEB2DAY_PARSER> = {
 
             const speakerId = extractIdFromUrl(spUrl);
 
-            const photoUrl = $speakerPage(`.speakerSingle-img`).attr()?.style.replace(/background: url\(([^)]*)\).*/gi, "$1");
-            const speakerFullName = $speakerPage(`.speakerSingle-name`).text().trim()
-            const speakerTitle = $speakerPage(`.speakerSingle-excerpt`).text().trim()
-            const speakerBio = $speakerPage(`.speakerSingle-desc-all`).html()
-            const socials = $speakerPage(`.socialnetList a`).map((_, socialLink) => {
-                const $socialLink = $speakerPage(socialLink);
-
-                let type: Speaker['social'][number]['type'] | undefined = undefined;
-                if($socialLink.hasClass('linkedin')) {
-                    type = 'linkedin';
-                } else if($socialLink.hasClass('twitter')) {
-                    type = 'twitter';
-                } else if($socialLink.hasClass('mastodon')) {
-                    type = 'mastodon';
-                } else if($socialLink.hasClass('instagram')) {
-                    type = 'instagram';
-                } else if($socialLink.hasClass('youtube')) {
-                    type = 'youtube';
-                } else if($socialLink.hasClass('twitch')) {
-                    type = 'twitch';
-                }
-
-                const url = $socialLink.attr()?.href
-
-                if(!type || !url) {
-                    console.log(`Unsupported speaker classes => ${$socialLink.attr()?.class}`);
-                    return undefined;
-                }
-
-                return { type, url };
-            }).toArray().filter(sp => !!sp);
+            const photoUrl = `https://camping-speakers.fr${$speakerPage(`img.team_member`).attr()?.src}`;
+            const speakerFullName = $speakerPage(`h1`).text().trim()
+            const speakerTitle = $speakerPage(`h2`).text().trim()
+            const speakerBio = $speakerPage(`.content`).html()
 
             const speaker: Speaker = {
                 id: speakerId,
@@ -173,7 +136,7 @@ export const WEB2DAY_CRAWLER: CrawlerKind<typeof WEB2DAY_PARSER> = {
                 photoUrl,
                 companyName: speakerTitle || "",
                 bio: speakerBio || "",
-                social: socials
+                social: []
             }
 
             return { url: spUrl, speaker };
@@ -182,9 +145,9 @@ export const WEB2DAY_CRAWLER: CrawlerKind<typeof WEB2DAY_PARSER> = {
         const confDescriptor: ConferenceDescriptor = {
             id: eventId,
             title: descriptor.title,
-            days: descriptor.days as Day[],
+            days: descriptor.days,
             headingTitle: descriptor.headingTitle,
-            description: descriptor.description,
+            description: descriptor.description || "",
             keywords: descriptor.keywords,
             location: descriptor.location,
             logoUrl: descriptor.logoUrl,
@@ -260,7 +223,8 @@ export const WEB2DAY_CRAWLER: CrawlerKind<typeof WEB2DAY_PARSER> = {
                 .filter(b => b.dayId === day.id)
                 .map(breakDescriptor => {
                     const breakTimeSlot: BreakTimeSlot = {
-                        id: `${breakDescriptor.breakTimeslot.start}--${breakDescriptor.breakTimeslot.end}`,
+                        type: 'break',
+                        id: `${breakDescriptor.breakTimeslot.start}--${breakDescriptor.breakTimeslot.end}` as BreakTimeSlot['id'],
                         start: breakDescriptor.breakTimeslot.start,
                         end: breakDescriptor.breakTimeslot.end,
                         break: {
@@ -268,7 +232,6 @@ export const WEB2DAY_CRAWLER: CrawlerKind<typeof WEB2DAY_PARSER> = {
                             icon: breakDescriptor.breakTimeslot.break.icon,
                             room: descriptor.rooms.find(r => r.id === breakDescriptor.breakTimeslot.break.roomId)!,
                         },
-                       type: 'break'
                     };
 
                     return breakTimeSlot;
@@ -289,7 +252,7 @@ export const WEB2DAY_CRAWLER: CrawlerKind<typeof WEB2DAY_PARSER> = {
                 title: descriptor.title,
                 days: descriptor.days as any,
                 theming: descriptor.theming as any,
-                description: descriptor.description,
+                description: descriptor.description || "",
                 keywords: descriptor.keywords,
                 location: descriptor.location,
                 logoUrl: descriptor.logoUrl,

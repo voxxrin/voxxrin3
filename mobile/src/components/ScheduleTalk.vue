@@ -4,7 +4,7 @@
             :class="{ container: true, 'is-highlighted': isHighlighted(talk, talkNotes), 'is-favorited': talkNotes.isFavorite, 'is-to-watch-later': talkNotes.watchLater }"
             @click="$emit('talk-clicked', talk)">
     <div class="talkCard-head">
-      <div class="track">
+      <div class="track" v-if="hasTrack">
         <ion-badge class="trackBadge">
           <ion-icon src="/assets/icons/solid/tag.svg"></ion-icon>{{talk.track.title}}
         </ion-badge>
@@ -14,6 +14,7 @@
     </div>
 
     <div class="talkCard-content">
+      <ion-badge v-if="talkLang && event.features.hideLanguages.indexOf(talkLang.id.value)===-1" :style="{ '--background': talkLang.themeColor }">{{talkLang.label}}</ion-badge>
       <div class="title">{{talk.title}}</div>
       <div class="pictures">
         <div class="picturesItem" v-for="(speaker, index) in talk.speakers" :key="speaker.id.value">
@@ -46,10 +47,8 @@ import {useRoute} from "vue-router";
 import {EventId} from "@/models/VoxxrinEvent";
 import {getRouteParamsValue} from "@/views/vue-utils";
 import {useUserTalkNotes} from "@/state/useUserTalkNotes";
-import {
-    useSharedConferenceDescriptor
-} from "@/state/useConferenceDescriptor";
 import {TalkNote} from "../../../shared/feedbacks.firestore";
+import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 
 
 const props = defineProps({
@@ -60,22 +59,31 @@ const props = defineProps({
   isHighlighted: {
       required: true,
       type: Function as PropType<(talk: VoxxrinTalk, talkNotes: TalkNote) => boolean>
-  }
+  },
+  event: {
+      required: true,
+      type: Object as PropType<VoxxrinConferenceDescriptor>
+  },
 })
 
 defineEmits<{
     (e: 'talk-clicked', talk: VoxxrinTalk): void,
 }>()
 
+const talkLang = computed(() => {
+    return props.event!.supportedTalkLanguages.find(lang => lang.id.isSameThan(props.talk!.language))
+})
+
 const route = useRoute();
 const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')));
 
-const { conferenceDescriptor } = useSharedConferenceDescriptor(eventId);
 const { eventTalkStats, talkNotes, toggleFavorite, toggleWatchLater} = useUserTalkNotes(eventId, props.talk?.id)
 
 const displayedSpeakers = props.talk!.speakers
     .map(s => `${s.fullName}${s.companyName?` (${s.companyName})`:``}`)
     .join(", ");
+
+const hasTrack = (props.event?.talkTracks.length || 0) > 1;
 
 const theme = {
   track: {

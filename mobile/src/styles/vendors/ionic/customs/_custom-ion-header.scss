@@ -6,6 +6,28 @@ ion-header  {
         --padding-end: 16px;
     }
 
+    &.toolbarHeader {
+        border-bottom: none;
+
+        ion-toolbar {
+            --padding-top: 4px;
+            --padding-bottom: 4px;
+            --background: var(--app-white);
+
+            @media (prefers-color-scheme: dark) {
+                --background: var(--app-dark-contrast);
+            }
+        }
+
+        ion-title {
+            padding-inline: 0;
+            position: relative;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: left;
+        }
+    }
+
     &.stickyHeader {
         position: sticky;
         top: -1px;
@@ -37,7 +59,7 @@ ion-header  {
             }
         }
 
-        .stickyHeader-title {
+        ion-title {
             padding-inline: 0;
             position: relative;
             font-size: 18px;
@@ -134,6 +156,14 @@ ion-header  {
             background-color: var(--app-light-contrast);
         }
 
+        ion-title {
+            padding-inline: 0;
+            position: relative;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: left;
+        }
+
         .subHeader-schedule, .subHeader-roomn, .subHeader-timeSlot {
             display: flex;
             align-items: center;
@@ -164,5 +194,55 @@ ion-header  {
                 }
             }
         }
+    }
+
+    /* Extra Elements in Ion Header */
+    .search-input {
+        position: absolute;
+        right: 0;
+        top: 0;
+        height: 100%;
+        animation: appearSearchInput 140ms cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+        z-index: 1;
+
+        ion-input {
+            height: 100%;
+            --padding-start: 54px;
+            --background: var(--app-white);
+            font-size: 18px;
+
+            @media (prefers-color-scheme: dark) {
+                --background: var(--app-medium-contrast);
+            }
+        }
+
+        ion-input:focus + ion-icon {
+            color: var(--voxxrin-event-theme-colors-secondary-hex) !important;
+        }
+
+        .iconInput {
+            position: absolute;
+            top: 50%;
+            left: 8px;
+            font-size: 34px;
+            transform: translate(0, -50%);
+            z-index: 2;
+        }
+
+        ion-button {
+            position: absolute;
+            top: 50%;
+            right: 16px;
+            --padding-start: 0;
+            --padding-end: 0;
+            transform: translate(0, -50%);
+            margin: 0 2px 0 0;
+            z-index: 2;
+        }
+    }
+
+    @keyframes appearSearchInput {
+        0% { width: 0;}
+        100% {  width: 100%;}
     }
 }

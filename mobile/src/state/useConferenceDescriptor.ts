@@ -16,7 +16,7 @@ export function useConferenceDescriptor(
     console.debug(`useConferenceDescriptor(${unref(eventIdRef)?.value})`)
     watch(() => unref(eventIdRef), (newVal, oldVal) => {
         console.debug(`useConferenceDescriptor[eventIdRef] updated from [${oldVal?.value}] to [${newVal?.value}]`)
-    })
+    }, {immediate: true})
 
     const firestoreConferenceDescriptorSource = computed(() => {
         const eventId = unref(eventIdRef);

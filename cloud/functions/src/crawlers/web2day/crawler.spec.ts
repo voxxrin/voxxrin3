@@ -12,7 +12,7 @@ describe('web2day crawler', () => {
         it(`Loading ${event.confName} schedule`, async () => {
             const descriptorResp = await axios.get(event.descriptorUrl);
             const descriptor = WEB2DAY_CRAWLER.descriptorParser.parse(descriptorResp.data)
-            const result = await WEB2DAY_CRAWLER.crawlerImpl(event.id, descriptor, { dayId: 'Mercredi' });
+            const result = await WEB2DAY_CRAWLER.crawlerImpl(event.id, descriptor, { dayIds: ['Mercredi'] });
             FULL_EVENT_PARSER.parse(result);
         }, { timeout: 30000 })
     })

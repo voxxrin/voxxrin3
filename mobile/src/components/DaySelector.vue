@@ -123,7 +123,7 @@ function findDayByLocalDate(localDate: string) {
     margin-left: -44px;
     margin-right: -34px;
     padding: 0;
-    background: var(--voxxrin-event-theme-colors-primary-contrast-hex);
+    background: var(--background);
     box-shadow: rgba(99, 99, 99, 0.2) 0 2px 8px 0;
 
     @media (prefers-color-scheme: dark) {
