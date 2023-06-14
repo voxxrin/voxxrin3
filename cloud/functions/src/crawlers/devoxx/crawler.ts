@@ -58,7 +58,7 @@ export const DEVOXX_CRAWLER: CrawlerKind<typeof DEVOXX_DESCRIPTOR_PARSER> = {
         }
 
         const daysMatchingCriteria = days.filter(d => {
-            return !criteria.dayIds || criteria.dayIds.includes(d.id);
+            return !criteria.dayIds || !criteria.dayIds.length || criteria.dayIds.includes(d.id);
         })
 
         const eventInfo = {
