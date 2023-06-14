@@ -7,6 +7,8 @@ import { i18nPlugin } from './i18n/i18n-vue'
 
 import { IonicVue } from '@ionic/vue';
 
+import './state/useDevUtilities'
+
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/vue/css/core.css';
 

@@ -1,6 +1,6 @@
 import {computed, ref, unref, watch} from "vue";
 import {
-    createVoxxrinConferenceDescriptor,
+    createVoxxrinConferenceDescriptor, VoxxrinConferenceDescriptor,
 } from "@/models/VoxxrinConferenceDescriptor";
 import {EventId} from "@/models/VoxxrinEvent";
 import {ConferenceDescriptor} from "../../../shared/conference-descriptor.firestore";
@@ -9,6 +9,13 @@ import {collection, doc, DocumentReference} from "firebase/firestore";
 import {db} from "@/state/firebase";
 import {useDocument} from "vuefire";
 import {createSharedComposable} from "@vueuse/core";
+import {
+    overrideListableEventProperties
+} from "@/state/useAvailableEvents";
+
+type OverridableEventDescriptorProperties = {eventId: string} & Partial<Pick<VoxxrinConferenceDescriptor, "headingTitle"|"theming"|"features"|"infos"|"location"|"backgroundUrl"|"logoUrl">>;
+
+const overridenEventDescriptorPropertiesRef = ref<OverridableEventDescriptorProperties|undefined>(undefined)
 
 export function useConferenceDescriptor(
     eventIdRef: Unreffable<EventId | undefined>) {
@@ -31,7 +38,9 @@ export function useConferenceDescriptor(
 
     return {
         conferenceDescriptor: computed(() => {
-            const firestoreConferenceDescriptor = unref(firestoreConferenceDescriptorRef);
+            const firestoreConferenceDescriptor = unref(firestoreConferenceDescriptorRef),
+                overridenEventDescriptorProperties = unref(overridenEventDescriptorPropertiesRef);
+
 
             if(!firestoreConferenceDescriptor) {
                 return undefined;
@@ -39,6 +48,7 @@ export function useConferenceDescriptor(
 
             const confDescriptor = createVoxxrinConferenceDescriptor({
                 ...firestoreConferenceDescriptor,
+                ...overridenEventDescriptorProperties,
                 // firestore's document key always overrides document's data().id field (if it exists)
                 // In our case for event-descriptor, document key and document.id are going to be different, that's
                 // why we want to re-set firestoreConferenceDescriptor.id to initial firestore document's id
@@ -53,3 +63,8 @@ export function useConferenceDescriptor(
 }
 
 export const useSharedConferenceDescriptor = createSharedComposable(useConferenceDescriptor);
+
+export function overrideCurrentEventDescriptorInfos(overridenEventDescriptorProperties: OverridableEventDescriptorProperties) {
+    overridenEventDescriptorPropertiesRef.value = overridenEventDescriptorProperties;
+    overrideListableEventProperties(overridenEventDescriptorProperties);
+}
