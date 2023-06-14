@@ -8,6 +8,7 @@ import {HexColor} from "../../../../shared/type-utils";
 import {WEB2DAY_CRAWLER} from "./web2day/crawler";
 import {Temporal} from "@js-temporal/polyfill";
 import {CAMPING_DES_SPEAKERS_CRAWLER} from "./camping-des-speakers/crawler";
+import {DEVOXX_SCALA_CRAWLER} from "./devoxx-scala/crawler";
 const axios = require('axios');
 
 export type CrawlerKind<ZOD_TYPE extends z.ZodType> = {
@@ -18,6 +19,7 @@ export type CrawlerKind<ZOD_TYPE extends z.ZodType> = {
 
 const CRAWLERS: CrawlerKind<any>[] = [
     DEVOXX_CRAWLER,
+    DEVOXX_SCALA_CRAWLER,
     LA_PRODUCT_CONF_CRAWLER,
     WEB2DAY_CRAWLER,
     CAMPING_DES_SPEAKERS_CRAWLER
