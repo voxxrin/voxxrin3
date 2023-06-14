@@ -192,7 +192,7 @@ defineEmits<{
 
     .logo {
       padding: 8px var(--app-gutters);
-      background: linear-gradient(90deg, rgba(255,255,255,1) 59%, rgba(255,255,255,0) 100%);
+      background: linear-gradient(90deg, rgba(var(--voxxrin-event-theme-colors-primary-contrast-rgb),1) 59%, rgba(var(--voxxrin-event-theme-colors-primary-contrast-rgb),0) 100%);
       border-radius: 0 0 var(--app-gutters) var(--app-gutters);
       z-index: 1;
 
