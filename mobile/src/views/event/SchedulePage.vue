@@ -6,7 +6,7 @@
         <ion-toolbar>
           <ion-title class="stickyHeader-title" slot="start">{{ LL.Schedule() }}</ion-title>
           <div v-if="searchFieldDisplayed" class="search-input">
-            <ion-input size="10" ref="$searchInput"
+            <ion-input :size="10" ref="$searchInput"
                        :debounce="300"
                        :placeholder="`${LL.Search()}...`"
                        @ionInput="(ev) => searchTermsRef = ''+ev.target.value"
@@ -109,7 +109,7 @@ const missingFeedbacksPastTimeslots = ref<Array<{start: string, end: string, tim
 const expandedTimeslotIds = ref<string[]>([])
 const searchFieldDisplayed = ref(false);
 const searchTermsRef = ref<string|undefined>(undefined);
-const $searchInput = ref<IonInput|undefined>(undefined);
+const $searchInput = ref<{ $el: HTMLIonInputElement }|undefined>(undefined);
 
 onMounted(async () => {
     console.log(`SchedulePage mounted !`)
