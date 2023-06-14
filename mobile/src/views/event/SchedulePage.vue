@@ -17,7 +17,7 @@
             </ion-button>
           </div>
 
-          <ion-button class="ion-margin-end" slot="end" shape="round" size="small" fill="outline" @click="openSchedulePreferencesModal()">
+          <ion-button class="ion-margin-end" slot="end" shape="round" size="small" fill="outline" @click="openSchedulePreferencesModal()" v-if="false">
             <ion-icon src="/assets/icons/solid/settings-cog.svg"></ion-icon>
           </ion-button>
           <ion-button slot="end" shape="round" size="small" @click="toggleSearchField()">
