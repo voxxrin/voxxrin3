@@ -181,7 +181,7 @@ export const DEVOXX_SCALA_CRAWLER: CrawlerKind<typeof DEVOXX_SCALA_DESCRIPTOR_PA
 
                                 const talkFormat: ThemedTalkFormat = {
                                     id: cfpProposalType.id,
-                                    title: cfpProposalType.description,
+                                    title: cfpProposalType.label,
                                     duration: `PT${duration.total('minutes')}m`,
                                     themeColor: descriptorTalkFormat.themeColor
                                 }
