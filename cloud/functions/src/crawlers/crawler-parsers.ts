@@ -56,7 +56,7 @@ export const EVENT_THEME_PARSER = z.object({
 export const LISTABLE_EVENT_PARSER = z.object({
     id: z.string(),
     title: z.string(),
-    description: z.string().nullish(),
+    description: z.string().nullable(),
     days: z.array(DAY_PARSER),
     timezone: z.string(),
     keywords: z.array(z.string()),

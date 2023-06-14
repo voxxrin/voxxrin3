@@ -15,11 +15,11 @@ export type TalkFormat = {
     title: string
 }
 export type Speaker = {
-    photoUrl?: string|undefined|null,
-    companyName?: string|undefined|null,
+    photoUrl?: string|null,
+    companyName?: string|null,
     fullName: string,
     id: string,
-    bio?: string|undefined|null,
+    bio?: string|null,
     social: Array<{type: "twitter"|"linkedin"|"mastodon"|"instagram"|"youtube"|"twitch", url: string}>
 }
 export type Talk = {
