@@ -39,7 +39,7 @@
           :talks="timeslot.talks" @talkClicked="openTalkDetails($event)"
           :is-highlighted="(talk, talkNotes) => talkNotes.isFavorite">
         <template #talk-card-upper-right="{ talk }">
-          <div class="room">
+          <div class="room" v-if="event.features.roomsDisplayed">
             <ion-icon aria-hidden="true" src="/assets/icons/solid/map-marker.svg"></ion-icon>
             {{talk.room.title}}
           </div>

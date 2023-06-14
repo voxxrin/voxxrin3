@@ -48,7 +48,7 @@
               <span class="slot-schedule-end">{{timeslotLabel.end}}</span>
             </ion-label>
           </div>
-          <div class="subHeader-room">
+          <div class="subHeader-room" v-if="event.features.roomsDisplayed">
             <ion-icon aria-hidden="true" src="/assets/icons/solid/map-marker.svg"></ion-icon>
             {{talk?.room.title}}
           </div>
