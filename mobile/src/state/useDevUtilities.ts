@@ -1,3 +1,5 @@
+import {overrideCurrentEventDescriptorInfos} from "@/state/useConferenceDescriptor";
+import {overrideListableEventProperties} from "@/state/useAvailableEvents";
 import {
     Clock,
     FixedTimeClock,
@@ -12,6 +14,8 @@ import {match, P} from "ts-pattern";
 // if(import.meta.env.DEV) {
 // May be useful for debug purposes
 
+(window as any)._overrideCurrentEventDescriptorInfos = overrideCurrentEventDescriptorInfos;
+(window as any)._overrideListableEventProperties = overrideListableEventProperties;
 (window as any).overrideCurrentClock = overrideCurrentClock;
 (window as any)._overrideCurrentClock = (clockOrDate: Clock | ISODatetime, clockType: 'fixed'|'shifted', temporalDurationOrSeconds?: Temporal.Duration | number | undefined) => {
     const clock = match([clockOrDate, clockType])
