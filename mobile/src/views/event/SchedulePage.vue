@@ -101,6 +101,8 @@ const { LL } = typesafeI18n()
 const currentlySelectedDayId = ref<DayId|undefined>(undefined)
 const changeDayTo = (day: VoxxrinDay) => {
     currentlySelectedDayId.value = day.id;
+
+    autoExpandTimeslotsRequested.value = true;
 }
 
 const { schedule: currentSchedule } = useSchedule(event, currentlySelectedDayId)
@@ -134,6 +136,7 @@ watch([event, currentlySelectedDayId], ([confDescriptor, selectedDayId]) => {
   }
 }, {immediate: true})
 
+const autoExpandTimeslotsRequested = ref(true);
 watch([event, currentSchedule, searchTermsRef], ([confDescriptor, currentSchedule, searchTerms]) => {
     if(currentSchedule && confDescriptor) {
         timeslotsRef.value = currentSchedule.timeSlots.map((ts, idx) => {
@@ -150,20 +153,24 @@ watch([event, currentSchedule, searchTermsRef], ([confDescriptor, currentSchedul
 
         currentlySelectedDayId.value = findVoxxrinDay(confDescriptor, currentSchedule.day).id
 
-        // Deferring expanded timeslots so that :
-        // 1/ we don't load the DOM too much when opening a schedule
-        // 2/ this allows to show the auto-expand animation to the user
-        const autoExpandableTimeslotIds = filterTimeslotsToAutoExpandBasedOn(currentSchedule.timeSlots, useCurrentClock().zonedDateTimeISO())
-            .map(ts => ts.id.value)
-        setTimeout(() => {
-            // Only expanding firt 2 auto-expandable timeslots first (no need to auto-expand others which
-            // will be outside the viewport
-            expandedTimeslotIds.value = autoExpandableTimeslotIds.slice(0, 3);
-        }, 300)
-        setTimeout(() => {
-            // Waiting a little bit and expanding those timeslots outside the viewport...
-            expandedTimeslotIds.value = autoExpandableTimeslotIds.slice(0);
-        }, 1200)
+        if(autoExpandTimeslotsRequested.value) {
+            // Deferring expanded timeslots so that :
+            // 1/ we don't load the DOM too much when opening a schedule
+            // 2/ this allows to show the auto-expand animation to the user
+            const autoExpandableTimeslotIds = filterTimeslotsToAutoExpandBasedOn(currentSchedule.timeSlots, useCurrentClock().zonedDateTimeISO())
+                .map(ts => ts.id.value)
+            setTimeout(() => {
+                // Only expanding firt 2 auto-expandable timeslots first (no need to auto-expand others which
+                // will be outside the viewport
+                expandedTimeslotIds.value = autoExpandableTimeslotIds.slice(0, 3);
+            }, 300)
+            setTimeout(() => {
+                // Waiting a little bit and expanding those timeslots outside the viewport...
+                expandedTimeslotIds.value = autoExpandableTimeslotIds.slice(0);
+
+                autoExpandTimeslotsRequested.value = false;
+            }, 1200)
+        }
     }
 }, {immediate: true});
 
