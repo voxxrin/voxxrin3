@@ -21,7 +21,7 @@
           <ion-button class="stickyHeader-close" shape="round" slot="start" size="small" fill="outline" @click="$router.back()">
             <ion-icon src="/assets/icons/solid/close.svg"></ion-icon>
           </ion-button>
-          <ion-title class="stickyHeader-title" slot="start" >Talk details</ion-title>
+          <ion-title class="stickyHeader-title" slot="start" >{{ LL.Talk_details() }}</ion-title>
           <ion-button class="btnTalkAction _watchLater" slot="end" shape="round" fill="outline"  @click.stop="() => toggleWatchLater()" v-if="event?.features.remindMeOnceVideosAreAvailableEnabled">
             <ion-icon v-if="!talkNotes.watchLater" aria-hidden="true" src="/assets/icons/line/video-line.svg"></ion-icon>
             <ion-icon v-if="talkNotes.watchLater" aria-hidden="true" src="/assets/icons/solid/video.svg"></ion-icon>

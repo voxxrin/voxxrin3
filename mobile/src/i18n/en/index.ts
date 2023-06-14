@@ -26,6 +26,7 @@ const en = {
 	Overlaps_x_slot_label: `overlaps`,
 	Overlaps_x_slot_value: `{nrOfOverlappingSlots} slot{{nrOfOverlappingSlots:s}}`,
 	Talk_summary: `Talk summary`,
+	Talk_details: `Talk details`,
 	Speakers: `Speakers`,
 	Welcome_to: `Welcome to`,
 	Hello_xxx: `Hello, {name:string}`,

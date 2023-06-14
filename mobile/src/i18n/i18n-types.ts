@@ -116,6 +116,10 @@ type RootTranslation = {
 	 */
 	Talk_summary: string
 	/**
+	 * T​a​l​k​ ​d​e​t​a​i​l​s
+	 */
+	Talk_details: string
+	/**
 	 * S​p​e​a​k​e​r​s
 	 */
 	Speakers: string
@@ -243,6 +247,10 @@ export type TranslationFunctions = {
 	 * Talk summary
 	 */
 	Talk_summary: () => LocalizedString
+	/**
+	 * Talk details
+	 */
+	Talk_details: () => LocalizedString
 	/**
 	 * Speakers
 	 */
