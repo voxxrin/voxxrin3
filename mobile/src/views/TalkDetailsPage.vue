@@ -55,7 +55,10 @@
         </ion-header>
 
 
-        <h1 class="talkDetails-title">{{talk?.title}}</h1>
+        <h1 class="talkDetails-title">
+          <ion-badge v-if="talkLang && event.features.hideLanguages.indexOf(talkLang.id.value)===-1" :style="{ '--background': talkLang.themeColor }">{{talkLang.label}}</ion-badge>
+          {{talk?.title}}
+        </h1>
         <div class="talkDetails-infos">
           <div class="talkDetails-infos-listTrack">
           <ion-badge v-if="event.talkTracks.length > 1" class="trackBadge" :style="{
@@ -114,7 +117,7 @@ import {getRouteParamsValue, isRefDefined} from "@/views/vue-utils";
 import {useUserTalkNotes} from "@/state/useUserTalkNotes";
 import {TalkId} from "@/models/VoxxrinTalk";
 import {useSharedEventTalk} from "@/state/useEventTalk";
-import {computed, ref, watch} from "vue";
+import {computed, ref, unref, watch} from "vue";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {IonBadge, IonAvatar, IonText} from "@ionic/vue";
 import {business} from "ionicons/icons";
@@ -130,6 +133,16 @@ const {conferenceDescriptor: event} = useSharedConferenceDescriptor(eventId);
 const { eventTalkStats, talkNotes, toggleFavorite, toggleWatchLater} = useUserTalkNotes(eventId, talkId)
 const { talkDetails: talk } = useSharedEventTalk(event, talkId);
 const { LL } = typesafeI18n()
+
+const talkLang = computed(() => {
+    const eventDescriptor = unref(event),
+        unreffedTalk = unref(talk);
+    if(!eventDescriptor || !unreffedTalk) {
+        return undefined;
+    }
+
+    return eventDescriptor.supportedTalkLanguages.find(lang => lang.id.isSameThan(unreffedTalk.language))
+})
 
 const timeslotLabel = computed(() => {
     if(isRefDefined(talk) && isRefDefined(event)) {

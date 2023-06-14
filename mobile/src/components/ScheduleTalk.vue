@@ -14,6 +14,7 @@
     </div>
 
     <div class="talkCard-content">
+      <ion-badge v-if="talkLang && event.features.hideLanguages.indexOf(talkLang.id.value)===-1" :style="{ '--background': talkLang.themeColor }">{{talkLang.label}}</ion-badge>
       <div class="title">{{talk.title}}</div>
       <div class="pictures">
         <div class="picturesItem" v-for="(speaker, index) in talk.speakers" :key="speaker.id.value">
@@ -68,6 +69,10 @@ const props = defineProps({
 defineEmits<{
     (e: 'talk-clicked', talk: VoxxrinTalk): void,
 }>()
+
+const talkLang = computed(() => {
+    return props.event!.supportedTalkLanguages.find(lang => lang.id.isSameThan(props.talk!.language))
+})
 
 const route = useRoute();
 const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')));
