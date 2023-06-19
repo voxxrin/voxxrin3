@@ -22,8 +22,8 @@
             </div>
           </ion-col>
           <ion-col class="slot-actions" size="auto">
-            <ion-icon class="_provided-feedback" aria-hidden="true" src="/assets/icons/solid/comment-check.svg"></ion-icon>
-            <ion-button class="_missing-feedback" @click.stop="$emit('add-timeslot-feedback-clicked', timeslot)">
+            <ion-icon class="_provided-feedback" aria-hidden="true" src="/assets/icons/solid/comment-check.svg" v-if="areFeedbacksEnabled(event)"></ion-icon>
+            <ion-button class="_missing-feedback" @click.stop="$emit('add-timeslot-feedback-clicked', timeslot)" v-if="areFeedbacksEnabled(event)">
               <ion-icon src="/assets/icons/line/comment-line-add.svg"></ion-icon>
             </ion-button>
           </ion-col>
@@ -86,7 +86,10 @@ import {
 import {VoxxrinTimeslotFeedback} from "@/models/VoxxrinFeedback";
 import {useInterval} from "@/views/vue-utils";
 import {useCurrentClock} from "@/state/useCurrentClock";
-import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
+import {
+    areFeedbacksEnabled,
+    VoxxrinConferenceDescriptor
+} from "@/models/VoxxrinConferenceDescriptor";
 import TalkFormatGroupsBreakdown from "@/components/TalkFormatGroupsBreakdown.vue";
 import ScheduleBreak from "@/components/ScheduleBreak.vue";
 import {typesafeI18n} from "@/i18n/i18n-vue";

@@ -16,12 +16,14 @@ export default defineConfig(({ command, mode }) => {
           type: 'module'
         },
         strategies: 'injectManifest',
-        injectRegister: 'inline',
-        registerType: 'autoUpdate',
+        injectRegister: null,
+        registerType: 'prompt',
+        includeAssets: ['favicon.png'],
         srcDir: 'src',
         filename: 'sw.ts',
         mode: isDevMode?'development':'production',
         minify: !isDevMode,
+        selfDestroying: false,
         workbox: {
           mode: isDevMode?'development':'production',
           sourcemap: isDevMode,
