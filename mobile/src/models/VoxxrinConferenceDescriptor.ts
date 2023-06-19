@@ -128,3 +128,10 @@ export function findTrack(confDescriptor: VoxxrinConferenceDescriptor, trackId: 
     }
     return confDescriptor.talkTracks[trackIndex];
 }
+
+export function areFeedbacksEnabled(confDescriptor: VoxxrinConferenceDescriptor) {
+    return confDescriptor.features.ratings.scale.enabled
+        || confDescriptor.features.ratings.bingo.enabled
+        || confDescriptor.features.ratings["custom-scale"].enabled
+        || confDescriptor.features.ratings["free-text"].enabled;
+}

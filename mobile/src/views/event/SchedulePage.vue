@@ -44,7 +44,7 @@
           </time-slot-accordion>
       </ion-accordion-group>
 
-      <ion-fab vertical="bottom" horizontal="end" slot="fixed" v-if="missingFeedbacksPastTimeslots.length>0">
+      <ion-fab vertical="bottom" horizontal="end" slot="fixed" v-if="event && (areFeedbacksEnabled(event) || missingFeedbacksPastTimeslots.length>0)">
         <ion-fab-button @click="(ev) => fixAnimationOnFabClosing(ev.target)">
           <ion-icon src="/assets/icons/line/comment-line-add.svg"></ion-icon>
         </ion-fab-button>
@@ -83,7 +83,11 @@ import {
     VoxxrinScheduleTimeSlot
 } from "@/models/VoxxrinSchedule";
 import DaySelector from "@/components/DaySelector.vue";
-import {findBestAutoselectableConferenceDay, findVoxxrinDay} from "@/models/VoxxrinConferenceDescriptor";
+import {
+    areFeedbacksEnabled,
+    findBestAutoselectableConferenceDay,
+    findVoxxrinDay
+} from "@/models/VoxxrinConferenceDescriptor";
 import TimeSlotAccordion from "@/components/TimeSlotAccordion.vue";
 import {VoxxrinTimeslotFeedback} from "@/models/VoxxrinFeedback";
 import {useCurrentClock} from "@/state/useCurrentClock";
