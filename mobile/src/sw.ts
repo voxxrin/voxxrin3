@@ -4,7 +4,8 @@ import { ExpirationPlugin } from 'workbox-expiration';
 import {clientsClaim} from "workbox-core";
 import {cleanupOutdatedCaches, precacheAndRoute} from "workbox-precaching";
 
-declare let self: ServiceWorkerGlobalScope
+declare let self: ServiceWorkerGlobalScope & {__WB_DISABLE_DEV_LOGS?: boolean}
+
 
 // TODO: comment this line if you want to debug workbox (very verbose!) logs in the console
 self.__WB_DISABLE_DEV_LOGS = true
