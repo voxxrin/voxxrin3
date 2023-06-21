@@ -33,6 +33,8 @@ const en = {
 	Add_from_the_list_below: `Add from the list below`,
 	Today: 'Today',
 	Tomorrow: 'Tomorrow',
+	Favorited_schedule_not_implemented_yet: 'Favorited schedule not implemented (yet)',
+	Info_page_still_under_construction: 'Info page still under construction'
 } satisfies BaseTranslation
 
 export default en
