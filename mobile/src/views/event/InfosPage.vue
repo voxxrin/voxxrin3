@@ -13,7 +13,7 @@
       </ion-header>
 
       <p>
-        Infos planned here !
+        🚧 {{ LL.Info_page_still_under_construction() }}
       </p>
     </ion-content>
   </ion-page>
@@ -26,6 +26,9 @@
   import {getRouteParamsValue} from "@/views/vue-utils";
   import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
   import {computed, ref} from "vue";
+  import {typesafeI18n} from "@/i18n/i18n-vue";
+
+  const { LL } = typesafeI18n()
 
   const route = useRoute();
   const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')));

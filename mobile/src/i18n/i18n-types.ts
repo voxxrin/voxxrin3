@@ -144,6 +144,14 @@ type RootTranslation = {
 	 * T​o​m​o​r​r​o​w
 	 */
 	Tomorrow: string
+	/**
+	 * F​a​v​o​r​i​t​e​d​ ​s​c​h​e​d​u​l​e​ ​n​o​t​ ​i​m​p​l​e​m​e​n​t​e​d​ ​(​y​e​t​)
+	 */
+	Favorited_schedule_not_implemented_yet: string
+	/**
+	 * I​n​f​o​ ​p​a​g​e​ ​s​t​i​l​l​ ​u​n​d​e​r​ ​c​o​n​s​t​r​u​c​t​i​o​n
+	 */
+	Info_page_still_under_construction: string
 }
 
 export type TranslationFunctions = {
@@ -275,6 +283,14 @@ export type TranslationFunctions = {
 	 * Tomorrow
 	 */
 	Tomorrow: () => LocalizedString
+	/**
+	 * Favorited schedule not implemented (yet)
+	 */
+	Favorited_schedule_not_implemented_yet: () => LocalizedString
+	/**
+	 * Info page still under construction
+	 */
+	Info_page_still_under_construction: () => LocalizedString
 }
 
 export type Formatters = {}

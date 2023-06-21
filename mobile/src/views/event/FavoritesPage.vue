@@ -14,7 +14,7 @@
 
       <div class="infoMessage ion-text-center">
         <ion-icon class="infoMessage-iconIllu" src="/assets/images/svg/illu-no-favorites.svg"></ion-icon>
-        <span class="infoMessage-title">No favorites yet</span>
+        <span class="infoMessage-title">🚧 {{ LL.Favorited_schedule_not_implemented_yet() }}</span>
       </div>
 
     </ion-content>
@@ -28,6 +28,9 @@
   import {getRouteParamsValue} from "@/views/vue-utils";
   import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
   import {computed, ref} from "vue";
+  import {typesafeI18n} from "@/i18n/i18n-vue";
+
+  const { LL } = typesafeI18n()
 
   const route = useRoute();
   const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')));
