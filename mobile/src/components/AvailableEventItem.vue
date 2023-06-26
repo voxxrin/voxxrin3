@@ -1,5 +1,7 @@
 <template>
-    <ion-item class="eventItem" v-if="event" :style="{
+    <ion-item class="eventItem" v-if="event"
+              :class="{'_is-pined' : isPinnedRef}"
+              :style="{
         '--voxxrin-event-background-url': `url('${event.backgroundUrl}')`,
         '--voxxrin-event-logo-url': `url('${event.logoUrl}')`,
         '--voxxrin-event-theme-colors-primary-hex': event.theming.colors.primaryHex,
@@ -85,6 +87,37 @@ const isPinnedRef = computed(() => {
 
   @media (prefers-color-scheme: dark) {
     --border-color: var(--app-line-contrast);
+  }
+
+  &._is-pined {
+    &:before {
+      position: absolute;
+      content: '';
+      z-index: 2;
+      width: 54px;
+      height: 100%;
+      right: 0;
+      top: 0;
+      background: rgba(var(--app-voxxrin-rgb), 0.2);
+      transform: scale(1);
+      opacity: 0.2;
+      filter: blur(32px);
+      animation: scale-in-center 0.1s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+      pointer-events: none;
+    }
+  }
+
+  @keyframes scale-in-center {
+    0% {
+      -webkit-transform: scale(0);
+      transform: scale(0);
+      opacity: 1;
+    }
+    100% {
+      -webkit-transform: scale(1);
+      transform: scale(1);
+      opacity: 1;
+    }
   }
 
   &-logoContainer {
@@ -189,12 +222,28 @@ const isPinnedRef = computed(() => {
   }
 
   &-end {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
     height: 100%;
-    margin-inline-start: 8px;
-    margin-inline-end: 24px;
+    padding-inline-start: 16px;
+    padding-inline-end: 16px;
+
+    &:before {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      transform: translate(0, -50%);
+      width: 1px;
+      height: calc(100% - 34px);
+      background-color: var(--app-beige-line);
+      content: '';
+    }
+
+    ion-button {
+      height: 100% !important;
+    }
 
     ion-icon {
       width: 34px;
