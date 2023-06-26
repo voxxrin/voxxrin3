@@ -55,8 +55,13 @@
         </ion-header>
 
 
-        <h1 class="talkDetails-title">
-          <ion-badge v-if="talkLang && event.features.hideLanguages.indexOf(talkLang.id.value)===-1" :style="{ '--background': talkLang.themeColor }">{{talkLang.label}}</ion-badge>
+        <h1 class="talkDetails-title"
+            :class="{'_hasTalkLand' : talkLang && event.features.hideLanguages.indexOf(talkLang.id.value)===-1}">
+          <ion-badge v-if="talkLang && event.features.hideLanguages.indexOf(talkLang.id.value)===-1"
+                     :style="{ '--background': talkLang.themeColor }"
+                     class="talkLang">
+            {{talkLang.label}}
+          </ion-badge>
           {{talk?.title}}
         </h1>
         <div class="talkDetails-infos">
@@ -175,6 +180,18 @@ const theme = computed(() => {
     &-title {
       font-weight: 900;
       padding: 0 var(--app-gutters);
+
+      &._hasTalkLand { text-indent: 4px;}
+
+      .talkLang {
+        position: relative;
+        float: left;
+        top: 4px;
+        font-size: 14px;
+        height: 24px;
+        width: 34px !important;
+        text-indent: 0;
+      }
     }
 
     &-infos {
