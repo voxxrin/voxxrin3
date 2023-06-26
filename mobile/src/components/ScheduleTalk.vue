@@ -14,8 +14,14 @@
     </div>
 
     <div class="talkCard-content">
-      <ion-badge v-if="talkLang && event.features.hideLanguages.indexOf(talkLang.id.value)===-1" :style="{ '--background': talkLang.themeColor }">{{talkLang.label}}</ion-badge>
-      <div class="title">{{talk.title}}</div>
+      <div class="title">
+        <ion-badge v-if="talkLang && event.features.hideLanguages.indexOf(talkLang.id.value)===-1"
+                   :style="{ '--background': talkLang.themeColor }"
+                   class="talkLang">
+          {{talkLang.label}}
+        </ion-badge>
+        {{talk.title}}
+      </div>
       <div class="pictures">
         <div class="picturesItem" v-for="(speaker, index) in talk.speakers" :key="speaker.id.value">
           <ion-thumbnail>
@@ -181,10 +187,19 @@ const theme = {
       font-weight: bolder;
       color: var(--app-primary);
       font-size: 16px;
+      text-indent: 4px;
       line-height: 1.2;
 
       @media (prefers-color-scheme: dark) {
         color: var(--app-white);
+      }
+
+      .talkLang {
+        float: left;
+        font-size: 12px;
+        height: 19px;
+        width: 28px !important;
+        text-indent: 0;
       }
     }
 
@@ -260,11 +275,10 @@ const theme = {
       }
     }
   }
-}
 
-//* States card talk *//
-::v-deep {
-  &.is-highlighted {
+  //* States card talk *//
+
+  &._is-highlighted {
     border : {
       top: 2px solid var(--voxxrin-event-theme-colors-secondary-hex);
       bottom: 2px solid var(--voxxrin-event-theme-colors-secondary-hex);
@@ -276,34 +290,6 @@ const theme = {
         top: 2px solid var(--app-white);
         bottom: 2px solid var(--app-white);
         right: 2px solid var(--app-white);
-      }
-    }
-
-    &.is-favorited {
-      border : {
-        top: 2px solid var(--app-primary-shade);
-        bottom: 2px solid var(--app-primary-shade);
-        right: 2px solid var(--app-primary-shade);
-      }
-
-      @media (prefers-color-scheme: dark) {
-        border : {
-          top: 2px solid var(--app-white);
-          bottom: 2px solid var(--app-white);
-          right: 2px solid var(--app-white);
-        }
-      }
-
-      &:before {
-        background: rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.6);
-      }
-
-      ion-thumbnail { border: 2px solid var(--app-primary-shade);}
-
-      .talkCard-footer {
-        border-color: var(--app-primary-shade);
-
-        .btnTalk { border-color: var(--app-primary-shade);}
       }
     }
 
@@ -352,7 +338,8 @@ const theme = {
         border-color: var(--app-white) !important;
       }
 
-      .btnTalk {
+
+      ::v-deep .btnTalk {
         border-width: 2px;
         border-color: var(--voxxrin-event-theme-colors-secondary-hex);
 
@@ -362,41 +349,68 @@ const theme = {
       }
     }
 
+    //* Add paint stain style when card favorited or Pin Feedback *//
+    &._has-favorited {
+      border : {
+        top: 2px solid var(--app-primary-shade);
+        bottom: 2px solid var(--app-primary-shade);
+        right: 2px solid var(--app-primary-shade);
+      }
+
+      @media (prefers-color-scheme: dark) {
+        --border : {
+          top: 2px solid var(--app-white);
+          bottom: 2px solid var(--app-white);
+          right: 2px solid var(--app-white);
+        }
+      }
+
+      &:before { background: rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.6);}
+
+      ion-thumbnail { border: 2px solid var(--app-primary-shade);}
+
+      .talkCard-footer {
+        border-color: var(--app-primary-shade);
+
+        ::v-deep .btnTalk { border-color: var(--app-primary-shade);}
+      }
+    }
+
+    @keyframes scale-in-center {
+      0% {
+        -webkit-transform: scale(0);
+        transform: scale(0);
+        opacity: 1;
+      }
+      100% {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    //* TODO - Start - Delete when btn is component *//
     //* Change style type actions *//
     ion-button {
-      &.favorite-btn {
+      &.btn-favorite {
         --background: var(--voxxrin-event-theme-colors-primary-hex);
         --color: var(--voxxrin-event-theme-colors-primary-contrast-hex);
         border-left: 1px solid var(--app-primary-shade);
         --border-radius:  0 0 8px 0 !important;
       }
 
-      &.feedback-select-btn {
+      &.btn-watchLater {
         --background: var(--voxxrin-event-theme-colors-secondary-hex);
         --color: var(--voxxrin-event-theme-colors-secondary-contrast-hex);
         border-left: 1px solid var(--voxxrin-event-theme-colors-secondary-hex);
       }
-    }
-  }
 
-  @keyframes scale-in-center {
-    0% {
-      -webkit-transform: scale(0);
-      transform: scale(0);
-      opacity: 1;
-    }
-    100% {
-      -webkit-transform: scale(1);
-      transform: scale(1);
-      opacity: 1;
-    }
-  }
-
-  &.is-to-watch-later {
-    ion-button.watch-later-btn {
-      --background: var(--voxxrin-event-theme-colors-secondary-hex);
-      --color: var(--voxxrin-event-theme-colors-secondary-contrast-hex);
-      border-left: 1px solid var(--voxxrin-event-theme-colors-secondary-hex);
+      &.btn-feedbackSelect {
+        --background: var(--voxxrin-event-theme-colors-secondary-hex);
+        --color: var(--voxxrin-event-theme-colors-secondary-contrast-hex);
+        border-left: 1px solid var(--voxxrin-event-theme-colors-secondary-hex);
+      }
+      //* END - Delete when btn is component *//
     }
   }
 }
