@@ -4,6 +4,7 @@ import EventSelectorPage from "@/views/EventSelectorPage.vue";
 
 const routes: Array<RouteRecordRaw> = [
   { path: '/', redirect: '/event-selector' },
+  { path: '/index.html', redirect: '/event-selector' },
   { path: '/event-selector', component: EventSelectorPage },
   { path: '/events/:eventId', component: () => import('@/views/event/_BaseEventPages.vue'), children: [
     { path: '', redirect: (route) => `/events/${route.params.eventId}/schedule` },

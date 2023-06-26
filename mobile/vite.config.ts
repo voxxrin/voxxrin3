@@ -16,19 +16,21 @@ export default defineConfig(({ command, mode }) => {
           type: 'module'
         },
         strategies: 'injectManifest',
-        injectRegister: 'inline',
-        registerType: 'autoUpdate',
+        injectRegister: null,
+        registerType: 'prompt',
+        includeAssets: ['favicon.png'],
         srcDir: 'src',
         filename: 'sw.ts',
         mode: isDevMode?'development':'production',
         minify: !isDevMode,
+        selfDestroying: false,
         workbox: {
           mode: isDevMode?'development':'production',
           sourcemap: isDevMode,
           swDest: 'sw.js',
         },
         manifest: {
-          name: "Voxxrin",
+          name: "Voxxrin - Your conference companion",
           short_name: "Voxxrin",
           start_url: "index.html",
           display: "standalone",
@@ -37,8 +39,8 @@ export default defineConfig(({ command, mode }) => {
             sizes: "512x512",
             type: "image/png"
           }],
-          background_color: "#F7F6F0",
-          theme_color: "#F7F6F0"
+          background_color: "#E30A63",
+          theme_color: "#E30A63"
         }
       })
     ],

@@ -1,5 +1,6 @@
 import {ListableEvent} from "./event-list.firestore";
 import {HexColor} from "./type-utils";
+import {ThemedTalkFormat, ThemedTrack} from "./dayly-schedule.firestore";
 
 export type ConferenceDescriptor = ListableEvent & {
     headingTitle: string,
@@ -39,8 +40,8 @@ export type ConferenceDescriptor = ListableEvent & {
             }
         },
     },
-    talkFormats: Array<{ id: string, title: string, duration: `PT${number}m`, themeColor: HexColor }>,
-    talkTracks: Array<{ id: string, title: string, themeColor: HexColor }>,
+    talkFormats: Array<ThemedTalkFormat>,
+    talkTracks: Array<ThemedTrack>,
     supportedTalkLanguages: Array<{ id: string, label: string, themeColor: HexColor }>,
     rooms: Array<{ id: string, title: string }>,
     infos: {

@@ -1,15 +1,35 @@
 ion-modal {
+  --border-radius: 24px 24px 0 0;
+
+  ion-header {
+    &.header-ios  ion-toolbar {
+      --background: transparent;
+      --border-style: none;
+      padding-inline-start: 0;
+      padding-inline-end: 0;
+    }
+
+    &.header-md::after {display: none;}
+
+    ion-badge {
+      --background: rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.3);
+      --color: var(--voxxrin-event-theme-colors-primary-hex);
+    }
+  }
+
   .ion-modal-title {
     display: flex;
     align-items: center;
     position: relative;
+    padding-left: 8px;
+    color: var(--app-primary);
 
-    ion-icon {
-      font-size: 24px;
-    }
+    ion-icon { font-size: 24px;}
+
     ion-title {
+      position: relative !important;
       padding-inline: 4px;
-      font-size: 18px;
+      font-size: 22px;
       font-weight: bold;
       text-align: left;
     }
@@ -17,5 +37,13 @@ ion-modal {
 
   ion-content {
     --background: var(--app-white);
+  }
+
+  ion-footer {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--app-gutters);
+
+    &.footer-md::before { display: none;}
   }
 }

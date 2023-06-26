@@ -1,0 +1,37 @@
+/* Specific type list */
+
+.list-toggle {
+
+  ion-item {
+    --padding-start: 0;
+    --inner-padding-start: var(--app-gutters);
+    --inner-padding-top: 12px;
+    --inner-padding-bottom: 12px;
+    --background: var(--app-background);
+    --border-color: var(--app-beige-line);
+
+    .ion-toggle-left {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      column-gap: 8px;
+      font-size: 14px;
+
+      ion-icon {
+        flex: 0 0 auto;
+        font-size: 26px;
+        color: var(--app-primary-shade);
+      }
+
+      > div {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+    }
+
+    ion-toggle {
+      --track-background-checked: var(--voxxrin-event-theme-colors-primary-hex);
+    }
+  }
+}

@@ -4,7 +4,7 @@
             :class="{ container: true, '_is-highlighted': isHighlighted(talk, talkNotes), '_has-favorited': talkNotes.isFavorite, '_has-to-watch-later': talkNotes.watchLater }"
             @click="$emit('talk-clicked', talk)">
     <div class="talkCard-head">
-      <div class="track">
+      <div class="track" v-if="hasTrack">
         <ion-badge class="trackBadge">
           <ion-icon src="/assets/icons/solid/tag.svg"></ion-icon>{{talk.track.title}}
         </ion-badge>
@@ -14,7 +14,15 @@
     </div>
 
     <div class="talkCard-content">
-      <div class="title">{{talk.title}}</div>
+      <div class="title"
+           :class="{'_hasTalkLand' : talkLang && event.features.hideLanguages.indexOf(talkLang.id.value)===-1}">
+        <ion-badge v-if="talkLang && event.features.hideLanguages.indexOf(talkLang.id.value)===-1"
+                   :style="{ '--background':  talkLang.themeColor}"
+                   class="talkLang">
+          {{talkLang.label}}
+        </ion-badge>
+        {{talk.title}}
+      </div>
       <div class="pictures">
         <div class="picturesItem" v-for="(speaker, index) in talk.speakers" :key="speaker.id.value">
           <ion-thumbnail>
@@ -46,10 +54,8 @@ import {useRoute} from "vue-router";
 import {EventId} from "@/models/VoxxrinEvent";
 import {getRouteParamsValue} from "@/views/vue-utils";
 import {useUserTalkNotes} from "@/state/useUserTalkNotes";
-import {
-    useSharedConferenceDescriptor
-} from "@/state/useConferenceDescriptor";
 import {TalkNote} from "../../../shared/feedbacks.firestore";
+import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 
 
 const props = defineProps({
@@ -60,22 +66,31 @@ const props = defineProps({
   isHighlighted: {
       required: true,
       type: Function as PropType<(talk: VoxxrinTalk, talkNotes: TalkNote) => boolean>
-  }
+  },
+  event: {
+      required: true,
+      type: Object as PropType<VoxxrinConferenceDescriptor>
+  },
 })
 
 defineEmits<{
     (e: 'talk-clicked', talk: VoxxrinTalk): void,
 }>()
 
+const talkLang = computed(() => {
+    return props.event!.supportedTalkLanguages.find(lang => lang.id.isSameThan(props.talk!.language))
+})
+
 const route = useRoute();
 const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')));
 
-const { conferenceDescriptor } = useSharedConferenceDescriptor(eventId);
 const { eventTalkStats, talkNotes, toggleFavorite, toggleWatchLater} = useUserTalkNotes(eventId, props.talk?.id)
 
 const displayedSpeakers = props.talk!.speakers
     .map(s => `${s.fullName}${s.companyName?` (${s.companyName})`:``}`)
     .join(", ");
+
+const hasTrack = (props.event?.talkTracks.length || 0) > 1;
 
 const theme = {
   track: {
@@ -175,8 +190,18 @@ const theme = {
       font-size: 16px;
       line-height: 1.2;
 
+      &._hasTalkLand { text-indent: 4px;}
+
       @media (prefers-color-scheme: dark) {
         color: var(--app-white);
+      }
+
+      .talkLang {
+        float: left;
+        font-size: 12px;
+        height: 19px;
+        width: 28px !important;
+        text-indent: 0;
       }
     }
 

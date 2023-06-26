@@ -5,10 +5,22 @@
       <ion-header class="toolbarHeader">
         <ion-toolbar>
           <ion-title slot="start">{{ LL.Schedule() }}</ion-title>
-          <ion-button class="ion-margin-end" slot="end" shape="round" size="small" fill="outline">
+          <div v-if="searchFieldDisplayed" class="search-input">
+            <ion-input :size="10" ref="$searchInput"
+                       :debounce="300"
+                       :placeholder="`${LL.Search()}...`"
+                       @ionInput="(ev) => searchTermsRef = ''+ev.target.value"
+            />
+            <ion-icon class="iconInput" src="/assets/icons/line/search-line.svg"></ion-icon>
+            <ion-button shape="round" size="small" fill="outline" @click="toggleSearchField()">
+              <ion-icon src="/assets/icons/line/close-line.svg"></ion-icon>
+            </ion-button>
+          </div>
+
+          <ion-button class="ion-margin-end" slot="end" shape="round" size="small" fill="outline" @click="openSchedulePreferencesModal()" v-if="false">
             <ion-icon src="/assets/icons/solid/settings-cog.svg"></ion-icon>
           </ion-button>
-          <ion-button slot="end" shape="round" size="small">
+          <ion-button slot="end" shape="round" size="small" @click="toggleSearchField()">
             <ion-icon src="/assets/icons/line/search-line.svg"></ion-icon>
           </ion-button>
         </ion-toolbar>
@@ -24,7 +36,7 @@
 
       <ion-accordion-group :multiple="true" v-if="event && currentlySelectedDayId" :value="expandedTimeslotIds">
           <time-slot-accordion
-              v-for="(timeslot, index) in timeslots" :key="timeslot.id.value"
+              v-for="(timeslot, index) in timeslotsRef" :key="timeslot.id.value"
               :timeslot-feedback="timeslot.feedback" :timeslot="timeslot"
               :event="event"
               @add-timeslot-feedback-clicked="(ts) => showAlertForTimeslot(ts)"
@@ -32,7 +44,7 @@
           </time-slot-accordion>
       </ion-accordion-group>
 
-      <ion-fab vertical="bottom" horizontal="end" slot="fixed" v-if="missingFeedbacksPastTimeslots.length>0">
+      <ion-fab vertical="bottom" horizontal="end" slot="fixed" v-if="event && (areFeedbacksEnabled(event) || missingFeedbacksPastTimeslots.length>0)">
         <ion-fab-button @click="(ev) => fixAnimationOnFabClosing(ev.target)">
           <ion-icon src="/assets/icons/line/comment-line-add.svg"></ion-icon>
         </ion-fab-button>
@@ -55,12 +67,13 @@ import {
     IonFab,
     IonFabList,
     IonAccordionGroup,
+    alertController, IonInput, modalController,
 } from '@ionic/vue';
 import {useRoute} from "vue-router";
-import {computed, onMounted, ref, watch} from "vue";
+import {onMounted, ref, unref, watch} from "vue";
 import {prepareSchedules, useSchedule} from "@/state/useSchedule";
 import CurrentEventHeader from "@/components/CurrentEventHeader.vue";
-import {getRouteParamsValue, isRefDefined, useInterval} from "@/views/vue-utils";
+import {getRouteParamsValue, isRefDefined, isRefUndefined, useInterval} from "@/views/vue-utils";
 import {EventId} from "@/models/VoxxrinEvent";
 import {DayId, VoxxrinDay} from "@/models/VoxxrinDay";
 import {
@@ -70,12 +83,19 @@ import {
     VoxxrinScheduleTimeSlot
 } from "@/models/VoxxrinSchedule";
 import DaySelector from "@/components/DaySelector.vue";
-import {findBestAutoselectableConferenceDay, findVoxxrinDay} from "@/models/VoxxrinConferenceDescriptor";
+import {
+    areFeedbacksEnabled,
+    findBestAutoselectableConferenceDay,
+    findVoxxrinDay
+} from "@/models/VoxxrinConferenceDescriptor";
 import TimeSlotAccordion from "@/components/TimeSlotAccordion.vue";
 import {VoxxrinTimeslotFeedback} from "@/models/VoxxrinFeedback";
 import {useCurrentClock} from "@/state/useCurrentClock";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
+import {filterTalksMatching} from "@/models/VoxxrinTalk";
+import SchedulePreferencesModal from '@/components/modals/SchedulePreferencesModal.vue'
+import {search, searchOutline} from "ionicons/icons";
 import {useTabbedPageNav} from "@/state/useTabbedPageNav";
 
 const route = useRoute();
@@ -87,14 +107,19 @@ const { LL } = typesafeI18n()
 const currentlySelectedDayId = ref<DayId|undefined>(undefined)
 const changeDayTo = (day: VoxxrinDay) => {
     currentlySelectedDayId.value = day.id;
+
+    autoExpandTimeslotsRequested.value = true;
 }
 
 const { schedule: currentSchedule } = useSchedule(event, currentlySelectedDayId)
 
 type TalkTimeslotWithFeedback = VoxxrinScheduleTimeSlot & {label: ReturnType<typeof getTimeslotLabel>} & {feedback: VoxxrinTimeslotFeedback|undefined};
-const timeslots = ref<TalkTimeslotWithFeedback[]>([]);
+const timeslotsRef = ref<TalkTimeslotWithFeedback[]>([]);
 const missingFeedbacksPastTimeslots = ref<Array<{start: string, end: string, timeslot: VoxxrinScheduleTimeSlot}>>([])
 const expandedTimeslotIds = ref<string[]>([])
+const searchFieldDisplayed = ref(false);
+const searchTermsRef = ref<string|undefined>(undefined);
+const $searchInput = ref<{ $el: HTMLIonInputElement }|undefined>(undefined);
 
 onMounted(async () => {
     console.log(`SchedulePage mounted !`)
@@ -119,42 +144,55 @@ watch([event, currentlySelectedDayId], ([confDescriptor, selectedDayId]) => {
   }
 }, {immediate: true})
 
-watch([event, currentSchedule], ([confDescriptor, currentSchedule]) => {
+const autoExpandTimeslotsRequested = ref(true);
+watch([event, currentSchedule, searchTermsRef], ([confDescriptor, currentSchedule, searchTerms]) => {
     if(currentSchedule && confDescriptor) {
-        timeslots.value = currentSchedule.timeSlots.map((ts: VoxxrinScheduleTimeSlot, idx): TalkTimeslotWithFeedback => {
+        timeslotsRef.value = currentSchedule.timeSlots.map((ts: VoxxrinScheduleTimeSlot, idx): TalkTimeslotWithFeedback => {
             const label = getTimeslotLabel(ts);
             // TODO: change me once feedback will be persisted
             const feedback: VoxxrinTimeslotFeedback|undefined = undefined;
             // yes that's weird ... but looks like TS is not very smart here 🤔
-            if(ts.type === 'talks') {
+            if(ts.type === 'break') {
                 return { ...ts, label, feedback };
             } else {
-                return { ...ts, label, feedback };
+                const filteredTalks = filterTalksMatching(ts.talks, searchTerms);
+                return {...ts, label, talks: filteredTalks, feedback };
             }
-        });
+        }).filter(ts => ts.type === 'break' || (ts.type === 'talks' && ts.talks.length !== 0));
+
         recomputeMissingFeedbacksList();
 
         currentlySelectedDayId.value = findVoxxrinDay(confDescriptor, currentSchedule.day).id
 
-        // Deferring expanded timeslots so that :
-        // 1/ we don't load the DOM too much when opening a schedule
-        // 2/ this allows to show the auto-expand animation to the user
-        const autoExpandableTimeslotIds = filterTimeslotsToAutoExpandBasedOn(currentSchedule.timeSlots, useCurrentClock().zonedDateTimeISO())
-            .map(ts => ts.id.value)
-        setTimeout(() => {
-            // Only expanding firt 2 auto-expandable timeslots first (no need to auto-expand others which
-            // will be outside the viewport
-            expandedTimeslotIds.value = autoExpandableTimeslotIds.slice(0, 3);
-        }, 300)
-        setTimeout(() => {
-            // Waiting a little bit and expanding those timeslots outside the viewport...
-            expandedTimeslotIds.value = autoExpandableTimeslotIds.slice(0);
-        }, 1200)
+        if(autoExpandTimeslotsRequested.value) {
+            // Deferring expanded timeslots so that :
+            // 1/ we don't load the DOM too much when opening a schedule
+            // 2/ this allows to show the auto-expand animation to the user
+            const autoExpandableTimeslotIds = filterTimeslotsToAutoExpandBasedOn(currentSchedule.timeSlots, useCurrentClock().zonedDateTimeISO())
+                .map(ts => ts.id.value)
+            setTimeout(() => {
+                // Only expanding firt 2 auto-expandable timeslots first (no need to auto-expand others which
+                // will be outside the viewport
+                expandedTimeslotIds.value = autoExpandableTimeslotIds.slice(0, 3);
+            }, 300)
+            setTimeout(() => {
+                // Waiting a little bit and expanding those timeslots outside the viewport...
+                expandedTimeslotIds.value = autoExpandableTimeslotIds.slice(0);
+
+                autoExpandTimeslotsRequested.value = false;
+            }, 1200)
+        }
     }
 }, {immediate: true});
 
 function recomputeMissingFeedbacksList() {
-    missingFeedbacksPastTimeslots.value = timeslots.value.filter(ts => {
+    const timeslots = unref(timeslotsRef);
+    if(!timeslots) {
+        missingFeedbacksPastTimeslots.value = [];
+        return;
+    }
+
+    missingFeedbacksPastTimeslots.value = timeslots.filter(ts => {
         return ts.type === 'talks'
             && !ts.feedback
             && getTimeslotTimingProgress(ts, useCurrentClock().zonedDateTimeISO()).status === 'past'
@@ -196,6 +234,27 @@ function toggleExpandedTimeslot(timeslot: VoxxrinScheduleTimeSlot) {
     } else {
         expandedTimeslotIds.value.splice(expandedTimeslotIdsIndex, 1);
     }
+}
+
+function toggleSearchField() {
+    searchFieldDisplayed.value = !searchFieldDisplayed.value
+    if(searchFieldDisplayed.value) {
+        if(isRefDefined($searchInput)) {
+            setTimeout(() => $searchInput.value.$el.setFocus(), 200);
+        }
+    } else {
+        searchTermsRef.value = '';
+    }
+}
+
+async function openSchedulePreferencesModal() {
+    const modal = await modalController.create({
+        component: SchedulePreferencesModal,
+    });
+    modal.present();
+
+    const { data, role } = await modal.onWillDismiss();
+    console.log(`TODO: Update schedule local preferences`)
 }
 </script>
 
@@ -300,4 +359,5 @@ function toggleExpandedTimeslot(timeslot: VoxxrinScheduleTimeSlot) {
     0% {transform: translateX(0);}
     100% { transform: translateX(120%);}
   }
+
 </style>

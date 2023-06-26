@@ -56,7 +56,7 @@ export const EVENT_THEME_PARSER = z.object({
 export const LISTABLE_EVENT_PARSER = z.object({
     id: z.string(),
     title: z.string(),
-    description: z.string().nullish(),
+    description: z.string().nullable(),
     days: z.array(DAY_PARSER),
     timezone: z.string(),
     keywords: z.array(z.string()),
@@ -89,7 +89,7 @@ export const EVENT_DESCRIPTOR_PARSER = LISTABLE_EVENT_PARSER.extend({
             }),
             scale: z.object({
                 enabled: z.boolean(),
-                icon: z.enum(['star', 'thumbs-up']),
+                icon: z.union([z.literal('star'), z.literal('thumbs-up')]),
                 labels: z.array(z.string())
                     .transform(arr => arr as ConferenceDescriptor['features']['ratings']['scale']['labels'])
             }),
@@ -101,7 +101,13 @@ export const EVENT_DESCRIPTOR_PARSER = LISTABLE_EVENT_PARSER.extend({
                 enabled: z.boolean(),
                 choices: z.array(z.object({
                     id: z.string(),
-                    icon: z.enum(["happy", "sad", "thumbs-up", "hand-right", "thumbs-down"])
+                    icon: z.union([
+                        z.literal("happy"),
+                        z.literal("sad"),
+                        z.literal("thumbs-up"),
+                        z.literal("hand-right"),
+                        z.literal("thumbs-down")
+                    ])
                 }))
             })
         }),

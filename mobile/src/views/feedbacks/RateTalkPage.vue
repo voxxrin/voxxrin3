@@ -7,7 +7,7 @@
         <slot>
           <div class="rateTalkView">
             <div class="rateTalkView-head">
-              <schedule-talk :is-highlighted="() => false" :talk="labelledTimeslotWithTalkRef.talk">
+              <schedule-talk :event="confDescriptorRef" :is-highlighted="() => false" :talk="labelledTimeslotWithTalkRef.talk">
               </schedule-talk>
             </div>
 
@@ -91,12 +91,11 @@ import IconBasedRating from "@/components/ratings/IconBasedRating.vue";
 import {UserFeedback} from "../../../../shared/feedbacks.firestore";
 import {UnwrapNestedRefs} from "@vue/reactivity";
 import {useUserFeedbacks} from "@/state/useUserFeedbacks";
+import {ScheduleTimeSlotId} from "@/models/VoxxrinSchedule";
 
 const { LL } = typesafeI18n()
 
 const route = useRoute();
-const eventId = computed(() => new EventId(getRouteParamsValue(route, 'eventId')));
-const {conferenceDescriptor: event} = useSharedConferenceDescriptor(eventId);
 const eventIdRef = computed(() => new EventId(getRouteParamsValue(route, 'eventId')));
 const talkId = new TalkId(getRouteParamsValue(route, 'talkId'));
 const {conferenceDescriptor: confDescriptorRef } = useSharedConferenceDescriptor(eventIdRef);
@@ -108,6 +107,8 @@ const dayIdRef = computed(() => {
 })
 
 const feedback: UnwrapNestedRefs<UserFeedback> = reactive({
+    timeslotId: '',
+    talkId: talkId.value,
     ratings: {
         'linear-rating': null,
         'bingo': [],
@@ -124,10 +125,13 @@ watch([confDescriptorRef], async ([confDescriptor]) => {
 
     const labelledTimeslotWithTalk = await findLabelledTimeslotContainingTalk(confDescriptor, talkId);
     labelledTimeslotWithTalkRef.value = labelledTimeslotWithTalk;
+    if(labelledTimeslotWithTalk) {
+        feedback.timeslotId = labelledTimeslotWithTalk.labelledTimeslot.id.value;
+    }
 }, { immediate: true })
 
 const feedbackCanBeSubmitted = computed(() => {
-    const confDescriptor = unref(event);
+    const confDescriptor = unref(confDescriptorRef);
     if(!confDescriptor) {
         return false;
     }
@@ -145,14 +149,14 @@ const feedbackCanBeSubmitted = computed(() => {
         && !confDescriptor.features.ratings["bingo"].enabled
         && !confDescriptor.features.ratings["scale"].enabled
         && !confDescriptor.features.ratings["custom-scale"].enabled
-        && (feedback.comment?.length === null || feedback.comment.length < 3)) {
+        && (feedback.comment?.length === undefined || feedback.comment.length < 3)) {
         return false;
     }
 
     return true;
 })
 
-const {userFeedbacks, updateTimeslotFeedback} = useUserFeedbacks(eventId, dayIdRef);
+const {userFeedbacks, updateTimeslotFeedback} = useUserFeedbacks(eventIdRef, dayIdRef);
 
 async function submitFeedback() {
     const labelledTimeslotWithTalk = unref(labelledTimeslotWithTalkRef);

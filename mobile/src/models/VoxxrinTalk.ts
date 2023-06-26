@@ -7,7 +7,7 @@ import {TrackId, VoxxrinTrack} from "@/models/VoxxrinTrack";
 import {Replace} from "@/models/type-utils";
 import {
     findRoom,
-    findTalkFormat, findTalkFormatIndex, findTrack,
+    findTalkFormat, findTalkFormatIndex, findTrack, TalkLanguageCode,
     VoxxrinConferenceDescriptor
 } from "@/models/VoxxrinConferenceDescriptor";
 import {match} from "ts-pattern";
@@ -22,7 +22,8 @@ export type VoxxrinTalk = Replace<Talk, {
     format: VoxxrinTalkFormat,
     track: VoxxrinTrack,
     room: VoxxrinRoom,
-    id: TalkId
+    id: TalkId,
+    language: TalkLanguageCode
 }>
 
 export type VoxxrinDetailedTalk = Replace<VoxxrinTalk, {
@@ -39,7 +40,7 @@ export function createVoxxrinTalkFromFirestore(event: VoxxrinConferenceDescripto
     const room = findRoom(event, new RoomId(firestoreTalk.room.id));
 
     const talk: VoxxrinTalk = {
-        language: firestoreTalk.language,
+        language: new TalkLanguageCode(firestoreTalk.language),
         title: firestoreTalk.title,
         speakers: firestoreTalk.speakers.map(sp => ({
             photoUrl: sp.photoUrl,
@@ -85,4 +86,19 @@ export function sortThenGroupByFormat(talks: VoxxrinTalk[], confDescriptor: Voxx
 
             return talksGroupedByFormat;
         }, [] as Array<{format: VoxxrinTalkFormat, talks: VoxxrinTalk[]}>)
+}
+
+export function filterTalksMatching(talks: VoxxrinTalk[], searchTerms: string|undefined) {
+    return talks.filter(talk => {
+        if(!searchTerms) {
+            return true;
+        }
+
+        const talkSearchableContent = `
+            ${talk.title}
+            ${talk.speakers.map(sp => `${sp.fullName} ${sp.companyName}`).join("\n")}
+        `.toLowerCase()
+
+        return searchTerms.split(" ").every(searchTerm => talkSearchableContent.includes(searchTerm.toLowerCase()));
+    })
 }

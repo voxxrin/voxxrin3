@@ -21,7 +21,7 @@
           <ion-button class="stickyHeader-close" shape="round" slot="start" size="small" fill="outline" @click="$router.back()">
             <ion-icon src="/assets/icons/solid/close.svg"></ion-icon>
           </ion-button>
-          <ion-title class="stickyHeader-title" slot="start" >Talk details</ion-title>
+          <ion-title class="stickyHeader-title" slot="start" >{{ LL.Talk_details() }}</ion-title>
           <ion-button class="btnTalkAction _watchLater" slot="end" shape="round" fill="outline"  @click.stop="() => toggleWatchLater()" v-if="event?.features.remindMeOnceVideosAreAvailableEnabled">
             <ion-icon v-if="!talkNotes.watchLater" aria-hidden="true" src="/assets/icons/line/video-line.svg"></ion-icon>
             <ion-icon v-if="talkNotes.watchLater" aria-hidden="true" src="/assets/icons/solid/video.svg"></ion-icon>
@@ -48,17 +48,25 @@
               <span class="slot-schedule-end">{{timeslotLabel.end}}</span>
             </ion-label>
           </div>
-          <div class="subHeader-room">
+          <div class="subHeader-room" v-if="event.features.roomsDisplayed">
             <ion-icon aria-hidden="true" src="/assets/icons/solid/map-marker.svg"></ion-icon>
             {{talk?.room.title}}
           </div>
         </ion-header>
 
 
-        <h1 class="talkDetails-title">{{talk?.title}}</h1>
+        <h1 class="talkDetails-title"
+            :class="{'_hasTalkLand' : talkLang && event.features.hideLanguages.indexOf(talkLang.id.value)===-1}">
+          <ion-badge v-if="talkLang && event.features.hideLanguages.indexOf(talkLang.id.value)===-1"
+                     :style="{ '--background': talkLang.themeColor }"
+                     class="talkLang">
+            {{talkLang.label}}
+          </ion-badge>
+          {{talk?.title}}
+        </h1>
         <div class="talkDetails-infos">
           <div class="talkDetails-infos-listTrack">
-          <ion-badge class="trackBadge" :style="{
+          <ion-badge v-if="event.talkTracks.length > 1" class="trackBadge" :style="{
               '--background': talk?.track.themeColor
           }">{{talk?.track.title}}</ion-badge>
           </div>
@@ -85,14 +93,15 @@
         <ion-list class="talkDetails-speakers-list">
           <ion-item v-for="(speaker, index) in talk?.speakers" :key="speaker.id.value">
             <ion-avatar>
-              <img :src="speaker.photoUrl===null?undefined:speaker.photoUrl" />
+              <img :src="speaker.photoUrl" v-if="speaker.photoUrl"/>
+              <img src="/assets/images/svg/avatar-shadow.svg" v-if="!speaker.photoUrl"/>
             </ion-avatar>
             <div class="speakerInfo">
               <div class="speakerInfo-name">
                 {{speaker.fullName}}
                 <span class="speakerInfo-company" v-if="speaker.companyName">
                      <ion-icon aria-hidden="true" :icon="business"></ion-icon>
-                  ({{speaker.companyName}})
+                  {{speaker.companyName}}
                 </span>
               </div>
               <div class="speakerInfo-description">
@@ -113,7 +122,7 @@ import {getRouteParamsValue, isRefDefined} from "@/views/vue-utils";
 import {useUserTalkNotes} from "@/state/useUserTalkNotes";
 import {TalkId} from "@/models/VoxxrinTalk";
 import {useSharedEventTalk} from "@/state/useEventTalk";
-import {computed, ref, watch} from "vue";
+import {computed, ref, unref, watch} from "vue";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {IonBadge, IonAvatar, IonText} from "@ionic/vue";
 import {business} from "ionicons/icons";
@@ -129,6 +138,16 @@ const {conferenceDescriptor: event} = useSharedConferenceDescriptor(eventId);
 const { eventTalkStats, talkNotes, toggleFavorite, toggleWatchLater} = useUserTalkNotes(eventId, talkId)
 const { talkDetails: talk } = useSharedEventTalk(event, talkId);
 const { LL } = typesafeI18n()
+
+const talkLang = computed(() => {
+    const eventDescriptor = unref(event),
+        unreffedTalk = unref(talk);
+    if(!eventDescriptor || !unreffedTalk) {
+        return undefined;
+    }
+
+    return eventDescriptor.supportedTalkLanguages.find(lang => lang.id.isSameThan(unreffedTalk.language))
+})
 
 const timeslotLabel = computed(() => {
     if(isRefDefined(talk) && isRefDefined(event)) {
@@ -161,6 +180,18 @@ const theme = computed(() => {
     &-title {
       font-weight: 900;
       padding: 0 var(--app-gutters);
+
+      &._hasTalkLand { text-indent: 4px;}
+
+      .talkLang {
+        position: relative;
+        float: left;
+        top: 4px;
+        font-size: 14px;
+        height: 24px;
+        width: 34px !important;
+        text-indent: 0;
+      }
     }
 
     &-infos {

@@ -4,10 +4,11 @@ import { FullEvent } from "../models/Event";
 import {z} from "zod";
 import {LA_PRODUCT_CONF_CRAWLER} from "./la-product-conf/crawler";
 import {FIREBASE_CRAWLER_DESCRIPTOR_PARSER} from "./crawler-parsers";
-import {HexColor, ISODatetime} from "../../../../shared/type-utils";
+import {HexColor} from "../../../../shared/type-utils";
 import {WEB2DAY_CRAWLER} from "./web2day/crawler";
-import {match} from "ts-pattern";
 import {Temporal} from "@js-temporal/polyfill";
+import {CAMPING_DES_SPEAKERS_CRAWLER} from "./camping-des-speakers/crawler";
+import {DEVOXX_SCALA_CRAWLER} from "./devoxx-scala/crawler";
 const axios = require('axios');
 
 export type CrawlerKind<ZOD_TYPE extends z.ZodType> = {
@@ -18,8 +19,10 @@ export type CrawlerKind<ZOD_TYPE extends z.ZodType> = {
 
 const CRAWLERS: CrawlerKind<any>[] = [
     DEVOXX_CRAWLER,
+    DEVOXX_SCALA_CRAWLER,
     LA_PRODUCT_CONF_CRAWLER,
-    WEB2DAY_CRAWLER
+    WEB2DAY_CRAWLER,
+    CAMPING_DES_SPEAKERS_CRAWLER
 ]
 
 export const TALK_FORMAT_FALLBACK_COLORS: HexColor[] = [
@@ -63,7 +66,7 @@ const crawlAll = async function(criteria: CrawlCriteria) {
     const matchingCrawlerDescriptors = fbCrawlerDescriptorSnapshot.docs.map((snap, _) => {
         return {...FIREBASE_CRAWLER_DESCRIPTOR_PARSER.parse(snap.data()), id: snap.id }
     }).filter(firestoreCrawler => {
-        return !isAutoCrawling
+        return isAutoCrawling
             || Temporal.Now.instant().epochMilliseconds < Date.parse(firestoreCrawler.stopAutoCrawlingAfter)
     });
 

@@ -21,10 +21,10 @@ export function useSchedule(
     console.debug(`useSchedule(${unref(conferenceDescriptorRef)?.id.value}, ${unref(dayIdRef)?.value})`)
     watch(() => unref(conferenceDescriptorRef), (newVal, oldVal) => {
         console.debug(`useSchedule[conferenceDescriptorRef] updated from [${oldVal?.id.value}] to [${newVal?.id.value}]`)
-    })
+    }, {immediate: true})
     watch(() => unref(dayIdRef), (newVal, oldVal) => {
         console.debug(`useSchedule[dayIdRef] updated from [${oldVal?.value}] to [${newVal?.value}]`)
-    })
+    }, {immediate: true})
 
 
 
