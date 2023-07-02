@@ -1,3 +1,25 @@
+<template>
+  <ion-header class="stepHeader">
+    <span class="stepHeader-nb">{{ step }}</span>
+    {{ stepLabel }}
+  </ion-header>
+</template>
+
+<script setup lang="ts">
+const props = defineProps({
+    step: {
+        required: true,
+        type: Number,
+    },
+    stepLabel: {
+        required: true,
+        type: String
+    }
+});
+
+</script>
+
+<style lang="scss" scoped>
 .stepHeader {
   position: sticky;
   top: 68px;
@@ -21,3 +43,4 @@
     background-color: var(--app-primary);
   }
 }
+</style>

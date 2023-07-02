@@ -34,10 +34,7 @@
       </div>
     </ion-header>
 
-    <ion-header class="stepHeader">
-      <span class="stepHeader-nb">{{ step }}</span>
-      {{ stepLabel }}
-    </ion-header>
+    <step-header :step="step" :step-label="stepLabel"></step-header>
 
     <slot></slot>
   </ion-content>
@@ -48,6 +45,7 @@ import {PropType} from "vue";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {LabelledTimeslot} from "@/state/findTimeslot";
+import StepHeader from "@/components/StepHeader.vue";
 
 const props = defineProps({
     step: {
