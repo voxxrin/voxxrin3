@@ -52,18 +52,14 @@
         </slot>
       </base-feedback-step>
     </ion-content>
-    <ion-footer class="feedBackFooter">
-      <ion-toolbar>
-        <div class="feedBackFooter-group">
-          <ion-button size="small" fill="solid" color="medium" shape="round" expand="block">{{ LL.Cancel() }}</ion-button>
-          <ion-button size="small" shape="round" color="tertiary" expand="block"
-                @click="submitFeedback()"
-                :disabled="!feedbackCanBeSubmitted">
-            {{ LL.Submit_Feedback() }}
-          </ion-button>
-        </div>
-      </ion-toolbar>
-    </ion-footer>
+    <feedback-footer>
+      <ion-button size="small" fill="solid" color="medium" shape="round" expand="block">{{ LL.Cancel() }}</ion-button>
+      <ion-button size="small" shape="round" color="tertiary" expand="block"
+                  @click="submitFeedback()"
+                  :disabled="!feedbackCanBeSubmitted">
+        {{ LL.Submit_Feedback() }}
+      </ion-button>
+    </feedback-footer>
   </ion-page>
 </template>
 
@@ -90,6 +86,7 @@ import {UnwrapNestedRefs} from "@vue/reactivity";
 import {useUserFeedbacks} from "@/state/useUserFeedbacks";
 import {ScheduleTimeSlotId} from "@/models/VoxxrinSchedule";
 import VoxDivider from "@/components/ui/VoxDivider.vue";
+import FeedbackFooter from "@/components/FeedbackFooter.vue";
 
 const { LL } = typesafeI18n()
 

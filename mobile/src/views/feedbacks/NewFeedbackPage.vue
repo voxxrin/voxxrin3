@@ -67,28 +67,28 @@
         </div>
       </slot>
     </base-feedback-step>
-    <ion-footer class="feedBackFooter">
-      <ion-toolbar>
+    <feedback-footer>
+      <template #details>
         <ion-button size="small" fill="outline" shape="round" expand="block" v-if="event?.features.remindMeOnceVideosAreAvailableEnabled">
-            <ion-icon slot="start" src="assets/icons/solid/video.svg"  aria-hidden="true"></ion-icon>
-              {{LL.Watch_later_all_favorited_talks()}}
+          <ion-icon slot="start" src="assets/icons/solid/video.svg"  aria-hidden="true"></ion-icon>
+          {{LL.Watch_later_all_favorited_talks()}}
         </ion-button>
-        <div class="feedBackFooter-group">
-          <ion-button size="small" fill="solid" color="medium" shape="round" expand="block">{{ LL.Cancel() }}</ion-button>
-          <ion-button size="small" fill="outline" shape="round" expand="block" v-if="selectedTalk === undefined">
+      </template>
+      <template #default>
+        <ion-button size="small" fill="solid" color="medium" shape="round" expand="block">{{ LL.Cancel() }}</ion-button>
+        <ion-button size="small" fill="outline" shape="round" expand="block" v-if="selectedTalk === undefined">
             <span class="contentDidntAttendTalk">
               {{LL.I_didnt_attend_any_talk()}}
                 <small>({{ LL.During_this_time_slot() }})</small>
             </span>
-          </ion-button>
-          <ion-button size="small" fill="solid" shape="round" expand="block" v-if="selectedTalk !== undefined" @click="rateSelectedTalk()">
+        </ion-button>
+        <ion-button size="small" fill="solid" shape="round" expand="block" v-if="selectedTalk !== undefined" @click="rateSelectedTalk()">
             <span class="contentDidntAttendTalk">
               {{LL.Add_Feedback()}}
             </span>
-          </ion-button>
-        </div>
-      </ion-toolbar>
-    </ion-footer>
+        </ion-button>
+      </template>
+    </feedback-footer>
   </ion-page>
 </template>
 
@@ -112,6 +112,7 @@ import {
     LabelledTimeslot,
     LabelledTimeslotWithOverlappings
 } from "@/state/findTimeslot";
+import FeedbackFooter from "@/components/FeedbackFooter.vue";
 
 const { LL } = typesafeI18n()
 
