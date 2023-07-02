@@ -15,13 +15,7 @@
               <ion-icon class="slot-schedule-icon" aria-hidden="true" src="assets/icons/line/chevron-right-line.svg"></ion-icon>
               <span class="slot-schedule-end">{{timeslotLabel.end}}</span>
             </ion-label>
-            <div class="slotOverlay" v-if="timeslot.type==='talks' && timeslot.overlappingTimeSlots.length > 0">
-              <ion-icon aria-hidden="true" src="assets/icons/solid/slot-overlay.svg"></ion-icon>
-              <span class="slotOverlay-txt">
-                <small>{{LL.Overlaps_x_slot_label()}}</small>
-                <strong>{{LL.Overlaps_x_slot_value({nrOfOverlappingSlots: timeslot.overlappingTimeSlots.length})}}</strong>
-              </span>
-            </div>
+            <slot-overlaps v-if="timeslot.type === 'talks'" :overlappingTimeslots="timeslot.overlappingTimeSlots"></slot-overlaps>
           </ion-col>
           <ion-col class="slot-actions" size="auto">
             <ion-icon class="_provided-feedback" aria-hidden="true" src="/assets/icons/solid/comment-check.svg" v-if="areFeedbacksEnabled(event)"></ion-icon>
@@ -100,6 +94,7 @@ import {
 } from "@/state/useConferenceDescriptor";
 import {VoxxrinTalk} from "@/models/VoxxrinTalk";
 import {useTabbedPageNav} from "@/state/useTabbedPageNav";
+import SlotOverlaps from "@/components/SlotOverlaps.vue";
 
 const props = defineProps({
   timeslot: {

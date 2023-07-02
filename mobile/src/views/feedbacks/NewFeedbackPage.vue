@@ -12,13 +12,7 @@
             </div>
 
             <div class="pickTalkDivider-end">
-              <div class="slotOverlay" v-if="labelledTimeslotWithOverlappingsRef.overlappingLabelledTimeslots.length > 0">
-                <ion-icon aria-hidden="true" src="assets/icons/solid/slot-overlay.svg"></ion-icon>
-                <span class="slotOverlay-txt">
-                <small>{{LL.Overlaps_x_slot_label()}}</small>
-                <strong>{{LL.Overlaps_x_slot_value({nrOfOverlappingSlots: labelledTimeslotWithOverlappingsRef.overlappingLabelledTimeslots.length})}}</strong>
-              </span>
-              </div>
+              <slot-overlaps :overlappingTimeslots="labelledTimeslotWithOverlappingsRef.overlappingLabelledTimeslots"></slot-overlaps>
             </div>
 
             <ion-label class="pickTalkDivider-timeSlotResume" v-if="labelledTimeslotWithOverlappingsRef.labelledTimeslot.label">
@@ -113,6 +107,7 @@ import {
     LabelledTimeslotWithOverlappings
 } from "@/state/findTimeslot";
 import FeedbackFooter from "@/components/FeedbackFooter.vue";
+import SlotOverlaps from "@/components/SlotOverlaps.vue";
 
 const { LL } = typesafeI18n()
 
