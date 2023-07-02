@@ -1,3 +1,15 @@
+<template>
+  <div class="divider">
+    <span class="titleDivider"><slot></slot></span>
+    <span class="divider-separator"></span>
+  </div>
+</template>
+
+<script setup lang="ts">
+
+</script>
+
+<style lang="scss" scoped>
 .divider {
   display: flex;
   flex-direction: row;
@@ -27,3 +39,4 @@
     }
   }
 }
+</style>

@@ -12,10 +12,9 @@
             </div>
 
             <div class="rateTalkForm">
-              <div class="divider" v-if="confDescriptorRef.features.ratings.scale.enabled || confDescriptorRef.features.ratings['custom-scale'].enabled">
-                <span class="titleDivider">{{ LL.Rate_it() }} :</span>
-                <span class="divider-separator"></span>
-              </div>
+              <vox-divider v-if="confDescriptorRef.features.ratings.scale.enabled || confDescriptorRef.features.ratings['custom-scale'].enabled">
+                {{ LL.Rate_it() }} :
+              </vox-divider >
 
               <linear-rating
                   v-if="confDescriptorRef.features.ratings.scale.enabled"
@@ -28,10 +27,9 @@
                   @rating-selected="feedback.ratings['custom-rating'] = $event"
               ></icon-based-rating>
 
-              <div class="divider" v-if="confDescriptorRef.features.ratings.bingo.enabled">
-                <span class="titleDivider">{{ LL.Quick_feedback() }} :</span>
-                <span class="divider-separator"></span>
-              </div>
+              <vox-divider v-if="confDescriptorRef.features.ratings.bingo.enabled">
+                {{ LL.Quick_feedback() }} :
+              </vox-divider>
 
               <quick-feedback-rating
                   v-if="confDescriptorRef.features.ratings.bingo.enabled"
@@ -39,10 +37,9 @@
                   @rating-selected="feedback.ratings['bingo'] = $event"
               ></quick-feedback-rating>
 
-              <div class="divider" v-if="confDescriptorRef.features.ratings['free-text'].enabled">
-                <span class="titleDivider">{{ LL.Free_comment() }} :</span>
-                <span class="divider-separator"></span>
-              </div>
+              <vox-divider v-if="confDescriptorRef.features.ratings['free-text'].enabled">
+                {{ LL.Free_comment() }} :
+              </vox-divider>
 
               <ion-textarea v-if="confDescriptorRef.features.ratings['free-text'].enabled"
                   :debounce="300" :maxlength="confDescriptorRef.features.ratings['free-text'].maxLength"
@@ -92,6 +89,7 @@ import {UserFeedback} from "../../../../shared/feedbacks.firestore";
 import {UnwrapNestedRefs} from "@vue/reactivity";
 import {useUserFeedbacks} from "@/state/useUserFeedbacks";
 import {ScheduleTimeSlotId} from "@/models/VoxxrinSchedule";
+import VoxDivider from "@/components/ui/VoxDivider.vue";
 
 const { LL } = typesafeI18n()
 

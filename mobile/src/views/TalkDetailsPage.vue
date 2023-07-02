@@ -77,19 +77,17 @@
       </ion-text>
 
       <div class="talkDetails-description">
-        <div class="divider">
-          <span class="titleDivider">{{ LL.Talk_summary() }}</span>
-          <span class="divider-separator"></span>
-        </div>
+        <vox-divider>
+          {{ LL.Talk_summary() }}
+        </vox-divider>
         <ion-text v-html="talk?.description">
         </ion-text>
       </div>
 
       <div class="talkDetails-speakers">
-        <div class="divider">
-          <span class="titleDivider">{{ LL.Speakers() }}</span>
-          <span class="divider-separator"></span>
-        </div>
+        <vox-divider>
+          {{ LL.Speakers() }}
+        </vox-divider>
         <ion-list class="talkDetails-speakers-list">
           <ion-item v-for="(speaker, index) in talk?.speakers" :key="speaker.id.value">
             <ion-avatar>
@@ -129,6 +127,7 @@ import {business} from "ionicons/icons";
 import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
 import {formatHourMinutes} from "@/models/DatesAndTime";
 import {Temporal} from "temporal-polyfill";
+import VoxDivider from "@/components/ui/VoxDivider.vue";
 
 const route = useRoute();
 const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')));
