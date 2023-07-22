@@ -394,13 +394,6 @@ const theme = {
     //* TODO - Start - Delete when btn is component *//
     //* Change style type actions *//
     ion-button {
-      &.btn-favorite {
-        --background: var(--voxxrin-event-theme-colors-primary-hex);
-        --color: var(--voxxrin-event-theme-colors-primary-contrast-hex);
-        border-left: 1px solid var(--app-primary-shade);
-        --border-radius:  0 0 8px 0 !important;
-      }
-
       &.btn-watchLater {
         --background: var(--voxxrin-event-theme-colors-secondary-hex);
         --color: var(--voxxrin-event-theme-colors-secondary-contrast-hex);

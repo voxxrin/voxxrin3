@@ -49,13 +49,7 @@
               </ion-button>
             </div>
             <div class="talkActions-favorite">
-              <ion-button class="btnTalk btn-favorite" @click.stop="() => talkNotesHook.toggleFavorite()" v-if="conferenceDescriptor?.features.favoritesEnabled">
-                <span class="btn-favorite-group">
-                  <ion-icon class="btn-favorite-group-icon" v-if="!talkNotesHook.talkNotes?.isFavorite" aria-hidden="true" src="/assets/icons/line/bookmark-line-favorite.svg"></ion-icon>
-                  <ion-icon class="btn-favorite-group-icon" v-if="!!talkNotesHook.talkNotes?.isFavorite" aria-hidden="true" src="/assets/icons/solid/bookmark-favorite.svg"></ion-icon>
-                  <ion-label class="btn-favorite-group-nb" v-if="talkNotesHook.eventTalkStats !== undefined">{{ talkNotesHook.eventTalkStats.totalFavoritesCount }}</ion-label>
-                </span>
-              </ion-button>
+              <talk-favorite-button v-if="conferenceDescriptor" :event-descriptor="conferenceDescriptor" :talk-id="talk.id"></talk-favorite-button>
             </div>
           </div>
         </template>
@@ -95,6 +89,7 @@ import {
 import {VoxxrinTalk} from "@/models/VoxxrinTalk";
 import {useTabbedPageNav} from "@/state/useTabbedPageNav";
 import SlotOverlaps from "@/components/SlotOverlaps.vue";
+import TalkFavoriteButton from "@/components/TalkFavoriteButton.vue";
 
 const props = defineProps({
   timeslot: {
