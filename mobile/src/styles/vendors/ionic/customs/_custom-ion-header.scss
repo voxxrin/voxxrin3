@@ -74,6 +74,7 @@ ion-header  {
 
 
         ::v-deep {
+            /* TODO RLZ: move it to a proper place in talk actions components */
             &._has-watch-later {
                 .btnTalkAction._watchLater {
                     --background: var(--voxxrin-event-theme-colors-secondary-hex);
@@ -83,6 +84,7 @@ ion-header  {
                 }
             }
 
+            /* TODO RLZ: move it to a proper place in talk actions components */
             &._has-favorited {
                 .btnTalkAction._favorite {
                     --background: var(--voxxrin-event-theme-colors-primary-hex);
@@ -125,6 +127,7 @@ ion-header  {
             }
         }
 
+        /* TODO RLZ: move it to a proper place in talk actions components */
         .btnTalkAction {
             height: 48px;
             width: 48px;

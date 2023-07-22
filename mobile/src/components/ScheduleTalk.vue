@@ -341,6 +341,7 @@ const theme = {
       }
 
 
+      /* TODO RLZ: move it to a proper place in talk actions components */
       :deep(.btnTalk) {
         border-width: 2px;
         border-color: var(--voxxrin-event-theme-colors-secondary-hex);
@@ -374,6 +375,7 @@ const theme = {
       .talkCard-footer {
         border-color: var(--app-primary-shade);
 
+        /* TODO RLZ: move it to a proper place in talk actions components */
         :deep(.btnTalk) { border-color: var(--app-primary-shade);}
       }
     }

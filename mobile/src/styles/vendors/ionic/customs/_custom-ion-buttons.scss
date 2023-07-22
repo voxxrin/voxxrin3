@@ -88,6 +88,7 @@ ion-button {
         --background: rgba(var(--app-white-transparent));
     }
 
+    /* TODO RLZ: move it to a proper place in talk actions components */
     &.btnTalk {
         height: 100% !important;
         min-height: 55px !important;
