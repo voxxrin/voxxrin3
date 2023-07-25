@@ -11,7 +11,7 @@
       <ion-item class="listTalks-item" v-for="(talk) in perFormatGroup.talks" :key="talk.id.value">
         <schedule-talk :talk="talk" @talkClicked="$emit('talk-clicked', $event)" :is-highlighted="isHighlighted" :event="event">
           <template #upper-right="upperRightContext">
-            <slot name="talk-card-upper-right" :talk="upperRightContext.talk" />
+            <slot name="talk-card-upper-right" :talk="upperRightContext.talk" :talkNotesHook="upperRightContext.talkNotesHook" />
           </template>
           <template #footer-actions="footerActionsContext">
             <slot name="talk-card-footer-actions" :talk="footerActionsContext.talk" :talkNotesHook="footerActionsContext.talkNotesHook" />

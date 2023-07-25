@@ -10,7 +10,7 @@
         </ion-badge>
       </div>
 
-      <slot name="upper-right" :talk="talk"></slot>
+      <slot name="upper-right" :talk="talk" :talkNotesHook="userTalkNotesHook"></slot>
     </div>
 
     <div class="talkCard-content">

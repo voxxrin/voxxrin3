@@ -3,8 +3,8 @@
     <talk-format-groups-breakdown
         :event="eventDescriptor" :talks="displayedTalks" :is-highlighted="(talk, talkNotes) => talk.id.isSameThan(selectedTalkId)"
         @talkClicked="updateSelected($event)">
-      <template #talk-card-upper-right="{ talk }">
-        <div class="talkFavorite">
+      <template #talk-card-upper-right="{ talk, talkNotesHook }">
+        <div class="talkFavorite" v-if="talkNotesHook.talkNotes.value.isFavorite">
           <ion-icon src="/assets/icons/solid/bookmark-favorite.svg" />
           {{ LL.In_favorites() }}
         </div>
