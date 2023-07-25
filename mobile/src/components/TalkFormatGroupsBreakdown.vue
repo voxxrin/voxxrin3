@@ -30,7 +30,7 @@ import {
 } from '@ionic/vue';
 import {sortThenGroupByFormat, VoxxrinTalk} from "@/models/VoxxrinTalk";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
-import ScheduleTalk from "@/components/ScheduleTalk.vue";
+import ScheduleTalk from "@/components/talk-card/ScheduleTalk.vue";
 import {TalkNote} from "../../../shared/feedbacks.firestore";
 
 

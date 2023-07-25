@@ -76,7 +76,7 @@ import {
     findLabelledTimeslotContainingTalk,
     DailyLabelledTimeslotWithTalk,
 } from "@/state/findTimeslot";
-import ScheduleTalk from "@/components/ScheduleTalk.vue";
+import ScheduleTalk from "@/components/talk-card/ScheduleTalk.vue";
 import {IonFooter, IonInput, IonTextarea} from "@ionic/vue";
 import LinearRating from "@/components/ratings/LinearRating.vue";
 import QuickFeedbackRating from "@/components/ratings/QuickFeedbackRating.vue";

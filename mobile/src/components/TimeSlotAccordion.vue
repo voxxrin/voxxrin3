@@ -88,8 +88,8 @@ import {
 import {VoxxrinTalk} from "@/models/VoxxrinTalk";
 import {useTabbedPageNav} from "@/state/useTabbedPageNav";
 import SlotOverlaps from "@/components/SlotOverlaps.vue";
-import TalkFavoriteButton from "@/components/TalkFavoriteButton.vue";
-import TalkWatchLaterButton from "@/components/TalkWatchLaterButton.vue";
+import TalkFavoriteButton from "@/components/talk-card/TalkFavoriteButton.vue";
+import TalkWatchLaterButton from "@/components/talk-card/TalkWatchLaterButton.vue";
 
 const props = defineProps({
   timeslot: {

@@ -35,8 +35,8 @@ import TalkFormatGroupsBreakdown from "@/components/TalkFormatGroupsBreakdown.vu
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {useUserEventAllFavoritedTalkIds} from "@/state/useUserTalkNotes";
-import TalkWatchLaterButton from "@/components/TalkWatchLaterButton.vue";
-import TalkSelectForFeedback from "@/components/TalkSelectForFeedback.vue";
+import TalkWatchLaterButton from "@/components/talk-card/TalkWatchLaterButton.vue";
+import TalkSelectForFeedback from "@/components/talk-card/TalkSelectForFeedback.vue";
 
 const { LL } = typesafeI18n()
 

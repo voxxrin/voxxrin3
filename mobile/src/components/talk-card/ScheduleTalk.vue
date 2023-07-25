@@ -54,7 +54,7 @@ import {useRoute} from "vue-router";
 import {EventId} from "@/models/VoxxrinEvent";
 import {getRouteParamsValue} from "@/views/vue-utils";
 import {UserTalkNotesHook, useUserTalkNotes} from "@/state/useUserTalkNotes";
-import {TalkNote} from "../../../shared/feedbacks.firestore";
+import {TalkNote} from "../../../../shared/feedbacks.firestore";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 
 
