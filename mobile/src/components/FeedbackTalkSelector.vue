@@ -15,10 +15,7 @@
             <talk-watch-later-button :user-talk-notes="talkNotesHook" :event-descriptor="eventDescriptor"></talk-watch-later-button>
           </div>
           <div class="talkActions-feedback">
-            <ion-button class="btnTalk btn-feedbackSelect" @click.stop="() => updateSelected(talk)">
-              <ion-icon v-if="talk.id.isSameThan(selectedTalkId)" aria-hidden="true" src="assets/icons/solid/comment-feedback-select.svg"/>
-              <ion-icon v-if="!talk.id.isSameThan(selectedTalkId)" aria-hidden="true"  src="assets/icons/line/comment-line.svg"/>
-            </ion-button>
+            <talk-select-for-feedback :is-active="talk.id.isSameThan(selectedTalkId)" @click.stop="() => updateSelected(talk)"></talk-select-for-feedback>
           </div>
         </div>
       </template>
@@ -39,6 +36,7 @@ import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor"
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {useUserEventAllFavoritedTalkIds} from "@/state/useUserTalkNotes";
 import TalkWatchLaterButton from "@/components/TalkWatchLaterButton.vue";
+import TalkSelectForFeedback from "@/components/TalkSelectForFeedback.vue";
 
 const { LL } = typesafeI18n()
 
