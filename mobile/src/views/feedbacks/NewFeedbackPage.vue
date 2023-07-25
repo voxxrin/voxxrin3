@@ -97,15 +97,15 @@ import {
     ScheduleTimeSlotId
 } from "@/models/VoxxrinSchedule";
 import {IonAccordion, IonAccordionGroup, IonFooter, useIonRouter} from "@ionic/vue";
-import FeedbackTalkSelector from "@/components/FeedbackTalkSelector.vue";
+import FeedbackTalkSelector from "@/components/feedbacks/FeedbackTalkSelector.vue";
 import {VoxxrinTalk} from "@/models/VoxxrinTalk";
 import {useTabbedPageNav} from "@/state/useTabbedPageNav";
-import BaseFeedbackStep from "@/components/BaseFeedbackStep.vue";
+import BaseFeedbackStep from "@/components/feedbacks/BaseFeedbackStep.vue";
 import {
     findLabelledTimeslotWithOverlappingsForTimeslotId,
     LabelledTimeslotWithOverlappings
 } from "@/state/findTimeslot";
-import FeedbackFooter from "@/components/FeedbackFooter.vue";
+import FeedbackFooter from "@/components/feedbacks/FeedbackFooter.vue";
 import SlotOverlaps from "@/components/schedule/SlotOverlaps.vue";
 
 const { LL } = typesafeI18n()

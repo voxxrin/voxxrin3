@@ -71,7 +71,7 @@ import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
 import {computed, reactive, Ref, ref, unref, watch} from "vue";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {TalkId} from "@/models/VoxxrinTalk";
-import BaseFeedbackStep from "@/components/BaseFeedbackStep.vue";
+import BaseFeedbackStep from "@/components/feedbacks/BaseFeedbackStep.vue";
 import {
     findLabelledTimeslotContainingTalk,
     DailyLabelledTimeslotWithTalk,
@@ -86,7 +86,7 @@ import {UnwrapNestedRefs} from "@vue/reactivity";
 import {useUserFeedbacks} from "@/state/useUserFeedbacks";
 import {ScheduleTimeSlotId} from "@/models/VoxxrinSchedule";
 import VoxDivider from "@/components/ui/VoxDivider.vue";
-import FeedbackFooter from "@/components/FeedbackFooter.vue";
+import FeedbackFooter from "@/components/feedbacks/FeedbackFooter.vue";
 
 const { LL } = typesafeI18n()
 

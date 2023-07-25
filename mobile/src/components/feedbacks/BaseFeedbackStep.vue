@@ -45,7 +45,7 @@ import {PropType} from "vue";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {LabelledTimeslot} from "@/state/findTimeslot";
-import StepHeader from "@/components/StepHeader.vue";
+import StepHeader from "@/components/feedbacks/StepHeader.vue";
 
 const props = defineProps({
     step: {
