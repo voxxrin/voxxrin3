@@ -44,12 +44,13 @@
           <div class="talkActions">
             <div class="talkActions-watchLater">
               <ion-button class="btnTalk btn-watchLater" @click.stop="() => talkNotesHook.toggleWatchLater()" v-if="conferenceDescriptor?.features.remindMeOnceVideosAreAvailableEnabled">
-                <ion-icon v-if="!talkNotesHook.talkNotes?.watchLater" aria-hidden="true" src="/assets/icons/line/video-line.svg"></ion-icon>
-                <ion-icon v-if="!!talkNotesHook.talkNotes?.watchLater" aria-hidden="true" src="/assets/icons/solid/video.svg"></ion-icon>
+                <ion-icon v-if="!talkNotesHook.talkNotes?.value.watchLater" aria-hidden="true" src="/assets/icons/line/video-line.svg"></ion-icon>
+                <ion-icon v-if="!!talkNotesHook.talkNotes?.value.watchLater" aria-hidden="true" src="/assets/icons/solid/video.svg"></ion-icon>
               </ion-button>
             </div>
             <div class="talkActions-favorite">
-              <talk-favorite-button v-if="conferenceDescriptor" :event-descriptor="conferenceDescriptor" :talk-id="talk.id"></talk-favorite-button>
+              <talk-favorite-button v-if="conferenceDescriptor" :event-descriptor="conferenceDescriptor" :user-talk-notes="talkNotesHook">
+              </talk-favorite-button>
             </div>
           </div>
         </template>

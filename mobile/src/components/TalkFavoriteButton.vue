@@ -1,5 +1,5 @@
 <template>
-  <ion-button class="btnTalk btn-favorite" @click.stop="() => toggleFavorite()" v-if="eventDescriptor?.features.favoritesEnabled">
+  <ion-button :class="{ 'btnTalk': true, 'btn-favorite': true, '_is-active': !!talkNotes?.isFavorite }" @click.stop="() => userTalkNotes.toggleFavorite()" v-if="eventDescriptor?.features.favoritesEnabled">
     <span class="btn-favorite-group">
       <ion-icon class="btn-favorite-group-icon" v-if="!talkNotes?.isFavorite" aria-hidden="true" src="/assets/icons/line/bookmark-line-favorite.svg"></ion-icon>
       <ion-icon class="btn-favorite-group-icon" v-if="!!talkNotes?.isFavorite" aria-hidden="true" src="/assets/icons/solid/bookmark-favorite.svg"></ion-icon>
@@ -9,9 +9,8 @@
 </template>
 
 <script setup lang="ts">
-import {PropType} from "vue";
-import {TalkId} from "@/models/VoxxrinTalk";
-import {useUserTalkNotes} from "@/state/useUserTalkNotes";
+import {computed, PropType} from "vue";
+import type {UserTalkNotesHook} from "@/state/useUserTalkNotes";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 
 const props = defineProps({
@@ -19,12 +18,14 @@ const props = defineProps({
         required: true,
         type: Object as PropType<VoxxrinConferenceDescriptor>,
     },
-    talkId: {
-        type: Object as PropType<TalkId>
+    userTalkNotes: {
+        required: true,
+        type: Object as PropType<UserTalkNotesHook>
     }
 });
 
-const { talkNotes, eventTalkStats, toggleFavorite } = useUserTalkNotes(props.eventDescriptor?.id, props.talkId)
+const talkNotes = computed(() => props.userTalkNotes?.talkNotes.value)
+const eventTalkStats = computed(() => props.userTalkNotes?.eventTalkStats.value)
 </script>
 
 <style scoped lang="scss">

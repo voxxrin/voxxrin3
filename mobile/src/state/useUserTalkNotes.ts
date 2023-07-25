@@ -177,7 +177,7 @@ export function useUserEventAllFavoritedTalkIds(eventIdRef: Unreffable<EventId |
     };
 }
 
-
+export type UserTalkNotesHook = ReturnType<typeof useUserTalkNotes>;
 
 export function prepareUserTalkNotes(
     eventId: EventId,

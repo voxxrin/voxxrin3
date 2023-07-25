@@ -38,7 +38,7 @@
         <ion-icon src="/assets/icons/solid/megaphone.svg"></ion-icon>
         <span class="speakers-list">{{displayedSpeakers}}</span>
       </div>
-      <slot name="footer-actions" :talk="talk" :talkNotesHook="{ eventTalkStats, talkNotes, toggleFavorite, toggleWatchLater }" />
+      <slot name="footer-actions" :talk="talk" :talkNotesHook="userTalkNotesHook" />
     </div>
   </ion-card>
 </template>
@@ -53,7 +53,7 @@ import { VoxxrinTalk} from "@/models/VoxxrinTalk";
 import {useRoute} from "vue-router";
 import {EventId} from "@/models/VoxxrinEvent";
 import {getRouteParamsValue} from "@/views/vue-utils";
-import {useUserTalkNotes} from "@/state/useUserTalkNotes";
+import {UserTalkNotesHook, useUserTalkNotes} from "@/state/useUserTalkNotes";
 import {TalkNote} from "../../../shared/feedbacks.firestore";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 
@@ -84,7 +84,8 @@ const talkLang = computed(() => {
 const route = useRoute();
 const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')));
 
-const { eventTalkStats, talkNotes, toggleFavorite, toggleWatchLater} = useUserTalkNotes(eventId, props.talk?.id)
+const userTalkNotesHook: UserTalkNotesHook = useUserTalkNotes(eventId, props.talk?.id)
+const { talkNotes } = userTalkNotesHook;
 
 const displayedSpeakers = props.talk!.speakers
     .map(s => `${s.fullName}${s.companyName?` (${s.companyName})`:``}`)
