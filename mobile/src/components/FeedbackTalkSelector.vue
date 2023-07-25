@@ -12,10 +12,7 @@
       <template #talk-card-footer-actions="{ talk, talkNotesHook }">
         <div class="talkActions">
           <div class="talkActions-watchLater">
-            <ion-button class="btnTalk btn-watchLater" @click.stop="() => talkNotesHook.toggleWatchLater()" v-if="eventDescriptor.features.remindMeOnceVideosAreAvailableEnabled">
-              <ion-icon v-if="!talkNotesHook.talkNotes?.watchLater" aria-hidden="true" src="/assets/icons/line/video-line.svg"></ion-icon>
-              <ion-icon v-if="!!talkNotesHook.talkNotes?.watchLater" aria-hidden="true" src="/assets/icons/solid/video.svg"></ion-icon>
-            </ion-button>
+            <talk-watch-later-button :user-talk-notes="talkNotesHook" :event-descriptor="eventDescriptor"></talk-watch-later-button>
           </div>
           <div class="talkActions-feedback">
             <ion-button class="btnTalk btn-feedbackSelect" @click.stop="() => updateSelected(talk)">
@@ -41,6 +38,7 @@ import TalkFormatGroupsBreakdown from "@/components/TalkFormatGroupsBreakdown.vu
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {useUserEventAllFavoritedTalkIds} from "@/state/useUserTalkNotes";
+import TalkWatchLaterButton from "@/components/TalkWatchLaterButton.vue";
 
 const { LL } = typesafeI18n()
 

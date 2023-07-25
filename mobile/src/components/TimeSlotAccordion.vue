@@ -43,10 +43,8 @@
         <template #talk-card-footer-actions="{ talk, talkNotesHook }">
           <div class="talkActions">
             <div class="talkActions-watchLater">
-              <ion-button class="btnTalk btn-watchLater" @click.stop="() => talkNotesHook.toggleWatchLater()" v-if="conferenceDescriptor?.features.remindMeOnceVideosAreAvailableEnabled">
-                <ion-icon v-if="!talkNotesHook.talkNotes?.value.watchLater" aria-hidden="true" src="/assets/icons/line/video-line.svg"></ion-icon>
-                <ion-icon v-if="!!talkNotesHook.talkNotes?.value.watchLater" aria-hidden="true" src="/assets/icons/solid/video.svg"></ion-icon>
-              </ion-button>
+              <talk-watch-later-button v-if="conferenceDescriptor" :event-descriptor="conferenceDescriptor" :user-talk-notes="talkNotesHook">
+              </talk-watch-later-button>
             </div>
             <div class="talkActions-favorite">
               <talk-favorite-button v-if="conferenceDescriptor" :event-descriptor="conferenceDescriptor" :user-talk-notes="talkNotesHook">
@@ -91,6 +89,7 @@ import {VoxxrinTalk} from "@/models/VoxxrinTalk";
 import {useTabbedPageNav} from "@/state/useTabbedPageNav";
 import SlotOverlaps from "@/components/SlotOverlaps.vue";
 import TalkFavoriteButton from "@/components/TalkFavoriteButton.vue";
+import TalkWatchLaterButton from "@/components/TalkWatchLaterButton.vue";
 
 const props = defineProps({
   timeslot: {
