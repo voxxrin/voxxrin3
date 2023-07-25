@@ -21,7 +21,7 @@
 
 <script setup lang="ts">
 import {useIonRouter} from "@ionic/vue";
-import CurrentEventStatus from "@/components/CurrentEventStatus.vue";
+import CurrentEventStatus from "@/components/events/CurrentEventStatus.vue";
 import {PropType} from "vue";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {useTabbedPageNav} from "@/state/useTabbedPageNav";

@@ -72,7 +72,7 @@ import {
 import {useRoute} from "vue-router";
 import {onMounted, ref, unref, watch} from "vue";
 import {prepareSchedules, useSchedule} from "@/state/useSchedule";
-import CurrentEventHeader from "@/components/CurrentEventHeader.vue";
+import CurrentEventHeader from "@/components/events/CurrentEventHeader.vue";
 import {getRouteParamsValue, isRefDefined, isRefUndefined, useInterval} from "@/views/vue-utils";
 import {EventId} from "@/models/VoxxrinEvent";
 import {DayId, VoxxrinDay} from "@/models/VoxxrinDay";

@@ -70,14 +70,14 @@ import {
 } from '@ionic/vue';
 import {EventId, ListableVoxxrinEvent, searchEvents} from "@/models/VoxxrinEvent";
 import {computed, ref, Ref, watch} from "vue";
-import AvailableEventsList from "@/components/AvailableEventsList.vue";
+import AvailableEventsList from "@/components/events/AvailableEventsList.vue";
 import {presentActionSheetController} from "@/views/vue-utils";
 import {Browser} from "@capacitor/browser";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {
     ActionSheetButton
 } from "@ionic/core/dist/types/components/action-sheet/action-sheet-interface";
-import PinnedEventSelector from "@/components/PinnedEventSelector.vue";
+import PinnedEventSelector from "@/components/events/PinnedEventSelector.vue";
 import {useAvailableEvents} from "@/state/useAvailableEvents";
 import {useSharedUserPreferences} from "@/state/useUserPreferences";
 
