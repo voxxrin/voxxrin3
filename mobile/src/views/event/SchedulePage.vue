@@ -82,13 +82,13 @@ import {
     getTimeslotTimingProgress,
     VoxxrinScheduleTimeSlot
 } from "@/models/VoxxrinSchedule";
-import DaySelector from "@/components/DaySelector.vue";
+import DaySelector from "@/components/schedule/DaySelector.vue";
 import {
     areFeedbacksEnabled,
     findBestAutoselectableConferenceDay,
     findVoxxrinDay
 } from "@/models/VoxxrinConferenceDescriptor";
-import TimeSlotAccordion from "@/components/TimeSlotAccordion.vue";
+import TimeSlotAccordion from "@/components/schedule/TimeSlotAccordion.vue";
 import {VoxxrinTimeslotFeedback} from "@/models/VoxxrinFeedback";
 import {useCurrentClock} from "@/state/useCurrentClock";
 import {typesafeI18n} from "@/i18n/i18n-vue";

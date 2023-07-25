@@ -31,7 +31,7 @@ import {
 import {sortThenGroupByFormat, VoxxrinTalk} from "@/models/VoxxrinTalk";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import ScheduleTalk from "@/components/talk-card/ScheduleTalk.vue";
-import {TalkNote} from "../../../shared/feedbacks.firestore";
+import {TalkNote} from "../../../../shared/feedbacks.firestore";
 
 
 const props = defineProps({

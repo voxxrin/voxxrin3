@@ -79,15 +79,15 @@ import {
     areFeedbacksEnabled,
     VoxxrinConferenceDescriptor
 } from "@/models/VoxxrinConferenceDescriptor";
-import TalkFormatGroupsBreakdown from "@/components/TalkFormatGroupsBreakdown.vue";
-import ScheduleBreak from "@/components/ScheduleBreak.vue";
+import TalkFormatGroupsBreakdown from "@/components/schedule/TalkFormatGroupsBreakdown.vue";
+import ScheduleBreak from "@/components/schedule/ScheduleBreak.vue";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {
     useSharedConferenceDescriptor
 } from "@/state/useConferenceDescriptor";
 import {VoxxrinTalk} from "@/models/VoxxrinTalk";
 import {useTabbedPageNav} from "@/state/useTabbedPageNav";
-import SlotOverlaps from "@/components/SlotOverlaps.vue";
+import SlotOverlaps from "@/components/schedule/SlotOverlaps.vue";
 import TalkFavoriteButton from "@/components/talk-card/TalkFavoriteButton.vue";
 import TalkWatchLaterButton from "@/components/talk-card/TalkWatchLaterButton.vue";
 

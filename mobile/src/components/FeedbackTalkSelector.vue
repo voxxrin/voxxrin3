@@ -31,7 +31,7 @@
 <script setup lang="ts">
 import {computed, Prop, PropType, Ref, ref, unref} from "vue";
 import {TalkId, VoxxrinTalk} from "@/models/VoxxrinTalk";
-import TalkFormatGroupsBreakdown from "@/components/TalkFormatGroupsBreakdown.vue";
+import TalkFormatGroupsBreakdown from "@/components/schedule/TalkFormatGroupsBreakdown.vue";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {useUserEventAllFavoritedTalkIds} from "@/state/useUserTalkNotes";

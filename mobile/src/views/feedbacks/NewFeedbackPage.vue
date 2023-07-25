@@ -106,7 +106,7 @@ import {
     LabelledTimeslotWithOverlappings
 } from "@/state/findTimeslot";
 import FeedbackFooter from "@/components/FeedbackFooter.vue";
-import SlotOverlaps from "@/components/SlotOverlaps.vue";
+import SlotOverlaps from "@/components/schedule/SlotOverlaps.vue";
 
 const { LL } = typesafeI18n()
 
