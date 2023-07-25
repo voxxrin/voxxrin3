@@ -63,7 +63,7 @@
     </base-feedback-step>
     <feedback-footer>
       <template #details>
-        <ion-button size="small" fill="outline" shape="round" expand="block" v-if="event?.features.remindMeOnceVideosAreAvailableEnabled">
+        <ion-button size="small" fill="outline" shape="round" expand="block" v-if="confDescriptorRef?.features.remindMeOnceVideosAreAvailableEnabled">
           <ion-icon slot="start" src="assets/icons/solid/video.svg"  aria-hidden="true"></ion-icon>
           {{LL.Watch_later_all_favorited_talks()}}
         </ion-button>
@@ -103,7 +103,6 @@ import {useTabbedPageNav} from "@/state/useTabbedPageNav";
 import BaseFeedbackStep from "@/components/BaseFeedbackStep.vue";
 import {
     findLabelledTimeslotWithOverlappingsForTimeslotId,
-    LabelledTimeslot,
     LabelledTimeslotWithOverlappings
 } from "@/state/findTimeslot";
 import FeedbackFooter from "@/components/FeedbackFooter.vue";
@@ -113,8 +112,6 @@ const { LL } = typesafeI18n()
 
 const router = useIonRouter();
 const route = useRoute();
-const eventId = computed(() => new EventId(getRouteParamsValue(route, 'eventId')));
-const {conferenceDescriptor: event} = useSharedConferenceDescriptor(eventId);
 const eventIdRef = computed(() => new EventId(getRouteParamsValue(route, 'eventId')));
 const timeslotIdRef = computed(() => new ScheduleTimeSlotId(getRouteParamsValue(route, 'timeslotId')));
 const {conferenceDescriptor: confDescriptorRef } = useSharedConferenceDescriptor(eventIdRef);
@@ -142,13 +139,13 @@ function deselectTalk() {
 const {triggerTabbedPageNavigate} = useTabbedPageNav()
 
 function rateSelectedTalk() {
-    if(isRefUndefined(event) || isRefUndefined(selectedTalk)) {
+    if(isRefUndefined(confDescriptorRef) || isRefUndefined(selectedTalk)) {
         console.warn(`rateSelectedTalk() triggered with empty event or selected talk !`)
         return;
     }
 
-    if(isRefDefined(event) && isRefDefined(selectedTalk)) {
-        triggerTabbedPageNavigate(`/events/${event.value.id.value}/rate-talk/${selectedTalk.value.id.value}`, 'forward', 'replace');
+    if(isRefDefined(confDescriptorRef) && isRefDefined(selectedTalk)) {
+        triggerTabbedPageNavigate(`/events/${confDescriptorRef.value.id.value}/rate-talk/${selectedTalk.value.id.value}`, 'forward', 'replace');
     }
 }
 
