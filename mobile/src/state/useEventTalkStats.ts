@@ -38,7 +38,7 @@ export function useTalkStats(eventIdRef: Unreffable<EventId | undefined>,
     // this count will be lost until user gets back online and his fav/unfav is taken into consideration
     // into firestore
     const inMemoryDeltaUntilFirestoreRefreshRef = ref(0);
-    watch(() => unref(firestoreTalkStatsRef), (newVal, oldVal) => {
+    watch(firestoreTalkStatsRef, (newVal, oldVal) => {
         console.debug(`useTalkStats(${unref(eventIdRef)?.value}, ${unref(talkIdRef)?.value})[firestoreTalkStatsRef] updated from [${oldVal?.id}] to [${newVal?.id}]`)
         // Resetting local delta everytime we receive a firestore refresh
         inMemoryDeltaUntilFirestoreRefreshRef.value = 0;
