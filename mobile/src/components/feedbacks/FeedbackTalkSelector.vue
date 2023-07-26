@@ -49,6 +49,10 @@ const props = defineProps({
         required: true,
         type: Object as PropType<Array<VoxxrinTalk>>
     },
+    allUserFavoritedTalkIds: {
+        required: true,
+        type: Object as PropType<TalkId[]>
+    },
     selectedTalkId: {
         required: false,
         type: Object as PropType<TalkId>
@@ -72,13 +76,11 @@ function updateSelected(talk: VoxxrinTalk) {
     }
 }
 
-const { allUserFavoritedTalkIds: allUserFavoritedTalkIdsRef } = useUserEventAllFavoritedTalkIds(props.eventDescriptor?.id)
-
 const showUnfavoritedTalksRef = ref<boolean>(false);
 
 const displayedTalks: Ref<VoxxrinTalk[]> = computed(() => {
     const showUnfavoritedTalks = unref(showUnfavoritedTalksRef),
-        allUserFavoritedTalkIds = unref(allUserFavoritedTalkIdsRef);
+        allUserFavoritedTalkIds = props.allUserFavoritedTalkIds;
 
     if(!props.talks) {
         return []
