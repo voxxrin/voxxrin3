@@ -225,12 +225,8 @@ const theme = computed(() => {
     }
 
     &-tags {
-      margin-bottom: 16px;
-      padding: 16px;
-      margin: 0 16px;
-      background: var(--app-beige-medium);
+      padding: 8px 16px;
       border-radius: 16px;
-
 
       @media (prefers-color-scheme: dark) {
         --border-style: none;
