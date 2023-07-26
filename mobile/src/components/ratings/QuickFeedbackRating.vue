@@ -13,6 +13,7 @@
         <span class="label">{{ choice.label }}</span>
         <span class="total"><strong>12</strong> Votes</span>
       </div>
+      <canvas class="quickFeedbackItem-canvas"></canvas>
     </ion-item>
   </ion-list>
 </template>
@@ -109,6 +110,13 @@ function ratingToggled(choiceId: string) {
           font-size: 13px;
           color: var(--app-grey-dark);
         }
+      }
+
+      &-canvas {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        z-index: -1;
       }
     }
   }
