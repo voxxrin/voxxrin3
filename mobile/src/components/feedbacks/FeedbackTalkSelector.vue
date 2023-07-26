@@ -55,7 +55,7 @@ const props = defineProps({
     },
     selectedTalkId: {
         required: false,
-        type: Object as PropType<TalkId>
+        type: Object as PropType<TalkId|undefined>
     }
 })
 
@@ -64,14 +64,10 @@ const emits = defineEmits<{
     (e: 'talk-deselected', talk: VoxxrinTalk): void,
 }>()
 
-const selectedTalkId = ref<TalkId|undefined>(undefined);
-
 function updateSelected(talk: VoxxrinTalk) {
-    if(talk.id.isSameThan(selectedTalkId.value)) {
-        selectedTalkId.value = undefined;
+    if(talk.id.isSameThan(props.selectedTalkId)) {
         emits('talk-deselected', talk);
     } else {
-        selectedTalkId.value = talk.id;
         emits('talk-selected', talk);
     }
 }

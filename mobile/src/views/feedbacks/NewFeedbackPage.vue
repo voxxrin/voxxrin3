@@ -27,6 +27,7 @@
                 :event-descriptor="confDescriptorRef"
                 :talks="labelledTimeslotWithOverlappingsRef.labelledTimeslot.talks || []"
                 :all-user-favorited-talk-ids="allUserFavoritedTalkIdsRef"
+                :selected-talk-id="selectedTalk?.id"
                 @talk-selected="selectTalk($event)"
                 @talk-deselected="deselectTalk()"
             >
@@ -52,6 +53,7 @@
                       :event-descriptor="confDescriptorRef"
                       :talks="overlappingTimeslot.talks"
                       :all-user-favorited-talk-ids="allUserFavoritedTalkIdsRef"
+                      :selected-talk-id="selectedTalk?.id"
                       @talk-selected="selectTalk($event)"
                       @talk-deselected="deselectTalk()"
                   >
