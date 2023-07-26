@@ -26,8 +26,8 @@
       <div class="pictures">
         <div class="picturesItem" v-for="(speaker, index) in talk.speakers" :key="speaker.id.value">
           <ion-thumbnail>
-            <img :src="speaker.photoUrl" v-if="speaker.photoUrl"/>
-            <img src="/assets/images/svg/avatar-shadow.svg" v-if="!speaker.photoUrl"/>
+            <img v-if="speaker.photoUrl" :src="speaker.photoUrl" onerror="if(this.src != import.meta.env.BASE_URL+'assets/images/svg/avatar-shadow.svg') this.src = import.meta.env.BASE_URL+'assets/images/svg/avatar-shadow.svg';" />
+            <img v-if="!speaker.photoUrl" :src="import.meta.env.BASE_URL+'assets/images/svg/avatar-shadow.svg'" />
           </ion-thumbnail>
         </div>
       </div>
@@ -56,7 +56,6 @@ import {getRouteParamsValue} from "@/views/vue-utils";
 import {useUserTalkNotes} from "@/state/useUserTalkNotes";
 import {TalkNote} from "../../../shared/feedbacks.firestore";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
-
 
 const props = defineProps({
   talk: {
