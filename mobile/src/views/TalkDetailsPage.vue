@@ -18,7 +18,7 @@
     }">
       <ion-header class="stickyHeader" v-if="talkNotes" :class="{ 'is-favorited': talkNotes.isFavorite, 'to-watch-later': talkNotes.watchLater }">
         <ion-toolbar>
-          <ion-button class="stickyHeader-close" shape="round" slot="start" size="small" fill="outline" @click="$router.back()">
+          <ion-button class="stickyHeader-close" shape="round" slot="start" size="small" fill="outline" @click="closeAndNavigateBack()">
             <ion-icon src="/assets/icons/solid/close.svg"></ion-icon>
           </ion-button>
           <ion-title class="stickyHeader-title" slot="start" >{{ LL.Talk_details() }}</ion-title>
@@ -132,12 +132,18 @@ import {TalkId} from "@/models/VoxxrinTalk";
 import {useSharedEventTalk} from "@/state/useEventTalk";
 import {computed, ref, unref, watch} from "vue";
 import {typesafeI18n} from "@/i18n/i18n-vue";
-import {IonBadge, IonAvatar, IonText} from "@ionic/vue";
+import {IonBadge, IonAvatar, IonText, useIonRouter} from "@ionic/vue";
 import {business} from "ionicons/icons";
 import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
 import {formatHourMinutes} from "@/models/DatesAndTime";
 import {Temporal} from "temporal-polyfill";
 import VoxDivider from "@/components/ui/VoxDivider.vue";
+import {goBackOrNavigateTo} from "@/router";
+
+const ionRouter = useIonRouter();
+function closeAndNavigateBack() {
+    goBackOrNavigateTo(ionRouter, `/events/${eventId.value.value}/schedule`, 0 /* talk details page is always opened through popups */)
+}
 
 const route = useRoute();
 const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')));

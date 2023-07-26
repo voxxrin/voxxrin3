@@ -31,30 +31,14 @@ const props = defineProps({
     event: {
         required: true,
         type: Object as PropType<VoxxrinConferenceDescriptor>
-    },
-    backBtnAction: {
-        require: false,
-        type: String as PropType<typeof backBtnAction>
     }
 })
 
-const backBtnAction: "goBack"|"triggerEventExit" = props.backBtnAction || "triggerEventExit";
-const { triggerTabbedPageGoBack } = useTabbedPageNav()
+const { triggerTabbedPageExitOrNavigate } = useTabbedPageNav()
 
 function backButtonClicked() {
-    if(backBtnAction === 'goBack') {
-        // standard current ion router attached to the component to go back
-        // (implicitely: if current component is integrated inside tabs, back() will impact the
-        // tab's history, not the tabbed page's history)
-        router.back();
-    } else if (backBtnAction === 'triggerEventExit') {
-        // Triggering tabbed page's back, and not current tab's
-        triggerTabbedPageGoBack(() => {
-            // TODO: check the expected behavior, seems to work without doing anything
-            // unsetCurrentSchedule();
-            return Promise.resolve();
-        });
-    }
+    // Triggering tabbed page's back, and not current tab's
+    triggerTabbedPageExitOrNavigate(`/event-selector`);
 }
 
 </script>

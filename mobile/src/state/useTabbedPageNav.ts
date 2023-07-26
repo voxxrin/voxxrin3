@@ -6,6 +6,7 @@ import {
     TypedCustomEventData,
 } from "@/models/utils";
 import {useRouter} from "vue-router";
+import {goBackOrNavigateTo} from "@/router";
 
 
 /**
@@ -35,29 +36,25 @@ import {useRouter} from "vue-router";
  * (see goBackCallback handler implementation)
  */
 
-const GoBackEvent = createTypedCustomEventClass<{
+const TabExitOrNavigateEventName = 'tabbed-page-exit-or-navigate-requested';
+const TabExitOrNavigateEvent = createTypedCustomEventClass<{
     onEventCaught?: (() => Promise<void>)|undefined,
-}>('tabbed-page-go-back-requested');
+    url: string,
+    routerDirection?: RouteDirection
+}>('tabbed-page-exit-or-navigate-requested');
 
+const NavigationEventName = 'tabbed-page-navigation-requested'
 const NavigationEvent = createTypedCustomEventClass<{
     onEventCaught?: (() => Promise<void>)|undefined,
     url: string,
     routerDirection: RouteDirection,
     routerAction: RouteAction
-}>('tabbed-page-navigation-requested')
+}>(NavigationEventName)
 
 
 
 export function useTabbedPageNav() {
     return {
-        triggerTabbedPageGoBack: function(onEventCaught?: TypedCustomEventData<typeof GoBackEvent>['onEventCaught']) {
-            // Using standard event dispatching through ionic's $emit is pointless here, as I didn't find
-            // how to bubble these event from <ion-router-outlet> placed into _BaseEventPages
-            // => I'm using a crappy global event (type unsafe) hack here
-            window.dispatchEvent(new GoBackEvent( {
-                onEventCaught,
-            }));
-        },
         triggerTabbedPageNavigate: function(url: string, routerDirection: RouteDirection, routerAction: RouteAction, onEventCaught?: TypedCustomEventData<typeof NavigationEvent>['onEventCaught']|undefined) {
             // Using standard event dispatching through ionic's $emit is pointless here, as I didn't find
             // how to bubble these event from <ion-router-outlet> placed into _BaseEventPages
@@ -67,9 +64,19 @@ export function useTabbedPageNav() {
                 url, routerDirection, routerAction
             }))
         },
-        registerTabbedPageNavListeners: function(opts?: { skipNavRegistration: boolean, skipGoBackRegistration: boolean }) {
+        triggerTabbedPageExitOrNavigate: function(url: string, routerDirection?: RouteDirection, onEventCaught?: TypedCustomEventData<typeof NavigationEvent>['onEventCaught']|undefined) {
+            // Using standard event dispatching through ionic's $emit is pointless here, as I didn't find
+            // how to bubble these event from <ion-router-outlet> placed into _BaseEventPages
+            // => I'm using a crappy global event (type unsafe) hack here
+            window.dispatchEvent(new TabExitOrNavigateEvent({
+                onEventCaught,
+                url, routerDirection
+            }))
+        },
+        // Please, call this listeners registration whenever you open a page containing tabs, so that
+        // tabbed views are able to communicate root-level navigation calls through triggerXXX hooks
+        registerTabbedPageNavListeners: function(opts?: { skipNavRegistration: boolean, skipExitOrNavRegistration: boolean }) {
             const ionRouter = useIonRouter();
-            const router = useRouter();
             const startingHistoryPosition = history.state.position;
 
             const navCallback = async (event: Event) => {
@@ -85,41 +92,31 @@ export function useTabbedPageNav() {
                     throw new Error(`Unexpected event type ${event.type} in tabbed-page-navigation callback registration !`)
                 }
             }
-            const goBackCallback = async (event: Event) => {
-                if(event instanceof GoBackEvent) {
-                    const goBackEvent = event as InstanceType<typeof GoBackEvent>
-                    if(goBackEvent.detail.onEventCaught) {
-                        await goBackEvent.detail.onEventCaught();
-                    }
+            const tabExitOrNavigateCallback = async (event: Event) => {
+                if(event instanceof TabExitOrNavigateEvent) {
+                    const exitOrNavEvent = event as InstanceType<typeof TabExitOrNavigateEvent>
 
-                    // This back() call will happen inside tabbed page context
-                    //
-                    // Note that calling tabbed page's router back() doesn't work when there have been tabbed navigations involved
-                    // (I assume it has something to do with history.state.position)
-                    // That's why when a navigation backward is requested at the tabbed page's level, we first need to reset
-                    // vue router's history position to the original tabbed page's one, THEN perform a back() at ion router's level
-                    const delta = startingHistoryPosition - history.state.position;
-                    router.go(delta)
-                    ionRouter.back();
+                    const routerGoBacks = startingHistoryPosition - history.state.position;
+                    await goBackOrNavigateTo(ionRouter, exitOrNavEvent.detail.url, routerGoBacks, exitOrNavEvent.detail.routerDirection, exitOrNavEvent.detail.onEventCaught);
                 } else {
-                    throw new Error(`Unexpected event type ${event.type} in tabbed-page-go-back callback registration !`)
+                    throw new Error(`Unexpected event type ${event.type} in tabbed-page-navigation callback registration !`)
                 }
             }
 
             onMounted(() => {
                 if(!opts?.skipNavRegistration) {
-                    window.addEventListener('tabbed-page-navigation-requested', navCallback);
+                    window.addEventListener(NavigationEventName, navCallback);
                 }
-                if(!opts?.skipGoBackRegistration) {
-                    window.addEventListener('tabbed-page-go-back-requested', goBackCallback);
+                if(!opts?.skipExitOrNavRegistration) {
+                    window.addEventListener(TabExitOrNavigateEventName, tabExitOrNavigateCallback);
                 }
             })
             onUnmounted(() => {
                 if(!opts?.skipNavRegistration) {
-                    window.removeEventListener('tabbed-page-navigation-requested', navCallback);
+                    window.removeEventListener(NavigationEventName, navCallback);
                 }
-                if(!opts?.skipGoBackRegistration) {
-                    window.removeEventListener('tabbed-page-go-back-requested', goBackCallback);
+                if(!opts?.skipExitOrNavRegistration) {
+                    window.removeEventListener(TabExitOrNavigateEventName, tabExitOrNavigateCallback);
                 }
             })
         }
