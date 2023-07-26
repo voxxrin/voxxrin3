@@ -64,12 +64,14 @@
     <feedback-footer>
       <template #details>
         <ion-button size="small" fill="outline" shape="round" expand="block" v-if="confDescriptorRef?.features.remindMeOnceVideosAreAvailableEnabled">
-          <ion-icon slot="start" src="assets/icons/solid/video.svg"  aria-hidden="true"></ion-icon>
+          <ion-icon slot="start" src="assets/icons/solid/video.svg" aria-hidden="true"></ion-icon>
           {{LL.Watch_later_all_favorited_talks()}}
         </ion-button>
       </template>
       <template #default>
-        <ion-button size="small" fill="solid" color="medium" shape="round" expand="block">{{ LL.Cancel() }}</ion-button>
+        <ion-button class="cancel" size="small" fill="solid" color="medium" shape="round" expand="block">
+          {{ LL.Cancel() }}
+        </ion-button>
         <ion-button size="small" fill="outline" shape="round" expand="block" v-if="selectedTalk === undefined">
             <span class="contentDidntAttendTalk">
               {{LL.I_didnt_attend_any_talk()}}

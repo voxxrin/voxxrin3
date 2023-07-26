@@ -1,8 +1,10 @@
 <template>
   <ion-footer class="feedBackFooter">
     <ion-toolbar>
-      <slot name="details"></slot>
-      <div class="feedBackFooter-group">
+      <div class="feedBackFooter-top">
+        <slot name="details"></slot>
+      </div>
+      <div class="feedBackFooter-bottom">
         <slot></slot>
       </div>
     </ion-toolbar>
@@ -19,10 +21,10 @@ import {IonFooter, IonToolbar} from "@ionic/vue";
 
   ion-toolbar {
     --background: var(--app-white);
-    --padding-top: 8px;
-    --padding-bottom: 8px;
-    --padding-start: 4px;
-    --padding-end: 4px;
+    --padding-top: 12px;
+    --padding-bottom: 12px;
+    --padding-start: 12px;
+    --padding-end: 12px;
     --min-height: 44px;
     box-shadow: 0 3px 20px rgba(0, 0, 0, 0.5);
 
@@ -31,13 +33,19 @@ import {IonFooter, IonToolbar} from "@ionic/vue";
     }
   }
 
-  &-group {
+  &-top {
+    margin-bottom: 4px;
+  }
+
+  &-top, &-bottom {
     display: flex;
     column-gap: 8px;
-    margin-top: 8px;
 
-    :deep(ion-button:first-child) { width: 128px}
-    :deep(ion-button:last-child) { flex: 1;}
+    :deep(ion-button) {flex: 1;}
+    :deep(ion-button.cancel) {
+      flex: 1 1 auto;
+      max-width: 134px;
+    }
   }
 }
 </style>
