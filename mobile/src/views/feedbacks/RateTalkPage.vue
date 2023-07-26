@@ -77,14 +77,13 @@ import {
     DailyLabelledTimeslotWithTalk,
 } from "@/state/findTimeslot";
 import ScheduleTalk from "@/components/talk-card/ScheduleTalk.vue";
-import {IonFooter, IonInput, IonTextarea} from "@ionic/vue";
+import {IonTextarea} from "@ionic/vue";
 import LinearRating from "@/components/ratings/LinearRating.vue";
 import QuickFeedbackRating from "@/components/ratings/QuickFeedbackRating.vue";
 import IconBasedRating from "@/components/ratings/IconBasedRating.vue";
 import {UserFeedback} from "../../../../shared/feedbacks.firestore";
 import {UnwrapNestedRefs} from "@vue/reactivity";
 import {useUserFeedbacks} from "@/state/useUserFeedbacks";
-import {ScheduleTimeSlotId} from "@/models/VoxxrinSchedule";
 import VoxDivider from "@/components/ui/VoxDivider.vue";
 import FeedbackFooter from "@/components/feedbacks/FeedbackFooter.vue";
 
@@ -101,7 +100,7 @@ const dayIdRef = computed(() => {
     return labelledTimeslotWithTalk?.dayId;
 })
 
-const feedback: UnwrapNestedRefs<UserFeedback> = reactive({
+const feedback: UnwrapNestedRefs<Omit<UserFeedback, 'createdOn'|'lastUpdatedOn'>> = reactive({
     timeslotId: '',
     talkId: talkId.value,
     ratings: {
@@ -151,7 +150,7 @@ const feedbackCanBeSubmitted = computed(() => {
     return true;
 })
 
-const {userFeedbacks, updateTimeslotFeedback} = useUserFeedbacks(eventIdRef, dayIdRef);
+const {updateTimeslotFeedback} = useUserFeedbacks(eventIdRef, dayIdRef);
 
 async function submitFeedback() {
     const labelledTimeslotWithTalk = unref(labelledTimeslotWithTalkRef);

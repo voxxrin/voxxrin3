@@ -13,6 +13,8 @@ import {DayId} from "@/models/VoxxrinDay";
 import {UserDailyFeedbacks, UserFeedback} from "../../../shared/feedbacks.firestore";
 import {ScheduleTimeSlotId} from "@/models/VoxxrinSchedule";
 import {TalkId} from "@/models/VoxxrinTalk";
+import {useCurrentClock} from "@/state/useCurrentClock";
+import {ISODatetime} from "../../../shared/type-utils";
 
 export function useUserFeedbacks(
     eventIdRef: Unreffable<EventId|undefined>,
@@ -39,7 +41,9 @@ export function useUserFeedbacks(
 
     const firestoreDailyUserFeedbacksRef = useDocument(firestoreUserFeedbacksSource);
 
-    const updateTimeslotFeedback = (timeslotIdRef: Unreffable<ScheduleTimeSlotId>, talkIdRef: Unreffable<TalkId>, feedback: UserFeedback) => {
+    const updateTimeslotFeedback = (timeslotIdRef: Unreffable<ScheduleTimeSlotId>, talkIdRef: Unreffable<TalkId>, feedback: Omit<UserFeedback, 'createdOn'|'lastUpdatedOn'>) => {
+        const clock = useCurrentClock()
+
         const firestoreUserFeedbacksDoc = unref(firestoreUserFeedbacksSource),
             timeslotId = unref(timeslotIdRef),
             talkId = unref(talkIdRef),
@@ -50,11 +54,15 @@ export function useUserFeedbacks(
             return;
         }
 
+        const now = clock.zonedDateTimeISO().toInstant().toString() as ISODatetime;
+
         if(!firestoreDailyUserFeedbacks) {
             setDoc(firestoreUserFeedbacksDoc, {
                 dayId: dayId.value,
                 feedbacks: [{
                     ...feedback,
+                    createdOn: now,
+                    lastUpdatedOn: now,
                     timeslotId: timeslotId.value,
                     talkId: talkId.value,
                 }]
@@ -67,12 +75,16 @@ export function useUserFeedbacks(
             if(existingFeedbackIndex === -1) {
                 firestoreDailyUserFeedbacks.feedbacks.push({
                     ...feedback,
+                    createdOn: now,
+                    lastUpdatedOn: now,
                     timeslotId: timeslotId.value,
                     talkId: talkId.value,
                 })
             } else {
                 firestoreDailyUserFeedbacks.feedbacks[existingFeedbackIndex] = {
                     ...feedback,
+                    createdOn: firestoreDailyUserFeedbacks.feedbacks[existingFeedbackIndex].createdOn,
+                    lastUpdatedOn: now,
                     timeslotId: timeslotId.value,
                     talkId: talkId.value,
                 }

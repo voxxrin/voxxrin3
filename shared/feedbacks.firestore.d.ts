@@ -1,3 +1,5 @@
+import {ISODatetime} from "./type-utils";
+
 export type TalkStats = {
     id: string,
     totalFavoritesCount: number
@@ -31,5 +33,7 @@ export type UserFeedback = {
         'bingo': string[],
         'custom-rating': string | null
     },
-    comment: string | null
+    comment: string | null,
+    createdOn: ISODatetime,
+    lastUpdatedOn: ISODatetime
 }
