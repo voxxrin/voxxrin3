@@ -190,7 +190,8 @@ const crawlDevoxxDay = async (eventId: string, day: string) => {
             start: start as ISODatetime,
             end: end as ISODatetime,
             summary: item.proposal.summary || "",
-            description: item.proposal.description || ""
+            description: item.proposal.description || "",
+            tags: item.proposal.tags.map(t => t.name)
         };
 
         return { talk, detailedTalk };

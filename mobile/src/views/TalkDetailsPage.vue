@@ -76,12 +76,11 @@
         </div>
       </ion-text>
 
-      <div class="talkDetails-tags">
-        <!-- TODO - Add list Tags -->
+      <div class="talkDetails-tags" v-if="talk?.tags.length">
         <div class="talkDetails-tags-list">
-          <ion-badge v-if="true" class="tagBadge">
+          <ion-badge v-if="true" class="tagBadge" v-for="(tag) in talk?.tags" :key="tag">
             <ion-icon aria-hidden="true" src="assets/icons/solid/tag.svg"></ion-icon>
-            Tag label
+            {{tag}}
           </ion-badge>
         </div>
       </div>
@@ -140,6 +139,7 @@ import {business} from "ionicons/icons";
 import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
 import {formatHourMinutes} from "@/models/DatesAndTime";
 import {Temporal} from "temporal-polyfill";
+import TimeSlotAccordion from "@/components/TimeSlotAccordion.vue";
 
 const route = useRoute();
 const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')));

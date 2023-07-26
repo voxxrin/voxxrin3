@@ -216,6 +216,7 @@ export const WEB2DAY_CRAWLER: CrawlerKind<typeof WEB2DAY_PARSER> = {
                 language: descriptor.supportedTalkLanguages.find(lang => lang.id === rawTalk!.lang)!.id,
                 start: rawTalk!.start,
                 end: rawTalk!.end,
+                tags: []
             };
             return detailedTalk;
         });

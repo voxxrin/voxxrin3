@@ -179,7 +179,8 @@ export const LA_PRODUCT_CONF_CRAWLER: CrawlerKind<typeof LA_PRODUCT_CONF_DESCRIP
                         },
                         room: descriptor.rooms[tabIdx],
                         summary: '',
-                        description: ''
+                        description: '',
+                        tags: []
                     };
 
                     talks.push(detailedTalk);
