@@ -1,7 +1,7 @@
 <template>
   <ion-button :class="{ 'btnTalk': true, 'btn-feedbackSelect': true, '_is-active': isActive }">
     <ion-icon class="active" aria-hidden="true" src="assets/icons/solid/comment-feedback-select.svg"/>
-    <ion-icon class="inactive" aria-hidden="true"  src="assets/icons/line/comment-line.svg"/>
+    <ion-icon class="inactive" aria-hidden="true"  src="assets/icons/line/comment-line-add.svg"/>
   </ion-button>
 </template>
 
@@ -15,15 +15,27 @@ const props = defineProps({
 </script>
 
 <style scoped lang="scss">
+
 .btn-feedbackSelect {
+  font-size: 22px;
+
   &._is-active {
-    --background: var(--voxxrin-event-theme-colors-secondary-hex);
-    --color: var(--voxxrin-event-theme-colors-secondary-contrast-hex);
-    border-left: 1px solid var(--voxxrin-event-theme-colors-secondary-hex);
+    --background: var(--voxxrin-event-theme-colors-tertiary-hex);
+    --color: var(--voxxrin-event-theme-colors-secondary-tertiary-hex);
+    border-left: 1px solid var(--voxxrin-event-theme-colors-tertiary-hex);
+    color: white;
+
+    @media (prefers-color-scheme: dark) {
+      --background: var(--app-white);
+
+      ion-icon {
+        color: var(--app-primary);
+      }
+    }
   }
 
-  .active { display: none; }
-  .inactive { display: block; }
+  .active { display: none;}
+  .inactive { display: block;}
   &._is-active .active { display: block; }
   &._is-active .inactive { display: none; }
 }

@@ -4,8 +4,8 @@
             :class="{ container: true, '_is-highlighted': isHighlighted(talk, talkNotes), '_has-favorited': talkNotes.isFavorite, '_has-to-watch-later': talkNotes.watchLater }"
             @click="$emit('talk-clicked', talk)">
     <div class="talkCard-head">
-      <div class="track" v-if="hasTrack">
-        <ion-badge class="trackBadge">
+      <div class="track">
+        <ion-badge class="trackBadge" v-if="hasTrack">
           <ion-icon src="/assets/icons/solid/tag.svg"></ion-icon>{{talk.track.title}}
         </ion-badge>
       </div>
@@ -283,58 +283,31 @@ const theme = {
 
   &._is-highlighted {
     border : {
-      top: 2px solid var(--voxxrin-event-theme-colors-secondary-hex);
-      bottom: 2px solid var(--voxxrin-event-theme-colors-secondary-hex);
-      right: 2px solid var(--voxxrin-event-theme-colors-secondary-hex);
+      top: 2px solid var(--app-primary);
+      bottom: 2px solid var(--app-primary);
+      right: 2px solid var(--app-primary);
     }
 
     @media (prefers-color-scheme: dark) {
       border : {
-        top: 2px solid var(--app-white);
-        bottom: 2px solid var(--app-white);
-        right: 2px solid var(--app-white);
-      }
-    }
-
-    &:before {
-      width: 40%;
-      height: 70%;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(331deg, rgba(var(--voxxrin-event-theme-colors-secondary-rgb), 0.6) 30%, rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.6) 80%);
-      transform: scale(1);
-      opacity: 1;
-      filter: blur(32px);
-      animation: scale-in-center 0.1s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-    }
-
-    &:after {
-      width: 50%;
-      height: 100%;
-      right: 0;
-      bottom: 0;
-      background-image: url('assets/images/png/texture-favorited.png');
-      background-repeat: no-repeat;
-      background-position: right;
-      background-size: cover;
-      transform: scale(1);
-      opacity: 0.5;
-      mix-blend-mode: overlay;
-      animation: scale-in-center 0.1s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-
-      @media (prefers-color-scheme: dark) {
-        mix-blend-mode: difference;
+        top: 2px solid var(--app-white) !important;
+        bottom: 2px solid var(--app-white) !important;
+        right: 2px solid var(--app-white) !important;
       }
     }
 
     ion-thumbnail {
       background-color: var(--app-background);
-      border: 2px solid var(--voxxrin-event-theme-colors-secondary-hex);
+      border: 2px solid var(--app-primary);
+
+      @media (prefers-color-scheme: dark) {
+        border: 2px solid var(--app-white) !important;
+      }
     }
 
     .talkCard-footer {
       border-width: 2px;
-      border-color: var(--voxxrin-event-theme-colors-secondary-hex);
+      border-color: var(--app-primary);
       border-bottom: none;
 
       @media (prefers-color-scheme: dark) {
@@ -345,7 +318,7 @@ const theme = {
       /* TODO RLZ: move it to a proper place in talk actions components */
       :deep(.btnTalk) {
         border-width: 2px;
-        border-color: var(--voxxrin-event-theme-colors-secondary-hex);
+        border-color: var(--app-primary);
 
         @media (prefers-color-scheme: dark) {
           border-color: var(--app-white) !important;
@@ -404,11 +377,50 @@ const theme = {
       }
 
       &.btn-feedbackSelect {
-        --background: var(--voxxrin-event-theme-colors-secondary-hex);
-        --color: var(--voxxrin-event-theme-colors-secondary-contrast-hex);
-        border-left: 1px solid var(--voxxrin-event-theme-colors-secondary-hex);
+        --background: var(--voxxrin-event-theme-colors-primary-hex);
+        --color: var(--voxxrin-event-theme-colors-primary-contrast-hex);
+        border-left: 1px solid var(--voxxrin-event-theme-colors-primary-hex);
       }
       //* END - Delete when btn is component *//
+    }
+  }
+
+  &._has-favorited {
+    &:before {
+      width: 40%;
+      height: 70%;
+      right: 0;
+      bottom: 0;
+      transform: scale(1);
+      background: linear-gradient(331deg, rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.6) 30%, rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.6) 80%);
+      opacity: 1;
+      filter: blur(32px);
+      animation: scale-in-center 0.1s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+    }
+
+    &:after {
+      width: 50%;
+      height: 100%;
+      right: 0;
+      bottom: 0;
+      background-image: url('assets/images/png/texture-favorited.png');
+      background-repeat: no-repeat;
+      background-position: right;
+      background-size: cover;
+      transform: scale(1);
+      opacity: 0.5;
+      mix-blend-mode: overlay;
+      animation: scale-in-center 0.1s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+
+      @media (prefers-color-scheme: dark) {
+        mix-blend-mode: difference;
+      }
+    }
+
+    &._has-to-watch-later {
+      &:before {
+        background: linear-gradient(331deg, rgba(var(--voxxrin-event-theme-colors-secondary-rgb), 0.6) 30%, rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.6) 80%) !important;
+      }
     }
   }
 }
