@@ -53,7 +53,9 @@
       </base-feedback-step>
     </ion-content>
     <feedback-footer>
-      <ion-button size="small" fill="solid" color="medium" shape="round" expand="block">{{ LL.Cancel() }}</ion-button>
+      <ion-button size="small" fill="solid" color="medium" shape="round" expand="block" @click="backToSchedulePage">
+        {{ LL.Cancel() }}
+      </ion-button>
       <ion-button size="small" shape="round" color="tertiary" expand="block"
                   @click="submitFeedback()"
                   :disabled="!feedbackCanBeSubmitted">
@@ -68,7 +70,7 @@ import {EventId} from "@/models/VoxxrinEvent";
 import {getRouteParamsValue} from "@/views/vue-utils";
 import {useRoute} from "vue-router";
 import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
-import {computed, reactive, Ref, ref, unref, watch} from "vue";
+import {computed, reactive, ref, unref, watch} from "vue";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {TalkId} from "@/models/VoxxrinTalk";
 import BaseFeedbackStep from "@/components/feedbacks/BaseFeedbackStep.vue";
@@ -77,7 +79,7 @@ import {
     DailyLabelledTimeslotWithTalk,
 } from "@/state/findTimeslot";
 import ScheduleTalk from "@/components/talk-card/ScheduleTalk.vue";
-import {IonTextarea} from "@ionic/vue";
+import {IonTextarea, useIonRouter} from "@ionic/vue";
 import LinearRating from "@/components/ratings/LinearRating.vue";
 import QuickFeedbackRating from "@/components/ratings/QuickFeedbackRating.vue";
 import IconBasedRating from "@/components/ratings/IconBasedRating.vue";
@@ -86,6 +88,7 @@ import {UnwrapNestedRefs} from "@vue/reactivity";
 import {useUserFeedbacks} from "@/state/useUserFeedbacks";
 import VoxDivider from "@/components/ui/VoxDivider.vue";
 import FeedbackFooter from "@/components/feedbacks/FeedbackFooter.vue";
+import {goBackOrNavigateTo} from "@/router";
 
 const { LL } = typesafeI18n()
 
@@ -159,6 +162,11 @@ async function submitFeedback() {
     }
 
     await updateTimeslotFeedback(labelledTimeslotWithTalk.labelledTimeslot.id, labelledTimeslotWithTalk.talk.id, feedback);
+}
+
+const ionRouter = useIonRouter();
+function backToSchedulePage() {
+    goBackOrNavigateTo(ionRouter, `/events/${eventIdRef.value.value}`, 0)
 }
 
 </script>

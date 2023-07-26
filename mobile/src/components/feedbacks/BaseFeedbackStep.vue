@@ -16,7 +16,7 @@
   }">
     <ion-header class="stickyHeader">
       <ion-toolbar>
-      <ion-button class="stickyHeader-close" shape="round" slot="start" size="small" fill="outline" @click="$router.back()">
+      <ion-button class="stickyHeader-close" shape="round" slot="start" size="small" fill="outline" @click="backButtonClicked">
         <ion-icon src="/assets/icons/line/arrow-left-line.svg"></ion-icon>
       </ion-button>
       <ion-title class="stickyHeader-title" slot="start">{{LL.Add_Feedback()}}</ion-title>
@@ -46,6 +46,12 @@ import {typesafeI18n} from "@/i18n/i18n-vue";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {LabelledTimeslot} from "@/state/findTimeslot";
 import StepHeader from "@/components/feedbacks/StepHeader.vue";
+import {useIonRouter} from "@ionic/vue";
+import {goBackOrNavigateTo} from "@/router";
+import {useRoute} from "vue-router";
+import {ref} from "vue/dist/vue";
+import {EventId} from "@/models/VoxxrinEvent";
+import {getRouteParamsValue} from "@/views/vue-utils";
 
 const props = defineProps({
     step: {
@@ -68,6 +74,13 @@ const props = defineProps({
 
 const { LL } = typesafeI18n()
 
+const route = useRoute();
+const eventId = new EventId(getRouteParamsValue(route, 'eventId'));
+
+const ionRouter = useIonRouter();
+function backButtonClicked() {
+    goBackOrNavigateTo(ionRouter, `/events/${eventId.value}`, 0)
+}
 </script>
 
 <style scoped lang="scss">

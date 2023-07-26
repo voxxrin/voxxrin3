@@ -69,7 +69,7 @@
         </ion-button>
       </template>
       <template #default>
-        <ion-button class="cancel" size="small" fill="solid" color="medium" shape="round" expand="block">
+        <ion-button class="cancel" size="small" fill="solid" color="medium" shape="round" expand="block" @click="backToSchedulePage">
           {{ LL.Cancel() }}
         </ion-button>
         <ion-button size="small" fill="outline" shape="round" expand="block" v-if="selectedTalk === undefined">
@@ -98,7 +98,7 @@ import {typesafeI18n} from "@/i18n/i18n-vue";
 import {
     ScheduleTimeSlotId
 } from "@/models/VoxxrinSchedule";
-import {IonAccordion, IonAccordionGroup, IonFooter, useIonRouter} from "@ionic/vue";
+import {IonAccordion, IonAccordionGroup, useIonRouter} from "@ionic/vue";
 import FeedbackTalkSelector from "@/components/feedbacks/FeedbackTalkSelector.vue";
 import {VoxxrinTalk} from "@/models/VoxxrinTalk";
 import {useTabbedPageNav} from "@/state/useTabbedPageNav";
@@ -109,10 +109,11 @@ import {
 } from "@/state/findTimeslot";
 import FeedbackFooter from "@/components/feedbacks/FeedbackFooter.vue";
 import SlotOverlaps from "@/components/schedule/SlotOverlaps.vue";
+import {goBackOrNavigateTo} from "@/router";
 
 const { LL } = typesafeI18n()
 
-const router = useIonRouter();
+const ionRouter = useIonRouter();
 const route = useRoute();
 const eventIdRef = computed(() => new EventId(getRouteParamsValue(route, 'eventId')));
 const timeslotIdRef = computed(() => new ScheduleTimeSlotId(getRouteParamsValue(route, 'timeslotId')));
@@ -149,6 +150,10 @@ function rateSelectedTalk() {
     if(isRefDefined(confDescriptorRef) && isRefDefined(selectedTalk)) {
         triggerTabbedPageNavigate(`/events/${confDescriptorRef.value.id.value}/rate-talk/${selectedTalk.value.id.value}`, 'forward', 'replace');
     }
+}
+
+function backToSchedulePage() {
+    goBackOrNavigateTo(ionRouter, `/events/${eventIdRef.value.value}`, 0)
 }
 
 </script>
