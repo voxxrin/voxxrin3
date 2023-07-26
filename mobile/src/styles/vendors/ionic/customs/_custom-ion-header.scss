@@ -72,40 +72,6 @@ ion-header  {
             column-gap: 16px;
         }
 
-
-        ::v-deep {
-            /* TODO RLZ: move it to a proper place in talk actions components */
-            &._has-watch-later {
-                .btnTalkAction._watchLater {
-                    --background: var(--voxxrin-event-theme-colors-secondary-hex);
-                    --background-activated: var(--voxxrin-event-theme-colors-secondary-hex);
-                    --color-activated: var(--app-white);
-                    --color: var(--app-white);
-                }
-            }
-
-            /* TODO RLZ: move it to a proper place in talk actions components */
-            &._has-favorited {
-                .btnTalkAction._favorite {
-                    --background: var(--voxxrin-event-theme-colors-primary-hex);
-                    --background-activated: var(--voxxrin-event-theme-colors-primary-hex);
-                    --color-activated: var(--app-white);
-                    --border-color:  var(--voxxrin-event-theme-colors-primary-hex);
-                    --color: var(--app-white);
-                }
-
-                .favorite-btn-nb {
-                    background: var(--app-primary) !important;
-                    color: var(--app-white);
-
-                    @media (prefers-color-scheme: dark) {
-                        background: var(--app-white) !important;
-                        color: var(--app-primary);
-                    }
-                }
-            }
-        }
-
         .favoriteGroup {
             position: relative;
             margin-left: 12px;
@@ -123,28 +89,6 @@ ion-header  {
 
                 @media (prefers-color-scheme: dark) {
                     background: var(--app-dark-contrast);
-                }
-            }
-        }
-
-        /* TODO RLZ: move it to a proper place in talk actions components */
-        .btnTalkAction {
-            height: 48px;
-            width: 48px;
-            --padding-start: 0;
-            --padding-end: 0;
-            font-size: 22px;
-
-            @media (prefers-color-scheme: dark) {
-                --border-style: none;
-                --background: var(--app-light-contrast);
-            }
-
-            &._favorite {
-                display: flex;
-
-                .favorite-btn-icon {
-                    font-size: 30px !important;
                 }
             }
         }

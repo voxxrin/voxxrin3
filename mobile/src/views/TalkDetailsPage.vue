@@ -174,6 +174,59 @@ const theme = computed(() => {
 </script>
 
 <style lang="scss" scoped>
+  ion-header {
+
+    &.to-watch-later{
+      .btnTalkAction._watchLater {
+        --background: var(--voxxrin-event-theme-colors-secondary-hex);
+        --background-activated: var(--voxxrin-event-theme-colors-secondary-hex);
+        --color-activated: var(--app-white);
+        --color: var(--app-white);
+      }
+    }
+
+    &.is-favorited {
+      .btnTalkAction._favorite {
+        --background: var(--voxxrin-event-theme-colors-primary-hex);
+        --background-activated: var(--voxxrin-event-theme-colors-primary-hex);
+        --color-activated: var(--app-white);
+        --border-color:  var(--voxxrin-event-theme-colors-primary-hex);
+        --color: var(--app-white);
+      }
+
+      .favorite-btn-nb {
+        background: var(--app-primary) !important;
+        color: var(--app-white);
+
+        @media (prefers-color-scheme: dark) {
+          background: var(--app-white) !important;
+          color: var(--app-primary);
+        }
+      }
+    }
+
+    .btnTalkAction {
+      height: 48px;
+      width: 48px;
+      --padding-start: 0;
+      --padding-end: 0;
+      font-size: 22px;
+
+      @media (prefers-color-scheme: dark) {
+        --border-style: none;
+        --background: var(--app-light-contrast);
+      }
+
+      &._favorite {
+        display: flex;
+
+        .favorite-btn-icon {
+          font-size: 30px !important;
+        }
+      }
+    }
+  }
+
   .talkDetails {
 
     &-title {
