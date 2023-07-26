@@ -107,7 +107,6 @@ import {
 import {IonAccordion, IonAccordionGroup, useIonRouter} from "@ionic/vue";
 import FeedbackTalkSelector from "@/components/feedbacks/FeedbackTalkSelector.vue";
 import {VoxxrinTalk} from "@/models/VoxxrinTalk";
-import {useTabbedPageNav} from "@/state/useTabbedPageNav";
 import BaseFeedbackStep from "@/components/feedbacks/BaseFeedbackStep.vue";
 import {
     findLabelledTimeslotWithOverlappingsForTimeslotId,
@@ -117,7 +116,6 @@ import FeedbackFooter from "@/components/feedbacks/FeedbackFooter.vue";
 import SlotOverlaps from "@/components/schedule/SlotOverlaps.vue";
 import {goBackOrNavigateTo} from "@/router";
 import {
-    UserTalkNotesHook,
     useUserEventAllFavoritedTalkIds,
     useUserTalkNotes
 } from "@/state/useUserTalkNotes";
@@ -150,8 +148,6 @@ function deselectTalk() {
     selectedTalk.value = undefined;
 }
 
-const {triggerTabbedPageNavigate} = useTabbedPageNav()
-
 function rateSelectedTalk() {
     if(isRefUndefined(confDescriptorRef) || isRefUndefined(selectedTalk)) {
         console.warn(`rateSelectedTalk() triggered with empty event or selected talk !`)
@@ -159,19 +155,22 @@ function rateSelectedTalk() {
     }
 
     if(isRefDefined(confDescriptorRef) && isRefDefined(selectedTalk)) {
-        triggerTabbedPageNavigate(`/events/${confDescriptorRef.value.id.value}/rate-talk/${selectedTalk.value.id.value}`, 'forward', 'replace');
+        ionRouter.navigate(`/events/${confDescriptorRef.value.id.value}/rate-talk/${selectedTalk.value.id.value}`, 'forward', 'replace')
     }
 }
 
+const everyCandidateTalksRef = computed(() => {
+    const labelledTimeslotWithOverlappings = unref(labelledTimeslotWithOverlappingsRef);
+
+    const overlappingTimeslots = (labelledTimeslotWithOverlappings?.overlappingLabelledTimeslots || []);
+    const overlappingTalks = overlappingTimeslots.flatMap(ts => ts.talks);
+    const everyCandidateTalks = (labelledTimeslotWithOverlappings?.labelledTimeslot.talks || []).concat(overlappingTalks)
+    return everyCandidateTalks;
+})
+
 const { allUserFavoritedTalkIds: allUserFavoritedTalkIdsRef } = useUserEventAllFavoritedTalkIds(eventIdRef)
 async function watchLaterAllFavoritedTalks() {
-    const overlappingTimeslots = (labelledTimeslotWithOverlappingsRef.value?.overlappingLabelledTimeslots || []);
-    const overlappingTalks = overlappingTimeslots.flatMap(ts => ts.talks);
-
-    const everyCandidateTalks = (labelledTimeslotWithOverlappingsRef.value?.labelledTimeslot.talks || [])
-        .concat(overlappingTalks)
-
-    const favoritedTalks = everyCandidateTalks.filter(talk => talk.id.isIncludedIntoArray(allUserFavoritedTalkIdsRef.value))
+    const favoritedTalks = everyCandidateTalksRef.value.filter(talk => talk.id.isIncludedIntoArray(allUserFavoritedTalkIdsRef.value))
     await Promise.all(
         // Enabling watch later on every *favorited* talks...
         favoritedTalks.map(async favoritedTalk => {
@@ -182,7 +181,7 @@ async function watchLaterAllFavoritedTalks() {
             }
         }).concat(
             // ... and Disabling watch later on every selected talk (regardless if it is favorited or not)
-            everyCandidateTalks
+            everyCandidateTalksRef.value
               .filter(talk => talk.id.isSameThan(selectedTalk.value?.id))
               .map(async talk => {
                 const { toggleWatchLater, talkNotes } = useUserTalkNotes(eventIdRef, talk.id)

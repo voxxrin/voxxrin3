@@ -162,6 +162,7 @@ async function submitFeedback() {
     }
 
     await updateTimeslotFeedback(labelledTimeslotWithTalk.labelledTimeslot.id, labelledTimeslotWithTalk.talk.id, feedback);
+    backToSchedulePage();
 }
 
 const ionRouter = useIonRouter();
