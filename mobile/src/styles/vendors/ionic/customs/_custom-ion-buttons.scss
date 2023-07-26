@@ -84,8 +84,17 @@ ion-button {
     }
 
     //* Add Specific Styles Voxxrin Button *//
-    &.btnUser {
+    &.btnUser ,
+    &.viewsHeader-back {
+        height: 48px;
+        width: 48px;
+        --padding-start: 0;
+        --padding-end: 0;
+        font-size: 18px;
         --background: rgba(var(--app-white-transparent));
+    --border-color: rgba(var(--app-white-transparent));
+        --border-width: 1px;
+        --border-style: solid;
     }
 
     /* TODO RLZ: move it to a proper place in talk actions components */

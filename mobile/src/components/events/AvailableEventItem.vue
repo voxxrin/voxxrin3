@@ -89,21 +89,27 @@ const isPinnedRef = computed(() => {
     --border-color: var(--app-line-contrast);
   }
 
+  &:before {
+    position: absolute;
+    content: '';
+    z-index: 2;
+    width: 54px;
+    height: 100%;
+    right: 0;
+    top: 0;
+    background: rgba(var(--app-voxxrin-rgb), 0.25);
+    transform: scale(0);
+    opacity: 0;
+    filter: blur(32px);
+    pointer-events: none;
+    transition: 140ms;
+  }
+
   &._is-pined {
     &:before {
-      position: absolute;
-      content: '';
-      z-index: 2;
-      width: 54px;
-      height: 100%;
-      right: 0;
-      top: 0;
-      background: rgba(var(--app-voxxrin-rgb), 0.2);
+      transition: 140ms;
       transform: scale(1);
-      opacity: 0.2;
-      filter: blur(32px);
-      animation: scale-in-center 0.1s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-      pointer-events: none;
+      opacity: 1;
     }
   }
 

@@ -182,8 +182,8 @@ function findDayByLocalDate(localDate: string) {
     &-button {
       display: flex;
       align-items: center;
-      height: 44px;
-      width: 44px;
+      height: 44px !important;
+      width: 44px !important;
       --border-radius: 44px;
       --border-width: 1px;
       --border-style: solid;

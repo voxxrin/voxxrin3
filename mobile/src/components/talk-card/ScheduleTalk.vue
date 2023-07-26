@@ -26,8 +26,8 @@
       <div class="pictures">
         <div class="picturesItem" v-for="(speaker, index) in talk.speakers" :key="speaker.id.value">
           <ion-thumbnail>
-            <img :src="speaker.photoUrl" v-if="speaker.photoUrl"/>
-            <img src="/assets/images/svg/avatar-shadow.svg" v-if="!speaker.photoUrl"/>
+            <img v-if="speaker.photoUrl" :src="speaker.photoUrl" @error="handle404OnSpeakerThumbnail($event.target)" />
+            <img v-if="!speaker.photoUrl" :src="baseUrl+'assets/images/svg/avatar-shadow.svg'" />
           </ion-thumbnail>
         </div>
       </div>
@@ -57,6 +57,12 @@ import {UserTalkNotesHook, useUserTalkNotes} from "@/state/useUserTalkNotes";
 import {TalkNote} from "../../../../shared/feedbacks.firestore";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 
+const baseUrl = import.meta.env.BASE_URL;
+function handle404OnSpeakerThumbnail(img: HTMLImageElement) {
+    if(img.src !== baseUrl+'assets/images/svg/avatar-shadow.svg') {
+        img.src = baseUrl+'assets/images/svg/avatar-shadow.svg';
+    }
+}
 
 const props = defineProps({
   talk: {

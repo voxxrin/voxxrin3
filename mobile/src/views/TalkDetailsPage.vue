@@ -66,15 +66,25 @@
         </h1>
         <div class="talkDetails-infos">
           <div class="talkDetails-infos-listTrack">
-          <ion-badge v-if="event.talkTracks.length > 1" class="trackBadge" :style="{
-              '--background': talk?.track.themeColor
-          }">{{talk?.track.title}}</ion-badge>
+            <ion-badge v-if="event.talkTracks.length > 1" class="trackBadge" :style="{
+                '--background': talk?.track.themeColor
+            }">{{talk?.track.title}}</ion-badge>
           </div>
           <ion-label :style="{ 'color': talk?.format.themeColor }">
             {{talk?.format.title}} ({{talk?.format.hmmDuration}})
           </ion-label>
         </div>
       </ion-text>
+
+      <div class="talkDetails-tags" v-if="talk?.tags.length">
+        <div class="talkDetails-tags-list">
+          <ion-badge v-if="true" class="tagBadge" v-for="(tag) in talk?.tags" :key="tag">
+            <ion-icon aria-hidden="true" src="assets/icons/solid/tag.svg"></ion-icon>
+            {{tag}}
+          </ion-badge>
+        </div>
+      </div>
+
 
       <div class="talkDetails-description">
         <vox-divider>
@@ -262,6 +272,42 @@ const theme = computed(() => {
       ion-label {
         font-size: 14px;
         font-weight: 500;
+      }
+    }
+
+    &-tags {
+      padding: 8px 16px;
+      border-radius: 16px;
+
+      @media (prefers-color-scheme: dark) {
+        --border-style: none;
+        background: var(--app-dark-contrast);
+      }
+
+      &-list {
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: row;
+        column-gap: 8px;
+        row-gap: 8px;
+
+        .tagBadge {
+          --padding-start: 16px;
+          --padding-end: 16px;
+          font-weight: 500;
+          --background: var(--app-white-90);
+          border: 1px solid var(--app-grey-line);
+          color: var(--app-primary);
+
+          ion-icon { color: var(--app-primary);}
+
+          @media (prefers-color-scheme: dark) {
+            background: var(--app-light-contrast);
+            color: var(--app-white);
+
+            ion-icon { color: var(--app-white);}
+          }
+        }
       }
     }
 

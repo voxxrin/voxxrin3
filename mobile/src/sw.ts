@@ -27,9 +27,11 @@ precacheAndRoute(wbManifest);
 cleanupOutdatedCaches()
 
 // To allow working offline
-registerRoute(new NavigationRoute(
-    createHandlerBoundToURL('index.html')
-))
+if(!import.meta.env.DEV) {
+    registerRoute(new NavigationRoute(
+        createHandlerBoundToURL(import.meta.env.BASE_URL+'index.html')
+    ))
+}
 
 // A new route that matches same-origin image requests and handles
 // them with the cache-first, falling back to network strategy:

@@ -2,10 +2,10 @@
   <ion-header class="ion-no-border">
     <ion-toolbar>
       <div class="viewsHeader">
-        <ion-button class="viewsHeader-back" @click="backButtonClicked" shape="round" size="default">
-          <ion-icon src="/assets/icons/solid/arrow-left.svg"></ion-icon>
+        <ion-button class="viewsHeader-back" @click="backButtonClicked" shape="round">
+          <ion-icon src="/assets/icons/solid/checkbox-list.svg"></ion-icon>
         </ion-button>
-        <ion-button class="btnUser" shape="round" size="default">
+        <ion-button class="btnUser" shape="round">
           <ion-icon src="/assets/icons/line/user-line.svg"></ion-icon>
         </ion-button>
       </div>
