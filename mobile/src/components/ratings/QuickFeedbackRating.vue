@@ -1,12 +1,18 @@
 <template>
   <ion-list>
-    <ion-item v-for="(choice, index) in config.choices" :key="choice.id">
-      <ion-checkbox justify="space-between"
-                    :checked="selectedChoices.includes(choice.id)"
+    <!-- TODO Add class _checked + add variable theme events -->
+    <ion-item v-for="(choice, index) in config.choices"
+              :key="choice.id"
+              class="quickFeedbackItem"
+              :class="{'_checked': selectedChoices.includes(choice.id)}">
+      <ion-checkbox :checked="selectedChoices.includes(choice.id)"
                     :name="choice.id"
                     @ionChange="ratingToggled(choice.id)">
-        {{ choice.label }}
       </ion-checkbox>
+      <div class="quickFeedbackItem-infos">
+        <span class="label">{{ choice.label }}</span>
+        <span class="total"><strong>12</strong> Votes</span>
+      </div>
     </ion-item>
   </ion-list>
 </template>
@@ -46,16 +52,63 @@ function ratingToggled(choiceId: string) {
 
 <style scoped lang="scss">
   ion-list {
-    margin-bottom: 16px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: 8px;
+    column-gap: 12px;
+    margin-bottom: 12px;
     padding-top: 0;
     background: transparent;
 
-    ion-item {
-      --background: transparent !important;
+    .quickFeedbackItem {
       --padding-end: 0;
+      --padding-start: 0;
+      --inner-padding-end: 0;
+      text-align: center;
+      background-color: var(--app-background);
+      border: 2px solid var(--app-beige-medium);
+      border-radius: 12px;
+      --background: transparent !important;
+      --inner-border-width: 0;
 
-      &:last-child {
-        --border-style: none;
+      &._checked {
+        background-color: var(--app-beige-medium);
+        border: 2px solid var(--app-primary);
+
+        * {
+          color: var(--app-primary);
+          font-weight: 900;
+        }
+      }
+
+      ion-checkbox {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        display: none;
+      }
+
+      &-infos {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 8px 0;
+        row-gap: 4px;
+
+        .label {
+          font-weight: 500;
+          width: 100%;
+          color: var(--app-grey-dark);
+        }
+
+        .total {
+          font-weight: 500;
+          width: 100%;
+          font-size: 13px;
+          color: var(--app-grey-dark);
+        }
       }
     }
   }
