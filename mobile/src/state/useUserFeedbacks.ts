@@ -10,11 +10,15 @@ import {db} from "@/state/firebase";
 import {createSharedComposable} from "@vueuse/core";
 import {Unreffable} from "@/views/vue-utils";
 import {DayId} from "@/models/VoxxrinDay";
-import {UserDailyFeedbacks, UserFeedback} from "../../../shared/feedbacks.firestore";
+import {
+    ProvidedUserFeedback, SkippedUserFeedback,
+    UserDailyFeedbacks,
+    UserFeedback
+} from "../../../shared/feedbacks.firestore";
 import {ScheduleTimeSlotId} from "@/models/VoxxrinSchedule";
-import {TalkId} from "@/models/VoxxrinTalk";
 import {useCurrentClock} from "@/state/useCurrentClock";
 import {ISODatetime} from "../../../shared/type-utils";
+import {match} from "ts-pattern";
 
 export function useUserFeedbacks(
     eventIdRef: Unreffable<EventId|undefined>,
@@ -41,31 +45,37 @@ export function useUserFeedbacks(
 
     const firestoreDailyUserFeedbacksRef = useDocument(firestoreUserFeedbacksSource);
 
-    const updateTimeslotFeedback = (timeslotIdRef: Unreffable<ScheduleTimeSlotId>, talkIdRef: Unreffable<TalkId>, feedback: Omit<UserFeedback, 'createdOn'|'lastUpdatedOn'>) => {
+    const updateTimeslotFeedback = async (timeslotIdRef: Unreffable<ScheduleTimeSlotId>, feedback: Omit<UserFeedback, 'createdOn'|'lastUpdatedOn'>) => {
         const clock = useCurrentClock()
 
         const firestoreUserFeedbacksDoc = unref(firestoreUserFeedbacksSource),
             timeslotId = unref(timeslotIdRef),
-            talkId = unref(talkIdRef),
             dayId = unref(dayIdRef),
             firestoreDailyUserFeedbacks = unref(firestoreDailyUserFeedbacksRef);
 
-        if(!firestoreUserFeedbacksDoc || !talkId || !dayId) {
+        if(!firestoreUserFeedbacksDoc || !dayId) {
             return;
         }
 
         const now = clock.zonedDateTimeISO().toInstant().toString() as ISODatetime;
+        const userFeedback: UserFeedback = match(feedback)
+            .with({status:'provided'}, (providedFeedback: ProvidedUserFeedback): ProvidedUserFeedback => ({
+                ...providedFeedback,
+                createdOn: now,
+                lastUpdatedOn: now,
+                timeslotId: timeslotId.value,
+                talkId: providedFeedback.talkId,
+            })).with({status: 'skipped'}, (skippedFeedback: SkippedUserFeedback): SkippedUserFeedback => ({
+                ...skippedFeedback,
+                createdOn: now,
+                lastUpdatedOn: now,
+                timeslotId: timeslotId.value,
+            })).run();
 
         if(!firestoreDailyUserFeedbacks) {
-            setDoc(firestoreUserFeedbacksDoc, {
+            await setDoc(firestoreUserFeedbacksDoc, {
                 dayId: dayId.value,
-                feedbacks: [{
-                    ...feedback,
-                    createdOn: now,
-                    lastUpdatedOn: now,
-                    timeslotId: timeslotId.value,
-                    talkId: talkId.value,
-                }]
+                feedbacks: [userFeedback]
             })
         } else {
             let existingFeedbackIndex = firestoreDailyUserFeedbacks.feedbacks.findIndex(feedback => {
@@ -73,23 +83,14 @@ export function useUserFeedbacks(
             })
 
             if(existingFeedbackIndex === -1) {
-                firestoreDailyUserFeedbacks.feedbacks.push({
-                    ...feedback,
-                    createdOn: now,
-                    lastUpdatedOn: now,
-                    timeslotId: timeslotId.value,
-                    talkId: talkId.value,
-                })
+                firestoreDailyUserFeedbacks.feedbacks.push(userFeedback)
             } else {
                 firestoreDailyUserFeedbacks.feedbacks[existingFeedbackIndex] = {
-                    ...feedback,
+                    ...userFeedback,
                     createdOn: firestoreDailyUserFeedbacks.feedbacks[existingFeedbackIndex].createdOn,
-                    lastUpdatedOn: now,
-                    timeslotId: timeslotId.value,
-                    talkId: talkId.value,
                 }
             }
-            updateDoc(firestoreUserFeedbacksDoc, firestoreDailyUserFeedbacks);
+            await updateDoc(firestoreUserFeedbacksDoc, firestoreDailyUserFeedbacks);
         }
     }
 

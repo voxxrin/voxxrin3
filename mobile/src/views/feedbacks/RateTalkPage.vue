@@ -83,7 +83,7 @@ import {IonTextarea, useIonRouter} from "@ionic/vue";
 import LinearRating from "@/components/ratings/LinearRating.vue";
 import QuickFeedbackRating from "@/components/ratings/QuickFeedbackRating.vue";
 import IconBasedRating from "@/components/ratings/IconBasedRating.vue";
-import {UserFeedback} from "../../../../shared/feedbacks.firestore";
+import {ProvidedUserFeedback} from "../../../../shared/feedbacks.firestore";
 import {UnwrapNestedRefs} from "@vue/reactivity";
 import {useUserFeedbacks} from "@/state/useUserFeedbacks";
 import VoxDivider from "@/components/ui/VoxDivider.vue";
@@ -103,9 +103,10 @@ const dayIdRef = computed(() => {
     return labelledTimeslotWithTalk?.dayId;
 })
 
-const feedback: UnwrapNestedRefs<Omit<UserFeedback, 'createdOn'|'lastUpdatedOn'>> = reactive({
+const feedback: UnwrapNestedRefs<Omit<ProvidedUserFeedback, 'createdOn'|'lastUpdatedOn'>> = reactive({
     timeslotId: '',
     talkId: talkId.value,
+    status: 'provided',
     ratings: {
         'linear-rating': null,
         'bingo': [],
@@ -161,7 +162,7 @@ async function submitFeedback() {
         throw new Error(`Unexpected state: submitFeedback() called with empty labelledTimeslotWithTalk`)
     }
 
-    await updateTimeslotFeedback(labelledTimeslotWithTalk.labelledTimeslot.id, labelledTimeslotWithTalk.talk.id, feedback);
+    await updateTimeslotFeedback(labelledTimeslotWithTalk.labelledTimeslot.id, feedback);
     backToSchedulePage();
 }
 

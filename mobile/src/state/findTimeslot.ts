@@ -12,6 +12,7 @@ import {DayId} from "@/models/VoxxrinDay";
 
 export type LabelledTimeslot = VoxxrinScheduleTalksTimeSlot & {label: ReturnType<typeof getTimeslotLabel>};
 export type LabelledTimeslotWithOverlappings = {
+    dayId: DayId,
     labelledTimeslot: LabelledTimeslot,
     overlappingLabelledTimeslots: LabelledTimeslot[]
 }
@@ -58,6 +59,7 @@ export async function findLabelledTimeslotWithOverlappingsForTimeslotId(
         })
 
         const result: LabelledTimeslotWithOverlappings = {
+            dayId: day.id,
             labelledTimeslot: {
                 ...timeslot,
                 label: timeslotLabel,

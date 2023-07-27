@@ -89,7 +89,10 @@ import {
     findVoxxrinDay
 } from "@/models/VoxxrinConferenceDescriptor";
 import TimeSlotAccordion from "@/components/schedule/TimeSlotAccordion.vue";
-import {findTimeslotFeedback, VoxxrinUserFeedback} from "@/models/VoxxrinFeedback";
+import {
+    findTimeslotFeedback,
+    VoxxrinTimeslotFeedback,
+} from "@/models/VoxxrinFeedback";
 import {useCurrentClock} from "@/state/useCurrentClock";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
@@ -113,11 +116,11 @@ const changeDayTo = (day: VoxxrinDay) => {
 
 const { schedule: currentSchedule } = useSchedule(event, currentlySelectedDayId)
 
-type TalkTimeslotWithFeedback = VoxxrinScheduleTimeSlot & {
+type LabelledTimeslotWithFeedback = VoxxrinScheduleTimeSlot & {
     label: ReturnType<typeof getTimeslotLabel>,
-    feedback?: VoxxrinUserFeedback|undefined
+    feedback: VoxxrinTimeslotFeedback
 };
-const timeslotsRef = ref<TalkTimeslotWithFeedback[]>([]);
+const timeslotsRef = ref<LabelledTimeslotWithFeedback[]>([]);
 const missingFeedbacksPastTimeslots = ref<Array<{start: string, end: string, timeslot: VoxxrinScheduleTimeSlot}>>([])
 const expandedTimeslotIds = ref<string[]>([])
 const searchFieldDisplayed = ref(false);
@@ -151,12 +154,12 @@ const { userFeedbacks: dailyUserFeedbacksRef  } = useUserFeedbacks(eventId, curr
 const autoExpandTimeslotsRequested = ref(true);
 watch([event, currentSchedule, searchTermsRef, dailyUserFeedbacksRef ], ([confDescriptor, currentSchedule, searchTerms, dailyUserFeedbacks]) => {
     if(currentSchedule && confDescriptor) {
-        timeslotsRef.value = currentSchedule.timeSlots.map((ts: VoxxrinScheduleTimeSlot): TalkTimeslotWithFeedback => {
+        timeslotsRef.value = currentSchedule.timeSlots.map((ts: VoxxrinScheduleTimeSlot): LabelledTimeslotWithFeedback => {
             const label = getTimeslotLabel(ts);
             if(ts.type === 'break') {
-                return { ...ts, label };
+                return { ...ts, label, feedback: {status: 'missing'} };
             } else {
-                const feedback: VoxxrinUserFeedback|undefined = findTimeslotFeedback(dailyUserFeedbacks, ts.id);
+                const feedback = findTimeslotFeedback(dailyUserFeedbacks, ts.id);
                 const filteredTalks = filterTalksMatching(ts.talks, searchTerms);
                 return {...ts, label, talks: filteredTalks, feedback };
             }
@@ -196,7 +199,7 @@ function recomputeMissingFeedbacksList() {
 
     missingFeedbacksPastTimeslots.value = timeslots.filter(ts => {
         return ts.type === 'talks'
-            && !ts.feedback
+            && ts.feedback.status === 'missing'
             && getTimeslotTimingProgress(ts, useCurrentClock().zonedDateTimeISO()).status === 'past'
     }).map(timeslot => {
         const labels = getTimeslotLabel(timeslot)

@@ -78,7 +78,7 @@
         <ion-button class="cancel" size="small" fill="solid" color="medium" shape="round" expand="block" @click="backToSchedulePage">
           {{ LL.Cancel() }}
         </ion-button>
-        <ion-button size="small" fill="outline" shape="round" expand="block" v-if="selectedTalk === undefined">
+        <ion-button size="small" fill="outline" shape="round" expand="block" v-if="selectedTalk === undefined" @click="submitSkippedFeedback()">
             <span class="contentDidntAttendTalk">
               {{LL.I_didnt_attend_any_talk()}}
                 <small>({{ LL.During_this_time_slot() }})</small>
@@ -119,6 +119,7 @@ import {
     useUserEventAllFavoritedTalkIds,
     useUserTalkNotes
 } from "@/state/useUserTalkNotes";
+import {useUserFeedbacks} from "@/state/useUserFeedbacks";
 
 const { LL } = typesafeI18n()
 
@@ -195,6 +196,17 @@ async function watchLaterAllFavoritedTalks() {
 }
 
 function backToSchedulePage() {
+    goBackOrNavigateTo(ionRouter, `/events/${eventIdRef.value.value}`, 0)
+}
+
+const dayIdRef = computed(() => labelledTimeslotWithOverlappingsRef.value?.dayId)
+const { updateTimeslotFeedback } = useUserFeedbacks(eventIdRef, dayIdRef)
+async function submitSkippedFeedback() {
+    await updateTimeslotFeedback(timeslotIdRef.value, {
+        status: 'skipped',
+        timeslotId: labelledTimeslotWithOverlappingsRef.value!.labelledTimeslot.id.value,
+        alsoConcernsOverlappingTimeslotIds: labelledTimeslotWithOverlappingsRef.value!.overlappingLabelledTimeslots.map(ts => ts.id.value)
+    })
     goBackOrNavigateTo(ionRouter, `/events/${eventIdRef.value.value}`, 0)
 }
 

@@ -25,8 +25,14 @@ export type UserDailyFeedbacks = {
     feedbacks: Array<UserFeedback>
 }
 
-export type UserFeedback = {
+export type BaseUserFeedback = {
     timeslotId: string,
+    createdOn: ISODatetime,
+    lastUpdatedOn: ISODatetime,
+}
+
+export type ProvidedUserFeedback = BaseUserFeedback & {
+    status: 'provided',
     talkId: string,
     ratings: {
         'linear-rating': number | null,
@@ -34,6 +40,7 @@ export type UserFeedback = {
         'custom-rating': string | null
     },
     comment: string | null,
-    createdOn: ISODatetime,
-    lastUpdatedOn: ISODatetime
 }
+export type SkippedUserFeedback = BaseUserFeedback & { status: 'skipped' }
+
+export type UserFeedback = ProvidedUserFeedback | SkippedUserFeedback;

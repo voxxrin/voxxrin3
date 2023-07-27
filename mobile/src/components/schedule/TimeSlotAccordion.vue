@@ -1,7 +1,7 @@
 <template>
   <ion-accordion :value="timeslot.id.value"
                  class="slot-accordion"
-                 :class="{ [`_${progress?.status}`]: true, '_feedback-provided': !!timeslotFeedback, '_missing-feedback': !timeslotFeedback, '_is-break': timeslot.type==='break' }">
+                 :class="{ [`_${progress?.status}`]: true, '_feedback-provided': !hasMissingFeedback, '_missing-feedback': hasMissingFeedback, '_is-break': timeslot.type==='break' }">
     <ion-item slot="header" color="light">
       <ion-ripple-effect type="bounded"></ion-ripple-effect>
       <ion-grid class="slot">
@@ -58,7 +58,7 @@
 </template>
 
 <script setup lang="ts">
-import {PropType, ref} from "vue";
+import {computed, PropType, ref} from "vue";
 import {
   IonProgressBar,
   IonAccordion,
@@ -72,7 +72,7 @@ import {
   TimeslotTimingProgress,
   VoxxrinScheduleTimeSlot
 } from "@/models/VoxxrinSchedule";
-import {VoxxrinUserFeedback} from "@/models/VoxxrinFeedback";
+import {VoxxrinTimeslotFeedback} from "@/models/VoxxrinFeedback";
 import {useInterval} from "@/views/vue-utils";
 import {useCurrentClock} from "@/state/useCurrentClock";
 import {
@@ -97,8 +97,8 @@ const props = defineProps({
     type: Object as PropType<VoxxrinScheduleTimeSlot>
   },
   timeslotFeedback: {
-    required: false,
-    type: Object as PropType<VoxxrinUserFeedback|undefined>
+    required: true,
+    type: Object as PropType<VoxxrinTimeslotFeedback>
   },
   event: {
     required: true,
@@ -123,8 +123,11 @@ useInterval(() => {
 
 const timeslotLabel = getTimeslotLabel(props.timeslot!);
 
-const { triggerTabbedPageNavigate } = useTabbedPageNav();
+const hasMissingFeedback = computed(() => {
+    return props.timeslotFeedback?.status === 'missing' || props.timeslotFeedback?.status === undefined;
+})
 
+const { triggerTabbedPageNavigate } = useTabbedPageNav();
 function openTalkDetails(talk: VoxxrinTalk) {
     if(props.event && talk) {
         triggerTabbedPageNavigate(`/events/${props.event.id.value}/talks/${talk.id.value}/details`, "forward", "push");
