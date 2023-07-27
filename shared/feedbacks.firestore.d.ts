@@ -27,6 +27,7 @@ export type UserDailyFeedbacks = {
 
 export type BaseUserFeedback = {
     timeslotId: string,
+    alsoConcernsOverlappingTimeslotIds: string[]
     createdOn: ISODatetime,
     lastUpdatedOn: ISODatetime,
 }

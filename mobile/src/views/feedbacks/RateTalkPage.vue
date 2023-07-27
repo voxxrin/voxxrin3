@@ -106,6 +106,7 @@ const dayIdRef = computed(() => {
 const feedback: UnwrapNestedRefs<Omit<ProvidedUserFeedback, 'createdOn'|'lastUpdatedOn'>> = reactive({
     timeslotId: '',
     talkId: talkId.value,
+    alsoConcernsOverlappingTimeslotIds: [],
     status: 'provided',
     ratings: {
         'linear-rating': null,
@@ -125,6 +126,7 @@ watch([confDescriptorRef], async ([confDescriptor]) => {
     labelledTimeslotWithTalkRef.value = labelledTimeslotWithTalk;
     if(labelledTimeslotWithTalk) {
         feedback.timeslotId = labelledTimeslotWithTalk.labelledTimeslot.id.value;
+        feedback.alsoConcernsOverlappingTimeslotIds = labelledTimeslotWithTalk.labelledTimeslot.overlappingTimeSlots.map(tsId => tsId.value)
     }
 }, { immediate: true })
 

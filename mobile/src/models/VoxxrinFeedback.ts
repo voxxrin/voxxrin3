@@ -15,7 +15,7 @@ export type VoxxrinUserFeedback = Replace<UserFeedback, {
 }>
 
 export type VoxxrinTimeslotFeedback = {
-    status: "missing" | "skipped"
+    status: "missing" | "skipped" | "provided-on-overlapping-timeslot"
 } | {
     status: "provided",
     userFeedback: VoxxrinUserFeedback
@@ -43,6 +43,9 @@ export function findTimeslotFeedback(dailyUserFeedbacks: UserDailyFeedbacks|unde
             f.status === 'skipped'
             && (f.timeslotId === timeslotId.value || f.alsoConcernsOverlappingTimeslotIds.includes(timeslotId.value)),
         extractFeedbackFrom: (feedback: UserFeedback) => ({ status: "skipped" })
+    }, {
+        predicate: (f: UserFeedback, timeslotId: ScheduleTimeSlotId) =>  f.status === 'provided' && f.alsoConcernsOverlappingTimeslotIds.includes(timeslotId.value),
+        extractFeedbackFrom: (feedback: UserFeedback) => ({ status: "provided-on-overlapping-timeslot" })
     }]
 
     for (const extractor of extractors) {
