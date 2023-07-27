@@ -41,7 +41,7 @@ const TabExitOrNavigateEvent = createTypedCustomEventClass<{
     onEventCaught?: (() => Promise<void>)|undefined,
     url: string,
     routerDirection?: RouteDirection
-}>('tabbed-page-exit-or-navigate-requested');
+}>(TabExitOrNavigateEventName);
 
 const NavigationEventName = 'tabbed-page-navigation-requested'
 const NavigationEvent = createTypedCustomEventClass<{
