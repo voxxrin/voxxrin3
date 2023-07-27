@@ -72,7 +72,7 @@ import {
   TimeslotTimingProgress,
   VoxxrinScheduleTimeSlot
 } from "@/models/VoxxrinSchedule";
-import {VoxxrinTimeslotFeedback} from "@/models/VoxxrinFeedback";
+import {VoxxrinUserFeedback} from "@/models/VoxxrinFeedback";
 import {useInterval} from "@/views/vue-utils";
 import {useCurrentClock} from "@/state/useCurrentClock";
 import {
@@ -98,7 +98,7 @@ const props = defineProps({
   },
   timeslotFeedback: {
     required: false,
-    type: Object as PropType<VoxxrinTimeslotFeedback|undefined>
+    type: Object as PropType<VoxxrinUserFeedback|undefined>
   },
   event: {
     required: true,

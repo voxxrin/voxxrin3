@@ -89,14 +89,14 @@ import {
     findVoxxrinDay
 } from "@/models/VoxxrinConferenceDescriptor";
 import TimeSlotAccordion from "@/components/schedule/TimeSlotAccordion.vue";
-import {VoxxrinTimeslotFeedback} from "@/models/VoxxrinFeedback";
+import {findTimeslotFeedback, VoxxrinUserFeedback} from "@/models/VoxxrinFeedback";
 import {useCurrentClock} from "@/state/useCurrentClock";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
 import {filterTalksMatching} from "@/models/VoxxrinTalk";
 import SchedulePreferencesModal from '@/components/modals/SchedulePreferencesModal.vue'
-import {search, searchOutline} from "ionicons/icons";
 import {useTabbedPageNav} from "@/state/useTabbedPageNav";
+import {useUserFeedbacks} from "@/state/useUserFeedbacks";
 
 const route = useRoute();
 const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')));
@@ -113,7 +113,10 @@ const changeDayTo = (day: VoxxrinDay) => {
 
 const { schedule: currentSchedule } = useSchedule(event, currentlySelectedDayId)
 
-type TalkTimeslotWithFeedback = VoxxrinScheduleTimeSlot & {label: ReturnType<typeof getTimeslotLabel>} & {feedback: VoxxrinTimeslotFeedback|undefined};
+type TalkTimeslotWithFeedback = VoxxrinScheduleTimeSlot & {
+    label: ReturnType<typeof getTimeslotLabel>,
+    feedback?: VoxxrinUserFeedback|undefined
+};
 const timeslotsRef = ref<TalkTimeslotWithFeedback[]>([]);
 const missingFeedbacksPastTimeslots = ref<Array<{start: string, end: string, timeslot: VoxxrinScheduleTimeSlot}>>([])
 const expandedTimeslotIds = ref<string[]>([])
@@ -144,17 +147,16 @@ watch([event, currentlySelectedDayId], ([confDescriptor, selectedDayId]) => {
   }
 }, {immediate: true})
 
+const { userFeedbacks: dailyUserFeedbacksRef  } = useUserFeedbacks(eventId, currentlySelectedDayId)
 const autoExpandTimeslotsRequested = ref(true);
-watch([event, currentSchedule, searchTermsRef], ([confDescriptor, currentSchedule, searchTerms]) => {
+watch([event, currentSchedule, searchTermsRef, dailyUserFeedbacksRef ], ([confDescriptor, currentSchedule, searchTerms, dailyUserFeedbacks]) => {
     if(currentSchedule && confDescriptor) {
-        timeslotsRef.value = currentSchedule.timeSlots.map((ts: VoxxrinScheduleTimeSlot, idx): TalkTimeslotWithFeedback => {
+        timeslotsRef.value = currentSchedule.timeSlots.map((ts: VoxxrinScheduleTimeSlot): TalkTimeslotWithFeedback => {
             const label = getTimeslotLabel(ts);
-            // TODO: change me once feedback will be persisted
-            const feedback: VoxxrinTimeslotFeedback|undefined = undefined;
-            // yes that's weird ... but looks like TS is not very smart here 🤔
             if(ts.type === 'break') {
-                return { ...ts, label, feedback };
+                return { ...ts, label };
             } else {
+                const feedback: VoxxrinUserFeedback|undefined = findTimeslotFeedback(dailyUserFeedbacks, ts.id);
                 const filteredTalks = filterTalksMatching(ts.talks, searchTerms);
                 return {...ts, label, talks: filteredTalks, feedback };
             }
