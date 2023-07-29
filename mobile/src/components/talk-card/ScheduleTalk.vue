@@ -38,7 +38,9 @@
         <ion-icon src="/assets/icons/solid/megaphone.svg"></ion-icon>
         <span class="speakers-list">{{displayedSpeakers}}</span>
       </div>
-      <slot name="footer-actions" :talk="talk" :talkNotesHook="userTalkNotesHook" />
+      <div class="talkActions">
+        <slot name="footer-actions" :talk="talk" :talkNotesHook="userTalkNotesHook" />
+      </div>
     </div>
   </ion-card>
 </template>
@@ -427,6 +429,15 @@ const theme = {
       &:before {
         background: linear-gradient(331deg, rgba(var(--voxxrin-event-theme-colors-secondary-rgb), 0.6) 30%, rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.6) 80%) !important;
       }
+    }
+  }
+
+  .talkActions {
+    display: flex;
+    flex-direction: row;
+
+    :deep(.talkAction) {
+      height: 100%;
     }
   }
 }

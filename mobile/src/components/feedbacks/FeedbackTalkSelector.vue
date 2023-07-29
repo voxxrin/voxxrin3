@@ -5,20 +5,11 @@
         <ion-item class="listTalks-item">
           <schedule-talk :talk="talk" @talkClicked="updateSelected($event)" :is-highlighted="(talk, talkNotes) => talk.id.isSameThan(selectedTalkId)" :event="eventDescriptor">
             <template #upper-right="{ talk, talkNotesHook }">
-              <div class="talkFavorite" v-if="talkNotesHook.talkNotes.value.isFavorite">
-                <ion-icon src="/assets/icons/solid/bookmark-favorite.svg" />
-                {{ LL.In_favorites() }}
-              </div>
+              <talk-is-favorited :talk-notes="talkNotesHook.talkNotes.value" />
             </template>
             <template #footer-actions="{ talk, talkNotesHook }">
-              <div class="talkActions">
-                <div class="talkActions-watchLater">
-                  <talk-watch-later-button :user-talk-notes="talkNotesHook" :event-descriptor="eventDescriptor"></talk-watch-later-button>
-                </div>
-                <div class="talkActions-feedback">
-                  <talk-select-for-feedback :is-active="talk.id.isSameThan(selectedTalkId)" @click.stop="() => updateSelected(talk)"></talk-select-for-feedback>
-                </div>
-              </div>
+              <talk-watch-later-button :user-talk-notes="talkNotesHook" :event-descriptor="eventDescriptor"></talk-watch-later-button>
+              <talk-select-for-feedback :is-active="talk.id.isSameThan(selectedTalkId)" @click.stop="() => updateSelected(talk)"></talk-select-for-feedback>
             </template>
           </schedule-talk>
         </ion-item>
@@ -42,6 +33,7 @@ import TalkWatchLaterButton from "@/components/talk-card/TalkWatchLaterButton.vu
 import TalkSelectForFeedback from "@/components/talk-card/TalkSelectForFeedback.vue";
 import ScheduleTalk from "@/components/talk-card/ScheduleTalk.vue";
 import TalkFavoriteButton from "@/components/talk-card/TalkFavoriteButton.vue";
+import TalkIsFavorited from "@/components/talk-card/TalkIsFavorited.vue";
 
 const { LL } = typesafeI18n()
 
@@ -101,29 +93,6 @@ const nonFavoritedTalksCount = computed(() => {
 </script>
 
 <style lang="scss" scoped>
-
-  .talkFavorite {
-    display: flex;
-    justify-content: center;
-    column-gap: 4px;
-    color: var(--voxxrin-event-theme-colors-primary-hex);
-    font-weight: bold;
-
-    ion-icon { font-size: 18px;}
-  }
-
-  //* Base style slot actions *//
-  .talkActions {
-    display: flex;
-    flex-direction: row;
-
-    &-watchLater, &-highlight { height: 100%;}
-
-    &-actions {
-      display: flex;
-      align-items: end;
-    }
-  }
 
   .showTalksContainer {
     background-color: var(--app-background);

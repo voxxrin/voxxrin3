@@ -1,8 +1,10 @@
 <template>
-  <ion-button :class="{ 'btnTalk': true, 'btn-watchLater': true, '_is-active': !!talkNotes?.watchLater }" @click.stop="() => userTalkNotes.toggleWatchLater()" v-if="eventDescriptor?.features.remindMeOnceVideosAreAvailableEnabled">
-    <ion-icon v-if="!talkNotes?.watchLater" aria-hidden="true" src="/assets/icons/line/video-line.svg"></ion-icon>
-    <ion-icon v-if="!!talkNotes?.watchLater" aria-hidden="true" src="/assets/icons/solid/video.svg"></ion-icon>
-  </ion-button>
+  <div class="talkAction">
+    <ion-button :class="{ 'btnTalk': true, 'btn-watchLater': true, '_is-active': !!talkNotes?.watchLater }" @click.stop="() => userTalkNotes.toggleWatchLater()" v-if="eventDescriptor?.features.remindMeOnceVideosAreAvailableEnabled">
+      <ion-icon v-if="!talkNotes?.watchLater" aria-hidden="true" src="/assets/icons/line/video-line.svg"></ion-icon>
+      <ion-icon v-if="!!talkNotes?.watchLater" aria-hidden="true" src="/assets/icons/solid/video.svg"></ion-icon>
+    </ion-button>
+  </div>
 </template>
 
 <script setup lang="ts">

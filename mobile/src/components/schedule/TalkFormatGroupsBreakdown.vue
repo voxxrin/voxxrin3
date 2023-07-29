@@ -25,7 +25,6 @@ import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor"
 import ScheduleTalk from "@/components/talk-card/ScheduleTalk.vue";
 import {TalkNote} from "../../../../shared/feedbacks.firestore";
 
-
 const props = defineProps({
     talks: {
         required: true,

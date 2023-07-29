@@ -36,22 +36,13 @@
           <ion-item class="listTalks-item">
             <schedule-talk :talk="talk" @talkClicked="openTalkDetails($event)" :is-highlighted="(talk, talkNotes) => talkNotes.isFavorite" :event="event">
               <template #upper-right="{ talk, talkNotesHook }">
-                <div class="room" v-if="event.features.roomsDisplayed">
-                  <ion-icon aria-hidden="true" src="/assets/icons/solid/map-marker.svg"></ion-icon>
-                  {{talk.room.title}}
-                </div>
+                <talk-room :talk="talk" :conf-descriptor="conferenceDescriptor" />
               </template>
               <template #footer-actions="{ talk, talkNotesHook }">
-                <div class="talkActions">
-                  <div class="talkActions-watchLater">
-                    <talk-watch-later-button v-if="conferenceDescriptor" :event-descriptor="conferenceDescriptor" :user-talk-notes="talkNotesHook">
-                    </talk-watch-later-button>
-                  </div>
-                  <div class="talkActions-favorite">
-                    <talk-favorite-button v-if="conferenceDescriptor" :event-descriptor="conferenceDescriptor" :user-talk-notes="talkNotesHook">
-                    </talk-favorite-button>
-                  </div>
-                </div>
+                <talk-watch-later-button v-if="conferenceDescriptor" :event-descriptor="conferenceDescriptor" :user-talk-notes="talkNotesHook">
+                </talk-watch-later-button>
+                <talk-favorite-button v-if="conferenceDescriptor" :event-descriptor="conferenceDescriptor" :user-talk-notes="talkNotesHook">
+                </talk-favorite-button>
               </template>
             </schedule-talk>
           </ion-item>
@@ -95,6 +86,7 @@ import SlotOverlaps from "@/components/schedule/SlotOverlaps.vue";
 import TalkFavoriteButton from "@/components/talk-card/TalkFavoriteButton.vue";
 import TalkWatchLaterButton from "@/components/talk-card/TalkWatchLaterButton.vue";
 import ScheduleTalk from "@/components/talk-card/ScheduleTalk.vue";
+import TalkRoom from "@/components/talk-card/TalkRoom.vue";
 
 const props = defineProps({
   timeslot: {
@@ -141,27 +133,6 @@ function openTalkDetails(talk: VoxxrinTalk) {
 </script>
 
 <style lang="scss" scoped>
-.room {
-  display: flex;
-  align-items: center;
-  column-gap: 2px;
-  font-weight: 500;
-  color: var(--app-grey-dark);
-
-  @media (prefers-color-scheme: dark) {
-    color: rgba(white, 0.8);
-  }
-
-  ion-icon {
-    font-size: 16px;
-    color: var(--app-primary-shade);
-
-    @media (prefers-color-scheme: dark) {
-      color: var(--app-white);
-    }
-  }
-}
-
   // * Base Style Accordion *//
   ion-accordion {
     border-bottom: 1px solid var(--app-background);
@@ -287,19 +258,6 @@ function openTalkDetails(talk: VoxxrinTalk) {
           color: var(--app-white);
         }
       }
-    }
-  }
-
-  //* Base style slot actions *//
-  .talkActions {
-    display: flex;
-    flex-direction: row;
-
-    &-watchLater, &-favorite { height: 100%;}
-
-    &-actions {
-      display: flex;
-      align-items: end;
     }
   }
 

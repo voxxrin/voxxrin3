@@ -1,11 +1,13 @@
 <template>
-  <ion-button :class="{ 'btnTalk': true, 'btn-favorite': true, '_is-active': !!talkNotes?.isFavorite }" @click.stop="() => userTalkNotes.toggleFavorite()" v-if="eventDescriptor?.features.favoritesEnabled">
+  <div class="talkAction">
+    <ion-button :class="{ 'btnTalk': true, 'btn-favorite': true, '_is-active': !!talkNotes?.isFavorite }" @click.stop="() => userTalkNotes.toggleFavorite()" v-if="eventDescriptor?.features.favoritesEnabled">
     <span class="btn-favorite-group">
       <ion-icon class="btn-favorite-group-icon" v-if="!talkNotes?.isFavorite" aria-hidden="true" src="/assets/icons/line/bookmark-line-favorite.svg"></ion-icon>
       <ion-icon class="btn-favorite-group-icon" v-if="!!talkNotes?.isFavorite" aria-hidden="true" src="/assets/icons/solid/bookmark-favorite.svg"></ion-icon>
       <ion-label class="btn-favorite-group-nb" v-if="eventTalkStats !== undefined">{{ eventTalkStats.totalFavoritesCount }}</ion-label>
     </span>
-  </ion-button>
+    </ion-button>
+  </div>
 </template>
 
 <script setup lang="ts">
