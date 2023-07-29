@@ -1,7 +1,6 @@
 <template>
   <ion-accordion :value="timeslot.id.value"
-                 class="slot-accordion"
-                 :class="{ [`_${progress?.status}`]: true, '_feedback-provided': !hasMissingFeedback, '_missing-feedback': hasMissingFeedback, '_is-break': timeslot.type==='break' }">
+       :class="{ 'slot-accordion': true, [`_${progress?.status}`]: true, '_feedback-provided': !hasMissingFeedback, '_missing-feedback': hasMissingFeedback, '_is-break': timeslot.type==='break' }">
     <ion-item slot="header" color="light">
       <ion-ripple-effect type="bounded"></ion-ripple-effect>
       <ion-grid class="slot">
@@ -32,25 +31,30 @@
       <schedule-break v-if="timeslot.type==='break'" :event="event" :talk-break="timeslot.break"></schedule-break>
       <talk-format-groups-breakdown
           :event="event" v-if="timeslot.type==='talks'"
-          :talks="timeslot.talks" @talkClicked="openTalkDetails($event)"
-          :is-highlighted="(talk, talkNotes) => talkNotes.isFavorite">
-        <template #talk-card-upper-right="{ talk }">
-          <div class="room" v-if="event.features.roomsDisplayed">
-            <ion-icon aria-hidden="true" src="/assets/icons/solid/map-marker.svg"></ion-icon>
-            {{talk.room.title}}
-          </div>
-        </template>
-        <template #talk-card-footer-actions="{ talk, talkNotesHook }">
-          <div class="talkActions">
-            <div class="talkActions-watchLater">
-              <talk-watch-later-button v-if="conferenceDescriptor" :event-descriptor="conferenceDescriptor" :user-talk-notes="talkNotesHook">
-              </talk-watch-later-button>
-            </div>
-            <div class="talkActions-favorite">
-              <talk-favorite-button v-if="conferenceDescriptor" :event-descriptor="conferenceDescriptor" :user-talk-notes="talkNotesHook">
-              </talk-favorite-button>
-            </div>
-          </div>
+          :talks="timeslot.talks">
+        <template #talk="{ talk }">
+          <ion-item class="listTalks-item">
+            <schedule-talk :talk="talk" @talkClicked="openTalkDetails($event)" :is-highlighted="(talk, talkNotes) => talkNotes.isFavorite" :event="event">
+              <template #upper-right="{ talk, talkNotesHook }">
+                <div class="room" v-if="event.features.roomsDisplayed">
+                  <ion-icon aria-hidden="true" src="/assets/icons/solid/map-marker.svg"></ion-icon>
+                  {{talk.room.title}}
+                </div>
+              </template>
+              <template #footer-actions="{ talk, talkNotesHook }">
+                <div class="talkActions">
+                  <div class="talkActions-watchLater">
+                    <talk-watch-later-button v-if="conferenceDescriptor" :event-descriptor="conferenceDescriptor" :user-talk-notes="talkNotesHook">
+                    </talk-watch-later-button>
+                  </div>
+                  <div class="talkActions-favorite">
+                    <talk-favorite-button v-if="conferenceDescriptor" :event-descriptor="conferenceDescriptor" :user-talk-notes="talkNotesHook">
+                    </talk-favorite-button>
+                  </div>
+                </div>
+              </template>
+            </schedule-talk>
+          </ion-item>
         </template>
       </talk-format-groups-breakdown>
     </div>
@@ -90,6 +94,7 @@ import {useTabbedPageNav} from "@/state/useTabbedPageNav";
 import SlotOverlaps from "@/components/schedule/SlotOverlaps.vue";
 import TalkFavoriteButton from "@/components/talk-card/TalkFavoriteButton.vue";
 import TalkWatchLaterButton from "@/components/talk-card/TalkWatchLaterButton.vue";
+import ScheduleTalk from "@/components/talk-card/ScheduleTalk.vue";
 
 const props = defineProps({
   timeslot: {
@@ -295,6 +300,18 @@ function openTalkDetails(talk: VoxxrinTalk) {
     &-actions {
       display: flex;
       align-items: end;
+    }
+  }
+
+  :deep(.listTalks-item) {
+    overflow: visible !important;
+    --padding-start: 0;
+    --inner-padding-end: 0;
+    --background: transparent;
+    --border-style: none;
+
+    &:last-child {
+      margin-bottom: var(--app-gutters);
     }
   }
 </style>

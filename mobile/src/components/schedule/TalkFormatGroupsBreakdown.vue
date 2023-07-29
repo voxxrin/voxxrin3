@@ -8,16 +8,8 @@
         </ion-label>
         <span class="listTalks-divider-separator"></span>
       </ion-item-divider>
-      <ion-item class="listTalks-item" v-for="(talk) in perFormatGroup.talks" :key="talk.id.value">
-        <schedule-talk :talk="talk" @talkClicked="$emit('talk-clicked', $event)" :is-highlighted="isHighlighted" :event="event">
-          <template #upper-right="upperRightContext">
-            <slot name="talk-card-upper-right" :talk="upperRightContext.talk" :talkNotesHook="upperRightContext.talkNotesHook" />
-          </template>
-          <template #footer-actions="footerActionsContext">
-            <slot name="talk-card-footer-actions" :talk="footerActionsContext.talk" :talkNotesHook="footerActionsContext.talkNotesHook" />
-          </template>
-        </schedule-talk>
-      </ion-item>
+
+      <slot name="talk" v-for="(talk) in perFormatGroup.talks" :key="talk.id.value" :talk="talk" />
     </ion-item-group>
   </ion-list>
 </template>
@@ -42,16 +34,8 @@ const props = defineProps({
     event: {
         required: true,
         type: Object as PropType<VoxxrinConferenceDescriptor>
-    },
-    isHighlighted: {
-        required: true,
-        type: Function as PropType<(talk: VoxxrinTalk, talkNotes: TalkNote) => boolean>
     }
 })
-
-defineEmits<{
-    (e: 'talk-clicked', talk: VoxxrinTalk): void,
-}>()
 
 const perFormatGroups = computed(() => sortThenGroupByFormat(props.talks!, props.event!));
 
@@ -91,18 +75,6 @@ const perFormatGroups = computed(() => sortThenGroupByFormat(props.talks!, props
         @media (prefers-color-scheme: dark) {
           background-color: var(--app-line-contrast);
         }
-      }
-    }
-
-    &-item {
-      overflow: visible !important;
-      --padding-start: 0;
-      --inner-padding-end: 0;
-      --background: transparent;
-      --border-style: none;
-
-      &:last-child {
-        margin-bottom: var(--app-gutters);
       }
     }
   }

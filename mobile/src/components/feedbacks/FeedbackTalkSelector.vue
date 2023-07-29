@@ -1,23 +1,27 @@
 <template>
   <div>
-    <talk-format-groups-breakdown
-        :event="eventDescriptor" :talks="displayedTalks" :is-highlighted="(talk, talkNotes) => talk.id.isSameThan(selectedTalkId)"
-        @talkClicked="updateSelected($event)">
-      <template #talk-card-upper-right="{ talk, talkNotesHook }">
-        <div class="talkFavorite" v-if="talkNotesHook.talkNotes.value.isFavorite">
-          <ion-icon src="/assets/icons/solid/bookmark-favorite.svg" />
-          {{ LL.In_favorites() }}
-        </div>
-      </template>
-      <template #talk-card-footer-actions="{ talk, talkNotesHook }">
-        <div class="talkActions">
-          <div class="talkActions-watchLater">
-            <talk-watch-later-button :user-talk-notes="talkNotesHook" :event-descriptor="eventDescriptor"></talk-watch-later-button>
-          </div>
-          <div class="talkActions-feedback">
-            <talk-select-for-feedback :is-active="talk.id.isSameThan(selectedTalkId)" @click.stop="() => updateSelected(talk)"></talk-select-for-feedback>
-          </div>
-        </div>
+    <talk-format-groups-breakdown :event="eventDescriptor" :talks="displayedTalks">
+      <template #talk="{ talk }">
+        <ion-item class="listTalks-item">
+          <schedule-talk :talk="talk" @talkClicked="updateSelected($event)" :is-highlighted="(talk, talkNotes) => talk.id.isSameThan(selectedTalkId)" :event="eventDescriptor">
+            <template #upper-right="{ talk, talkNotesHook }">
+              <div class="talkFavorite" v-if="talkNotesHook.talkNotes.value.isFavorite">
+                <ion-icon src="/assets/icons/solid/bookmark-favorite.svg" />
+                {{ LL.In_favorites() }}
+              </div>
+            </template>
+            <template #footer-actions="{ talk, talkNotesHook }">
+              <div class="talkActions">
+                <div class="talkActions-watchLater">
+                  <talk-watch-later-button :user-talk-notes="talkNotesHook" :event-descriptor="eventDescriptor"></talk-watch-later-button>
+                </div>
+                <div class="talkActions-feedback">
+                  <talk-select-for-feedback :is-active="talk.id.isSameThan(selectedTalkId)" @click.stop="() => updateSelected(talk)"></talk-select-for-feedback>
+                </div>
+              </div>
+            </template>
+          </schedule-talk>
+        </ion-item>
       </template>
     </talk-format-groups-breakdown>
     <div class="showTalksContainer" v-if="!showUnfavoritedTalksRef && nonFavoritedTalksCount>0">
@@ -36,6 +40,8 @@ import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor"
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import TalkWatchLaterButton from "@/components/talk-card/TalkWatchLaterButton.vue";
 import TalkSelectForFeedback from "@/components/talk-card/TalkSelectForFeedback.vue";
+import ScheduleTalk from "@/components/talk-card/ScheduleTalk.vue";
+import TalkFavoriteButton from "@/components/talk-card/TalkFavoriteButton.vue";
 
 const { LL } = typesafeI18n()
 
@@ -123,5 +129,17 @@ const nonFavoritedTalksCount = computed(() => {
     background-color: var(--app-background);
     padding: var(--app-gutters);
     text-align: center;
+  }
+
+  :deep(.listTalks-item) {
+    overflow: visible !important;
+    --padding-start: 0;
+    --inner-padding-end: 0;
+    --background: transparent;
+    --border-style: none;
+
+    &:last-child {
+      margin-bottom: var(--app-gutters);
+    }
   }
 </style>
