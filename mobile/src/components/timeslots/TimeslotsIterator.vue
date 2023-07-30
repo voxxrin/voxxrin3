@@ -40,6 +40,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
+    (e: 'timeslots-list-updated', timeslots: LabelledTimeslotWithFeedback[]): void,
     (e: 'missing-feedback-past-timeslots-updated', missingFeedbackPastTimeslot: MissingFeedbackPastTimeslot[]): void
 }>()
 
@@ -52,6 +53,10 @@ const { userFeedbacks: dailyUserFeedbacksRef  } = useUserFeedbacks(props.confDes
 const { timeslotsRef } = useLabelledTimeslotWithFeedbacks(
     toRef(props, 'dailySchedule'),
     dailyUserFeedbacksRef, toRef(props, 'searchTerms'));
+
+watch([timeslotsRef], ([timeslots]) => {
+    emit('timeslots-list-updated', timeslots);
+})
 
 watch([
     toRef(props, 'confDescriptor'),

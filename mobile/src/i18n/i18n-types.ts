@@ -83,6 +83,10 @@ type RootTranslation = {
 	 */
 	Feedbacks: string
 	/**
+	 * N​o​ ​f​e​e​d​b​a​c​k​ ​y​e​t
+	 */
+	No_feedback_yet: string
+	/**
 	 * I​n​f​o​s
 	 */
 	Infos: string
@@ -284,6 +288,10 @@ export type TranslationFunctions = {
 	 * Feedbacks
 	 */
 	Feedbacks: () => LocalizedString
+	/**
+	 * No feedback yet
+	 */
+	No_feedback_yet: () => LocalizedString
 	/**
 	 * Infos
 	 */

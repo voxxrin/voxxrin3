@@ -28,7 +28,7 @@
     </ion-item>
 
     <div class="ion-padding accordion-content" slot="content">
-      <slot name="accordion-content" :timeslot="timeslot" />
+      <slot name="accordion-content" :timeslot="timeslot" :feedback="timeslotFeedback" />
     </div>
   </ion-accordion>
 </template>

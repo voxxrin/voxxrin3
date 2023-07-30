@@ -18,6 +18,7 @@ const en = {
 	Search: `Search`,
 	Favorites: `Favorites`,
 	Feedbacks: `Feedbacks`,
+	No_feedback_yet: `No feedback yet`,
 	Infos: `Infos`,
 	ConfStatus_ongoing: `Ongoing`,
 	ConfStatus_past: `Past`,

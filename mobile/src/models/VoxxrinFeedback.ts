@@ -1,6 +1,4 @@
-
-// TODO: To complete
-import {ScheduleTimeSlotId} from "@/models/VoxxrinSchedule";
+import {ScheduleTimeSlotId, VoxxrinScheduleTalksTimeSlot} from "@/models/VoxxrinSchedule";
 import {
     ProvidedUserFeedback,
     UserDailyFeedbacks,
@@ -9,7 +7,7 @@ import {
 import {Replace} from "@/models/type-utils";
 import {TalkId} from "@/models/VoxxrinTalk";
 
-export type VoxxrinUserFeedback = Replace<UserFeedback, {
+export type VoxxrinUserFeedback = Replace<ProvidedUserFeedback, {
     timeslotId: ScheduleTimeSlotId,
     talkId: TalkId,
 }>
@@ -56,4 +54,11 @@ export function findTimeslotFeedback(dailyUserFeedbacks: UserDailyFeedbacks|unde
     }
 
     return { status: "missing" };
+}
+
+export function findTimeslotTalkMatchingFeedback(timeslot: VoxxrinScheduleTalksTimeSlot, userFeedback: VoxxrinUserFeedback) {
+    if(!timeslot.id.isSameThan(userFeedback.timeslotId)) {
+        return undefined;
+    }
+    return timeslot.talks.find(t => t.id.isSameThan(userFeedback.talkId))
 }
