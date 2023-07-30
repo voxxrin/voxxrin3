@@ -2,10 +2,7 @@
   <ion-list class="listTalks">
     <ion-item-group v-for="(perFormatGroup) in perFormatGroups" :key="perFormatGroup.format.id.value">
       <ion-item-divider class="listTalks-divider">
-        <ion-icon src="/assets/images/svg/format-symbol.svg" :style="{ 'color': perFormatGroup.format.themeColor }"></ion-icon>
-        <ion-label :style="{ '--color': perFormatGroup.format.themeColor }">
-          {{perFormatGroup.format.title}} ({{perFormatGroup.format.hmmDuration}})
-        </ion-label>
+        <talk-format :format="perFormatGroup.format" />
         <span class="listTalks-divider-separator"></span>
       </ion-item-divider>
 
@@ -22,8 +19,7 @@ import {
 } from '@ionic/vue';
 import {sortThenGroupByFormat, VoxxrinTalk} from "@/models/VoxxrinTalk";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
-import ScheduleTalk from "@/components/talk-card/ScheduleTalk.vue";
-import {TalkNote} from "../../../../shared/feedbacks.firestore";
+import TalkFormat from "@/components/timeslots/TalkFormat.vue";
 
 const props = defineProps({
     talks: {
@@ -52,16 +48,6 @@ const perFormatGroups = computed(() => sortThenGroupByFormat(props.talks!, props
       --background: transparent;
       --border-style: inherit;
       border: none;
-
-      ion-icon {
-        font-size: 24px;
-      }
-
-      ion-label {
-        padding-left: 8px;
-        font-size: 16px;
-        font-weight: 900;
-      }
 
       &-separator {
         display: block;
