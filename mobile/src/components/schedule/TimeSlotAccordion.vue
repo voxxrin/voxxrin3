@@ -28,26 +28,7 @@
     </ion-item>
 
     <div class="ion-padding accordion-content" slot="content">
-      <schedule-break v-if="timeslot.type==='break'" :event="event" :talk-break="timeslot.break"></schedule-break>
-      <talk-format-groups-breakdown
-          :event="event" v-if="timeslot.type==='talks'"
-          :talks="timeslot.talks">
-        <template #talk="{ talk }">
-          <ion-item class="listTalks-item">
-            <schedule-talk :talk="talk" @talkClicked="openTalkDetails($event)" :is-highlighted="(talk, talkNotes) => talkNotes.isFavorite" :event="event">
-              <template #upper-right="{ talk, talkNotesHook }">
-                <talk-room :talk="talk" :conf-descriptor="conferenceDescriptor" />
-              </template>
-              <template #footer-actions="{ talk, talkNotesHook }">
-                <talk-watch-later-button v-if="conferenceDescriptor" :event-descriptor="conferenceDescriptor" :user-talk-notes="talkNotesHook">
-                </talk-watch-later-button>
-                <talk-favorite-button v-if="conferenceDescriptor" :event-descriptor="conferenceDescriptor" :user-talk-notes="talkNotesHook">
-                </talk-favorite-button>
-              </template>
-            </schedule-talk>
-          </ion-item>
-        </template>
-      </talk-format-groups-breakdown>
+      <slot name="accordion-content" :timeslot="timeslot" />
     </div>
   </ion-accordion>
 </template>
@@ -74,19 +55,11 @@ import {
     areFeedbacksEnabled,
     VoxxrinConferenceDescriptor
 } from "@/models/VoxxrinConferenceDescriptor";
-import TalkFormatGroupsBreakdown from "@/components/schedule/TalkFormatGroupsBreakdown.vue";
-import ScheduleBreak from "@/components/schedule/ScheduleBreak.vue";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {
     useSharedConferenceDescriptor
 } from "@/state/useConferenceDescriptor";
-import {VoxxrinTalk} from "@/models/VoxxrinTalk";
-import {useTabbedPageNav} from "@/state/useTabbedPageNav";
 import SlotOverlaps from "@/components/schedule/SlotOverlaps.vue";
-import TalkFavoriteButton from "@/components/talk-card/TalkFavoriteButton.vue";
-import TalkWatchLaterButton from "@/components/talk-card/TalkWatchLaterButton.vue";
-import ScheduleTalk from "@/components/talk-card/ScheduleTalk.vue";
-import TalkRoom from "@/components/talk-card/TalkRoom.vue";
 
 const props = defineProps({
   timeslot: {
@@ -123,13 +96,6 @@ const timeslotLabel = getTimeslotLabel(props.timeslot!);
 const hasMissingFeedback = computed(() => {
     return props.timeslotFeedback?.status === 'missing' || props.timeslotFeedback?.status === undefined;
 })
-
-const { triggerTabbedPageNavigate } = useTabbedPageNav();
-function openTalkDetails(talk: VoxxrinTalk) {
-    if(props.event && talk) {
-        triggerTabbedPageNavigate(`/events/${props.event.id.value}/talks/${talk.id.value}/details`, "forward", "push");
-    }
-}
 </script>
 
 <style lang="scss" scoped>
@@ -258,18 +224,6 @@ function openTalkDetails(talk: VoxxrinTalk) {
           color: var(--app-white);
         }
       }
-    }
-  }
-
-  :deep(.listTalks-item) {
-    overflow: visible !important;
-    --padding-start: 0;
-    --inner-padding-end: 0;
-    --background: transparent;
-    --border-style: none;
-
-    &:last-child {
-      margin-bottom: var(--app-gutters);
     }
   }
 </style>

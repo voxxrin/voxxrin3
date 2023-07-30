@@ -35,17 +35,32 @@
       </ion-header>
 
       <ion-accordion-group :multiple="true" v-if="event && currentlySelectedDayId" :value="expandedTimeslotIds">
-        <timeslots-iterator
-            :conf-descriptor="event" :day-id="currentlySelectedDayId"
+        <timeslots-iterator :conf-descriptor="event" :day-id="currentlySelectedDayId"
             :daily-schedule="currentSchedule" :search-terms="searchTermsRef"
-            @missing-feedback-past-timeslots-updated="updatedMissingTimeslots => missingFeedbacksPastTimeslots = updatedMissingTimeslots"
-        >
+            @missing-feedback-past-timeslots-updated="updatedMissingTimeslots => missingFeedbacksPastTimeslots = updatedMissingTimeslots">
           <template #iterator="{ timeslot }">
             <time-slot-accordion
-                :timeslot-feedback="timeslot.feedback" :timeslot="timeslot"
-                :event="event"
+                :timeslot-feedback="timeslot.feedback" :timeslot="timeslot" :event="event"
                 @add-timeslot-feedback-clicked="(ts) => navigateToTimeslotFeedbackCreation(ts)"
                 @click="() => toggleExpandedTimeslot(timeslot)">
+              <template #accordion-content="{ timeslot }">
+                <schedule-break v-if="timeslot.type==='break'" :event="event" :talk-break="timeslot.break"></schedule-break>
+                <talk-format-groups-breakdown  :event="event" v-if="timeslot.type==='talks'" :talks="timeslot.talks">
+                  <template #talk="{ talk }">
+                    <ion-item class="listTalks-item">
+                      <schedule-talk :talk="talk" @talkClicked="openTalkDetails($event)" :is-highlighted="(talk, talkNotes) => talkNotes.isFavorite" :event="event">
+                        <template #upper-right="{ talk, talkNotesHook }">
+                          <talk-room :talk="talk" :conf-descriptor="event" />
+                        </template>
+                        <template #footer-actions="{ talk, talkNotesHook }">
+                          <talk-watch-later-button v-if="event" :event-descriptor="event" :user-talk-notes="talkNotesHook" />
+                          <talk-favorite-button v-if="event" :event-descriptor="event" :user-talk-notes="talkNotesHook" />
+                        </template>
+                      </schedule-talk>
+                    </ion-item>
+                  </template>
+                </talk-format-groups-breakdown>
+              </template>
             </time-slot-accordion>
           </template>
         </timeslots-iterator>
@@ -100,6 +115,13 @@ import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
 import SchedulePreferencesModal from '@/components/modals/SchedulePreferencesModal.vue'
 import {useTabbedPageNav} from "@/state/useTabbedPageNav";
 import TimeslotsIterator, {MissingFeedbackPastTimeslot} from "@/components/timeslots/TimeslotsIterator.vue";
+import ScheduleBreak from "@/components/schedule/ScheduleBreak.vue";
+import TalkWatchLaterButton from "@/components/talk-card/TalkWatchLaterButton.vue";
+import ScheduleTalk from "@/components/talk-card/ScheduleTalk.vue";
+import TalkRoom from "@/components/talk-card/TalkRoom.vue";
+import TalkFavoriteButton from "@/components/talk-card/TalkFavoriteButton.vue";
+import TalkFormatGroupsBreakdown from "@/components/schedule/TalkFormatGroupsBreakdown.vue";
+import {VoxxrinTalk} from "@/models/VoxxrinTalk";
 
 const route = useRoute();
 const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')));
@@ -171,6 +193,13 @@ const { triggerTabbedPageNavigate } = useTabbedPageNav();
 async function navigateToTimeslotFeedbackCreation(timeslot: VoxxrinScheduleTimeSlot) {
     triggerTabbedPageNavigate(`/events/${eventId.value.value}/new-feedback-for-timeslot/${timeslot.id.value}`, "forward", "push");
 }
+
+async function openTalkDetails(talk: VoxxrinTalk) {
+    if(talk) {
+        triggerTabbedPageNavigate(`/events/${eventId.value}/talks/${talk.id.value}/details`, "forward", "push");
+    }
+}
+
 
 // Crappy hack in order to have a pretty ion-fab-list closing animation
 // Basically, we need to avoid changing display:flex => none on ion-fab-list *as soon as* the ion-fab-button
@@ -324,4 +353,15 @@ async function openSchedulePreferencesModal() {
     100% { transform: translateX(120%);}
   }
 
+  :deep(.listTalks-item) {
+    overflow: visible !important;
+    --padding-start: 0;
+    --inner-padding-end: 0;
+    --background: transparent;
+    --border-style: none;
+
+    &:last-child {
+      margin-bottom: var(--app-gutters);
+    }
+  }
 </style>
