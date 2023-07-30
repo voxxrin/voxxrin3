@@ -16,11 +16,11 @@
                 {{ LL.Rate_it() }} :
               </vox-divider >
 
-              <linear-rating
+              <labelled-linear-rating
                   v-if="confDescriptorRef.features.ratings.scale.enabled"
                   :config="confDescriptorRef.features.ratings.scale"
                   @rating-selected="feedback.ratings['linear-rating'] = $event?.score"
-              ></linear-rating>
+              ></labelled-linear-rating>
               <icon-based-rating
                   v-if="confDescriptorRef.features.ratings['custom-scale'].enabled"
                   :config="confDescriptorRef.features.ratings['custom-scale']"
@@ -80,7 +80,6 @@ import {
 } from "@/state/findTimeslot";
 import ScheduleTalk from "@/components/talk-card/ScheduleTalk.vue";
 import {IonTextarea, useIonRouter} from "@ionic/vue";
-import LinearRating from "@/components/ratings/LinearRating.vue";
 import QuickFeedbackRating from "@/components/ratings/QuickFeedbackRating.vue";
 import IconBasedRating from "@/components/ratings/IconBasedRating.vue";
 import {ProvidedUserFeedback} from "../../../../shared/feedbacks.firestore";
@@ -89,6 +88,7 @@ import {useUserFeedbacks} from "@/state/useUserFeedbacks";
 import VoxDivider from "@/components/ui/VoxDivider.vue";
 import FeedbackFooter from "@/components/feedbacks/FeedbackFooter.vue";
 import {goBackOrNavigateTo} from "@/router";
+import LabelledLinearRating from "@/components/ratings/LabelledLinearRating.vue";
 
 const { LL } = typesafeI18n()
 
