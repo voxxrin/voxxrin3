@@ -42,7 +42,8 @@
                       <talk-format :format="talk.format" class="talkFormatContainer" />
                     </template>
                     <template #footer-actions="{ talk, talkNotesHook }">
-                      <linear-rating :config="event.features.ratings.scale" :user-feedback="feedback.userFeedback" :readonly="true" />
+                      <linear-rating v-if="event.features.ratings.scale.enabled" :config="event.features.ratings.scale"
+                                     :user-feedback="feedback.userFeedback" :readonly="true" />
                     </template>
                   </schedule-talk>
                 </ion-item>
