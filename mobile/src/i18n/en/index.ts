@@ -34,7 +34,7 @@ const en = {
 	Add_from_the_list_below: `Add from the list below`,
 	Today: 'Today',
 	Tomorrow: 'Tomorrow',
-	Favorited_schedule_not_implemented_yet: 'Favorited schedule not implemented (yet)',
+	No_favorites_defined_yet: "No favorites defined yet",
 	Info_page_still_under_construction: 'Info page still under construction',
 	Add_Feedback: 'Add Feedback',
 	Pick_the_talk_you_attended: 'Pick the talk you attended',

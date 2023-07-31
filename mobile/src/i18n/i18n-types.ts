@@ -149,9 +149,9 @@ type RootTranslation = {
 	 */
 	Tomorrow: string
 	/**
-	 * F​a​v​o​r​i​t​e​d​ ​s​c​h​e​d​u​l​e​ ​n​o​t​ ​i​m​p​l​e​m​e​n​t​e​d​ ​(​y​e​t​)
+	 * N​o​ ​f​a​v​o​r​i​t​e​s​ ​d​e​f​i​n​e​d​ ​y​e​t
 	 */
-	Favorited_schedule_not_implemented_yet: string
+	No_favorites_defined_yet: string
 	/**
 	 * I​n​f​o​ ​p​a​g​e​ ​s​t​i​l​l​ ​u​n​d​e​r​ ​c​o​n​s​t​r​u​c​t​i​o​n
 	 */
@@ -385,9 +385,9 @@ export type TranslationFunctions = {
 	 */
 	Tomorrow: () => LocalizedString
 	/**
-	 * Favorited schedule not implemented (yet)
+	 * No favorites defined yet
 	 */
-	Favorited_schedule_not_implemented_yet: () => LocalizedString
+	No_favorites_defined_yet: () => LocalizedString
 	/**
 	 * Info page still under construction
 	 */
