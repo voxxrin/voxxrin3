@@ -130,24 +130,29 @@ watch([confDescriptorRef], async ([confDescriptor]) => {
 
 const feedbackCanBeSubmitted = computed(() => {
     const confDescriptor = unref(confDescriptorRef);
+    const ratings = feedback.ratings;
+    const comment = feedback.comment;
+
+
     if(!confDescriptor) {
         return false;
     }
 
-    if(confDescriptor.features.ratings.bingo.enabled && feedback.ratings.bingo.length===0) {
+    // Temporarily disabled... until a proper bingo implementation is provided !
+    // if(confDescriptor.features.ratings.bingo.enabled && ratings.bingo.length===0) {
+    //     return false;
+    // }
+    if(confDescriptor.features.ratings.scale.enabled && (ratings["linear-rating"] === null || ratings["linear-rating"] === undefined)) {
         return false;
     }
-    if(confDescriptor.features.ratings.scale.enabled && feedback.ratings["linear-rating"] === null) {
-        return false;
-    }
-    if(confDescriptor.features.ratings["custom-scale"].enabled && feedback.ratings["custom-rating"] === null) {
+    if(confDescriptor.features.ratings["custom-scale"].enabled && ratings["custom-rating"] === null) {
         return false;
     }
     if(confDescriptor.features.ratings["free-text"].enabled
         && !confDescriptor.features.ratings["bingo"].enabled
         && !confDescriptor.features.ratings["scale"].enabled
         && !confDescriptor.features.ratings["custom-scale"].enabled
-        && (feedback.comment?.length === undefined || feedback.comment.length < 3)) {
+        && (comment?.length === undefined || comment.length < 3)) {
         return false;
     }
 
