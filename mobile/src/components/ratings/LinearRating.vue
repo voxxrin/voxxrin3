@@ -1,7 +1,9 @@
 <template>
-  <ion-button v-for="(label, index) in config.labels" :key="index" @click="ratingSelected(index)">
-    <ion-icon :icon="ICONS[config.icon]" :class="{ '_active': selectedIndex !== null && index <= selectedIndex}"></ion-icon>
-  </ion-button>
+  <div class="linearRating">
+    <ion-button v-for="(label, index) in config.labels" :key="index" @click="ratingSelected(index)">
+      <ion-icon class="linearRating-icon" :icon="ICONS[config.icon]" :class="{ '_active': selectedIndex !== null && index <= selectedIndex}"></ion-icon>
+    </ion-button>
+  </div>
 </template>
 
 <script setup lang="ts">

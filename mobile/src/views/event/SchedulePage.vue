@@ -353,6 +353,10 @@ async function openSchedulePreferencesModal() {
     100% { transform: translateX(120%);}
   }
 
+  .listTalks {
+    padding: 0;
+  }
+
   :deep(.listTalks-item) {
     overflow: visible !important;
     --padding-start: 0;
@@ -363,5 +367,10 @@ async function openSchedulePreferencesModal() {
     &:last-child {
       margin-bottom: var(--app-gutters);
     }
+  }
+
+  .talkCard {
+    margin-top: 8px;
+    margin-bottom: 4px;
   }
 </style>

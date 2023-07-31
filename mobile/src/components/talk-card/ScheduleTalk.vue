@@ -116,6 +116,7 @@ const theme = {
   flex-direction: column;
   row-gap: 8px;
   width: 100%;
+  margin: 8px;
   border-left: 6px solid v-bind('theme.track.color');
   border-radius: 8px 12px 12px 8px;
   border : {
@@ -147,7 +148,6 @@ const theme = {
 
   &-head {
     display: flex;
-    column-gap: 16px;
     justify-content: space-between;
     padding: 8px 12px 0 8px;
 
@@ -438,6 +438,22 @@ const theme = {
 
     :deep(.talkAction) {
       height: 100%;
+    }
+
+    :deep(.linearRating) {
+      display: flex;
+      padding-left: 8px;
+      padding-right: 8px;
+      border-left: 1px solid var(--app-beige-line);
+
+      ion-button {
+        height: 32px !important;
+        width: 26px !important;
+      }
+
+      .linearRating-icon {
+        font-size: 24px;
+      }
     }
   }
 }

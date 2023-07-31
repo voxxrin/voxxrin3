@@ -1,8 +1,10 @@
 <template>
-  <ion-icon src="/assets/images/svg/format-symbol.svg" :style="{ 'color': format.themeColor }"></ion-icon>
-  <ion-label :style="{ '--color': format.themeColor }">
-    {{format.title}} ({{format.hmmDuration}})
-  </ion-label>
+  <div class="talkFormat">
+    <ion-icon src="/assets/images/svg/format-symbol.svg" :style="{ 'color': format.themeColor }"></ion-icon>
+    <ion-label :style="{ '--color': format.themeColor }">
+      {{format.title}} ({{format.hmmDuration}})
+    </ion-label>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -18,13 +20,17 @@ const props = defineProps({
 </script>
 
 <style lang="scss" scoped>
-ion-icon {
-  font-size: 24px;
-}
+.talkFormat {
+  display: flex;
 
-ion-label {
-  padding-left: 8px;
-  font-size: 16px;
-  font-weight: 900;
+  ion-icon {
+    font-size: 24px;
+  }
+
+  ion-label {
+    padding-left: 8px;
+    font-size: 16px;
+    font-weight: 900;
+  }
 }
 </style>
