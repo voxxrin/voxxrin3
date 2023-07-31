@@ -50,7 +50,7 @@
                 <ion-item v-else>
                   <div class="infoMessage _small">
                     <ion-icon class="infoMessage-iconIllu _skipped" src="assets/icons/solid/comment-feedback-skipped.svg"></ion-icon>
-                    <span class="infoMessage-title ion-color-secondary">{{ LL.Skipped() }}</span>
+                    <span class="infoMessage-title ion-color-secondary"><em>{{ LL.Skipped() }}</em></span>
                   </div>
                 </ion-item>
               </template>
