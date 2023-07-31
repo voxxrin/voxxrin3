@@ -8,20 +8,120 @@
   }
 }
 
-/* Adjust color chevron accordion for TimeSlot State */
+.slot-accordion {
+  border-bottom: 1px solid var(--app-beige-light);
 
-._ongoing {
-  .ion-accordion-toggle-icon {
-    color: var(--app-white) !important;
+  @media (prefers-color-scheme: dark) {
+    border-bottom: 1px solid var(--app-light-contrast);
   }
-}
 
-._future {
-  .ion-accordion-toggle-icon {
-    color: var(--app-white) !important;
+  ion-label {
+    display: flex !important;
+    align-items: center;
+    column-gap: 8px;
+    font-weight: bold;
+  }
+
+  .ion-color-light {
+    --ion-color-base: var(--app-beige-line) !important;
+    --ripple-color: var(--app-beige-dark) !important;
 
     @media (prefers-color-scheme: dark) {
-      color: var(--app-medium-contrast);
+      --ion-color-base: var(--app-background) !important;
+    }
+
+    ion-label {
+      color: var(--app-primary-tint);
+
+      @media (prefers-color-scheme: dark) {
+        color: var(--app-white);
+      }
+    }
+  }
+
+  ._accordion-icon._past-icon {
+    display: inline-block;
+    color: var(--app-primary-tint);
+
+    @media (prefers-color-scheme: dark) {
+      color: rgba(white, 0.5);
+    }
+  }
+
+  &._past {
+    @media (prefers-color-scheme: dark) {
+      border-bottom: 1px solid var(--app-light-contrast);
+    }
+
+    .ion-color-light {
+      --ion-color-base: var(--app-beige-line) !important;
+      --ripple-color: var(--app-beige-dark) !important;
+
+      @media (prefers-color-scheme: dark) {
+        --ion-color-base: var(--app-background) !important;
+      }
+
+      ion-label {
+        color: var(--app-primary-tint);
+
+        @media (prefers-color-scheme: dark) {
+          color: var(--app-white);
+        }
+      }
+    }
+
+    ._accordion-icon._past-icon {
+      display: inline-block;
+      color: var(--app-primary-tint);
+
+      @media (prefers-color-scheme: dark) {
+        color: rgba(white, 0.5);
+      }
+    }
+    &._missing-feedback:not(._is-break) ._missing-feedback { display: inline-block;}
+    &._feedback-provided:not(._is-break) ._provided-feedback {display: inline-block;}
+  }
+
+  &._ongoing {
+    .ion-color-light {
+      --ion-color-base:  var(--voxxrin-event-theme-colors-primary-hex) !important;
+      --ripple-color: var(--app-beige-dark) !important;
+
+      ion-label { color: var(--app-white);}
+    }
+
+    ._accordion-icon._ongoing-icon { display: inline-block; }
+    ._ongoing-progress { display: block; }
+    ._accordion-icon { color: var(--app-white) !important;}
+
+    .ion-accordion-toggle-icon {
+      color: var(--app-white) !important;
+    }
+  }
+
+  &._future {
+    --color: var(--app-white);
+
+    .ion-color-light {
+      --ion-color-base: var(--app-primary-shade) !important;
+      --ripple-color: var(--app-primary) !important;
+
+      @media (prefers-color-scheme: dark) {
+        --ion-color-base: var(--app-light-contrast) !important;
+      }
+
+      ion-label { color: var(--app-white);}
+    }
+
+    ._accordion-icon._future-icon { display: inline-block; }
+    ._accordion-icon { color: var(--app-white) !important;}
+
+    .ion-accordion-toggle-icon {
+      color: var(--app-white) !important;
+
+      @media (prefers-color-scheme: dark) {
+        color: var(--app-medium-contrast);
+      }
     }
   }
 }

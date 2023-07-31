@@ -1,16 +1,16 @@
 <template>
   <ion-card class="talkCard"
             v-if="talkNotes"
-            :class="{ container: true, 'is-highlighted': isHighlighted(talk, talkNotes), 'is-favorited': talkNotes.isFavorite, 'is-to-watch-later': talkNotes.watchLater }"
+            :class="{ container: true, '_is-highlighted': isHighlighted(talk, talkNotes), '_has-favorited': talkNotes.isFavorite, '_has-to-watch-later': talkNotes.watchLater }"
             @click="$emit('talk-clicked', talk)">
     <div class="talkCard-head">
-      <div class="track" v-if="hasTrack">
-        <ion-badge class="trackBadge">
+      <div class="track">
+        <ion-badge class="trackBadge" v-if="hasTrack">
           <ion-icon src="/assets/icons/solid/tag.svg"></ion-icon>{{talk.track.title}}
         </ion-badge>
       </div>
 
-      <slot name="upper-right" :talk="talk"></slot>
+      <slot name="upper-right" :talk="talk" :talkNotesHook="userTalkNotesHook"></slot>
     </div>
 
     <div class="talkCard-content">
@@ -38,7 +38,9 @@
         <ion-icon src="/assets/icons/solid/megaphone.svg"></ion-icon>
         <span class="speakers-list">{{displayedSpeakers}}</span>
       </div>
-      <slot name="footer-actions" :talk="talk" :talkNotesHook="{ eventTalkStats, talkNotes, toggleFavorite, toggleWatchLater }" />
+      <div class="talkActions">
+        <slot name="footer-actions" :talk="talk" :talkNotesHook="userTalkNotesHook" />
+      </div>
     </div>
   </ion-card>
 </template>
@@ -53,8 +55,8 @@ import { VoxxrinTalk} from "@/models/VoxxrinTalk";
 import {useRoute} from "vue-router";
 import {EventId} from "@/models/VoxxrinEvent";
 import {getRouteParamsValue} from "@/views/vue-utils";
-import {useUserTalkNotes} from "@/state/useUserTalkNotes";
-import {TalkNote} from "../../../shared/feedbacks.firestore";
+import {UserTalkNotesHook, useUserTalkNotes} from "@/state/useUserTalkNotes";
+import {TalkNote} from "../../../../shared/feedbacks.firestore";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 
 const baseUrl = import.meta.env.BASE_URL;
@@ -90,7 +92,8 @@ const talkLang = computed(() => {
 const route = useRoute();
 const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')));
 
-const { eventTalkStats, talkNotes, toggleFavorite, toggleWatchLater} = useUserTalkNotes(eventId, props.talk?.id)
+const userTalkNotesHook: UserTalkNotesHook = useUserTalkNotes(eventId, props.talk?.id)
+const { talkNotes } = userTalkNotesHook;
 
 const displayedSpeakers = props.talk!.speakers
     .map(s => `${s.fullName}${s.companyName?` (${s.companyName})`:``}`)
@@ -113,6 +116,7 @@ const theme = {
   flex-direction: column;
   row-gap: 8px;
   width: 100%;
+  margin: 8px;
   border-left: 6px solid v-bind('theme.track.color');
   border-radius: 8px 12px 12px 8px;
   border : {
@@ -144,7 +148,6 @@ const theme = {
 
   &-head {
     display: flex;
-    column-gap: 16px;
     justify-content: space-between;
     padding: 8px 12px 0 8px;
 
@@ -288,68 +291,47 @@ const theme = {
 
   &._is-highlighted {
     border : {
-      top: 2px solid var(--voxxrin-event-theme-colors-secondary-hex);
-      bottom: 2px solid var(--voxxrin-event-theme-colors-secondary-hex);
-      right: 2px solid var(--voxxrin-event-theme-colors-secondary-hex);
+      top: 2px solid var(--app-primary);
+      bottom: 2px solid var(--app-primary);
+      right: 2px solid var(--app-primary);
     }
 
     @media (prefers-color-scheme: dark) {
       border : {
-        top: 2px solid var(--app-white);
-        bottom: 2px solid var(--app-white);
-        right: 2px solid var(--app-white);
-      }
-    }
-
-    &:before {
-      width: 40%;
-      height: 70%;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(331deg, rgba(var(--voxxrin-event-theme-colors-secondary-rgb), 0.6) 30%, rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.6) 80%);
-      transform: scale(1);
-      opacity: 1;
-      filter: blur(32px);
-      animation: scale-in-center 0.1s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-    }
-
-    &:after {
-      width: 50%;
-      height: 100%;
-      right: 0;
-      bottom: 0;
-      background-image: url('assets/images/png/texture-favorited.png');
-      background-repeat: no-repeat;
-      background-position: right;
-      background-size: cover;
-      transform: scale(1);
-      opacity: 0.5;
-      mix-blend-mode: overlay;
-      animation: scale-in-center 0.1s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-
-      @media (prefers-color-scheme: dark) {
-        mix-blend-mode: difference;
+        top: 2px solid var(--app-white) !important;
+        bottom: 2px solid var(--app-white) !important;
+        right: 2px solid var(--app-white) !important;
       }
     }
 
     ion-thumbnail {
       background-color: var(--app-background);
-      border: 2px solid var(--voxxrin-event-theme-colors-secondary-hex);
+      border: 2px solid var(--app-primary);
+
+      @media (prefers-color-scheme: dark) {
+        border: 2px solid var(--app-white) !important;
+      }
     }
 
     .talkCard-footer {
       border-width: 2px;
-      border-color: var(--voxxrin-event-theme-colors-secondary-hex);
+      border-color: var(--app-primary);
       border-bottom: none;
 
       @media (prefers-color-scheme: dark) {
         border-color: var(--app-white) !important;
       }
 
-
-      ::v-deep .btnTalk {
+      :deep(.linearRating) {
         border-width: 2px;
-        border-color: var(--voxxrin-event-theme-colors-secondary-hex);
+        border-color: var(--app-primary);
+      }
+
+
+      /* TODO RLZ: move it to a proper place in talk actions components */
+      :deep(.btnTalk) {
+        border-width: 2px;
+        border-color: var(--app-primary);
 
         @media (prefers-color-scheme: dark) {
           border-color: var(--app-white) !important;
@@ -380,7 +362,8 @@ const theme = {
       .talkCard-footer {
         border-color: var(--app-primary-shade);
 
-        ::v-deep .btnTalk { border-color: var(--app-primary-shade);}
+        /* TODO RLZ: move it to a proper place in talk actions components */
+        :deep(.btnTalk) { border-color: var(--app-primary-shade);}
       }
     }
 
@@ -400,13 +383,6 @@ const theme = {
     //* TODO - Start - Delete when btn is component *//
     //* Change style type actions *//
     ion-button {
-      &.btn-favorite {
-        --background: var(--voxxrin-event-theme-colors-primary-hex);
-        --color: var(--voxxrin-event-theme-colors-primary-contrast-hex);
-        border-left: 1px solid var(--app-primary-shade);
-        --border-radius:  0 0 8px 0 !important;
-      }
-
       &.btn-watchLater {
         --background: var(--voxxrin-event-theme-colors-secondary-hex);
         --color: var(--voxxrin-event-theme-colors-secondary-contrast-hex);
@@ -414,11 +390,75 @@ const theme = {
       }
 
       &.btn-feedbackSelect {
-        --background: var(--voxxrin-event-theme-colors-secondary-hex);
-        --color: var(--voxxrin-event-theme-colors-secondary-contrast-hex);
-        border-left: 1px solid var(--voxxrin-event-theme-colors-secondary-hex);
+        --background: var(--voxxrin-event-theme-colors-primary-hex);
+        --color: var(--voxxrin-event-theme-colors-primary-contrast-hex);
+        border-left: 1px solid var(--voxxrin-event-theme-colors-primary-hex);
       }
       //* END - Delete when btn is component *//
+    }
+  }
+
+  &._has-favorited {
+    &:before {
+      width: 40%;
+      height: 70%;
+      right: 0;
+      bottom: 0;
+      transform: scale(1);
+      background: linear-gradient(331deg, rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.6) 30%, rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.6) 80%);
+      opacity: 1;
+      filter: blur(32px);
+      animation: scale-in-center 0.1s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+    }
+
+    &:after {
+      width: 50%;
+      height: 100%;
+      right: 0;
+      bottom: 0;
+      background-image: url('assets/images/png/texture-favorited.png');
+      background-repeat: no-repeat;
+      background-position: right;
+      background-size: cover;
+      transform: scale(1);
+      opacity: 0.5;
+      mix-blend-mode: overlay;
+      animation: scale-in-center 0.1s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+
+      @media (prefers-color-scheme: dark) {
+        mix-blend-mode: difference;
+      }
+    }
+
+    &._has-to-watch-later {
+      &:before {
+        background: linear-gradient(331deg, rgba(var(--voxxrin-event-theme-colors-secondary-rgb), 0.6) 30%, rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.6) 80%) !important;
+      }
+    }
+  }
+
+  .talkActions {
+    display: flex;
+    flex-direction: row;
+
+    :deep(.talkAction) {
+      height: 100%;
+    }
+
+    :deep(.linearRating) {
+      display: flex;
+      padding-left: 8px;
+      padding-right: 8px;
+      border-left: 1px solid var(--app-beige-line);
+
+      ion-button {
+        height: 32px !important;
+        width: 26px !important;
+      }
+
+      .linearRating-icon {
+        font-size: 24px;
+      }
     }
   }
 }

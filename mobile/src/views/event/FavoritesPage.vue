@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-  import CurrentEventHeader from "@/components/CurrentEventHeader.vue";
+  import CurrentEventHeader from "@/components/events/CurrentEventHeader.vue";
   import {useRoute} from "vue-router";
   import {EventId} from "@/models/VoxxrinEvent";
   import {getRouteParamsValue} from "@/views/vue-utils";

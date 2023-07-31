@@ -53,7 +53,7 @@ import {DayId, VoxxrinDay} from "@/models/VoxxrinDay";
 import {localDateToReadableParts, toISOLocalDate} from "@/models/DatesAndTime";
 import {useCurrentUserLocale} from "@/state/useCurrentUserLocale";
 import {useInterval} from "@/views/vue-utils";
-import {ISOLocalDate} from "../../../shared/type-utils";
+import {ISOLocalDate} from "../../../../shared/type-utils";
 import {useCurrentClock} from "@/state/useCurrentClock";
 import {IonGrid} from "@ionic/vue";
 import {typesafeI18n} from "@/i18n/i18n-vue";

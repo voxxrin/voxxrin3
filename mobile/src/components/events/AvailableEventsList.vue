@@ -16,7 +16,7 @@
 <script setup lang="ts">
 import {PropType} from "vue";
 import {EventId, ListableVoxxrinEvent} from "@/models/VoxxrinEvent";
-import AvailableEventItem from "@/components/AvailableEventItem.vue";
+import AvailableEventItem from "@/components/events/AvailableEventItem.vue";
 
 const props = defineProps({
     events: {

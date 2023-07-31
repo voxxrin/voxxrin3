@@ -88,12 +88,7 @@ export function useUserTalkNotes(
         const initialNote: TalkNote = firestoreUserTalkNotes?.note || {
             talkId: talkId.value,
             isFavorite: false,
-            watchLater: null,
-            ratings: {
-                bingo: null,
-                scale: null
-            },
-            comment: null
+            watchLater: null
         }
 
         const fieldsToUpdate = talkNoteUpdater(initialNote);
@@ -182,7 +177,7 @@ export function useUserEventAllFavoritedTalkIds(eventIdRef: Unreffable<EventId |
     };
 }
 
-
+export type UserTalkNotesHook = ReturnType<typeof useUserTalkNotes>;
 
 export function prepareUserTalkNotes(
     eventId: EventId,

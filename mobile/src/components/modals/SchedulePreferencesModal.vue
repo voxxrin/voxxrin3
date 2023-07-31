@@ -2,7 +2,7 @@
   <ion-header>
     <ion-toolbar>
       <div class="ion-modal-title">
-        <ion-title>Settings list</ion-title>
+        <ion-title>{{ LL.Settings_list() }}</ion-title>
         <ion-badge class="round">1</ion-badge>
       </div>
       <ion-button @click="close()" slot="start" shape="round" size="small" fill="outline">
@@ -16,7 +16,7 @@
         <ion-toggle>
           <div class="ion-toggle-left">
             <ion-icon aria-hidden="true" src="/assets/icons/solid/timer.svg"></ion-icon>
-            Hide today's past time-slots after 1h
+            {{ LL.Hide_today_s_past_time_slots_after_1h() }}
           </div>
         </ion-toggle>
       </ion-item>
@@ -25,8 +25,8 @@
           <div class="ion-toggle-left">
             <ion-icon aria-hidden="true" src="/assets/icons/solid/back-circle.svg"></ion-icon>
             <div>
-              Hide past time-slots
-              <small>Including slots without feedback</small>
+              {{ LL.Hide_past_time_slots() }}
+              <small>{{ LL.Including_slots_without_feedback() }}</small>
             </div>
           </div>
         </ion-toggle>
@@ -42,7 +42,8 @@ import {
     IonContent, IonHeader, IonInput, IonItem, IonTitle, IonToolbar,
     modalController,
 } from '@ionic/vue';
-import {defineComponent, PropType} from "vue";
+import {defineComponent} from "vue";
+import {typesafeI18n} from "@/i18n/i18n-vue";
 
 export default defineComponent({
     components: {
@@ -54,6 +55,11 @@ export default defineComponent({
             return modalController.dismiss(null, 'cancel');
         },
     },
+    setup() {
+        const { LL } = typesafeI18n()
+
+        return { LL }
+    }
 });
 </script>
 

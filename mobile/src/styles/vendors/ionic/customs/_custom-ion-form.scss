@@ -1,7 +1,6 @@
 /* Custom Ionic form component */
 
 /* Input */
-
 ion-input {
 
   &.sc-ion-input-md-h {
@@ -23,7 +22,7 @@ ion-input {
     border-radius: 8px;
     --placeholder-color: var(--app-beige-dark);
     --placeholder-opacity: 1;
-    --border-radius: 8px;
+    --border-radius: var(--app-radius-form);
     --padding-bottom: 10px;
     --padding-end: 10px;
     --padding-start: 10px;
@@ -52,5 +51,56 @@ ion-input {
       font-size: 28px;
       z-index: 1;
     }
+  }
+}
+
+/* Textearea */
+
+ion-textarea {
+  --background: var(--app-white);
+
+  &.has-focus {
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    border-color: var(--app-beige-dark) !important;
+
+    .textarea-highlight.sc-ion-textarea-md {
+      display: none !important;
+    }
+  }
+
+  &.sc-ion-textarea-md-h {
+    --background: var(--app-white);
+    --padding-end: 12px;
+    --padding-top: 12px;
+    --padding-bottom: 12px;
+    --padding-start: 12px;
+    --border-radius: var(--app-radius-form);
+    border-radius: var(--app-radius-form);
+    border: 1px solid var(--app-beige-line);
+
+    @media (prefers-color-scheme: dark) {
+      --border-color: var(--app-line-contrast);
+      --background: transparent;
+    }
+  }
+}
+
+/* Checkbox */
+ion-checkbox {
+  --checkbox-background: transparent;
+  --border-color: var(--app-grey-medium);
+  --checkbox-background-checked: var(--voxxrin-event-theme-colors-primary-hex);
+  --border-color-checked: var(--voxxrin-event-theme-colors-primary-hex);
+  --size: 24px;
+  color: var(--app-grey-dark);
+  font-weight: 400;
+
+  @media (prefers-color-scheme: dark) {
+    --border-color: var(--app-line-contrast);
+    color: var(--app-grey-medium);
+  }
+
+  &.checkbox-checked {
+    color: var(--voxxrin-event-theme-colors-primary-hex);
   }
 }

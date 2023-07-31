@@ -83,6 +83,10 @@ type RootTranslation = {
 	 */
 	Feedbacks: string
 	/**
+	 * N​o​ ​f​e​e​d​b​a​c​k​ ​y​e​t
+	 */
+	No_feedback_yet: string
+	/**
 	 * I​n​f​o​s
 	 */
 	Infos: string
@@ -152,6 +156,99 @@ type RootTranslation = {
 	 * I​n​f​o​ ​p​a​g​e​ ​s​t​i​l​l​ ​u​n​d​e​r​ ​c​o​n​s​t​r​u​c​t​i​o​n
 	 */
 	Info_page_still_under_construction: string
+	/**
+	 * A​d​d​ ​F​e​e​d​b​a​c​k
+	 */
+	Add_Feedback: string
+	/**
+	 * P​i​c​k​ ​t​h​e​ ​t​a​l​k​ ​y​o​u​ ​a​t​t​e​n​d​e​d
+	 */
+	Pick_the_talk_you_attended: string
+	/**
+	 * S​e​l​e​c​t​ ​o​n​e​ ​o​f​ ​t​h​e​ ​t​a​l​k​ ​y​o​u​ ​a​t​t​e​n​d​e​d
+	 */
+	Select_one_of_the_talk_you_attended: string
+	/**
+	 * E​i​t​h​e​r​ ​s​e​l​e​c​t​ ​o​n​e​ ​o​f​ ​t​h​e​ ​t​a​l​k​ ​y​o​u​ ​a​t​t​e​n​d​e​d​.​.​.
+	 */
+	Either_select_one_of_the_talk_you_attended: string
+	/**
+	 * .​.​.​ ​o​r​ ​s​e​l​e​c​t​ ​a​ ​t​a​l​k​ ​i​n​ ​t​h​e​s​e​ ​o​v​e​r​l​a​p​p​i​n​g​ ​s​l​o​t​s
+	 */
+	Or_select_a_talk_in_these_overlapping_slots: string
+	/**
+	 * C​u​r​r​e​n​t​l​y​ ​s​e​l​e​c​t​e​d​ ​t​i​m​e​s​l​o​t
+	 */
+	Currently_selected_timeslot: string
+	/**
+	 * {​n​r​O​f​O​v​e​r​l​a​p​p​i​n​g​S​l​o​t​s​}​ ​O​v​e​r​l​a​p​p​i​n​g​ ​t​i​m​e​ ​s​l​o​t​{​{​s​}​}
+	 * @param {string | number | boolean} nrOfOverlappingSlots
+	 */
+	Overlapping_timeslots: RequiredParams<'nrOfOverlappingSlots'>
+	/**
+	 * I​n​ ​f​a​v​o​r​i​t​e​s
+	 */
+	In_favorites: string
+	/**
+	 * S​h​o​w​ ​n​o​n​-​f​a​v​o​r​i​t​e​d​ ​t​a​l​k​{​{​s​}​}
+	 */
+	Show_non_favorited_talks: string
+	/**
+	 * W​a​t​c​h​ ​l​a​t​e​r​ ​a​l​l​ ​f​a​v​o​r​i​t​e​d​ ​t​a​l​k​s
+	 */
+	Watch_later_all_favorited_talks: string
+	/**
+	 * I​ ​d​i​d​n​'​t​ ​a​t​t​e​n​d​ ​a​n​y​ ​t​a​l​k
+	 */
+	I_didnt_attend_any_talk: string
+	/**
+	 * d​u​r​i​n​g​ ​t​h​i​s​ ​t​i​m​e​ ​s​l​o​t
+	 */
+	During_this_time_slot: string
+	/**
+	 * S​h​a​r​e​ ​y​o​u​r​ ​f​e​e​d​b​a​c​k
+	 */
+	Share_your_feedback: string
+	/**
+	 * R​a​t​e​ ​i​t
+	 */
+	Rate_it: string
+	/**
+	 * Q​u​i​c​k​ ​F​e​e​d​b​a​c​k
+	 */
+	Quick_feedback: string
+	/**
+	 * E​n​t​e​r​ ​s​o​m​e​ ​c​o​n​s​t​r​u​c​t​i​v​e​ ​f​o​r​ ​t​h​e​ ​s​p​e​a​k​e​r
+	 */
+	Enter_some_constructive_feedback_for_the_speaker: string
+	/**
+	 * S​u​b​m​i​t​ ​F​e​e​d​b​a​c​k
+	 */
+	Submit_Feedback: string
+	/**
+	 * F​r​e​e​ ​c​o​m​m​e​n​t
+	 */
+	Free_comment: string
+	/**
+	 * S​k​i​p​p​e​d
+	 */
+	Skipped: string
+	/**
+	 * S​e​t​t​i​n​g​s​ ​l​i​s​t
+	 */
+	Settings_list: string
+	/**
+	 * H​i​d​e​ ​t​o​d​a​y​'​s​ ​p​a​s​t​ ​t​i​m​e​-​s​l​o​t​s​ ​a​f​t​e​r​ ​1​h
+	 */
+	Hide_today_s_past_time_slots_after_1h: string
+	/**
+	 * H​i​d​e​ ​p​a​s​t​ ​t​i​m​e​-​s​l​o​t​s
+	 */
+	Hide_past_time_slots: string
+	/**
+	 * I​n​c​l​u​d​i​n​g​ ​s​l​o​t​s​ ​w​i​t​h​o​u​t​ ​f​e​e​d​b​a​c​k
+	 */
+	Including_slots_without_feedback: string
 }
 
 export type TranslationFunctions = {
@@ -224,6 +321,10 @@ export type TranslationFunctions = {
 	 */
 	Feedbacks: () => LocalizedString
 	/**
+	 * No feedback yet
+	 */
+	No_feedback_yet: () => LocalizedString
+	/**
 	 * Infos
 	 */
 	Infos: () => LocalizedString
@@ -291,6 +392,98 @@ export type TranslationFunctions = {
 	 * Info page still under construction
 	 */
 	Info_page_still_under_construction: () => LocalizedString
+	/**
+	 * Add Feedback
+	 */
+	Add_Feedback: () => LocalizedString
+	/**
+	 * Pick the talk you attended
+	 */
+	Pick_the_talk_you_attended: () => LocalizedString
+	/**
+	 * Select one of the talk you attended
+	 */
+	Select_one_of_the_talk_you_attended: () => LocalizedString
+	/**
+	 * Either select one of the talk you attended...
+	 */
+	Either_select_one_of_the_talk_you_attended: () => LocalizedString
+	/**
+	 * ... or select a talk in these overlapping slots
+	 */
+	Or_select_a_talk_in_these_overlapping_slots: () => LocalizedString
+	/**
+	 * Currently selected timeslot
+	 */
+	Currently_selected_timeslot: () => LocalizedString
+	/**
+	 * {nrOfOverlappingSlots} Overlapping time slot{{s}}
+	 */
+	Overlapping_timeslots: (arg: { nrOfOverlappingSlots: string | number | boolean }) => LocalizedString
+	/**
+	 * In favorites
+	 */
+	In_favorites: () => LocalizedString
+	/**
+	 * Show non-favorited talk{{s}}
+	 */
+	Show_non_favorited_talks: (arg: { nrOfNonFavoritedTalks: number | string | boolean }) => LocalizedString
+	/**
+	 * Watch later all favorited talks
+	 */
+	Watch_later_all_favorited_talks: () => LocalizedString
+	/**
+	 * I didn't attend any talk
+	 */
+	I_didnt_attend_any_talk: () => LocalizedString
+	/**
+	 * during this time slot
+	 */
+	During_this_time_slot: () => LocalizedString
+	/**
+	 * Share your feedback
+	 */
+	Share_your_feedback: () => LocalizedString
+	/**
+	 * Rate it
+	 */
+	Rate_it: () => LocalizedString
+	/**
+	 * Quick Feedback
+	 */
+	Quick_feedback: () => LocalizedString
+	/**
+	 * Enter some constructive for the speaker
+	 */
+	Enter_some_constructive_feedback_for_the_speaker: () => LocalizedString
+	/**
+	 * Submit Feedback
+	 */
+	Submit_Feedback: () => LocalizedString
+	/**
+	 * Free comment
+	 */
+	Free_comment: () => LocalizedString
+	/**
+	 * Skipped
+	 */
+	Skipped: () => LocalizedString
+	/**
+	 * Settings list
+	 */
+	Settings_list: () => LocalizedString
+	/**
+	 * Hide today's past time-slots after 1h
+	 */
+	Hide_today_s_past_time_slots_after_1h: () => LocalizedString
+	/**
+	 * Hide past time-slots
+	 */
+	Hide_past_time_slots: () => LocalizedString
+	/**
+	 * Including slots without feedback
+	 */
+	Including_slots_without_feedback: () => LocalizedString
 }
 
 export type Formatters = {}

@@ -5,7 +5,7 @@ import {
     TimeSlotBase
 } from "../../../shared/dayly-schedule.firestore";
 import {
-    createVoxxrinTalkFromFirestore,
+    createVoxxrinTalkFromFirestore, TalkId,
     VoxxrinBreak,
     VoxxrinTalk
 } from "@/models/VoxxrinTalk";
@@ -88,6 +88,23 @@ export function getTimeslotLabel(timeslot: VoxxrinScheduleTimeSlot) {
 export function findTalksTimeslotById(dailySchedule: VoxxrinDailySchedule, timeslotId: ScheduleTimeSlotId) {
     const talkTimeslots = dailySchedule.timeSlots.filter(ts => ts.type === 'talks') as VoxxrinScheduleTalksTimeSlot[];
     return talkTimeslots.find(tts => tts.id.isSameThan(timeslotId));
+}
+
+export function findTalksTimeslotContainingTalk(dailySchedule: VoxxrinDailySchedule, talkId: TalkId) {
+    const talkTimeslots = dailySchedule.timeSlots
+        .filter(ts => ts.type === 'talks') as VoxxrinScheduleTalksTimeSlot[];
+
+    const maybeTalkAndTimeslot = talkTimeslots.map(tts => {
+        const foundTalk = tts.talks.find(t => t.id.isSameThan(talkId))
+
+        if(!foundTalk) {
+            return undefined;
+        }
+
+        return { talk: foundTalk, timeslot: tts }
+    }).find(talkAndTimeslot => !!talkAndTimeslot);
+
+    return maybeTalkAndTimeslot;
 }
 
 export function filterTimeslotsToAutoExpandBasedOn(timeslots: VoxxrinScheduleTimeSlot[], now: Temporal.ZonedDateTime) {

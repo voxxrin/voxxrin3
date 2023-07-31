@@ -20,12 +20,12 @@ export type ConferenceDescriptor = ListableEvent & {
             },
             scale: {
                 enabled: boolean,
-                icon: "star" | "thumbs-up",
-                labels: [string, string, string]
-                    | [string, string, string, string]
-                    | [string, string, string, string, string]
-                    | [string, string, string, string, string, string]
-                    | [string, string, string, string, string, string, string]
+                icon: "star"|"thumbs-up",
+                labels: [string,string,string]
+                    |[string,string,string,string]
+                    |[string,string,string,string,string]
+                    |[string,string,string,string,string,string]
+                    |[string,string,string,string,string,string, string]
             },
             "free-text": {
                 enabled: boolean,
@@ -35,7 +35,7 @@ export type ConferenceDescriptor = ListableEvent & {
                 enabled: boolean,
                 choices: Array<{
                     id: string,
-                    icon: string,
+                    icon: "happy"|"sad"|"thumbs-up"|"hand-right"|"thumbs-down",
                 }>
             }
         },

@@ -41,7 +41,7 @@ const TabExitOrNavigateEvent = createTypedCustomEventClass<{
     onEventCaught?: (() => Promise<void>)|undefined,
     url: string,
     routerDirection?: RouteDirection
-}>('tabbed-page-exit-or-navigate-requested');
+}>(TabExitOrNavigateEventName);
 
 const NavigationEventName = 'tabbed-page-navigation-requested'
 const NavigationEvent = createTypedCustomEventClass<{
@@ -80,24 +80,21 @@ export function useTabbedPageNav() {
             const startingHistoryPosition = history.state.position;
 
             const navCallback = async (event: Event) => {
-                if(event instanceof NavigationEvent) {
-                    const navEvent = event as InstanceType<typeof NavigationEvent>
-                    if(navEvent.detail.onEventCaught) {
-                        await navEvent.detail.onEventCaught();
+                if(isNavigationEvent(event)) {
+                    if(event.detail.onEventCaught) {
+                        await event.detail.onEventCaught();
                     }
 
                     // This navigate() call will happen inside tabbed page context
-                    ionRouter.navigate(navEvent.detail.url, navEvent.detail.routerDirection, navEvent.detail.routerAction);
+                    ionRouter.navigate(event.detail.url, event.detail.routerDirection, event.detail.routerAction);
                 } else {
                     throw new Error(`Unexpected event type ${event.type} in tabbed-page-navigation callback registration !`)
                 }
             }
             const tabExitOrNavigateCallback = async (event: Event) => {
-                if(event instanceof TabExitOrNavigateEvent) {
-                    const exitOrNavEvent = event as InstanceType<typeof TabExitOrNavigateEvent>
-
+                if(isTabExitOrNavigateEvent(event)) {
                     const routerGoBacks = startingHistoryPosition - history.state.position;
-                    await goBackOrNavigateTo(ionRouter, exitOrNavEvent.detail.url, routerGoBacks, exitOrNavEvent.detail.routerDirection, exitOrNavEvent.detail.onEventCaught);
+                    await goBackOrNavigateTo(ionRouter, event.detail.url, routerGoBacks, event.detail.routerDirection, event.detail.onEventCaught);
                 } else {
                     throw new Error(`Unexpected event type ${event.type} in tabbed-page-navigation callback registration !`)
                 }
@@ -121,4 +118,11 @@ export function useTabbedPageNav() {
             })
         }
     }
+}
+
+function isNavigationEvent(event: Event): event is InstanceType<typeof NavigationEvent> {
+    return event.type === NavigationEventName;
+}
+function isTabExitOrNavigateEvent(event: Event): event is InstanceType<typeof TabExitOrNavigateEvent> {
+    return event.type === TabExitOrNavigateEventName;
 }

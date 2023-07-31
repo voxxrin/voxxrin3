@@ -87,19 +87,17 @@
 
 
       <div class="talkDetails-description">
-        <div class="divider">
-          <span class="titleDivider">{{ LL.Talk_summary() }}</span>
-          <span class="divider-separator"></span>
-        </div>
+        <vox-divider>
+          {{ LL.Talk_summary() }}
+        </vox-divider>
         <ion-text v-html="talk?.description">
         </ion-text>
       </div>
 
       <div class="talkDetails-speakers">
-        <div class="divider">
-          <span class="titleDivider">{{ LL.Speakers() }}</span>
-          <span class="divider-separator"></span>
-        </div>
+        <vox-divider>
+          {{ LL.Speakers() }}
+        </vox-divider>
         <ion-list class="talkDetails-speakers-list">
           <ion-item v-for="(speaker, index) in talk?.speakers" :key="speaker.id.value">
             <ion-avatar>
@@ -139,6 +137,7 @@ import {business} from "ionicons/icons";
 import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
 import {formatHourMinutes} from "@/models/DatesAndTime";
 import {Temporal} from "temporal-polyfill";
+import VoxDivider from "@/components/ui/VoxDivider.vue";
 import {goBackOrNavigateTo} from "@/router";
 
 const ionRouter = useIonRouter();
@@ -191,6 +190,59 @@ const theme = computed(() => {
 </script>
 
 <style lang="scss" scoped>
+  ion-header {
+
+    &.to-watch-later{
+      .btnTalkAction._watchLater {
+        --background: var(--voxxrin-event-theme-colors-secondary-hex);
+        --background-activated: var(--voxxrin-event-theme-colors-secondary-hex);
+        --color-activated: var(--app-white);
+        --color: var(--app-white);
+      }
+    }
+
+    &.is-favorited {
+      .btnTalkAction._favorite {
+        --background: var(--voxxrin-event-theme-colors-primary-hex);
+        --background-activated: var(--voxxrin-event-theme-colors-primary-hex);
+        --color-activated: var(--app-white);
+        --border-color:  var(--voxxrin-event-theme-colors-primary-hex);
+        --color: var(--app-white);
+      }
+
+      .favorite-btn-nb {
+        background: var(--app-primary) !important;
+        color: var(--app-white);
+
+        @media (prefers-color-scheme: dark) {
+          background: var(--app-white) !important;
+          color: var(--app-primary);
+        }
+      }
+    }
+
+    .btnTalkAction {
+      height: 48px;
+      width: 48px;
+      --padding-start: 0;
+      --padding-end: 0;
+      font-size: 22px;
+
+      @media (prefers-color-scheme: dark) {
+        --border-style: none;
+        --background: var(--app-light-contrast);
+      }
+
+      &._favorite {
+        display: flex;
+
+        .favorite-btn-icon {
+          font-size: 30px !important;
+        }
+      }
+    }
+  }
+
   .talkDetails {
 
     &-title {
@@ -352,34 +404,6 @@ const theme = computed(() => {
             }
           }
         }
-      }
-    }
-  }
-
-  .divider {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-
-    .titleDivider {
-      font-weight: bold;
-      color: var(--app-beige-dark);
-
-      @media (prefers-color-scheme: dark) {
-        opacity: 0.8;
-      }
-    }
-
-    .divider-separator {
-      display: block;
-      height: 1px;
-      width: 100%;
-      margin-left: 16px;
-      background-color: var(--app-beige-line);
-      flex: 1;
-
-      @media (prefers-color-scheme: dark) {
-        background-color: var(--app-line-contrast);
       }
     }
   }

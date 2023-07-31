@@ -64,7 +64,7 @@ import {
 } from '@ionic/vue';
 import {people} from "ionicons/icons";
 import {ListableVoxxrinEvent} from "@/models/VoxxrinEvent";
-import CurrentEventStatus from "@/components/CurrentEventStatus.vue";
+import CurrentEventStatus from "@/components/events/CurrentEventStatus.vue";
 import MonthDayDateRange from "@/components/MonthDayDateRange.vue";
 
 const props = defineProps({
