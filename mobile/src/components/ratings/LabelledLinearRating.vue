@@ -5,7 +5,7 @@
     </span>
     <ul class="linearRating-list">
       <li>
-        <linear-rating :config="config" @rating-selected="({ score, selectedLabel}) => ratingSelected({ score, selectedLabel })" />
+        <linear-rating :config="config" @rating-selected="result => ratingSelected(result)" />
       </li>
     </ul>
   </div>
