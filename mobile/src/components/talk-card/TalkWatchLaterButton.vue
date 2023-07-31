@@ -1,6 +1,6 @@
 <template>
   <div class="talkAction">
-    <ion-button :class="{ 'btnTalk': true, 'btn-watchLater': true, '_is-active': !!talkNotes?.watchLater }" @click.stop="() => userTalkNotes.toggleWatchLater()" v-if="eventDescriptor?.features.remindMeOnceVideosAreAvailableEnabled">
+    <ion-button :class="{ 'btnTalk': true, 'btn-watchLater': true, '_is-active': !!talkNotes?.watchLater }" @click.stop="() => userTalkNotes.toggleWatchLater()" v-if="confDescriptor?.features.remindMeOnceVideosAreAvailableEnabled">
       <ion-icon v-if="!talkNotes?.watchLater" aria-hidden="true" src="/assets/icons/line/video-line.svg"></ion-icon>
       <ion-icon v-if="!!talkNotes?.watchLater" aria-hidden="true" src="/assets/icons/solid/video.svg"></ion-icon>
     </ion-button>
@@ -13,7 +13,7 @@ import {UserTalkNotesHook} from "@/state/useUserTalkNotes";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 
 const props = defineProps({
-    eventDescriptor: {
+    confDescriptor: {
         required: true,
         type: Object as PropType<VoxxrinConferenceDescriptor>,
     },

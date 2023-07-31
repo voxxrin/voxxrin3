@@ -1,6 +1,6 @@
 <template>
   <div class="talkAction">
-    <ion-button :class="{ 'btnTalk': true, 'btn-favorite': true, '_is-active': !!talkNotes?.isFavorite }" @click.stop="() => userTalkNotes.toggleFavorite()" v-if="eventDescriptor?.features.favoritesEnabled">
+    <ion-button :class="{ 'btnTalk': true, 'btn-favorite': true, '_is-active': !!talkNotes?.isFavorite }" @click.stop="() => userTalkNotes.toggleFavorite()" v-if="confDescriptor?.features.favoritesEnabled">
     <span class="btn-favorite-group">
       <ion-icon class="btn-favorite-group-icon" v-if="!talkNotes?.isFavorite" aria-hidden="true" src="/assets/icons/line/bookmark-line-favorite.svg"></ion-icon>
       <ion-icon class="btn-favorite-group-icon" v-if="!!talkNotes?.isFavorite" aria-hidden="true" src="/assets/icons/solid/bookmark-favorite.svg"></ion-icon>
@@ -16,7 +16,7 @@ import type {UserTalkNotesHook} from "@/state/useUserTalkNotes";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 
 const props = defineProps({
-    eventDescriptor: {
+    confDescriptor: {
         required: true,
         type: Object as PropType<VoxxrinConferenceDescriptor>,
     },

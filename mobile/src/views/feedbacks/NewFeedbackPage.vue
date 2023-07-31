@@ -25,7 +25,7 @@
           </ion-header>
           <div>
             <feedback-talk-selector
-                :event-descriptor="confDescriptorRef"
+                :conf-descriptor="confDescriptorRef"
                 :talks="labelledTimeslotWithOverlappingsRef.labelledTimeslot.talks || []"
                 :all-user-favorited-talk-ids="allUserFavoritedTalkIdsRef"
                 :selected-talk-id="selectedTalk?.id"
@@ -52,7 +52,7 @@
                 </ion-item>
                 <div slot="content">
                   <feedback-talk-selector
-                      :event-descriptor="confDescriptorRef"
+                      :conf-descriptor="confDescriptorRef"
                       :talks="overlappingTimeslot.talks"
                       :all-user-favorited-talk-ids="allUserFavoritedTalkIdsRef"
                       :selected-talk-id="selectedTalk?.id"

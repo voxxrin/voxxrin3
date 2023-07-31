@@ -1,7 +1,7 @@
 <template>
   <ion-page>
     <ion-content :fullscreen="true">
-      <current-event-header v-if="event" :event="event" />
+      <current-event-header v-if="confDescriptor" :conf-descriptor="confDescriptor" />
 
       <ion-header class="stickyHeader">
         <ion-toolbar>
@@ -32,5 +32,5 @@
 
   const route = useRoute();
   const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')));
-  const {conferenceDescriptor: event} = useSharedConferenceDescriptor(eventId);
+  const {conferenceDescriptor: confDescriptor} = useSharedConferenceDescriptor(eventId);
 </script>

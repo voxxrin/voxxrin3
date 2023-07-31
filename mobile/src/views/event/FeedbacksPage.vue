@@ -2,7 +2,7 @@
 <template>
   <ion-page>
     <ion-content :fullscreen="true">
-      <current-event-header v-if="event" :event="event" />
+      <current-event-header v-if="confDescriptor" :conf-descriptor="confDescriptor" />
       <ion-header class="toolbarHeader">
         <ion-toolbar>
           <ion-title slot="start" >{{ LL.Feedbacks() }}</ion-title>
@@ -12,19 +12,20 @@
       <ion-header class="stickyHeader">
         <day-selector
             :selected-day-id="currentlySelectedDayId"
-            :days="event?.days || []"
+            :days="confDescriptor?.days || []"
             @day-selected="(day) => changeDayTo(day)">
         </day-selector>
       </ion-header>
 
-      <ion-accordion-group :multiple="true" v-if="event && currentlySelectedDayId" :value="expandedTimeslotIds">
-        <timeslots-iterator :conf-descriptor="event" :day-id="currentlySelectedDayId"
-            :daily-schedule="currentSchedule"
-            @timeslots-list-updated="timeslots => expandedTimeslotIds = timeslots.map(t => t.id.value)">
+      <ion-accordion-group :multiple="true" v-if="confDescriptor && currentlySelectedDayId" :value="expandedTimeslotIds">
+        <timeslots-iterator :conf-descriptor="confDescriptor" :day-id="currentlySelectedDayId"
+                            :daily-schedule="currentSchedule"
+                            @timeslots-list-updated="timeslots => expandedTimeslotIds = timeslots.map(t => t.id.value)">
           <template #iterator="{ timeslot }">
             <time-slot-accordion v-if="timeslot.type==='talks' && timeslot.feedback.status !== 'provided-on-overlapping-timeslot'"
+                :conf-descriptor="confDescriptor"
                 :timeslot-feedback="timeslot.feedback"
-                :timeslot="timeslot" :event="event"
+                :timeslot="timeslot" :event="confDescriptor"
                 @add-timeslot-feedback-clicked="(ts) => navigateToTimeslotFeedbackCreation(ts)"
                 @click="() => toggleExpandedTimeslot(timeslot)">
               <template #accordion-content="{ timeslot, feedback }">
@@ -36,12 +37,12 @@
                   </div>
                 </ion-item>
                 <ion-item v-else-if="feedback.status === 'provided'" class="listTalks-item">
-                  <schedule-talk :talk="findTimeslotTalkMatchingFeedback(timeslot, feedback.userFeedback)!" @talkClicked="toBeImplemented('To be implemented: opening feedback page in EDIT mode')" :is-highlighted="(talk, talkNotes) => talkNotes.isFavorite" :event="event">
+                  <schedule-talk :talk="findTimeslotTalkMatchingFeedback(timeslot, feedback.userFeedback)!" @talkClicked="toBeImplemented('To be implemented: opening feedback page in EDIT mode')" :is-highlighted="(talk, talkNotes) => talkNotes.isFavorite" :conf-descriptor="confDescriptor">
                     <template #upper-right="{ talk, talkNotesHook }">
                       <talk-format :format="talk.format" class="talkFormatContainer" />
                     </template>
                     <template #footer-actions="{ talk, talkNotesHook }">
-                      <linear-rating v-if="event.features.ratings.scale.enabled" :config="event.features.ratings.scale"
+                      <linear-rating v-if="confDescriptor.features.ratings.scale.enabled" :config="confDescriptor.features.ratings.scale"
                                      :user-feedback="feedback.userFeedback" :readonly="true" />
                     </template>
                   </schedule-talk>
@@ -87,16 +88,16 @@
 
   const route = useRoute();
   const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')));
-  const {conferenceDescriptor: event} = useSharedConferenceDescriptor(eventId);
+  const {conferenceDescriptor: confDescriptor} = useSharedConferenceDescriptor(eventId);
 
   const currentlySelectedDayId = ref<DayId|undefined>(undefined)
   const changeDayTo = (day: VoxxrinDay) => {
       currentlySelectedDayId.value = day.id;
   }
 
-  const { schedule: currentSchedule } = useSchedule(event, currentlySelectedDayId)
+  const { schedule: currentSchedule } = useSchedule(confDescriptor, currentlySelectedDayId)
 
-  watch([event, currentlySelectedDayId], ([confDescriptor, selectedDayId]) => {
+  watch([confDescriptor, currentlySelectedDayId], ([confDescriptor, selectedDayId]) => {
       console.debug(`current conf descriptor changed`, confDescriptor, selectedDayId)
       if (confDescriptor && !selectedDayId) {
           currentlySelectedDayId.value = findBestAutoselectableConferenceDay(confDescriptor).id;

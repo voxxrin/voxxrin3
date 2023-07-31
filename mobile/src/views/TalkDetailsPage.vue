@@ -1,20 +1,20 @@
 <template>
   <ion-page>
-    <ion-content :fullscreen="true" v-if="event" :style="{
-          '--voxxrin-event-background-url': `url('${event.backgroundUrl}')`,
-          '--voxxrin-event-logo-url': `url('${event.logoUrl}')`,
-          '--voxxrin-event-theme-colors-primary-hex': event.theming.colors.primaryHex,
-          '--voxxrin-event-theme-colors-primary-rgb': event.theming.colors.primaryRGB,
-          '--voxxrin-event-theme-colors-primary-contrast-hex': event.theming.colors.primaryContrastHex,
-          '--voxxrin-event-theme-colors-primary-contrast-rgb': event.theming.colors.primaryContrastRGB,
-          '--voxxrin-event-theme-colors-secondary-hex': event.theming.colors.secondaryHex,
-          '--voxxrin-event-theme-colors-secondary-rgb': event.theming.colors.secondaryRGB,
-          '--voxxrin-event-theme-colors-secondary-contrast-hex': event.theming.colors.secondaryContrastHex,
-          '--voxxrin-event-theme-colors-secondary-contrast-rgb': event.theming.colors.secondaryContrastRGB,
-          '--voxxrin-event-theme-colors-tertiary-hex': event.theming.colors.tertiaryHex,
-          '--voxxrin-event-theme-colors-tertiary-rgb': event.theming.colors.tertiaryRGB,
-          '--voxxrin-event-theme-colors-tertiary-contrast-hex': event.theming.colors.tertiaryContrastHex,
-          '--voxxrin-event-theme-colors-tertiary-contrast-rgb': event.theming.colors.tertiaryContrastRGB,
+    <ion-content :fullscreen="true" v-if="confDescriptor" :style="{
+          '--voxxrin-event-background-url': `url('${confDescriptor.backgroundUrl}')`,
+          '--voxxrin-event-logo-url': `url('${confDescriptor.logoUrl}')`,
+          '--voxxrin-event-theme-colors-primary-hex': confDescriptor.theming.colors.primaryHex,
+          '--voxxrin-event-theme-colors-primary-rgb': confDescriptor.theming.colors.primaryRGB,
+          '--voxxrin-event-theme-colors-primary-contrast-hex': confDescriptor.theming.colors.primaryContrastHex,
+          '--voxxrin-event-theme-colors-primary-contrast-rgb': confDescriptor.theming.colors.primaryContrastRGB,
+          '--voxxrin-event-theme-colors-secondary-hex': confDescriptor.theming.colors.secondaryHex,
+          '--voxxrin-event-theme-colors-secondary-rgb': confDescriptor.theming.colors.secondaryRGB,
+          '--voxxrin-event-theme-colors-secondary-contrast-hex': confDescriptor.theming.colors.secondaryContrastHex,
+          '--voxxrin-event-theme-colors-secondary-contrast-rgb': confDescriptor.theming.colors.secondaryContrastRGB,
+          '--voxxrin-event-theme-colors-tertiary-hex': confDescriptor.theming.colors.tertiaryHex,
+          '--voxxrin-event-theme-colors-tertiary-rgb': confDescriptor.theming.colors.tertiaryRGB,
+          '--voxxrin-event-theme-colors-tertiary-contrast-hex': confDescriptor.theming.colors.tertiaryContrastHex,
+          '--voxxrin-event-theme-colors-tertiary-contrast-rgb': confDescriptor.theming.colors.tertiaryContrastRGB,
     }">
       <ion-header class="stickyHeader" v-if="talkNotes" :class="{ 'is-favorited': talkNotes.isFavorite, 'to-watch-later': talkNotes.watchLater }">
         <ion-toolbar>
@@ -22,12 +22,12 @@
             <ion-icon src="/assets/icons/solid/close.svg"></ion-icon>
           </ion-button>
           <ion-title class="stickyHeader-title" slot="start" >{{ LL.Talk_details() }}</ion-title>
-          <ion-button class="btnTalkAction _watchLater" slot="end" shape="round" fill="outline"  @click.stop="() => toggleWatchLater()" v-if="event?.features.remindMeOnceVideosAreAvailableEnabled">
+          <ion-button class="btnTalkAction _watchLater" slot="end" shape="round" fill="outline"  @click.stop="() => toggleWatchLater()" v-if="confDescriptor?.features.remindMeOnceVideosAreAvailableEnabled">
             <ion-icon v-if="!talkNotes.watchLater" aria-hidden="true" src="/assets/icons/line/video-line.svg"></ion-icon>
             <ion-icon v-if="talkNotes.watchLater" aria-hidden="true" src="/assets/icons/solid/video.svg"></ion-icon>
           </ion-button>
           <div class="favoriteGroup" slot="end">
-            <ion-button class="btnTalkAction _favorite" shape="round" fill="outline" @click.stop="() => toggleFavorite()" v-if="event?.features.favoritesEnabled">
+            <ion-button class="btnTalkAction _favorite" shape="round" fill="outline" @click.stop="() => toggleFavorite()" v-if="confDescriptor?.features.favoritesEnabled">
               <ion-icon class="favorite-btn-icon" v-if="!talkNotes.isFavorite" aria-hidden="true" src="/assets/icons/line/bookmark-line-favorite.svg"></ion-icon>
               <ion-icon class="favorite-btn-icon" v-if="talkNotes.isFavorite" aria-hidden="true" src="/assets/icons/solid/bookmark-favorite.svg"></ion-icon>
             </ion-button>
@@ -48,7 +48,7 @@
               <span class="slot-schedule-end">{{timeslotLabel.end}}</span>
             </ion-label>
           </div>
-          <div class="subHeader-room" v-if="event.features.roomsDisplayed">
+          <div class="subHeader-room" v-if="confDescriptor.features.roomsDisplayed">
             <ion-icon aria-hidden="true" src="/assets/icons/solid/map-marker.svg"></ion-icon>
             {{talk?.room.title}}
           </div>
@@ -56,8 +56,8 @@
 
 
         <h1 class="talkDetails-title"
-            :class="{'_hasTalkLand' : talkLang && event.features.hideLanguages.indexOf(talkLang.id.value)===-1}">
-          <ion-badge v-if="talkLang && event.features.hideLanguages.indexOf(talkLang.id.value)===-1"
+            :class="{'_hasTalkLand' : talkLang && confDescriptor.features.hideLanguages.indexOf(talkLang.id.value)===-1}">
+          <ion-badge v-if="talkLang && confDescriptor.features.hideLanguages.indexOf(talkLang.id.value)===-1"
                      :style="{ '--background': talkLang.themeColor }"
                      class="talkLang">
             {{talkLang.label}}
@@ -66,7 +66,7 @@
         </h1>
         <div class="talkDetails-infos">
           <div class="talkDetails-infos-listTrack">
-            <ion-badge v-if="event.talkTracks.length > 1" class="trackBadge" :style="{
+            <ion-badge v-if="confDescriptor.talkTracks.length > 1" class="trackBadge" :style="{
                 '--background': talk?.track.themeColor
             }">{{talk?.track.title}}</ion-badge>
           </div>
@@ -148,14 +148,14 @@ function closeAndNavigateBack() {
 const route = useRoute();
 const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')));
 const talkId = computed(() => new TalkId(getRouteParamsValue(route, 'talkId')));
-const {conferenceDescriptor: event} = useSharedConferenceDescriptor(eventId);
+const {conferenceDescriptor: confDescriptor} = useSharedConferenceDescriptor(eventId);
 
 const { eventTalkStats, talkNotes, toggleFavorite, toggleWatchLater} = useUserTalkNotes(eventId, talkId)
-const { talkDetails: talk } = useSharedEventTalk(event, talkId);
+const { talkDetails: talk } = useSharedEventTalk(confDescriptor, talkId);
 const { LL } = typesafeI18n()
 
 const talkLang = computed(() => {
-    const eventDescriptor = unref(event),
+    const eventDescriptor = unref(confDescriptor),
         unreffedTalk = unref(talk);
     if(!eventDescriptor || !unreffedTalk) {
         return undefined;
@@ -165,10 +165,10 @@ const talkLang = computed(() => {
 })
 
 const timeslotLabel = computed(() => {
-    if(isRefDefined(talk) && isRefDefined(event)) {
+    if(isRefDefined(talk) && isRefDefined(confDescriptor)) {
         return {
-            start: formatHourMinutes(Temporal.ZonedDateTime.from(`${talk.value.start}[${event.value.timezone}]`)),
-            end: formatHourMinutes(Temporal.ZonedDateTime.from(`${talk.value.end}[${event.value.timezone}]`)),
+            start: formatHourMinutes(Temporal.ZonedDateTime.from(`${talk.value.start}[${confDescriptor.value.timezone}]`)),
+            end: formatHourMinutes(Temporal.ZonedDateTime.from(`${talk.value.end}[${confDescriptor.value.timezone}]`)),
         }
     } else {
         return undefined;

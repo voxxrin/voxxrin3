@@ -30,7 +30,7 @@ const props = defineProps({
         required: true,
         type: Object as PropType<VoxxrinBreak>
     },
-    event: {
+    confDescriptor: {
         required: true,
         type: Object as PropType<VoxxrinConferenceDescriptor>
     }

@@ -17,8 +17,8 @@
             <slot-overlaps v-if="timeslot.type === 'talks'" :overlappingTimeslots="timeslot.overlappingTimeSlots"></slot-overlaps>
           </ion-col>
           <ion-col class="slot-actions" size="auto">
-            <ion-icon class="_provided-feedback" aria-hidden="true" src="/assets/icons/solid/comment-check.svg" v-if="areFeedbacksEnabled(event)"></ion-icon>
-            <ion-button class="_missing-feedback" @click.stop="$emit('add-timeslot-feedback-clicked', timeslot)" v-if="areFeedbacksEnabled(event)">
+            <ion-icon class="_provided-feedback" aria-hidden="true" src="/assets/icons/solid/comment-check.svg" v-if="areFeedbacksEnabled(confDescriptor)"></ion-icon>
+            <ion-button class="_missing-feedback" @click.stop="$emit('add-timeslot-feedback-clicked', timeslot)" v-if="areFeedbacksEnabled(confDescriptor)">
               <ion-icon src="/assets/icons/line/comment-line-add.svg"></ion-icon>
             </ion-button>
           </ion-col>
@@ -70,7 +70,7 @@ const props = defineProps({
     required: true,
     type: Object as PropType<VoxxrinTimeslotFeedback>
   },
-  event: {
+  confDescriptor: {
     required: true,
     type: Object as PropType<VoxxrinConferenceDescriptor>
   }
@@ -82,7 +82,7 @@ defineEmits<{
 
 const { LL } = typesafeI18n()
 
-const { conferenceDescriptor } = useSharedConferenceDescriptor(props.event?.id);
+const { conferenceDescriptor } = useSharedConferenceDescriptor(props.confDescriptor?.id);
 
 const progress = ref<TimeslotTimingProgress>()
 useInterval(() => {

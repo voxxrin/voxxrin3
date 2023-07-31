@@ -15,8 +15,8 @@
 
     <div class="talkCard-content">
       <div class="title"
-           :class="{'_hasTalkLand' : talkLang && event.features.hideLanguages.indexOf(talkLang.id.value)===-1}">
-        <ion-badge v-if="talkLang && event.features.hideLanguages.indexOf(talkLang.id.value)===-1"
+           :class="{'_hasTalkLand' : talkLang && confDescriptor.features.hideLanguages.indexOf(talkLang.id.value)===-1}">
+        <ion-badge v-if="talkLang && confDescriptor.features.hideLanguages.indexOf(talkLang.id.value)===-1"
                    :style="{ '--background':  talkLang.themeColor}"
                    class="talkLang">
           {{talkLang.label}}
@@ -75,7 +75,7 @@ const props = defineProps({
       required: true,
       type: Function as PropType<(talk: VoxxrinTalk, talkNotes: TalkNote) => boolean>
   },
-  event: {
+  confDescriptor: {
       required: true,
       type: Object as PropType<VoxxrinConferenceDescriptor>
   },
@@ -86,7 +86,7 @@ defineEmits<{
 }>()
 
 const talkLang = computed(() => {
-    return props.event!.supportedTalkLanguages.find(lang => lang.id.isSameThan(props.talk!.language))
+    return props.confDescriptor!.supportedTalkLanguages.find(lang => lang.id.isSameThan(props.talk!.language))
 })
 
 const route = useRoute();
@@ -99,7 +99,7 @@ const displayedSpeakers = props.talk!.speakers
     .map(s => `${s.fullName}${s.companyName?` (${s.companyName})`:``}`)
     .join(", ") || "???";
 
-const hasTrack = (props.event?.talkTracks.length || 0) > 1;
+const hasTrack = (props.confDescriptor?.talkTracks.length || 0) > 1;
 
 const theme = {
   track: {

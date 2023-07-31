@@ -7,7 +7,7 @@
         <slot>
           <div class="rateTalkView">
             <div class="rateTalkView-head">
-              <schedule-talk :event="confDescriptorRef" :is-highlighted="() => false" :talk="labelledTimeslotWithTalkRef.talk">
+              <schedule-talk :conf-descriptor="confDescriptorRef" :is-highlighted="() => false" :talk="labelledTimeslotWithTalkRef.talk">
               </schedule-talk>
             </div>
 

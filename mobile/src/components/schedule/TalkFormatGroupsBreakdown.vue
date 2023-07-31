@@ -26,13 +26,13 @@ const props = defineProps({
         required: true,
         type: Array as PropType<VoxxrinTalk[]>
     },
-    event: {
+    confDescriptor: {
         required: true,
         type: Object as PropType<VoxxrinConferenceDescriptor>
     }
 })
 
-const perFormatGroups = computed(() => sortThenGroupByFormat(props.talks!, props.event!));
+const perFormatGroups = computed(() => sortThenGroupByFormat(props.talks!, props.confDescriptor!));
 
 </script>
 

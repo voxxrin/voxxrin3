@@ -11,11 +11,11 @@
       </div>
 
       <div class="viewsSubHeader">
-        <div class="viewsSubHeader-title">{{ event?.headingTitle }}</div>
-        <current-event-status :event="event"></current-event-status>
+        <div class="viewsSubHeader-title">{{ confDescriptor?.headingTitle }}</div>
+        <current-event-status :conf-descriptor="confDescriptor"></current-event-status>
       </div>
     </ion-toolbar>
-    <img :src="event?.backgroundUrl">
+    <img :src="confDescriptor?.backgroundUrl">
   </ion-header>
 </template>
 
@@ -28,7 +28,7 @@ import {useTabbedPageNav} from "@/state/useTabbedPageNav";
 
 const router = useIonRouter();
 const props = defineProps({
-    event: {
+    confDescriptor: {
         required: true,
         type: Object as PropType<VoxxrinConferenceDescriptor>
     }

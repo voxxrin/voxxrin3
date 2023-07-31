@@ -1,14 +1,14 @@
 <template>
   <div>
-    <talk-format-groups-breakdown :event="eventDescriptor" :talks="displayedTalks">
+    <talk-format-groups-breakdown :conf-descriptor="confDescriptor" :talks="displayedTalks">
       <template #talk="{ talk }">
         <ion-item class="listTalks-item">
-          <schedule-talk :talk="talk" @talkClicked="updateSelected($event)" :is-highlighted="(talk, talkNotes) => talk.id.isSameThan(selectedTalkId)" :event="eventDescriptor">
+          <schedule-talk :talk="talk" @talkClicked="updateSelected($event)" :is-highlighted="(talk, talkNotes) => talk.id.isSameThan(selectedTalkId)" :conf-descriptor="confDescriptor">
             <template #upper-right="{ talk, talkNotesHook }">
               <talk-is-favorited :talk-notes="talkNotesHook.talkNotes.value" />
             </template>
             <template #footer-actions="{ talk, talkNotesHook }">
-              <talk-watch-later-button :user-talk-notes="talkNotesHook" :event-descriptor="eventDescriptor"></talk-watch-later-button>
+              <talk-watch-later-button :user-talk-notes="talkNotesHook" :conf-descriptor="confDescriptor"></talk-watch-later-button>
               <talk-select-for-feedback :is-active="talk.id.isSameThan(selectedTalkId)" @click.stop="() => updateSelected(talk)"></talk-select-for-feedback>
             </template>
           </schedule-talk>
@@ -38,7 +38,7 @@ import TalkIsFavorited from "@/components/talk-card/TalkIsFavorited.vue";
 const { LL } = typesafeI18n()
 
 const props = defineProps({
-    eventDescriptor: {
+    confDescriptor: {
         required: true,
         type: Object as PropType<VoxxrinConferenceDescriptor>
     },
