@@ -165,6 +165,18 @@ type RootTranslation = {
 	 */
 	Pick_the_talk_you_attended: string
 	/**
+	 * S​e​l​e​c​t​ ​o​n​e​ ​o​f​ ​t​h​e​ ​t​a​l​k​ ​y​o​u​ ​a​t​t​e​n​d​e​d
+	 */
+	Select_one_of_the_talk_you_attended: string
+	/**
+	 * E​i​t​h​e​r​ ​s​e​l​e​c​t​ ​o​n​e​ ​o​f​ ​t​h​e​ ​t​a​l​k​ ​y​o​u​ ​a​t​t​e​n​d​e​d​.​.​.
+	 */
+	Either_select_one_of_the_talk_you_attended: string
+	/**
+	 * .​.​.​ ​o​r​ ​s​e​l​e​c​t​ ​a​ ​t​a​l​k​ ​i​n​ ​t​h​e​s​e​ ​o​v​e​r​l​a​p​p​i​n​g​ ​s​l​o​t​s
+	 */
+	Or_select_a_talk_in_these_overlapping_slots: string
+	/**
 	 * C​u​r​r​e​n​t​l​y​ ​s​e​l​e​c​t​e​d​ ​t​i​m​e​s​l​o​t
 	 */
 	Currently_selected_timeslot: string
@@ -190,7 +202,7 @@ type RootTranslation = {
 	 */
 	I_didnt_attend_any_talk: string
 	/**
-	 * D​u​r​i​n​g​ ​t​h​i​s​ ​t​i​m​e​ ​s​l​o​t
+	 * d​u​r​i​n​g​ ​t​h​i​s​ ​t​i​m​e​ ​s​l​o​t
 	 */
 	During_this_time_slot: string
 	/**
@@ -217,6 +229,26 @@ type RootTranslation = {
 	 * F​r​e​e​ ​c​o​m​m​e​n​t
 	 */
 	Free_comment: string
+	/**
+	 * S​k​i​p​p​e​d
+	 */
+	Skipped: string
+	/**
+	 * S​e​t​t​i​n​g​s​ ​l​i​s​t
+	 */
+	Settings_list: string
+	/**
+	 * H​i​d​e​ ​t​o​d​a​y​'​s​ ​p​a​s​t​ ​t​i​m​e​-​s​l​o​t​s​ ​a​f​t​e​r​ ​1​h
+	 */
+	Hide_today_s_past_time_slots_after_1h: string
+	/**
+	 * H​i​d​e​ ​p​a​s​t​ ​t​i​m​e​-​s​l​o​t​s
+	 */
+	Hide_past_time_slots: string
+	/**
+	 * I​n​c​l​u​d​i​n​g​ ​s​l​o​t​s​ ​w​i​t​h​o​u​t​ ​f​e​e​d​b​a​c​k
+	 */
+	Including_slots_without_feedback: string
 }
 
 export type TranslationFunctions = {
@@ -369,6 +401,18 @@ export type TranslationFunctions = {
 	 */
 	Pick_the_talk_you_attended: () => LocalizedString
 	/**
+	 * Select one of the talk you attended
+	 */
+	Select_one_of_the_talk_you_attended: () => LocalizedString
+	/**
+	 * Either select one of the talk you attended...
+	 */
+	Either_select_one_of_the_talk_you_attended: () => LocalizedString
+	/**
+	 * ... or select a talk in these overlapping slots
+	 */
+	Or_select_a_talk_in_these_overlapping_slots: () => LocalizedString
+	/**
 	 * Currently selected timeslot
 	 */
 	Currently_selected_timeslot: () => LocalizedString
@@ -393,7 +437,7 @@ export type TranslationFunctions = {
 	 */
 	I_didnt_attend_any_talk: () => LocalizedString
 	/**
-	 * During this time slot
+	 * during this time slot
 	 */
 	During_this_time_slot: () => LocalizedString
 	/**
@@ -420,6 +464,26 @@ export type TranslationFunctions = {
 	 * Free comment
 	 */
 	Free_comment: () => LocalizedString
+	/**
+	 * Skipped
+	 */
+	Skipped: () => LocalizedString
+	/**
+	 * Settings list
+	 */
+	Settings_list: () => LocalizedString
+	/**
+	 * Hide today's past time-slots after 1h
+	 */
+	Hide_today_s_past_time_slots_after_1h: () => LocalizedString
+	/**
+	 * Hide past time-slots
+	 */
+	Hide_past_time_slots: () => LocalizedString
+	/**
+	 * Including slots without feedback
+	 */
+	Including_slots_without_feedback: () => LocalizedString
 }
 
 export type Formatters = {}

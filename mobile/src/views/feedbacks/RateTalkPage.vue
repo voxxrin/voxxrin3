@@ -44,7 +44,7 @@
               <ion-textarea v-if="confDescriptorRef.features.ratings['free-text'].enabled"
                   :debounce="300" :maxlength="confDescriptorRef.features.ratings['free-text'].maxLength"
                   @ionInput="(ev) => feedback.comment = ''+ev.target.value"
-                  aria-label="Custom input" :placeholder="LL.Enter_some_constructive_feedback_for_the_speaker()" auto-grow>
+                  :aria-label="LL.Free_comment()" :placeholder="LL.Enter_some_constructive_feedback_for_the_speaker()" auto-grow>
               </ion-textarea>
             </div>
           </div>

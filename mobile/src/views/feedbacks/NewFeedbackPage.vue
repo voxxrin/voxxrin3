@@ -8,7 +8,8 @@
           <ion-header class="pickTalkDivider">
             <div class="pickTalkDivider-start">
               <span class="pickTalkDivider-title">{{LL.Currently_selected_timeslot()}}</span>
-              <small><strong>1</strong> {{LL.Pick_the_talk_you_attended()}}</small>
+              <small v-if="labelledTimeslotWithOverlappingsRef.overlappingLabelledTimeslots.length">{{LL.Either_select_one_of_the_talk_you_attended()}}</small>
+              <small v-if="!labelledTimeslotWithOverlappingsRef.overlappingLabelledTimeslots.length">{{LL.Select_one_of_the_talk_you_attended()}}</small>
             </div>
 
             <div class="pickTalkDivider-end">
@@ -37,6 +38,7 @@
             <ion-header class="pickTalkDivider">
               <div class="pickTalkDivider-start">
                 <span class="pickTalkDivider-title">{{LL.Overlapping_timeslots({ nrOfOverlappingSlots: labelledTimeslotWithOverlappingsRef.overlappingLabelledTimeslots.length })}}</span>
+                <small>{{LL.Or_select_a_talk_in_these_overlapping_slots()}}</small>
               </div>
             </ion-header>
 
@@ -55,8 +57,7 @@
                       :all-user-favorited-talk-ids="allUserFavoritedTalkIdsRef"
                       :selected-talk-id="selectedTalk?.id"
                       @talk-selected="selectTalk($event)"
-                      @talk-deselected="deselectTalk()"
-                  >
+                      @talk-deselected="deselectTalk()">
                   </feedback-talk-selector>
                 </div>
               </ion-accordion>

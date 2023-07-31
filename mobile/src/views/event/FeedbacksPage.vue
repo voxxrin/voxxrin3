@@ -32,8 +32,7 @@
                   <div class="infoMessage _small">
                     <ion-icon class="infoMessage-iconIllu" src="/assets/images/svg/illu-no-feedback.svg"></ion-icon>
                     <span class="infoMessage-title">{{LL.No_feedback_yet()}}</span>
-                    <!-- TODO Connect button add feed-back -->
-                    <ion-button size="default" fill="outline"  expand="block">Add feedback slot</ion-button>
+                    <ion-button @click="navigateToTimeslotFeedbackCreation(timeslot)" size="default" fill="outline"  expand="block">{{LL.Add_Feedback()}}</ion-button>
                   </div>
                 </ion-item>
                 <ion-item v-else-if="feedback.status === 'provided'" class="listTalks-item">
@@ -50,7 +49,7 @@
                 <ion-item v-else>
                   <div class="infoMessage _small">
                     <ion-icon class="infoMessage-iconIllu _skipped" src="assets/icons/solid/comment-feedback-skipped.svg"></ion-icon>
-                    <span class="infoMessage-title ion-color-secondary">Skipped</span>
+                    <span class="infoMessage-title ion-color-secondary">{{ LL.Skipped() }}</span>
                   </div>
                 </ion-item>
               </template>
@@ -68,7 +67,7 @@
   import {getRouteParamsValue, toBeImplemented} from "@/views/vue-utils";
   import {useRoute} from "vue-router";
   import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
-  import {computed, ref, watch} from "vue";
+  import {ref, watch} from "vue";
   import {typesafeI18n} from "@/i18n/i18n-vue";
   import DaySelector from "@/components/schedule/DaySelector.vue";
   import {DayId, VoxxrinDay} from "@/models/VoxxrinDay";
