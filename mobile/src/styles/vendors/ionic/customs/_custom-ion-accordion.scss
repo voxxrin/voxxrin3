@@ -39,15 +39,6 @@
     }
   }
 
-  ._accordion-icon._past-icon {
-    display: inline-block;
-    color: var(--app-primary-tint);
-
-    @media (prefers-color-scheme: dark) {
-      color: rgba(white, 0.5);
-    }
-  }
-
   &._past {
     @media (prefers-color-scheme: dark) {
       border-bottom: 1px solid var(--app-light-contrast);
