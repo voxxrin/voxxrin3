@@ -322,6 +322,11 @@ const theme = {
         border-color: var(--app-white) !important;
       }
 
+      :deep(.linearRating) {
+        border-width: 2px;
+        border-color: var(--app-primary);
+      }
+
 
       /* TODO RLZ: move it to a proper place in talk actions components */
       :deep(.btnTalk) {

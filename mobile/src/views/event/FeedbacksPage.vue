@@ -49,7 +49,7 @@
                 </ion-item>
                 <ion-item v-else>
                   <div class="infoMessage _small">
-                    <ion-icon class="infoMessage-iconIllu" src="/assets/images/svg/illu-no-feedback.svg"></ion-icon>
+                    <ion-icon class="infoMessage-iconIllu _skipped" src="assets/icons/solid/comment-feedback-skipped.svg"></ion-icon>
                     <span class="infoMessage-title ion-color-secondary">Skipped</span>
                   </div>
                 </ion-item>
@@ -132,6 +132,12 @@
     opacity: 0.2;
     left: 0;
     top: 0;
+
+    &._skipped {
+      font-size: 64px;
+      opacity: 0.1;
+      top: -4px;
+    }
   }
 
   .talkCard {
@@ -141,6 +147,8 @@
 
   .talkFormatContainer {
     display: flex;
+    justify-content: end;
+    align-items: center;
     width: 100%;
   }
 </style>
