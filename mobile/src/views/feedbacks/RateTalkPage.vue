@@ -1,57 +1,55 @@
 
 <template>
   <ion-page v-if="confDescriptorRef && labelledTimeslotWithTalkRef">
-    <ion-content>
-      <base-feedback-step :step="2" :step-label="LL.Share_your_feedback()"
-                          :conf-descriptor="confDescriptorRef" :labelled-timeslot="labelledTimeslotWithTalkRef.labelledTimeslot">
-        <slot>
-          <div class="rateTalkView">
-            <div class="rateTalkView-head">
-              <schedule-talk :conf-descriptor="confDescriptorRef" :is-highlighted="() => false" :talk="labelledTimeslotWithTalkRef.talk">
-              </schedule-talk>
-            </div>
-
-            <div class="rateTalkForm">
-              <vox-divider v-if="confDescriptorRef.features.ratings.scale.enabled || confDescriptorRef.features.ratings['custom-scale'].enabled">
-                {{ LL.Rate_it() }} :
-              </vox-divider >
-
-              <labelled-linear-rating
-                  v-if="confDescriptorRef.features.ratings.scale.enabled"
-                  :config="confDescriptorRef.features.ratings.scale"
-                  @rating-selected="feedback.ratings['linear-rating'] = $event?.score"
-              ></labelled-linear-rating>
-              <icon-based-rating
-                  v-if="confDescriptorRef.features.ratings['custom-scale'].enabled"
-                  :config="confDescriptorRef.features.ratings['custom-scale']"
-                  @rating-selected="feedback.ratings['custom-rating'] = $event"
-              ></icon-based-rating>
-
-              <vox-divider v-if="confDescriptorRef.features.ratings.bingo.enabled">
-                {{ LL.Quick_feedback() }} :
-              </vox-divider>
-
-              <quick-feedback-rating
-                  v-if="confDescriptorRef.features.ratings.bingo.enabled"
-                  :config="confDescriptorRef.features.ratings.bingo"
-                  @rating-selected="feedback.ratings['bingo'] = $event"
-              ></quick-feedback-rating>
-
-              <vox-divider v-if="confDescriptorRef.features.ratings['free-text'].enabled">
-                {{ LL.Free_comment() }} :
-              </vox-divider>
-
-              <ion-textarea v-if="confDescriptorRef.features.ratings['free-text'].enabled"
-                  :debounce="300" :maxlength="confDescriptorRef.features.ratings['free-text'].maxLength"
-                  @ionInput="(ev) => feedback.comment = ''+ev.target.value"
-                  :aria-label="LL.Free_comment()" :placeholder="LL.Enter_some_constructive_feedback_for_the_speaker()" auto-grow>
-              </ion-textarea>
-            </div>
+    <base-feedback-step :step="2" :step-label="LL.Share_your_feedback()"
+                        :conf-descriptor="confDescriptorRef" :labelled-timeslot="labelledTimeslotWithTalkRef.labelledTimeslot">
+      <slot>
+        <div class="rateTalkView">
+          <div class="rateTalkView-head">
+            <schedule-talk :conf-descriptor="confDescriptorRef" :is-highlighted="() => false" :talk="labelledTimeslotWithTalkRef.talk">
+            </schedule-talk>
           </div>
 
-        </slot>
-      </base-feedback-step>
-    </ion-content>
+          <div class="rateTalkForm">
+            <vox-divider v-if="confDescriptorRef.features.ratings.scale.enabled || confDescriptorRef.features.ratings['custom-scale'].enabled">
+              {{ LL.Rate_it() }} :
+            </vox-divider >
+
+            <labelled-linear-rating
+                v-if="confDescriptorRef.features.ratings.scale.enabled"
+                :config="confDescriptorRef.features.ratings.scale"
+                @rating-selected="feedback.ratings['linear-rating'] = $event?.score"
+            ></labelled-linear-rating>
+            <icon-based-rating
+                v-if="confDescriptorRef.features.ratings['custom-scale'].enabled"
+                :config="confDescriptorRef.features.ratings['custom-scale']"
+                @rating-selected="feedback.ratings['custom-rating'] = $event"
+            ></icon-based-rating>
+
+            <vox-divider v-if="confDescriptorRef.features.ratings.bingo.enabled">
+              {{ LL.Quick_feedback() }} :
+            </vox-divider>
+
+            <quick-feedback-rating
+                v-if="confDescriptorRef.features.ratings.bingo.enabled"
+                :config="confDescriptorRef.features.ratings.bingo"
+                @rating-selected="feedback.ratings['bingo'] = $event"
+            ></quick-feedback-rating>
+
+            <vox-divider v-if="confDescriptorRef.features.ratings['free-text'].enabled">
+              {{ LL.Free_comment() }} :
+            </vox-divider>
+
+            <ion-textarea v-if="confDescriptorRef.features.ratings['free-text'].enabled"
+                :debounce="300" :maxlength="confDescriptorRef.features.ratings['free-text'].maxLength"
+                @ionInput="(ev) => feedback.comment = ''+ev.target.value"
+                :aria-label="LL.Free_comment()" :placeholder="LL.Enter_some_constructive_feedback_for_the_speaker()" auto-grow>
+            </ion-textarea>
+          </div>
+        </div>
+
+      </slot>
+    </base-feedback-step>
     <feedback-footer>
       <ion-button size="small" fill="solid" color="medium" shape="round" expand="block" @click="backToSchedulePage">
         {{ LL.Cancel() }}
