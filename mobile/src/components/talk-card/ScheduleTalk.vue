@@ -97,7 +97,7 @@ const { talkNotes } = userTalkNotesHook;
 
 const displayedSpeakers = props.talk!.speakers
     .map(s => `${s.fullName}${s.companyName?` (${s.companyName})`:``}`)
-    .join(", ");
+    .join(", ") || "???";
 
 const hasTrack = (props.event?.talkTracks.length || 0) > 1;
 
