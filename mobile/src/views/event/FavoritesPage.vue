@@ -32,7 +32,7 @@
                   <talk-format-groups-breakdown :conf-descriptor="confDescriptor" v-if="timeslot.type==='talks'" :talks="timeslot.talks.filter(t => t.id.isIncludedIntoArray(allUserFavoritedTalkIds))">
                     <template #talk="{ talk }">
                       <schedule-talk :talk="talk" @talkClicked="openTalkDetails($event)" :is-highlighted="(talk, talkNotes) => talkNotes.isFavorite" :conf-descriptor="confDescriptor">
-                        <template #upper-middle="{ talk }">
+                        <template #upper-right="{ talk }">
                           <div class="room" v-if="confDescriptor?.features.roomsDisplayed">
                             {{talk.room.title}}
                           </div>
@@ -128,6 +128,8 @@
 
 <style lang="scss" scoped>
   .room {
+    position: relative;
+    top: -8px;
     flex: 0 0 auto;
     padding: 4px 12px;
     text-align: center;
