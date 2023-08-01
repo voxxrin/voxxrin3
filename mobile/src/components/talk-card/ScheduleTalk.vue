@@ -129,7 +129,7 @@ const theme = {
   display: flex;
   flex-direction: column;
   row-gap: 8px;
-  width: 100%;
+  flex: 1;
   margin: 8px;
   border-left: 6px solid v-bind('theme.track.color');
   border-radius: 8px 12px 12px 8px;

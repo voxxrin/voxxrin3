@@ -127,13 +127,13 @@
 </script>
 
 <style lang="scss" scoped>
-.room {
-  padding: 4px 12px;
-  width: 80%;
-  text-align: center;
-  background-color: var(--app-primary);
-  color: var(--app-primary-contrast);
-  font-weight: bold;
-  border-radius: 0 0 10px 10px;
-}
+  .room {
+    flex: 0 0 auto;
+    padding: 4px 12px;
+    text-align: center;
+    background-color: var(--app-primary);
+    color: var(--app-primary-contrast);
+    font-weight: bold;
+    border-radius: 0 0 10px 10px;
+  }
 </style>
