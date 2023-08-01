@@ -4,13 +4,27 @@
             :class="{ container: true, '_is-highlighted': isHighlighted(talk, talkNotes), '_has-favorited': talkNotes.isFavorite, '_has-to-watch-later': talkNotes.watchLater }"
             @click="$emit('talk-clicked', talk)">
     <div class="talkCard-head">
-      <div class="track">
-        <ion-badge class="trackBadge" v-if="hasTrack">
-          <ion-icon src="/assets/icons/solid/tag.svg"></ion-icon>{{talk.track.title}}
-        </ion-badge>
+      <div class="start">
+        <div class="item">
+          <div class="track">
+            <ion-badge class="trackBadge" v-if="hasTrack">
+              <ion-icon src="/assets/icons/solid/tag.svg"></ion-icon>{{talk.track.title}}
+            </ion-badge>
+          </div>
+        </div>
       </div>
 
-      <slot name="upper-right" :talk="talk" :talkNotesHook="userTalkNotesHook"></slot>
+      <div class="middle">
+        <div class="item">
+          <slot name="upper-middle" :talk="talk" :talkNotesHook="userTalkNotesHook"></slot>
+        </div>
+      </div>
+
+      <div class="end">
+        <div class="item">
+          <slot name="upper-right" :talk="talk"></slot>
+        </div>
+      </div>
     </div>
 
     <div class="talkCard-content">
@@ -147,9 +161,33 @@ const theme = {
   }
 
   &-head {
-    display: flex;
-    justify-content: space-between;
-    padding: 8px 12px 0 8px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+    gap: 0px 0px;
+
+    //display: flex;
+    //justify-content: space-between;
+
+    .item {
+      display: flex;
+    }
+    .start {
+      grid-area: 1 / 1 / 2 / 4;
+      .item { flex-direction: row; }
+      padding-top: 8px;
+    }
+    .end {
+      grid-area: 1 / 4 / 2 / 7;
+      .item { flex-direction: row-reverse; }
+      padding-top: 8px;
+    }
+    .middle {
+      grid-area: 1 / 3 / 2 / 5;
+      .item { justify-content: center; }
+    }
+
+    padding: 0 12px 0 8px;
 
     @mixin background-opacity($color, $opacity: 0.3) {
       background: $color; /* The Fallback */

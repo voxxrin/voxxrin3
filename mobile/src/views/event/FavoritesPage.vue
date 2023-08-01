@@ -21,11 +21,8 @@
                             :daily-schedule="currentSchedule"
                             @timeslots-list-updated="timeslots => expandedTimeslotIds = timeslots.map(t => t.id.value)">
           <template #iterator="{ timeslot }">
-            <time-slot-accordion
-                :timeslot-feedback="timeslot.feedback" :timeslot="timeslot" :conf-descriptor="confDescriptor"
-                @add-timeslot-feedback-clicked="(ts) => navigateToTimeslotFeedbackCreation(ts)"
-                @click="() => toggleExpandedTimeslot(timeslot)">
-              <template #accordion-content="{ timeslot, feedback }">
+            <time-slot-section :timeslot="timeslot" :conf-descriptor="confDescriptor">
+              <template #section-content="{ timeslot }">
                 <schedule-break v-if="timeslot.type==='break'" :conf-descriptor="confDescriptor" :talk-break="timeslot.break"></schedule-break>
                 <div v-if="timeslot.type === 'talks'">
                   <div class="infoMessage ion-text-center" v-if="timeslot.talks.filter(t => t.id.isIncludedIntoArray(allUserFavoritedTalkIds)).length === 0">
@@ -34,22 +31,22 @@
                   </div>
                   <talk-format-groups-breakdown :conf-descriptor="confDescriptor" v-if="timeslot.type==='talks'" :talks="timeslot.talks.filter(t => t.id.isIncludedIntoArray(allUserFavoritedTalkIds))">
                     <template #talk="{ talk }">
-                      <ion-item class="listTalks-item">
-                        <schedule-talk :talk="talk" @talkClicked="openTalkDetails($event)" :is-highlighted="(talk, talkNotes) => talkNotes.isFavorite" :conf-descriptor="confDescriptor">
-                          <template #upper-right="{ talk, talkNotesHook }">
-                            <talk-room :talk="talk" :conf-descriptor="confDescriptor" />
-                          </template>
-                          <template #footer-actions="{ talk, talkNotesHook }">
-                            <talk-watch-later-button v-if="confDescriptor" :conf-descriptor="confDescriptor" :user-talk-notes="talkNotesHook" />
-                            <talk-favorite-button v-if="confDescriptor" :conf-descriptor="confDescriptor" :user-talk-notes="talkNotesHook" />
-                          </template>
-                        </schedule-talk>
-                      </ion-item>
+                      <schedule-talk :talk="talk" @talkClicked="openTalkDetails($event)" :is-highlighted="(talk, talkNotes) => talkNotes.isFavorite" :conf-descriptor="confDescriptor">
+                        <template #upper-middle="{ talk }">
+                          <div class="room" v-if="confDescriptor?.features.roomsDisplayed">
+                            {{talk.room.title}}
+                          </div>
+                        </template>
+                        <template #footer-actions="{ talk, talkNotesHook }">
+                          <talk-watch-later-button v-if="confDescriptor" :conf-descriptor="confDescriptor" :user-talk-notes="talkNotesHook" />
+                          <talk-favorite-button v-if="confDescriptor" :conf-descriptor="confDescriptor" :user-talk-notes="talkNotesHook" />
+                        </template>
+                      </schedule-talk>
                     </template>
                   </talk-format-groups-breakdown>
                 </div>
               </template>
-            </time-slot-accordion>
+            </time-slot-section>
           </template>
         </timeslots-iterator>
       </ion-accordion-group>
@@ -64,17 +61,15 @@
   import {EventId} from "@/models/VoxxrinEvent";
   import {getRouteParamsValue, isRefDefined} from "@/views/vue-utils";
   import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
-  import {ref, unref, watch} from "vue";
+  import {ref, watch} from "vue";
   import {typesafeI18n} from "@/i18n/i18n-vue";
   import DaySelector from "@/components/schedule/DaySelector.vue";
   import {DayId, VoxxrinDay} from "@/models/VoxxrinDay";
   import ScheduleBreak from "@/components/schedule/ScheduleBreak.vue";
   import TimeslotsIterator from "@/components/timeslots/TimeslotsIterator.vue";
-  import TimeSlotAccordion from "@/components/timeslots/TimeSlotAccordion.vue";
   import TalkWatchLaterButton from "@/components/talk-card/TalkWatchLaterButton.vue";
   import ScheduleTalk from "@/components/talk-card/ScheduleTalk.vue";
   import {IonAccordionGroup} from "@ionic/vue";
-  import TalkRoom from "@/components/talk-card/TalkRoom.vue";
   import TalkFavoriteButton from "@/components/talk-card/TalkFavoriteButton.vue";
   import TalkFormatGroupsBreakdown from "@/components/schedule/TalkFormatGroupsBreakdown.vue";
   import {
@@ -85,6 +80,7 @@
   import {VoxxrinTalk} from "@/models/VoxxrinTalk";
   import {findBestAutoselectableConferenceDay} from "@/models/VoxxrinConferenceDescriptor";
   import {useUserEventAllFavoritedTalkIds} from "@/state/useUserTalkNotes";
+  import TimeSlotSection from "@/components/timeslots/TimeSlotSection.vue";
 
   const { LL } = typesafeI18n()
 
@@ -129,3 +125,15 @@
       }
   }
 </script>
+
+<style lang="scss" scoped>
+.room {
+  padding: 4px 12px;
+  width: 80%;
+  text-align: center;
+  background-color: var(--app-primary);
+  color: var(--app-primary-contrast);
+  font-weight: bold;
+  border-radius: 0 0 10px 10px;
+}
+</style>
