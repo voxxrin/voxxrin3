@@ -43,7 +43,7 @@
                     </template>
                     <template #footer-actions="{ talk, talkNotesHook }">
                       <linear-rating v-if="confDescriptor.features.ratings.scale.enabled" :config="confDescriptor.features.ratings.scale"
-                                     :user-feedback="feedback.userFeedback" :readonly="true" :small="true" />
+                                     :user-feedback="feedback.userFeedback" :readonly="true" :is-small="true" />
                     </template>
                   </schedule-talk>
                 </ion-item>

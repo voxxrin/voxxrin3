@@ -18,10 +18,6 @@ const ICONS: Record<VoxxrinConferenceDescriptor['features']['ratings']['scale'][
 }
 
 const props = defineProps({
-    small: {
-      type: Boolean,
-      default: false,
-    },
     config: {
         required: true,
         type: Object as PropType<VoxxrinConferenceDescriptor['features']['ratings']['scale']>
@@ -33,10 +29,13 @@ const props = defineProps({
     readonly: {
         required: false,
         type: Boolean
-    }
+    },
+    isSmall: {
+        required: false,
+        type: Boolean,
+        default: false,
+    },
 })
-
-const isSmall = ref(props.small);
 
 const $emits = defineEmits<{
     (e: 'rating-selected', value: null|{ score: number, selectedLabel: string }): void
