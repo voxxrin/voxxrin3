@@ -70,7 +70,7 @@
   import {DayId, VoxxrinDay} from "@/models/VoxxrinDay";
   import ScheduleBreak from "@/components/schedule/ScheduleBreak.vue";
   import TimeslotsIterator from "@/components/timeslots/TimeslotsIterator.vue";
-  import TimeSlotAccordion from "@/components/schedule/TimeSlotAccordion.vue";
+  import TimeSlotAccordion from "@/components/timeslots/TimeSlotAccordion.vue";
   import TalkWatchLaterButton from "@/components/talk-card/TalkWatchLaterButton.vue";
   import ScheduleTalk from "@/components/talk-card/ScheduleTalk.vue";
   import {IonAccordionGroup} from "@ionic/vue";

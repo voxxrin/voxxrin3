@@ -73,7 +73,7 @@
   import DaySelector from "@/components/schedule/DaySelector.vue";
   import {DayId, VoxxrinDay} from "@/models/VoxxrinDay";
   import {findBestAutoselectableConferenceDay} from "@/models/VoxxrinConferenceDescriptor";
-  import TimeSlotAccordion from "@/components/schedule/TimeSlotAccordion.vue";
+  import TimeSlotAccordion from "@/components/timeslots/TimeSlotAccordion.vue";
   import {IonAccordionGroup} from "@ionic/vue";
   import {VoxxrinScheduleTimeSlot} from "@/models/VoxxrinSchedule";
   import TimeslotsIterator from "@/components/timeslots/TimeslotsIterator.vue";

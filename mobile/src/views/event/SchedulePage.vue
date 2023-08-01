@@ -108,7 +108,7 @@ import {
     findBestAutoselectableConferenceDay,
     findVoxxrinDay
 } from "@/models/VoxxrinConferenceDescriptor";
-import TimeSlotAccordion from "@/components/schedule/TimeSlotAccordion.vue";
+import TimeSlotAccordion from "@/components/timeslots/TimeSlotAccordion.vue";
 import {useCurrentClock} from "@/state/useCurrentClock";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
