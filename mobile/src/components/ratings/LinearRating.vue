@@ -1,5 +1,5 @@
 <template>
-  <div class="linearRating">
+  <div :class="['linearRating', { '_small': isSmall }]">
     <ion-button v-for="(label, index) in config.labels" :key="index" @click="ratingSelected(index)">
       <ion-icon class="linearRating-icon" :icon="ICONS[config.icon]" :class="{ '_active': selectedIndex !== null && index <= selectedIndex}"></ion-icon>
     </ion-button>
@@ -18,6 +18,10 @@ const ICONS: Record<VoxxrinConferenceDescriptor['features']['ratings']['scale'][
 }
 
 const props = defineProps({
+    small: {
+      type: Boolean,
+      default: false,
+    },
     config: {
         required: true,
         type: Object as PropType<VoxxrinConferenceDescriptor['features']['ratings']['scale']>
@@ -31,6 +35,8 @@ const props = defineProps({
         type: Boolean
     }
 })
+
+const isSmall = ref(props.small);
 
 const $emits = defineEmits<{
     (e: 'rating-selected', value: null|{ score: number, selectedLabel: string }): void
@@ -56,29 +62,48 @@ function ratingSelected(index: number) {
 </script>
 
 <style lang="scss" scoped>
-ion-button {
-  --background: transparent;
-  --box-shadow: none;
-  --padding-top: 0;
-  --padding-start: 0;
-  --padding-end: 0;
-  --ripple-color: var(--voxxrin-event-theme-colors-primary-hex);
-  --border-radius: 24px;
 
-  @media (prefers-color-scheme: dark) {
-    --background: transparent !important;
-    --ripple-color: var(--app-grey-medium);
+.linearRating {
+  ion-button {
+    --background: transparent;
+    --box-shadow: none;
+    --padding-top: 0;
+    --padding-start: 0;
+    --padding-end: 0;
+    --ripple-color: var(--voxxrin-event-theme-colors-primary-hex);
+    --border-radius: 24px;
+
+    @media (prefers-color-scheme: dark) {
+      --background: transparent !important;
+      --ripple-color: var(--app-grey-medium);
+    }
   }
-}
 
-ion-icon {
-  font-size: 34px;
-  color: var(--app-beige-dark);
-  opacity: 0.5;
+  ion-icon {
+    font-size: 34px;
+    color: var(--app-beige-dark);
+    opacity: 0.5;
 
-  &._active {
-    opacity: 1;
-    color: var(--voxxrin-event-theme-colors-primary-hex);
+    &._active {
+      opacity: 1;
+      color: var(--voxxrin-event-theme-colors-primary-hex);
+    }
+  }
+
+  &._small {
+    display: flex;
+    padding-left: 8px;
+    padding-right: 8px;
+    border-left: 1px solid var(--app-beige-line);
+
+    ion-button {
+      height: 32px !important;
+      width: 26px !important;
+    }
+
+    .linearRating-icon {
+      font-size: 24px;
+    }
   }
 }
 </style>

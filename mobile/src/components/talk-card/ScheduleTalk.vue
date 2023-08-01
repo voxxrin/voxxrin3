@@ -444,22 +444,6 @@ const theme = {
     :deep(.talkAction) {
       height: 100%;
     }
-
-    :deep(.linearRating) {
-      display: flex;
-      padding-left: 8px;
-      padding-right: 8px;
-      border-left: 1px solid var(--app-beige-line);
-
-      ion-button {
-        height: 32px !important;
-        width: 26px !important;
-      }
-
-      .linearRating-icon {
-        font-size: 24px;
-      }
-    }
   }
 }
 </style>
