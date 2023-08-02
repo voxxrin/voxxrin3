@@ -115,7 +115,6 @@ const isPinnedRef = computed(() => {
     }
 
     &:after {
-      opacity: 0;
       transition: 140ms;
       transform: rotate(0) scale(0);
     }
@@ -130,30 +129,26 @@ const isPinnedRef = computed(() => {
 
     .btnPin {
       position: relative;
-      top: -4px;
-      transition: 84ms ease-in-out;
-      animation: pinedAnimation 140ms both;
+      animation: pinedAnimation 600ms both;
 
       &:after {
         position: absolute;
-        left: -10px;
+        left: -13px;
         bottom: -15px;
         height: 28px;
         width: 34px;
-        opacity: 0.6;
-        transform: rotate(30deg) scale(1) translateX(2px);
         background: url('/assets/images/png/pined-shadow.png');
         background-repeat: no-repeat;
         background-size: 100%;
-        transition: 240ms ease-in-out;
         content: '';
+        animation: pinedAnimationShadow 500ms both;
       }
 
       ion-icon {
         position: relative;
-        transition: 140ms ease-in-out;
-        top: 8px;
-        left: -4px;
+        top: 7px;
+        left: -7px;
+        animation: pinedAnimationIcon 500ms both;
       }
     }
   }
@@ -162,8 +157,54 @@ const isPinnedRef = computed(() => {
     0% {
       transform: rotate(0);
     }
+    30% {
+      transform: rotate(-45deg);
+      top: -8px;
+    }
+    60% {
+      top: -10px;
+    }
     100% {
-      transform: rotate(-35deg);
+      transform: rotate(-45deg);
+      top: 0;
+    }
+  }
+
+  @keyframes pinedAnimationIcon {
+    0% {
+      top: 0;
+      left: 0;
+    }
+    30% {
+      top: 0;
+      left: 0;
+    }
+    60% {
+      top: 0;
+      left: 0;
+    }
+    100% {
+      top: 7px;
+      left: -7px;
+    }
+  }
+
+  @keyframes pinedAnimationShadow {
+    0% {
+      transform: rotate(31deg)scale(0);
+      opacity: 0;
+    }
+    30% {
+      transform: rotate(31deg) scale(0);
+      opacity: 0;
+    }
+    60% {
+      transform: rotate(31deg) scale(0.5);
+      opacity: 0.2;
+    }
+    100% {
+      transform: rotate(31deg) scale(1);
+      opacity: 0.4;
     }
   }
 
