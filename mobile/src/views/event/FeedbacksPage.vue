@@ -1,8 +1,8 @@
 
 <template>
   <ion-page>
-    <ion-content :fullscreen="true">
-      <current-event-header v-if="confDescriptor" :conf-descriptor="confDescriptor" />
+    <ion-content :fullscreen="true" v-if="confDescriptor">
+      <current-event-header :conf-descriptor="confDescriptor" />
       <ion-header class="toolbarHeader">
         <ion-toolbar>
           <ion-title slot="start" >{{ LL.Feedbacks() }}</ion-title>
@@ -11,9 +11,9 @@
 
       <ion-header class="stickyHeader">
         <day-selector
-            :selected-day-id="currentlySelectedDayId"
-            :days="confDescriptor?.days || []"
-            @day-selected="(day) => changeDayTo(day)">
+            :conf-descriptor="confDescriptor"
+            @once-initialized-with-day="(day) => currentlySelectedDayId = day.id"
+            @day-selected="(day) => currentlySelectedDayId = day.id">
         </day-selector>
       </ion-header>
 
@@ -68,11 +68,10 @@
   import {getRouteParamsValue, toBeImplemented} from "@/views/vue-utils";
   import {useRoute} from "vue-router";
   import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
-  import {ref, watch} from "vue";
+  import {ref} from "vue";
   import {typesafeI18n} from "@/i18n/i18n-vue";
   import DaySelector from "@/components/schedule/DaySelector.vue";
-  import {DayId, VoxxrinDay} from "@/models/VoxxrinDay";
-  import {findBestAutoselectableConferenceDay} from "@/models/VoxxrinConferenceDescriptor";
+  import {DayId} from "@/models/VoxxrinDay";
   import TimeSlotAccordion from "@/components/timeslots/TimeSlotAccordion.vue";
   import {IonAccordionGroup} from "@ionic/vue";
   import {VoxxrinScheduleTimeSlot} from "@/models/VoxxrinSchedule";
@@ -91,18 +90,8 @@
   const {conferenceDescriptor: confDescriptor} = useSharedConferenceDescriptor(eventId);
 
   const currentlySelectedDayId = ref<DayId|undefined>(undefined)
-  const changeDayTo = (day: VoxxrinDay) => {
-      currentlySelectedDayId.value = day.id;
-  }
 
   const { schedule: currentSchedule } = useSchedule(confDescriptor, currentlySelectedDayId)
-
-  watch([confDescriptor, currentlySelectedDayId], ([confDescriptor, selectedDayId]) => {
-      console.debug(`current conf descriptor changed`, confDescriptor, selectedDayId)
-      if (confDescriptor && !selectedDayId) {
-          currentlySelectedDayId.value = findBestAutoselectableConferenceDay(confDescriptor).id;
-      }
-  }, {immediate: true})
 
   const expandedTimeslotIds = ref<string[]>([])
   function toggleExpandedTimeslot(timeslot: VoxxrinScheduleTimeSlot) {

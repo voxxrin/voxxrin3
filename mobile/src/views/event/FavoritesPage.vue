@@ -1,7 +1,7 @@
 <template>
   <ion-page>
-    <ion-content :fullscreen="true">
-      <current-event-header v-if="confDescriptor" :conf-descriptor="confDescriptor" />
+    <ion-content :fullscreen="true" v-if="confDescriptor">
+      <current-event-header :conf-descriptor="confDescriptor" />
       <ion-header class="toolbarHeader">
         <ion-toolbar>
           <ion-title slot="start" >{{ LL.Favorites() }}</ion-title>
@@ -10,9 +10,9 @@
 
       <ion-header class="stickyHeader">
         <day-selector
-            :selected-day-id="currentlySelectedDayId"
-            :days="confDescriptor?.days || []"
-            @day-selected="(day) => changeDayTo(day)">
+            :conf-descriptor="confDescriptor"
+            @once-initialized-with-day="(day) => currentlySelectedDayId = day.id"
+            @day-selected="(day) => currentlySelectedDayId = day.id">
         </day-selector>
       </ion-header>
 
@@ -61,10 +61,10 @@
   import {EventId} from "@/models/VoxxrinEvent";
   import {getRouteParamsValue, isRefDefined} from "@/views/vue-utils";
   import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
-  import {ref, watch} from "vue";
+  import {ref} from "vue";
   import {typesafeI18n} from "@/i18n/i18n-vue";
   import DaySelector from "@/components/schedule/DaySelector.vue";
-  import {DayId, VoxxrinDay} from "@/models/VoxxrinDay";
+  import {DayId} from "@/models/VoxxrinDay";
   import ScheduleBreak from "@/components/schedule/ScheduleBreak.vue";
   import TimeslotsIterator from "@/components/timeslots/TimeslotsIterator.vue";
   import TalkWatchLaterButton from "@/components/talk-card/TalkWatchLaterButton.vue";
@@ -78,7 +78,6 @@
   import {useSchedule} from "@/state/useSchedule";
   import {useTabbedPageNav} from "@/state/useTabbedPageNav";
   import {VoxxrinTalk} from "@/models/VoxxrinTalk";
-  import {findBestAutoselectableConferenceDay} from "@/models/VoxxrinConferenceDescriptor";
   import {useUserEventAllFavoritedTalkIds} from "@/state/useUserTalkNotes";
   import TimeSlotSection from "@/components/timeslots/TimeSlotSection.vue";
 
@@ -89,30 +88,11 @@
   const {conferenceDescriptor: confDescriptor} = useSharedConferenceDescriptor(eventId);
 
   const currentlySelectedDayId = ref<DayId|undefined>(undefined)
-  const changeDayTo = (day: VoxxrinDay) => {
-      currentlySelectedDayId.value = day.id;
-  }
 
   const { schedule: currentSchedule } = useSchedule(confDescriptor, currentlySelectedDayId)
   const { allUserFavoritedTalkIds } = useUserEventAllFavoritedTalkIds(eventId)
 
   const expandedTimeslotIds = ref<string[]>([])
-  function toggleExpandedTimeslot(timeslot: VoxxrinScheduleTimeSlot) {
-      const expandedTimeslotIdsIndex = expandedTimeslotIds.value.indexOf(timeslot.id.value)
-      if(expandedTimeslotIdsIndex === -1) {
-          expandedTimeslotIds.value.push(timeslot.id.value);
-      } else {
-          expandedTimeslotIds.value.splice(expandedTimeslotIdsIndex, 1);
-      }
-  }
-
-  watch([confDescriptor, currentlySelectedDayId], ([confDescriptor, selectedDayId]) => {
-      console.debug(`current conf descriptor changed`, confDescriptor, selectedDayId)
-      if (confDescriptor && !selectedDayId) {
-          currentlySelectedDayId.value = findBestAutoselectableConferenceDay(confDescriptor).id;
-      }
-  }, {immediate: true})
-
 
   const { triggerTabbedPageNavigate } = useTabbedPageNav();
 

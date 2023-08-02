@@ -28,8 +28,8 @@
 
       <ion-header class="stickyHeader">
         <day-selector
-            :selected-day-id="currentlySelectedDayId"
-            :days="confDescriptor?.days || []"
+            :conf-descriptor="confDescriptor"
+            @once-initialized-with-day="(day, days) => onceDayInitializedTo(day, days)"
             @day-selected="(day) => changeDayTo(day)">
         </day-selector>
       </ion-header>
@@ -105,8 +105,6 @@ import {
 import DaySelector from "@/components/schedule/DaySelector.vue";
 import {
     areFeedbacksEnabled,
-    findBestAutoselectableConferenceDay,
-    findVoxxrinDay
 } from "@/models/VoxxrinConferenceDescriptor";
 import TimeSlotAccordion from "@/components/timeslots/TimeSlotAccordion.vue";
 import {useCurrentClock} from "@/state/useCurrentClock";
@@ -130,6 +128,20 @@ const {conferenceDescriptor: confDescriptor} = useSharedConferenceDescriptor(eve
 const { LL } = typesafeI18n()
 
 const currentlySelectedDayId = ref<DayId|undefined>(undefined)
+function onceDayInitializedTo(day: VoxxrinDay, availableDays: VoxxrinDay[]) {
+    changeDayTo(day);
+
+    // Pre-loading other days data in the background, for 2 main reasons :
+    // - navigation to other days will be quickier
+    // - if user switches to offline without navigating to these days, information will be in his cache anyway
+    setTimeout(() => {
+        if(isRefDefined(confDescriptor)) {
+            const otherDayIds = availableDays.filter(availableDay => !availableDay.id.isSameThan(day.id)).map(d => d.id);
+            console.log(`Preparing schedule data for other days than currently selected one (${otherDayIds.map(id => id.value).join(", ")})`)
+            prepareSchedules(confDescriptor.value, day.id, otherDayIds);
+        }
+    }, 5000)
+}
 const changeDayTo = (day: VoxxrinDay) => {
     currentlySelectedDayId.value = day.id;
 
@@ -144,29 +156,9 @@ const searchFieldDisplayed = ref(false);
 const searchTermsRef = ref<string|undefined>(undefined);
 const $searchInput = ref<{ $el: HTMLIonInputElement }|undefined>(undefined);
 
-watch([confDescriptor, currentlySelectedDayId], ([confDescriptor, selectedDayId]) => {
-  console.debug(`current conf descriptor changed`, confDescriptor, selectedDayId)
-  if (confDescriptor && !selectedDayId) {
-      currentlySelectedDayId.value = findBestAutoselectableConferenceDay(confDescriptor).id;
-
-      // Pre-loading other days data in the background, for 2 main reasons :
-      // - navigation to other days will be quickier
-      // - if user switches to offline without navigating to these days, information will be in his cache anyway
-      setTimeout(() => {
-          if(isRefDefined(currentlySelectedDayId)) {
-              const otherDayIds = confDescriptor.days.filter(day => !day.id.isSameThan(currentlySelectedDayId.value)).map(d => d.id);
-              console.log(`Preparing schedule data for other days than currently selected one (${otherDayIds.map(id => id.value).join(", ")})`)
-              prepareSchedules(confDescriptor, currentlySelectedDayId.value, otherDayIds);
-          }
-      }, 5000)
-  }
-}, {immediate: true})
-
 const autoExpandTimeslotsRequested = ref(true);
 watch([confDescriptor, currentSchedule ], ([confDescriptor, currentSchedule]) => {
     if(currentSchedule && confDescriptor) {
-        currentlySelectedDayId.value = findVoxxrinDay(confDescriptor, currentSchedule.day).id
-
         if(autoExpandTimeslotsRequested.value) {
             // Deferring expanded timeslots so that :
             // 1/ we don't load the DOM too much when opening a schedule
