@@ -36,7 +36,7 @@
       </div>
 
       <div class="eventItem-end" slot="end">
-        <ion-button fill="clear" shape="round" @click.stop="$emit('event-pin-toggled', event, isPinnedRef?'pinned-to-unpinned':'unpinned-to-pinned')">
+        <ion-button class="btnPin" fill="clear" shape="round" @click.stop="$emit('event-pin-toggled', event, isPinnedRef?'pinned-to-unpinned':'unpinned-to-pinned')">
           <ion-icon src="/assets/icons/line/pin-line.svg" v-if="!isPinnedRef"></ion-icon>
           <ion-icon class="_is-pined" src="/assets/icons/solid/pin.svg" v-if="isPinnedRef"></ion-icon>
         </ion-button>
@@ -105,11 +105,65 @@ const isPinnedRef = computed(() => {
     transition: 140ms;
   }
 
+  .btnPin {
+    position: relative;
+    transition: 140ms ease-in-out;
+    transform: rotate(0deg);
+
+    ion-icon {
+      transition: 140ms;
+    }
+
+    &:after {
+      opacity: 0;
+      transition: 140ms;
+      transform: rotate(0) scale(0);
+    }
+  }
+
   &._is-pined {
     &:before {
       transition: 140ms;
       transform: scale(1);
       opacity: 1;
+    }
+
+    .btnPin {
+      position: relative;
+      top: -4px;
+      transition: 84ms ease-in-out;
+      animation: pinedAnimation 140ms both;
+
+      &:after {
+        position: absolute;
+        left: -10px;
+        bottom: -15px;
+        height: 28px;
+        width: 34px;
+        opacity: 0.6;
+        transform: rotate(30deg) scale(1) translateX(2px);
+        background: url('/assets/images/png/pined-shadow.png');
+        background-repeat: no-repeat;
+        background-size: 100%;
+        transition: 240ms ease-in-out;
+        content: '';
+      }
+
+      ion-icon {
+        position: relative;
+        transition: 140ms ease-in-out;
+        top: 8px;
+        left: -4px;
+      }
+    }
+  }
+
+  @keyframes pinedAnimation {
+    0% {
+      transform: rotate(0);
+    }
+    100% {
+      transform: rotate(-35deg);
     }
   }
 

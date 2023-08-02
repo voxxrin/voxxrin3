@@ -207,6 +207,10 @@ function eventPinToggled(event: ListableVoxxrinEvent, transitionType: 'unpinned-
       --background-hover-opacity: 0.2;
       border-radius: 58px;
 
+      ion-icon {
+        font-size: 32px;
+      }
+
       @media (prefers-color-scheme: dark) {
         --background: var(--app-dark-contrast);
         --color: var(--app-white);
