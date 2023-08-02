@@ -1,5 +1,5 @@
 <template>
-  <div :class="{ 'slotSection': true, [`_${progress?.status}`]: true, [`_timeslot-is-${timeslot.type}`]: true }">
+  <div :class="{ 'slotSection': true,[`_timeslot-is-${timeslot.type}`]: true }">
     <div class="slotSection-timeline">
       <span class="slot-schedule-start">{{timeslotLabel.start}}</span>
       <span class="slot-schedule-maillon"></span>
@@ -77,39 +77,62 @@ const timeslotLabel = getTimeslotLabel(props.timeslot!);
     width: 64px;
     padding: 16px 0 8px 0;
     border-bottom: 1px dashed var(--app-beige-line);
+    border-right: 1px solid var(--app-beige-line);
     background: var(--app-beige-medium);
     z-index: 2;
+
+    @media (prefers-color-scheme: dark) {
+      background: var(--app-dark-contrast);
+      --color:  var(--app-white);
+    }
 
     .slot-schedule-start,
     .slot-schedule-end {
       flex: 0 0 auto;
-      margin: 4px 0;
+      margin: 2px 0;
       font-weight: bold;
-      font-size: 16px;
+      font-size: 15px;
+      color:  var(--app-primary-dark);
     }
 
     .slot-schedule-maillon {
       position: relative;
       flex: 1;
+      margin: 0 auto;
+      width: 1px;
+      height: 100%;
+      border-left: 2px solid var(--voxxrin-event-theme-colors-secondary-hex);
 
       &:after {
         position: absolute;
         top: 0;
-        left: 50%;
-        width: 12px;
-        height: 50%;
+        left: -10px;
+        width: 10px;
+        height: 10px;
+        border-radius: 18px;
+        border: 4px solid var(--app-beige-medium);
+        background: var(--voxxrin-event-theme-colors-secondary-hex);
         content: '';
-        border-left: 2px solid var(--voxxrin-event-theme-colors-secondary-hex);
+
+        @media (prefers-color-scheme: dark) {
+          border: 4px solid var(--app-dark-contrast);
+        }
       }
 
       &:before {
         position: absolute;
         bottom: 0;
-        left: 50%;
-        width: 12px;
-        height: 50%;
+        left: -10px;
+        width: 10px;
+        height: 10px;
+        border-radius: 18px;
+        border: 4px solid var(--app-beige-medium);
+        background: var(--voxxrin-event-theme-colors-secondary-hex);;
         content: '';
-        border-left: 2px solid var(--voxxrin-event-theme-colors-secondary-hex);
+
+        @media (prefers-color-scheme: dark) {
+          border: 4px solid var(--app-dark-contrast);
+        }
       }
     }
 
@@ -143,6 +166,9 @@ const timeslotLabel = getTimeslotLabel(props.timeslot!);
       color: var(--app-beige-dark);
 
       .slot-schedule-maillon {
+        filter: grayscale(1);
+        border-left: 2px dashed var(--voxxrin-event-theme-colors-secondary-hex);
+
         &:after, &:before {
           border-left: 2px dashed var(--app-beige-dark);
           border-color: var(--app-beige-dark);
@@ -150,9 +176,7 @@ const timeslotLabel = getTimeslotLabel(props.timeslot!);
       }
     }
 
-    :deep(.listTalks) {
-    background: none;
-    }
+    :deep(.listTalks) {background: none;}
 
     .slotOverlap,
     .slotSection-content {
