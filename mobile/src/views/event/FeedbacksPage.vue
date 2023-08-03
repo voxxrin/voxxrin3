@@ -10,15 +10,12 @@
       </ion-header>
 
       <ion-header class="stickyHeader">
-        <day-selector
-            :conf-descriptor="confDescriptor"
-            @once-initialized-with-day="(day) => currentlySelectedDayId = day.id"
-            @day-selected="(day) => currentlySelectedDayId = day.id">
+        <day-selector :conf-descriptor="confDescriptor">
         </day-selector>
       </ion-header>
 
-      <ion-accordion-group :multiple="true" v-if="confDescriptor && currentlySelectedDayId" :value="expandedTimeslotIds">
-        <timeslots-iterator :conf-descriptor="confDescriptor" :day-id="currentlySelectedDayId"
+      <ion-accordion-group :multiple="true" v-if="confDescriptor && selectedDayId" :value="expandedTimeslotIds">
+        <timeslots-iterator :conf-descriptor="confDescriptor" :day-id="selectedDayId"
                             :daily-schedule="currentSchedule"
                             @timeslots-list-updated="timeslots => expandedTimeslotIds = timeslots.map(t => t.id.value)">
           <template #iterator="{ timeslot }">
@@ -71,7 +68,6 @@
   import {ref} from "vue";
   import {typesafeI18n} from "@/i18n/i18n-vue";
   import DaySelector from "@/components/schedule/DaySelector.vue";
-  import {DayId} from "@/models/VoxxrinDay";
   import TimeSlotAccordion from "@/components/timeslots/TimeSlotAccordion.vue";
   import {IonAccordionGroup} from "@ionic/vue";
   import {VoxxrinScheduleTimeSlot} from "@/models/VoxxrinSchedule";
@@ -82,6 +78,7 @@
   import {findTimeslotTalkMatchingFeedback} from "@/models/VoxxrinFeedback";
   import TalkFormat from "@/components/timeslots/TalkFormat.vue";
   import LinearRating from "@/components/ratings/LinearRating.vue";
+  import {useSharedEventSelectedDay} from "@/state/useEventSelectedDay";
 
   const { LL } = typesafeI18n()
 
@@ -89,9 +86,9 @@
   const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')));
   const {conferenceDescriptor: confDescriptor} = useSharedConferenceDescriptor(eventId);
 
-  const currentlySelectedDayId = ref<DayId|undefined>(undefined)
+  const {selectedDayId} = useSharedEventSelectedDay(eventId);
 
-  const { schedule: currentSchedule } = useSchedule(confDescriptor, currentlySelectedDayId)
+  const { schedule: currentSchedule } = useSchedule(confDescriptor, selectedDayId)
 
   const expandedTimeslotIds = ref<string[]>([])
   function toggleExpandedTimeslot(timeslot: VoxxrinScheduleTimeSlot) {

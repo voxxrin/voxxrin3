@@ -29,13 +29,12 @@
       <ion-header class="stickyHeader">
         <day-selector
             :conf-descriptor="confDescriptor"
-            @once-initialized-with-day="(day, days) => onceDayInitializedTo(day, days)"
-            @day-selected="(day) => changeDayTo(day)">
+            @once-initialized-with-day="(day, days) => onceDayInitializedTo(day, days)">
         </day-selector>
       </ion-header>
 
-      <ion-accordion-group :multiple="true" v-if="confDescriptor && currentlySelectedDayId" :value="expandedTimeslotIds">
-        <timeslots-iterator :conf-descriptor="confDescriptor" :day-id="currentlySelectedDayId"
+      <ion-accordion-group :multiple="true" v-if="confDescriptor && selectedDayId" :value="expandedTimeslotIds">
+        <timeslots-iterator :conf-descriptor="confDescriptor" :day-id="selectedDayId"
                             :daily-schedule="currentSchedule" :search-terms="searchTermsRef"
                             @missing-feedback-past-timeslots-updated="updatedMissingTimeslots => missingFeedbacksPastTimeslots = updatedMissingTimeslots">
           <template #iterator="{ timeslot }">
@@ -120,6 +119,7 @@ import TalkRoom from "@/components/talk-card/TalkRoom.vue";
 import TalkFavoriteButton from "@/components/talk-card/TalkFavoriteButton.vue";
 import TalkFormatGroupsBreakdown from "@/components/schedule/TalkFormatGroupsBreakdown.vue";
 import {VoxxrinTalk} from "@/models/VoxxrinTalk";
+import {useSharedEventSelectedDay} from "@/state/useEventSelectedDay";
 
 const route = useRoute();
 const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')));
@@ -127,10 +127,9 @@ const {conferenceDescriptor: confDescriptor} = useSharedConferenceDescriptor(eve
 
 const { LL } = typesafeI18n()
 
-const currentlySelectedDayId = ref<DayId|undefined>(undefined)
-function onceDayInitializedTo(day: VoxxrinDay, availableDays: VoxxrinDay[]) {
-    changeDayTo(day);
+const {selectedDayId} = useSharedEventSelectedDay(eventId);
 
+function onceDayInitializedTo(day: VoxxrinDay, availableDays: VoxxrinDay[]) {
     // Pre-loading other days data in the background, for 2 main reasons :
     // - navigation to other days will be quickier
     // - if user switches to offline without navigating to these days, information will be in his cache anyway
@@ -142,13 +141,8 @@ function onceDayInitializedTo(day: VoxxrinDay, availableDays: VoxxrinDay[]) {
         }
     }, 5000)
 }
-const changeDayTo = (day: VoxxrinDay) => {
-    currentlySelectedDayId.value = day.id;
 
-    autoExpandTimeslotsRequested.value = true;
-}
-
-const { schedule: currentSchedule } = useSchedule(confDescriptor, currentlySelectedDayId)
+const { schedule: currentSchedule } = useSchedule(confDescriptor, selectedDayId)
 
 const missingFeedbacksPastTimeslots = ref<MissingFeedbackPastTimeslot[]>([])
 const expandedTimeslotIds = ref<string[]>([])
@@ -179,6 +173,9 @@ watch([confDescriptor, currentSchedule ], ([confDescriptor, currentSchedule]) =>
         }
     }
 }, {immediate: true});
+watch([selectedDayId], ([updatedDayId]) => {
+    autoExpandTimeslotsRequested.value = updatedDayId !== undefined;
+})
 
 const { triggerTabbedPageNavigate } = useTabbedPageNav();
 

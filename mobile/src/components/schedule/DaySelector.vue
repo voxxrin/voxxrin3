@@ -58,6 +58,7 @@ import {useCurrentClock} from "@/state/useCurrentClock";
 import {IonGrid} from "@ionic/vue";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
+import {useSharedEventSelectedDay} from "@/state/useEventSelectedDay";
 
 const { LL } = typesafeI18n()
 
@@ -74,20 +75,42 @@ const props = defineProps({
 });
 
 const confDescriptorRef = toRef(props, 'confDescriptor');
+const persistedLocalStorageDayKeyName = computed(() => `${confDescriptorRef.value?.id.value}-selected-day`)
 
-const currentlySelectedDayIdRef = ref<DayId|undefined>(undefined)
-watch([confDescriptorRef, currentlySelectedDayIdRef], ([confDescriptor, selectedDayId]) => {
-    if(confDescriptor && confDescriptor.days.length && selectedDayId === undefined) {
-        initializeWithDays(confDescriptor.days);
+const {selectedDayId: currentlySelectedDayIdRef, setSelectedDayId} = useSharedEventSelectedDay(confDescriptorRef.value?.id);
+
+const selectedDayIdUniqueInitializationWatchCleaner = watch([confDescriptorRef, currentlySelectedDayIdRef], ([confDescriptor, selectedDayId]) => {
+    if(confDescriptor && confDescriptor.days.length) {
+        // Making everything into an async block, so that selectedDayIdUniqueInitializationWatchCleaner
+        // gets initialized
+        setTimeout(() => {
+            const availableDays = confDescriptor.days;
+
+            let updatedSelectedDayId: DayId|undefined = undefined;
+            if(selectedDayId !== undefined) {
+                updatedSelectedDayId = selectedDayId;
+            }
+
+            const persistedSelectedDayId = localStorage.getItem(persistedLocalStorageDayKeyName.value)
+            // If nothing pre-selected at component mounting, trying to pre-select day based on localstorage...
+            if(updatedSelectedDayId === undefined && persistedSelectedDayId) {
+                updatedSelectedDayId = confDescriptorRef.value?.days.find(d => d.id.value === persistedSelectedDayId)?.id || undefined;
+            }
+
+            // If nothing loaded from localstorage, trying to guess best auto selectable day
+            if(updatedSelectedDayId === undefined) {
+                updatedSelectedDayId = findBestAutoselectableConferenceDay(availableDays).id;
+            }
+
+            if(updatedSelectedDayId !== undefined) {
+                selectedDayIdUniqueInitializationWatchCleaner();
+                setSelectedDayId(updatedSelectedDayId);
+                emits('once-initialized-with-day', confDescriptor.days.find(d => d.id.isSameThan(updatedSelectedDayId))!, availableDays)
+            }
+        })
     }
 }, {immediate: true})
 
-function initializeWithDays(days: VoxxrinDay[]) {
-    if(currentlySelectedDayIdRef.value === undefined) {
-        currentlySelectedDayIdRef.value = findBestAutoselectableConferenceDay(days).id;
-    }
-    emits('once-initialized-with-day', days.find(d => d.id.isSameThan(currentlySelectedDayIdRef.value))!, days)
-}
 
 function findBestAutoselectableConferenceDay(days: VoxxrinDay[]): VoxxrinDay {
     const today = toISOLocalDate(useCurrentClock().zonedDateTimeISO())
@@ -111,7 +134,8 @@ const formattedDays = computed(() => {
 })
 
 const changeDayTo = (day: VoxxrinDay) => {
-    currentlySelectedDayIdRef.value = day.id;
+    setSelectedDayId(day.id);
+    localStorage.setItem(persistedLocalStorageDayKeyName.value, day.id.value);
     emits('day-selected', day)
 }
 

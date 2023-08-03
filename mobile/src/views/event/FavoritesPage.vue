@@ -9,15 +9,12 @@
       </ion-header>
 
       <ion-header class="stickyHeader">
-        <day-selector
-            :conf-descriptor="confDescriptor"
-            @once-initialized-with-day="(day) => currentlySelectedDayId = day.id"
-            @day-selected="(day) => currentlySelectedDayId = day.id">
+        <day-selector :conf-descriptor="confDescriptor">
         </day-selector>
       </ion-header>
 
-      <ion-accordion-group :multiple="true" v-if="confDescriptor && currentlySelectedDayId" :value="expandedTimeslotIds">
-        <timeslots-iterator :conf-descriptor="confDescriptor" :day-id="currentlySelectedDayId"
+      <ion-accordion-group :multiple="true" v-if="confDescriptor && selectedDayId" :value="expandedTimeslotIds">
+        <timeslots-iterator :conf-descriptor="confDescriptor" :day-id="selectedDayId"
                             :daily-schedule="currentSchedule"
                             @timeslots-list-updated="timeslots => expandedTimeslotIds = timeslots.map(t => t.id.value)">
           <template #iterator="{ timeslot }">
@@ -80,6 +77,7 @@
   import {VoxxrinTalk} from "@/models/VoxxrinTalk";
   import {useUserEventAllFavoritedTalkIds} from "@/state/useUserTalkNotes";
   import TimeSlotSection from "@/components/timeslots/TimeSlotSection.vue";
+  import {useSharedEventSelectedDay} from "@/state/useEventSelectedDay";
 
   const { LL } = typesafeI18n()
 
@@ -87,9 +85,9 @@
   const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')));
   const {conferenceDescriptor: confDescriptor} = useSharedConferenceDescriptor(eventId);
 
-  const currentlySelectedDayId = ref<DayId|undefined>(undefined)
+  const {selectedDayId} = useSharedEventSelectedDay(eventId);
 
-  const { schedule: currentSchedule } = useSchedule(confDescriptor, currentlySelectedDayId)
+  const { schedule: currentSchedule } = useSchedule(confDescriptor, selectedDayId)
   const { allUserFavoritedTalkIds } = useUserEventAllFavoritedTalkIds(eventId)
 
   const expandedTimeslotIds = ref<string[]>([])
