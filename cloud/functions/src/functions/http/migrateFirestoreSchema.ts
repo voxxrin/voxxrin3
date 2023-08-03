@@ -2,6 +2,16 @@ import {https} from "firebase-functions";
 import {extractSingleQueryParam} from "./utils";
 import {db} from "../../firebase";
 import {ISODatetime} from "../../../../../shared/type-utils";
+import {
+    createExistingUsersTokensWallet
+} from "../firestore/migrations/createExistingUsersTokensWallet";
+
+/**
+ * Like Flyway, but for firestore :-)
+ */
+const MIGRATIONS: Migration[] = [{
+    name: "createExistingUsersTokensWallet", exec: createExistingUsersTokensWallet
+}];
 
 export type MigrationResult = "OK"|"Error";
 
@@ -33,17 +43,17 @@ type SchemaMigrations = {
     migrations: PersistedMigration[];
 }
 
-const migrations: Migration[] = [];
-
-const migrationNames = migrations.map(m => m.name);
+const migrationNames = MIGRATIONS.map(m => m.name);
 
 export const migrateFirestoreSchema = https.onRequest(async (request, response) => {
     const migrationToken = extractSingleQueryParam(request, 'migrationToken')
     if(!migrationToken) {
+        response.status(400)
         response.send(`Missing 'migrationToken' query parameter !`)
         return;
     }
     if(migrationToken !== process.env.MIGRATION_TOKEN) {
+        response.status(403)
         response.send(`Forbidden: invalid migrationToken !`)
         return;
     }
@@ -54,12 +64,13 @@ export const migrateFirestoreSchema = https.onRequest(async (request, response) 
     const persistedMigrationNames = persistedMigrations.map(m => m.name);
     const unknownMigrations = persistedMigrationNames.filter(pmn => !migrationNames.includes(pmn))
     if(unknownMigrations.length) {
+        response.status(500)
         response.send(`Unknown migrations detected: ${unknownMigrations.join(", ")}
         Known migrations: ${migrationNames.join(", ")}`);
         return;
     }
 
-    const { executedMigrations: alreadyExecutedMigrations, migrationsToExecute, error } = migrations.reduce((result, migration, idx) => {
+    const { executedMigrations: alreadyExecutedMigrations, migrationsToExecute, error } = MIGRATIONS.reduce((result, migration, idx) => {
         if(result.error) {
             return result;
         }
@@ -78,6 +89,7 @@ export const migrateFirestoreSchema = https.onRequest(async (request, response) 
     }, { executedMigrations: [] as PersistedMigration[], migrationsToExecute: [] as Migration[], error: undefined as string|undefined });
 
     if(error) {
+        response.status(500)
         response.send(`Error: ${error}`);
         return;
     }
@@ -130,6 +142,7 @@ export const migrateFirestoreSchema = https.onRequest(async (request, response) 
     }
     await db.collection('schema-migrations').doc("self").set(updatedSchemaMigration)
 
+    response.status(success?200:500)
     response.send([
         `Executed migrations: [${executedMigrations.map(m => `${m.name} (${m.duration}ms)`).join(", ")}]`,
         migrationFailure?`Migration failure at ${migrationFailure.name}: ${JSON.stringify(migrationFailure)}`:``
