@@ -54,6 +54,13 @@ const { timeslotsRef } = useLabelledTimeslotWithFeedbacks(
     toRef(props, 'dailySchedule'),
     dailyUserFeedbacksRef, toRef(props, 'searchTerms'));
 
+export type MissingFeedbackPastTimeslot = {
+    start: string,
+    end: string,
+    timeslot: VoxxrinScheduleTimeSlot
+}
+const missingFeedbacksPastTimeslotsRef = ref<MissingFeedbackPastTimeslot[]>([])
+
 watch([timeslotsRef], ([timeslots]) => {
     emit('timeslots-list-updated', timeslots);
 })
@@ -80,13 +87,6 @@ watch([
     }
 }, {immediate: true});
 
-export type MissingFeedbackPastTimeslot = {
-    start: string,
-    end: string,
-    timeslot: VoxxrinScheduleTimeSlot
-}
-
-const missingFeedbacksPastTimeslotsRef = ref<MissingFeedbackPastTimeslot[]>([])
 watch([missingFeedbacksPastTimeslotsRef], ([missingFeedbacksPastTimeslots]) => {
     emit('missing-feedback-past-timeslots-updated', missingFeedbacksPastTimeslots)
 })
