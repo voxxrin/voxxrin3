@@ -4,11 +4,11 @@
       <template #talk="{ talk }">
         <ion-item class="listTalks-item">
           <schedule-talk :talk="talk" @talkClicked="updateSelected($event)" :is-highlighted="(talk, talkNotes) => talk.id.isSameThan(selectedTalkId)" :conf-descriptor="confDescriptor">
-            <template #upper-right="{ talk, talkNotesHook }">
-              <talk-is-favorited :talk-notes="talkNotesHook.talkNotes.value" />
+            <template #upper-right="{ talk, talkNotes }">
+              <talk-is-favorited :talk-notes="talkNotes.value" />
             </template>
-            <template #footer-actions="{ talk, talkNotesHook }">
-              <talk-watch-later-button :user-talk-notes="talkNotesHook" :conf-descriptor="confDescriptor"></talk-watch-later-button>
+            <template #footer-actions="{ talk, userTalkHook }">
+              <talk-watch-later-button :user-talk-notes="userTalkHook" :conf-descriptor="confDescriptor"></talk-watch-later-button>
               <talk-select-for-feedback :is-active="talk.id.isSameThan(selectedTalkId)" @click.stop="() => updateSelected(talk)"></talk-select-for-feedback>
             </template>
           </schedule-talk>

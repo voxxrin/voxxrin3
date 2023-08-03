@@ -16,13 +16,13 @@
 
       <div class="middle">
         <div class="item">
-          <slot name="upper-middle" :talk="talk" :talkNotesHook="userTalkNotesHook"></slot>
+          <slot name="upper-middle" :talk="talk" :talkNotes="userTalkNotesHook.talkNotes" :talkStats="userTalkNotesHook.eventTalkStats" :userTalkHook="userTalkNotesHook"></slot>
         </div>
       </div>
 
       <div class="end">
         <div class="item">
-          <slot name="upper-right" :talk="talk"></slot>
+          <slot name="upper-right" :talk="talk" :talkNotes="userTalkNotesHook.talkNotes" :talkStats="userTalkNotesHook.eventTalkStats" :userTalkHook="userTalkNotesHook"></slot>
         </div>
       </div>
     </div>
@@ -40,7 +40,7 @@
       <div class="pictures">
         <div class="picturesItem" v-for="(speaker, index) in talk.speakers" :key="speaker.id.value">
           <ion-thumbnail>
-            <img v-if="speaker.photoUrl" :src="speaker.photoUrl" @error="handle404OnSpeakerThumbnail($event.target)" />
+            <img v-if="speaker.photoUrl" :src="speaker.photoUrl" @error="handle404OnSpeakerThumbnail($event.target as HTMLImageElement)" />
             <img v-if="!speaker.photoUrl" :src="baseUrl+'assets/images/svg/avatar-shadow.svg'" />
           </ion-thumbnail>
         </div>
@@ -53,7 +53,7 @@
         <span class="speakers-list">{{displayedSpeakers}}</span>
       </div>
       <div class="talkActions">
-        <slot name="footer-actions" :talk="talk" :talkNotesHook="userTalkNotesHook" />
+        <slot name="footer-actions" :talk="talk" :talkNotes="userTalkNotesHook.talkNotes" :talkStats="userTalkNotesHook.eventTalkStats" :userTalkHook="userTalkNotesHook" />
       </div>
     </div>
   </ion-card>
@@ -74,8 +74,8 @@ import {TalkNote} from "../../../../shared/feedbacks.firestore";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 
 const baseUrl = import.meta.env.BASE_URL;
-function handle404OnSpeakerThumbnail(img: HTMLImageElement) {
-    if(img.src !== baseUrl+'assets/images/svg/avatar-shadow.svg') {
+function handle404OnSpeakerThumbnail(img: HTMLImageElement|null) {
+    if(img && img.src !== baseUrl+'assets/images/svg/avatar-shadow.svg') {
         img.src = baseUrl+'assets/images/svg/avatar-shadow.svg';
     }
 }

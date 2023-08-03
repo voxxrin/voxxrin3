@@ -48,12 +48,12 @@
                   <template #talk="{ talk }">
                     <ion-item class="listTalks-item">
                       <schedule-talk :talk="talk" @talkClicked="openTalkDetails($event)" :is-highlighted="(talk, talkNotes) => talkNotes.isFavorite" :conf-descriptor="confDescriptor">
-                        <template #upper-right="{ talk, talkNotesHook }">
+                        <template #upper-right="{ talk }">
                           <talk-room :talk="talk" :conf-descriptor="confDescriptor" />
                         </template>
-                        <template #footer-actions="{ talk, talkNotesHook }">
-                          <talk-watch-later-button v-if="confDescriptor" :conf-descriptor="confDescriptor" :user-talk-notes="talkNotesHook" />
-                          <talk-favorite-button v-if="confDescriptor" :conf-descriptor="confDescriptor" :user-talk-notes="talkNotesHook" />
+                        <template #footer-actions="{ talk, userTalkHook }">
+                          <talk-watch-later-button v-if="confDescriptor" :conf-descriptor="confDescriptor" :user-talk-notes="userTalkHook" />
+                          <talk-favorite-button v-if="confDescriptor" :conf-descriptor="confDescriptor" :user-talk-notes="userTalkHook" />
                         </template>
                       </schedule-talk>
                     </ion-item>

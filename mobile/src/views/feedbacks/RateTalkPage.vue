@@ -18,7 +18,7 @@
             <labelled-linear-rating
                 v-if="confDescriptorRef.features.ratings.scale.enabled"
                 :config="confDescriptorRef.features.ratings.scale"
-                @rating-selected="feedback.ratings['linear-rating'] = $event?.score"
+                @rating-selected="feedback.ratings['linear-rating'] = $event?.score || null"
             ></labelled-linear-rating>
             <icon-based-rating
                 v-if="confDescriptorRef.features.ratings['custom-scale'].enabled"

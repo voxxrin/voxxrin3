@@ -35,10 +35,10 @@
                 </ion-item>
                 <ion-item v-else-if="feedback.status === 'provided'" class="listTalks-item">
                   <schedule-talk :talk="findTimeslotTalkMatchingFeedback(timeslot, feedback.userFeedback)!" @talkClicked="toBeImplemented('To be implemented: opening feedback page in EDIT mode')" :is-highlighted="(talk, talkNotes) => talkNotes.isFavorite" :conf-descriptor="confDescriptor">
-                    <template #upper-right="{ talk, talkNotesHook }">
+                    <template #upper-right="{ talk }">
                       <talk-format :format="talk.format" class="talkFormatContainer" />
                     </template>
-                    <template #footer-actions="{ talk, talkNotesHook }">
+                    <template #footer-actions="{ talk }">
                       <linear-rating v-if="confDescriptor.features.ratings.scale.enabled" :config="confDescriptor.features.ratings.scale"
                                      :user-feedback="feedback.userFeedback" :readonly="true" :is-small="true" />
                     </template>

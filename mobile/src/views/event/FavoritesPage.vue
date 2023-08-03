@@ -34,9 +34,9 @@
                             {{talk.room.title}}
                           </div>
                         </template>
-                        <template #footer-actions="{ talk, talkNotesHook }">
-                          <talk-watch-later-button v-if="confDescriptor" :conf-descriptor="confDescriptor" :user-talk-notes="talkNotesHook" />
-                          <talk-favorite-button v-if="confDescriptor" :conf-descriptor="confDescriptor" :user-talk-notes="talkNotesHook" />
+                        <template #footer-actions="{ talk, userTalkHook }">
+                          <talk-watch-later-button v-if="confDescriptor" :conf-descriptor="confDescriptor" :user-talk-notes="userTalkHook" />
+                          <talk-favorite-button v-if="confDescriptor" :conf-descriptor="confDescriptor" :user-talk-notes="userTalkHook" />
                         </template>
                       </schedule-talk>
                     </template>

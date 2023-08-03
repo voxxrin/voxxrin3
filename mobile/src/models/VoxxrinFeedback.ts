@@ -1,4 +1,8 @@
-import {ScheduleTimeSlotId, VoxxrinScheduleTalksTimeSlot} from "@/models/VoxxrinSchedule";
+import {
+    ScheduleTimeSlotId,
+    VoxxrinScheduleTalksTimeSlot,
+    VoxxrinScheduleTimeSlot
+} from "@/models/VoxxrinSchedule";
 import {
     ProvidedUserFeedback,
     UserDailyFeedbacks,
@@ -56,7 +60,11 @@ export function findTimeslotFeedback(dailyUserFeedbacks: UserDailyFeedbacks|unde
     return { status: "missing" };
 }
 
-export function findTimeslotTalkMatchingFeedback(timeslot: VoxxrinScheduleTalksTimeSlot, userFeedback: VoxxrinUserFeedback) {
+export function findTimeslotTalkMatchingFeedback(timeslot: VoxxrinScheduleTimeSlot, userFeedback: VoxxrinUserFeedback) {
+    if(timeslot.type === 'break') {
+        return undefined;
+    }
+
     if(!timeslot.id.isSameThan(userFeedback.timeslotId)) {
         return undefined;
     }
