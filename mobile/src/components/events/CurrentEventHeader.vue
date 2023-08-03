@@ -5,9 +5,7 @@
         <ion-button class="viewsHeader-back" @click="backButtonClicked" shape="round">
           <ion-icon src="/assets/icons/solid/checkbox-list.svg"></ion-icon>
         </ion-button>
-        <ion-button class="btnUser" shape="round">
-          <ion-icon src="/assets/icons/line/user-line.svg"></ion-icon>
-        </ion-button>
+        <global-user-actions-button />
       </div>
 
       <div class="viewsSubHeader">
@@ -25,6 +23,7 @@ import CurrentEventStatus from "@/components/events/CurrentEventStatus.vue";
 import {PropType} from "vue";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {useTabbedPageNav} from "@/state/useTabbedPageNav";
+import GlobalUserActionsButton from "@/components/user/GlobalUserActionsButton.vue";
 
 const router = useIonRouter();
 const props = defineProps({
