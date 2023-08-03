@@ -3,7 +3,7 @@ import {
     DailySchedule,
     ScheduleTimeSlot, TalksTimeSlot,
     TimeSlotBase
-} from "../../../shared/dayly-schedule.firestore";
+} from "../../../shared/daily-schedule.firestore";
 import {
     createVoxxrinTalkFromFirestore, TalkId,
     VoxxrinBreak,

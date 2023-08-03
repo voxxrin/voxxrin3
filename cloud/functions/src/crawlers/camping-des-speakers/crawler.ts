@@ -4,7 +4,7 @@ import {
     BreakTimeSlot,
     DailySchedule, DetailedTalk, ScheduleTimeSlot,
     Speaker, TalksTimeSlot,
-} from "../../../../../shared/dayly-schedule.firestore";
+} from "../../../../../shared/daily-schedule.firestore";
 import * as cheerio from 'cheerio';
 import {ConferenceDescriptor} from "../../../../../shared/conference-descriptor.firestore";
 import axios from "axios";

@@ -3,7 +3,7 @@ import {
     TalkId,
 } from "@/models/VoxxrinTalk";
 import {computed, unref, watch} from "vue";
-import {DetailedTalk} from "../../../shared/dayly-schedule.firestore";
+import {DetailedTalk} from "../../../shared/daily-schedule.firestore";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {collection, doc, DocumentReference} from "firebase/firestore";
 import {db} from "@/state/firebase";

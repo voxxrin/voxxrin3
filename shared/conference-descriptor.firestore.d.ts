@@ -1,6 +1,6 @@
 import {ListableEvent} from "./event-list.firestore";
 import {HexColor} from "./type-utils";
-import {ThemedTalkFormat, ThemedTrack} from "./dayly-schedule.firestore";
+import {ThemedTalkFormat, ThemedTrack} from "./daily-schedule.firestore";
 
 export type ConferenceDescriptor = ListableEvent & {
     headingTitle: string,

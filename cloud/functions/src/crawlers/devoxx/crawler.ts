@@ -12,7 +12,7 @@ import {
     DetailedTalk,
     Speaker,
     Talk
-} from "../../../../../shared/dayly-schedule.firestore"
+} from "../../../../../shared/daily-schedule.firestore"
 import {TalkStats} from "../../../../../shared/feedbacks.firestore";
 import { FullEvent } from "../../models/Event";
 import { ISODatetime, ISOLocalDate } from "../../../../../shared/type-utils";

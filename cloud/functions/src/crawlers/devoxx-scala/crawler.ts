@@ -13,7 +13,7 @@ import {
     DetailedTalk, ScheduleTimeSlot,
     Speaker,
     TalksTimeSlot, ThemedTalkFormat, ThemedTrack
-} from "../../../../../shared/dayly-schedule.firestore"
+} from "../../../../../shared/daily-schedule.firestore"
 import { FullEvent } from "../../models/Event";
 import { ISODatetime } from "../../../../../shared/type-utils";
 import { ListableEvent } from "../../../../../shared/event-list.firestore";

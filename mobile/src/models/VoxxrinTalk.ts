@@ -1,5 +1,5 @@
 import {sortBy, ValueObject} from "@/models/utils";
-import {Break, DetailedTalk, Talk} from "../../../shared/dayly-schedule.firestore";
+import {Break, DetailedTalk, Talk} from "../../../shared/daily-schedule.firestore";
 import {RoomId, VoxxrinRoom} from "@/models/VoxxrinRoom";
 import {SpeakerId, VoxxrinDetailedSpeaker, VoxxrinSimpleSpeaker} from "@/models/VoxxrinSpeaker";
 import {TalkFormatId, VoxxrinTalkFormat} from "@/models/VoxxrinTalkFormat";
