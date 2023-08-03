@@ -8,6 +8,7 @@ import {
     persistentMultipleTabManager,
 } from "firebase/firestore";
 import {firestoreDefaultConverter, globalFirestoreOptions} from "vuefire";
+import { getAuth, connectAuthEmulator } from "firebase/auth";
 
 
 export const app = initializeApp({
@@ -32,6 +33,7 @@ export const db = getFirestore(app);
 
 if (location.hostname === "localhost" && import.meta.env.DEV && import.meta.env.VITE_USE_LOCAL_FIREBASE_INSTANCE === 'true') {
     connectFirestoreEmulator(db, 'localhost', 8080);
+    connectAuthEmulator(getAuth(), "http://localhost:9099");
 }
 
 globalFirestoreOptions.converter = {
