@@ -9,6 +9,11 @@ import {WEB2DAY_CRAWLER} from "./web2day/crawler";
 import {Temporal} from "@js-temporal/polyfill";
 import {CAMPING_DES_SPEAKERS_CRAWLER} from "./camping-des-speakers/crawler";
 import {DEVOXX_SCALA_CRAWLER} from "./devoxx-scala/crawler";
+import {match} from "ts-pattern";
+import {v4 as uuidv4} from "uuid"
+import {DetailedTalk} from "../../../../shared/daily-schedule.firestore";
+import {ConferenceOrganizerSpace} from "../../../../shared/conference-organizer-space.firestore";
+import {TalkAttendeeFeedback, TalkFeedbacks} from "../../../../shared/talk-feedbacks.firestore";
 const axios = require('axios');
 
 export type CrawlerKind<ZOD_TYPE extends z.ZodType> = {
@@ -106,6 +111,28 @@ const saveEvent = async function(event: FullEvent) {
     await db.collection("events").doc(event.id).set(event.info)
 
     const firestoreEvent = await db.collection("events").doc(event.id);
+    const organizerSpaceEntries = await firestoreEvent
+        .collection('organizer-space')
+        .listDocuments();
+
+    const { organizerSpaceContent, organizerSecretToken }  = await match(organizerSpaceEntries.length)
+        .with(0, async () => {
+            const organizerSecretToken = uuidv4();
+            const organizerSpaceContent: ConferenceOrganizerSpace = {
+                organizerSecretToken,
+                talkFeedbackViewerTokens: []
+            }
+
+            await firestoreEvent.collection('organizer-space').doc(organizerSecretToken).set(organizerSpaceContent)
+            return {organizerSecretToken, organizerSpaceContent};
+        }).with(1, async () => {
+            const organizerSecretToken = await organizerSpaceEntries[0].id;
+            const organizerSpaceContent = (await firestoreEvent.collection('organizer-space').doc(organizerSecretToken).get()).data() as ConferenceOrganizerSpace;
+            return {organizerSecretToken, organizerSpaceContent};
+        }).otherwise(async () => {
+            throw new Error(`More than 1 organizer-space entries detected (${organizerSpaceEntries.length}) for event ${event.id}`);
+        })
+
     await Promise.all(event.daySchedules.map(async daySchedule => {
         try {
             await firestoreEvent
@@ -121,6 +148,28 @@ const saveEvent = async function(event: FullEvent) {
             await firestoreEvent
                 .collection("talks").doc(talk.id)
                 .set(talk)
+
+            const existingTalkFeedbackViewerToken = organizerSpaceContent.talkFeedbackViewerTokens
+                .find(tfvt => tfvt.eventId === event.id && tfvt.talkId === talk.id)
+
+            // If token already exists for the talk, let's not add it
+            if(!existingTalkFeedbackViewerToken) {
+                const talkFeedbackViewerSecretToken = uuidv4();
+                const talkFeedbacks: TalkFeedbacks = {
+                    attendeeFeedbacks: []
+                }
+
+                await firestoreEvent
+                    .collection("talks").doc(talk.id)
+                    .collection("feedbacks").doc(talkFeedbackViewerSecretToken)
+                    .set(talkFeedbacks)
+
+                organizerSpaceContent.talkFeedbackViewerTokens.push({
+                    eventId: event.id,
+                    talkId: talk.id,
+                    secretToken: talkFeedbackViewerSecretToken
+                });
+            }
         }catch(e) {
             error(`Error while saving talk ${talk.id}: ${e?.toString()}`)
         }
@@ -132,6 +181,12 @@ const saveEvent = async function(event: FullEvent) {
             .set(event.conferenceDescriptor);
     }catch(e) {
         error(`Error while storing conference descriptor ${event.conferenceDescriptor.id}: ${e?.toString()}`)
+    }
+
+    try {
+        await firestoreEvent.collection('organizer-space').doc(organizerSecretToken).set(organizerSpaceContent)
+    }catch(e) {
+        error(`Error while storing event's organizer-space content`)
     }
 }
 
