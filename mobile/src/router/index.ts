@@ -19,6 +19,12 @@ const routes: Array<RouteRecordRaw> = [
   { path: '/events/:eventId/new-feedback-for-timeslot/:timeslotId', component: () => import('@/views/feedbacks/NewFeedbackPage.vue') },
   { path: '/events/:eventId/rate-talk/:talkId', component: () => import('@/views/feedbacks/RateTalkPage.vue') },
   { path: '/events/:eventId/talks/:talkId/details', component: () => import('@/views/TalkDetailsPage.vue') },
+  { path: '/user/dashboard', component: () => import('@/views/user/UserDashboardPage.vue') },
+  { path: '/user/talks', component: () => import('@/views/user/ViewableTalksHavingFeedbacksPage.vue') },
+  { path: '/user/talks/:talkId/feedbacks', component: () => import('@/views/user/TalkFeedbacksPage.vue') },
+  { path: '/user/my-global-settings', component: () => import('@/views/user/MyGlobalSettingsPage.vue') },
+  { path: '/user/my-personal-data', component: () => import('@/views/user/MyPersonalDataPage.vue') },
+  { path: '/user/my-personal-data', component: () => import('@/views/user/MyPersonalDataPage.vue') },
 ]
 
 const router = createRouter({
