@@ -1,0 +1,65 @@
+.listCardButton {
+  display: flex;
+  flex-direction: column;
+  row-gap: 4px;
+
+  &-item {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: inherit;
+    --padding-top: 22px;
+    --padding-bottom: 22px;
+    --padding-start: 0;
+    --padding-end: 0;
+    --border-radius: 24px;
+    --background: var(--app-beige-medium);
+    --background-focused: var(--app-beige-dark);
+    --background-activated: var(--app-beige-dark);
+    --background-activated-opacity: 0.4;
+    --border-color: var(--app-beige-line);
+    --border-width: 1px;
+    --border-style: solid;
+    color: var(--app-primary);
+
+    @media (prefers-color-scheme: dark) {
+      --background: var(--app-dark-contrast) !important;
+      --background-activated-opacity: 0.1;
+      color: var(--app-white);
+    }
+
+    &-icon {
+      flex: 0 0 auto;
+      padding: 0 16px;
+      font-size: 34px;
+      color: var(--app-voxxrin);
+    }
+
+    &-text {
+      display: flex;
+      flex-direction: column;
+      row-gap: 6px;
+      flex: 1;
+      text-align: left;
+
+      .titleItem {
+        font-size: 18px;
+        font-weight: 600;
+      }
+
+      .subTitleItem {
+        color: var(--app-grey-dark);
+
+        @media (prefers-color-scheme: dark) {
+          color: var(--app-beige-dark);
+        }
+      }
+    }
+
+    &-nav {
+      font-size: 28px;
+      padding-right: 12px;
+      color: var(--app-grey-medium);
+    }
+  }
+}

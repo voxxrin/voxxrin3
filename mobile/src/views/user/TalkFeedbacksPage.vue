@@ -1,8 +1,15 @@
 <template>
   <ion-page>
     <ion-content>
-      TO BE IMPLEMENTED: Talk feedbacks
-      <ion-button @click="goBackOrNavigateTo(ionRouter, `/user/talks`, 0)">Back</ion-button>
+      <ion-header class="stickyHeader">
+        <ion-toolbar>
+          <ion-button class="stickyHeader-close" shape="round" slot="start" size="small" fill="outline"
+                      @click="goBackOrNavigateTo(ionRouter, `/user/talks`, 0)">
+            <ion-icon src="/assets/icons/line/arrow-left-line.svg"></ion-icon>
+          </ion-button>
+          <ion-title class="stickyHeader-title" slot="start">Talk feedbacks</ion-title>
+        </ion-toolbar>
+      </ion-header>
     </ion-content>
   </ion-page>
 </template>
