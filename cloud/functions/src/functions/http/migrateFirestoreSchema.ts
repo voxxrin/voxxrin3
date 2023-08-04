@@ -5,13 +5,15 @@ import {ISODatetime} from "../../../../../shared/type-utils";
 import {
     createExistingUsersTokensWallet
 } from "../firestore/migrations/createExistingUsersTokensWallet";
+import {createExistingUsersInfos} from "../firestore/migrations/createExistingUsersInfos";
 
 /**
  * Like Flyway, but for firestore :-)
  */
-const MIGRATIONS: Migration[] = [{
-    name: "createExistingUsersTokensWallet", exec: createExistingUsersTokensWallet
-}];
+const MIGRATIONS: Migration[] = [
+    { name: "createExistingUsersTokensWallet", exec: createExistingUsersTokensWallet },
+    { name: "createExistingUsersInfos", exec: createExistingUsersInfos },
+];
 
 export type MigrationResult = "OK"|"Error";
 
