@@ -3,7 +3,7 @@ import {UserDailyFeedbacks, UserFeedback} from "../../../../../shared/feedbacks.
 import {db} from "../../firebase";
 import {getSecretTokenDoc} from "./firestore-utils";
 import {ConferenceOrganizerSpace} from "../../../../../shared/conference-organizer-space.firestore";
-import {TalkAttendeeFeedback, TalkFeedbacks} from "../../../../../shared/talk-feedbacks.firestore";
+import {TalkAttendeeFeedback} from "../../../../../shared/talk-feedbacks.firestore";
 import {UserTokensWallet} from "../../../../../shared/user-tokens-wallet.firestore";
 
 
@@ -49,8 +49,8 @@ async function updateTalkFeedbacksFromUserFeedbacks(userId: string, eventId: str
                 throw new Error(`Unexpected unexistant user token wallet for userId=${userId}`);
             }
 
-            const talkFeedbacks = (await db.doc(`events/${eventId}/talks/${feedback.talkId}/feedbacks/${talkFeedbackViewerToken.secretToken}`).get()).data() as TalkFeedbacks|undefined
-                || { attendeeFeedbacks: [] };
+            const userPublicTokensHavingProvidedFeedback = ((await db.collection(`events/${eventId}/talks/${feedback.talkId}/feedbacks-access/${talkFeedbackViewerToken.secretToken}/feedbacks`).listDocuments())
+                || []).map(d => d.id)
 
             const attendeeFeedback: TalkAttendeeFeedback = {
                 talkId: feedback.talkId,
@@ -61,14 +61,7 @@ async function updateTalkFeedbacksFromUserFeedbacks(userId: string, eventId: str
                 attendeePublicToken: userTokensWallet.publicUserToken
             }
 
-            const afIndex = talkFeedbacks.attendeeFeedbacks.findIndex(af => af.talkId === feedback.talkId);
-            if(afIndex === -1) {
-                talkFeedbacks.attendeeFeedbacks.push(attendeeFeedback);
-            } else {
-                talkFeedbacks.attendeeFeedbacks[afIndex] = attendeeFeedback;
-            }
-
-            await db.doc(`events/${eventId}/talks/${feedback.talkId}/feedbacks/${talkFeedbackViewerToken.secretToken}`).set(talkFeedbacks);
+            await db.doc(`events/${eventId}/talks/${feedback.talkId}/feedbacks-access/${talkFeedbackViewerToken.secretToken}/feedbacks/${userTokensWallet.publicUserToken}`).set(attendeeFeedback)
         }
     }))
 }

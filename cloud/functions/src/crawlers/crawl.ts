@@ -11,9 +11,7 @@ import {CAMPING_DES_SPEAKERS_CRAWLER} from "./camping-des-speakers/crawler";
 import {DEVOXX_SCALA_CRAWLER} from "./devoxx-scala/crawler";
 import {match} from "ts-pattern";
 import {v4 as uuidv4} from "uuid"
-import {DetailedTalk} from "../../../../shared/daily-schedule.firestore";
 import {ConferenceOrganizerSpace} from "../../../../shared/conference-organizer-space.firestore";
-import {TalkAttendeeFeedback, TalkFeedbacks} from "../../../../shared/talk-feedbacks.firestore";
 const axios = require('axios');
 
 export type CrawlerKind<ZOD_TYPE extends z.ZodType> = {
@@ -155,14 +153,12 @@ const saveEvent = async function(event: FullEvent) {
             // If token already exists for the talk, let's not add it
             if(!existingTalkFeedbackViewerToken) {
                 const talkFeedbackViewerSecretToken = uuidv4();
-                const talkFeedbacks: TalkFeedbacks = {
-                    attendeeFeedbacks: []
-                }
 
                 await firestoreEvent
                     .collection("talks").doc(talk.id)
-                    .collection("feedbacks").doc(talkFeedbackViewerSecretToken)
-                    .set(talkFeedbacks)
+                    .collection("feedbacks-access").doc(talkFeedbackViewerSecretToken)
+                    // Creating a fake entry so that feedbacks-access/{secretToken} node is created
+                    .collection('_empty').add({ _: 42 })
 
                 organizerSpaceContent.talkFeedbackViewerTokens.push({
                     eventId: event.id,

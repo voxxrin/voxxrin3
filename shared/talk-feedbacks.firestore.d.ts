@@ -1,9 +1,5 @@
 import {ISODatetime} from "./type-utils";
 
-export type TalkFeedbacks = {
-    attendeeFeedbacks: TalkAttendeeFeedback[]
-}
-
 export type TalkAttendeeFeedback = {
     talkId: string,
     attendeePublicToken: string;
