@@ -36,10 +36,11 @@ export function useUserFeedbacks(
             return undefined;
         }
 
-        return doc(collection(doc(collection(doc(collection(db,
+        return doc(collection(doc(collection(doc(collection(doc(collection(db,
             'users'), user.uid),
-            'event-feedbacks'), eventId.value),
-            'days'), dayId.value
+            'events'), eventId.value),
+            'days'), dayId.value),
+            'feedbacks'), 'self'
         ) as DocumentReference<UserDailyFeedbacks>
     });
 
