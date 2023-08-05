@@ -9,6 +9,6 @@ export type UserTokensWallet = {
 }
 
 export type EventOrganizerSecretToken = {
-    token: string;
+    secretToken: string;
     eventId: string;
 }
