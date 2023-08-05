@@ -54,6 +54,21 @@ function backButtonClicked() {
       z-index: -1;
       object-fit: cover;
     }
+
+    .btnUser {
+      height: 48px;
+      width: 48px;
+      --padding-start: 0;
+      --padding-end: 0;
+      font-size: 18px;
+      --background: rgba(var(--app-white-transparent));
+      --border-color: rgba(var(--app-white-transparent));
+      --border-width: 1px;
+
+      :deep(ion-icon) {
+        color: white;
+      }
+    }
   }
   ion-toolbar {
     position: relative;

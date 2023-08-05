@@ -191,6 +191,14 @@ const theme = computed(() => {
 
 <style lang="scss" scoped>
   ion-header {
+    ion-toolbar {
+      &:before, &:after {
+        position: absolute;
+        content: '';
+        z-index: 1;
+      }
+
+    }
 
     &.to-watch-later{
       .btnTalkAction._watchLater {
@@ -198,6 +206,12 @@ const theme = computed(() => {
         --background-activated: var(--voxxrin-event-theme-colors-secondary-hex);
         --color-activated: var(--app-white);
         --color: var(--app-white);
+      }
+
+      ion-toolbar {
+        &:before {
+          background: linear-gradient(331deg, rgba(var(--voxxrin-event-theme-colors-secondary-rgb), 0.6) 30%, rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.6) 80%) !important;
+        }
       }
     }
 
@@ -217,6 +231,39 @@ const theme = computed(() => {
         @media (prefers-color-scheme: dark) {
           background: var(--app-white) !important;
           color: var(--app-primary);
+        }
+      }
+
+      ion-toolbar {
+        &:before {
+          width: 40%;
+          height: 70%;
+          right: 0;
+          bottom: 0;
+          transform: scale(1);
+          background: linear-gradient(331deg, rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.6) 30%, rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.6) 80%);
+          opacity: 1;
+          filter: blur(32px);
+          animation: scale-in-center 0.1s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+        }
+
+        &:after {
+          width: 50%;
+          height: 100%;
+          right: 0;
+          bottom: 0;
+          background-repeat: no-repeat;
+          background-image: url('assets/images/png/texture-favorited.png');
+          background-position: right;
+          background-size: cover;
+          transform: scale(1);
+          opacity: 0.5;
+          mix-blend-mode: overlay;
+          animation: scale-in-center 0.1s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+
+          @media (prefers-color-scheme: dark) {
+            mix-blend-mode: difference;
+          }
         }
       }
     }
