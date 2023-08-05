@@ -91,12 +91,6 @@ export function findVoxxrinDay(conferenceDescriptor: VoxxrinConferenceDescriptor
     return conferenceDescriptor.days[dayIndex];
 }
 
-export function findBestAutoselectableConferenceDay(conferenceDescriptor: VoxxrinConferenceDescriptor): VoxxrinDay {
-    const today = toISOLocalDate(useCurrentClock().zonedDateTimeISO())
-    const confDayMatchingToday = conferenceDescriptor.days.find(d => d.localDate === today)
-    return confDayMatchingToday || conferenceDescriptor.days[0];
-}
-
 export function findRoomIndex(confDescriptor: VoxxrinConferenceDescriptor, roomId: RoomId) {
     return confDescriptor.rooms.findIndex(r => r.id.isSameThan(roomId));
 }

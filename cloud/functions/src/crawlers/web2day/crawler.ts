@@ -4,7 +4,7 @@ import {
     BreakTimeSlot,
     DailySchedule, DetailedTalk, ScheduleTimeSlot,
     Speaker, TalksTimeSlot,
-} from "../../../../../shared/dayly-schedule.firestore";
+} from "../../../../../shared/daily-schedule.firestore";
 import * as cheerio from 'cheerio';
 import {ConferenceDescriptor} from "../../../../../shared/conference-descriptor.firestore";
 import {Day} from "../../../../../shared/event-list.firestore";
@@ -216,6 +216,7 @@ export const WEB2DAY_CRAWLER: CrawlerKind<typeof WEB2DAY_PARSER> = {
                 language: descriptor.supportedTalkLanguages.find(lang => lang.id === rawTalk!.lang)!.id,
                 start: rawTalk!.start,
                 end: rawTalk!.end,
+                tags: []
             };
             return detailedTalk;
         });

@@ -1,7 +1,7 @@
 import {RouteLocationNormalizedLoaded} from "vue-router";
 import {onUnmounted, Ref, unref} from "vue";
 import {Temporal} from "temporal-polyfill";
-import {actionSheetController, ActionSheetOptions} from "@ionic/vue";
+import {actionSheetController, ActionSheetOptions, alertController} from "@ionic/vue";
 
 // Ensure that we only get a single value from route params
 // this is intended to workaround the fact that route.params.foo is string|string[] and we want
@@ -48,3 +48,11 @@ export async function presentActionSheetController(
 }
 
 export type Unreffable<T> = T | Ref<T>
+
+export async function toBeImplemented(message: string) {
+    const alert = await alertController.create({
+        header: 'Not implemented yet !',
+        message: message
+    });
+    alert.present();
+}

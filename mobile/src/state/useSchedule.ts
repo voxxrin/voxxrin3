@@ -1,7 +1,10 @@
-import {computed, unref, watch} from "vue";
-import {DailySchedule} from "../../../shared/dayly-schedule.firestore";
+import {computed, Ref, ref, unref, watch} from "vue";
+import {DailySchedule} from "../../../shared/daily-schedule.firestore";
 import {
     createVoxxrinDailyScheduleFromFirestore,
+    getTimeslotLabel,
+    VoxxrinDailySchedule,
+    VoxxrinScheduleTimeSlot,
 } from "@/models/VoxxrinSchedule";
 import {DayId} from "@/models/VoxxrinDay";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
@@ -12,7 +15,9 @@ import {useDocument} from "vuefire";
 import {prepareEventTalks} from "@/state/useEventTalk";
 import {prepareTalkStats} from "@/state/useEventTalkStats";
 import {prepareUserTalkNotes} from "@/state/useUserTalkNotes";
-import {TalkId} from "@/models/VoxxrinTalk";
+import {filterTalksMatching, TalkId} from "@/models/VoxxrinTalk";
+import {findTimeslotFeedback, VoxxrinTimeslotFeedback} from "@/models/VoxxrinFeedback";
+import {UserDailyFeedbacks} from "../../../shared/feedbacks.firestore";
 
 export function useSchedule(
             conferenceDescriptorRef: Unreffable<VoxxrinConferenceDescriptor | undefined>,
@@ -25,8 +30,6 @@ export function useSchedule(
     watch(() => unref(dayIdRef), (newVal, oldVal) => {
         console.debug(`useSchedule[dayIdRef] updated from [${oldVal?.value}] to [${newVal?.value}]`)
     }, {immediate: true})
-
-
 
     const firestoreDailyScheduleSource = computed(() => {
         const conferenceDescriptor = unref(conferenceDescriptorRef),
@@ -52,7 +55,7 @@ export function useSchedule(
     };
 }
 
-function dailyScheduleDocument(eventDescriptor: VoxxrinConferenceDescriptor|undefined, dayId: DayId|undefined) {
+export function dailyScheduleDocument(eventDescriptor: VoxxrinConferenceDescriptor|undefined, dayId: DayId|undefined) {
     if(!eventDescriptor || !eventDescriptor.id || !eventDescriptor.id.value || !dayId || !dayId.value) {
         return undefined;
     }
@@ -99,6 +102,34 @@ export function prepareSchedules(
             prepareUserTalkNotes(conferenceDescriptor.id, dayAndTalkIds);
         }
     })
+}
 
+export type LabelledTimeslotWithFeedback = VoxxrinScheduleTimeSlot & {
+    label: ReturnType<typeof getTimeslotLabel>,
+    feedback: VoxxrinTimeslotFeedback
+};
 
+export function useLabelledTimeslotWithFeedbacks(
+    dailyScheduleRef: Ref<VoxxrinDailySchedule|undefined>,
+    dailyUserFeedbacksRef: Ref<UserDailyFeedbacks|undefined>,
+    searchTermsRef: Ref<string|undefined>
+) {
+    const timeslotsRef = ref<LabelledTimeslotWithFeedback[]>([]);
+
+    watch([dailyScheduleRef, searchTermsRef, dailyUserFeedbacksRef], ([dailySchedule, searchTerms, dailyUserFeedbacks]) => {
+        if (dailySchedule) {
+            timeslotsRef.value = dailySchedule.timeSlots.map((ts: VoxxrinScheduleTimeSlot): LabelledTimeslotWithFeedback => {
+                const label = getTimeslotLabel(ts);
+                if (ts.type === 'break') {
+                    return {...ts, label, feedback: {status: 'missing'}};
+                } else {
+                    const feedback = findTimeslotFeedback(dailyUserFeedbacks, ts.id);
+                    const filteredTalks = filterTalksMatching(ts.talks, searchTerms);
+                    return {...ts, label, talks: filteredTalks, feedback};
+                }
+            }).filter(ts => ts.type === 'break' || (ts.type === 'talks' && ts.talks.length !== 0));
+        }
+    })
+
+    return { timeslotsRef }
 }

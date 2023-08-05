@@ -8,12 +8,12 @@
   <ion-list class="dayList" v-if="formattedDays.length > 1">
     <ion-item  v-for="(day, index) in formattedDays" :key="day.id.value" :class="{past: today.localeCompare(day.localDate) === 1}">
       <div class="dayList-content">
-        <ion-button class="dayList-button" @click="$emit('day-selected', day)" :class="{
-          selected: day.id.isSameThan(selectedDayId),
+        <ion-button class="dayList-button" @click="changeDayTo(day)" :class="{
+          selected: day.id.isSameThan(currentlySelectedDayIdRef),
           past: today.localeCompare(day.localDate) === 1,
           today: today.localeCompare(day.localDate) === 0,
           future: today.localeCompare(day.localDate) === -1,
-      }">
+        }">
           <div class="dayList-button-content">
             <strong class="day">{{day.formatted.day}}</strong>
             <span class="month">{{day.formatted.month}}</span>
@@ -48,35 +48,76 @@
 </template>
 
 <script setup lang="ts">
-import {computed, PropType, ref, watch} from "vue";
+import {computed, PropType, ref, toRef, watch} from "vue";
 import {DayId, VoxxrinDay} from "@/models/VoxxrinDay";
 import {localDateToReadableParts, toISOLocalDate} from "@/models/DatesAndTime";
 import {useCurrentUserLocale} from "@/state/useCurrentUserLocale";
 import {useInterval} from "@/views/vue-utils";
-import {ISOLocalDate} from "../../../shared/type-utils";
+import {ISOLocalDate} from "../../../../shared/type-utils";
 import {useCurrentClock} from "@/state/useCurrentClock";
 import {IonGrid} from "@ionic/vue";
 import {typesafeI18n} from "@/i18n/i18n-vue";
+import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
+import {useSharedEventSelectedDay} from "@/state/useEventSelectedDay";
 
 const { LL } = typesafeI18n()
 
-defineEmits<{
+const emits = defineEmits<{
+    (e: 'once-initialized-with-day', day: VoxxrinDay, days: VoxxrinDay[]): void,
     (e: 'day-selected', day: VoxxrinDay): void
 }>()
 
 const props = defineProps({
-    days: {
+    confDescriptor: {
         required: true,
-        type: Array as PropType<VoxxrinDay[]>,
-    },
-    selectedDayId: {
-        type: Object as PropType<DayId|undefined>
+        type: Object as PropType<VoxxrinConferenceDescriptor>,
     }
 });
 
-const selectedDay = computed(() => {
-    return props.days.find(d => d.id.isSameThan(props.selectedDayId));
-})
+const confDescriptorRef = toRef(props, 'confDescriptor');
+const persistedLocalStorageDayKeyName = computed(() => `${confDescriptorRef.value?.id.value}-selected-day`)
+
+const {selectedDayId: currentlySelectedDayIdRef, setSelectedDayId} = useSharedEventSelectedDay(confDescriptorRef.value?.id);
+
+const selectedDayIdUniqueInitializationWatchCleaner = watch([confDescriptorRef, currentlySelectedDayIdRef], ([confDescriptor, selectedDayId]) => {
+    if(confDescriptor && confDescriptor.days.length) {
+        // Making everything into an async block, so that selectedDayIdUniqueInitializationWatchCleaner
+        // gets initialized
+        setTimeout(() => {
+            const availableDays = confDescriptor.days;
+
+            let updatedSelectedDayId: DayId|undefined = undefined;
+            if(selectedDayId !== undefined) {
+                updatedSelectedDayId = selectedDayId;
+            }
+
+            const persistedSelectedDayId = localStorage.getItem(persistedLocalStorageDayKeyName.value)
+            // If nothing pre-selected at component mounting, trying to pre-select day based on localstorage...
+            if(updatedSelectedDayId === undefined && persistedSelectedDayId) {
+                updatedSelectedDayId = confDescriptorRef.value?.days.find(d => d.id.value === persistedSelectedDayId)?.id || undefined;
+            }
+
+            // If nothing loaded from localstorage, trying to guess best auto selectable day
+            if(updatedSelectedDayId === undefined) {
+                updatedSelectedDayId = findBestAutoselectableConferenceDay(availableDays).id;
+            }
+
+            if(updatedSelectedDayId !== undefined) {
+                selectedDayIdUniqueInitializationWatchCleaner();
+                setSelectedDayId(updatedSelectedDayId);
+                emits('once-initialized-with-day', confDescriptor.days.find(d => d.id.isSameThan(updatedSelectedDayId))!, availableDays)
+            }
+        })
+    }
+}, {immediate: true})
+
+
+function findBestAutoselectableConferenceDay(days: VoxxrinDay[]): VoxxrinDay {
+    const today = toISOLocalDate(useCurrentClock().zonedDateTimeISO())
+    const confDayMatchingToday = days.find(d => d.localDate === today)
+    return confDayMatchingToday || days[0];
+}
+
 const today = ref<ISOLocalDate>("0000-00-00")
 const tomorrow = ref<ISOLocalDate>("0000-00-00")
 useInterval(() => {
@@ -86,17 +127,23 @@ useInterval(() => {
 }, {minutes:1}, { immediate: true })
 
 const formattedDays = computed(() => {
-    return (props.days || []).map(d => ({
+    return (confDescriptorRef.value.days || []).map(d => ({
         ...d,
         formatted: localDateToReadableParts(d.localDate, useCurrentUserLocale())
     }))
 })
 
+const changeDayTo = (day: VoxxrinDay) => {
+    setSelectedDayId(day.id);
+    localStorage.setItem(persistedLocalStorageDayKeyName.value, day.id.value);
+    emits('day-selected', day)
+}
+
 function findDayByIdValue(dayIdValue: string) {
-    return props.days?.find(day => day.id.value === dayIdValue);
+    return confDescriptorRef.value.days.find(day => day.id.value === dayIdValue);
 }
 function findDayByLocalDate(localDate: string) {
-    return props.days?.find(day => day.localDate === localDate);
+    return confDescriptorRef.value.days.find(day => day.localDate === localDate);
 }
 
 </script>
@@ -182,8 +229,8 @@ function findDayByLocalDate(localDate: string) {
     &-button {
       display: flex;
       align-items: center;
-      height: 44px;
-      width: 44px;
+      height: 44px !important;
+      width: 44px !important;
       --border-radius: 44px;
       --border-width: 1px;
       --border-style: solid;

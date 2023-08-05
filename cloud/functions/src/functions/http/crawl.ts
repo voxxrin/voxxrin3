@@ -1,16 +1,7 @@
 import * as functions from "firebase-functions";
 
 import crawlAll from "../../crawlers/crawl"
-
-function extractSingleQueryParam(request: functions.https.Request, paramName: string) {
-    const value  = request.query[paramName];
-    return Array.isArray(value)?value[0]?.toString():value?.toString();
-}
-
-function extractMultiQueryParam(request: functions.https.Request, paramName: string): string[] {
-    const value  = request.query[paramName];
-    return (Array.isArray(value)?value.map(v => v.toString()):[ value?.toString() ].filter(v => !!v)) as string[];
-}
+import {extractMultiQueryParam, extractSingleQueryParam} from "./utils";
 
 const crawl = functions.https.onRequest(async (request, response) => {
     const crawlingToken = extractSingleQueryParam(request, 'crawlingToken')

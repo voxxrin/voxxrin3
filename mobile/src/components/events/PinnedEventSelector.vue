@@ -18,7 +18,7 @@
           '--voxxrin-event-theme-colors-tertiary-contrast-rgb': pinnedEvent.theming.colors.tertiaryContrastRGB,
       }" v-for="(pinnedEvent, index) in pinnedEvents" :key="pinnedEvent.id.value"
                 @click="$emit('event-selected', pinnedEvent)">
-        <current-event-status :event="pinnedEvent"/>
+        <current-event-status :conf-descriptor="pinnedEvent"/>
         <div>
           <div class="pinnedEvents-card-head">
             <ion-card-title class="title">{{pinnedEvent.title}}</ion-card-title>
@@ -64,7 +64,7 @@ import {
 } from '@ionic/vue';
 import {people} from "ionicons/icons";
 import {ListableVoxxrinEvent} from "@/models/VoxxrinEvent";
-import CurrentEventStatus from "@/components/CurrentEventStatus.vue";
+import CurrentEventStatus from "@/components/events/CurrentEventStatus.vue";
 import MonthDayDateRange from "@/components/MonthDayDateRange.vue";
 
 const props = defineProps({

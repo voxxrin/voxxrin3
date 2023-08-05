@@ -1,7 +1,7 @@
 <template>
   <ion-page>
-    <ion-content :fullscreen="true">
-      <current-event-header v-if="event" :event="event"/>
+    <ion-content :fullscreen="true" v-if="confDescriptor">
+      <current-event-header :conf-descriptor="confDescriptor"/>
       <ion-header class="toolbarHeader">
         <ion-toolbar>
           <ion-title slot="start">{{ LL.Schedule() }}</ion-title>
@@ -28,29 +28,50 @@
 
       <ion-header class="stickyHeader">
         <day-selector
-            :selected-day-id="currentlySelectedDayId"
-            :days="event?.days || []"
-            @day-selected="(day) => changeDayTo(day)">
+            :conf-descriptor="confDescriptor"
+            @once-initialized-with-day="(day, days) => onceDayInitializedTo(day, days)">
         </day-selector>
       </ion-header>
 
-      <ion-accordion-group :multiple="true" v-if="event && currentlySelectedDayId" :value="expandedTimeslotIds">
-          <time-slot-accordion
-              v-for="(timeslot, index) in timeslotsRef" :key="timeslot.id.value"
-              :timeslot-feedback="timeslot.feedback" :timeslot="timeslot"
-              :event="event"
-              @add-timeslot-feedback-clicked="(ts) => showAlertForTimeslot(ts)"
-              @click="() => toggleExpandedTimeslot(timeslot)">
-          </time-slot-accordion>
+      <ion-accordion-group :multiple="true" v-if="confDescriptor && selectedDayId" :value="expandedTimeslotIds">
+        <timeslots-iterator :conf-descriptor="confDescriptor" :day-id="selectedDayId"
+                            :daily-schedule="currentSchedule" :search-terms="searchTermsRef"
+                            @missing-feedback-past-timeslots-updated="updatedMissingTimeslots => missingFeedbacksPastTimeslots = updatedMissingTimeslots">
+          <template #iterator="{ timeslot }">
+            <time-slot-accordion
+                :timeslot-feedback="timeslot.feedback" :timeslot="timeslot" :conf-descriptor="confDescriptor"
+                @add-timeslot-feedback-clicked="(ts) => navigateToTimeslotFeedbackCreation(ts)"
+                @click="() => toggleExpandedTimeslot(timeslot)">
+              <template #accordion-content="{ timeslot }">
+                <schedule-break v-if="timeslot.type==='break'" :conf-descriptor="confDescriptor" :talk-break="timeslot.break"></schedule-break>
+                <talk-format-groups-breakdown :conf-descriptor="confDescriptor" v-if="timeslot.type==='talks'" :talks="timeslot.talks">
+                  <template #talk="{ talk }">
+                    <ion-item class="listTalks-item">
+                      <schedule-talk :talk="talk" @talkClicked="openTalkDetails($event)" :is-highlighted="(talk, talkNotes) => talkNotes.isFavorite" :conf-descriptor="confDescriptor">
+                        <template #upper-right="{ talk }">
+                          <talk-room :talk="talk" :conf-descriptor="confDescriptor" />
+                        </template>
+                        <template #footer-actions="{ talk, userTalkHook }">
+                          <talk-watch-later-button v-if="confDescriptor" :conf-descriptor="confDescriptor" :user-talk-notes="userTalkHook" />
+                          <talk-favorite-button v-if="confDescriptor" :conf-descriptor="confDescriptor" :user-talk-notes="userTalkHook" />
+                        </template>
+                      </schedule-talk>
+                    </ion-item>
+                  </template>
+                </talk-format-groups-breakdown>
+              </template>
+            </time-slot-accordion>
+          </template>
+        </timeslots-iterator>
       </ion-accordion-group>
 
-      <ion-fab vertical="bottom" horizontal="end" slot="fixed" v-if="event && (areFeedbacksEnabled(event) || missingFeedbacksPastTimeslots.length>0)">
+      <ion-fab vertical="bottom" horizontal="end" slot="fixed" v-if="(areFeedbacksEnabled(confDescriptor) || missingFeedbacksPastTimeslots.length>0)">
         <ion-fab-button @click="(ev) => fixAnimationOnFabClosing(ev.target)">
           <ion-icon src="/assets/icons/line/comment-line-add.svg"></ion-icon>
         </ion-fab-button>
         <ion-fab-list side="top" class="listFeedbackSlot">
           <div class="listFeedbackSlot-item" v-for="(missingFeedbacksPastTimeslot, index) in missingFeedbacksPastTimeslots" :key="missingFeedbacksPastTimeslot.timeslot.id.value"
-               @click="() => showAlertForTimeslot(missingFeedbacksPastTimeslot.timeslot)">
+               @click="() => navigateToTimeslotFeedbackCreation(missingFeedbacksPastTimeslot.timeslot)">
             <ion-label>{{ missingFeedbacksPastTimeslot.start }} <ion-icon aria-hidden="true" src="assets/icons/line/chevron-right-line.svg"></ion-icon>
               {{ missingFeedbacksPastTimeslot.end }}</ion-label>
             <ion-icon class="plusIndicator" aria-hidden="true" src="assets/icons/solid/plus.svg"></ion-icon>
@@ -67,98 +88,71 @@ import {
     IonFab,
     IonFabList,
     IonAccordionGroup,
-    alertController, IonInput, modalController,
+    IonInput, modalController,
 } from '@ionic/vue';
-import {useRoute, useRouter} from "vue-router";
-import {onMounted, ref, unref, watch} from "vue";
+import {useRoute} from "vue-router";
+import {ref, watch} from "vue";
 import {prepareSchedules, useSchedule} from "@/state/useSchedule";
-import CurrentEventHeader from "@/components/CurrentEventHeader.vue";
-import {getRouteParamsValue, isRefDefined, isRefUndefined, useInterval} from "@/views/vue-utils";
+import CurrentEventHeader from "@/components/events/CurrentEventHeader.vue";
+import {getRouteParamsValue, isRefDefined} from "@/views/vue-utils";
 import {EventId} from "@/models/VoxxrinEvent";
 import {DayId, VoxxrinDay} from "@/models/VoxxrinDay";
 import {
     filterTimeslotsToAutoExpandBasedOn,
-    getTimeslotLabel,
-    getTimeslotTimingProgress,
     VoxxrinScheduleTimeSlot
 } from "@/models/VoxxrinSchedule";
-import DaySelector from "@/components/DaySelector.vue";
+import DaySelector from "@/components/schedule/DaySelector.vue";
 import {
     areFeedbacksEnabled,
-    findBestAutoselectableConferenceDay,
-    findVoxxrinDay
 } from "@/models/VoxxrinConferenceDescriptor";
-import TimeSlotAccordion from "@/components/TimeSlotAccordion.vue";
-import {VoxxrinTimeslotFeedback} from "@/models/VoxxrinFeedback";
+import TimeSlotAccordion from "@/components/timeslots/TimeSlotAccordion.vue";
 import {useCurrentClock} from "@/state/useCurrentClock";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
-import {filterTalksMatching} from "@/models/VoxxrinTalk";
 import SchedulePreferencesModal from '@/components/modals/SchedulePreferencesModal.vue'
-import {search, searchOutline} from "ionicons/icons";
+import {useTabbedPageNav} from "@/state/useTabbedPageNav";
+import TimeslotsIterator, {MissingFeedbackPastTimeslot} from "@/components/timeslots/TimeslotsIterator.vue";
+import ScheduleBreak from "@/components/schedule/ScheduleBreak.vue";
+import TalkWatchLaterButton from "@/components/talk-card/TalkWatchLaterButton.vue";
+import ScheduleTalk from "@/components/talk-card/ScheduleTalk.vue";
+import TalkRoom from "@/components/talk-card/TalkRoom.vue";
+import TalkFavoriteButton from "@/components/talk-card/TalkFavoriteButton.vue";
+import TalkFormatGroupsBreakdown from "@/components/schedule/TalkFormatGroupsBreakdown.vue";
+import {VoxxrinTalk} from "@/models/VoxxrinTalk";
+import {useSharedEventSelectedDay} from "@/state/useEventSelectedDay";
 
-const router = useRouter();
 const route = useRoute();
 const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')));
-const {conferenceDescriptor: event} = useSharedConferenceDescriptor(eventId);
+const {conferenceDescriptor: confDescriptor} = useSharedConferenceDescriptor(eventId);
 
 const { LL } = typesafeI18n()
 
-const currentlySelectedDayId = ref<DayId|undefined>(undefined)
-const changeDayTo = (day: VoxxrinDay) => {
-    currentlySelectedDayId.value = day.id;
+const {selectedDayId} = useSharedEventSelectedDay(eventId);
 
-    autoExpandTimeslotsRequested.value = true;
+function onceDayInitializedTo(day: VoxxrinDay, availableDays: VoxxrinDay[]) {
+    // Pre-loading other days data in the background, for 2 main reasons :
+    // - navigation to other days will be quickier
+    // - if user switches to offline without navigating to these days, information will be in his cache anyway
+    setTimeout(() => {
+        if(isRefDefined(confDescriptor)) {
+            const otherDayIds = availableDays.filter(availableDay => !availableDay.id.isSameThan(day.id)).map(d => d.id);
+            console.log(`Preparing schedule data for other days than currently selected one (${otherDayIds.map(id => id.value).join(", ")})`)
+            prepareSchedules(confDescriptor.value, day.id, otherDayIds);
+        }
+    }, 5000)
 }
 
-const { schedule: currentSchedule } = useSchedule(event, currentlySelectedDayId)
-const timeslotsRef = ref<Array<VoxxrinScheduleTimeSlot & {feedback: VoxxrinTimeslotFeedback|undefined}>>([]);
-const missingFeedbacksPastTimeslots = ref<Array<{start: string, end: string, timeslot: VoxxrinScheduleTimeSlot}>>([])
+const { schedule: currentSchedule } = useSchedule(confDescriptor, selectedDayId)
+
+const missingFeedbacksPastTimeslots = ref<MissingFeedbackPastTimeslot[]>([])
 const expandedTimeslotIds = ref<string[]>([])
 const searchFieldDisplayed = ref(false);
 const searchTermsRef = ref<string|undefined>(undefined);
 const $searchInput = ref<{ $el: HTMLIonInputElement }|undefined>(undefined);
 
-onMounted(async () => {
-    console.log(`SchedulePage mounted !`)
-    useInterval(recomputeMissingFeedbacksList, {seconds:10}, {immediate: true})
-})
-
-watch([event, currentlySelectedDayId], ([confDescriptor, selectedDayId]) => {
-  console.debug(`current conf descriptor changed`, confDescriptor, selectedDayId)
-  if (confDescriptor && !selectedDayId) {
-      currentlySelectedDayId.value = findBestAutoselectableConferenceDay(confDescriptor).id;
-
-      // Pre-loading other days data in the background, for 2 main reasons :
-      // - navigation to other days will be quickier
-      // - if user switches to offline without navigating to these days, information will be in his cache anyway
-      setTimeout(() => {
-          if(isRefDefined(currentlySelectedDayId)) {
-              const otherDayIds = confDescriptor.days.filter(day => !day.id.isSameThan(currentlySelectedDayId.value)).map(d => d.id);
-              console.log(`Preparing schedule data for other days than currently selected one (${otherDayIds.map(id => id.value).join(", ")})`)
-              prepareSchedules(confDescriptor, currentlySelectedDayId.value, otherDayIds);
-          }
-      }, 5000)
-  }
-}, {immediate: true})
-
 const autoExpandTimeslotsRequested = ref(true);
-watch([event, currentSchedule, searchTermsRef], ([confDescriptor, currentSchedule, searchTerms]) => {
+watch([confDescriptor, currentSchedule ], ([confDescriptor, currentSchedule]) => {
     if(currentSchedule && confDescriptor) {
-        timeslotsRef.value = currentSchedule.timeSlots.map((ts, idx) => {
-            // yes that's weird ... but looks like TS is not very smart here 🤔
-            if(ts.type === 'break') {
-                return {...ts, feedback: idx%2===0?getTimeslotLabel(ts):undefined};
-            } else {
-                const filteredTalks = filterTalksMatching(ts.talks, searchTerms);
-                return {...ts, talks: filteredTalks, feedback: idx%2===0?getTimeslotLabel(ts):undefined};
-            }
-        }).filter(ts => ts.type === 'break' || (ts.type === 'talks' && ts.talks.length !== 0));
-
-        recomputeMissingFeedbacksList();
-
-        currentlySelectedDayId.value = findVoxxrinDay(confDescriptor, currentSchedule.day).id
-
         if(autoExpandTimeslotsRequested.value) {
             // Deferring expanded timeslots so that :
             // 1/ we don't load the DOM too much when opening a schedule
@@ -179,31 +173,22 @@ watch([event, currentSchedule, searchTermsRef], ([confDescriptor, currentSchedul
         }
     }
 }, {immediate: true});
+watch([selectedDayId], ([updatedDayId]) => {
+    autoExpandTimeslotsRequested.value = updatedDayId !== undefined;
+})
 
-function recomputeMissingFeedbacksList() {
-    const timeslots = unref(timeslotsRef);
-    if(!timeslots) {
-        missingFeedbacksPastTimeslots.value = [];
-        return;
+const { triggerTabbedPageNavigate } = useTabbedPageNav();
+
+async function navigateToTimeslotFeedbackCreation(timeslot: VoxxrinScheduleTimeSlot) {
+    triggerTabbedPageNavigate(`/events/${eventId.value.value}/new-feedback-for-timeslot/${timeslot.id.value}`, "forward", "push");
+}
+
+async function openTalkDetails(talk: VoxxrinTalk) {
+    if(talk) {
+        triggerTabbedPageNavigate(`/events/${eventId.value}/talks/${talk.id.value}/details`, "forward", "push");
     }
-
-    missingFeedbacksPastTimeslots.value = timeslots.filter(ts => {
-        return ts.type === 'talks'
-            && !ts.feedback
-            && getTimeslotTimingProgress(ts, useCurrentClock().zonedDateTimeISO()).status === 'past'
-    }).map(timeslot => {
-        const labels = getTimeslotLabel(timeslot)
-        return {timeslot, start: labels.start, end: labels.end };
-    });
 }
 
-async function showAlertForTimeslot(timeslot: VoxxrinScheduleTimeSlot) {
-    const alert = await alertController.create({
-        header: 'Not implemented yet !',
-        message: 'Providing feedback for a timeslot is not implemented (yet)'
-    });
-    alert.present();
-}
 
 // Crappy hack in order to have a pretty ion-fab-list closing animation
 // Basically, we need to avoid changing display:flex => none on ion-fab-list *as soon as* the ion-fab-button
@@ -357,4 +342,24 @@ async function openSchedulePreferencesModal() {
     100% { transform: translateX(120%);}
   }
 
+  .listTalks {
+    padding: 0;
+  }
+
+  :deep(.listTalks-item) {
+    overflow: visible !important;
+    --padding-start: 0;
+    --inner-padding-end: 0;
+    --background: transparent;
+    --border-style: none;
+
+    &:last-child {
+      margin-bottom: var(--app-gutters);
+    }
+  }
+
+  .talkCard {
+    margin-top: 8px;
+    margin-bottom: 4px;
+  }
 </style>

@@ -72,35 +72,6 @@ ion-header  {
             column-gap: 16px;
         }
 
-        &.to-watch-later {
-            .btnTalkAction._watchLater {
-                --background: var(--voxxrin-event-theme-colors-secondary-hex);
-                --background-activated: var(--voxxrin-event-theme-colors-secondary-hex);
-                --color-activated: var(--app-white);
-                --color: var(--app-white);
-            }
-        }
-
-        &.is-favorited {
-            .btnTalkAction._favorite {
-                --background: var(--voxxrin-event-theme-colors-primary-hex);
-                --background-activated: var(--voxxrin-event-theme-colors-primary-hex);
-                --color-activated: var(--app-white);
-                --border-color:  var(--voxxrin-event-theme-colors-primary-hex);
-                --color: var(--app-white);
-            }
-
-            .favorite-btn-nb {
-                background: var(--app-primary) !important;
-                color: var(--app-white);
-
-                @media (prefers-color-scheme: dark) {
-                    background: var(--app-white) !important;
-                    color: var(--app-primary);
-                }
-            }
-        }
-
         .favoriteGroup {
             position: relative;
             margin-left: 12px;
@@ -118,27 +89,6 @@ ion-header  {
 
                 @media (prefers-color-scheme: dark) {
                     background: var(--app-dark-contrast);
-                }
-            }
-        }
-
-        .btnTalkAction {
-            height: 48px;
-            width: 48px;
-            --padding-start: 0;
-            --padding-end: 0;
-            font-size: 22px;
-
-            @media (prefers-color-scheme: dark) {
-                --border-style: none;
-                --background: var(--app-light-contrast);
-            }
-
-            &._favorite {
-                display: flex;
-
-                .favorite-btn-icon {
-                    font-size: 30px !important;
                 }
             }
         }
@@ -203,6 +153,7 @@ ion-header  {
         top: 0;
         height: 100%;
         animation: appearSearchInput 140ms cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+        border-bottom: 1px solid var(--app-beige-line);
         z-index: 1;
 
         ion-input {

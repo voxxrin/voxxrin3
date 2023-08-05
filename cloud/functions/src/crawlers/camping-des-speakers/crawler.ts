@@ -4,10 +4,9 @@ import {
     BreakTimeSlot,
     DailySchedule, DetailedTalk, ScheduleTimeSlot,
     Speaker, TalksTimeSlot,
-} from "../../../../../shared/dayly-schedule.firestore";
+} from "../../../../../shared/daily-schedule.firestore";
 import * as cheerio from 'cheerio';
 import {ConferenceDescriptor} from "../../../../../shared/conference-descriptor.firestore";
-import {Day} from "../../../../../shared/event-list.firestore";
 import axios from "axios";
 import {
     BREAK_PARSER,
@@ -179,6 +178,7 @@ export const CAMPING_DES_SPEAKERS_CRAWLER: CrawlerKind<typeof CAMPING_DES_SPEAKE
                 language: descriptor.supportedTalkLanguages.find(lang => lang.id === rawTalk!.lang)!.id,
                 start: rawTalk!.start,
                 end: rawTalk!.end,
+                tags: []
             };
             return detailedTalk;
         });

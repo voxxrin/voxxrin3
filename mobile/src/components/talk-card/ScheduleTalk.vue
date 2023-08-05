@@ -1,26 +1,47 @@
 <template>
   <ion-card class="talkCard"
             v-if="talkNotes"
-            :class="{ container: true, 'is-highlighted': isHighlighted(talk, talkNotes), 'is-favorited': talkNotes.isFavorite, 'is-to-watch-later': talkNotes.watchLater }"
+            :class="{ container: true, '_is-highlighted': isHighlighted(talk, talkNotes), '_has-favorited': talkNotes.isFavorite, '_has-to-watch-later': talkNotes.watchLater }"
             @click="$emit('talk-clicked', talk)">
     <div class="talkCard-head">
-      <div class="track" v-if="hasTrack">
-        <ion-badge class="trackBadge">
-          <ion-icon src="/assets/icons/solid/tag.svg"></ion-icon>{{talk.track.title}}
-        </ion-badge>
+      <div class="start">
+        <div class="item">
+          <div class="track">
+            <ion-badge class="trackBadge" v-if="hasTrack">
+              <ion-icon src="/assets/icons/solid/tag.svg"></ion-icon>{{talk.track.title}}
+            </ion-badge>
+          </div>
+        </div>
       </div>
 
-      <slot name="upper-right" :talk="talk"></slot>
+      <div class="middle">
+        <div class="item">
+          <slot name="upper-middle" :talk="talk" :talkNotes="userTalkNotesHook.talkNotes" :talkStats="userTalkNotesHook.eventTalkStats" :userTalkHook="userTalkNotesHook"></slot>
+        </div>
+      </div>
+
+      <div class="end">
+        <div class="item">
+          <slot name="upper-right" :talk="talk" :talkNotes="userTalkNotesHook.talkNotes" :talkStats="userTalkNotesHook.eventTalkStats" :userTalkHook="userTalkNotesHook"></slot>
+        </div>
+      </div>
     </div>
 
     <div class="talkCard-content">
-      <ion-badge v-if="talkLang && event.features.hideLanguages.indexOf(talkLang.id.value)===-1" :style="{ '--background': talkLang.themeColor }">{{talkLang.label}}</ion-badge>
-      <div class="title">{{talk.title}}</div>
+      <div class="title"
+           :class="{'_hasTalkLand' : talkLang && confDescriptor.features.hideLanguages.indexOf(talkLang.id.value)===-1}">
+        <ion-badge v-if="talkLang && confDescriptor.features.hideLanguages.indexOf(talkLang.id.value)===-1"
+                   :style="{ '--background':  talkLang.themeColor}"
+                   class="talkLang">
+          {{talkLang.label}}
+        </ion-badge>
+        {{talk.title}}
+      </div>
       <div class="pictures">
         <div class="picturesItem" v-for="(speaker, index) in talk.speakers" :key="speaker.id.value">
           <ion-thumbnail>
-            <img :src="speaker.photoUrl" v-if="speaker.photoUrl"/>
-            <img src="/assets/images/svg/avatar-shadow.svg" v-if="!speaker.photoUrl"/>
+            <img v-if="speaker.photoUrl" :src="speaker.photoUrl" @error="handle404OnSpeakerThumbnail($event.target as HTMLImageElement)" />
+            <img v-if="!speaker.photoUrl" :src="baseUrl+'assets/images/svg/avatar-shadow.svg'" />
           </ion-thumbnail>
         </div>
       </div>
@@ -31,7 +52,9 @@
         <ion-icon src="/assets/icons/solid/megaphone.svg"></ion-icon>
         <span class="speakers-list">{{displayedSpeakers}}</span>
       </div>
-      <slot name="footer-actions" :talk="talk" :talkNotesHook="{ eventTalkStats, talkNotes, toggleFavorite, toggleWatchLater }" />
+      <div class="talkActions">
+        <slot name="footer-actions" :talk="talk" :talkNotes="userTalkNotesHook.talkNotes" :talkStats="userTalkNotesHook.eventTalkStats" :userTalkHook="userTalkNotesHook" />
+      </div>
     </div>
   </ion-card>
 </template>
@@ -46,10 +69,16 @@ import { VoxxrinTalk} from "@/models/VoxxrinTalk";
 import {useRoute} from "vue-router";
 import {EventId} from "@/models/VoxxrinEvent";
 import {getRouteParamsValue} from "@/views/vue-utils";
-import {useUserTalkNotes} from "@/state/useUserTalkNotes";
-import {TalkNote} from "../../../shared/feedbacks.firestore";
+import {UserTalkNotesHook, useUserTalkNotes} from "@/state/useUserTalkNotes";
+import {TalkNote} from "../../../../shared/feedbacks.firestore";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 
+const baseUrl = import.meta.env.BASE_URL;
+function handle404OnSpeakerThumbnail(img: HTMLImageElement|null) {
+    if(img && img.src !== baseUrl+'assets/images/svg/avatar-shadow.svg') {
+        img.src = baseUrl+'assets/images/svg/avatar-shadow.svg';
+    }
+}
 
 const props = defineProps({
   talk: {
@@ -60,7 +89,7 @@ const props = defineProps({
       required: true,
       type: Function as PropType<(talk: VoxxrinTalk, talkNotes: TalkNote) => boolean>
   },
-  event: {
+  confDescriptor: {
       required: true,
       type: Object as PropType<VoxxrinConferenceDescriptor>
   },
@@ -71,19 +100,20 @@ defineEmits<{
 }>()
 
 const talkLang = computed(() => {
-    return props.event!.supportedTalkLanguages.find(lang => lang.id.isSameThan(props.talk!.language))
+    return props.confDescriptor!.supportedTalkLanguages.find(lang => lang.id.isSameThan(props.talk!.language))
 })
 
 const route = useRoute();
 const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')));
 
-const { eventTalkStats, talkNotes, toggleFavorite, toggleWatchLater} = useUserTalkNotes(eventId, props.talk?.id)
+const userTalkNotesHook: UserTalkNotesHook = useUserTalkNotes(eventId, props.talk?.id)
+const { talkNotes } = userTalkNotesHook;
 
 const displayedSpeakers = props.talk!.speakers
     .map(s => `${s.fullName}${s.companyName?` (${s.companyName})`:``}`)
-    .join(", ");
+    .join(", ") || "???";
 
-const hasTrack = (props.event?.talkTracks.length || 0) > 1;
+const hasTrack = (props.confDescriptor?.talkTracks.length || 0) > 1;
 
 const theme = {
   track: {
@@ -99,7 +129,8 @@ const theme = {
   display: flex;
   flex-direction: column;
   row-gap: 8px;
-  width: 100%;
+  flex: 1;
+  margin: 8px;
   border-left: 6px solid v-bind('theme.track.color');
   border-radius: 8px 12px 12px 8px;
   border : {
@@ -130,10 +161,33 @@ const theme = {
   }
 
   &-head {
-    display: flex;
-    column-gap: 16px;
-    justify-content: space-between;
-    padding: 8px 12px 0 8px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+    gap: 0px 0px;
+
+    //display: flex;
+    //justify-content: space-between;
+
+    .item {
+      display: flex;
+    }
+    .start {
+      grid-area: 1 / 1 / 2 / 4;
+      .item { flex-direction: row; }
+      padding-top: 8px;
+    }
+    .end {
+      grid-area: 1 / 4 / 2 / 7;
+      .item { flex-direction: row-reverse; }
+      padding-top: 8px;
+    }
+    .middle {
+      grid-area: 1 / 3 / 2 / 5;
+      .item { justify-content: center; }
+    }
+
+    padding: 0 12px 0 8px;
 
     @mixin background-opacity($color, $opacity: 0.3) {
       background: $color; /* The Fallback */
@@ -183,8 +237,18 @@ const theme = {
       font-size: 16px;
       line-height: 1.2;
 
+      &._hasTalkLand { text-indent: 4px;}
+
       @media (prefers-color-scheme: dark) {
         color: var(--app-white);
+      }
+
+      .talkLang {
+        float: left;
+        font-size: 12px;
+        height: 19px;
+        width: 28px !important;
+        text-indent: 0;
       }
     }
 
@@ -260,26 +324,61 @@ const theme = {
       }
     }
   }
-}
 
-//* States card talk *//
-::v-deep {
-  &.is-highlighted {
+  //* States card talk *//
+
+  &._is-highlighted {
     border : {
-      top: 2px solid var(--voxxrin-event-theme-colors-secondary-hex);
-      bottom: 2px solid var(--voxxrin-event-theme-colors-secondary-hex);
-      right: 2px solid var(--voxxrin-event-theme-colors-secondary-hex);
+      top: 2px solid var(--app-primary);
+      bottom: 2px solid var(--app-primary);
+      right: 2px solid var(--app-primary);
     }
 
     @media (prefers-color-scheme: dark) {
       border : {
-        top: 2px solid var(--app-white);
-        bottom: 2px solid var(--app-white);
-        right: 2px solid var(--app-white);
+        top: 2px solid var(--app-white) !important;
+        bottom: 2px solid var(--app-white) !important;
+        right: 2px solid var(--app-white) !important;
       }
     }
 
-    &.is-favorited {
+    ion-thumbnail {
+      background-color: var(--app-background);
+      border: 2px solid var(--app-primary);
+
+      @media (prefers-color-scheme: dark) {
+        border: 2px solid var(--app-white) !important;
+      }
+    }
+
+    .talkCard-footer {
+      border-width: 2px;
+      border-color: var(--app-primary);
+      border-bottom: none;
+
+      @media (prefers-color-scheme: dark) {
+        border-color: var(--app-white) !important;
+      }
+
+      :deep(.linearRating) {
+        border-width: 2px;
+        border-color: var(--app-primary);
+      }
+
+
+      /* TODO RLZ: move it to a proper place in talk actions components */
+      :deep(.btnTalk) {
+        border-width: 2px;
+        border-color: var(--app-primary);
+
+        @media (prefers-color-scheme: dark) {
+          border-color: var(--app-white) !important;
+        }
+      }
+    }
+
+    //* Add paint stain style when card favorited or Pin Feedback *//
+    &._has-favorited {
       border : {
         top: 2px solid var(--app-primary-shade);
         bottom: 2px solid var(--app-primary-shade);
@@ -287,33 +386,51 @@ const theme = {
       }
 
       @media (prefers-color-scheme: dark) {
-        border : {
+        --border : {
           top: 2px solid var(--app-white);
           bottom: 2px solid var(--app-white);
           right: 2px solid var(--app-white);
         }
       }
 
-      &:before {
-        background: rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.6);
-      }
+      &:before { background: rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.6);}
 
       ion-thumbnail { border: 2px solid var(--app-primary-shade);}
 
       .talkCard-footer {
         border-color: var(--app-primary-shade);
 
-        .btnTalk { border-color: var(--app-primary-shade);}
+        /* TODO RLZ: move it to a proper place in talk actions components */
+        :deep(.btnTalk) { border-color: var(--app-primary-shade);}
       }
     }
 
+    //* TODO - Start - Delete when btn is component *//
+    //* Change style type actions *//
+    ion-button {
+      &.btn-watchLater {
+        --background: var(--voxxrin-event-theme-colors-secondary-hex);
+        --color: var(--voxxrin-event-theme-colors-secondary-contrast-hex);
+        border-left: 1px solid var(--voxxrin-event-theme-colors-secondary-hex);
+      }
+
+      &.btn-feedbackSelect {
+        --background: var(--voxxrin-event-theme-colors-primary-hex);
+        --color: var(--voxxrin-event-theme-colors-primary-contrast-hex);
+        border-left: 1px solid var(--voxxrin-event-theme-colors-primary-hex);
+      }
+      //* END - Delete when btn is component *//
+    }
+  }
+
+  &._has-favorited {
     &:before {
       width: 40%;
       height: 70%;
       right: 0;
       bottom: 0;
-      background: linear-gradient(331deg, rgba(var(--voxxrin-event-theme-colors-secondary-rgb), 0.6) 30%, rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.6) 80%);
       transform: scale(1);
+      background: linear-gradient(331deg, rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.6) 30%, rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.6) 80%);
       opacity: 1;
       filter: blur(32px);
       animation: scale-in-center 0.1s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
@@ -338,65 +455,19 @@ const theme = {
       }
     }
 
-    ion-thumbnail {
-      background-color: var(--app-background);
-      border: 2px solid var(--voxxrin-event-theme-colors-secondary-hex);
-    }
-
-    .talkCard-footer {
-      border-width: 2px;
-      border-color: var(--voxxrin-event-theme-colors-secondary-hex);
-      border-bottom: none;
-
-      @media (prefers-color-scheme: dark) {
-        border-color: var(--app-white) !important;
-      }
-
-      .btnTalk {
-        border-width: 2px;
-        border-color: var(--voxxrin-event-theme-colors-secondary-hex);
-
-        @media (prefers-color-scheme: dark) {
-          border-color: var(--app-white) !important;
-        }
-      }
-    }
-
-    //* Change style type actions *//
-    ion-button {
-      &.favorite-btn {
-        --background: var(--voxxrin-event-theme-colors-primary-hex);
-        --color: var(--voxxrin-event-theme-colors-primary-contrast-hex);
-        border-left: 1px solid var(--app-primary-shade);
-        --border-radius:  0 0 8px 0 !important;
-      }
-
-      &.feedback-select-btn {
-        --background: var(--voxxrin-event-theme-colors-secondary-hex);
-        --color: var(--voxxrin-event-theme-colors-secondary-contrast-hex);
-        border-left: 1px solid var(--voxxrin-event-theme-colors-secondary-hex);
+    &._has-to-watch-later {
+      &:before {
+        background: linear-gradient(331deg, rgba(var(--voxxrin-event-theme-colors-secondary-rgb), 0.6) 30%, rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.6) 80%) !important;
       }
     }
   }
 
-  @keyframes scale-in-center {
-    0% {
-      -webkit-transform: scale(0);
-      transform: scale(0);
-      opacity: 1;
-    }
-    100% {
-      -webkit-transform: scale(1);
-      transform: scale(1);
-      opacity: 1;
-    }
-  }
+  .talkActions {
+    display: flex;
+    flex-direction: row;
 
-  &.is-to-watch-later {
-    ion-button.watch-later-btn {
-      --background: var(--voxxrin-event-theme-colors-secondary-hex);
-      --color: var(--voxxrin-event-theme-colors-secondary-contrast-hex);
-      border-left: 1px solid var(--voxxrin-event-theme-colors-secondary-hex);
+    :deep(.talkAction) {
+      height: 100%;
     }
   }
 }

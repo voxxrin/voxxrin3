@@ -1,7 +1,7 @@
 <template>
   <ion-page>
     <ion-content :fullscreen="true">
-      <current-event-header v-if="event" :event="event" />
+      <current-event-header v-if="confDescriptor" :conf-descriptor="confDescriptor" />
 
       <ion-header class="stickyHeader">
         <ion-toolbar>
@@ -20,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-  import CurrentEventHeader from "@/components/CurrentEventHeader.vue";
+  import CurrentEventHeader from "@/components/events/CurrentEventHeader.vue";
   import {useRoute} from "vue-router";
   import {EventId} from "@/models/VoxxrinEvent";
   import {getRouteParamsValue} from "@/views/vue-utils";
@@ -32,5 +32,5 @@
 
   const route = useRoute();
   const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')));
-  const {conferenceDescriptor: event} = useSharedConferenceDescriptor(eventId);
+  const {conferenceDescriptor: confDescriptor} = useSharedConferenceDescriptor(eventId);
 </script>

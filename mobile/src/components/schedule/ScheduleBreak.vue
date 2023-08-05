@@ -30,7 +30,7 @@ const props = defineProps({
         required: true,
         type: Object as PropType<VoxxrinBreak>
     },
-    event: {
+    confDescriptor: {
         required: true,
         type: Object as PropType<VoxxrinConferenceDescriptor>
     }
@@ -113,9 +113,12 @@ const props = defineProps({
     }
 
     .breakIcon {
+      position: absolute;
       padding: 0 8px 0 16px;
-      font-size: 64px;
+      font-size: 98px;
       color: var(--app-primary-shade);
+      top: -16px;
+      right: 0;
 
 
       @media (prefers-color-scheme: dark) {

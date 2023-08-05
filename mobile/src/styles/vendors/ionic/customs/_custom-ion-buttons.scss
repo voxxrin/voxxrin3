@@ -3,6 +3,9 @@
 ion-button {
     --border-radius: 54px;
 
+    text-transform: inherit;
+    letter-spacing: inherit;
+
     //* Adjust base Size & Color
     &.button-default {
         height: 42px;
@@ -12,7 +15,23 @@ ion-button {
         }
     }
 
-    //* Adjust Type
+    &.ion-color-medium {
+        --ion-color-base: var(--app-beige-medium) !important;
+        --ion-color-contrast: var(--app-primary-shade) !important;
+        --background-activated: var(--app-beige-dark) !important;
+        --border-color: var(--app-beige-line) !important;
+        --border-width: 1px;
+        --border-style: solid;
+
+        @media (prefers-color-scheme: dark) {
+            --ion-color-base: transparent !important;
+            --ion-color-contrast: var(--app-grey-medium) !important;
+            --background: transparent !important;
+            --border-color: var(--app-line-contrast) !important;
+        }
+    }
+
+    //* Adjust Ionic Btn Type
     &.button-solid {
         @media (prefers-color-scheme: dark) {
             --background: var(--app-white);
@@ -37,7 +56,7 @@ ion-button {
         }
     }
 
-    //* Adjust Shapes
+    //* Adjust Ionic Btn Shapes
     &.button-round {
        &.button-default {
            --border-radius: 42px;
@@ -52,23 +71,51 @@ ion-button {
            --border-radius: 42px;
            --padding-start: 0;
            --padding-end: 0;
-           width: 36px;
-           height: 36px;
+           height: 44px !important;
+           min-width: 44px !important;
            font-size: 16px;
        }
    }
 
-    //* Adjust Size
-    &.button-small {
-        height: 36px !important;
-        width: 36px !important;;
+    //* Add Specific Styles Voxxrin Button *//
+    &.viewsHeader-back {
+        height: 48px;
+        width: 48px;
+        --padding-start: 0;
+        --padding-end: 0;
+        font-size: 18px;
+        --background: rgba(var(--app-white-transparent));
+        --border-color: rgba(var(--app-white-transparent));
+        --border-width: 1px;
+        --border-style: solid;
     }
 
-    //* Specific
-    &.btnUser  { --background: rgba(var(--app-white-transparent));}
+    /* TODO RLZ: move it to a proper place in talk actions components */
+    &.btnTalk {
+        height: 100% !important;
+        min-height: 55px !important;
+        width: 58px !important;
+        margin: 0;
+        --border-radius: 0;
+        --background: rgba(white, 0.5);
+        --color: var(--app-primary);
+        border-left: 1px solid var(--app-grey-line);
+        font-size: 20px;
+        --padding-start: 0;
+        --padding-end: 0;
+        --background-activated-opacity: 0.1;
+        --background-hover-opacity: 0.1;
+        --box-shadow: none;
+
+        @media (prefers-color-scheme: dark) {
+            --background: rgba(white, 0.2);
+            --color: var(--app-white);
+            border-left: 1px solid var(--app-line-contrast);
+        }
+    }
 }
 
-//* Btn Float
+//* Ionic Btn Float
 ion-fab {
     ion-fab-button {
 

@@ -6,10 +6,7 @@
           <span class="name">{{ LL.Hello_xxx({name:'World'}) }}</span>
           <span class="welcome">{{ LL.Welcome_to() }} <strong>Voxxrin</strong></span>
         </div>
-        <ion-button class="btnUser" shape="round" size="large">
-          <ion-icon src="/assets/icons/line/user-line.svg"></ion-icon>
-          <ion-ripple-effect type="unbounded"></ion-ripple-effect>
-        </ion-button>
+        <global-user-actions-button />
       </ion-header>
 
       <ion-header class="conferenceHeader stickyHeader" collapse="condense">
@@ -70,16 +67,17 @@ import {
 } from '@ionic/vue';
 import {EventId, ListableVoxxrinEvent, searchEvents} from "@/models/VoxxrinEvent";
 import {computed, ref, Ref, watch} from "vue";
-import AvailableEventsList from "@/components/AvailableEventsList.vue";
+import AvailableEventsList from "@/components/events/AvailableEventsList.vue";
 import {presentActionSheetController} from "@/views/vue-utils";
 import {Browser} from "@capacitor/browser";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {
     ActionSheetButton
 } from "@ionic/core/dist/types/components/action-sheet/action-sheet-interface";
-import PinnedEventSelector from "@/components/PinnedEventSelector.vue";
+import PinnedEventSelector from "@/components/events/PinnedEventSelector.vue";
 import {useAvailableEvents} from "@/state/useAvailableEvents";
 import {useSharedUserPreferences} from "@/state/useUserPreferences";
+import GlobalUserActionsButton from "@/components/user/GlobalUserActionsButton.vue";
 
 const router = useIonRouter();
 const { LL } = typesafeI18n()
@@ -191,26 +189,6 @@ function eventPinToggled(event: ListableVoxxrinEvent, transitionType: 'unpinned-
         strong {
           color: var(--app-voxxrin);
         }
-      }
-    }
-
-    .btnUser {
-      height: 58px;
-      width: 58px;
-      border: 1px solid var(--app-beige-line);
-      --padding-end: 0;
-      --padding-start: 0;
-      --background: var(--app-beige-medium);
-      --color: var(--app-beige-dark);
-      --background-activated-opacity: 0.2;
-      --background-focused-opacity: 0.2;
-      --background-hover-opacity: 0.2;
-      border-radius: 58px;
-
-      @media (prefers-color-scheme: dark) {
-        --background: var(--app-dark-contrast);
-        --color: var(--app-white);
-        border: none;
       }
     }
   }

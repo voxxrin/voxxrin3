@@ -1,5 +1,7 @@
 <template>
-    <ion-item class="eventItem" v-if="event" :style="{
+    <ion-item class="eventItem" v-if="event"
+              :class="{'_is-pined' : isPinnedRef}"
+              :style="{
         '--voxxrin-event-background-url': `url('${event.backgroundUrl}')`,
         '--voxxrin-event-logo-url': `url('${event.logoUrl}')`,
         '--voxxrin-event-theme-colors-primary-hex': event.theming.colors.primaryHex,
@@ -34,7 +36,7 @@
       </div>
 
       <div class="eventItem-end" slot="end">
-        <ion-button fill="clear" shape="round" @click.stop="$emit('event-pin-toggled', event, isPinnedRef?'pinned-to-unpinned':'unpinned-to-pinned')">
+        <ion-button class="btnPin" fill="clear" shape="round" @click.stop="$emit('event-pin-toggled', event, isPinnedRef?'pinned-to-unpinned':'unpinned-to-pinned')">
           <ion-icon src="/assets/icons/line/pin-line.svg" v-if="!isPinnedRef"></ion-icon>
           <ion-icon class="_is-pined" src="/assets/icons/solid/pin.svg" v-if="isPinnedRef"></ion-icon>
         </ion-button>
@@ -85,6 +87,138 @@ const isPinnedRef = computed(() => {
 
   @media (prefers-color-scheme: dark) {
     --border-color: var(--app-line-contrast);
+  }
+
+  &:before {
+    position: absolute;
+    content: '';
+    z-index: 2;
+    width: 54px;
+    height: 100%;
+    right: 0;
+    top: 0;
+    background: rgba(var(--app-voxxrin-rgb), 0.25);
+    transform: scale(0);
+    opacity: 0;
+    filter: blur(32px);
+    pointer-events: none;
+    transition: 140ms;
+  }
+
+  .btnPin {
+    position: relative;
+    transition: 140ms ease-in-out;
+    transform: rotate(0deg);
+
+    ion-icon {
+      transition: 140ms;
+    }
+
+    &:after {
+      transition: 140ms;
+      transform: rotate(0) scale(0);
+    }
+  }
+
+  &._is-pined {
+    &:before {
+      transition: 140ms;
+      transform: scale(1);
+      opacity: 1;
+    }
+
+    .btnPin {
+      position: relative;
+      animation: pinedAnimation 600ms both;
+
+      &:after {
+        position: absolute;
+        left: -13px;
+        bottom: -15px;
+        height: 28px;
+        width: 34px;
+        background: url('/assets/images/png/pined-shadow.png');
+        background-repeat: no-repeat;
+        background-size: 100%;
+        content: '';
+        animation: pinedAnimationShadow 500ms both;
+      }
+
+      ion-icon {
+        position: relative;
+        top: 7px;
+        left: -7px;
+        animation: pinedAnimationIcon 500ms both;
+      }
+    }
+  }
+
+  @keyframes pinedAnimation {
+    0% {
+      transform: rotate(0);
+    }
+    30% {
+      transform: rotate(-45deg);
+      top: -8px;
+    }
+    60% {
+      top: -10px;
+    }
+    100% {
+      transform: rotate(-45deg);
+      top: 0;
+    }
+  }
+
+  @keyframes pinedAnimationIcon {
+    0% {
+      top: 0;
+      left: 0;
+    }
+    30% {
+      top: 0;
+      left: 0;
+    }
+    60% {
+      top: 0;
+      left: 0;
+    }
+    100% {
+      top: 7px;
+      left: -7px;
+    }
+  }
+
+  @keyframes pinedAnimationShadow {
+    0% {
+      transform: rotate(31deg)scale(0);
+      opacity: 0;
+    }
+    30% {
+      transform: rotate(31deg) scale(0);
+      opacity: 0;
+    }
+    60% {
+      transform: rotate(31deg) scale(0.5);
+      opacity: 0.2;
+    }
+    100% {
+      transform: rotate(31deg) scale(1);
+      opacity: 0.4;
+    }
+  }
+
+  @keyframes scale-in-center {
+    0% {
+      -webkit-transform: scale(0);
+      transform: scale(0);
+      opacity: 1;
+    }
+    100% {
+      -webkit-transform: scale(1);
+      transform: scale(1);
+      opacity: 1;
+    }
   }
 
   &-logoContainer {
@@ -189,12 +323,28 @@ const isPinnedRef = computed(() => {
   }
 
   &-end {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
     height: 100%;
-    margin-inline-start: 8px;
-    margin-inline-end: 24px;
+    padding-inline-start: 16px;
+    padding-inline-end: 16px;
+
+    &:before {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      transform: translate(0, -50%);
+      width: 1px;
+      height: calc(100% - 34px);
+      background-color: var(--app-beige-line);
+      content: '';
+    }
+
+    ion-button {
+      height: 100% !important;
+    }
 
     ion-icon {
       width: 34px;

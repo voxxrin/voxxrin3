@@ -163,7 +163,8 @@ export const DETAILED_TALK_PARSER =  TALK_PARSER.extend({
     start: ISO_DATETIME_PARSER,
     end: ISO_DATETIME_PARSER,
     summary: z.string(),
-    description: z.string()
+    description: z.string(),
+    tags: z.array(z.string())
 })
 
 export const TIME_SLOT_BASE_PARSER = z.object({

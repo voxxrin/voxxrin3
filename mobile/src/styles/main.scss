@@ -6,7 +6,7 @@
 @import "@/styles/utils/_helpers.scss";
 
 /* ~ COMPONENTS*/
-@import "@/styles/components/_slotOverlay.scss";
+@import "@/styles/components/_listCardsButtons.scss";
 
 /* ~ BASE */
 @import "@/styles/base/base.scss";
@@ -26,3 +26,7 @@
 @import "@/styles/vendors/ionic/metrics-ionic-variables.scss";
 @import "@/styles/vendors/ionic/theme-ionic-variables.scss";
 @import "@/styles/vendors/font.scss";
+
+
+/* ~ UTILS*/
+@import "@/styles/utils/_animations.scss";

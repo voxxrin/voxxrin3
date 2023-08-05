@@ -13,7 +13,7 @@ import {
     DetailedTalk, ScheduleTimeSlot,
     Speaker,
     TalksTimeSlot, ThemedTalkFormat, ThemedTrack
-} from "../../../../../shared/dayly-schedule.firestore"
+} from "../../../../../shared/daily-schedule.firestore"
 import { FullEvent } from "../../models/Event";
 import { ISODatetime } from "../../../../../shared/type-utils";
 import { ListableEvent } from "../../../../../shared/event-list.firestore";
@@ -204,7 +204,8 @@ export const DEVOXX_SCALA_CRAWLER: CrawlerKind<typeof DEVOXX_SCALA_DESCRIPTOR_PA
                             },
                             room,
                             summary: talk.summaryAsHtml,
-                            description: talk.summaryAsHtml
+                            description: talk.summaryAsHtml,
+                            tags: []
                         }
 
                         talks.push(detailedTalk);

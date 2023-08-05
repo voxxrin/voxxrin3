@@ -50,7 +50,6 @@ app
 // const detectedLocale = detectLocale(navigatorDetector)
 const detectedLocale = 'en';
 
-loadLocaleAsync(detectedLocale);
 
 const auth = useFirebaseAuth()!
 

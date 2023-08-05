@@ -2,59 +2,42 @@
   <ion-header class="ion-no-border">
     <ion-toolbar>
       <div class="viewsHeader">
-        <ion-button class="viewsHeader-back" @click="backButtonClicked" shape="round" size="default">
-          <ion-icon src="/assets/icons/solid/arrow-left.svg"></ion-icon>
+        <ion-button class="viewsHeader-back" @click="backButtonClicked" shape="round">
+          <ion-icon src="/assets/icons/solid/checkbox-list.svg"></ion-icon>
         </ion-button>
-        <ion-button class="btnUser" shape="round" size="default">
-          <ion-icon src="/assets/icons/line/user-line.svg"></ion-icon>
-        </ion-button>
+        <global-user-actions-button />
       </div>
 
       <div class="viewsSubHeader">
-        <div class="viewsSubHeader-title">{{ event?.headingTitle }}</div>
-        <current-event-status :event="event"></current-event-status>
+        <div class="viewsSubHeader-title">{{ confDescriptor?.headingTitle }}</div>
+        <current-event-status :conf-descriptor="confDescriptor"></current-event-status>
       </div>
     </ion-toolbar>
-    <img :src="event?.backgroundUrl">
+    <img :src="confDescriptor?.backgroundUrl">
   </ion-header>
 </template>
 
 <script setup lang="ts">
 import {useIonRouter} from "@ionic/vue";
-import CurrentEventStatus from "@/components/CurrentEventStatus.vue";
+import CurrentEventStatus from "@/components/events/CurrentEventStatus.vue";
 import {PropType} from "vue";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {useTabbedPageNav} from "@/state/useTabbedPageNav";
+import GlobalUserActionsButton from "@/components/user/GlobalUserActionsButton.vue";
 
 const router = useIonRouter();
 const props = defineProps({
-    event: {
+    confDescriptor: {
         required: true,
         type: Object as PropType<VoxxrinConferenceDescriptor>
-    },
-    backBtnAction: {
-        require: false,
-        type: String as PropType<typeof backBtnAction>
     }
 })
 
-const backBtnAction: "goBack"|"triggerEventExit" = props.backBtnAction || "triggerEventExit";
-const { triggerTabbedPageGoBack } = useTabbedPageNav()
+const { triggerTabbedPageExitOrNavigate } = useTabbedPageNav()
 
 function backButtonClicked() {
-    if(backBtnAction === 'goBack') {
-        // standard current ion router attached to the component to go back
-        // (implicitely: if current component is integrated inside tabs, back() will impact the
-        // tab's history, not the tabbed page's history)
-        router.back();
-    } else if (backBtnAction === 'triggerEventExit') {
-        // Triggering tabbed page's back, and not current tab's
-        triggerTabbedPageGoBack(() => {
-            // TODO: check the expected behavior, seems to work without doing anything
-            // unsetCurrentSchedule();
-            return Promise.resolve();
-        });
-    }
+    // Triggering tabbed page's back, and not current tab's
+    triggerTabbedPageExitOrNavigate(`/event-selector`);
 }
 
 </script>
@@ -70,6 +53,21 @@ function backButtonClicked() {
       width: 100%;
       z-index: -1;
       object-fit: cover;
+    }
+
+    .btnUser {
+      height: 48px;
+      width: 48px;
+      --padding-start: 0;
+      --padding-end: 0;
+      font-size: 18px;
+      --background: rgba(var(--app-white-transparent));
+      --border-color: rgba(var(--app-white-transparent));
+      --border-width: 1px;
+
+      :deep(ion-icon) {
+        color: white;
+      }
     }
   }
   ion-toolbar {

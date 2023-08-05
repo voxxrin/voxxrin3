@@ -1,5 +1,5 @@
 import {sortBy, ValueObject} from "@/models/utils";
-import {Break, DetailedTalk, Talk} from "../../../shared/dayly-schedule.firestore";
+import {Break, DetailedTalk, Talk} from "../../../shared/daily-schedule.firestore";
 import {RoomId, VoxxrinRoom} from "@/models/VoxxrinRoom";
 import {SpeakerId, VoxxrinDetailedSpeaker, VoxxrinSimpleSpeaker} from "@/models/VoxxrinSpeaker";
 import {TalkFormatId, VoxxrinTalkFormat} from "@/models/VoxxrinTalkFormat";
@@ -28,11 +28,8 @@ export type VoxxrinTalk = Replace<Talk, {
 
 export type VoxxrinDetailedTalk = Replace<VoxxrinTalk, {
     speakers: Array<VoxxrinDetailedSpeaker>,
-}> & {
-    start: ISODatetime,
-    end: ISODatetime,
-    description: string;
-}
+}> & Replace<Omit<DetailedTalk, (keyof Talk) | "summary">, {
+}>
 
 export function createVoxxrinTalkFromFirestore(event: VoxxrinConferenceDescriptor, firestoreTalk: Talk) {
     const format = findTalkFormat(event, new TalkFormatId(firestoreTalk.format.id));
@@ -67,6 +64,7 @@ export function createVoxxrinDetailedTalkFromFirestore(event: VoxxrinConferenceD
             id: new SpeakerId(sp.id)
         })),
         description: firestoreTalk.description,
+        tags: firestoreTalk.tags || []
     };
     return detailedTalk;
 }

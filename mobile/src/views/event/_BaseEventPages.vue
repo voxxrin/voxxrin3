@@ -1,20 +1,20 @@
 <template>
   <ion-page>
-    <ion-tabs ref="$tabs" v-if="event" :style="{
-      '--voxxrin-event-background-url': `url('${event.backgroundUrl}')`,
-      '--voxxrin-event-logo-url': `url('${event.logoUrl}')`,
-      '--voxxrin-event-theme-colors-primary-hex': event.theming.colors.primaryHex,
-      '--voxxrin-event-theme-colors-primary-rgb': event.theming.colors.primaryRGB,
-      '--voxxrin-event-theme-colors-primary-contrast-hex': event.theming.colors.primaryContrastHex,
-      '--voxxrin-event-theme-colors-primary-contrast-rgb': event.theming.colors.primaryContrastRGB,
-      '--voxxrin-event-theme-colors-secondary-hex': event.theming.colors.secondaryHex,
-      '--voxxrin-event-theme-colors-secondary-rgb': event.theming.colors.secondaryRGB,
-      '--voxxrin-event-theme-colors-secondary-contrast-hex': event.theming.colors.secondaryContrastHex,
-      '--voxxrin-event-theme-colors-secondary-contrast-rgb': event.theming.colors.secondaryContrastRGB,
-      '--voxxrin-event-theme-colors-tertiary-hex': event.theming.colors.tertiaryHex,
-      '--voxxrin-event-theme-colors-tertiary-rgb': event.theming.colors.tertiaryRGB,
-      '--voxxrin-event-theme-colors-tertiary-contrast-hex': event.theming.colors.tertiaryContrastHex,
-      '--voxxrin-event-theme-colors-tertiary-contrast-rgb': event.theming.colors.tertiaryContrastRGB,
+    <ion-tabs ref="$tabs" v-if="confDescriptor" :style="{
+      '--voxxrin-event-background-url': `url('${confDescriptor.backgroundUrl}')`,
+      '--voxxrin-event-logo-url': `url('${confDescriptor.logoUrl}')`,
+      '--voxxrin-event-theme-colors-primary-hex': confDescriptor.theming.colors.primaryHex,
+      '--voxxrin-event-theme-colors-primary-rgb': confDescriptor.theming.colors.primaryRGB,
+      '--voxxrin-event-theme-colors-primary-contrast-hex': confDescriptor.theming.colors.primaryContrastHex,
+      '--voxxrin-event-theme-colors-primary-contrast-rgb': confDescriptor.theming.colors.primaryContrastRGB,
+      '--voxxrin-event-theme-colors-secondary-hex': confDescriptor.theming.colors.secondaryHex,
+      '--voxxrin-event-theme-colors-secondary-rgb': confDescriptor.theming.colors.secondaryRGB,
+      '--voxxrin-event-theme-colors-secondary-contrast-hex': confDescriptor.theming.colors.secondaryContrastHex,
+      '--voxxrin-event-theme-colors-secondary-contrast-rgb': confDescriptor.theming.colors.secondaryContrastRGB,
+      '--voxxrin-event-theme-colors-tertiary-hex': confDescriptor.theming.colors.tertiaryHex,
+      '--voxxrin-event-theme-colors-tertiary-rgb': confDescriptor.theming.colors.tertiaryRGB,
+      '--voxxrin-event-theme-colors-tertiary-contrast-hex': confDescriptor.theming.colors.tertiaryContrastHex,
+      '--voxxrin-event-theme-colors-tertiary-contrast-rgb': confDescriptor.theming.colors.tertiaryContrastRGB,
   }">
       <ion-router-outlet></ion-router-outlet>
       <ion-tab-bar slot="bottom">
@@ -48,7 +48,7 @@ import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
 const router = useIonRouter();
 const route = useRoute();
 const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')));
-const {conferenceDescriptor: event} = useSharedConferenceDescriptor(eventId);
+const {conferenceDescriptor: confDescriptor} = useSharedConferenceDescriptor(eventId);
 
 const { LL } = typesafeI18n()
 

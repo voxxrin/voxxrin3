@@ -24,7 +24,7 @@ import {ListableVoxxrinEvent} from "@/models/VoxxrinEvent";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 
 const props = defineProps({
-    event: {
+    confDescriptor: {
         required: true,
         type: Object as PropType<VoxxrinConferenceDescriptor|ListableVoxxrinEvent>
     }
@@ -47,7 +47,7 @@ onMounted(() => {
 })
 
 function refreshStatus() {
-    conferenceStatus.value = match<VoxxrinConferenceDescriptor|ListableVoxxrinEvent|undefined, DisplayedConferenceStatus>(props.event)
+    conferenceStatus.value = match<VoxxrinConferenceDescriptor|ListableVoxxrinEvent|undefined, DisplayedConferenceStatus>(props.confDescriptor)
         .with(undefined, () => 'unknown')
         .with(P.any, (event: VoxxrinConferenceDescriptor|ListableVoxxrinEvent) => conferenceStatusOf(event.start, event.end, event.timezone))
         .otherwise(() => 'unknown')

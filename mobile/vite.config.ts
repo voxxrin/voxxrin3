@@ -40,7 +40,7 @@ export default defineConfig(({ command, mode }) => {
             type: "image/png"
           }],
           background_color: "#E30A63",
-          theme_color: "#E30A63"
+          theme_color: "transparent"
         }
       })
     ],

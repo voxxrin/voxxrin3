@@ -11,7 +11,7 @@ import {
     Talk,
     TalkFormat,
     TalksTimeSlot,
-} from "../../../../../shared/dayly-schedule.firestore";
+} from "../../../../../shared/daily-schedule.firestore";
 import * as cheerio from 'cheerio';
 import {match, P} from "ts-pattern";
 import {ConferenceDescriptor} from "../../../../../shared/conference-descriptor.firestore";
@@ -179,7 +179,8 @@ export const LA_PRODUCT_CONF_CRAWLER: CrawlerKind<typeof LA_PRODUCT_CONF_DESCRIP
                         },
                         room: descriptor.rooms[tabIdx],
                         summary: '',
-                        description: ''
+                        description: '',
+                        tags: []
                     };
 
                     talks.push(detailedTalk);
