@@ -1,5 +1,5 @@
 <template>
-  <ion-button class="btnUser" shape="round" size="large" @click="$router.push(`/user/dashboard`)">
+  <ion-button class="btnUser" shape="round" size="large" @click="if(false){$router.push(`/user/dashboard`);}">
     <ion-icon src="/assets/icons/line/user-line.svg"></ion-icon>
     <ion-ripple-effect type="unbounded"></ion-ripple-effect>
   </ion-button>
