@@ -35,10 +35,13 @@
         </div>
       </div>
 
-      <div class="eventItem-end" slot="end">
-        <ion-button v-if="eventOrganizerToken" fill="clear" shape="round" @click.stop="navToEventOrganizerPage()">
+      <div class="eventItem-config" slot="end">
+        <ion-button fill="clear" shape="round" @click.stop="navToEventOrganizerPage()">
           <ion-icon src="/assets/icons/line/settings-cog-line.svg"></ion-icon>
         </ion-button>
+      </div>
+
+      <div class="eventItem-end" slot="end">
         <ion-button class="btnPin" fill="clear" shape="round" @click.stop="$emit('event-pin-toggled', event, isPinnedRef?'pinned-to-unpinned':'unpinned-to-pinned')">
           <ion-icon src="/assets/icons/line/pin-line.svg" v-if="!isPinnedRef"></ion-icon>
           <ion-icon class="_is-pined" src="/assets/icons/solid/pin.svg" v-if="isPinnedRef"></ion-icon>
@@ -186,7 +189,7 @@ function navToEventOrganizerPage() {
       top: -8px;
     }
     100% {
-      transform: rotate(0) translateY(0) translateX(0);
+      transform: rotate(0) translateY(8px) translateX(0);
       top: -8px;
     }
   }
@@ -295,7 +298,7 @@ function navToEventOrganizerPage() {
   }
 
   &-logoContainer {
-    padding: var(--app-gutters) ;
+    padding: 12px 12px;
 
     .logo {
       position: relative;
@@ -361,7 +364,7 @@ function navToEventOrganizerPage() {
       margin-bottom: 4px;
       column-gap: 4px;
       font-size: 13px;
-      font-weight: 500;
+      font-weight: 700;
       text-align: end;
       color: var(--app-grey-dark);
 
@@ -383,15 +386,30 @@ function navToEventOrganizerPage() {
       display: flex;
       align-items: center;
       column-gap: 4px;
-      color: var(--app-beige-dark);
+      color: var(--app-grey-dark);
       font-size: 13px;
       text-align: left;
       word-break: break-word;
 
       ion-icon {
         font-size: 16px;
-        color: var(--app-grey-dark);
+        color: var(--app-beige-dark);
       }
+    }
+  }
+
+  &-config {
+    padding-inline-start: 8px;
+    padding-inline-end: 12px;
+
+    ion-button {
+      height: 100% !important;
+    }
+
+    ion-icon {
+      width: 34px;
+      font-size: 34px;
+      color: var(--app-grey-medium);
     }
   }
 
@@ -401,8 +419,8 @@ function navToEventOrganizerPage() {
     align-items: center;
     justify-content: center;
     height: 100%;
-    padding-inline-start: 16px;
-    padding-inline-end: 16px;
+    padding-inline-start: 12px;
+    padding-inline-end: 12px;
 
     &:before {
       position: absolute;

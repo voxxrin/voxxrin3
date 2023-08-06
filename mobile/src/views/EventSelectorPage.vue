@@ -188,6 +188,7 @@ function eventPinToggled(event: ListableVoxxrinEvent, transitionType: 'unpinned-
 
         strong {
           color: var(--app-voxxrin);
+          font-weight: 900;
         }
       }
     }
