@@ -409,7 +409,7 @@ function navToEventOrganizerPage() {
     ion-icon {
       width: 34px;
       font-size: 34px;
-      color: var(--app-grey-medium);
+      color: var(--app-voxxrin);
     }
   }
 
@@ -429,8 +429,9 @@ function navToEventOrganizerPage() {
       transform: translate(0, -50%);
       width: 1px;
       height: calc(100% - 34px);
-      background-color: var(--app-beige-line);
+      background: linear-gradient(180deg, rgba(var(--app-beige-line-rgb),0) 0%, rgba(var(--app-beige-line-rgb),1) 50%, rgba(var(--app-beige-line-rgb),0) 100%);
       content: '';
+
     }
 
     ion-button {
