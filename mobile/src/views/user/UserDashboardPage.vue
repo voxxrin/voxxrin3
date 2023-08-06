@@ -45,6 +45,14 @@
         </div>
       </div>
     </ion-content>
+    <ion-footer class="userDashboardFooter">
+      <ion-toolbar>
+        <ion-button fill="outline" size="default" expand="block">
+          Logout
+          <ion-icon src="/assets/icons/line/logout-half-circle-line.svg"></ion-icon>
+        </ion-button>
+      </ion-toolbar>
+    </ion-footer>
   </ion-page>
 </template>
 
@@ -64,6 +72,33 @@ registerTabbedPageNavListeners();
   .userDashboard {
     &-content {
       padding: var(--app-gutters);
+    }
+  }
+
+  .userDashboardFooter {
+    --ion-toolbar-background: var(--app-background);
+
+    &::before  {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: -20px !important;
+      height: 20px;
+      pointer-events: none;
+    }
+
+    &::before {
+      top: 0;
+      background: linear-gradient(to bottom, transparent, var(--app-background));
+    }
+
+
+    ion-toolbar {
+      --padding-bottom: 12px;
+      --padding-top: 12px;
+      --border-width: 0;
+
     }
   }
 </style>
