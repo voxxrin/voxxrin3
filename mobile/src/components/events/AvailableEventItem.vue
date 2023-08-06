@@ -125,14 +125,17 @@ function navToEventOrganizerPage() {
     position: relative;
     transition: 140ms ease-in-out;
     transform: rotate(0deg);
-
-    ion-icon {
-      transition: 140ms;
-    }
+    animation: reversePinedAnimation 600ms both;
 
     &:after {
       transition: 140ms;
       transform: rotate(0) scale(0);
+      animation: reversePinedAnimationShadow 500ms both;
+    }
+
+    ion-icon {
+      transition: 140ms;
+      animation: reversePinedAnimationIcon 500ms both;
     }
   }
 
@@ -169,23 +172,78 @@ function navToEventOrganizerPage() {
     }
   }
 
+
+  // -- UnPin Animations
+  @keyframes reversePinedAnimation {
+    0% {
+      transform: rotate(-45deg) translateY(-8px) translateX(8px);
+      top: 0;
+    }
+    30% {
+      top: -10px;
+    }
+    60% {
+      top: -8px;
+    }
+    100% {
+      transform: rotate(0) translateY(0) translateX(0);
+      top: -8px;
+    }
+  }
+  @keyframes reversePinedAnimationIcon {
+    0% {
+      top: 7px;
+      left: -7px;
+    }
+    30% {
+      top: 0;
+      left: 0;
+    }
+    60% {
+      top: 0;
+      left: 0;
+    }
+    100% {
+      top: 0;
+      left: 0;
+    }
+  }
+  @keyframes reversePinedAnimationShadow {
+    0% {
+      transform: rotate(31deg) scale(1);
+      opacity: 0.4;
+    }
+    30% {
+      transform: rotate(31deg) scale(0.5);
+      opacity: 0.2;
+    }
+    60% {
+      transform: rotate(31deg) scale(0);
+      opacity: 0;
+    }
+    100% {
+      transform: rotate(31deg) scale(0);
+      opacity: 0;
+    }
+  }
+
+  // -- Pinned Animations
   @keyframes pinedAnimation {
     0% {
       transform: rotate(0);
     }
     30% {
-      transform: rotate(-45deg);
+      transform: rotate(-45deg) translateY(-12px) translateX(12px);
       top: -8px;
     }
     60% {
       top: -10px;
     }
     100% {
-      transform: rotate(-45deg);
+      transform: rotate(-45deg) translateY(-8px) translateX(8px);
       top: 0;
     }
   }
-
   @keyframes pinedAnimationIcon {
     0% {
       top: 0;
@@ -204,7 +262,6 @@ function navToEventOrganizerPage() {
       left: -7px;
     }
   }
-
   @keyframes pinedAnimationShadow {
     0% {
       transform: rotate(31deg)scale(0);
