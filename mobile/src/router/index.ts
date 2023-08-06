@@ -25,6 +25,13 @@ const routes: Array<RouteRecordRaw> = [
   { path: '/user/my-global-settings', component: () => import('@/views/user/MyGlobalSettingsPage.vue') },
   { path: '/user/my-personal-data', component: () => import('@/views/user/MyPersonalDataPage.vue') },
   { path: '/user/my-personal-data', component: () => import('@/views/user/MyPersonalDataPage.vue') },
+  { path: '/user-tokens/register', component: () => import('@/views/UserTokenRegistrationPage.vue') },
+  { path: '/events/:eventId/asOrganizer/:secretOrganizerToken', component: () => import('@/views/event-admin/_BaseEventAdminPages.vue'), children: [
+      { path: '', redirect: (route) => `/events/${route.params.eventId}/asOrganizer/${route.params.secretOrganizerToken}/config` },
+      { path: 'config', component: () => import('@/views/event-admin/EventAdminConfiguration.vue') },
+      { path: 'talks-config', component: () => import('@/views/event-admin/EventAdminTalksConfiguration.vue') },
+  ]},
+  { path: '/events/:eventId/asOrganizer/:secretOrganizerToken/talk-feedbacks/:talkId', component: () => import('@/views/event-admin/EventAdminTalkFeedbacks.vue') },
 ]
 
 const router = createRouter({

@@ -249,6 +249,14 @@ type RootTranslation = {
 	 * I​n​c​l​u​d​i​n​g​ ​s​l​o​t​s​ ​w​i​t​h​o​u​t​ ​f​e​e​d​b​a​c​k
 	 */
 	Including_slots_without_feedback: string
+	/**
+	 * C​o​n​f​i​g
+	 */
+	Config: string
+	/**
+	 * T​a​l​k​s
+	 */
+	Talks_Config: string
 }
 
 export type TranslationFunctions = {
@@ -484,6 +492,14 @@ export type TranslationFunctions = {
 	 * Including slots without feedback
 	 */
 	Including_slots_without_feedback: () => LocalizedString
+	/**
+	 * Config
+	 */
+	Config: () => LocalizedString
+	/**
+	 * Talks
+	 */
+	Talks_Config: () => LocalizedString
 }
 
 export type Formatters = {}
