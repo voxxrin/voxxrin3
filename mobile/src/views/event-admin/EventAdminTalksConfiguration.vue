@@ -10,7 +10,21 @@
           <ion-title class="stickyHeader-title" slot="start">Event Talks Configuration</ion-title>
         </ion-toolbar>
       </ion-header>
-      TODO: Event talks here...
+      TODO: Event talks here...<br/>
+      Basically, the same page as the regular schedule, except that we can perform different actions on every talks :
+      <ul>
+        <li>Allow to provide recording link manually</li>
+        <li>Trigger recording PUSH notification</li>
+        <li>Get (shareable) Feedbacks-viewer token link</li>
+      </ul>
+
+      At the general level (through a footer-action-button), we should be able to :
+      <ul>
+        <li>Trigger automatic recording link resolution from Youtube</li>
+        <li>Trigger PUSH Notification on every talks having a recording link provided since latest PUSH notification trigger</li>
+        <li>Download CSV file with every talk (CFP) id + shareable feedbacks-viewer token link, that could be shared by conference organizer to speakers</li>
+      </ul>
+
       <ion-button @click="triggerTabbedPageNavigate(`/events/${eventId.value}/asOrganizer/${secretOrganizerToken}/talk-feedbacks/1`, 'forward', 'push')">
         Feedbacks for talk 1
       </ion-button>

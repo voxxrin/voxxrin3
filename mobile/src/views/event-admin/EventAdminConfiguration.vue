@@ -11,7 +11,12 @@
         </ion-toolbar>
       </ion-header>
 
-      TODO: Event configuration here...
+      TODO: Event configuration here... allowing to :
+      <ul>
+        <li>Trigger a manual crawling for the event</li>
+        <li>Update some features : room visibility, favorites/watch/feedbacks enabled</li>
+        <li>Update themes and see directly how this works</li>
+      </ul>
     </ion-content>
   </ion-page>
 </template>
