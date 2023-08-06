@@ -36,6 +36,9 @@
       </div>
 
       <div class="eventItem-end" slot="end">
+        <ion-button v-if="eventOrganizerToken" fill="clear" shape="round" @click.stop="navToEventOrganizerPage()">
+          <ion-icon src="/assets/icons/line/settings-cog-line.svg"></ion-icon>
+        </ion-button>
         <ion-button class="btnPin" fill="clear" shape="round" @click.stop="$emit('event-pin-toggled', event, isPinnedRef?'pinned-to-unpinned':'unpinned-to-pinned')">
           <ion-icon src="/assets/icons/line/pin-line.svg" v-if="!isPinnedRef"></ion-icon>
           <ion-icon class="_is-pined" src="/assets/icons/solid/pin.svg" v-if="isPinnedRef"></ion-icon>
@@ -45,12 +48,13 @@
 </template>
 
 <script setup lang="ts">
-import {computed, PropType} from "vue";
+import {computed, PropType, toRef, unref} from "vue";
 import {
-    IonImg,
+    IonImg, useIonRouter,
 } from '@ionic/vue';
 import {EventId, ListableVoxxrinEvent} from "@/models/VoxxrinEvent";
 import MonthDayDateRange from "@/components/MonthDayDateRange.vue";
+import {useSharedUserTokensWallet} from "@/state/useUserTokensWallet";
 
 const props = defineProps({
     event: {
@@ -68,6 +72,12 @@ defineEmits<{
     (e: 'event-pin-toggled', event: ListableVoxxrinEvent, transitionType: 'unpinned-to-pinned'|'pinned-to-unpinned'): void,
 }>()
 
+const ionRouter = useIonRouter();
+
+const { organizerTokenRefForEvent } = useSharedUserTokensWallet()
+const eventRef = toRef(props, 'event');
+const eventIdRef = computed<EventId|undefined>(() => { const event = unref(eventRef); return event?.id; })
+
 const isPinnedRef = computed(() => {
     if(props.pinnedEvents && props.event) {
         return !!props.pinnedEvents?.find(eventId => props.event?.id.isSameThan(eventId))
@@ -75,6 +85,12 @@ const isPinnedRef = computed(() => {
         return false;
     }
 })
+
+const eventOrganizerToken = organizerTokenRefForEvent(eventIdRef)
+
+function navToEventOrganizerPage() {
+    ionRouter.push(`/events/${eventRef.value.id.value}/asOrganizer/${eventOrganizerToken.value}`)
+}
 
 </script>
 

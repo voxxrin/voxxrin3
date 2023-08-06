@@ -59,6 +59,8 @@ const en = {
 	Hide_today_s_past_time_slots_after_1h: "Hide today's past time-slots after 1h",
 	Hide_past_time_slots: "Hide past time-slots",
 	Including_slots_without_feedback: "Including slots without feedback",
+	Config: "Config",
+	Talks_Config: "Talks",
 } satisfies BaseTranslation
 
 export default en
