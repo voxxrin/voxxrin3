@@ -35,7 +35,7 @@
         </div>
       </div>
 
-      <div class="eventItem-config" slot="end">
+      <div class="eventItem-config" slot="end" v-if="eventOrganizerToken">
         <ion-button fill="clear" shape="round" @click.stop="navToEventOrganizerPage()">
           <ion-icon src="/assets/icons/line/settings-cog-line.svg"></ion-icon>
         </ion-button>
