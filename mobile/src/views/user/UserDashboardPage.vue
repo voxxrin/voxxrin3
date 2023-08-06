@@ -97,8 +97,9 @@ registerTabbedPageNavListeners();
     ion-toolbar {
       --padding-bottom: 12px;
       --padding-top: 12px;
+      --padding-end: 16px;
+      --padding-start: 16px;
       --border-width: 0;
-
     }
   }
 </style>
