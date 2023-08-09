@@ -99,7 +99,7 @@
   }
   async function openTalkDetails(talk: VoxxrinTalk) {
       if(talk) {
-          triggerTabbedPageNavigate(`/events/${eventId.value}/talks/${talk.id.value}/details`, "forward", "push");
+          triggerTabbedPageNavigate(`/events/${eventId.value.value}/talks/${talk.id.value}/details`, "forward", "push");
       }
   }
 </script>
