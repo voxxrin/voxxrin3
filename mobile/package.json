@@ -8,6 +8,7 @@
     "vite-dev": "vite --mode dev",
     "build-dev": "vite --mode dev build",
     "build": "vue-tsc && vite build",
+    "build:demo": "vue-tsc && vite --mode demo build",
     "preview": "vite preview",
     "test:e2e": "cypress run",
     "test:unit": "vitest",

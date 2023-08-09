@@ -1,0 +1,53 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function authenticated() { return request.auth.uid != null }
+    function iAm(userId) { return request.auth.uid == userId }
+
+    // By default, prevent reads & writes on any node
+    match /{document=**} {
+      allow read, write: if false;
+    }
+    match /events/{event} {
+      allow read: if true;
+      match /talksStats/{talkId} {
+        allow read: if true;
+      }
+      match /days/{dayId} {
+        allow read: if true;
+      }
+      match /event-descriptor/self {
+        allow read: if true;
+      }
+      match /organizer-space/{secretOrganizerToken} {
+        allow get: if true;
+        allow list: if false;
+      }
+      match /talks/{talkId} {
+        allow read: if true;
+        match /feedbacks-access/{secretFeedbackViewerToken} {
+          allow get: if true;
+          allow list: if false;
+          match /feedbacks/{userPublicToken} {
+          	allow read: if true;
+          }
+        }
+      }
+      match /talksStats/{talkId} {
+      	allow read: if true;
+      }
+    }
+    match /users/{userId} {
+    	allow get: if iAm(userId)
+      allow list: if false
+      match /{document=**} {
+        allow get: if iAm(userId)
+        allow list: if false
+      	allow write: if iAm(userId)
+      }
+      match /events/{eventId}/days/{dayId}/feedbacks/{talkId} {
+      	allow list: if iAm(userId)
+      }
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "name": "voxxrin-firestore",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "deploy": "firebase use voxxrin-v3 && firebase deploy --only firestore",
+    "deploy:demo": "firebase use voxxrin-v3-demo && firebase deploy --only firestore"
+  },
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "firebase-tools": "12.4.7"
+  }
+}

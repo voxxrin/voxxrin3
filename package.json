@@ -1,0 +1,24 @@
+{
+  "name": "voxxrin-app",
+  "description": "Voxxrin is your mobile conference companion.",
+  "scripts": {
+    "bootstrap": "npm ci && concurrently 'cd mobile && npm ci' 'cd cloud/hosting && npm ci' 'cd cloud/functions && npm ci'",
+    "build-mobile": "npm run build-mobile:prod",
+    "build-mobile:prod": "cd mobile && npm run build && cd -",
+    "build-mobile:demo": "cd mobile && npm run build:demo && cd -",
+    "build-mobile:dev": "cd mobile && npm run build-dev && cd -",
+    "dev:mobile": "cd mobile && npm run dev",
+    "dev:fn": "cd cloud/functions && npm run serve",
+    "dev": "concurrently 'npm run dev:fn' 'npm run dev:mobile'",
+    "deploy:site": "npm run build-mobile && cd cloud/hosting && npm run deploy && cd -",
+    "deploy:site:demo": "npm run build-mobile:demo && cd cloud/hosting && npm run deploy:demo && cd -",
+    "deploy:fn": "cd cloud/functions && npm run deploy",
+    "deploy:fn:demo": "cd cloud/functions && npm run deploy:demo",
+    "deploy": "concurrently 'npm run deploy:fn' 'npm run deploy:site'",
+    "deploy:demo": "concurrently 'npm run deploy:fn:demo' 'npm run deploy:site:demo'"
+  },
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "concurrently": "8.2.0"
+  }
+}
