@@ -35,14 +35,16 @@ const DEVOXX_DESCRIPTOR_PARSER = EVENT_DESCRIPTOR_PARSER.omit({
     // because we need a theme color for them that are currently *not* provided by the API
     talkFormats: true, rooms: true,
 }).extend({
-    cfpId: z.string()
+    cfpId: z.string().nullish(),
+    cfpBaseUrl: z.string().nullish()
 })
 
 export const DEVOXX_CRAWLER: CrawlerKind<typeof DEVOXX_DESCRIPTOR_PARSER> = {
     kind: 'devoxx',
     descriptorParser: DEVOXX_DESCRIPTOR_PARSER,
     crawlerImpl: async (eventId: string, descriptor: z.infer<typeof DEVOXX_DESCRIPTOR_PARSER>, criteria: { dayIds?: string[]|undefined }) => {
-        const res = await axios.get(`https://${descriptor.cfpId}.cfp.dev/api/public/event`)
+        const cfpBaseUrl = descriptor.cfpBaseUrl || `https://${descriptor.cfpId}.cfp.dev`;
+        const res = await axios.get(`${cfpBaseUrl+(cfpBaseUrl.endsWith("/")?"":"/")}api/public/event`)
         const e: CfpEvent = res.data;
 
         const start = e.fromDate.substring(0, 10) as ISOLocalDate
@@ -83,7 +85,7 @@ export const DEVOXX_CRAWLER: CrawlerKind<typeof DEVOXX_DESCRIPTOR_PARSER> = {
             eventRooms: ConferenceDescriptor['rooms'] = [],
             eventTalkFormats: ConferenceDescriptor['talkFormats'] = [];
         await Promise.all(daysMatchingCriteria.map(async day => {
-            const {daySchedule, talkStats, talks, rooms, talkFormats} = await crawlDevoxxDay(eventId, day.id)
+            const {daySchedule, talkStats, talks, rooms, talkFormats} = await crawlDevoxxDay(cfpBaseUrl, day.id)
             daySchedules.push(daySchedule)
             for (const talk of talks) {
                 eventTalks.push(talk)
@@ -120,8 +122,8 @@ export const DEVOXX_CRAWLER: CrawlerKind<typeof DEVOXX_DESCRIPTOR_PARSER> = {
 };
 
 
-const crawlDevoxxDay = async (eventId: string, day: string) => {
-    const res = await axios.get(`https://${eventId}.cfp.dev/api/public/schedules/${day}`)
+const crawlDevoxxDay = async (cfpBaseUrl: string, day: string) => {
+    const res = await axios.get(`${cfpBaseUrl+(cfpBaseUrl.endsWith("/")?"":"/")}api/public/schedules/${day}`)
 
     const schedules:DevoxxScheduleItem[] = res.data;
 
