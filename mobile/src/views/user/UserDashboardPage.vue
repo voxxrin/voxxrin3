@@ -58,7 +58,7 @@
 
 <script setup lang="ts">
 
-import {useIonRouter} from "@ionic/vue";
+import {IonFooter, useIonRouter} from "@ionic/vue";
 import {useTabbedPageNav} from "@/state/useTabbedPageNav";
 
 const ionRouter = useIonRouter();
