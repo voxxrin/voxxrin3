@@ -12,6 +12,7 @@ import {DEVOXX_SCALA_CRAWLER} from "./devoxx-scala/crawler";
 import {match} from "ts-pattern";
 import {v4 as uuidv4} from "uuid"
 import {ConferenceOrganizerSpace} from "../../../../shared/conference-organizer-space.firestore";
+import {JUG_SUMMERCAMP_CRAWLER} from "./jugsummercamp/crawler";
 const axios = require('axios');
 
 export type CrawlerKind<ZOD_TYPE extends z.ZodType> = {
@@ -25,7 +26,8 @@ const CRAWLERS: CrawlerKind<any>[] = [
     DEVOXX_SCALA_CRAWLER,
     LA_PRODUCT_CONF_CRAWLER,
     WEB2DAY_CRAWLER,
-    CAMPING_DES_SPEAKERS_CRAWLER
+    CAMPING_DES_SPEAKERS_CRAWLER,
+    JUG_SUMMERCAMP_CRAWLER
 ]
 
 export const TALK_FORMAT_FALLBACK_COLORS: HexColor[] = [
