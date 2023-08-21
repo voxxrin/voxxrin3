@@ -4,7 +4,7 @@
       <ion-header class="conferenceWelcome">
         <div class="conferenceWelcome-title">
           <span class="name">{{ LL.Hello_xxx({name:'World'}) }}</span>
-          <span class="welcome">{{ LL.Welcome_to() }} <strong>Voxxrin</strong></span>
+          <span class="welcome">{{ LL.Welcome_to() }} <strong>{{ appTitle }}</strong></span>
         </div>
         <global-user-actions-button />
       </ion-header>
@@ -78,6 +78,8 @@ import PinnedEventSelector from "@/components/events/PinnedEventSelector.vue";
 import {useAvailableEvents} from "@/state/useAvailableEvents";
 import {useSharedUserPreferences} from "@/state/useUserPreferences";
 import GlobalUserActionsButton from "@/components/user/GlobalUserActionsButton.vue";
+
+const appTitle = import.meta.env.VITE_WHITE_LABEL_NAME;
 
 const router = useIonRouter();
 const { LL } = typesafeI18n()
