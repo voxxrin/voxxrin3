@@ -9,6 +9,8 @@ import {
 } from "firebase/firestore";
 import {firestoreDefaultConverter, globalFirestoreOptions} from "vuefire";
 import { getAuth, connectAuthEmulator } from "firebase/auth";
+import { getMessaging } from "firebase/messaging";
+import {useRegisterSW} from "virtual:pwa-register/vue";
 
 
 export const app = initializeApp({
@@ -30,6 +32,19 @@ initializeFirestore(app,
     });
 
 export const db = getFirestore(app);
+
+export const messaging = getMessaging();
+
+export const onceServiceWorkerRegistered: Promise<ServiceWorkerRegistration> = new Promise((resolve) => {
+    useRegisterSW({
+        immediate: true,
+        onRegisteredSW: ((swUrl, registration) => {
+            if(registration) {
+                resolve(registration);
+            }
+        })
+    })
+})
 
 if (["localhost", "127.0.0.1"].includes(location.hostname) && import.meta.env.DEV && import.meta.env.VITE_USE_LOCAL_FIREBASE_INSTANCE === 'true') {
     connectFirestoreEmulator(db, 'localhost', 8080);

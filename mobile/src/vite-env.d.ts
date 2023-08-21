@@ -12,6 +12,7 @@ interface ImportMetaEnv {
     readonly VITE_FIREBASE_MESSAGING_SENDER_ID: string,
     readonly VITE_FIREBASE_APP_ID: string,
     readonly VITE_USE_LOCAL_FIREBASE_INSTANCE: string,
+    readonly VITE_FIREBASE_MESSAGING_VAPID_KEY: string,
     readonly VITE_USE_LOCAL_FIREBASE_INSTANCE_FOR_AUTH: string,
     readonly VITE_VIEWABLE_USER_DASHBOARD: "false"|"true",
     readonly VITE_WHITE_LABEL_NAME: string,

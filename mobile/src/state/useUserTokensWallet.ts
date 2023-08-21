@@ -7,17 +7,20 @@ import {
     doc,
     DocumentReference, updateDoc,
 } from "firebase/firestore";
-import {db} from "@/state/firebase";
+import {db, messaging, onceServiceWorkerRegistered} from "@/state/firebase";
 import {VoxxrinUserTokensWallet} from "@/models/VoxxrinUser";
 import {createSharedComposable} from "@vueuse/core";
 import {
-    EventOrganizerSecretToken,
+    EventOrganizerSecretToken, FirebaseMessagingToken,
     UserTokensWallet
 } from "../../../shared/user-tokens-wallet.firestore";
 import {TalkId} from "@/models/VoxxrinTalk";
 import {Unreffable} from "@/views/vue-utils";
 import {TalkFeedbacksViewerSecretToken} from "../../../shared/conference-organizer-space.firestore";
 import { arrayUnion } from "firebase/firestore";
+import {getToken} from "firebase/messaging";
+import {getPlatform} from "@/models/Platforms";
+import {ISODatetime} from "../../../shared/type-utils";
 
 export function useUserTokensWallet() {
 
@@ -51,6 +54,7 @@ export function useUserTokensWallet() {
             publicUserToken: firestoreUserTokensWallet.publicUserToken,
             privateUserId: firestoreUserTokensWallet.privateUserId,
             secretTokens: {
+                ...firestoreUserTokensWallet.secretTokens,
                 eventOrganizerTokens: firestoreUserTokensWallet.secretTokens.eventOrganizerTokens.map(fsOrgToken => ({
                     ...fsOrgToken,
                     eventId: new EventId(fsOrgToken.eventId)
@@ -102,11 +106,58 @@ export function useUserTokensWallet() {
         })
     }
 
+    const ensureFirebaseMessagingSecretTokenRegistered = async () => {
+        const user = unref(userRef);
+        const firestoreUserTokensWallet = unref(firestoreUserTokensWalletRef);
+        const firestoreUserTokensWalletDoc = unref(firestoreUserTokensWalletSource);
+
+        if(!user) {
+            console.error(`user is undefined in ensureFirebaseMessagingSecretTokenRegistered() !`)
+            return;
+        }
+        if(!firestoreUserTokensWalletDoc) {
+            console.error(`firestoreUserTokensWalletDoc is undefined for user ${user?.uid} !`)
+            return;
+        }
+        if(!firestoreUserTokensWallet) {
+            console.error(`firestoreUserTokensWallet is undefined for user ${user?.uid} !`)
+            return;
+        }
+
+        const registration = await onceServiceWorkerRegistered
+        const firebaseMessagingToken = await getToken(messaging, {
+            serviceWorkerRegistration: registration,
+            vapidKey: import.meta.env.VITE_FIREBASE_MESSAGING_VAPID_KEY,
+        })
+
+        const firebaseMessagingSecretToken: FirebaseMessagingToken = {
+            secretToken: firebaseMessagingToken,
+            platform: getPlatform(),
+            registeredOn: new Date().toISOString() as ISODatetime
+        }
+
+        if(!firestoreUserTokensWallet.secretTokens.firebaseMessagingTokens) {
+            await updateDoc(firestoreUserTokensWalletDoc, "secretTokens.firebaseMessagingTokens", [ firebaseMessagingSecretToken ])
+            console.log(`Firebase token registered for user ${user?.uid}: ${firebaseMessagingSecretToken}`)
+        } else if(!!firestoreUserTokensWallet.secretTokens.firebaseMessagingTokens.find(
+            messagingToken => messagingToken.secretToken === firebaseMessagingSecretToken.secretToken
+        )) {
+            // Firebase token already exists, that's fine !
+            return;
+        } else {
+            await updateDoc(firestoreUserTokensWalletDoc, "secretTokens.firebaseMessagingTokens", arrayUnion(firebaseMessagingSecretToken));
+            console.log(`Firebase token registered for user ${user?.uid}: ${firebaseMessagingSecretToken}`)
+        }
+    }
+
+
+
     return {
         userTokensWalletRef: voxxrinUserTokensWallet,
         registerEventOrganizerSecretToken,
         registerTalkFeedbacksViewerSecretToken,
         talkFeedbackViewerTokensRefForEvent,
+        ensureFirebaseMessagingSecretTokenRegistered,
         organizerTokenRefForEvent: (eventIdRef: Unreffable<EventId|undefined>) => {
             return computed(() => {
                 const userTokensWallet = unref(voxxrinUserTokensWallet);

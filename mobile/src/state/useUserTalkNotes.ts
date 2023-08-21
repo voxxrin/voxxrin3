@@ -16,6 +16,7 @@ import {
 } from "firebase/firestore";
 import {db} from "@/state/firebase";
 import {TalkNote, UserComputedEventInfos, UserTalkNote} from "../../../shared/feedbacks.firestore";
+import {useUserTokensWallet} from "@/state/useUserTokensWallet";
 
 export function useUserTalkNotes(
     eventIdRef: Unreffable<EventId | undefined>,
@@ -24,6 +25,8 @@ export function useUserTalkNotes(
     console.debug(`useUserTalkNotes(${unref(eventIdRef)?.value}, ${unref(talkIdRef)?.value})`)
 
     const userRef = useCurrentUser()
+
+    const { ensureFirebaseMessagingSecretTokenRegistered } = useUserTokensWallet()
 
     const firestoreUserTalkNotesSource = computed(() => {
         const eventId = unref(eventIdRef),
@@ -126,6 +129,8 @@ export function useUserTalkNotes(
             });
     }
     const toggleWatchLater = async () => {
+        await ensureFirebaseMessagingSecretTokenRegistered();
+
         await updateTalkNotesDocument(
             'toggleWatchLater',
             talkNotes => ({ watchLater: !talkNotes.watchLater }),

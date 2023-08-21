@@ -16,14 +16,14 @@ const {
     updateServiceWorker,
 } = useRegisterSW({
     immediate: true,
-    onRegisteredSW(swUrl, r) {
+    onRegisteredSW(swUrl, reg) {
         // eslint-disable-next-line no-console
-        console.log(`Service Worker at: ${swUrl}`)
+        console.log(`Service Worker at: ${swUrl}`);
 
-        r && setInterval(async () => {
+        reg && setInterval(async () => {
             // eslint-disable-next-line no-console
             console.debug('Checking for sw update...')
-            await r.update()
+            await reg.update()
         }, 60000)
     },
 })
