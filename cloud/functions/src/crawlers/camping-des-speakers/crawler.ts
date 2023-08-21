@@ -143,6 +143,7 @@ export const CAMPING_DES_SPEAKERS_CRAWLER: CrawlerKind<typeof CAMPING_DES_SPEAKE
 
         const confDescriptor: ConferenceDescriptor = {
             id: eventId,
+            eventFamily: 'camping-des-speakers',
             title: descriptor.title,
             days: descriptor.days,
             headingTitle: descriptor.headingTitle,
@@ -249,6 +250,7 @@ export const CAMPING_DES_SPEAKERS_CRAWLER: CrawlerKind<typeof CAMPING_DES_SPEAKE
             id: eventId,
             info: {
                 id: eventId,
+                eventFamily: confDescriptor.eventFamily,
                 title: descriptor.title,
                 days: descriptor.days as any,
                 theming: descriptor.theming as any,

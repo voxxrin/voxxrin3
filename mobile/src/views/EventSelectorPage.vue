@@ -65,7 +65,7 @@ import {
     IonItemDivider,
     useIonRouter
 } from '@ionic/vue';
-import {EventId, ListableVoxxrinEvent, searchEvents} from "@/models/VoxxrinEvent";
+import {EventFamily, EventId, ListableVoxxrinEvent, searchEvents} from "@/models/VoxxrinEvent";
 import {computed, ref, Ref, watch} from "vue";
 import AvailableEventsList from "@/components/events/AvailableEventsList.vue";
 import {presentActionSheetController} from "@/views/vue-utils";
@@ -84,7 +84,11 @@ const appTitle = import.meta.env.VITE_WHITE_LABEL_NAME;
 const router = useIonRouter();
 const { LL } = typesafeI18n()
 
-const { listableEvents: availableEventsRef } = useAvailableEvents();
+const filteredEventFamilies = (import.meta.env.VITE_WHITE_LABEL_FILTERING_EVENT_FAMILIES||"")
+    .split(",")
+    .filter(family => !!family)
+    .map(rawFamily => new EventFamily(rawFamily));
+const { listableEvents: availableEventsRef } = useAvailableEvents(filteredEventFamilies);
 
 const { userPreferences, pinEvent, unpinEvent, togglePastEvent } = useSharedUserPreferences();
 

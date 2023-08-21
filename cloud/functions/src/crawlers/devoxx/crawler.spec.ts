@@ -1,8 +1,8 @@
 import {describe, it} from 'vitest'
 import type {ConferenceDescriptor} from "../../../../../shared/conference-descriptor.firestore";
 import axios from "axios";
-import {DEVOXX_CRAWLER} from "./crawler";
-import {EVENT_DESCRIPTOR_PARSER, FULL_EVENT_PARSER} from "../crawler-parsers";
+import {DEVOXX_CRAWLER, DEVOXX_DESCRIPTOR_PARSER} from "./crawler";
+import {FULL_EVENT_PARSER} from "../crawler-parsers";
 
 describe('devoxx crawlers', () => {
     it(`Full event type matches zod validations`, () => {
@@ -10,7 +10,7 @@ describe('devoxx crawlers', () => {
             // This line should never raise a typescript compilation error
             // If it does, it means that CONFERENCE_DESCRIPTOR_PARSE needs to be aligned
             // with ConferenceDescriptor
-            const t: ConferenceDescriptor = EVENT_DESCRIPTOR_PARSER.parse({});
+            const t = DEVOXX_DESCRIPTOR_PARSER.parse({});
             throw Error(`Unexpected code reached`)
         }catch(e) {
             // should be OK

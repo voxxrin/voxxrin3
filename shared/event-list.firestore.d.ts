@@ -18,6 +18,7 @@ export type Day = {
 
 export type ListableEvent = {
     id: string;
+    eventFamily: string|undefined,
     title: string,
     description?: string|undefined|null,
     days: Array<Day>,
