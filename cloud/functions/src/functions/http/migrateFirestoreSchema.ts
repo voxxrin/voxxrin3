@@ -11,6 +11,9 @@ import {
     gettingRidOfUserPreferencesPastEvents
 } from "../firestore/migrations/003-gettingRidOfUserPreferencesPastEvents";
 import {createOrganizerSpaceRatings} from "../firestore/migrations/006-createOrganizerSpaceRatings";
+import {
+    initializeFirebaseMessagingTokens
+} from "../firestore/migrations/004-initializeFirebaseMessagingTokens";
 
 /**
  * Like Flyway, but for firestore :-)
@@ -21,6 +24,7 @@ const MIGRATIONS: Migration[] = [
     { name: "addUserIdInTokenWallet", exec: addUserIdInTokenWallet },
     { name: "gettingRidOfUserPreferencesPastEvents", exec: gettingRidOfUserPreferencesPastEvents },
     { name: "createOrganizerSpaceRatings", exec: createOrganizerSpaceRatings },
+    { name: "initializeFirebaseMessagingTokens", exec: initializeFirebaseMessagingTokens },
 ];
 
 export type MigrationResult = "OK"|"Error";

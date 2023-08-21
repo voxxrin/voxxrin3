@@ -21,6 +21,7 @@ export async function createEmptyUserTokenWallet(userId: string) {
         privateUserId: userId,
         publicUserToken,
         secretTokens: {
+            firebaseMessagingTokens: [],
             eventOrganizerTokens: [],
             talkFeedbacksViewerTokens: []
         }

@@ -17,13 +17,13 @@ export type VoxxrinUserPreferences = Replace<UserPreferences, {
 }>
 
 export type VoxxrinUserTokensWallet = Replace<UserTokensWallet, {
-    secretTokens: {
+    secretTokens: Replace<UserTokensWallet['secretTokens'], {
         eventOrganizerTokens: Array<Replace<EventOrganizerSecretToken, {
             eventId: EventId
         }>>,
         talkFeedbacksViewerTokens: Array<Replace<TalkFeedbacksViewerSecretToken, {
             eventId: EventId,
             talkId: TalkId
-        }>>
-    }
+        }>>,
+    }>
 }>
