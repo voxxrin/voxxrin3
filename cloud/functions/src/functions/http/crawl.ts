@@ -1,7 +1,7 @@
 import * as functions from "firebase-functions";
 
 import crawlAll from "../../crawlers/crawl"
-import {extractMultiQueryParam, extractSingleQueryParam} from "./utils";
+import {extractMultiQueryParam, extractSingleQueryParam, sendResponseMessage} from "./utils";
 
 const crawl = functions.https.onRequest(async (request, response) => {
     const crawlingToken = extractSingleQueryParam(request, 'crawlingToken')
@@ -9,9 +9,9 @@ const crawl = functions.https.onRequest(async (request, response) => {
 
     try {
         const events = await crawlAll({ crawlingToken, dayIds })
-        response.send(JSON.stringify(events, null, '  '));
+        return sendResponseMessage(response, 200, JSON.stringify(events, null, '  '))
     }catch(e) {
-        response.send(e?.toString());
+        return sendResponseMessage(response, 500, e?.toString() || "");
     }
 });
 
