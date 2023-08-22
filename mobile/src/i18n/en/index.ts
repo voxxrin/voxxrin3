@@ -61,6 +61,8 @@ const en = {
 	Including_slots_without_feedback: "Including slots without feedback",
 	Config: "Config",
 	Talks_Config: "Talks",
+	Open_full_version_of_the_schedule: "Open full version of the schedule",
+	Here: "here"
 } satisfies BaseTranslation
 
 export default en

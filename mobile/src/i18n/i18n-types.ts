@@ -257,6 +257,14 @@ type RootTranslation = {
 	 * T​a​l​k​s
 	 */
 	Talks_Config: string
+	/**
+	 * O​p​e​n​ ​f​u​l​l​ ​v​e​r​s​i​o​n​ ​o​f​ ​t​h​e​ ​s​c​h​e​d​u​l​e
+	 */
+	Open_full_version_of_the_schedule: string
+	/**
+	 * h​e​r​e
+	 */
+	Here: string
 }
 
 export type TranslationFunctions = {
@@ -500,6 +508,14 @@ export type TranslationFunctions = {
 	 * Talks
 	 */
 	Talks_Config: () => LocalizedString
+	/**
+	 * Open full version of the schedule
+	 */
+	Open_full_version_of_the_schedule: () => LocalizedString
+	/**
+	 * here
+	 */
+	Here: () => LocalizedString
 }
 
 export type Formatters = {}

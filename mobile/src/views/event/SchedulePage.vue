@@ -1,7 +1,7 @@
 <template>
   <ion-page>
     <ion-content :fullscreen="true" v-if="confDescriptor">
-      <current-event-header :conf-descriptor="confDescriptor"/>
+      <current-event-header v-if="!hideHeader" :conf-descriptor="confDescriptor"/>
       <ion-header class="toolbarHeader">
         <ion-toolbar>
           <ion-title slot="start">{{ LL.Schedule() }}</ion-title>
@@ -96,7 +96,7 @@ import {prepareSchedules, useSchedule} from "@/state/useSchedule";
 import CurrentEventHeader from "@/components/events/CurrentEventHeader.vue";
 import {getRouteParamsValue, isRefDefined} from "@/views/vue-utils";
 import {EventId} from "@/models/VoxxrinEvent";
-import {DayId, VoxxrinDay} from "@/models/VoxxrinDay";
+import {VoxxrinDay} from "@/models/VoxxrinDay";
 import {
     filterTimeslotsToAutoExpandBasedOn,
     VoxxrinScheduleTimeSlot
@@ -120,6 +120,14 @@ import TalkFavoriteButton from "@/components/talk-card/TalkFavoriteButton.vue";
 import TalkFormatGroupsBreakdown from "@/components/schedule/TalkFormatGroupsBreakdown.vue";
 import {VoxxrinTalk} from "@/models/VoxxrinTalk";
 import {useSharedEventSelectedDay} from "@/state/useEventSelectedDay";
+
+const props = defineProps({
+    hideHeader: {
+        required: false,
+        type: Boolean,
+        default: false
+    }
+})
 
 const route = useRoute();
 const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')));
