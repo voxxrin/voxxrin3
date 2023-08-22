@@ -8,10 +8,12 @@ import {
     onTalkFeedbackUpdated
 } from "./functions/firestore/onTalkFeedbackProvided";
 import attendeesFeedbacks from "./functions/http/event/attendeesFeedbacks";
+import eventStats from "./functions/http/event/eventStats";
 
 exports.helloWorld = hello
 exports.crawl = crawl
 exports.attendeesFeedbacks = attendeesFeedbacks
+exports.eventStats = eventStats
 exports.migrateFirestoreSchema = migrateFirestoreSchema
 
 exports.onUserTalksNoteCreate = onUserTalksNoteCreate

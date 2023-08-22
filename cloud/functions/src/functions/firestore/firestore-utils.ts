@@ -1,7 +1,7 @@
 import {db} from "../../firebase";
 import {ConferenceOrganizerSpace} from "../../../../../shared/conference-organizer-space.firestore";
-import {UserFeedback} from "../../../../../shared/feedbacks.firestore";
 import {TalkAttendeeFeedback} from "../../../../../shared/talk-feedbacks.firestore";
+import {TalkStats} from "../../../../../shared/feedbacks.firestore";
 
 export async function getSecretTokenDoc<T>(path: string) {
     const list = await db.collection(path).listDocuments()
@@ -36,4 +36,13 @@ export async function ensureTalkFeedbackViewerTokenIsValidThenGetFeedbacks(event
     const feedbacks = feedbackSnapshots.map(snap => snap.data() as TalkAttendeeFeedback)
 
     return feedbacks;
+}
+
+export async function eventTalkStatsFor(eventId: string) {
+    const eventTalkStatsDocs = await db.collection(`events/${eventId}/talksStats`).listDocuments();
+
+    const talkStatsSnapshot = await Promise.all(eventTalkStatsDocs.map(ref => ref.get()))
+    const talkStats = talkStatsSnapshot.map(snap => snap.data() as TalkStats);
+
+    return talkStats;
 }
