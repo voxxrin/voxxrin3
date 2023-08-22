@@ -1,8 +1,9 @@
 import {
+    EventFamily,
     firestoreListableEventToVoxxrinListableEvent, ListableVoxxrinEvent,
 } from "@/models/VoxxrinEvent";
 import {ListableEvent} from "../../../shared/event-list.firestore";
-import {sortBy} from "@/models/utils";
+import {sortBy, ValueObject} from "@/models/utils";
 import {computed, ref, unref} from "vue";
 import {collection, CollectionReference} from "firebase/firestore";
 import {db} from "@/state/firebase";
@@ -12,7 +13,7 @@ type OverridableListableEventProperties = {eventId: string} & Partial<Pick<Lista
 
 const overridenListableEventPropertiesRef = ref<OverridableListableEventProperties|undefined>(undefined)
 
-export function useAvailableEvents() {
+export function useAvailableEvents(eventFamilies: EventFamily[]) {
 
     console.debug(`useAvailableEvents()`)
     const firestoreListableEventsSource = computed(() =>
@@ -26,8 +27,12 @@ export function useAvailableEvents() {
             const firestoreListableEvents = unref(firestoreListableEventsRef),
                 overridenListableEventProperties = unref(overridenListableEventPropertiesRef);
 
+            const filteredFirestoreListableEvents = firestoreListableEvents
+                .filter(le => eventFamilies.length===0
+                    || (le.eventFamily!==undefined && eventFamilies.map(ef => ef.value).includes(le.eventFamily)));
+
             const availableSortedEvents = sortBy(
-                firestoreListableEvents.map(firestoreListableEventToVoxxrinListableEvent),
+                filteredFirestoreListableEvents.map(firestoreListableEventToVoxxrinListableEvent),
                 event => -event.start.epochMilliseconds
             );
 

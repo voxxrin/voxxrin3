@@ -4,7 +4,7 @@ import {ConferenceDescriptor} from "../../../shared/conference-descriptor.firest
 import {TalkFormatId, VoxxrinTalkFormat} from "@/models/VoxxrinTalkFormat";
 import {TrackId, VoxxrinTrack} from "@/models/VoxxrinTrack";
 import {RoomId, VoxxrinRoom} from "@/models/VoxxrinRoom";
-import {EventId, toVoxxrinEventTheme, VoxxrinEventTheme} from "@/models/VoxxrinEvent";
+import {EventFamily, EventId, toVoxxrinEventTheme, VoxxrinEventTheme} from "@/models/VoxxrinEvent";
 import {Replace} from "@/models/type-utils";
 import {Temporal} from "temporal-polyfill";
 import {match} from "ts-pattern";
@@ -13,6 +13,7 @@ import {toHMMDuration, toISOLocalDate, zonedDateTimeRangeOf} from "@/models/Date
 
 export type VoxxrinConferenceDescriptor = Replace<ConferenceDescriptor, {
     id: EventId;
+    eventFamily: EventFamily|undefined,
     start: Temporal.ZonedDateTime,
     end: Temporal.ZonedDateTime,
     days: VoxxrinDay[];
@@ -51,6 +52,7 @@ export function createVoxxrinConferenceDescriptor(firestoreConferenceDescriptor:
     const voxxrinConferenceDescriptor: VoxxrinConferenceDescriptor = {
         ...firestoreConferenceDescriptor,
         id: new EventId(firestoreConferenceDescriptor.id),
+        eventFamily: firestoreConferenceDescriptor.eventFamily===undefined?undefined:new EventFamily(firestoreConferenceDescriptor.eventFamily),
         start,
         end,
         days: firestoreConferenceDescriptor.days.map(d => ({

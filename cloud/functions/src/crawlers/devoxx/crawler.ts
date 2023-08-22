@@ -27,7 +27,7 @@ import {match} from "ts-pattern";
 
 const daysOfWeek = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
 
-const DEVOXX_DESCRIPTOR_PARSER = EVENT_DESCRIPTOR_PARSER.omit({
+export const DEVOXX_DESCRIPTOR_PARSER = EVENT_DESCRIPTOR_PARSER.omit({
     // All these fields can be extracted from the devoxx API
     title: true, description: true, days: true,
     timezone: true, location: true,
@@ -36,7 +36,8 @@ const DEVOXX_DESCRIPTOR_PARSER = EVENT_DESCRIPTOR_PARSER.omit({
     talkFormats: true, rooms: true,
 }).extend({
     cfpId: z.string().nullish(),
-    cfpBaseUrl: z.string().nullish()
+    cfpBaseUrl: z.string().nullish(),
+    eventFamily: z.string()
 })
 
 export const DEVOXX_CRAWLER: CrawlerKind<typeof DEVOXX_DESCRIPTOR_PARSER> = {
@@ -65,6 +66,7 @@ export const DEVOXX_CRAWLER: CrawlerKind<typeof DEVOXX_DESCRIPTOR_PARSER> = {
 
         const eventInfo = {
             id: eventId,
+            eventFamily: descriptor.eventFamily || 'devoxx',
             title: e.name,
             description: e.description,
             peopleDescription: descriptor.peopleDescription,

@@ -227,6 +227,7 @@ export const LA_PRODUCT_CONF_CRAWLER: CrawlerKind<typeof LA_PRODUCT_CONF_DESCRIP
 
         const confDescriptor: ConferenceDescriptor = {
             id: eventId,
+            eventFamily: 'la-product-conf',
             title: descriptor.title,
             days: descriptor.days as Day[],
             headingTitle: descriptor.headingTitle,
@@ -251,6 +252,7 @@ export const LA_PRODUCT_CONF_CRAWLER: CrawlerKind<typeof LA_PRODUCT_CONF_DESCRIP
             id: eventId,
             info: {
                 id: eventId,
+                eventFamily: 'la-product-conf',
                 title: descriptor.title,
                 days: descriptor.days as any,
                 theming: descriptor.theming as any,

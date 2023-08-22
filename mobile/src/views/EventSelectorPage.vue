@@ -4,7 +4,7 @@
       <ion-header class="conferenceWelcome">
         <div class="conferenceWelcome-title">
           <span class="name">{{ LL.Hello_xxx({name:'World'}) }}</span>
-          <span class="welcome">{{ LL.Welcome_to() }} <strong>Voxxrin</strong></span>
+          <span class="welcome">{{ LL.Welcome_to() }} <strong>{{ appTitle }}</strong></span>
         </div>
         <global-user-actions-button />
       </ion-header>
@@ -65,7 +65,7 @@ import {
     IonItemDivider,
     useIonRouter
 } from '@ionic/vue';
-import {EventId, ListableVoxxrinEvent, searchEvents} from "@/models/VoxxrinEvent";
+import {EventFamily, EventId, ListableVoxxrinEvent, searchEvents} from "@/models/VoxxrinEvent";
 import {computed, ref, Ref, watch} from "vue";
 import AvailableEventsList from "@/components/events/AvailableEventsList.vue";
 import {presentActionSheetController} from "@/views/vue-utils";
@@ -79,10 +79,16 @@ import {useAvailableEvents} from "@/state/useAvailableEvents";
 import {useSharedUserPreferences} from "@/state/useUserPreferences";
 import GlobalUserActionsButton from "@/components/user/GlobalUserActionsButton.vue";
 
+const appTitle = import.meta.env.VITE_WHITE_LABEL_NAME;
+
 const router = useIonRouter();
 const { LL } = typesafeI18n()
 
-const { listableEvents: availableEventsRef } = useAvailableEvents();
+const filteredEventFamilies = (import.meta.env.VITE_WHITE_LABEL_FILTERING_EVENT_FAMILIES||"")
+    .split(",")
+    .filter(family => !!family)
+    .map(rawFamily => new EventFamily(rawFamily));
+const { listableEvents: availableEventsRef } = useAvailableEvents(filteredEventFamilies);
 
 const { userPreferences, pinEvent, unpinEvent, togglePastEvent } = useSharedUserPreferences();
 

@@ -133,6 +133,7 @@ export const JUG_SUMMERCAMP_CRAWLER: CrawlerKind<typeof JUG_SUMMERCAMP_PARSER> =
 
         const confDescriptor: ConferenceDescriptor = {
             id: eventId,
+            eventFamily: 'jugsummercamp',
             title: descriptor.title,
             days: descriptor.days,
             headingTitle: descriptor.headingTitle,
@@ -239,6 +240,7 @@ export const JUG_SUMMERCAMP_CRAWLER: CrawlerKind<typeof JUG_SUMMERCAMP_PARSER> =
             id: eventId,
             info: {
                 id: eventId,
+                eventFamily: 'jugsummercamp',
                 title: descriptor.title,
                 days: descriptor.days as any,
                 theming: descriptor.theming as any,
