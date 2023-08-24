@@ -34,6 +34,7 @@
     "singleProjectMode": true
   },
   "hosting": {
+    "site": "voxxrin-v3",
     "public": "hosting/public",
     "ignore": [
       "firebase.json",
@@ -46,11 +47,5 @@
         "destination": "/index.html"
       }
     ]
-  },
-  "hosting:voxxrin-v3": {
-    "site": "voxxrin-v3"
-  },
-  "hosting:voxxrin-v3-demo": {
-    "site": "voxxrin-v3-demo"
   }
 }
