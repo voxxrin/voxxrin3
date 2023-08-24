@@ -52,7 +52,7 @@
                           <talk-room :talk="talk" :conf-descriptor="confDescriptor" />
                         </template>
                         <template #footer-actions="{ talk, userTalkHook }">
-                          <talk-watch-later-button v-if="confDescriptor" :conf-descriptor="confDescriptor" :user-talk-notes="userTalkHook" />
+                          <talk-watch-later-button v-if="confDescriptor && !hideWatchLater" :conf-descriptor="confDescriptor" :user-talk-notes="userTalkHook" />
                           <talk-favorite-button v-if="confDescriptor" :conf-descriptor="confDescriptor" :user-talk-notes="userTalkHook" />
                         </template>
                       </schedule-talk>
@@ -124,6 +124,11 @@ import {useSharedEventSelectedDay} from "@/state/useEventSelectedDay";
 const props = defineProps({
     hideHeader: {
         required: false,
+        type: Boolean,
+        default: false
+    },
+    hideWatchLater: {
+        require: false,
         type: Boolean,
         default: false
     }

@@ -15,7 +15,7 @@
       '--voxxrin-event-theme-colors-tertiary-contrast-hex': confDescriptor?.theming.colors.tertiaryContrastHex,
       '--voxxrin-event-theme-colors-tertiary-contrast-rgb': confDescriptor?.theming.colors.tertiaryContrastRGB,
   }">
-    <schedule-page :hide-header="true"></schedule-page>
+    <schedule-page :hide-header="true" :hide-watch-later="true"></schedule-page>
     <ion-footer>
       <em>
         {{ LL.Open_full_version_of_the_schedule() }}
