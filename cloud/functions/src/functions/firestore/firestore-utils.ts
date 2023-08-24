@@ -22,20 +22,20 @@ export async function ensureOrganizerTokenIsValid(eventId: string, organizerToke
     return organizerSpace;
 }
 
-export async function ensureTalkFeedbackViewerTokenIsValidThenGetFeedbacks(eventId: string, talkId: string, talkViewerToken: string) {
-    const talkFeedbacksViewerDoc = await db.doc(
-        `events/${eventId}/talks/${talkId}/feedbacks-access/${talkViewerToken}`
-    ).get()
+export async function ensureTalkFeedbackViewerTokenIsValidThenGetFeedbacks(eventId: string, talkId: string, talkViewerToken: string, updatedSince: Date) {
+    const feedbacksRefs = await db.collection(
+        `events/${eventId}/talks/${talkId}/feedbacks-access/${talkViewerToken}/feedbacks`
+    ).listDocuments()
 
-    if(!talkFeedbacksViewerDoc.exists) {
+    if(!feedbacksRefs) {
         return [];
     }
 
-    const feedbacksRefs = await talkFeedbacksViewerDoc.ref.collection('feedbacks').listDocuments()
+    // const feedbacksRefs = await talkFeedbacksViewerDoc.ref.collection('feedbacks').listDocuments()
     const feedbackSnapshots = await Promise.all(feedbacksRefs.map(ref => ref.get()))
     const feedbacks = feedbackSnapshots.map(snap => snap.data() as TalkAttendeeFeedback)
 
-    return feedbacks;
+    return feedbacks.filter(feedback => Date.parse(feedback.lastUpdatedOn) > updatedSince.getTime());
 }
 
 export async function eventTalkStatsFor(eventId: string) {

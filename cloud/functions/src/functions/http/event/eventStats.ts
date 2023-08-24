@@ -11,8 +11,8 @@ const eventStats = functions.https.onRequest(async (request, response) => {
     const organizerSecretToken = extractSingleQueryParam(request, 'organizerSecretToken');
     const eventId = extractSingleQueryParam(request, 'eventId');
 
-    if(!eventId) { return sendResponseMessage(response, 400, `Missing eventId query parameter !`) }
-    if(!organizerSecretToken) { return sendResponseMessage(response, 400, `Missing organizerSecretToken query parameter !`) }
+    if(!eventId) { return sendResponseMessage(response, 400, `Missing [eventId] query parameter !`) }
+    if(!organizerSecretToken) { return sendResponseMessage(response, 400, `Missing [organizerSecretToken] query parameter !`) }
 
     const organizerSpace = await ensureOrganizerTokenIsValid(eventId, organizerSecretToken);
     const talksStats = await eventTalkStatsFor(eventId);
