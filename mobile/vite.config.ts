@@ -35,8 +35,16 @@ export default defineConfig(({ command, mode }) => {
           start_url: "index.html",
           display: "standalone",
           icons: [{
-            src: "assets/imgs/logo.png",
+            src: "assets/imgs/logo512.png",
             sizes: "512x512",
+            type: "image/png"
+          }, {
+            src: "assets/imgs/logo256.png",
+            sizes: "256x256",
+            type: "image/png"
+          }, {
+            src: "assets/imgs/logo128.png",
+            sizes: "128x128",
             type: "image/png"
           }],
           background_color: "#E30A63",
