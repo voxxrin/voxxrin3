@@ -43,7 +43,7 @@
     ],
     "rewrites": [
       {
-        "source": "!/@(assets|favicon.*|sw.js|manifest.webmanifest)/**",
+        "source": "!(/assets/**|/favicon.*|/sw.js|/manifest.webmanifest)",
         "destination": "/index.html"
       }
     ]
