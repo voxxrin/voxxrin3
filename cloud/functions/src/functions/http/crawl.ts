@@ -6,9 +6,10 @@ import {extractMultiQueryParam, extractSingleQueryParam, sendResponseMessage} fr
 const crawl = functions.https.onRequest(async (request, response) => {
     const crawlingToken = extractSingleQueryParam(request, 'crawlingToken')
     const dayIds = extractMultiQueryParam(request, 'dayId')
+    const eventIds = extractMultiQueryParam(request, 'eventId')
 
     try {
-        const events = await crawlAll({ crawlingToken, dayIds })
+        const events = await crawlAll({ crawlingToken, dayIds, eventIds })
         return sendResponseMessage(response, 200, JSON.stringify(events, null, '  '))
     }catch(e) {
         return sendResponseMessage(response, 500, e?.toString() || "");

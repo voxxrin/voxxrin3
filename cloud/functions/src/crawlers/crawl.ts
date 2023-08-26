@@ -45,6 +45,7 @@ export const LANGUAGE_FALLBACK_COLORS: HexColor[] = [
 ];
 
 export type CrawlCriteria = {
+    eventIds?: string[]|undefined;
     crawlingToken?: string|undefined;
     dayIds?: string[]|undefined;
 }
@@ -71,9 +72,18 @@ const crawlAll = async function(criteria: CrawlCriteria) {
     const matchingCrawlerDescriptors = fbCrawlerDescriptorSnapshot.docs.map((snap, _) => {
         return {...FIREBASE_CRAWLER_DESCRIPTOR_PARSER.parse(snap.data()), id: snap.id }
     }).filter(firestoreCrawler => {
-        return isAutoCrawling
+        const dateConstraintMatches = isAutoCrawling
             || Temporal.Now.instant().epochMilliseconds < Date.parse(firestoreCrawler.stopAutoCrawlingAfter)
+
+        const eventIdConstraintMatches = !criteria.eventIds || !criteria.eventIds.length || criteria.eventIds.includes(firestoreCrawler.id);
+
+        return dateConstraintMatches && eventIdConstraintMatches;
     });
+
+    if(!matchingCrawlerDescriptors.length) {
+        info(`No crawler found matching either eventIds=${JSON.stringify(criteria.eventIds)} or crawlers' 'stopAutoCrawlingAfter' deadline`);
+        return;
+    }
 
     return await Promise.all(matchingCrawlerDescriptors.map(async crawlerDescriptor => {
         try {
