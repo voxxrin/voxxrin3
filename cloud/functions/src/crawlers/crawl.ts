@@ -64,7 +64,7 @@ const crawlAll = async function(criteria: CrawlCriteria) {
 
 
     if (fbCrawlerDescriptorSnapshot.empty) {
-        info(`No crawler found matching [${criteria.crawlingToken}] token !`)
+        throw new Error(`No crawler found matching [${criteria.crawlingToken}] token !`)
         return;
     }
 
@@ -81,7 +81,7 @@ const crawlAll = async function(criteria: CrawlCriteria) {
     });
 
     if(!matchingCrawlerDescriptors.length) {
-        info(`No crawler found matching either eventIds=${JSON.stringify(criteria.eventIds)} or crawlers' 'stopAutoCrawlingAfter' deadline`);
+        throw new Error(`No crawler found matching either eventIds=${JSON.stringify(criteria.eventIds)} or crawlers' 'stopAutoCrawlingAfter' deadline`);
         return;
     }
 
@@ -91,7 +91,7 @@ const crawlAll = async function(criteria: CrawlCriteria) {
 
             const crawler = CRAWLERS.find(c => c.kind === crawlerDescriptor.kind);
             if(!crawler) {
-                error(`Error: no crawler found for kind: ${crawlerDescriptor.kind} (with id=${crawlerDescriptor.id})`)
+                throw new Error(`Error: no crawler found for kind: ${crawlerDescriptor.kind} (with id=${crawlerDescriptor.id})`)
                 return;
             }
 
@@ -109,7 +109,7 @@ const crawlAll = async function(criteria: CrawlCriteria) {
                 durationInSeconds: start.until(end).total('seconds')
             }
         }catch(e: any) {
-            error(`Error during crawler with id ${crawlerDescriptor.id}: ${e?.toString()}`)
+            throw new Error(`Error during crawler with id ${crawlerDescriptor.id}: ${e?.toString()}`)
             throw e;
         }
     }))
