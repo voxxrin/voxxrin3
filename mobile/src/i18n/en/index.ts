@@ -62,7 +62,9 @@ const en = {
 	Config: "Config",
 	Talks_Config: "Talks",
 	Open_full_version_of_the_schedule: "Open full version of the schedule",
-	Here: "here"
+	Here: "here",
+	New_content_available_click_on_reload_button_to_update_in_the_bg: "New content available, click on reload button to update in the background",
+	Reload: "Reload"
 } satisfies BaseTranslation
 
 export default en

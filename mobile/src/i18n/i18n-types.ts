@@ -265,6 +265,14 @@ type RootTranslation = {
 	 * h​e​r​e
 	 */
 	Here: string
+	/**
+	 * N​e​w​ ​c​o​n​t​e​n​t​ ​a​v​a​i​l​a​b​l​e​,​ ​c​l​i​c​k​ ​o​n​ ​r​e​l​o​a​d​ ​b​u​t​t​o​n​ ​t​o​ ​u​p​d​a​t​e​ ​i​n​ ​t​h​e​ ​b​a​c​k​g​r​o​u​n​d
+	 */
+	New_content_available_click_on_reload_button_to_update_in_the_bg: string
+	/**
+	 * R​e​l​o​a​d
+	 */
+	Reload: string
 }
 
 export type TranslationFunctions = {
@@ -516,6 +524,14 @@ export type TranslationFunctions = {
 	 * here
 	 */
 	Here: () => LocalizedString
+	/**
+	 * New content available, click on reload button to update in the background
+	 */
+	New_content_available_click_on_reload_button_to_update_in_the_bg: () => LocalizedString
+	/**
+	 * Reload
+	 */
+	Reload: () => LocalizedString
 }
 
 export type Formatters = {}

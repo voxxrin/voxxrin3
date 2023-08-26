@@ -5,17 +5,44 @@
 import { useRegisterSW } from 'virtual:pwa-register/vue'
 import { pwaInfo } from 'virtual:pwa-info'
 import {toastController} from "@ionic/vue";
-import {watch} from "vue";
 import {reload} from "ionicons/icons";
+import {typesafeI18n} from "@/i18n/i18n-vue";
 
 console.log(pwaInfo)
 
+const { LL } = typesafeI18n()
+
+let pwaRefreshToaster: HTMLIonToastElement|undefined = undefined;
 const {
-    offlineReady,
-    needRefresh,
     updateServiceWorker,
 } = useRegisterSW({
     immediate: true,
+    async onNeedRefresh() {
+        console.log(`onNeedRefresh called !`)
+        if(pwaRefreshToaster === undefined) {
+            pwaRefreshToaster = await toastController.create({
+                message: LL.value.New_content_available_click_on_reload_button_to_update_in_the_bg()+".",
+                duration: undefined,
+                position: 'top',
+                buttons: [{
+                    text: LL.value.Reload(),
+                    side: 'end',
+                    icon: reload,
+                    role: 'reload',
+                    handler: async () => {
+                        await updateServiceWorker(true)
+                        if(pwaRefreshToaster) {
+                            await pwaRefreshToaster.dismiss();
+                        }
+                    }
+                }],
+                color: 'primary'
+            })
+            await pwaRefreshToaster.present()
+        } else {
+            console.log(`pwa refresher already opened !.. skipping...`)
+        }
+    },
     onRegisteredSW(swUrl, r) {
         // eslint-disable-next-line no-console
         console.log(`Service Worker at: ${swUrl}`)
@@ -28,29 +55,6 @@ const {
     },
 })
 
-watch([needRefresh], async ([_needRefresh]) => {
-    if(_needRefresh) {
-        const toast = await toastController.create({
-            message: 'New content available, click on reload button to update.',
-            duration: undefined,
-            position: 'top',
-            buttons: [{
-                text: 'Reload',
-                side: 'end',
-                icon: reload,
-                role: 'reload',
-                handler: () => updateServiceWorker(true),
-            }],
-            color: 'primary'
-        })
-        await toast.present()
-    }
-})
-
-const close = async () => {
-    offlineReady.value = false
-    needRefresh.value = false
-}
 </script>
 
 <style lang="scss" scoped>
