@@ -189,13 +189,14 @@ const crawlDevoxxDay = async (cfpBaseUrl: string, day: string) => {
             language: "EN"
         };
 
+        const upperFirstAudience = item.proposal.audienceLevel.charAt(0).toUpperCase() + item.proposal.audienceLevel.slice(1).toLowerCase();
         const detailedTalk: DetailedTalk = {
             ...talk,
             start: start as ISODatetime,
             end: end as ISODatetime,
             summary: item.proposal.summary || "",
             description: item.proposal.description || "",
-            tags: item.proposal.tags.map(t => t.name)
+            tags: [`Audience:${upperFirstAudience}`].concat(item.proposal.tags.map(t => t.name))
         };
 
         return { talk, detailedTalk };

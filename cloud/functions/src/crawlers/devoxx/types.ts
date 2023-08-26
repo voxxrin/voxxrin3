@@ -43,7 +43,7 @@ export interface DevoxxScheduleProposal {
       description: string,
       summary: string,
       afterVideoURL: string,
-      audienceLevel: string,
+      audienceLevel: "BEGINNER"|"INTERMEDIATE"|"ADVANCED",
       track: {
         id: number,
         name: string,
