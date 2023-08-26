@@ -39,7 +39,7 @@ watch([needRefresh], async ([_needRefresh]) => {
                 side: 'end',
                 icon: reload,
                 role: 'reload',
-                handler: updateServiceWorker,
+                handler: () => updateServiceWorker(true),
             }],
             color: 'primary'
         })
