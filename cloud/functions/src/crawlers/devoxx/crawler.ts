@@ -75,7 +75,7 @@ export const DEVOXX_CRAWLER: CrawlerKind<typeof DEVOXX_DESCRIPTOR_PARSER> = {
             end: end,
             days: days,
             logoUrl: descriptor.logoUrl,
-            backgroundUrl: e.eventImageURL || descriptor.backgroundUrl,
+            backgroundUrl: descriptor.backgroundUrl,
             websiteUrl: e.website,
             location: { city: e.locationCity, country: e.locationCountry },
             theming: descriptor.theming,
