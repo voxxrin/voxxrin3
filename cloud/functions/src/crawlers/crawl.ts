@@ -184,6 +184,9 @@ const saveEvent = async function(event: FullEvent) {
     }));
 
     try {
+        // TODO: Remove me once watch later will be properly implemented !
+        event.conferenceDescriptor.features.remindMeOnceVideosAreAvailableEnabled = false;
+
         await firestoreEvent.collection('event-descriptor')
             .doc('self')
             .set(event.conferenceDescriptor);
