@@ -3,9 +3,13 @@ import {db} from "../../firebase";
 import {ConferenceOrganizerSpace} from "../../../../../shared/conference-organizer-space.firestore";
 import {TalkAttendeeFeedback} from "../../../../../shared/talk-feedbacks.firestore";
 import {TalkStats} from "../../../../../shared/feedbacks.firestore";
-import {EventLastUpdates} from "../../../../../shared/event-list.firestore";
+import {EventLastUpdates, ListableEvent} from "../../../../../shared/event-list.firestore";
 import {ISODatetime} from "../../../../../shared/type-utils";
-import {sendResponseMessage} from "../http/utils";
+
+export type EventFamilyToken = {
+    families: string[],
+    token: string;
+}
 
 export async function getSecretTokenDoc<T>(path: string) {
     const list = await db.collection(path).listDocuments()
@@ -16,11 +20,22 @@ export async function getSecretTokenDoc<T>(path: string) {
     return (await db.doc(`${path}/${list[0].id}`).get()).data() as T;
 }
 
-export async function ensureOrganizerTokenIsValid(eventId: string, organizerToken: string) {
+export async function getOrganizerSpaceByToken(
+   eventId: string,
+   tokenType: 'organizerSecretToken'|'familyToken',
+   secretToken: string
+) {
     const organizerSpace: ConferenceOrganizerSpace = await getSecretTokenDoc(`events/${eventId}/organizer-space`);
 
-    if(organizerSpace.organizerSecretToken !== organizerToken) {
-        throw new Error(`Invalid organizer token for eventId=${eventId}: ${organizerToken}`);
+    if(tokenType === 'organizerSecretToken' && organizerSpace.organizerSecretToken !== secretToken) {
+        throw new Error(`Invalid organizer token for eventId=${eventId}: ${secretToken}`);
+    }
+
+    if(tokenType === 'familyToken') {
+        const familyTokenValid = await checkEventFamilyTokenIsValid(eventId, secretToken);
+        if(!familyTokenValid) {
+            throw new Error(`Invalid family token for eventId=${eventId}: ${secretToken}`);
+        }
     }
 
     return organizerSpace;
@@ -93,4 +108,19 @@ export async function checkEventLastUpdate(
     }
 
     return { cachedHash, updatesDetected: true };
+}
+
+export async function checkEventFamilyTokenIsValid(eventId: string, token: string) {
+    const listableEvent = (await db.collection("events").doc(eventId).get())?.data() as ListableEvent|undefined;
+
+    if(!listableEvent || !listableEvent.eventFamily) {
+        return false;
+    }
+
+    const familyTokenSnapshots = await db.collection("event-family-tokens")
+        .where('families', 'array-contains', listableEvent.eventFamily)
+        .where("token", '==', token)
+        .get()
+
+    return !familyTokenSnapshots.empty;
 }
