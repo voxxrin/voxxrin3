@@ -9,6 +9,7 @@ import {
 } from "../../../../../shared/feedbacks.firestore";
 import {firestore} from "firebase-admin";
 import DocumentReference = firestore.DocumentReference;
+import {eventLastUpdateRefreshed} from "./firestore-utils";
 
 async function upsertTalkStats(eventId: string, talkId: string, isFavorite: boolean) {
     const existingTalksStatsEntryRef = db
@@ -64,6 +65,7 @@ export const onUserTalksNoteUpdate = functions.firestore
             info(`favorite update by ${userId} on ${eventId} // ${talkId}: ${wasFavorite} => ${isFavorite}`);
 
             await Promise.all([
+                eventLastUpdateRefreshed(eventId, [ "favorites" ]),
                 upsertTalkStats(eventId, talkId, isFavorite),
                 updateUserTalkAllFavorites(userId, eventId, talkId, isFavorite),
             ])
@@ -84,6 +86,7 @@ export const onUserTalksNoteCreate = functions.firestore
             info(`favorite create by ${userId} on ${eventId} // ${talkId}: ${isFavorite}`);
 
             await Promise.all([
+                eventLastUpdateRefreshed(eventId, [ "favorites" ]),
                 upsertTalkStats(eventId, talkId, isFavorite),
                 updateUserTalkAllFavorites(userId, eventId, talkId, isFavorite),
             ])

@@ -1,7 +1,7 @@
 import * as functions from "firebase-functions";
 import {UserDailyFeedbacks, UserFeedback} from "../../../../../shared/feedbacks.firestore";
 import {db} from "../../firebase";
-import {getSecretTokenDoc} from "./firestore-utils";
+import {eventLastUpdateRefreshed, getSecretTokenDoc} from "./firestore-utils";
 import {ConferenceOrganizerSpace} from "../../../../../shared/conference-organizer-space.firestore";
 import {TalkAttendeeFeedback} from "../../../../../shared/talk-feedbacks.firestore";
 import {UserTokensWallet} from "../../../../../shared/user-tokens-wallet.firestore";
@@ -49,9 +49,6 @@ async function updateTalkFeedbacksFromUserFeedbacks(userId: string, eventId: str
                 throw new Error(`Unexpected unexistant user token wallet for userId=${userId}`);
             }
 
-            const userPublicTokensHavingProvidedFeedback = ((await db.collection(`events/${eventId}/talks/${feedback.talkId}/feedbacks-access/${talkFeedbackViewerToken.secretToken}/feedbacks`).listDocuments())
-                || []).map(d => d.id)
-
             const attendeeFeedback: TalkAttendeeFeedback = {
                 talkId: feedback.talkId,
                 comment: feedback.comment,
@@ -61,7 +58,10 @@ async function updateTalkFeedbacksFromUserFeedbacks(userId: string, eventId: str
                 attendeePublicToken: userTokensWallet.publicUserToken
             }
 
-            await db.doc(`events/${eventId}/talks/${feedback.talkId}/feedbacks-access/${talkFeedbackViewerToken.secretToken}/feedbacks/${userTokensWallet.publicUserToken}`).set(attendeeFeedback)
+            await Promise.all([
+                db.doc(`events/${eventId}/talks/${feedback.talkId}/feedbacks-access/${talkFeedbackViewerToken.secretToken}/feedbacks/${userTokensWallet.publicUserToken}`).set(attendeeFeedback),
+                eventLastUpdateRefreshed(eventId, [ "feedbacks" ])
+            ])
         }
     }))
 }

@@ -19,6 +19,9 @@ service cloud.firestore {
       match /event-descriptor/self {
         allow read: if true;
       }
+      match /last-updates/self {
+        allow read: if true;
+      }
       match /organizer-space/{secretOrganizerToken} {
         allow get: if true;
         allow list: if false;

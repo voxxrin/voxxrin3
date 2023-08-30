@@ -1,7 +1,11 @@
+import * as functions from "firebase-functions";
 import {db} from "../../firebase";
 import {ConferenceOrganizerSpace} from "../../../../../shared/conference-organizer-space.firestore";
 import {TalkAttendeeFeedback} from "../../../../../shared/talk-feedbacks.firestore";
 import {TalkStats} from "../../../../../shared/feedbacks.firestore";
+import {EventLastUpdates} from "../../../../../shared/event-list.firestore";
+import {ISODatetime} from "../../../../../shared/type-utils";
+import {sendResponseMessage} from "../http/utils";
 
 export async function getSecretTokenDoc<T>(path: string) {
     const list = await db.collection(path).listDocuments()
@@ -45,4 +49,48 @@ export async function eventTalkStatsFor(eventId: string) {
     const talkStats = talkStatsSnapshot.map(snap => snap.data() as TalkStats);
 
     return talkStats;
+}
+
+export async function eventLastUpdateRefreshed(eventId: string, fields: Array<keyof EventLastUpdates>) {
+    if(!fields.length) {
+        return;
+    }
+
+    const now = new Date().toISOString() as ISODatetime;
+    const fieldUpdates: Partial<EventLastUpdates> = fields.reduce((fieldUpdates, field) => {
+        fieldUpdates[field] = now;
+        return fieldUpdates;
+    }, {} as Partial<EventLastUpdates>)
+
+    const existingLastUpdates = await db
+        .collection("events").doc(eventId)
+        .collection("last-updates").doc("self")
+        .get();
+
+    if(existingLastUpdates.exists) {
+        existingLastUpdates.ref.update(fieldUpdates);
+    } else {
+        existingLastUpdates.ref.set(fieldUpdates);
+    }
+}
+
+export async function checkEventLastUpdate(
+    eventId: string, lastUpdateFieldName: keyof EventLastUpdates,
+    request: functions.https.Request, response: functions.Response
+): Promise<{ cachedHash: string|undefined, updatesDetected: boolean }> {
+    const eventLastUpdatesDoc = await db
+        .collection("events").doc(eventId)
+        .collection("last-updates").doc("self")
+        .get();
+
+    const cachedHash = (eventLastUpdatesDoc.data() as EventLastUpdates|undefined)?.[lastUpdateFieldName];
+
+    const ifNoneMatchHeader = request.header("If-None-Match")
+    if(ifNoneMatchHeader) {
+        if(eventLastUpdatesDoc.exists && cachedHash && cachedHash === ifNoneMatchHeader) {
+            return { cachedHash, updatesDetected: false }
+        }
+    }
+
+    return { cachedHash, updatesDetected: true };
 }

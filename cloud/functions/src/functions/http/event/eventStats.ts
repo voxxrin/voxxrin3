@@ -1,6 +1,7 @@
 import * as functions from "firebase-functions";
 import {extractSingleQueryParam, sendResponseMessage} from "../utils";
 import {
+    checkEventLastUpdate,
     ensureOrganizerTokenIsValid,
     eventTalkStatsFor
 } from "../../firestore/firestore-utils";
@@ -14,6 +15,11 @@ const eventStats = functions.https.onRequest(async (request, response) => {
     if(!eventId) { return sendResponseMessage(response, 400, `Missing [eventId] query parameter !`) }
     if(!organizerSecretToken) { return sendResponseMessage(response, 400, `Missing [organizerSecretToken] query parameter !`) }
 
+    const { cachedHash, updatesDetected } = await checkEventLastUpdate(eventId, 'favorites', request, response)
+    if(!updatesDetected) {
+        return sendResponseMessage(response, 304)
+    }
+
     const organizerSpace = await ensureOrganizerTokenIsValid(eventId, organizerSecretToken);
     const talksStats = await eventTalkStatsFor(eventId);
 
@@ -25,7 +31,9 @@ const eventStats = functions.https.onRequest(async (request, response) => {
         return talkStats;
     }))
 
-    sendResponseMessage(response, 200, JSON.stringify(perTalkStats));
+    sendResponseMessage(response, 200, JSON.stringify(perTalkStats), cachedHash?{
+        'ETag': cachedHash
+    }:{});
 });
 
 export default eventStats

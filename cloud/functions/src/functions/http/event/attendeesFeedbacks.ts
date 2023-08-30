@@ -1,6 +1,7 @@
 import * as functions from "firebase-functions";
 import {extractSingleQueryParam, sendResponseMessage} from "../utils";
 import {
+    checkEventLastUpdate,
     ensureOrganizerTokenIsValid,
     ensureTalkFeedbackViewerTokenIsValidThenGetFeedbacks
 } from "../../firestore/firestore-utils";
@@ -15,6 +16,11 @@ const attendeesFeedbacks = functions.https.onRequest(async (request, response) =
     if(!organizerSecretToken) { return sendResponseMessage(response, 400, `Missing [organizerSecretToken] query parameter !`) }
     if(isNaN(sinceTimestamp)) { return sendResponseMessage(response, 400, `Missing valid [updatedSince] query parameter !`) }
 
+    const { cachedHash, updatesDetected } = await checkEventLastUpdate(eventId, 'feedbacks', request, response)
+    if(!updatesDetected) {
+        return sendResponseMessage(response, 304)
+    }
+
     const updatedSince = new Date(sinceTimestamp);
     const organizerSpace = await ensureOrganizerTokenIsValid(eventId, organizerSecretToken);
 
@@ -27,7 +33,9 @@ const attendeesFeedbacks = functions.https.onRequest(async (request, response) =
         };
     }))
 
-    sendResponseMessage(response, 200, JSON.stringify(perTalkFeedbacks));
+    sendResponseMessage(response, 200, JSON.stringify(perTalkFeedbacks), cachedHash ? {
+        'ETag': cachedHash
+    }:{});
 });
 
 export default attendeesFeedbacks

@@ -11,8 +11,19 @@ export function extractMultiQueryParam(request: functions.https.Request, paramNa
     return (Array.isArray(value)?value.map(v => v.toString()):[ value?.toString() ].filter(v => !!v)) as string[];
 }
 
-export function sendResponseMessage(response: Response, httpCode: number, message: string) {
+export function sendResponseMessage(response: Response, httpCode: number, message?: string|undefined, headers?: Record<string,string>) {
     response.status(httpCode)
-    response.send(message)
+    if(headers) {
+        Object.entries(headers).forEach(([key, value]) => {
+            response.setHeader(key, value);
+        })
+    }
+
+    if(message) {
+        response.send(message)
+    } else {
+        response.send();
+    }
+
     return;
 }
