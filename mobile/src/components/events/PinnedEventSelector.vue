@@ -2,8 +2,12 @@
   <div v-if="pinnedEvents.length>0" class="pinnedEventsContainer">
     <ion-list class="pinnedEvents">
       <pinned-event :pinned-event="pinnedEvent" @click="$emit('event-selected', pinnedEvent)"
-                    v-for="(pinnedEvent, index) in pinnedEvents" :key="pinnedEvent.id.value"></pinned-event>
+                    v-for="(pinnedEvent, index) in ongoingAndFutureEvents" :key="pinnedEvent.id.value"></pinned-event>
 
+      <div style="width: 2px; background-color: var(--app-voxxrin);"></div>
+
+      <pinned-event :pinned-event="pinnedEvent" @click="$emit('event-selected', pinnedEvent)"
+                    v-for="(pinnedEvent, index) in pastEvents" :key="pinnedEvent.id.value"></pinned-event>
     </ion-list>
   </div>
   <div v-else>
@@ -12,9 +16,10 @@
 </template>
 
 <script setup lang="ts">
-import {PropType} from "vue";
+import {computed, PropType} from "vue";
 import {ListableVoxxrinEvent} from "@/models/VoxxrinEvent";
 import PinnedEvent from "@/components/events/PinnedEvent.vue";
+import {conferenceStatusOf} from "@/models/VoxxrinConferenceDescriptor";
 
 const props = defineProps({
     pinnedEvents: {
@@ -26,6 +31,14 @@ const props = defineProps({
 defineEmits<{
     (e: 'event-selected', event: ListableVoxxrinEvent): void
 }>()
+
+const pastEvents = computed(() => props.pinnedEvents
+    .filter(e => conferenceStatusOf(e.start, e.end, e.timezone) === 'past')
+)
+const ongoingAndFutureEvents = computed(() => props.pinnedEvents
+    .filter(e => conferenceStatusOf(e.start, e.end, e.timezone) !== 'past')
+    .reverse()
+)
 
 </script>
 
