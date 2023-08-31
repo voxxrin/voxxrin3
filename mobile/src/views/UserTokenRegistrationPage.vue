@@ -11,7 +11,6 @@ const route = useRoute();
 const {registerEventOrganizerSecretToken, registerTalkFeedbacksViewerSecretToken} = useUserTokensWallet()
 
 onMounted(async () => {
-    debugger;
     const tokenType = route.query['type'] as string;
     const secretToken = route.query['secretToken'] as string;
     if(!tokenType) { alert("Missing token type !"); return; }
@@ -47,7 +46,10 @@ onMounted(async () => {
         })
 
     if(success){
+        console.log(`Successfully registered ${tokenType} token !`)
         ionRouter.push('/event-selector')
+    } else {
+        console.error(`Error while registering token of type ${tokenType}`)
     }
 })
 

@@ -9,11 +9,19 @@ import {
 } from "./functions/firestore/onTalkFeedbackProvided";
 import attendeesFeedbacks from "./functions/http/event/attendeesFeedbacks";
 import eventStats from "./functions/http/event/eventStats";
+import talkFeedbacksViewers from "./functions/http/event/talkFeedbacksViewers";
 
+// For testing purposes only
 exports.helloWorld = hello
+
+// For organizers
 exports.crawl = crawl
+exports.talkFeedbacksViewers = talkFeedbacksViewers
+// For organizers + co organizers (in same event family)
 exports.attendeesFeedbacks = attendeesFeedbacks
 exports.eventStats = eventStats
+
+// Admin only
 exports.migrateFirestoreSchema = migrateFirestoreSchema
 
 exports.onUserTalksNoteCreate = onUserTalksNoteCreate
