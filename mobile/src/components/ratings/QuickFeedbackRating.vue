@@ -1,5 +1,5 @@
 <template>
-  <ion-list>
+  <ion-list class="public-bingo" v-if="config.isPublic">
     <!-- TODO Add class _checked + add variable theme events -->
     <ion-item v-for="(choice, index) in config.choices"
               :key="choice.id"
@@ -14,6 +14,16 @@
         <span class="total"><strong>12</strong> Votes</span>
       </div>
       <canvas class="quickFeedbackItem-canvas"></canvas>
+    </ion-item>
+  </ion-list>
+  <ion-list class="private-bingo" v-else>
+    <ion-item v-for="(choice, index) in config.choices" :key="choice.id">
+      <ion-checkbox justify="space-between"
+                    :checked="selectedChoices.includes(choice.id)"
+                    :name="choice.id"
+                    @ionChange="ratingToggled(choice.id)">
+        {{ choice.label }}
+      </ion-checkbox>
     </ion-item>
   </ion-list>
 </template>
@@ -52,7 +62,21 @@ function ratingToggled(choiceId: string) {
 </script>
 
 <style scoped lang="scss">
-  ion-list {
+  ion-list.private-bingo {
+    margin-bottom: 16px;
+    padding-top: 0;
+    background: transparent;
+
+    ion-item {
+      --background: transparent !important;
+      --padding-end: 0;
+
+      &:last-child {
+        --border-style: none;
+      }
+    }
+  }
+  ion-list.public-bingo {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     row-gap: 8px;

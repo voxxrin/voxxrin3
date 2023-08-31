@@ -13,6 +13,7 @@ export type ConferenceDescriptor = ListableEvent & {
         ratings: {
             bingo: {
                 enabled: boolean,
+                isPublic?: boolean|undefined,
                 choices: Array<{
                     id: string,
                     label: string
