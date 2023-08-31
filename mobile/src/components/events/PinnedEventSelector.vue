@@ -4,7 +4,7 @@
       <pinned-event :pinned-event="pinnedEvent" @click="$emit('event-selected', pinnedEvent)"
                     v-for="(pinnedEvent, index) in ongoingAndFutureEvents" :key="pinnedEvent.id.value"></pinned-event>
 
-      <div style="width: 2px; background-color: var(--app-voxxrin);"></div>
+      <div v-if="pastEvents.length>0" style="width: 2px; background-color: var(--app-voxxrin);"></div>
 
       <pinned-event :pinned-event="pinnedEvent" @click="$emit('event-selected', pinnedEvent)"
                     v-for="(pinnedEvent, index) in pastEvents" :key="pinnedEvent.id.value"></pinned-event>

@@ -6,7 +6,7 @@
               @event-pin-toggled="(ev, transitionType) => $emit('event-pin-toggled', ev, transitionType)"
               @event-clicked="$emit('event-clicked', $event)">
       </available-event-item>
-      <div style="height: 2px; background-color: var(--app-voxxrin)"></div>
+      <div v-if="pastEvents.length>0" style="height: 2px; background-color: var(--app-voxxrin)"></div>
       <available-event-item :pinned-events="pinnedEvents" v-for="(event, index) in pastEvents" :key="event.id.value"
               :event="event"
               @event-pin-toggled="(ev, transitionType) => $emit('event-pin-toggled', ev, transitionType)"
