@@ -43,7 +43,7 @@ const attendeesFeedbacks = functions.https.onRequest(async (request, response) =
             };
         }))
 
-        sendResponseMessage(response, 200, JSON.stringify(perTalkFeedbacks), cachedHash ? {
+        sendResponseMessage(response, 200, perTalkFeedbacks, cachedHash ? {
             'ETag': cachedHash
         }:{});
     } catch(error) {

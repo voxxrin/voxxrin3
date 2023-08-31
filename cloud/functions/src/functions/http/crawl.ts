@@ -10,7 +10,7 @@ const crawl = functions.https.onRequest(async (request, response) => {
 
     try {
         const events = await crawlAll({ crawlingToken, dayIds, eventIds })
-        return sendResponseMessage(response, 200, JSON.stringify(events, null, '  '))
+        return sendResponseMessage(response, 200, events)
     }catch(e) {
         return sendResponseMessage(response, 500, e?.toString() || "");
     }

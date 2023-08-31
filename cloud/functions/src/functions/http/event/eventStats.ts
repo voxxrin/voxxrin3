@@ -41,7 +41,7 @@ const eventStats = functions.https.onRequest(async (request, response) => {
             return talkStats;
         }))
 
-        sendResponseMessage(response, 200, JSON.stringify(perTalkStats), cachedHash?{
+        sendResponseMessage(response, 200, perTalkStats, cachedHash?{
             'ETag': cachedHash
         }:{});
     } catch(error) {

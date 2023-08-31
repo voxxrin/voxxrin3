@@ -11,7 +11,7 @@ export function extractMultiQueryParam(request: functions.https.Request, paramNa
     return (Array.isArray(value)?value.map(v => v.toString()):[ value?.toString() ].filter(v => !!v)) as string[];
 }
 
-export function sendResponseMessage(response: Response, httpCode: number, message?: string|undefined, headers?: Record<string,string>) {
+export function sendResponseMessage(response: Response, httpCode: number, message?: string|undefined|object, headers?: Record<string,string>) {
     response.status(httpCode)
     if(headers) {
         Object.entries(headers).forEach(([key, value]) => {
@@ -20,6 +20,9 @@ export function sendResponseMessage(response: Response, httpCode: number, messag
     }
 
     if(message) {
+        if(typeof message !== 'string') {
+            response.setHeader("Content-Type", "application/json")
+        }
         response.send(message)
     } else {
         response.send();

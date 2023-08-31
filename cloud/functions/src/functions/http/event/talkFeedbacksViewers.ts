@@ -17,11 +17,10 @@ const talkFeedbacksViewers = functions.https.onRequest(async (request, response)
     try {
         const organizerSpace = await getOrganizerSpaceByToken(eventId, 'organizerSecretToken', organizerSecretToken)
 
-        sendResponseMessage(response, 200, JSON.stringify(
-            organizerSpace.talkFeedbackViewerTokens.map(tfvt => ({
+        sendResponseMessage(response, 200, organizerSpace.talkFeedbackViewerTokens.map(tfvt => ({
                 ...tfvt,
                 registrationUrl: `${baseUrl}${baseUrl.endsWith("/")?"":"/"}user-tokens/register?type=TalkFeedbacksViewer&eventId=${tfvt.eventId}&talkId=${tfvt.talkId}&secretToken=${tfvt.secretToken}`
-            }))
+            })
         ));
     } catch(error) {
         sendResponseMessage(response, 500, ""+error);
