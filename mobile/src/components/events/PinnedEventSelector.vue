@@ -1,22 +1,7 @@
 <template>
   <div v-if="pinnedEvents.length>0" class="pinnedEventsContainer">
     <ion-list class="pinnedEvents">
-      <ion-card class="pinnedEvents-card" :style="{
-          '--voxxrin-event-background-url': `url('${pinnedEvent.backgroundUrl}')`,
-          '--voxxrin-event-logo-url': `url('${pinnedEvent.logoUrl}')`,
-          '--voxxrin-event-theme-colors-primary-hex': pinnedEvent.theming.colors.primaryHex,
-          '--voxxrin-event-theme-colors-primary-rgb': pinnedEvent.theming.colors.primaryRGB,
-          '--voxxrin-event-theme-colors-primary-contrast-hex': pinnedEvent.theming.colors.primaryContrastHex,
-          '--voxxrin-event-theme-colors-primary-contrast-rgb': pinnedEvent.theming.colors.primaryContrastRGB,
-          '--voxxrin-event-theme-colors-secondary-hex': pinnedEvent.theming.colors.secondaryHex,
-          '--voxxrin-event-theme-colors-secondary-rgb': pinnedEvent.theming.colors.secondaryRGB,
-          '--voxxrin-event-theme-colors-secondary-contrast-hex': pinnedEvent.theming.colors.secondaryContrastHex,
-          '--voxxrin-event-theme-colors-secondary-contrast-rgb': pinnedEvent.theming.colors.secondaryContrastRGB,
-          '--voxxrin-event-theme-colors-tertiary-hex': pinnedEvent.theming.colors.tertiaryHex,
-          '--voxxrin-event-theme-colors-tertiary-rgb': pinnedEvent.theming.colors.tertiaryRGB,
-          '--voxxrin-event-theme-colors-tertiary-contrast-hex': pinnedEvent.theming.colors.tertiaryContrastHex,
-          '--voxxrin-event-theme-colors-tertiary-contrast-rgb': pinnedEvent.theming.colors.tertiaryContrastRGB,
-      }" v-for="(pinnedEvent, index) in pinnedEvents" :key="pinnedEvent.id.value"
+      <ion-card class="pinnedEvents-card" v-themed-event-styles="pinnedEvent" v-for="(pinnedEvent, index) in pinnedEvents" :key="pinnedEvent.id.value"
                 @click="$emit('event-selected', pinnedEvent)">
         <current-event-status :conf-descriptor="pinnedEvent"/>
         <div>

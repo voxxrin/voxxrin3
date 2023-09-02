@@ -34,6 +34,7 @@ import {navigatorDetector} from "typesafe-i18n/detectors";
 import {loadLocaleAsync} from "@/i18n/i18n-util.async";
 import {useFirebaseAuth, VueFire, VueFireAuth} from "vuefire";
 import { signInAnonymously } from 'firebase/auth';
+import { provideThemedEventStyles } from "@/directives/ThemedEventStyles";
 
 const app = createApp(App);
 app
@@ -45,6 +46,7 @@ app
     ]
   }).use(router)
   .use(globalComponents)
+    .directive('themedEventStyles', provideThemedEventStyles)
 
 
 // const detectedLocale = detectLocale(navigatorDetector)

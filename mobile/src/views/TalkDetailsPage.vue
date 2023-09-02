@@ -1,21 +1,6 @@
 <template>
   <ion-page>
-    <ion-content :fullscreen="true" v-if="confDescriptor" :style="{
-          '--voxxrin-event-background-url': `url('${confDescriptor.backgroundUrl}')`,
-          '--voxxrin-event-logo-url': `url('${confDescriptor.logoUrl}')`,
-          '--voxxrin-event-theme-colors-primary-hex': confDescriptor.theming.colors.primaryHex,
-          '--voxxrin-event-theme-colors-primary-rgb': confDescriptor.theming.colors.primaryRGB,
-          '--voxxrin-event-theme-colors-primary-contrast-hex': confDescriptor.theming.colors.primaryContrastHex,
-          '--voxxrin-event-theme-colors-primary-contrast-rgb': confDescriptor.theming.colors.primaryContrastRGB,
-          '--voxxrin-event-theme-colors-secondary-hex': confDescriptor.theming.colors.secondaryHex,
-          '--voxxrin-event-theme-colors-secondary-rgb': confDescriptor.theming.colors.secondaryRGB,
-          '--voxxrin-event-theme-colors-secondary-contrast-hex': confDescriptor.theming.colors.secondaryContrastHex,
-          '--voxxrin-event-theme-colors-secondary-contrast-rgb': confDescriptor.theming.colors.secondaryContrastRGB,
-          '--voxxrin-event-theme-colors-tertiary-hex': confDescriptor.theming.colors.tertiaryHex,
-          '--voxxrin-event-theme-colors-tertiary-rgb': confDescriptor.theming.colors.tertiaryRGB,
-          '--voxxrin-event-theme-colors-tertiary-contrast-hex': confDescriptor.theming.colors.tertiaryContrastHex,
-          '--voxxrin-event-theme-colors-tertiary-contrast-rgb': confDescriptor.theming.colors.tertiaryContrastRGB,
-    }">
+    <ion-content v-themed-event-styles="confDescriptor" :fullscreen="true" v-if="confDescriptor">
       <ion-header class="stickyHeader" v-if="talkNotes" :class="{ 'is-favorited': talkNotes.isFavorite, 'to-watch-later': talkNotes.watchLater }">
         <ion-toolbar>
           <ion-button class="stickyHeader-close" shape="round" slot="start" size="small" fill="outline" @click="closeAndNavigateBack()">

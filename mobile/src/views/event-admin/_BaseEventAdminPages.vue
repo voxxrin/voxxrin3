@@ -1,21 +1,6 @@
 <template>
   <ion-page>
-    <ion-tabs ref="$tabs" v-if="confDescriptor" :style="{
-      '--voxxrin-event-background-url': `url('${confDescriptor.backgroundUrl}')`,
-      '--voxxrin-event-logo-url': `url('${confDescriptor.logoUrl}')`,
-      '--voxxrin-event-theme-colors-primary-hex': confDescriptor.theming.colors.primaryHex,
-      '--voxxrin-event-theme-colors-primary-rgb': confDescriptor.theming.colors.primaryRGB,
-      '--voxxrin-event-theme-colors-primary-contrast-hex': confDescriptor.theming.colors.primaryContrastHex,
-      '--voxxrin-event-theme-colors-primary-contrast-rgb': confDescriptor.theming.colors.primaryContrastRGB,
-      '--voxxrin-event-theme-colors-secondary-hex': confDescriptor.theming.colors.secondaryHex,
-      '--voxxrin-event-theme-colors-secondary-rgb': confDescriptor.theming.colors.secondaryRGB,
-      '--voxxrin-event-theme-colors-secondary-contrast-hex': confDescriptor.theming.colors.secondaryContrastHex,
-      '--voxxrin-event-theme-colors-secondary-contrast-rgb': confDescriptor.theming.colors.secondaryContrastRGB,
-      '--voxxrin-event-theme-colors-tertiary-hex': confDescriptor.theming.colors.tertiaryHex,
-      '--voxxrin-event-theme-colors-tertiary-rgb': confDescriptor.theming.colors.tertiaryRGB,
-      '--voxxrin-event-theme-colors-tertiary-contrast-hex': confDescriptor.theming.colors.tertiaryContrastHex,
-      '--voxxrin-event-theme-colors-tertiary-contrast-rgb': confDescriptor.theming.colors.tertiaryContrastRGB,
-  }">
+    <ion-tabs ref="$tabs" v-if="confDescriptor" v-themed-event-styles="confDescriptor">
       <ion-router-outlet></ion-router-outlet>
       <event-tabs :tabs="tabs" :event-id="eventId"></event-tabs>
     </ion-tabs>
