@@ -51,7 +51,7 @@
 import {computed, PropType, ref, toRef, watch} from "vue";
 import {DayId, VoxxrinDay} from "@/models/VoxxrinDay";
 import {localDateToReadableParts, toISOLocalDate} from "@/models/DatesAndTime";
-import {useCurrentUserLocale} from "@/state/useCurrentUserLocale";
+import {useCurrentUserLocale} from "@/state/useCurrentUser";
 import {useInterval} from "@/views/vue-utils";
 import {ISOLocalDate} from "../../../../shared/type-utils";
 import {useCurrentClock} from "@/state/useCurrentClock";

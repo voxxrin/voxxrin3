@@ -3,7 +3,7 @@ import {UserLocale} from "@/models/VoxxrinUser";
 import {Temporal} from "temporal-polyfill";
 import {match, P} from "ts-pattern";
 import {useCurrentClock} from "@/state/useCurrentClock";
-import {useCurrentUserLocale} from "@/state/useCurrentUserLocale";
+import {useCurrentUserLocale} from "@/state/useCurrentUser";
 
 
 type ReadableLocalDatePartsOpts = {

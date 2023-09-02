@@ -20,7 +20,7 @@ import {
 } from "@/models/VoxxrinConferenceDescriptor";
 import {formatHourMinutes, localDateToReadableParts} from "@/models/DatesAndTime";
 import {NumberRange, sortBy, ValueObject} from "@/models/utils";
-import {useCurrentUserLocale} from "@/state/useCurrentUserLocale";
+import {useCurrentUserLocale} from "@/state/useCurrentUser";
 
 export class ScheduleTimeSlotId extends ValueObject<string>{ _scheduleTimeSlotIdClassDiscriminator!: never; }
 
