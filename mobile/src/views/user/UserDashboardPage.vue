@@ -12,6 +12,8 @@
       </ion-header>
 
       <div class="userDashboard-content">
+        User uid: {{currentUserRef?.uid}}<br/>
+        <em>Please keep this token private</em>
         <div class="listCardButton">
           <ion-button class="listCardButton-item" @click="$router.push(`/user/talks`)">
             <div class="listCardButton-item-icon">
@@ -60,8 +62,11 @@
 
 import {IonFooter, useIonRouter} from "@ionic/vue";
 import {useTabbedPageNav} from "@/state/useTabbedPageNav";
+import {useCurrentUser} from "@/state/useCurrentUser";
 
 const ionRouter = useIonRouter();
+
+const currentUserRef = useCurrentUser();
 
 const {registerTabbedPageNavListeners, triggerTabbedPageExitOrNavigate} = useTabbedPageNav()
 
