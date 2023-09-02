@@ -3,7 +3,8 @@ import {DayId} from "@/models/VoxxrinDay";
 import {TalkId} from "@/models/VoxxrinTalk";
 import {computed, Ref, unref} from "vue";
 import {useTalkStats} from "@/state/useEventTalkStats";
-import {useCurrentUser, useDocument} from "vuefire";
+import {useDocument} from "vuefire";
+import {useCurrentUser} from "@/state/useCurrentUser";
 import {Unreffable} from "@/views/vue-utils";
 import {
     collection,

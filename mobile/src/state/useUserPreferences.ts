@@ -1,6 +1,7 @@
 import {EventId} from "@/models/VoxxrinEvent";
 import {computed, ComputedRef, unref} from "vue";
-import {useCurrentUser, useDocument} from "vuefire";
+import {useDocument} from "vuefire";
+import {useCurrentUser} from "@/state/useCurrentUser";
 import {
     collection,
     doc,
