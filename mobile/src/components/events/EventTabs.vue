@@ -16,10 +16,10 @@
     '--voxxrin-event-theme-colors-tertiary-contrast-rgb': confDescriptor.theming.colors.tertiaryContrastRGB,
   }">
     <ion-router-outlet></ion-router-outlet>
-    <ion-tab-bar slot="bottom">
+    <ion-tab-bar slot="bottom" ref="$tabBarRef">
       <ion-tab-button v-for="(tab, index) in tabs" :key="index"
-                      :tab="tab.id" @click="(ev: Event) => tabClicked(tab, ev)" :href="tab.url">
-        <ion-icon aria-hidden="true" :src="selectedTab === tab.id ? tab.selectedIcon : tab.icon"/>
+                      :tab="tab.id" :href="tab.url">
+        <ion-icon aria-hidden="true" :src="$tabBarRef?.selectedTab === tab.id ? tab.selectedIcon : tab.icon"/>
         <ion-label>{{ tab.label }}</ion-label>
         <ion-ripple-effect type="unbounded"></ion-ripple-effect>
       </ion-tab-button>
@@ -34,10 +34,9 @@ import {
     IonTabs,
     IonRouterOutlet,
 } from '@ionic/vue';
-import {PropType, ref} from "vue";
+import {ComponentPublicInstance, onMounted, PropType, ref, watch} from "vue";
 import {useRoute} from "vue-router";
 import {EventId} from "@/models/VoxxrinEvent";
-import {typesafeI18n} from "@/i18n/i18n-vue";
 import {useTabbedPageNav} from "@/state/useTabbedPageNav";
 import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
 
@@ -58,14 +57,19 @@ const props = defineProps({
 
 const {conferenceDescriptor: confDescriptor} = useSharedConferenceDescriptor(props.eventId);
 
-const selectedTab = ref((props.tabs.find(t => t.url === route.fullPath) || props.tabs[0]).id);
-
-function tabClicked(tab: typeof props.tabs[number], event: Event) {
-    selectedTab.value = tab.id;
-}
-
 const { registerTabbedPageNavListeners } = useTabbedPageNav();
 registerTabbedPageNavListeners();
+
+const $tabBarRef = ref<ComponentPublicInstance<HTMLIonTabBarElement>|undefined>(undefined);
+watch([$tabBarRef], ([$tabBar]) => {
+    if($tabBar) {
+        // Manually pre-selecting tab because, for whatever reason, it doesn't (always) work
+        // (see talk details page for instance..)
+        const selectedTabId = (props.tabs.find(t => t.url === route.fullPath) || props.tabs[0]).id;
+        const selectedTabIndex = props.tabs?.findIndex(t => t.id === selectedTabId);
+        ($tabBar.$el.querySelectorAll(`ion-tab-button`) as HTMLIonTabButtonElement[])[selectedTabIndex].click();
+    }
+})
 </script>
 
 <style lang="scss" scoped>
