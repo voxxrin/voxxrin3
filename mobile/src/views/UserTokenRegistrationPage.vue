@@ -1,3 +1,7 @@
+<template>
+  <ion-page>
+  </ion-page>
+</template>
 <script setup lang="ts">
 import {onMounted} from "vue";
 import {useIonRouter} from "@ionic/vue";
@@ -47,7 +51,7 @@ onMounted(async () => {
 
     if(success){
         console.log(`Successfully registered ${tokenType} token !`)
-        ionRouter.push('/event-selector')
+        ionRouter.replace('/event-selector')
     } else {
         console.error(`Error while registering token of type ${tokenType}`)
     }
