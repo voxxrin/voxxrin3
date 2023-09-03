@@ -54,7 +54,7 @@ useInterval(() => {
   if(props.timeslot) {
     progress.value = getTimeslotTimingProgress(props.timeslot, useCurrentClock().zonedDateTimeISO())
   }
-}, {seconds:5}, { immediate: true });
+}, {freq:"high-frequency"}, { immediate: true });
 
 const timeslotLabel = getTimeslotLabel(props.timeslot!);
 </script>

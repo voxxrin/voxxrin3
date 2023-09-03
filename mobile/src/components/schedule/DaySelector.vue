@@ -124,7 +124,7 @@ useInterval(() => {
     let todayZDT = useCurrentClock().zonedDateTimeISO();
     today.value = toISOLocalDate(todayZDT)
     tomorrow.value = toISOLocalDate(todayZDT.add({days:1}))
-}, {minutes:1}, { immediate: true })
+}, {freq:"low-frequency"}, { immediate: true })
 
 const formattedDays = computed(() => {
     return (confDescriptorRef.value.days || []).map(d => ({

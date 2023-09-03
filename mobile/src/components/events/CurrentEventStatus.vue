@@ -43,7 +43,7 @@ const conferenceStatusLabels: Record<DisplayedConferenceStatus, string> = {
 }
 
 onMounted(() => {
-    useInterval(refreshStatus, {seconds:30}, {immediate: true})
+    useInterval(refreshStatus, {freq: "low-frequency"}, {immediate: true})
 })
 
 function refreshStatus() {

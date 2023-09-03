@@ -46,7 +46,7 @@ const emit = defineEmits<{
 
 onMounted(async () => {
     console.log(`SchedulePage mounted !`)
-    useInterval(recomputeMissingFeedbacksList, {seconds:10}, {immediate: true})
+    useInterval(recomputeMissingFeedbacksList, {freq:"low-frequency"}, {immediate: true})
 })
 
 const { userFeedbacks: dailyUserFeedbacksRef  } = useUserFeedbacks(props.confDescriptor?.id, props.dayId)
