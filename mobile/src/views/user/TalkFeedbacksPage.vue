@@ -10,6 +10,7 @@
           <ion-title class="stickyHeader-title" slot="start">Talk feedbacks</ion-title>
         </ion-toolbar>
       </ion-header>
+      List of feedbacks here for talk...
     </ion-content>
   </ion-page>
 </template>

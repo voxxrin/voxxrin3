@@ -20,11 +20,15 @@ const routes: Array<RouteRecordRaw> = [
   { path: '/events/:eventId/new-feedback-for-timeslot/:timeslotId', component: () => import('@/views/feedbacks/NewFeedbackPage.vue') },
   { path: '/events/:eventId/rate-talk/:talkId', component: () => import('@/views/feedbacks/RateTalkPage.vue') },
   { path: '/events/:eventId/talks/:talkId/details', component: () => import('@/views/TalkDetailsPage.vue') },
+  { path: '/events/:eventId/talks/:talkId/asFeedbackViewer/:secretFeedbacksViewerToken', component: () => import('@/views/event/details/_BaseEventDetailsPages.vue'), children: [
+      { path: '', redirect: (route) => `/events/${route.params.eventId}/talks/${route.params.talkId}/asFeedbackViewer/${route.params.secretFeedbacksViewerToken}/details` },
+      { path: 'details', component: () => import('@/views/TalkDetailsPage.vue') },
+      { path: 'feedbacks', component: () => import('@/views/user/TalkFeedbacksPage.vue') },
+  ]},
   { path: '/user/dashboard', component: () => import('@/views/user/UserDashboardPage.vue') },
   { path: '/user/talks', component: () => import('@/views/user/ViewableTalksHavingFeedbacksPage.vue') },
   { path: '/user/talks/:talkId/feedbacks', component: () => import('@/views/user/TalkFeedbacksPage.vue') },
   { path: '/user/my-global-settings', component: () => import('@/views/user/MyGlobalSettingsPage.vue') },
-  { path: '/user/my-personal-data', component: () => import('@/views/user/MyPersonalDataPage.vue') },
   { path: '/user/my-personal-data', component: () => import('@/views/user/MyPersonalDataPage.vue') },
   { path: '/user-tokens/register', component: () => import('@/views/UserTokenRegistrationPage.vue') },
   { path: '/events/:eventId/asOrganizer/:secretOrganizerToken', component: () => import('@/views/event-admin/_BaseEventAdminPages.vue'), children: [

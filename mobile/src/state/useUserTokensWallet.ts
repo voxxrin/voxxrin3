@@ -85,10 +85,26 @@ export function useUserTokensWallet() {
         await updateDoc(firestoreUserTokensWalletDoc, "secretTokens.talkFeedbacksViewerTokens", arrayUnion(talkFeedbacksViewerSecretToken));
     }
 
+    const talkFeedbackViewerTokensRefForEvent = (eventIdRef: Unreffable<EventId|undefined>) => {
+        return computed(() => {
+            const userTokensWallet = unref(voxxrinUserTokensWallet);
+            const eventId = unref(eventIdRef);
+
+            if(!userTokensWallet || !eventId) {
+                return undefined;
+            }
+
+            return userTokensWallet.secretTokens.talkFeedbacksViewerTokens.filter(
+                t => t.eventId.isSameThan(eventId)
+            )
+        })
+    }
+
     return {
         userTokensWalletRef: voxxrinUserTokensWallet,
         registerEventOrganizerSecretToken,
         registerTalkFeedbacksViewerSecretToken,
+        talkFeedbackViewerTokensRefForEvent,
         organizerTokenRefForEvent: (eventIdRef: Unreffable<EventId|undefined>) => {
             return computed(() => {
                 const userTokensWallet = unref(voxxrinUserTokensWallet);
