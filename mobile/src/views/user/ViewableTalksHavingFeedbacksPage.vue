@@ -11,8 +11,15 @@
         </ion-toolbar>
       </ion-header>
 
-      <ion-button @click="$router.push(`/user/events/dvbe23/talks/1/asFeedbackViewer/12345`)">Feedbacks for talk 1</ion-button>
-      <ion-button @click="$router.push(`/user/events/jsc23/talks/2/asFeedbackViewer/67890`)">Feedbacks for talk 2</ion-button>
+      <schedule-talk v-for="(feedbackViewerTalk, index) in feedbackViewerTalksRef" :key="feedbackViewerTalk.detailedTalk.id.value"
+          :conf-descriptor="feedbackViewerTalk.confDescriptor" :is-highlighted="() => false" :talk="feedbackViewerTalk.detailedTalk"
+          @click="$router.push(`/user/events/${feedbackViewerTalk.token.eventId.value}/talks/${feedbackViewerTalk.token.talkId.value}/asFeedbackViewer/${feedbackViewerTalk.token.secretToken}`)">
+        <template #upper-right="{ talk }">
+          {{feedbackViewerTalk.confDescriptor.headingTitle}}
+        </template>
+        <template #footer-actions="{ talk, userTalkHook }">
+        </template>
+      </schedule-talk>
     </ion-content>
   </ion-page>
 </template>
@@ -21,8 +28,60 @@
 
 import {goBackOrNavigateTo} from "@/router";
 import {useIonRouter} from "@ionic/vue";
+import {useUserTokensWallet} from "@/state/useUserTokensWallet";
+import {ref, watch} from "vue";
+import {VoxxrinUserTokensWallet} from "@/models/VoxxrinUser";
+import {VoxxrinDetailedTalk} from "@/models/VoxxrinTalk";
+import {fetchTalkDetails} from "@/services/DetailedTalks";
+import {fetchConferenceDescriptor} from "@/services/ConferenceDescriptors";
+import {EventId} from "@/models/VoxxrinEvent";
+import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
+import ScheduleTalk from "@/components/talk-card/ScheduleTalk.vue";
+import {sortBy} from "@/models/utils";
 
 const ionRouter = useIonRouter();
+
+const {userTokensWalletRef} = useUserTokensWallet()
+
+type FeedbackViewerTalk = {
+    token: VoxxrinUserTokensWallet['secretTokens']['talkFeedbacksViewerTokens'][number],
+    confDescriptor: VoxxrinConferenceDescriptor,
+    detailedTalk: VoxxrinDetailedTalk
+}
+const feedbackViewerTalksRef = ref<FeedbackViewerTalk[]>([]);
+watch([userTokensWalletRef], async ([userTokensWallet]) => {
+  if(!userTokensWallet || !userTokensWallet.secretTokens.talkFeedbacksViewerTokens.length) {
+      feedbackViewerTalksRef.value = [];
+      return;
+  }
+
+  const uniqueEventIds = new Set(userTokensWallet.secretTokens.talkFeedbacksViewerTokens.map(tfvt => tfvt.eventId.value))
+  const confDescriptors = await Promise.all(Array.from(uniqueEventIds).map(async rawEventId => {
+    return fetchConferenceDescriptor(new EventId(rawEventId));
+  }));
+
+  const confDescriptorsById = confDescriptors.reduce((confDescriptorsById, confDescriptor) => {
+      if(confDescriptor) {
+          confDescriptorsById.set(confDescriptor.id.value, confDescriptor);
+      }
+      return confDescriptorsById;
+  }, new Map<string, VoxxrinConferenceDescriptor>())
+
+  const talkWithFeedbacks = (await Promise.all(userTokensWallet.secretTokens.talkFeedbacksViewerTokens.map(async tfvt => {
+      const confDescriptor = confDescriptorsById.get(tfvt.eventId.value);
+      return {
+          token: tfvt,
+          confDescriptor,
+          detailedTalk: confDescriptor ? await fetchTalkDetails(confDescriptor, tfvt.talkId) : undefined
+      };
+  }))).filter(v => !!v.detailedTalk && !!v.confDescriptor).map(feedbackViewerTalk => ({
+      ...feedbackViewerTalk,
+      detailedTalk: feedbackViewerTalk.detailedTalk!,
+      confDescriptor: feedbackViewerTalk.confDescriptor!,
+  }));
+
+  feedbackViewerTalksRef.value = sortBy(talkWithFeedbacks, twf => -twf.confDescriptor.start.epochMilliseconds);
+})
 </script>
 
 <style lang="scss" scoped>
