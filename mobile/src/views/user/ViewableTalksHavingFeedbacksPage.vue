@@ -7,7 +7,7 @@
                       @click="goBackOrNavigateTo(ionRouter, `/user/dashboard`, 0)">
             <ion-icon src="/assets/icons/line/arrow-left-line.svg"></ion-icon>
           </ion-button>
-          <ion-title class="stickyHeader-title" slot="start">My talks with feedbacks</ion-title>
+          <ion-title class="stickyHeader-title" slot="start">{{LL.My_talks_with_Feedbacks()}}</ion-title>
         </ion-toolbar>
       </ion-header>
 
@@ -38,10 +38,12 @@ import {EventId} from "@/models/VoxxrinEvent";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import ScheduleTalk from "@/components/talk-card/ScheduleTalk.vue";
 import {sortBy} from "@/models/utils";
+import {typesafeI18n} from "@/i18n/i18n-vue";
 
 const ionRouter = useIonRouter();
 
 const {userTokensWalletRef} = useUserTokensWallet()
+const { LL } = typesafeI18n()
 
 type FeedbackViewerTalk = {
     token: VoxxrinUserTokensWallet['secretTokens']['talkFeedbacksViewerTokens'][number],

@@ -7,21 +7,21 @@
                       @click="goBackOrNavigateTo(ionRouter, `/user/talks`, 0)">
             <ion-icon src="/assets/icons/solid/close.svg"></ion-icon>
           </ion-button>
-          <ion-title class="stickyHeader-title" slot="start">Talk feedbacks</ion-title>
+          <ion-title class="stickyHeader-title" slot="start">{{LL.Talk_Feedbacks()}}</ion-title>
         </ion-toolbar>
       </ion-header>
 
       <talk-details-header :conf-descriptor="confDescriptorRef" :talk="detailedTalk"></talk-details-header>
 
-      <h2>Stats</h2>
-      Number of feedbacks: {{talkFeedbacksStats.count}}<br/>
+      <h2>{{LL.Stats()}}</h2>
       <div v-if="talkFeedbacksStats.count>0">
+        {{LL.Number_of_Feedbacks()}}: {{talkFeedbacksStats.count}}<br/>
         <div v-if="confDescriptorRef.features.ratings.scale.enabled">
-          Average linear ratings: {{talkFeedbacksStats.averageLinearRating}} / {{confDescriptorRef.features.ratings.scale.labels.length}}
-          (votes: {{talkFeedbacksStats.linearRatingCount}})
+          {{LL.Average_linear_ratings()}}: {{talkFeedbacksStats.averageLinearRating}} / {{confDescriptorRef.features.ratings.scale.labels.length}}
+          ({{LL.votes()}}: {{talkFeedbacksStats.linearRatingCount}})
         </div>
         <div v-if="confDescriptorRef.features.ratings.bingo.enabled && !confDescriptorRef.features.ratings.bingo.isPublic">
-          <h3>Private Bingo</h3>
+          <h3>{{LL.Private_Bingo()}}</h3>
           <ion-list :inset="true">
             <ion-item v-for="(bingoStat, choiceIndex) in talkFeedbacksStats.bingo" :key="choiceIndex">
               <ion-label>
@@ -32,16 +32,24 @@
           </ion-list>
         </div>
       </div>
+      <div v-else>
+        {{LL.No_feedback_yet()}}
+      </div>
       <hr/>
-      <h2>Detailed Feedbacks</h2>
-      <ion-card class="feedback" v-for="(talkFeedback, index) in displayableTalkFeedbacks" :key="talkFeedback.attendeePublicToken">
-        <div>Last updated: {{talkFeedback.lastUpdatedOn}}</div>
-        <div>Who: {{talkFeedback.attendeePublicToken}}</div>
-        <div v-if="confDescriptorRef.features.ratings.scale.enabled">Linear rating: {{talkFeedback.ratings['linear-rating']}}</div>
-        <div v-if="confDescriptorRef.features.ratings.bingo.enabled">Bingo: {{talkFeedback.ratings['bingo'].join(", ")}}</div>
-        <div v-if="confDescriptorRef.features.ratings['custom-scale'].enabled">Custom rating: {{talkFeedback.ratings['custom-rating']}}</div>
-        <div v-if="false">Comment: {{talkFeedback.comment}}</div>
-      </ion-card>
+      <h2>{{LL.Detailed_Feedbacks()}}</h2>
+      <div v-if="talkFeedbacksStats.count>0">
+        <ion-card class="feedback" v-for="(talkFeedback, index) in displayableTalkFeedbacks" :key="talkFeedback.attendeePublicToken">
+          <div>{{LL.Last_updated()}}: {{talkFeedback.lastUpdatedOn}}</div>
+          <div>{{LL.Who()}}: {{talkFeedback.attendeePublicToken}}</div>
+          <div v-if="confDescriptorRef.features.ratings.scale.enabled">{{LL.Linear_rating()}}: {{talkFeedback.ratings['linear-rating']}}</div>
+          <div v-if="confDescriptorRef.features.ratings.bingo.enabled">{{LL.Bingo()}}: {{talkFeedback.ratings['bingo'].join(", ")}}</div>
+          <div v-if="confDescriptorRef.features.ratings['custom-scale'].enabled">{{LL.Custom_rating()}}: {{talkFeedback.ratings['custom-rating']}}</div>
+          <div v-if="false">{{LL.Free_comment}}: {{talkFeedback.comment}}</div>
+        </ion-card>
+      </div>
+      <div v-else>
+        {{LL.No_feedback_yet()}}
+      </div>
     </ion-content>
   </ion-page>
 </template>
@@ -61,6 +69,7 @@ import {computed, ref, unref} from "vue";
 import {numberArrayStats, sortBy} from "@/models/utils";
 import TalkDetailsHeader from "@/components/talk-details/TalkDetailsHeader.vue";
 import {useSharedEventTalk} from "@/state/useEventTalk";
+import {typesafeI18n} from "@/i18n/i18n-vue";
 
 const ionRouter = useIonRouter();
 const route = useRoute();
@@ -70,6 +79,8 @@ const secretFeedbacksViewerToken = ref(getRouteParamsValue(route, 'secretFeedbac
 
 const {conferenceDescriptor: confDescriptorRef} = useConferenceDescriptor(eventId);
 const { talkDetails: detailedTalk } = useSharedEventTalk(confDescriptorRef, talkId);
+
+const { LL } = typesafeI18n()
 
 const {talkFeedbacksRef} = useTalkFeedbacks(eventId, talkId, secretFeedbacksViewerToken);
 const displayableTalkFeedbacks = computed(() => {
