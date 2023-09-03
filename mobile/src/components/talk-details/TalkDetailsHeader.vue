@@ -50,7 +50,7 @@ import {Temporal} from "temporal-polyfill";
 const props = defineProps({
     talk: {
         required: true,
-        type: Object as PropType<VoxxrinDetailedTalk|undefined>
+        type: Object as PropType<VoxxrinDetailedTalk>
     },
     confDescriptor: {
         required: true,

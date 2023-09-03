@@ -27,7 +27,7 @@ const routes: Array<RouteRecordRaw> = [
   ]},
   { path: '/user/dashboard', component: () => import('@/views/user/UserDashboardPage.vue') },
   { path: '/user/talks', component: () => import('@/views/user/ViewableTalksHavingFeedbacksPage.vue') },
-  { path: '/user/talks/:talkId/feedbacks', component: () => import('@/views/user/TalkFeedbacksPage.vue') },
+  { path: '/user/events/:eventId/talks/:talkId/asFeedbackViewer/:secretFeedbacksViewerToken', component: () => import('@/views/user/TalkFeedbacksPage.vue') },
   { path: '/user/my-global-settings', component: () => import('@/views/user/MyGlobalSettingsPage.vue') },
   { path: '/user/my-personal-data', component: () => import('@/views/user/MyPersonalDataPage.vue') },
   { path: '/user-tokens/register', component: () => import('@/views/UserTokenRegistrationPage.vue') },

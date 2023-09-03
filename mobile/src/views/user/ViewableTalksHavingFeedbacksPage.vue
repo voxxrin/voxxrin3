@@ -11,8 +11,8 @@
         </ion-toolbar>
       </ion-header>
 
-      <ion-button @click="$router.push(`/user/talks/1/feedbacks`)">Feedbacks for talk 1</ion-button>
-      <ion-button @click="$router.push(`/user/talks/2/feedbacks`)">Feedbacks for talk 2</ion-button>
+      <ion-button @click="$router.push(`/user/events/dvbe23/talks/1/asFeedbackViewer/12345`)">Feedbacks for talk 1</ion-button>
+      <ion-button @click="$router.push(`/user/events/jsc23/talks/2/asFeedbackViewer/67890`)">Feedbacks for talk 2</ion-button>
     </ion-content>
   </ion-page>
 </template>

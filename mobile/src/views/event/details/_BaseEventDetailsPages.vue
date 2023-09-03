@@ -21,10 +21,10 @@ const secretFeedbacksViewerToken = ref(getRouteParamsValue(route, 'secretFeedbac
 const { LL } = typesafeI18n()
 
 const tabs = [{
-    id: 'details', url: `/events/${eventId.value.value}/talks/${talkId.value.value}/asFeedbackViewer/${secretFeedbacksViewerToken}/details`,
+    id: 'details', url: `/events/${eventId.value.value}/talks/${talkId.value.value}/asFeedbackViewer/${secretFeedbacksViewerToken.value}/details`,
     label: LL.value.Talk_details(), icon: '/assets/icons/line/calendar-line.svg', selectedIcon: '/assets/icons/solid/calendar.svg',
 }, {
-    id: 'feedbacks', url: `/events/${eventId.value.value}/talks/${talkId.value.value}/asFeedbackViewer/${secretFeedbacksViewerToken}/feedbacks`,
+    id: 'feedbacks', url: `/events/${eventId.value.value}/talks/${talkId.value.value}/asFeedbackViewer/${secretFeedbacksViewerToken.value}/feedbacks`,
     label: LL.value.Feedbacks(), icon: '/assets/icons/line/comment-text-line.svg', selectedIcon: '/assets/icons/solid/comment-text.svg',
 }];
 </script>

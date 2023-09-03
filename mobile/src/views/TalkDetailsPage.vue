@@ -1,6 +1,6 @@
 <template>
   <ion-page>
-    <ion-content v-themed-event-styles="confDescriptor" :fullscreen="true" v-if="confDescriptor">
+    <ion-content v-themed-event-styles="confDescriptor" :fullscreen="true" v-if="confDescriptor && detailedTalk">
       <ion-header class="stickyHeader" v-if="talkNotes" :class="{ 'is-favorited': talkNotes.isFavorite, 'to-watch-later': talkNotes.watchLater }">
         <ion-toolbar>
           <ion-button class="stickyHeader-close" shape="round" slot="start" size="small" fill="outline" @click="closeAndNavigateBack()">
