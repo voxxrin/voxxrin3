@@ -99,6 +99,9 @@ const hasMissingFeedback = computed(() => {
 </script>
 
 <style lang="scss" scoped>
+  // Hint: some .slot-accordion class are defined in _custom-ion-accordion.css and should have to be
+  // moved here at some point
+
   // * Base Style Accordion *//
   ion-accordion {
     border-bottom: 1px solid var(--app-background);

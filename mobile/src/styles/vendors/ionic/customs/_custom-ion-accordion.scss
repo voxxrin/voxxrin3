@@ -8,6 +8,11 @@
   }
 }
 
+/*
+ TODO: would be nice to move this into time-slot-accordion
+ But beware as this class is also used in new-feedback-page (it would be nice to refacto this usage
+ by relying on time-slot-accordion)
+ */
 .slot-accordion {
   border-bottom: 1px solid var(--app-beige-light);
 
