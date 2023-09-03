@@ -31,6 +31,7 @@
               <span class="slot-schedule-start">{{timeslotLabel.start}}</span>
               <ion-icon class="slot-schedule-icon" aria-hidden="true" src="assets/icons/line/chevron-right-line.svg"></ion-icon>
               <span class="slot-schedule-end">{{timeslotLabel.end}}</span>
+              &nbsp;@ {{timeslotLabel.date}}
             </ion-label>
           </div>
           <div class="subHeader-room" v-if="confDescriptor.features.roomsDisplayed">
@@ -120,7 +121,7 @@ import {typesafeI18n} from "@/i18n/i18n-vue";
 import {IonBadge, IonAvatar, IonText, useIonRouter} from "@ionic/vue";
 import {business} from "ionicons/icons";
 import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
-import {formatHourMinutes} from "@/models/DatesAndTime";
+import {formatHourMinutes, weekDayMonthYearFormattedDate} from "@/models/DatesAndTime";
 import {Temporal} from "temporal-polyfill";
 import VoxDivider from "@/components/ui/VoxDivider.vue";
 import {goBackOrNavigateTo} from "@/router";
@@ -152,6 +153,7 @@ const talkLang = computed(() => {
 const timeslotLabel = computed(() => {
     if(isRefDefined(talk) && isRefDefined(confDescriptor)) {
         return {
+            date: weekDayMonthYearFormattedDate(Temporal.ZonedDateTime.from(`${talk.value.start}[${confDescriptor.value.timezone}]`)),
             start: formatHourMinutes(Temporal.ZonedDateTime.from(`${talk.value.start}[${confDescriptor.value.timezone}]`)),
             end: formatHourMinutes(Temporal.ZonedDateTime.from(`${talk.value.end}[${confDescriptor.value.timezone}]`)),
         }
