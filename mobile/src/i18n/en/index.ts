@@ -62,7 +62,8 @@ const en = {
 	Config: "Config",
 	Talks_Config: "Talks",
 	Open_full_version_of_the_schedule: "Open full version of the schedule",
-	Here: "here"
+	Here: "here",
+	Feedbacks_are_not_enabled_on_this_event: "Feedbacks are not enabled on this event"
 } satisfies BaseTranslation
 
 export default en

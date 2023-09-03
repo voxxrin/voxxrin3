@@ -14,47 +14,54 @@
         </day-selector>
       </ion-header>
 
-      <ion-accordion-group :multiple="true" v-if="confDescriptor && selectedDayId" :value="expandedTimeslotIds">
-        <timeslots-iterator :conf-descriptor="confDescriptor" :day-id="selectedDayId"
-                            :daily-schedule="currentSchedule"
-                            @timeslots-list-updated="timeslots => expandedTimeslotIds = timeslots.map(t => t.id.value)">
-          <template #iterator="{ timeslot }">
-            <time-slot-accordion v-if="timeslot.type==='talks' && timeslot.feedback.status !== 'provided-on-overlapping-timeslot'"
-                :conf-descriptor="confDescriptor"
-                :timeslot-feedback="timeslot.feedback"
-                :timeslot="timeslot" :event="confDescriptor"
-                @add-timeslot-feedback-clicked="(ts) => navigateToTimeslotFeedbackCreation(ts)"
-                @click="() => toggleExpandedTimeslot(timeslot)">
-              <template #accordion-content="{ timeslot, feedback }">
-                <ion-item v-if="feedback.status === 'missing'" class="listTalks-item">
-                  <div class="infoMessage _small">
-                    <ion-icon class="infoMessage-iconIllu" src="/assets/images/svg/illu-no-feedback.svg"></ion-icon>
-                    <span class="infoMessage-title">{{LL.No_feedback_yet()}}</span>
-                    <ion-button @click="navigateToTimeslotFeedbackCreation(timeslot)" size="default" fill="outline"  expand="block">{{LL.Add_Feedback()}}</ion-button>
-                  </div>
-                </ion-item>
-                <ion-item v-else-if="feedback.status === 'provided'" class="listTalks-item">
-                  <schedule-talk :talk="findTimeslotTalkMatchingFeedback(timeslot, feedback.userFeedback)!" @talkClicked="toBeImplemented('To be implemented: opening feedback page in EDIT mode')" :is-highlighted="(talk, talkNotes) => talkNotes.isFavorite" :conf-descriptor="confDescriptor">
-                    <template #upper-right="{ talk }">
-                      <talk-format :format="talk.format" class="talkFormatContainer" />
-                    </template>
-                    <template #footer-actions="{ talk }">
-                      <linear-rating v-if="confDescriptor.features.ratings.scale.enabled" :config="confDescriptor.features.ratings.scale"
-                                     :user-feedback="feedback.userFeedback" :readonly="true" :is-small="true" />
-                    </template>
-                  </schedule-talk>
-                </ion-item>
-                <ion-item v-else>
-                  <div class="infoMessage _small">
-                    <ion-icon class="infoMessage-iconIllu _skipped" src="assets/icons/solid/comment-feedback-skipped.svg"></ion-icon>
-                    <span class="infoMessage-title ion-color-secondary"><em>{{ LL.Skipped() }}</em></span>
-                  </div>
-                </ion-item>
-              </template>
-            </time-slot-accordion>
-          </template>
-        </timeslots-iterator>
-      </ion-accordion-group>
+      <div v-if="!areFeedbacksEnabled(confDescriptor)">
+        {{LL.Feedbacks_are_not_enabled_on_this_event()}}
+      </div>
+      <div v-else>
+        <ion-accordion-group :multiple="true" v-if="confDescriptor && selectedDayId" :value="expandedTimeslotIds">
+          <timeslots-iterator :conf-descriptor="confDescriptor" :day-id="selectedDayId"
+                              :daily-schedule="currentSchedule"
+                              @timeslots-list-updated="timeslots => expandedTimeslotIds = timeslots.map(t => t.id.value)">
+            <template #iterator="{ timeslot }">
+              <time-slot-accordion v-if="timeslot.type==='talks' && timeslot.feedback.status !== 'provided-on-overlapping-timeslot'"
+                                   :conf-descriptor="confDescriptor"
+                                   :timeslot-feedback="timeslot.feedback"
+                                   :timeslot="timeslot" :event="confDescriptor"
+                                   @add-timeslot-feedback-clicked="(ts) => navigateToTimeslotFeedbackCreation(ts)"
+                                   @click="() => toggleExpandedTimeslot(timeslot)">
+                <template #accordion-content="{ timeslot, feedback }">
+                  <ion-item v-if="feedback.status === 'missing'" class="listTalks-item">
+                    <div class="infoMessage _small">
+                      <ion-icon class="infoMessage-iconIllu" src="/assets/images/svg/illu-no-feedback.svg"></ion-icon>
+                      <span class="infoMessage-title">{{LL.No_feedback_yet()}}</span>
+                      <ion-button @click="navigateToTimeslotFeedbackCreation(timeslot)" size="default" fill="outline"  expand="block">
+                        {{LL.Add_Feedback()}}
+                      </ion-button>
+                    </div>
+                  </ion-item>
+                  <ion-item v-else-if="feedback.status === 'provided'" class="listTalks-item">
+                    <schedule-talk :talk="findTimeslotTalkMatchingFeedback(timeslot, feedback.userFeedback)!" @talkClicked="toBeImplemented('To be implemented: opening feedback page in EDIT mode')" :is-highlighted="(talk, talkNotes) => talkNotes.isFavorite" :conf-descriptor="confDescriptor">
+                      <template #upper-right="{ talk }">
+                        <talk-format :format="talk.format" class="talkFormatContainer" />
+                      </template>
+                      <template #footer-actions="{ talk }">
+                        <linear-rating v-if="confDescriptor.features.ratings.scale.enabled" :config="confDescriptor.features.ratings.scale"
+                                       :user-feedback="feedback.userFeedback" :readonly="true" :is-small="true" />
+                      </template>
+                    </schedule-talk>
+                  </ion-item>
+                  <ion-item v-else>
+                    <div class="infoMessage _small">
+                      <ion-icon class="infoMessage-iconIllu _skipped" src="assets/icons/solid/comment-feedback-skipped.svg"></ion-icon>
+                      <span class="infoMessage-title ion-color-secondary"><em>{{ LL.Skipped() }}</em></span>
+                    </div>
+                  </ion-item>
+                </template>
+              </time-slot-accordion>
+            </template>
+          </timeslots-iterator>
+        </ion-accordion-group>
+      </div>
     </ion-content>
   </ion-page>
 </template>
@@ -79,6 +86,7 @@
   import TalkFormat from "@/components/timeslots/TalkFormat.vue";
   import LinearRating from "@/components/ratings/LinearRating.vue";
   import {useSharedEventSelectedDay} from "@/state/useEventSelectedDay";
+  import {areFeedbacksEnabled} from "@/models/VoxxrinConferenceDescriptor";
 
   const { LL } = typesafeI18n()
 

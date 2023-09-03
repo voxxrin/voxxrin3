@@ -265,6 +265,10 @@ type RootTranslation = {
 	 * h​e​r​e
 	 */
 	Here: string
+	/**
+	 * F​e​e​d​b​a​c​k​s​ ​a​r​e​ ​n​o​t​ ​e​n​a​b​l​e​d​ ​o​n​ ​t​h​i​s​ ​e​v​e​n​t
+	 */
+	Feedbacks_are_not_enabled_on_this_event: string
 }
 
 export type TranslationFunctions = {
@@ -516,6 +520,10 @@ export type TranslationFunctions = {
 	 * here
 	 */
 	Here: () => LocalizedString
+	/**
+	 * Feedbacks are not enabled on this event
+	 */
+	Feedbacks_are_not_enabled_on_this_event: () => LocalizedString
 }
 
 export type Formatters = {}
