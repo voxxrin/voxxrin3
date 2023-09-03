@@ -29,12 +29,13 @@
                                    :timeslot="timeslot" :event="confDescriptor"
                                    @add-timeslot-feedback-clicked="(ts) => navigateToTimeslotFeedbackCreation(ts)"
                                    @click="() => toggleExpandedTimeslot(timeslot)">
-                <template #accordion-content="{ timeslot, feedback }">
+                <template #accordion-content="{ timeslot, feedback, progressStatus }">
                   <ion-item v-if="feedback.status === 'missing'" class="listTalks-item">
                     <div class="infoMessage _small">
                       <ion-icon class="infoMessage-iconIllu" src="/assets/images/svg/illu-no-feedback.svg"></ion-icon>
                       <span class="infoMessage-title">{{LL.No_feedback_yet()}}</span>
-                      <ion-button @click="navigateToTimeslotFeedbackCreation(timeslot)" size="default" fill="outline"  expand="block">
+                      <ion-button v-if="progressStatus === 'past'" @click="navigateToTimeslotFeedbackCreation(timeslot)"
+                                  size="default" fill="outline"  expand="block">
                         {{LL.Add_Feedback()}}
                       </ion-button>
                     </div>

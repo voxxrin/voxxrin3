@@ -18,7 +18,8 @@
           </ion-col>
           <ion-col class="slot-actions" size="auto">
             <ion-icon class="_provided-feedback" aria-hidden="true" src="/assets/icons/solid/comment-check.svg" v-if="areFeedbacksEnabled(confDescriptor)"></ion-icon>
-            <ion-button class="_missing-feedback" @click.stop="$emit('add-timeslot-feedback-clicked', timeslot)" v-if="areFeedbacksEnabled(confDescriptor)">
+            <ion-button class="_missing-feedback" v-if="elementsShown.includes('add-feedback-btn') && areFeedbacksEnabled(confDescriptor)"
+                        @click.stop="$emit('add-timeslot-feedback-clicked', timeslot)">
               <ion-icon src="/assets/icons/line/comment-line-add.svg"></ion-icon>
             </ion-button>
           </ion-col>
@@ -28,7 +29,7 @@
     </ion-item>
 
     <div class="ion-padding accordion-content" slot="content">
-      <slot name="accordion-content" :timeslot="timeslot" :feedback="timeslotFeedback" />
+      <slot name="accordion-content" :timeslot="timeslot" :feedback="timeslotFeedback" :progressStatus="progress?.status" />
     </div>
   </ion-accordion>
 </template>
@@ -73,6 +74,11 @@ const props = defineProps({
   confDescriptor: {
     required: true,
     type: Object as PropType<VoxxrinConferenceDescriptor>
+  },
+  elementsShown: {
+      required: false,
+      type: Object as PropType<Array<"add-feedback-btn">>,
+      default: []
   }
 })
 

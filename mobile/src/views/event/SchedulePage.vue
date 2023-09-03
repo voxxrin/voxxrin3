@@ -40,6 +40,7 @@
           <template #iterator="{ timeslot }">
             <time-slot-accordion
                 :timeslot-feedback="timeslot.feedback" :timeslot="timeslot" :conf-descriptor="confDescriptor"
+                :elements-shown="['add-feedback-btn']"
                 @add-timeslot-feedback-clicked="(ts) => navigateToTimeslotFeedbackCreation(ts)"
                 @click="() => toggleExpandedTimeslot(timeslot)">
               <template #accordion-content="{ timeslot }">
