@@ -1,6 +1,6 @@
 <template>
   <ion-accordion :value="timeslot.id.value"
-       :class="{ 'slot-accordion': true, [`_${progress?.status}`]: true, '_feedback-provided': !hasMissingFeedback, '_missing-feedback': hasMissingFeedback, '_is-break': timeslot.type==='break' }">
+       :class="{ 'slot-accordion': true, [`_chronological_status_is_${progress?.status}`]: true, '_feedback-provided': !hasMissingFeedback, '_missing-feedback': hasMissingFeedback, '_is-break': timeslot.type==='break' }">
     <ion-item slot="header" color="light">
       <ion-ripple-effect type="bounded"></ion-ripple-effect>
       <ion-grid class="slot">
@@ -149,6 +149,83 @@ const hasMissingFeedback = computed(() => {
       z-index: -1;
       --progress-background: rgba(var(--ion-color-light-rgb), 0.4);
       border: 1px solid rgba(var(--ion-color-light-rgb), 0.6);
+    }
+
+    &._chronological_status_is_past {
+      @media (prefers-color-scheme: dark) {
+        border-bottom: 1px solid var(--app-light-contrast);
+      }
+
+      .ion-color-light {
+        --ion-color-base: var(--app-beige-line) !important;
+        --ripple-color: var(--app-beige-dark) !important;
+
+        @media (prefers-color-scheme: dark) {
+          --ion-color-base: var(--app-background) !important;
+        }
+
+        ion-label {
+          color: var(--app-primary-tint);
+
+          @media (prefers-color-scheme: dark) {
+            color: var(--app-white);
+          }
+        }
+      }
+
+      ._accordion-icon._past-icon {
+        display: inline-block;
+        color: var(--app-primary-tint);
+
+        @media (prefers-color-scheme: dark) {
+          color: rgba(white, 0.5);
+        }
+      }
+      &._missing-feedback:not(._is-break) ._missing-feedback { display: inline-block;}
+      &._feedback-provided:not(._is-break) ._provided-feedback {display: inline-block;}
+    }
+
+    &._chronological_status_is_ongoing {
+      .ion-color-light {
+        --ion-color-base:  var(--voxxrin-event-theme-colors-primary-hex) !important;
+        --ripple-color: var(--app-beige-dark) !important;
+
+        ion-label { color: var(--app-white);}
+      }
+
+      ._accordion-icon._ongoing-icon { display: inline-block; }
+      ._ongoing-progress { display: block; }
+      ._accordion-icon { color: var(--app-white) !important;}
+
+      .ion-accordion-toggle-icon {
+        color: var(--app-white) !important;
+      }
+    }
+
+    &._chronological_status_is_future {
+      --color: var(--app-white);
+
+      .ion-color-light {
+        --ion-color-base: var(--app-primary-shade) !important;
+        --ripple-color: var(--app-primary) !important;
+
+        @media (prefers-color-scheme: dark) {
+          --ion-color-base: var(--app-light-contrast) !important;
+        }
+
+        ion-label { color: var(--app-white);}
+      }
+
+      ._accordion-icon._future-icon { display: inline-block; }
+      ._accordion-icon { color: var(--app-white) !important;}
+
+      .ion-accordion-toggle-icon {
+        color: var(--app-white) !important;
+
+        @media (prefers-color-scheme: dark) {
+          color: var(--app-medium-contrast);
+        }
+      }
     }
 
     ion-item {
