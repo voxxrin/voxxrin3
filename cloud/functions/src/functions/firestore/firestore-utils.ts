@@ -7,11 +7,18 @@ import {EventLastUpdates, ListableEvent} from "../../../../../shared/event-list.
 import {ISODatetime} from "../../../../../shared/type-utils";
 import {sortBy} from "lodash";
 import {firestore} from "firebase-admin";
-import DocumentReference = firestore.DocumentReference;
+import {DocumentReference} from "firebase-admin/firestore";
 
 export type EventFamilyToken = {
     families: string[],
     token: string;
+}
+
+export type EventNotificationSubscriptions = {
+    talkNotifications: {
+        pushNotificationsTriggered: Array<{ on: ISODatetime, by: string, notifiedUserIds: string[] }>,
+        userIdsForNextNotification: string[]
+    }
 }
 
 export async function getSecretTokenRef(path: string) {
@@ -134,4 +141,18 @@ export async function checkEventFamilyTokenIsValid(eventId: string, token: strin
         .get()
 
     return !familyTokenSnapshots.empty;
+}
+
+export async function createEmptyEventNotificationSubscriptions(eventId: string) {
+    const initialEventNotificationSubscriptions: EventNotificationSubscriptions = {
+        talkNotifications: {
+            pushNotificationsTriggered: [],
+            userIdsForNextNotification: []
+        }
+    };
+
+    const organizerSpaceRef = await getSecretTokenRef(`events/${eventId}/organizer-space`);
+    await organizerSpaceRef
+        .collection('event-notification-subscriptions').doc('self')
+        .create(initialEventNotificationSubscriptions);
 }

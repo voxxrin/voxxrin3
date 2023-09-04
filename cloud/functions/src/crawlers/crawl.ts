@@ -14,6 +14,7 @@ import {v4 as uuidv4} from "uuid"
 import {ConferenceOrganizerSpace} from "../../../../shared/conference-organizer-space.firestore";
 import {JUG_SUMMERCAMP_CRAWLER} from "./jugsummercamp/crawler";
 import {eventLastUpdateRefreshed} from "../functions/firestore/firestore-utils";
+import {createEmptyEventNotificationSubscriptions} from "../functions/firestore/firestore-utils";
 const axios = require('axios');
 
 export type CrawlerKind<ZOD_TYPE extends z.ZodType> = {
@@ -198,19 +199,31 @@ const saveEvent = async function(event: FullEvent) {
         await eventLastUpdateRefreshed(event.id, ['talkListUpdated']);
     }
 
-    try {
-        await firestoreEvent.collection('event-descriptor')
-            .doc('self')
-            .set(event.conferenceDescriptor);
-    }catch(e) {
-        error(`Error while storing conference descriptor ${event.conferenceDescriptor.id}: ${e?.toString()}`)
-    }
-
-    try {
-        await firestoreEvent.collection('organizer-space').doc(organizerSecretToken).set(organizerSpaceContent)
-    }catch(e) {
-        error(`Error while storing event's organizer-space content`)
-    }
+    await Promise.all([
+        async () => {
+            try {
+                await firestoreEvent.collection('event-descriptor')
+                    .doc('self')
+                    .set(event.conferenceDescriptor);
+            }catch(e) {
+                error(`Error while storing conference descriptor ${event.conferenceDescriptor.id}: ${e?.toString()}`)
+            }
+        },
+        async () => {
+            try {
+                await firestoreEvent.collection('organizer-space').doc(organizerSecretToken).set(organizerSpaceContent)
+            }catch(e) {
+                error(`Error while storing event's organizer-space content`)
+            }
+        },
+        async () => {
+            try {
+                await createEmptyEventNotificationSubscriptions(event.id)
+            }catch(e) {
+                error(`Error while creating empty event notification subscriptions`)
+            }
+        }
+    ].map(callback => callback()))
 }
 
 export default crawlAll;

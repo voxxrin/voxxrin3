@@ -60,6 +60,11 @@ service cloud.firestore {
         match /ratings/self {
           allow read, write: if false;
         }
+
+        match /event-notification-subscriptions/self {
+          allow get: if true;
+          allow list, write: if false;
+        }
       }
 
       match /last-updates/self {

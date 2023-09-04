@@ -14,6 +14,9 @@ import {createOrganizerSpaceRatings} from "../firestore/migrations/006-createOrg
 import {
     initializeFirebaseMessagingTokens
 } from "../firestore/migrations/004-initializeFirebaseMessagingTokens";
+import {
+    initializeEventNotificationSubscriptions
+} from "../firestore/migrations/005-initializeEventNotificationSubscriptions";
 
 /**
  * Like Flyway, but for firestore :-)
@@ -25,6 +28,7 @@ const MIGRATIONS: Migration[] = [
     { name: "gettingRidOfUserPreferencesPastEvents", exec: gettingRidOfUserPreferencesPastEvents },
     { name: "createOrganizerSpaceRatings", exec: createOrganizerSpaceRatings },
     { name: "initializeFirebaseMessagingTokens", exec: initializeFirebaseMessagingTokens },
+    { name: "initializeEventNotificationSubscriptions", exec: initializeEventNotificationSubscriptions },
 ];
 
 export type MigrationResult = "OK"|"Error";
