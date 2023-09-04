@@ -6,8 +6,7 @@ import {TalkStats} from "../../../../../shared/feedbacks.firestore";
 import {EventLastUpdates, ListableEvent} from "../../../../../shared/event-list.firestore";
 import {ISODatetime} from "../../../../../shared/type-utils";
 import {sortBy} from "lodash";
-import {firestore} from "firebase-admin";
-import {DocumentReference} from "firebase-admin/firestore";
+import {FieldValue, DocumentReference} from "firebase-admin/firestore";
 
 export type EventFamilyToken = {
     families: string[],
@@ -17,7 +16,7 @@ export type EventFamilyToken = {
 export type EventNotificationSubscriptions = {
     talkNotifications: {
         pushNotificationsTriggered: Array<{ on: ISODatetime, by: string, notifiedUserIds: string[] }>,
-        userIdsForNextNotification: string[]
+        userIdsForNextNotification: Array<`${string}:${string}`>
     }
 }
 
@@ -155,4 +154,13 @@ export async function createEmptyEventNotificationSubscriptions(eventId: string)
     await organizerSpaceRef
         .collection('event-notification-subscriptions').doc('self')
         .create(initialEventNotificationSubscriptions);
+}
+
+export async function eventWatchTalkLaterUpdated(eventId: string, talkId: string, userId: string, action: 'enabled-watch-later'|'disabled-watch-later') {
+    const entry: EventNotificationSubscriptions['talkNotifications']['userIdsForNextNotification'][number] = `${userId}:${talkId}`
+
+    const organizerSpaceRef = await getSecretTokenRef(`events/${eventId}/organizer-space`);
+    await organizerSpaceRef
+        .collection('event-notification-subscriptions').doc('self')
+        .update("talkNotifications.userIdsForNextNotification", (action==='enabled-watch-later'?FieldValue.arrayUnion:FieldValue.arrayRemove)(entry));
 }

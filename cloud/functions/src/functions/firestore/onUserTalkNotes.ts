@@ -9,7 +9,7 @@ import {
 } from "../../../../../shared/feedbacks.firestore";
 import {firestore} from "firebase-admin";
 import DocumentReference = firestore.DocumentReference;
-import {eventLastUpdateRefreshed} from "./firestore-utils";
+import {eventLastUpdateRefreshed, eventWatchTalkLaterUpdated} from "./firestore-utils";
 
 async function upsertTalkStats(eventId: string, talkId: string, isFavorite: boolean) {
     const existingTalksStatsEntryRef = db
@@ -61,15 +61,26 @@ export const onUserTalksNoteUpdate = functions.firestore
         const wasFavorite = beforeTalkNote.note.isFavorite;
         const isFavorite = afterTalkNote.note.isFavorite;
 
+        const operations: Array<Promise<void>> = [];
         if (wasFavorite != isFavorite) {
             info(`favorite update by ${userId} on ${eventId} // ${talkId}: ${wasFavorite} => ${isFavorite}`);
 
-            await Promise.all([
+            operations.push(...[
                 eventLastUpdateRefreshed(eventId, [ "favorites" ]),
                 upsertTalkStats(eventId, talkId, isFavorite),
                 updateUserTalkAllFavorites(userId, eventId, talkId, isFavorite),
             ])
         }
+
+        const wasWatchLater = beforeTalkNote.note.watchLater;
+        const isWatchLater = afterTalkNote.note.watchLater;
+
+        if(wasWatchLater !== isWatchLater) {
+            info(`watchLater flag updated by ${userId} on ${eventId} // ${talkId}`);
+            operations.push(eventWatchTalkLaterUpdated(eventId, talkId, userId, isWatchLater?'enabled-watch-later':'disabled-watch-later'));
+        }
+
+        await Promise.all(operations);
     });
 
 export const onUserTalksNoteCreate = functions.firestore
@@ -81,14 +92,23 @@ export const onUserTalksNoteCreate = functions.firestore
 
         const talkNote = change.data() as UserTalkNote
         const isFavorite = talkNote.note.isFavorite;
+        const isWatchLater = talkNote.note.watchLater;
 
+        const operations: Array<Promise<void>> = [];
         if(isFavorite) {
             info(`favorite create by ${userId} on ${eventId} // ${talkId}: ${isFavorite}`);
 
-            await Promise.all([
+            operations.push(...[
                 eventLastUpdateRefreshed(eventId, [ "favorites" ]),
                 upsertTalkStats(eventId, talkId, isFavorite),
                 updateUserTalkAllFavorites(userId, eventId, talkId, isFavorite),
             ])
         }
+
+        if(isWatchLater) {
+            info(`watchLater create by ${userId} on ${eventId} // ${talkId}`);
+            operations.push(eventWatchTalkLaterUpdated(eventId, talkId, userId, 'enabled-watch-later'));
+        }
+
+        await Promise.all(operations);
     });
