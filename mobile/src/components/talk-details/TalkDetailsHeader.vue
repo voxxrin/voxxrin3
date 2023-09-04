@@ -1,18 +1,22 @@
 <template>
   <ion-text class="talkDetails" v-if="talk">
     <ion-header class="subHeader">
-      <div class="subHeader-schedule">
-        <ion-icon class="_accordion-icon _future-icon" aria-hidden="true" src="assets/icons/solid/clock.svg"></ion-icon>
-        <ion-label v-if="timeslotLabel">
-          <span class="slot-schedule-start">{{timeslotLabel.start}}</span>
-          <ion-icon class="slot-schedule-icon" aria-hidden="true" src="assets/icons/line/chevron-right-line.svg"></ion-icon>
-          <span class="slot-schedule-end">{{timeslotLabel.end}}</span>
-          &nbsp;@ {{timeslotLabel.date}}
-        </ion-label>
+      <div class="slot-date">
+        <ion-icon aria-hidden="true" src="assets/icons/solid/calendar.svg"></ion-icon> {{timeslotLabel.date}}
       </div>
-      <div class="subHeader-room" v-if="confDescriptor.features.roomsDisplayed">
-        <ion-icon aria-hidden="true" src="/assets/icons/solid/map-marker.svg"></ion-icon>
-        {{talk.room.title}}
+      <div class="slot-infos">
+        <div class="subHeader-schedule">
+          <ion-icon class="_accordion-icon _future-icon" aria-hidden="true" src="assets/icons/solid/clock.svg"></ion-icon>
+          <ion-label v-if="timeslotLabel">
+            <span class="slot-schedule-start">{{timeslotLabel.start}}</span>
+            <ion-icon class="slot-schedule-icon" aria-hidden="true" src="assets/icons/line/chevron-right-line.svg"></ion-icon>
+            <span class="slot-schedule-end">{{timeslotLabel.end}}</span>
+          </ion-label>
+        </div>
+        <div class="subHeader-room" v-if="confDescriptor.features.roomsDisplayed">
+          <ion-icon aria-hidden="true" src="/assets/icons/solid/map-marker.svg"></ion-icon>
+          {{talk.room.title}}
+        </div>
       </div>
     </ion-header>
 
@@ -82,6 +86,29 @@ const talkLang = computed(() => {
 
 <style lang="scss" scoped>
 .talkDetails {
+
+  .subHeader {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+
+    .slot-date {
+      display: flex;
+      align-items: center;
+      column-gap: 8px;
+      background-color: var(--app-voxxrin);
+      padding: 8px 16px;
+      color: var(--app-white);
+    }
+
+    .slot-infos {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      padding: 8px 16px;
+    }
+  }
+
   &-title {
     font-weight: 900;
     padding: 0 var(--app-gutters);

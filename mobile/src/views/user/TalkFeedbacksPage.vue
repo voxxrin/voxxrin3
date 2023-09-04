@@ -8,47 +8,65 @@
             <ion-icon src="/assets/icons/solid/close.svg"></ion-icon>
           </ion-button>
           <ion-title class="stickyHeader-title" slot="start">{{LL.Talk_Feedbacks()}}</ion-title>
+          <span class="eventLogo"></span>
         </ion-toolbar>
       </ion-header>
 
       <talk-details-header :conf-descriptor="confDescriptorRef" :talk="detailedTalk"></talk-details-header>
 
-      <h2>{{LL.Stats()}}</h2>
-      <div v-if="talkFeedbacksStats.count>0">
-        {{LL.Number_of_Feedbacks()}}: {{talkFeedbacksStats.count}}<br/>
-        <div v-if="confDescriptorRef.features.ratings.scale.enabled">
-          {{LL.Average_linear_ratings()}}: {{talkFeedbacksStats.averageLinearRating}} / {{confDescriptorRef.features.ratings.scale.labels.length}}
-          ({{LL.votes()}}: {{talkFeedbacksStats.linearRatingCount}})
+      <div class="TalkFeedBacksContent">
+        <h4 class="TalkFeedBacksContent-title">Talk Feedbacks</h4>
+        <div v-if="talkFeedbacksStats.count>0">
+          <vox-divider>{{LL.Stats()}}</vox-divider>
+          <div class="TalkFeedBacksStats">
+            <div class="statGroup">
+                <div class="stat">
+                  <span class="stat-label">{{LL.Number_of_Feedbacks()}}</span>
+                  <span class="stat-value">{{talkFeedbacksStats.count}}</span>
+                </div>
+                <div class="stat" v-if="confDescriptorRef.features.ratings.scale.enabled">
+                  <img src="/assets/images/svg/illu-feedback.svg"/>
+                  <span class="stat-label">{{LL.Average_linear_ratings()}}</span>
+                  <div class="stat-rate">
+                    <span class="stat-rate-value">{{talkFeedbacksStats.averageLinearRating}}</span> /
+                    {{confDescriptorRef.features.ratings.scale.labels.length}}
+                  </div>
+                <div class="stat-count">
+                  <span class="stat-count-label">{{LL.votes()}}:</span>
+                  {{talkFeedbacksStats.linearRatingCount}}</div>
+              </div>
+            </div>
+
+            <div class="bingoContainer" v-if="confDescriptorRef.features.ratings.bingo.enabled && !confDescriptorRef.features.ratings.bingo.isPublic">
+              <h6 class="privateBingo-title">{{LL.Private_Bingo()}}</h6>
+              <ion-list class="privateBingo" :inset="true">
+                <ion-item v-for="(bingoStat, choiceIndex) in talkFeedbacksStats.bingo" :key="choiceIndex"
+                          :class="{ '_hasFeedback': bingoStat.count>0}">
+                  <span class="privateBingo-count">{{bingoStat.count}}</span>
+                  <ion-label>
+                    {{bingoStat.choiceLabel}}
+                    <ion-progress-bar :value="bingoStat.count / talkFeedbacksStats.maxBingo" />
+                  </ion-label>
+                </ion-item>
+              </ion-list>
+            </div>
+          </div>
+          <br>
+          <br>
+          <vox-divider>{{LL.Detailed_Feedbacks()}}</vox-divider>
+          <ion-card class="feedback" v-for="(talkFeedback, index) in displayableTalkFeedbacks" :key="talkFeedback.attendeePublicToken">
+            <div>{{LL.Last_updated()}}: {{talkFeedback.lastUpdatedOn}}</div>
+            <div>{{LL.Who()}}: {{talkFeedback.attendeePublicToken}}</div>
+            <div v-if="confDescriptorRef.features.ratings.scale.enabled">{{LL.Linear_rating()}}: {{talkFeedback.ratings['linear-rating']}}</div>
+            <div v-if="confDescriptorRef.features.ratings.bingo.enabled">{{LL.Bingo()}}: {{talkFeedback.ratings['bingo'].join(", ")}}</div>
+            <div v-if="confDescriptorRef.features.ratings['custom-scale'].enabled">{{LL.Custom_rating()}}: {{talkFeedback.ratings['custom-rating']}}</div>
+            <div v-if="false">{{LL.Free_comment}}: {{talkFeedback.comment}}</div>
+          </ion-card>
         </div>
-        <div v-if="confDescriptorRef.features.ratings.bingo.enabled && !confDescriptorRef.features.ratings.bingo.isPublic">
-          <h3>{{LL.Private_Bingo()}}</h3>
-          <ion-list :inset="true">
-            <ion-item v-for="(bingoStat, choiceIndex) in talkFeedbacksStats.bingo" :key="choiceIndex">
-              <ion-label>
-                {{bingoStat.choiceLabel}} ({{bingoStat.count}})
-                <ion-progress-bar :value="bingoStat.count / talkFeedbacksStats.maxBingo" />
-              </ion-label>
-            </ion-item>
-          </ion-list>
+        <div class="infoMessage _small" v-else>
+          <ion-icon class="infoMessage-iconIllu" src="/assets/images/svg/illu-no-feedback.svg"></ion-icon>
+          <span class="infoMessage-title ion-color-secondary"><em>{{LL.No_feedback_yet()}}</em></span>
         </div>
-      </div>
-      <div v-else>
-        {{LL.No_feedback_yet()}}
-      </div>
-      <hr/>
-      <h2>{{LL.Detailed_Feedbacks()}}</h2>
-      <div v-if="talkFeedbacksStats.count>0">
-        <ion-card class="feedback" v-for="(talkFeedback, index) in displayableTalkFeedbacks" :key="talkFeedback.attendeePublicToken">
-          <div>{{LL.Last_updated()}}: {{talkFeedback.lastUpdatedOn}}</div>
-          <div>{{LL.Who()}}: {{talkFeedback.attendeePublicToken}}</div>
-          <div v-if="confDescriptorRef.features.ratings.scale.enabled">{{LL.Linear_rating()}}: {{talkFeedback.ratings['linear-rating']}}</div>
-          <div v-if="confDescriptorRef.features.ratings.bingo.enabled">{{LL.Bingo()}}: {{talkFeedback.ratings['bingo'].join(", ")}}</div>
-          <div v-if="confDescriptorRef.features.ratings['custom-scale'].enabled">{{LL.Custom_rating()}}: {{talkFeedback.ratings['custom-rating']}}</div>
-          <div v-if="false">{{LL.Free_comment}}: {{talkFeedback.comment}}</div>
-        </ion-card>
-      </div>
-      <div v-else>
-        {{LL.No_feedback_yet()}}
       </div>
     </ion-content>
   </ion-page>
@@ -70,6 +88,7 @@ import {numberArrayStats, sortBy} from "@/models/utils";
 import TalkDetailsHeader from "@/components/talk-details/TalkDetailsHeader.vue";
 import {useSharedEventTalk} from "@/state/useEventTalk";
 import {typesafeI18n} from "@/i18n/i18n-vue";
+import VoxDivider from "@/components/ui/VoxDivider.vue";
 
 const ionRouter = useIonRouter();
 const route = useRoute();
@@ -138,4 +157,177 @@ const talkFeedbacksStats = computed(() => {
 </script>
 
 <style lang="scss" scoped>
+
+.eventLogo {
+  display: block;
+  height: 54px;
+  width: 124px;
+  background-color: var(--app-grey-light);
+  float: right;
+}
+
+.TalkFeedBacksContent {
+  padding: var(--app-gutters);
+
+  &-title {
+    display: block;
+    margin-bottom: 16px;
+    font-weight: 900;
+  }
+}
+
+.statGroup {
+  display: flex;
+  justify-content: space-between;
+  column-gap: 16px;
+}
+
+.stat {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  row-gap: 8px;
+  padding: 16px;
+  background-color: var(--app-beige-medium);
+  border-radius: 16px;
+  overflow: hidden;
+
+  img {
+    position: absolute;
+    left: 16px;
+    bottom: -8px;
+    height: 124px;
+    transform: rotate(-16deg);
+    opacity: 0.2;
+  }
+
+  &-label {
+    font-size: 14px;
+    text-align: center;
+  }
+
+  &-value {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 34px;
+    min-width: 34px;
+    border-radius: 34px;
+    color: var(--app-white);
+    font-weight: 900;
+    background-color: var(--app-voxxrin);
+  }
+
+  &-rate {
+    font-weight: 900;
+    font-size: 24px;
+
+    &-value {
+      color: var(--app-voxxrin);
+    }
+  }
+
+  &-count {
+    padding: 2px 8px;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 16px;
+    background-color: var(--app-voxxrin);
+    color: var(--app-white);
+
+    &-label {
+      font-weight: normal;
+      opacity: 0.7;
+    }
+  }
+}
+
+.bingoContainer {
+  margin-top: 16px;
+  padding: 16px;
+  border-radius: 16px;
+  background-color: var(--app-beige-medium);
+}
+
+.privateBingo {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 16px;
+  margin: 0;
+  background: transparent;
+
+  &-title {
+    text-align: center;
+    margin-top: 0;
+  }
+
+  &-count {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    top: -2px;
+    left: 50%;
+    transform: translate(-50%, 0);
+    height: 20px;
+    min-width: 24px;
+    padding: 0 8px;
+    border-radius: 0 0 12px 12px;
+    color: var(--app-beige-line);
+    font-weight: 900;
+    font-size: 12px;
+    border-left: 1px solid var(--app-beige-line);
+    border-right: 1px solid var(--app-beige-line);
+    border-bottom: 1px solid var(--app-beige-line);
+    background-color: transparent;
+  }
+
+  ion-item {
+    --padding-start: 0;
+    --inner-padding-end: 0;
+    --border-radius: 12px;
+    --border-width: 1px;
+    --border-color: var(--app-beige-line);
+    --background: var(--app-white);
+
+    &._hasFeedback {
+      --background: var(--app-voxxrin);
+
+      ion-label {
+        color: white;
+        font-weight: bold;
+      }
+
+      .privateBingo-count {
+        background-color: var(--app-primary);
+        color: var(--app-white);
+        border: none;
+      }
+    }
+
+    &:last-child {
+      --border-width: 1px;
+    }
+
+    ion-label {
+      margin: 0;
+      padding: 20px 8px 16px 8px;
+      font-size: 14px;
+      white-space: normal;
+      text-align: center;
+    }
+  }
+
+  ion-progress-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 100%;
+    --progress-background: white;
+    opacity: 0.15;
+    z-index: -1;
+  }
+}
 </style>
