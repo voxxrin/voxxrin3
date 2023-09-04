@@ -5,6 +5,8 @@ import path from 'path'
 import {defineConfig, UserConfigExport} from 'vite'
 import manifestConfig from './manifest-config.json'
 
+const forceSourcemaps = process.env.FORCE_SOURCEMAPS === 'true';
+
 // https://vitejs.dev/config/
 export default defineConfig(({ command, mode }) => {
   const isDevMode = mode === 'dev'
@@ -23,11 +25,11 @@ export default defineConfig(({ command, mode }) => {
         srcDir: 'src',
         filename: 'sw.ts',
         mode: isDevMode?'development':'production',
-        minify: !isDevMode,
+        minify: !isDevMode && !forceSourcemaps,
         selfDestroying: false,
         workbox: {
           mode: isDevMode?'development':'production',
-          sourcemap: isDevMode,
+          sourcemap: isDevMode || forceSourcemaps,
           swDest: 'sw.js',
         },
         manifest: manifestConfig
@@ -41,9 +43,9 @@ export default defineConfig(({ command, mode }) => {
     root: '.',
     build: {
       outDir: './dist',
-      minify: !isDevMode,
+      minify: !isDevMode && !forceSourcemaps,
       emptyOutDir: true,
-      sourcemap: isDevMode?'inline':false
+      sourcemap: (isDevMode || forceSourcemaps)?'inline':false
     },
     server: {
       host: '0.0.0.0'
