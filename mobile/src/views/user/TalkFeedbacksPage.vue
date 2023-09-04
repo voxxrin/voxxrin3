@@ -1,5 +1,5 @@
 <template>
-  <ion-page>
+  <ion-page v-themed-event-styles="confDescriptor">
     <ion-content v-if="confDescriptorRef && talkFeedbacksStats && detailedTalk">
       <ion-header class="stickyHeader">
         <ion-toolbar>
@@ -81,7 +81,7 @@ import {EventId} from "@/models/VoxxrinEvent";
 import {getRouteParamsValue} from "@/views/vue-utils";
 import {TalkId} from "@/models/VoxxrinTalk";
 import {
-    useConferenceDescriptor,
+  useConferenceDescriptor, useSharedConferenceDescriptor,
 } from "@/state/useConferenceDescriptor";
 import {computed, ref, unref} from "vue";
 import {numberArrayStats, sortBy} from "@/models/utils";
@@ -97,6 +97,7 @@ const talkId = ref(new TalkId(getRouteParamsValue(route, 'talkId')));
 const secretFeedbacksViewerToken = ref(getRouteParamsValue(route, 'secretFeedbacksViewerToken'));
 
 const {conferenceDescriptor: confDescriptorRef} = useConferenceDescriptor(eventId);
+const {conferenceDescriptor: confDescriptor} = useSharedConferenceDescriptor(eventId);
 const { talkDetails: detailedTalk } = useSharedEventTalk(confDescriptorRef, talkId);
 
 const { LL } = typesafeI18n()
@@ -162,7 +163,10 @@ const talkFeedbacksStats = computed(() => {
   display: block;
   height: 54px;
   width: 124px;
-  background-color: var(--app-grey-light);
+  background-image: var(--voxxrin-event-logo-url);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
   float: right;
 }
 
@@ -218,7 +222,7 @@ const talkFeedbacksStats = computed(() => {
     border-radius: 34px;
     color: var(--app-white);
     font-weight: 900;
-    background-color: var(--app-voxxrin);
+    background-color: var(--voxxrin-event-theme-colors-primary-hex);
   }
 
   &-rate {
@@ -226,7 +230,7 @@ const talkFeedbacksStats = computed(() => {
     font-size: 24px;
 
     &-value {
-      color: var(--app-voxxrin);
+      color: var(--voxxrin-event-theme-colors-primary-hex);
     }
   }
 
@@ -235,7 +239,7 @@ const talkFeedbacksStats = computed(() => {
     font-size: 12px;
     font-weight: bold;
     border-radius: 16px;
-    background-color: var(--app-voxxrin);
+    background-color: var(--voxxrin-event-theme-colors-primary-hex);
     color: var(--app-white);
 
     &-label {
@@ -293,7 +297,7 @@ const talkFeedbacksStats = computed(() => {
     --background: var(--app-white);
 
     &._hasFeedback {
-      --background: var(--app-voxxrin);
+      --background: var(--voxxrin-event-theme-colors-primary-hex);
 
       ion-label {
         color: white;

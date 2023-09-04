@@ -96,7 +96,7 @@ const talkLang = computed(() => {
       display: flex;
       align-items: center;
       column-gap: 8px;
-      background-color: var(--app-voxxrin);
+      background-color: var(--voxxrin-event-theme-colors-primary-hex);
       padding: 8px 16px;
       color: var(--app-white);
     }
