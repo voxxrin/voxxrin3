@@ -1,7 +1,7 @@
 <template>
   <ion-text class="talkDetails" v-if="talk">
     <ion-header class="subHeader">
-      <div class="slot-date">
+      <div class="slot-date" v-if="timeslotLabel">
         <ion-icon aria-hidden="true" src="assets/icons/solid/calendar.svg"></ion-icon> {{timeslotLabel.date}}
       </div>
       <div class="slot-infos">
