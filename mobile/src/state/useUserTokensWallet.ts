@@ -41,7 +41,7 @@ export function useUserTokensWallet() {
         ) as DocumentReference<UserTokensWallet>
     });
 
-    const firestoreUserTokensWalletRef = useDocument(firestoreUserTokensWalletSource);
+    const firestoreUserTokensWalletRef = useDocument<UserTokensWallet>(firestoreUserTokensWalletSource);
 
     const voxxrinUserTokensWallet: ComputedRef<VoxxrinUserTokensWallet|undefined> = computed(() => {
         const firestoreUserTokensWallet = unref(firestoreUserTokensWalletRef)
@@ -125,28 +125,35 @@ export function useUserTokensWallet() {
         }
 
         const registration = await onceServiceWorkerRegistered
-        const firebaseMessagingToken = await getToken(messaging, {
-            serviceWorkerRegistration: registration,
-            vapidKey: import.meta.env.VITE_FIREBASE_MESSAGING_VAPID_KEY,
-        })
-
-        const firebaseMessagingSecretToken: FirebaseMessagingToken = {
-            secretToken: firebaseMessagingToken,
-            platform: getPlatform(),
-            registeredOn: new Date().toISOString() as ISODatetime
+        let firebaseMessagingToken: string|undefined = undefined
+        try {
+            firebaseMessagingToken = await getToken(messaging, {
+                serviceWorkerRegistration: registration,
+                vapidKey: import.meta.env.VITE_FIREBASE_MESSAGING_VAPID_KEY,
+            })
+        }catch(err) {
+            console.error(`Error while retrieving firebase token: ${err}`)
         }
 
-        if(!firestoreUserTokensWallet.secretTokens.firebaseMessagingTokens) {
-            await updateDoc(firestoreUserTokensWalletDoc, "secretTokens.firebaseMessagingTokens", [ firebaseMessagingSecretToken ])
-            console.log(`Firebase token registered for user ${user?.uid}: ${firebaseMessagingSecretToken}`)
-        } else if(!!firestoreUserTokensWallet.secretTokens.firebaseMessagingTokens.find(
-            messagingToken => messagingToken.secretToken === firebaseMessagingSecretToken.secretToken
-        )) {
-            // Firebase token already exists, that's fine !
-            return;
-        } else {
-            await updateDoc(firestoreUserTokensWalletDoc, "secretTokens.firebaseMessagingTokens", arrayUnion(firebaseMessagingSecretToken));
-            console.log(`Firebase token registered for user ${user?.uid}: ${firebaseMessagingSecretToken}`)
+        if(firebaseMessagingToken) {
+            const firebaseMessagingSecretToken: FirebaseMessagingToken = {
+                secretToken: firebaseMessagingToken,
+                platform: getPlatform(),
+                registeredOn: new Date().toISOString() as ISODatetime
+            }
+
+            if(!firestoreUserTokensWallet.secretTokens.firebaseMessagingTokens) {
+                await updateDoc(firestoreUserTokensWalletDoc, "secretTokens.firebaseMessagingTokens", [ firebaseMessagingSecretToken ])
+                console.log(`Firebase token registered for user ${user?.uid}: ${firebaseMessagingSecretToken}`)
+            } else if(!!firestoreUserTokensWallet.secretTokens.firebaseMessagingTokens.find(
+                messagingToken => messagingToken.secretToken === firebaseMessagingSecretToken.secretToken
+            )) {
+                // Firebase token already exists, that's fine !
+                return;
+            } else {
+                await updateDoc(firestoreUserTokensWalletDoc, "secretTokens.firebaseMessagingTokens", arrayUnion(firebaseMessagingSecretToken));
+                console.log(`Firebase token registered for user ${user?.uid}: ${firebaseMessagingSecretToken}`)
+            }
         }
     }
 
