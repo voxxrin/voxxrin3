@@ -119,14 +119,19 @@ const firebaseApp = initializeApp({
     appId: import.meta.env.VITE_FIREBASE_APP_ID,
     databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
 });
-const messaging = getMessaging(firebaseApp);
 
-onMessage(messaging, (payload: any) => {
-    console.log('Message received. ', payload);
-});
-onBackgroundMessage(messaging, (payload: any) => {
-    self.registration.showNotification(payload.notification.title, {
-        body: payload.notification.body,
-        icon: '/assets/imgs/logo.png'
+try {
+    const messaging = getMessaging(firebaseApp);
+
+    onMessage(messaging, (payload: any) => {
+        console.log('Message received. ', payload);
     });
-});
+    onBackgroundMessage(messaging, (payload: any) => {
+        self.registration.showNotification(payload.notification.title, {
+            body: payload.notification.body,
+            icon: '/assets/imgs/logo.png'
+        });
+    });
+}catch(messagingErr) {
+    console.warn(`Looks like we got an error during firebase messaging registration: ${messagingErr}`)
+}
