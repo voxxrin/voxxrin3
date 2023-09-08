@@ -11,15 +11,17 @@
         </ion-toolbar>
       </ion-header>
 
-      <schedule-talk v-for="(feedbackViewerTalk, index) in feedbackViewerTalksRef" :key="feedbackViewerTalk.detailedTalk.id.value"
-          :conf-descriptor="feedbackViewerTalk.confDescriptor" :is-highlighted="() => false" :talk="feedbackViewerTalk.detailedTalk"
-          @click="$router.push(`/user/events/${feedbackViewerTalk.token.eventId.value}/talks/${feedbackViewerTalk.token.talkId.value}/asFeedbackViewer/${feedbackViewerTalk.token.secretToken}`)">
-        <template #upper-right="{ talk }">
-          {{feedbackViewerTalk.confDescriptor.headingTitle}}
-        </template>
-        <template #footer-actions="{ talk, userTalkHook }">
-        </template>
-      </schedule-talk>
+      <div class="schedule-talk-event"  v-for="(feedbackViewerTalk, index) in feedbackViewerTalksRef" :key="feedbackViewerTalk.detailedTalk.id.value">
+        <span class="schedule-talk-event-title">{{feedbackViewerTalk.confDescriptor.headingTitle}}</span>
+        <schedule-talk :conf-descriptor="feedbackViewerTalk.confDescriptor" :is-highlighted="() => false" :talk="feedbackViewerTalk.detailedTalk"
+                       @click="$router.push(`/user/events/${feedbackViewerTalk.token.eventId.value}/talks/${feedbackViewerTalk.token.talkId.value}/asFeedbackViewer/${feedbackViewerTalk.token.secretToken}`)">
+          <template #upper-right="{ talk }">
+            {{feedbackViewerTalk.confDescriptor.headingTitle}}
+          </template>
+          <template #footer-actions="{ talk, userTalkHook }">
+          </template>
+        </schedule-talk>
+      </div>
     </ion-content>
   </ion-page>
 </template>
@@ -87,4 +89,19 @@ watch([userTokensWalletRef], async ([userTokensWallet]) => {
 </script>
 
 <style lang="scss" scoped>
+
+/* TODO Add background event */
+.schedule-talk-event {
+  background-color: var(--app-voxxrin);
+  margin: 16px;
+  padding: 8px 4px;
+  border-radius: 16px;
+
+  &-title {
+    padding: 16px 12px;
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--app-white);
+  }
+}
 </style>
