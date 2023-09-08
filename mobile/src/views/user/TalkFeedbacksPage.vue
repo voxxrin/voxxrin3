@@ -55,12 +55,31 @@
           <br>
           <vox-divider>{{LL.Detailed_Feedbacks()}}</vox-divider>
           <ion-card class="feedback" v-for="(talkFeedback, index) in displayableTalkFeedbacks" :key="talkFeedback.attendeePublicToken">
-            <div>{{LL.Last_updated()}}: {{talkFeedback.lastUpdatedOn}}</div>
-            <div>{{LL.Who()}}: {{talkFeedback.attendeePublicToken}}</div>
-            <div v-if="confDescriptorRef.features.ratings.scale.enabled">{{LL.Linear_rating()}}: {{talkFeedback.ratings['linear-rating']}}</div>
-            <div v-if="confDescriptorRef.features.ratings.bingo.enabled">{{LL.Bingo()}}: {{talkFeedback.ratings['bingo'].join(", ")}}</div>
-            <div v-if="confDescriptorRef.features.ratings['custom-scale'].enabled">{{LL.Custom_rating()}}: {{talkFeedback.ratings['custom-rating']}}</div>
-            <div v-if="false">{{LL.Free_comment}}: {{talkFeedback.comment}}</div>
+            <div class="feedback-head">
+              <ion-row>
+                <ion-col size="auto">
+                  <ion-icon aria-hidden="true" src="/assets/icons/line/chat-2-text-line.svg"></ion-icon>
+                </ion-col>
+                <ion-col>
+                  <div class="feedback-id"><label>{{LL.Last_updated()}}</label> <strong>{{talkFeedback.lastUpdatedOn}}</strong></div>
+                  <div class="feedback-id"><label>{{LL.Who()}}</label> <strong>{{talkFeedback.attendeePublicToken}}</strong></div>
+                </ion-col>
+              </ion-row>
+            </div>
+            <div class="feedback-content">
+              <div class="feedback-content-info" v-if="confDescriptorRef.features.ratings.scale.enabled">
+                <label>{{LL.Linear_rating()}}</label> <strong>{{talkFeedback.ratings['linear-rating']}}</strong>
+              </div>
+              <div class="feedback-content-info" v-if="confDescriptorRef.features.ratings.bingo.enabled">
+                <label>{{LL.Bingo()}}</label> <strong>{{talkFeedback.ratings['bingo'].join(", ")}}</strong>
+              </div>
+              <div class="feedback-content-info" v-if="confDescriptorRef.features.ratings['custom-scale'].enabled">
+                <label>{{LL.Custom_rating()}}</label><strong>{{talkFeedback.ratings['custom-rating']}}</strong>
+              </div>
+              <div class="feedback-content-info" v-if="false">
+                <label>{{LL.Free_comment}}</label><strong>{{talkFeedback.comment}}</strong>
+              </div>
+            </div>
           </ion-card>
         </div>
         <div class="infoMessage _small" v-else>
@@ -296,6 +315,10 @@ const talkFeedbacksStats = computed(() => {
     --border-color: var(--app-beige-line);
     --background: var(--app-white);
 
+    &:first-child, &:last-child {
+      --border-radius: 12px;
+    }
+
     &._hasFeedback {
       --background: var(--voxxrin-event-theme-colors-primary-hex);
 
@@ -332,6 +355,71 @@ const talkFeedbacksStats = computed(() => {
     --progress-background: white;
     opacity: 0.15;
     z-index: -1;
+  }
+}
+
+.feedback {
+  margin: 16px 0;
+  border-radius: 12px;
+  box-shadow: none;
+  border: 1px solid var(--app-beige-line);
+  background: transparent;
+
+  .feedback-content {
+    display: flex;
+    flex-direction: column;
+    padding: 12px;
+
+    &-info {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      padding: 4px 0;
+      border-bottom: 1px solid var(--app-beige-line);
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      label {
+        flex: 1;
+      }
+
+      strong {
+        flex: 1;
+        text-align: left;
+      }
+    }
+  }
+
+  .feedback-head {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    row-gap: 4px;
+    padding: 8px 12px 0 12px;
+    background-color: var(--app-beige-line);
+
+    ion-icon {
+      font-size: 24px;
+    }
+
+    .feedback-id {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+
+      label {
+        flex: 1;
+        font-size: 10px;
+      }
+
+      strong {
+        flex: 1 1 auto;
+        text-align: right;
+        font-size: 10px;
+      }
+    }
   }
 }
 </style>
