@@ -20,6 +20,7 @@
     "typescript": "5.2.2"
   },
   "dependencies": {
-    "firebase-admin": "11.10.1"
+    "firebase-admin": "11.10.1",
+    "ts-pattern": "5.0.5"
   }
 }
