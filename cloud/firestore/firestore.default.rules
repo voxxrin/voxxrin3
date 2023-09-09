@@ -49,6 +49,7 @@ service cloud.firestore {
     match /users/{userId} {
     	allow get: if iAm(userId)
       allow list: if false
+      allow write: if request.resource.data.keys().hasOnly(['userLastConnection']);
       match /{document=**} {
         allow get: if iAm(userId)
         allow list: if false

@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import {app as firebaseApp} from './state/firebase'
+import {app as firebaseApp, db} from './state/firebase'
 import router from './router';
 import globalComponents from './global-components';
 import { i18nPlugin } from './i18n/i18n-vue'
@@ -35,6 +35,7 @@ import {loadLocaleAsync} from "@/i18n/i18n-util.async";
 import {useFirebaseAuth, VueFire, VueFireAuth} from "vuefire";
 import { signInAnonymously } from 'firebase/auth';
 import { provideThemedEventStyles } from "@/directives/ThemedEventStyles";
+import {collection, doc, updateDoc} from "firebase/firestore";
 
 const app = createApp(App);
 app
@@ -58,7 +59,10 @@ const auth = useFirebaseAuth()!
 Promise.all([
     loadLocaleAsync(detectedLocale).then(() => app.use(i18nPlugin, detectedLocale)),
     router.isReady(),
-    signInAnonymously(auth)
-]).then(async ([_1, _2]) => {
+    signInAnonymously(auth).then((anonymousUser) => {
+        const userRef = doc(collection(db, 'users'), anonymousUser.user.uid)
+        return updateDoc(userRef, "userLastConnection", new Date().toISOString());
+    })
+]).then(async ([_1, _2, _3]) => {
     app.mount('#app');
 })
