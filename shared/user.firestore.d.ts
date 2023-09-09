@@ -2,7 +2,7 @@ import {ISODatetime} from "./type-utils";
 
 export type User = {
     userCreation: ISODatetime;
-    userLastConnection: ISODatetime|undefined;
+    userLastConnection?: ISODatetime|undefined;
     username: string;
 }
 
