@@ -73,10 +73,25 @@ service cloud.firestore {
         allow delete: if false;
       }
       match /events/{eventId} {
-        allow read, write: if iAm(userId);
-      }
-      match /events/{eventId}/days/{dayId}/feedbacks/{talkId} {
-      	allow list: if iAm(userId);
+        allow read, create, update: if iAm(userId);
+        allow delete: if false;
+
+        match /__computed/self {
+          allow read, write: if fase;
+        }
+        match /talkNotes/{talkId} {
+          allow read, create, update: if iAm(userId);
+          allow delete: if false;
+        }
+        match /days/{dayId} {
+          allow read, create, update: if iAm(userId);
+          allow delete: if false;
+
+          match /feedbacks/self {
+            allow get, create, update: if iAm(userId);
+            allow list, delete: if false;
+          }
+        }
       }
     }
   }
