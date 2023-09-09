@@ -47,8 +47,9 @@ export function useUserTokensWallet() {
             return undefined;
         }
 
-        return {
+        const walletEntry: VoxxrinUserTokensWallet = {
             publicUserToken: firestoreUserTokensWallet.publicUserToken,
+            privateUserId: firestoreUserTokensWallet.privateUserId,
             secretTokens: {
                 eventOrganizerTokens: firestoreUserTokensWallet.secretTokens.eventOrganizerTokens.map(fsOrgToken => ({
                     ...fsOrgToken,
@@ -61,6 +62,7 @@ export function useUserTokensWallet() {
                 })),
             }
         }
+        return walletEntry;
     })
 
     const registerEventOrganizerSecretToken = async (eventOrganizerSecretToken: EventOrganizerSecretToken) => {

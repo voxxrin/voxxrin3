@@ -6,6 +6,7 @@ import {
     createExistingUsersTokensWallet
 } from "../firestore/migrations/createExistingUsersTokensWallet";
 import {createExistingUsersInfos} from "../firestore/migrations/createExistingUsersInfos";
+import {addUserIdInTokenWallet} from "../firestore/migrations/addUserIdInTokenWallet";
 
 /**
  * Like Flyway, but for firestore :-)
@@ -13,6 +14,7 @@ import {createExistingUsersInfos} from "../firestore/migrations/createExistingUs
 const MIGRATIONS: Migration[] = [
     { name: "createExistingUsersTokensWallet", exec: createExistingUsersTokensWallet },
     { name: "createExistingUsersInfos", exec: createExistingUsersInfos },
+    { name: "addUserIdInTokenWallet", exec: addUserIdInTokenWallet },
 ];
 
 export type MigrationResult = "OK"|"Error";

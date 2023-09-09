@@ -18,6 +18,7 @@ export const onUserCreated = functions.auth.user().onCreate(async (user, context
 export async function createEmptyUserTokenWallet(userId: string) {
     const publicUserToken = uuidv4();
     const userTokensWallet: UserTokensWallet = {
+        privateUserId: userId,
         publicUserToken,
         secretTokens: {
             eventOrganizerTokens: [],
