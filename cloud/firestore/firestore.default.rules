@@ -2,7 +2,18 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     function authenticated() { return request.auth.uid != null }
-    function iAm(userId) { return request.auth.uid == userId }
+    function iAm(userId) { return request != null && request.auth != null && request.auth.uid == userId }
+    function onlyAllowedUpdatedFields(allowedFieldNames) {
+      return allowedFieldNames != null
+        && request != null
+        && request.resource != null
+        && request.resource.data != null
+        && resource != null
+        && resource.data != null
+        && resource.data.diff(request.resource.data) != null
+        && resource.data.diff(request.resource.data).affectedKeys() != null
+        && resource.data.diff(request.resource.data).affectedKeys().hasOnly(['userLastConnection'])
+    }
 
     // By default, prevent reads & writes on any node
     match /{document=**} {
@@ -47,16 +58,24 @@ service cloud.firestore {
       }
     }
     match /users/{userId} {
-    	allow get: if iAm(userId)
-      allow list: if false
-      allow write: if request.resource.data.keys().hasOnly(['userLastConnection']);
-      match /{document=**} {
-        allow get: if iAm(userId)
-        allow list: if false
-      	allow write: if iAm(userId)
+      allow list: if false;
+    	allow get: if iAm(userId);
+    	allow create: if false;
+    	allow update: if iAm(userId) && onlyAllowedUpdatedFields(["userLastConnection"]);
+      allow delete: if false;
+
+      match /preferences/self {
+        allow read, write: if iAm(userId);
+      }
+      match /tokens-wallet/self {
+        allow read, create, update: if iAm(userId);
+        allow delete: if false;
+      }
+      match /events/{eventId} {
+        allow read, write: if iAm(userId);
       }
       match /events/{eventId}/days/{dayId}/feedbacks/{talkId} {
-      	allow list: if iAm(userId)
+      	allow list: if iAm(userId);
       }
     }
   }
