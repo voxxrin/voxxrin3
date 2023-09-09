@@ -154,6 +154,62 @@ const COLLECTIONS: CollectionDescriptor[] = [{
             })
         }
     }
+}, {
+    name: "/users/{userId}/preferences",
+    aroundTests: (userContext: UserContext) => match(userContext)
+        .with({ name: "unauthenticated user" },  () => ({
+            beforeEach: [
+                adminFirestore.doc('/users/alice/preferences/self').set({ pinnedEventIds: [], showPastEvents: false }),
+            ],
+            afterEach: [
+                adminFirestore.doc(`/users/alice/preferences/self`).delete(),
+            ]
+        }))
+        .with({ name: "fred user" },  () => ({
+            beforeEach: [
+                adminFirestore.doc('/users/alice/preferences/self').set({ pinnedEventIds: [], showPastEvents: false }),
+                adminFirestore.doc('/users/fred/preferences/self').set({ pinnedEventIds: [], showPastEvents: false }),
+            ],
+            afterEach: [
+                adminFirestore.doc(`/users/alice/preferences/self`).delete(),
+                adminFirestore.doc(`/users/fred/preferences/self`).delete(),
+            ]
+        })).run(),
+    tests: (userContext: UserContext) => {
+        it(`As ${userContext.name}, I should not be able to LIST another user preferences`, async () => {
+            await assertFails(getDocs(collection(userContext.context().firestore(), '/users/alice/preferences')));
+        })
+        it(`As ${userContext.name}, I should not be able to GET another user preferences`, async () => {
+            await assertFails(getDoc(doc(userContext.context().firestore(), '/users/alice/preferences/self')));
+        })
+        it(`As ${userContext.name}, I should not be able to CREATE another user's preferences`, async () => {
+            await assertFails(setDoc(doc(userContext.context().firestore(), '/users/alice/preferences/self'), { showPastEvents: true }));
+        })
+        it(`As ${userContext.name}, I should not be able to UPDATE another user's preferences`, async () => {
+            await assertFails(updateDoc(doc(userContext.context().firestore(), '/users/alice/preferences/self'), { showPastEvents: true }));
+        })
+        it(`As ${userContext.name}, I should not be able to DELETE another user's preferences`, async () => {
+            await assertFails(deleteDoc(doc(userContext.context().firestore(), '/users/alice/preferences/self')));
+        })
+
+        if(userContext.name === 'fred user') {
+            it(`As ${userContext.name}, I shoud not be able to LIST my user's preferences`, async () => {
+                await assertFails(getDocs(collection(userContext.context().firestore(), '/users/fred/preferences')));
+            })
+            it(`As ${userContext.name}, I shoud be able to GET my user's preferences`, async () => {
+                await assertSucceeds(getDoc(doc(userContext.context().firestore(), '/users/fred/preferences/self')));
+            })
+            it(`As ${userContext.name}, I shoud be able to CREATE my user's preferences`, async () => {
+                await assertSucceeds(setDoc(doc(userContext.context().firestore(), '/users/fred/preferences/self'), { showPastEvents: true }));
+            })
+            it(`As ${userContext.name}, I should be able to UPDATE my user's preferences`, async () => {
+                await assertSucceeds(updateDoc(doc(userContext.context().firestore(), '/users/fred/preferences/self'), { showPastEvents: true }))
+            })
+            it(`As ${userContext.name}, I should not be able to DELETE my user's preferences`, async () => {
+                await assertFails(deleteDoc(doc(userContext.context().firestore(), '/users/fred/preferences/self')));
+            })
+        }
+    }
 }];
 
 COLLECTIONS.forEach(collectionContext => {

@@ -65,7 +65,8 @@ service cloud.firestore {
       allow delete: if false;
 
       match /preferences/self {
-        allow read, write: if iAm(userId);
+        allow read, create, update: if iAm(userId);
+        allow delete: if false;
       }
       match /tokens-wallet/self {
         allow read, create, update: if iAm(userId);
