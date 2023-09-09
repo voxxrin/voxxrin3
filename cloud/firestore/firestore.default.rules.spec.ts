@@ -494,6 +494,87 @@ const COLLECTIONS: CollectionDescriptor[] = [{
             })
         }
     }
+}, {
+    name: "/event-family-tokens",
+    aroundTests: (userContext: UserContext) => ({
+        beforeEach: [
+            adminFirestore.doc('/event-family-tokens/a-family').set({ families: ['devoxx'], token: 'd54411a2-4ceb-4c3f-a014-41e9426235ed' }),
+        ],
+        afterEach: [
+            adminFirestore.doc(`/event-family-tokens/a-family`).delete(),
+        ]
+    }),
+    tests: (userContext: UserContext) => {
+        it(`As ${userContext.name}, I should not be able to LIST event family tokens`, async () => {
+            await assertFails(getDocs(collection(userContext.context().firestore(), '/event-family-tokens')));
+        })
+        it(`As ${userContext.name}, I should not be able to GET any event family token`, async () => {
+            await assertFails(getDoc(doc(userContext.context().firestore(), '/event-family-tokens/a-family')));
+        })
+        it(`As ${userContext.name}, I should not be able to CREATE event family token`, async () => {
+            await assertFails(setDoc(doc(userContext.context().firestore(), '/event-family-tokens/another-family'), { families: ['devoxx', 'voxxed'], token: 'd54411a2-4ceb-4c3f-a014-41e9426235ed' }));
+        })
+        it(`As ${userContext.name}, I should not be able to UPDATE event family token`, async () => {
+            await assertFails(updateDoc(doc(userContext.context().firestore(), '/event-family-tokens/a-family'), { families: ['devoxx', 'voxxed'], token: 'd54411a2-4ceb-4c3f-a014-41e9426235ed' }));
+        })
+        it(`As ${userContext.name}, I should not be able to DELETE event family token`, async () => {
+            await assertFails(deleteDoc(doc(userContext.context().firestore(), '/event-family-tokens/a-family')));
+        })
+    }
+}, {
+    name: "/crawlers",
+    aroundTests: (userContext: UserContext) => ({
+        beforeEach: [
+            adminFirestore.doc('/crawlers/a-crawler').set({ crawlingKeys: [ '8bb30ecd-24f0-402b-9ff1-15d9826262dd' ], descriptorUrl: 'https://path-to-descriptor.json', kind: 'devoxx', stopAutoCrawlingAfter: '2023-09-01T00:00:00Z' }),
+        ],
+        afterEach: [
+            adminFirestore.doc(`/crawlers/a-crawler`).delete(),
+        ]
+    }),
+    tests: (userContext: UserContext) => {
+        it(`As ${userContext.name}, I should not be able to LIST crawlers`, async () => {
+            await assertFails(getDocs(collection(userContext.context().firestore(), '/crawlers')));
+        })
+        it(`As ${userContext.name}, I should not be able to GET any crawler`, async () => {
+            await assertFails(getDoc(doc(userContext.context().firestore(), '/crawlers/a-crawler')));
+        })
+        it(`As ${userContext.name}, I should not be able to CREATE crawler`, async () => {
+            await assertFails(setDoc(doc(userContext.context().firestore(), '/crawlers/another-crawler'), { crawlingKeys: [ '8bb30ecd-24f0-402b-9ff1-15d9826262dd' ], descriptorUrl: 'https://path-to-descriptor.json', kind: 'devoxx', stopAutoCrawlingAfter: '2023-09-01T00:00:00Z' }));
+        })
+        it(`As ${userContext.name}, I should not be able to UPDATE crawler`, async () => {
+            await assertFails(updateDoc(doc(userContext.context().firestore(), '/crawlers/a-crawler'), { crawlingKeys: [ '8bb30ecd-24f0-402b-9ff1-15d9826262dd' ], descriptorUrl: 'https://path-to-descriptor.json', kind: 'devoxx', stopAutoCrawlingAfter: '2023-10-01T00:00:00Z' }));
+        })
+        it(`As ${userContext.name}, I should not be able to DELETE crawler`, async () => {
+            await assertFails(deleteDoc(doc(userContext.context().firestore(), '/crawlers/a-crawler')));
+        })
+    }
+}, {
+    name: "/schema-migrations",
+    aroundTests: (userContext: UserContext) => ({
+        beforeEach: [
+            adminFirestore.doc('/schema-migrations/self').set({ migrations: []}),
+        ],
+        afterEach: [
+            adminFirestore.doc(`/schema-migrations/self`).delete(),
+        ]
+    }),
+    tests: (userContext: UserContext) => {
+        it(`As ${userContext.name}, I should not be able to LIST schema migrations`, async () => {
+            await assertFails(getDocs(collection(userContext.context().firestore(), '/schema-migrations')));
+        })
+        it(`As ${userContext.name}, I should not be able to GET any schema migrations`, async () => {
+            await assertFails(getDoc(doc(userContext.context().firestore(), '/schema-migrations/self')));
+        })
+        it(`As ${userContext.name}, I should not be able to CREATE schema migration`, async () => {
+            await assertFails(setDoc(doc(userContext.context().firestore(), '/schema-migrations/another-migration'), { migrations: []}));
+        })
+        it(`As ${userContext.name}, I should not be able to UPDATE schema migration`, async () => {
+            await assertFails(updateDoc(doc(userContext.context().firestore(), '/schema-migrations/self'), { migrations: [] }));
+        })
+        it(`As ${userContext.name}, I should not be able to DELETE schema migration`, async () => {
+            await assertFails(deleteDoc(doc(userContext.context().firestore(), '/schema-migrations/self')));
+        })
+    }
 }];
 
 COLLECTIONS.forEach(collectionContext => {

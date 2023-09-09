@@ -19,12 +19,19 @@ service cloud.firestore {
     match /{document=**} {
       allow read, write: if false;
     }
-    match /event-family-tokens {
-      allow read: if false;
-      match /{document=**} {
-        allow read: if false;
-      }
+
+    match /event-family-tokens/{familyId} {
+      allow read, write: if false;
     }
+
+    match /crawlers/{crawlerId} {
+      allow read, write: if false;
+    }
+
+    match /schema-migrations/self {
+      allow read, write: if false;
+    }
+
     match /events/{event} {
       allow read: if true;
       match /talksStats/{talkId} {
@@ -57,6 +64,7 @@ service cloud.firestore {
       	allow read: if true;
       }
     }
+
     match /users/{userId} {
       allow list: if false;
     	allow get: if iAm(userId);
