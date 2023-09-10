@@ -29,6 +29,78 @@ beforeAll(async () => {
     });
 })
 
+beforeAll(async () => {
+    await Promise.all([
+        adminFirestore.doc('/users/alice').set({ username: 'alice' }),
+        adminFirestore.doc('/users/alice/tokens-wallet/self').set({ publicUserToken: '00d8b3b4-ec51-4694-865c-5e9d0f542e41' }),
+        adminFirestore.doc('/users/alice/preferences/self').set({ pinnedEventIds: [], showPastEvents: false }),
+        adminFirestore.doc('/users/alice/events/an-event').set({}),
+        adminFirestore.doc('/users/alice/events/an-event/__computed/self').set({ favoritedTalkIds: [] }),
+        adminFirestore.doc('/users/alice/events/an-event/talksNotes/12345').set({ note: { isFavorite: true } }),
+        adminFirestore.doc('/users/alice/events/an-event/days/monday').set({ }),
+        adminFirestore.doc('/users/alice/events/an-event/days/monday/feedbacks/self').set({ dayId: 'monday', feedbacks: [] }),
+
+        adminFirestore.doc('/users/fred').set({ username: 'fred' }),
+        adminFirestore.doc('/users/fred/tokens-wallet/self').set({ publicUserToken: 'c808ad21-af33-4e20-a6f8-89adc4d14d75' }),
+        adminFirestore.doc('/users/fred/preferences/self').set({ pinnedEventIds: [], showPastEvents: false }),
+        adminFirestore.doc('/users/fred/events/an-event').set({}),
+        adminFirestore.doc('/users/fred/events/an-event/__computed/self').set({ favoritedTalkIds: [] }),
+        adminFirestore.doc('/users/fred/events/an-event/talksNotes/12345').set({ note: { isFavorite: true } }),
+        adminFirestore.doc('/users/fred/events/an-event/days/monday').set({ }),
+        adminFirestore.doc('/users/fred/events/an-event/days/monday/feedbacks/self').set({ dayId: 'monday', feedbacks: [] }),
+
+        adminFirestore.doc('/event-family-tokens/a-family').set({ families: ['devoxx'], token: 'd54411a2-4ceb-4c3f-a014-41e9426235ed' }),
+        adminFirestore.doc('/crawlers/a-crawler').set({ crawlingKeys: [ '8bb30ecd-24f0-402b-9ff1-15d9826262dd' ], descriptorUrl: 'https://path-to-descriptor.json', kind: 'devoxx', stopAutoCrawlingAfter: '2023-09-01T00:00:00Z' }),
+        adminFirestore.doc('/schema-migrations/self').set({ migrations: []}),
+
+        adminFirestore.doc('/events/an-event').set({ title: `A super event` }),
+        adminFirestore.doc('/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472').set({ organizerSecretToken: '6c902c52-9c6d-4d54-b6f2-20814d2f8472' }),
+        adminFirestore.doc('/events/an-event/days/monday').set({ day: 'monday', timeSlots: [] }),
+        adminFirestore.doc('/events/an-event/event-descriptor/self').set({ title: `A super event` }),
+        adminFirestore.doc('/events/an-event/talksStats/12345').set({ id: `12345`, totalFavoritesCount: 0 }),
+        adminFirestore.doc('/events/an-event/last-updates/self').set({ favorites: '2023-09-01T00:00:00Z' }),
+        adminFirestore.doc('/events/an-event/talks/1234').set({ id: '1234', title: 'A super talk' }),
+        adminFirestore.doc('/events/an-event/talks/1234/feedbacks-access/1f0b405a-c3ba-46df-8d02-cce03bc34e5d').set({ }),
+        adminFirestore.doc('/events/an-event/talks/1234/feedbacks-access/1f0b405a-c3ba-46df-8d02-cce03bc34e5d/feedbacks/de25005c-de05-48bd-9ae4-4768933eeeb0').set({ attendeePublicToken: 'de25005c-de05-48bd-9ae4-4768933eeeb0', talkId: '1234' }),
+
+    ])
+})
+afterAll(async () => {
+    await Promise.all([
+        adminFirestore.doc(`/users/alice/events/an-event/days/monday/feedbacks/self`).delete(),
+        adminFirestore.doc(`/users/alice/events/an-event/days/monday`).delete(),
+        adminFirestore.doc(`/users/alice/events/an-event/talksNotes/12345`).delete(),
+        adminFirestore.doc('/users/alice/events/an-event/__computed/self').delete(),
+        adminFirestore.doc(`/users/alice/events/an-event`).delete(),
+        adminFirestore.doc(`/users/alice/tokens-wallet/self`).delete(),
+        adminFirestore.doc(`/users/alice/preferences/self`).delete(),
+        adminFirestore.doc(`/users/alice`).delete(),
+
+        adminFirestore.doc(`/users/fred/events/an-event/days/monday/feedbacks/self`).delete(),
+        adminFirestore.doc(`/users/fred/events/an-event/days/monday`).delete(),
+        adminFirestore.doc(`/users/fred/events/an-event/talksNotes/12345`).delete(),
+        adminFirestore.doc('/users/fred/events/an-event/__computed/self').delete(),
+        adminFirestore.doc(`/users/fred/events/an-event`).delete(),
+        adminFirestore.doc(`/users/fred/tokens-wallet/self`).delete(),
+        adminFirestore.doc(`/users/fred/preferences/self`).delete(),
+        adminFirestore.doc(`/users/fred`).delete(),
+
+        adminFirestore.doc(`/event-family-tokens/a-family`).delete(),
+        adminFirestore.doc(`/crawlers/a-crawler`).delete(),
+        adminFirestore.doc(`/schema-migrations/self`).delete(),
+
+        adminFirestore.doc(`/events/an-event/talks/1234/feedbacks-access/1f0b405a-c3ba-46df-8d02-cce03bc34e5d/feedbacks/de25005c-de05-48bd-9ae4-4768933eeeb0`).delete(),
+        adminFirestore.doc(`/events/an-event/talks/1234/feedbacks-access/1f0b405a-c3ba-46df-8d02-cce03bc34e5d`).delete(),
+        adminFirestore.doc(`/events/an-event/talks/1234`).delete(),
+        adminFirestore.doc(`/events/an-event/last-updates/self`).delete(),
+        adminFirestore.doc(`/events/an-event/talksStats/12345`).delete(),
+        adminFirestore.doc(`/events/an-event/event-descriptor/self`).delete(),
+        adminFirestore.doc(`/events/an-event/days/monday`).delete(),
+        adminFirestore.doc(`/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472`).delete(),
+        adminFirestore.doc(`/events/an-event`).delete(),
+    ]);
+})
+
 const USER_CONTEXTS = [
     { name: "unauthenticated user", context: () => testEnv.unauthenticatedContext() },
     { name: "fred user", context: () => testEnv.authenticatedContext('fred') },
@@ -49,22 +121,12 @@ const COLLECTIONS: CollectionDescriptor[] = [{
     name: "/users",
     aroundTests: (userContext: UserContext) => match(userContext)
         .with({ name: "unauthenticated user" },  () => ({
-            beforeEach: [
-                adminFirestore.doc('/users/alice').set({ username: 'alice' })
-            ],
-            afterEach: [
-                adminFirestore.doc(`/users/alice`).delete()
-            ]
+            beforeEach: [],
+            afterEach: [],
         }))
         .with({ name: "fred user" },  () => ({
-            beforeEach: [
-                adminFirestore.doc('/users/alice').set({ username: 'alice' }),
-                adminFirestore.doc('/users/fred').set({ username: 'fred' })
-            ],
-            afterEach: [
-                adminFirestore.doc(`/users/alice`).delete(),
-                adminFirestore.doc(`/users/fred`).delete()
-            ]
+            beforeEach: [],
+            afterEach: [],
         })).run(),
     tests: (userContext: UserContext) => {
         it(`As ${userContext.name}, I should not be able to LIST user ids`, async () => {
@@ -102,22 +164,12 @@ const COLLECTIONS: CollectionDescriptor[] = [{
     name: "/users/{userId}/tokens-wallet",
     aroundTests: (userContext: UserContext) => match(userContext)
         .with({ name: "unauthenticated user" },  () => ({
-            beforeEach: [
-                adminFirestore.doc('/users/alice/tokens-wallet/self').set({ publicUserToken: '00d8b3b4-ec51-4694-865c-5e9d0f542e41' }),
-            ],
-            afterEach: [
-                adminFirestore.doc(`/users/alice/tokens-wallet/self`).delete(),
-            ]
+            beforeEach: [],
+            afterEach: [],
         }))
         .with({ name: "fred user" },  () => ({
-            beforeEach: [
-                adminFirestore.doc('/users/alice/tokens-wallet/self').set({ publicUserToken: '00d8b3b4-ec51-4694-865c-5e9d0f542e41' }),
-                adminFirestore.doc('/users/fred/tokens-wallet/self').set({ publicUserToken: 'c808ad21-af33-4e20-a6f8-89adc4d14d75' }),
-            ],
-            afterEach: [
-                adminFirestore.doc(`/users/alice/tokens-wallet/self`).delete(),
-                adminFirestore.doc(`/users/fred/tokens-wallet/self`).delete(),
-            ]
+            beforeEach: [],
+            afterEach: [],
         })).run(),
     tests: (userContext: UserContext) => {
         it(`As ${userContext.name}, I should not be able to LIST another user tokens wallets`, async () => {
@@ -158,22 +210,12 @@ const COLLECTIONS: CollectionDescriptor[] = [{
     name: "/users/{userId}/preferences",
     aroundTests: (userContext: UserContext) => match(userContext)
         .with({ name: "unauthenticated user" },  () => ({
-            beforeEach: [
-                adminFirestore.doc('/users/alice/preferences/self').set({ pinnedEventIds: [], showPastEvents: false }),
-            ],
-            afterEach: [
-                adminFirestore.doc(`/users/alice/preferences/self`).delete(),
-            ]
+            beforeEach: [],
+            afterEach: [],
         }))
         .with({ name: "fred user" },  () => ({
-            beforeEach: [
-                adminFirestore.doc('/users/alice/preferences/self').set({ pinnedEventIds: [], showPastEvents: false }),
-                adminFirestore.doc('/users/fred/preferences/self').set({ pinnedEventIds: [], showPastEvents: false }),
-            ],
-            afterEach: [
-                adminFirestore.doc(`/users/alice/preferences/self`).delete(),
-                adminFirestore.doc(`/users/fred/preferences/self`).delete(),
-            ]
+            beforeEach: [],
+            afterEach: [],
         })).run(),
     tests: (userContext: UserContext) => {
         it(`As ${userContext.name}, I should not be able to LIST another user preferences`, async () => {
@@ -214,38 +256,28 @@ const COLLECTIONS: CollectionDescriptor[] = [{
     name: "/users/{userId}/events",
     aroundTests: (userContext: UserContext) => match(userContext)
         .with({ name: "unauthenticated user" },  () => ({
-            beforeEach: [
-                adminFirestore.doc('/users/alice/events/dvbe23').set({}),
-            ],
-            afterEach: [
-                adminFirestore.doc(`/users/alice/events/dvbe23`).delete(),
-            ]
+            beforeEach: [],
+            afterEach: [],
         }))
         .with({ name: "fred user" },  () => ({
-            beforeEach: [
-                adminFirestore.doc('/users/alice/events/dvbe23').set({}),
-                adminFirestore.doc('/users/fred/events/dvbe23').set({}),
-            ],
-            afterEach: [
-                adminFirestore.doc(`/users/alice/events/dvbe23`).delete(),
-                adminFirestore.doc(`/users/fred/events/dvbe23`).delete(),
-            ]
+            beforeEach: [],
+            afterEach: [],
         })).run(),
     tests: (userContext: UserContext) => {
         it(`As ${userContext.name}, I should not be able to LIST another user events`, async () => {
             await assertFails(getDocs(collection(userContext.context().firestore(), '/users/alice/events')));
         })
         it(`As ${userContext.name}, I should not be able to GET another user events`, async () => {
-            await assertFails(getDoc(doc(userContext.context().firestore(), '/users/alice/events/dvbe23')));
+            await assertFails(getDoc(doc(userContext.context().firestore(), '/users/alice/events/an-event')));
         })
         it(`As ${userContext.name}, I should not be able to CREATE another user's events`, async () => {
-            await assertFails(setDoc(doc(userContext.context().firestore(), '/users/alice/events/jsc23'), { }));
+            await assertFails(setDoc(doc(userContext.context().firestore(), '/users/alice/events/another-event'), { }));
         })
         it(`As ${userContext.name}, I should not be able to UPDATE another user's events`, async () => {
-            await assertFails(updateDoc(doc(userContext.context().firestore(), '/users/alice/events/dvbe23'), { }));
+            await assertFails(updateDoc(doc(userContext.context().firestore(), '/users/alice/events/an-event'), { }));
         })
         it(`As ${userContext.name}, I should not be able to DELETE another user's events`, async () => {
-            await assertFails(deleteDoc(doc(userContext.context().firestore(), '/users/alice/events/dvbe23')));
+            await assertFails(deleteDoc(doc(userContext.context().firestore(), '/users/alice/events/an-event')));
         })
 
         if(userContext.name === 'fred user') {
@@ -253,16 +285,16 @@ const COLLECTIONS: CollectionDescriptor[] = [{
                 await assertSucceeds(getDocs(collection(userContext.context().firestore(), '/users/fred/events')));
             })
             it(`As ${userContext.name}, I shoud be able to GET my user's events`, async () => {
-                await assertSucceeds(getDoc(doc(userContext.context().firestore(), '/users/fred/events/dvbe23')));
+                await assertSucceeds(getDoc(doc(userContext.context().firestore(), '/users/fred/events/an-event')));
             })
             it(`As ${userContext.name}, I shoud be able to CREATE my user's events`, async () => {
-                await assertSucceeds(setDoc(doc(userContext.context().firestore(), '/users/fred/events/dvbe23'), { }));
+                await assertSucceeds(setDoc(doc(userContext.context().firestore(), '/users/fred/events/an-event'), { }));
             })
             it(`As ${userContext.name}, I should be able to UPDATE my user's events`, async () => {
-                await assertSucceeds(updateDoc(doc(userContext.context().firestore(), '/users/fred/events/dvbe23'), { }))
+                await assertSucceeds(updateDoc(doc(userContext.context().firestore(), '/users/fred/events/an-event'), { }))
             })
             it(`As ${userContext.name}, I should not be able to DELETE my user's events`, async () => {
-                await assertFails(deleteDoc(doc(userContext.context().firestore(), '/users/fred/events/dvbe23')));
+                await assertFails(deleteDoc(doc(userContext.context().firestore(), '/users/fred/events/an-event')));
             })
         }
     }
@@ -270,111 +302,91 @@ const COLLECTIONS: CollectionDescriptor[] = [{
     name: "/users/{userId}/events/{eventId}/__computed",
     aroundTests: (userContext: UserContext) => match(userContext)
         .with({ name: "unauthenticated user" },  () => ({
-            beforeEach: [
-                adminFirestore.doc('/users/alice/events/dvbe23/__computed/self').set({ favoritedTalkIds: [] }),
-            ],
-            afterEach: [
-                adminFirestore.doc(`/users/alice/events/dvbe23/__computed/self`).delete(),
-            ]
+            beforeEach: [],
+            afterEach: [],
         }))
         .with({ name: "fred user" },  () => ({
-            beforeEach: [
-                adminFirestore.doc('/users/alice/events/dvbe23/__computed/self').set({ favoritedTalkIds: [] }),
-                adminFirestore.doc('/users/fred/events/dvbe23/__computed/self').set({ favoritedTalkIds: [] }),
-            ],
-            afterEach: [
-                adminFirestore.doc(`/users/alice/events/dvbe23`).delete(),
-                adminFirestore.doc(`/users/fred/events/dvbe23`).delete(),
-            ]
+            beforeEach: [],
+            afterEach: [],
         })).run(),
     tests: (userContext: UserContext) => {
         it(`As ${userContext.name}, I should not be able to LIST another user events' computed infos`, async () => {
-            await assertFails(getDocs(collection(userContext.context().firestore(), '/users/alice/events/dvbe23/__computed')));
+            await assertFails(getDocs(collection(userContext.context().firestore(), '/users/alice/events/an-event/__computed')));
         })
         it(`As ${userContext.name}, I should not be able to GET another user events' computed infos`, async () => {
-            await assertFails(getDoc(doc(userContext.context().firestore(), '/users/alice/events/dvbe23/__computed/self')));
+            await assertFails(getDoc(doc(userContext.context().firestore(), '/users/alice/events/an-event/__computed/self')));
         })
         it(`As ${userContext.name}, I should not be able to CREATE another user's events' computed infos`, async () => {
-            await assertFails(setDoc(doc(userContext.context().firestore(), '/users/alice/events/dvbe23/__computed/self'), { favoritedTalkIds: [] }));
+            await assertFails(setDoc(doc(userContext.context().firestore(), '/users/alice/events/an-event/__computed/self'), { favoritedTalkIds: [] }));
         })
         it(`As ${userContext.name}, I should not be able to UPDATE another user's events' computed infos`, async () => {
-            await assertFails(updateDoc(doc(userContext.context().firestore(), '/users/alice/events/dvbe23/__computed/self'), { favoritedTalkIds: ['1'] }));
+            await assertFails(updateDoc(doc(userContext.context().firestore(), '/users/alice/events/an-event/__computed/self'), { favoritedTalkIds: ['1'] }));
         })
         it(`As ${userContext.name}, I should not be able to DELETE another user's events' computed infos`, async () => {
-            await assertFails(deleteDoc(doc(userContext.context().firestore(), '/users/alice/events/dvbe23/__computed/self')));
+            await assertFails(deleteDoc(doc(userContext.context().firestore(), '/users/alice/events/an-event/__computed/self')));
         })
 
         if(userContext.name === 'fred user') {
             it(`As ${userContext.name}, I shoud not be able to LIST my user's events' computed infos`, async () => {
-                await assertFails(getDocs(collection(userContext.context().firestore(), '/users/fred/events/dvbe23/__computed')));
+                await assertFails(getDocs(collection(userContext.context().firestore(), '/users/fred/events/an-event/__computed')));
             })
             it(`As ${userContext.name}, I shoud not be able to GET my user's events' computed infos`, async () => {
-                await assertFails(getDoc(doc(userContext.context().firestore(), '/users/fred/events/dvbe23/__computed/self')));
+                await assertFails(getDoc(doc(userContext.context().firestore(), '/users/fred/events/an-event/__computed/self')));
             })
             it(`As ${userContext.name}, I shoud not be able to CREATE my user's events' computed infos`, async () => {
-                await assertFails(setDoc(doc(userContext.context().firestore(), '/users/fred/events/dvbe23/__computed/self'), { favoritedTalkIds: [] }));
+                await assertFails(setDoc(doc(userContext.context().firestore(), '/users/fred/events/an-event/__computed/self'), { favoritedTalkIds: [] }));
             })
             it(`As ${userContext.name}, I should not be able to UPDATE my user's events' computed infos`, async () => {
-                await assertFails(updateDoc(doc(userContext.context().firestore(), '/users/fred/events/dvbe23/__computed/self'), { favoritedTalkIds: ['1'] }))
+                await assertFails(updateDoc(doc(userContext.context().firestore(), '/users/fred/events/an-event/__computed/self'), { favoritedTalkIds: ['1'] }))
             })
             it(`As ${userContext.name}, I should not be able to DELETE my user's events' computed infos`, async () => {
-                await assertFails(deleteDoc(doc(userContext.context().firestore(), '/users/fred/events/dvbe23/__computed/self')));
+                await assertFails(deleteDoc(doc(userContext.context().firestore(), '/users/fred/events/an-event/__computed/self')));
             })
         }
     }
 }, {
-    name: "/users/{userId}/events/{eventId}/talkNotes",
+    name: "/users/{userId}/events/{eventId}/talksNotes",
     aroundTests: (userContext: UserContext) => match(userContext)
         .with({ name: "unauthenticated user" },  () => ({
-            beforeEach: [
-                adminFirestore.doc('/users/alice/events/dvbe23/talkNotes/12345').set({ note: { isFavorite: true } }),
-            ],
-            afterEach: [
-                adminFirestore.doc(`/users/alice/events/dvbe23/talkNotes/12345`).delete(),
-            ]
+            beforeEach: [],
+            afterEach: [],
         }))
         .with({ name: "fred user" },  () => ({
-            beforeEach: [
-                adminFirestore.doc('/users/alice/events/dvbe23/talkNotes/12345').set({ note: { isFavorite: true } }),
-                adminFirestore.doc('/users/fred/events/dvbe23/talkNotes/12345').set({ note: { isFavorite: true } }),
-            ],
-            afterEach: [
-                adminFirestore.doc(`/users/alice/events/dvbe23/talkNotes/12345`).delete(),
-                adminFirestore.doc(`/users/fred/events/dvbe23/talkNotes/12345`).delete(),
-            ]
+            beforeEach: [],
+            afterEach: [],
         })).run(),
     tests: (userContext: UserContext) => {
         it(`As ${userContext.name}, I should not be able to LIST another user events' talk notes`, async () => {
-            await assertFails(getDocs(collection(userContext.context().firestore(), '/users/alice/events/dvbe23/talkNotes')));
+            await assertFails(getDocs(collection(userContext.context().firestore(), '/users/alice/events/an-event/talksNotes')));
         })
         it(`As ${userContext.name}, I should not be able to GET another user events' talk notes`, async () => {
-            await assertFails(getDoc(doc(userContext.context().firestore(), '/users/alice/events/dvbe23/talkNotes/12345')));
+            await assertFails(getDoc(doc(userContext.context().firestore(), '/users/alice/events/an-event/talksNotes/12345')));
         })
         it(`As ${userContext.name}, I should not be able to CREATE another user's events' talk notes`, async () => {
-            await assertFails(setDoc(doc(userContext.context().firestore(), '/users/alice/events/dvbe23/talkNotes/12345'), { note: { isFavorite: true } }));
+            await assertFails(setDoc(doc(userContext.context().firestore(), '/users/alice/events/an-event/talksNotes/12345'), { note: { isFavorite: true } }));
         })
         it(`As ${userContext.name}, I should not be able to UPDATE another user's events' talk notes`, async () => {
-            await assertFails(updateDoc(doc(userContext.context().firestore(), '/users/alice/events/dvbe23/talkNotes/12345'), { note: { isFavorite: false } }));
+            await assertFails(updateDoc(doc(userContext.context().firestore(), '/users/alice/events/an-event/talksNotes/12345'), { note: { isFavorite: false } }));
         })
         it(`As ${userContext.name}, I should not be able to DELETE another user's events' talk notes`, async () => {
-            await assertFails(deleteDoc(doc(userContext.context().firestore(), '/users/alice/events/dvbe23/talkNotes/12345')));
+            await assertFails(deleteDoc(doc(userContext.context().firestore(), '/users/alice/events/an-event/talksNotes/12345')));
         })
 
         if(userContext.name === 'fred user') {
             it(`As ${userContext.name}, I shoud be able to LIST my user's events' talk notes`, async () => {
-                await assertSucceeds(getDocs(collection(userContext.context().firestore(), '/users/fred/events/dvbe23/talkNotes')));
+                await assertSucceeds(getDocs(collection(userContext.context().firestore(), '/users/fred/events/an-event/talksNotes')));
             })
             it(`As ${userContext.name}, I shoud be able to GET my user's events' talk notes`, async () => {
-                await assertSucceeds(getDoc(doc(userContext.context().firestore(), '/users/fred/events/dvbe23/talkNotes/12345')));
+                await assertSucceeds(getDoc(doc(userContext.context().firestore(), '/users/fred/events/an-event/talksNotes/12345')));
             })
             it(`As ${userContext.name}, I shoud not be able to CREATE my user's events' talk notes`, async () => {
-                await assertSucceeds(setDoc(doc(userContext.context().firestore(), '/users/fred/events/dvbe23/talkNotes/12345'), { note: { isFavorite: true } }));
+                await assertSucceeds(setDoc(doc(userContext.context().firestore(), '/users/fred/events/an-event/talksNotes/12345'), { note: { isFavorite: true } }));
             })
             it(`As ${userContext.name}, I should not be able to UPDATE my user's events' talk notes`, async () => {
-                await assertSucceeds(updateDoc(doc(userContext.context().firestore(), '/users/fred/events/dvbe23/talkNotes/12345'), { note: { isFavorite: false } }))
+                await assertSucceeds(updateDoc(doc(userContext.context().firestore(), '/users/fred/events/an-event/talksNotes/12345'), { note: { isFavorite: false } }))
             })
             it(`As ${userContext.name}, I should not be able to DELETE my user's events' talk notes`, async () => {
-                await assertFails(deleteDoc(doc(userContext.context().firestore(), '/users/fred/events/dvbe23/talkNotes/12345')));
+                await assertFails(deleteDoc(doc(userContext.context().firestore(), '/users/fred/events/an-event/talksNotes/12345')));
             })
         }
     }
@@ -383,54 +395,48 @@ const COLLECTIONS: CollectionDescriptor[] = [{
     aroundTests: (userContext: UserContext) => match(userContext)
         .with({ name: "unauthenticated user" },  () => ({
             beforeEach: [
-                adminFirestore.doc('/users/alice/events/dvbe23/days/monday').set({ }),
             ],
             afterEach: [
-                adminFirestore.doc(`/users/alice/events/dvbe23/days/monday`).delete(),
             ]
         }))
         .with({ name: "fred user" },  () => ({
             beforeEach: [
-                adminFirestore.doc('/users/alice/events/dvbe23/days/monday').set({ }),
-                adminFirestore.doc('/users/fred/events/dvbe23/days/monday').set({ }),
             ],
             afterEach: [
-                adminFirestore.doc(`/users/alice/events/dvbe23/days/monday`).delete(),
-                adminFirestore.doc(`/users/fred/events/dvbe23/days/monday`).delete(),
             ]
         })).run(),
     tests: (userContext: UserContext) => {
         it(`As ${userContext.name}, I should not be able to LIST another user events' days`, async () => {
-            await assertFails(getDocs(collection(userContext.context().firestore(), '/users/alice/events/dvbe23/days')));
+            await assertFails(getDocs(collection(userContext.context().firestore(), '/users/alice/events/an-event/days')));
         })
         it(`As ${userContext.name}, I should not be able to GET another user events' days`, async () => {
-            await assertFails(getDoc(doc(userContext.context().firestore(), '/users/alice/events/dvbe23/days/monday')));
+            await assertFails(getDoc(doc(userContext.context().firestore(), '/users/alice/events/an-event/days/monday')));
         })
         it(`As ${userContext.name}, I should not be able to CREATE another user's events' days`, async () => {
-            await assertFails(setDoc(doc(userContext.context().firestore(), '/users/alice/events/dvbe23/days/monday'), { }));
+            await assertFails(setDoc(doc(userContext.context().firestore(), '/users/alice/events/an-event/days/monday'), { }));
         })
         it(`As ${userContext.name}, I should not be able to UPDATE another user's events' days`, async () => {
-            await assertFails(updateDoc(doc(userContext.context().firestore(), '/users/alice/events/dvbe23/days/monday'), { }));
+            await assertFails(updateDoc(doc(userContext.context().firestore(), '/users/alice/events/an-event/days/monday'), { }));
         })
         it(`As ${userContext.name}, I should not be able to DELETE another user's events' days`, async () => {
-            await assertFails(deleteDoc(doc(userContext.context().firestore(), '/users/alice/events/dvbe23/days/monday')));
+            await assertFails(deleteDoc(doc(userContext.context().firestore(), '/users/alice/events/an-event/days/monday')));
         })
 
         if(userContext.name === 'fred user') {
             it(`As ${userContext.name}, I shoud be able to LIST my user's events' days`, async () => {
-                await assertSucceeds(getDocs(collection(userContext.context().firestore(), '/users/fred/events/dvbe23/days')));
+                await assertSucceeds(getDocs(collection(userContext.context().firestore(), '/users/fred/events/an-event/days')));
             })
             it(`As ${userContext.name}, I shoud be able to GET my user's events' days`, async () => {
-                await assertSucceeds(getDoc(doc(userContext.context().firestore(), '/users/fred/events/dvbe23/days/monday')));
+                await assertSucceeds(getDoc(doc(userContext.context().firestore(), '/users/fred/events/an-event/days/monday')));
             })
             it(`As ${userContext.name}, I shoud not be able to CREATE my user's events' days`, async () => {
-                await assertSucceeds(setDoc(doc(userContext.context().firestore(), '/users/fred/events/dvbe23/days/monday'), { }));
+                await assertSucceeds(setDoc(doc(userContext.context().firestore(), '/users/fred/events/an-event/days/monday'), { }));
             })
             it(`As ${userContext.name}, I should not be able to UPDATE my user's events' days`, async () => {
-                await assertSucceeds(updateDoc(doc(userContext.context().firestore(), '/users/fred/events/dvbe23/days/monday'), { }))
+                await assertSucceeds(updateDoc(doc(userContext.context().firestore(), '/users/fred/events/an-event/days/monday'), { }))
             })
             it(`As ${userContext.name}, I should not be able to DELETE my user's events' days`, async () => {
-                await assertFails(deleteDoc(doc(userContext.context().firestore(), '/users/fred/events/dvbe23/days/monday')));
+                await assertFails(deleteDoc(doc(userContext.context().firestore(), '/users/fred/events/an-event/days/monday')));
             })
         }
     }
@@ -439,70 +445,56 @@ const COLLECTIONS: CollectionDescriptor[] = [{
     aroundTests: (userContext: UserContext) => match(userContext)
         .with({ name: "unauthenticated user" },  () => ({
             beforeEach: [
-                adminFirestore.doc('/events/dvbe23/organizer-space/eedef166-3180-4eed-86e6-73eb05f392b1').set({ organizerSecretToken: 'eedef166-3180-4eed-86e6-73eb05f392b1' }),
-                adminFirestore.doc('/users/alice/events/dvbe23/days/monday/feedbacks/self').set({ dayId: 'monday', feedbacks: [] }),
             ],
             afterEach: [
-                adminFirestore.doc(`/users/alice/events/dvbe23/days/monday/feedbacks/self`).delete(),
-                adminFirestore.doc(`/events/dvbe23/organizer-space/eedef166-3180-4eed-86e6-73eb05f392b1`).delete(),
             ]
         }))
         .with({ name: "fred user" },  () => ({
             beforeEach: [
-                adminFirestore.doc('/events/dvbe23/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472').set({ organizerSecretToken: '6c902c52-9c6d-4d54-b6f2-20814d2f8472' }),
-                adminFirestore.doc('/users/alice/events/dvbe23/days/monday/feedbacks/self').set({ dayId: 'monday', feedbacks: [] }),
-                adminFirestore.doc('/users/fred/events/dvbe23/days/monday/feedbacks/self').set({ dayId: 'monday', feedbacks: [] }),
             ],
             afterEach: [
-                adminFirestore.doc(`/users/alice/events/dvbe23/days/monday/feedbacks/self`).delete(),
-                adminFirestore.doc(`/users/fred/events/dvbe23/days/monday/feedbacks/self`).delete(),
-                adminFirestore.doc(`/events/dvbe23/organizer-space/eedef166-3180-4eed-86e6-73eb05f392b1`).delete(),
             ]
         })).run(),
     tests: (userContext: UserContext) => {
         it(`As ${userContext.name}, I should not be able to LIST another user events' daily feedbacks`, async () => {
-            await assertFails(getDocs(collection(userContext.context().firestore(), '/users/alice/events/dvbe23/days/monday/feedbacks')));
+            await assertFails(getDocs(collection(userContext.context().firestore(), '/users/alice/events/an-event/days/monday/feedbacks')));
         })
         it(`As ${userContext.name}, I should not be able to GET another user events' daily feedbacks`, async () => {
-            await assertFails(getDoc(doc(userContext.context().firestore(), '/users/alice/events/dvbe23/days/monday/feedbacks/self')));
+            await assertFails(getDoc(doc(userContext.context().firestore(), '/users/alice/events/an-event/days/monday/feedbacks/self')));
         })
         it(`As ${userContext.name}, I should not be able to CREATE another user's events' daily feedbacks`, async () => {
-            await assertFails(setDoc(doc(userContext.context().firestore(), '/users/alice/events/dvbe23/days/monday/feedbacks/self'), { dayId: 'monday', feedbacks: [] }));
+            await assertFails(setDoc(doc(userContext.context().firestore(), '/users/alice/events/an-event/days/monday/feedbacks/self'), { dayId: 'monday', feedbacks: [] }));
         })
         it(`As ${userContext.name}, I should not be able to UPDATE another user's events' daily feedbacks`, async () => {
-            await assertFails(updateDoc(doc(userContext.context().firestore(), '/users/alice/events/dvbe23/days/monday/feedbacks/self'), { dayId: 'monday', feedbacks: [] }));
+            await assertFails(updateDoc(doc(userContext.context().firestore(), '/users/alice/events/an-event/days/monday/feedbacks/self'), { dayId: 'monday', feedbacks: [] }));
         })
         it(`As ${userContext.name}, I should not be able to DELETE another user's events' daily feedbacks`, async () => {
-            await assertFails(deleteDoc(doc(userContext.context().firestore(), '/users/alice/events/dvbe23/days/monday/feedbacks/self')));
+            await assertFails(deleteDoc(doc(userContext.context().firestore(), '/users/alice/events/an-event/days/monday/feedbacks/self')));
         })
 
         if(userContext.name === 'fred user') {
             it(`As ${userContext.name}, I shoud be able to LIST my user's events' daily feedbacks`, async () => {
-                await assertFails(getDocs(collection(userContext.context().firestore(), '/users/fred/events/dvbe23/days/monday/feedbacks')));
+                await assertFails(getDocs(collection(userContext.context().firestore(), '/users/fred/events/an-event/days/monday/feedbacks')));
             })
             it(`As ${userContext.name}, I shoud be able to GET my user's events' daily feedbacks`, async () => {
-                await assertSucceeds(getDoc(doc(userContext.context().firestore(), '/users/fred/events/dvbe23/days/monday/feedbacks/self')));
+                await assertSucceeds(getDoc(doc(userContext.context().firestore(), '/users/fred/events/an-event/days/monday/feedbacks/self')));
             })
             it(`As ${userContext.name}, I shoud not be able to CREATE my user's events' daily feedbacks`, async () => {
-                await assertSucceeds(setDoc(doc(userContext.context().firestore(), '/users/fred/events/dvbe23/days/monday/feedbacks/self'), { dayId: 'monday', feedbacks: [] }));
+                await assertSucceeds(setDoc(doc(userContext.context().firestore(), '/users/fred/events/an-event/days/monday/feedbacks/self'), { dayId: 'monday', feedbacks: [] }));
             })
             it(`As ${userContext.name}, I should not be able to UPDATE my user's events' daily feedbacks`, async () => {
-                await assertSucceeds(updateDoc(doc(userContext.context().firestore(), '/users/fred/events/dvbe23/days/monday/feedbacks/self'), { dayId: 'monday', feedbacks: [] }))
+                await assertSucceeds(updateDoc(doc(userContext.context().firestore(), '/users/fred/events/an-event/days/monday/feedbacks/self'), { dayId: 'monday', feedbacks: [] }))
             })
             it(`As ${userContext.name}, I should not be able to DELETE my user's events' daily feedbacks`, async () => {
-                await assertFails(deleteDoc(doc(userContext.context().firestore(), '/users/fred/events/dvbe23/days/monday/feedbacks/self')));
+                await assertFails(deleteDoc(doc(userContext.context().firestore(), '/users/fred/events/an-event/days/monday/feedbacks/self')));
             })
         }
     }
 }, {
     name: "/event-family-tokens",
     aroundTests: (userContext: UserContext) => ({
-        beforeEach: [
-            adminFirestore.doc('/event-family-tokens/a-family').set({ families: ['devoxx'], token: 'd54411a2-4ceb-4c3f-a014-41e9426235ed' }),
-        ],
-        afterEach: [
-            adminFirestore.doc(`/event-family-tokens/a-family`).delete(),
-        ]
+        beforeEach: [],
+        afterEach: [],
     }),
     tests: (userContext: UserContext) => {
         it(`As ${userContext.name}, I should not be able to LIST event family tokens`, async () => {
@@ -524,12 +516,8 @@ const COLLECTIONS: CollectionDescriptor[] = [{
 }, {
     name: "/crawlers",
     aroundTests: (userContext: UserContext) => ({
-        beforeEach: [
-            adminFirestore.doc('/crawlers/a-crawler').set({ crawlingKeys: [ '8bb30ecd-24f0-402b-9ff1-15d9826262dd' ], descriptorUrl: 'https://path-to-descriptor.json', kind: 'devoxx', stopAutoCrawlingAfter: '2023-09-01T00:00:00Z' }),
-        ],
-        afterEach: [
-            adminFirestore.doc(`/crawlers/a-crawler`).delete(),
-        ]
+        beforeEach: [],
+        afterEach: [],
     }),
     tests: (userContext: UserContext) => {
         it(`As ${userContext.name}, I should not be able to LIST crawlers`, async () => {
@@ -551,12 +539,8 @@ const COLLECTIONS: CollectionDescriptor[] = [{
 }, {
     name: "/schema-migrations",
     aroundTests: (userContext: UserContext) => ({
-        beforeEach: [
-            adminFirestore.doc('/schema-migrations/self').set({ migrations: []}),
-        ],
-        afterEach: [
-            adminFirestore.doc(`/schema-migrations/self`).delete(),
-        ]
+        beforeEach: [],
+        afterEach: [],
     }),
     tests: (userContext: UserContext) => {
         it(`As ${userContext.name}, I should not be able to LIST schema migrations`, async () => {
@@ -573,6 +557,213 @@ const COLLECTIONS: CollectionDescriptor[] = [{
         })
         it(`As ${userContext.name}, I should not be able to DELETE schema migration`, async () => {
             await assertFails(deleteDoc(doc(userContext.context().firestore(), '/schema-migrations/self')));
+        })
+    }
+}, {
+    name: "/events",
+    aroundTests: (userContext: UserContext) => ({
+        beforeEach: [],
+        afterEach: [],
+    }),
+    tests: (userContext: UserContext) => {
+        it(`As ${userContext.name}, I should be able to LIST events`, async () => {
+            await assertSucceeds(getDocs(collection(userContext.context().firestore(), '/events')));
+        })
+        it(`As ${userContext.name}, I should be able to GET events`, async () => {
+            await assertSucceeds(getDoc(doc(userContext.context().firestore(), '/events/an-event')));
+        })
+        it(`As ${userContext.name}, I should not be able to CREATE event`, async () => {
+            await assertFails(setDoc(doc(userContext.context().firestore(), '/events/another-event'), { title: `Another super event` }));
+        })
+        it(`As ${userContext.name}, I should not be able to UPDATE event`, async () => {
+            await assertFails(updateDoc(doc(userContext.context().firestore(), '/events/an-event'), { title: `A super updated event` }));
+        })
+        it(`As ${userContext.name}, I should not be able to DELETE event`, async () => {
+            await assertFails(deleteDoc(doc(userContext.context().firestore(), '/events/an-event')));
+        })
+    }
+}, {
+    name: "/events/{eventId}/days",
+    aroundTests: (userContext: UserContext) => ({
+        beforeEach: [],
+        afterEach: [],
+    }),
+    tests: (userContext: UserContext) => {
+        it(`As ${userContext.name}, I should be able to LIST events' days`, async () => {
+            await assertSucceeds(getDocs(collection(userContext.context().firestore(), '/events/an-event/days')));
+        })
+        it(`As ${userContext.name}, I should be able to GET events' days`, async () => {
+            await assertSucceeds(getDoc(doc(userContext.context().firestore(), '/events/an-event/days/monday')));
+        })
+        it(`As ${userContext.name}, I should not be able to CREATE events' days`, async () => {
+            await assertFails(setDoc(doc(userContext.context().firestore(), '/events/an-event/days/tuesday'), { day: 'tuesday', timeSlots: [] }));
+        })
+        it(`As ${userContext.name}, I should not be able to UPDATE events' days`, async () => {
+            await assertFails(updateDoc(doc(userContext.context().firestore(), '/events/an-event/days/monday'), { day: 'monday', timeSlots: [] }));
+        })
+        it(`As ${userContext.name}, I should not be able to DELETE events' days`, async () => {
+            await assertFails(deleteDoc(doc(userContext.context().firestore(), '/events/an-event/days/monday')));
+        })
+    }
+}, {
+    name: "/events/{eventId}/event-descriptor",
+    aroundTests: (userContext: UserContext) => ({
+        beforeEach: [],
+        afterEach: [],
+    }),
+    tests: (userContext: UserContext) => {
+        it(`As ${userContext.name}, I should not be able to LIST events' event descriptor`, async () => {
+            await assertFails(getDocs(collection(userContext.context().firestore(), '/events/an-event/event-descriptor')));
+        })
+        it(`As ${userContext.name}, I should be able to GET events' event descriptor`, async () => {
+            await assertSucceeds(getDoc(doc(userContext.context().firestore(), '/events/an-event/event-descriptor/self')));
+        })
+        it(`As ${userContext.name}, I should not be able to CREATE events' event descriptor`, async () => {
+            await assertFails(setDoc(doc(userContext.context().firestore(), '/events/another-event/event-descriptor/self'), { title: `Another super event` }));
+        })
+        it(`As ${userContext.name}, I should not be able to UPDATE events' event descriptor`, async () => {
+            await assertFails(updateDoc(doc(userContext.context().firestore(), '/events/an-event/event-descriptor/self'), { title: `A super updated event` }));
+        })
+        it(`As ${userContext.name}, I should not be able to DELETE events' event descriptor`, async () => {
+            await assertFails(deleteDoc(doc(userContext.context().firestore(), '/events/an-event/event-descriptor/self')));
+        })
+    }
+}, {
+    name: "/events/{eventId}/talksStats",
+    aroundTests: (userContext: UserContext) => ({
+        beforeEach: [],
+        afterEach: [],
+    }),
+    tests: (userContext: UserContext) => {
+        it(`As ${userContext.name}, I should be able to LIST events' talks stats`, async () => {
+            await assertSucceeds(getDocs(collection(userContext.context().firestore(), '/events/an-event/talksStats')));
+        })
+        it(`As ${userContext.name}, I should be able to GET events' talks stats`, async () => {
+            await assertSucceeds(getDoc(doc(userContext.context().firestore(), '/events/an-event/talksStats/12345')));
+        })
+        it(`As ${userContext.name}, I should not be able to CREATE events' talks stats`, async () => {
+            await assertFails(setDoc(doc(userContext.context().firestore(), '/events/another-event/talksStats/23456'), { id: `23456`, totalFavoritesCount: 0 }));
+        })
+        it(`As ${userContext.name}, I should not be able to UPDATE events' talks stats`, async () => {
+            await assertFails(updateDoc(doc(userContext.context().firestore(), '/events/an-event/talksStats/12345'), { id: `12345`, totalFavoritesCount: 1 }));
+        })
+        it(`As ${userContext.name}, I should not be able to DELETE events' talks stats`, async () => {
+            await assertFails(deleteDoc(doc(userContext.context().firestore(), '/events/an-event/talksStats/12345')));
+        })
+    }
+}, {
+    name: "/events/{eventId}/organizer-space",
+    aroundTests: (userContext: UserContext) => ({
+        beforeEach: [],
+        afterEach: [],
+    }),
+    tests: (userContext: UserContext) => {
+        it(`As ${userContext.name}, I should not be able to LIST events' organizer spaces`, async () => {
+            await assertFails(getDocs(collection(userContext.context().firestore(), '/events/an-event/organizer-space')));
+        })
+        it(`As ${userContext.name}, I should be able to GET events' organizer space by its token`, async () => {
+            await assertSucceeds(getDoc(doc(userContext.context().firestore(), '/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472')));
+        })
+        it(`As ${userContext.name}, I should not be able to CREATE events' organizer space`, async () => {
+            await assertFails(setDoc(doc(userContext.context().firestore(), '/events/another-event/organizer-space/d05d6d61-53c4-496c-9269-795a30b70443'), { organizerSecretToken: `d05d6d61-53c4-496c-9269-795a30b70443`, talkFeedbackViewerTokens: [] }));
+        })
+        it(`As ${userContext.name}, I should not be able to UPDATE events' organizer space`, async () => {
+            await assertFails(updateDoc(doc(userContext.context().firestore(), '/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472'), { organizerSecretToken: `6c902c52-9c6d-4d54-b6f2-20814d2f8472`, talkFeedbackViewerTokens: [] }));
+        })
+        it(`As ${userContext.name}, I should not be able to DELETE events' organizer space`, async () => {
+            await assertFails(deleteDoc(doc(userContext.context().firestore(), '/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472')));
+        })
+    }
+}, {
+    name: "/events/{eventId}/last-updates",
+    aroundTests: (userContext: UserContext) => ({
+        beforeEach: [],
+        afterEach: [],
+    }),
+    tests: (userContext: UserContext) => {
+        it(`As ${userContext.name}, I should not be able to LIST events' organizer spaces`, async () => {
+            await assertFails(getDocs(collection(userContext.context().firestore(), '/events/an-event/last-updates')));
+        })
+        it(`As ${userContext.name}, I should be able to GET events' organizer space by its token`, async () => {
+            await assertSucceeds(getDoc(doc(userContext.context().firestore(), '/events/an-event/last-updates/self')));
+        })
+        it(`As ${userContext.name}, I should not be able to CREATE events' organizer space`, async () => {
+            await assertFails(setDoc(doc(userContext.context().firestore(), '/events/another-event/last-updates/self'), { favorites: '2023-09-01T00:00:00Z' }));
+        })
+        it(`As ${userContext.name}, I should not be able to UPDATE events' organizer space`, async () => {
+            await assertFails(updateDoc(doc(userContext.context().firestore(), '/events/an-event/last-updates/self'), { favorites: '2023-09-05T00:00:00Z' }));
+        })
+        it(`As ${userContext.name}, I should not be able to DELETE events' organizer space`, async () => {
+            await assertFails(deleteDoc(doc(userContext.context().firestore(), '/events/an-event/last-updates/self')));
+        })
+    }
+}, {
+    name: "/events/{eventId}/talks",
+    aroundTests: (userContext: UserContext) => ({
+        beforeEach: [],
+        afterEach: [],
+    }),
+    tests: (userContext: UserContext) => {
+        it(`As ${userContext.name}, I should be able to LIST events' talks`, async () => {
+            await assertSucceeds(getDocs(collection(userContext.context().firestore(), '/events/an-event/talks')));
+        })
+        it(`As ${userContext.name}, I should be able to GET events' talks`, async () => {
+            await assertSucceeds(getDoc(doc(userContext.context().firestore(), '/events/an-event/talks/1234')));
+        })
+        it(`As ${userContext.name}, I should not be able to CREATE events' talks`, async () => {
+            await assertFails(setDoc(doc(userContext.context().firestore(), '/events/an-event/talks/2345'), {  id: '2345', title: 'Another super talk' }));
+        })
+        it(`As ${userContext.name}, I should not be able to UPDATE events' talks`, async () => {
+            await assertFails(updateDoc(doc(userContext.context().firestore(), '/events/an-event/talks/1234'), {  id: '1234', title: 'A super updated talk' }));
+        })
+        it(`As ${userContext.name}, I should not be able to DELETE events' talks`, async () => {
+            await assertFails(deleteDoc(doc(userContext.context().firestore(), '/events/an-event/talks/1234')));
+        })
+    }
+}, {
+    name: "/events/{eventId}/talks/{talkId}/feedbacks-access",
+    aroundTests: (userContext: UserContext) => ({
+        beforeEach: [],
+        afterEach: [],
+    }),
+    tests: (userContext: UserContext) => {
+        it(`As ${userContext.name}, I should not be able to LIST events' talks feedbacks access`, async () => {
+            await assertFails(getDocs(collection(userContext.context().firestore(), '/events/an-event/talks/1234/feedbacks-access')));
+        })
+        it(`As ${userContext.name}, I should be able to GET events' talks feedbacks access`, async () => {
+            await assertSucceeds(getDoc(doc(userContext.context().firestore(), '/events/an-event/talks/1234/feedbacks-access/1f0b405a-c3ba-46df-8d02-cce03bc34e5d')));
+        })
+        it(`As ${userContext.name}, I should not be able to CREATE events' talks feedbacks access`, async () => {
+            await assertFails(setDoc(doc(userContext.context().firestore(), '/events/an-event/talks/2345/feedbacks-access/9f8b0440-8819-48eb-9974-87b69049f132'), { }));
+        })
+        it(`As ${userContext.name}, I should not be able to UPDATE events' talks feedbacks access`, async () => {
+            await assertFails(updateDoc(doc(userContext.context().firestore(), '/events/an-event/talks/1234/feedbacks-access/1f0b405a-c3ba-46df-8d02-cce03bc34e5d'), { }));
+        })
+        it(`As ${userContext.name}, I should not be able to DELETE events' talks feedbacks access`, async () => {
+            await assertFails(deleteDoc(doc(userContext.context().firestore(), '/events/an-event/talks/1234/feedbacks-access/1f0b405a-c3ba-46df-8d02-cce03bc34e5d')));
+        })
+    }
+}, {
+    name: "/events/{eventId}/talks/{talkId}/feedbacks-access/{secretFeedbackViewerToken}/feedbacks",
+    aroundTests: (userContext: UserContext) => ({
+        beforeEach: [],
+        afterEach: [],
+    }),
+    tests: (userContext: UserContext) => {
+        it(`As ${userContext.name}, I should be able to LIST events' talks feedbacks`, async () => {
+            await assertSucceeds(getDocs(collection(userContext.context().firestore(), '/events/an-event/talks/1234/feedbacks-access/1f0b405a-c3ba-46df-8d02-cce03bc34e5d/feedbacks')));
+        })
+        it(`As ${userContext.name}, I should be able to GET events' talks feedbacks`, async () => {
+            await assertSucceeds(getDoc(doc(userContext.context().firestore(), '/events/an-event/talks/1234/feedbacks-access/1f0b405a-c3ba-46df-8d02-cce03bc34e5d/feedbacks/de25005c-de05-48bd-9ae4-4768933eeeb0')));
+        })
+        it(`As ${userContext.name}, I should not be able to CREATE events' talks feedbacks`, async () => {
+            await assertFails(setDoc(doc(userContext.context().firestore(), '/events/an-event/talks/2345/feedbacks-access/9f8b0440-8819-48eb-9974-87b69049f132/feedbacks/8bf30db6-cb2a-461b-82be-45baf307fd8f'), { attendeePublicToken: '8bf30db6-cb2a-461b-82be-45baf307fd8f', talkId: '2345' }));
+        })
+        it(`As ${userContext.name}, I should not be able to UPDATE events' talks feedbacks`, async () => {
+            await assertFails(updateDoc(doc(userContext.context().firestore(), '/events/an-event/talks/1234/feedbacks-access/1f0b405a-c3ba-46df-8d02-cce03bc34e5d/feedbacks/de25005c-de05-48bd-9ae4-4768933eeeb0'), { attendeePublicToken: 'de25005c-de05-48bd-9ae4-4768933eeeb0', talkId: '1234' }));
+        })
+        it(`As ${userContext.name}, I should not be able to DELETE events' talks feedbacks`, async () => {
+            await assertFails(deleteDoc(doc(userContext.context().firestore(), '/events/an-event/talks/1234/feedbacks-access/1f0b405a-c3ba-46df-8d02-cce03bc34e5d/feedbacks/de25005c-de05-48bd-9ae4-4768933eeeb0')));
         })
     }
 }];

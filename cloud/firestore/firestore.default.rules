@@ -34,65 +34,75 @@ service cloud.firestore {
 
     match /events/{event} {
       allow read: if true;
-      match /talksStats/{talkId} {
-        allow read: if true;
-      }
+      allow write: if false;
+
       match /days/{dayId} {
         allow read: if true;
+        allow write: if false;
       }
+
       match /event-descriptor/self {
-        allow read: if true;
+        allow get: if true;
+        allow list, write: if false;
       }
-      match /last-updates/self {
+
+      match /talksStats/{talkId} {
         allow read: if true;
+        allow write: if false;
       }
+
       match /organizer-space/{secretOrganizerToken} {
         allow get: if true;
-        allow list: if false;
+        allow list, write: if false;
       }
+
+      match /last-updates/self {
+        allow get: if true;
+        allow list, write: if false;
+      }
+
       match /talks/{talkId} {
         allow read: if true;
+        allow write: if false;
+
         match /feedbacks-access/{secretFeedbackViewerToken} {
           allow get: if true;
-          allow list: if false;
+          allow list, write: if false;
+
           match /feedbacks/{userPublicToken} {
           	allow read: if true;
+          	allow write: if false;
           }
         }
-      }
-      match /talksStats/{talkId} {
-      	allow read: if true;
       }
     }
 
     match /users/{userId} {
-      allow list: if false;
+      allow list, create, delete: if false;
     	allow get: if iAm(userId);
-    	allow create: if false;
     	allow update: if iAm(userId) && onlyAllowedUpdatedFields(["userLastConnection"]);
-      allow delete: if false;
 
       match /preferences/self {
-        allow read, create, update: if iAm(userId);
-        allow delete: if false;
+        allow get, create, update: if iAm(userId);
+        allow delete, list: if false;
       }
       match /tokens-wallet/self {
-        allow read, create, update: if iAm(userId);
-        allow delete: if false;
+        allow get, create, update: if iAm(userId);
+        allow delete, list: if false;
       }
       match /events/{eventId} {
-        allow read, create, update: if iAm(userId);
+        allow get, list, create, update: if iAm(userId);
         allow delete: if false;
 
         match /__computed/self {
           allow read, write: if fase;
         }
-        match /talkNotes/{talkId} {
-          allow read, create, update: if iAm(userId);
+        match /talksNotes/{talkId} {
+          allow get, list, create, update: if iAm(userId);
           allow delete: if false;
         }
         match /days/{dayId} {
-          allow read, create, update: if iAm(userId);
+          allow get, list, create, update: if iAm(userId);
           allow delete: if false;
 
           match /feedbacks/self {
