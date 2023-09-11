@@ -4,9 +4,9 @@ import {db} from "../../firebase";
 import {ISODatetime} from "../../../../../shared/type-utils";
 import {
     createExistingUsersTokensWallet
-} from "../firestore/migrations/createExistingUsersTokensWallet";
-import {createExistingUsersInfos} from "../firestore/migrations/createExistingUsersInfos";
-import {addUserIdInTokenWallet} from "../firestore/migrations/addUserIdInTokenWallet";
+} from "../firestore/migrations/000-createExistingUsersTokensWallet";
+import {createExistingUsersInfos} from "../firestore/migrations/001-createExistingUsersInfos";
+import {addUserIdInTokenWallet} from "../firestore/migrations/002-addUserIdInTokenWallet";
 
 /**
  * Like Flyway, but for firestore :-)
