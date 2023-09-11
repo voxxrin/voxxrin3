@@ -1,25 +1,19 @@
 <template>
   <div v-if="pinnedEvents.length > 0" class="pinnedEventsContainer">
     <ion-list class="pinnedEvents">
-      <!-- TODO Add class sticky-divider when element is sticky -->
-      <div v-if="pastEvents.length > 0 && ongoingAndFutureEvents.length > 0" class="pinnedEventsDivider"
-           :class="{ 'sticky-divider': isStickyFuture }">
-        <span>events <strong>Future</strong></span>
-        <ion-icon src="/assets/icons/line/arrow-left-line.svg"></ion-icon>
-      </div>
-
-      <pinned-event :pinned-event="pinnedEvent" @click="$emit('event-selected', pinnedEvent)"
-                    v-for="(pinnedEvent, index) in ongoingAndFutureEvents" :key="pinnedEvent.id.value"></pinned-event>
-
-      <!-- TODO Add class sticky-divider when element is sticky -->
-      <div v-if="pastEvents.length > 0 && ongoingAndFutureEvents.length > 0" class="pinnedEventsDivider"
-           :class="{ 'sticky-divider': isStickyOngoing }">
+      <div v-if="pastEvents.length > 0 && ongoingAndFutureEvents.length > 0" class="pinnedEventsDivider">
         <span>events <strong>Ongoing</strong></span>
-        <ion-icon src="/assets/icons/line/arrow-left-line.svg"></ion-icon>
       </div>
 
       <pinned-event :pinned-event="pinnedEvent" @click="$emit('event-selected', pinnedEvent)"
                     v-for="(pinnedEvent, index) in pastEvents" :key="pinnedEvent.id.value"></pinned-event>
+
+      <div v-if="pastEvents.length > 0 && ongoingAndFutureEvents.length > 0" class="pinnedEventsDivider">
+        <span>events <strong>Future</strong></span>
+      </div>
+
+      <pinned-event :pinned-event="pinnedEvent" @click="$emit('event-selected', pinnedEvent)"
+                    v-for="(pinnedEvent, index) in ongoingAndFutureEvents" :key="pinnedEvent.id.value"></pinned-event>
     </ion-list>
   </div>
   <div v-else>
@@ -69,39 +63,42 @@ const ongoingAndFutureEvents = computed(() =>
   display: inline-flex;
   flex-direction: row;
   column-gap: var(--app-gutters);
-  padding: 0 var(--app-gutters);
+  padding: 0;
   background: transparent;
   contain: initial;
 }
 
 .pinnedEventsDivider {
   display: inline-flex;
+  align-items: end;
   justify-content: space-between;
   column-gap: 8px;
   position: sticky;
   left: 0;
   top: 0;
-  width: 34px;
-  height: 268px;
-  margin: 16px 4px;
+  width: 40px;
+  height: 296px;
   line-height: 0.9;
-  border-radius: 34px 0 16px 16px;
-  background-color: var(--app-white);
-  padding: 24px 8px 8px 8px;
-  border: 1px solid var(--app-beige-line);
+  background: linear-gradient(180deg, rgba(238,238,238,1) 46%, rgba(238,238,238,0) 100%);
+  padding: 24px 8px 8px 12px;
   writing-mode: vertical-rl;
   text-orientation: mixed;
   z-index: 4;
   transition: 140ms ease-in-out;
+  backdrop-filter: blur(2px);
 
-  ion-icon {
-    color: var(--app-grey-medium);
+  &:after {
+    position: absolute;
+    top: 0;
+    right: -1px;
+    width: 1px;
+    height: 100%;
+    background: linear-gradient(180deg, var(--app-beige-line) 46%, rgba(0,0,0,0) 100%);
+    content: '';
   }
 
-  &.sticky-divider {
-    transition: 140ms ease-in-out;
-    border-radius: 0 0 0 0;
-    box-shadow: rgba(0, 0, 0, 0.15) 7px 0 7px;
+  @media (prefers-color-scheme: dark) {
+    background: linear-gradient(180deg, var(--app-primary) 46%, rgba(0,0,0,0) 100%);
   }
 
   &:first-child {

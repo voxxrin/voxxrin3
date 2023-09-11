@@ -65,5 +65,9 @@ const ongoingAndFutureEvents = computed(() => props.events
     padding: var(--app-gutters);
     font-weight: 900;
     z-index: 5;
+
+    @media (prefers-color-scheme: dark) {
+      background-color: var(--app-primary);
+    }
   }
 </style>
