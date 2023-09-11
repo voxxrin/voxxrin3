@@ -1,6 +1,6 @@
 <template>
     <ion-item class="eventItem" :class="{'_is-pined' : isPinnedRef}" v-if="event"
-              v-themed-event-styles="event" @click="$emit('event-clicked', event)">
+              v-themed-event-styles="event">
       <ion-ripple-effect type="bounded"></ion-ripple-effect>
       <div class="eventItem-logoContainer">
         <div class="logo">
@@ -30,6 +30,12 @@
           <ion-icon src="/assets/icons/line/pin-line.svg" v-if="!isPinnedRef"></ion-icon>
           <ion-icon class="_is-pined" src="/assets/icons/solid/pin.svg" v-if="isPinnedRef"></ion-icon>
         </ion-button>
+      </div>
+
+      <div class="eventItem-dot" slot="end" @click="$emit('event-clicked', event)">
+        <span class="eventItem-dot-click">
+          <ion-icon src="/assets/icons/solid/more-menu-vertical.svg"></ion-icon>
+        </span>
       </div>
     </ion-item>
 </template>
@@ -430,6 +436,29 @@ function navToEventOrganizerPage() {
 
     ._is-pined {
       color: var(--app-voxxrin) !important;
+    }
+  }
+
+  &-dot {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding-right: 20px;
+
+    &-click  {
+      position: relative;
+      height: 100%;
+      width: 12px;
+
+      ion-icon {
+        position: absolute;
+        top: 0;
+        left: -14px;
+        height: 100%;
+        width: 38px;
+        font-size: 40px;
+        color: var(--app-beige-dark);
+      }
     }
   }
 }
