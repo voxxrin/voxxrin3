@@ -93,7 +93,7 @@
 
 <script setup lang="ts">
 import {goBackOrNavigateTo} from "@/router";
-import {useIonRouter, IonProgressBar} from "@ionic/vue";
+import {useIonRouter, IonProgressBar, IonCol, IonRow } from "@ionic/vue";
 import {useTalkFeedbacks} from "@/state/useTalkFeedbacks";
 import {useRoute} from "vue-router";
 import {EventId} from "@/models/VoxxrinEvent";
