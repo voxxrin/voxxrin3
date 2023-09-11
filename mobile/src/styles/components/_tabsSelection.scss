@@ -1,0 +1,29 @@
+.tabsSelection {
+  display: flex;
+  align-items: center;
+  height: 54px;
+  padding: 0 8px;
+  border-radius: 0;
+  border-top: 1px solid var(--app-beige-line);
+  border-bottom: 1px solid var(--app-beige-line);
+  background: var(--app-white);
+
+  ion-segment-button {
+    --border-radius: 54px;
+    --border-width: 0;
+    font-weight: 900;
+    font-size: 16px;
+    height: 38px;
+    color: var(--app-voxxrin);
+    --indicator-color: var(--app-voxxrin);
+    --indicator-box-shadow: none;
+
+    .segment-button-indicator {
+      background: none;
+    }
+
+    &.segment-button-checked {
+      color: white;
+    }
+  }
+}

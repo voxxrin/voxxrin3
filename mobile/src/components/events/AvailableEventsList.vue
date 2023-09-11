@@ -1,12 +1,17 @@
 <template>
   <div v-if="events.length>0">
     <ion-list>
+      <div v-if="pastEvents.length>0 && ongoingAndFutureEvents.length>0" class="eventsDivider">
+        Future events
+      </div>
       <available-event-item :pinned-events="pinnedEvents" v-for="(event, index) in ongoingAndFutureEvents" :key="event.id.value"
               :event="event"
               @event-pin-toggled="(ev, transitionType) => $emit('event-pin-toggled', ev, transitionType)"
               @event-clicked="$emit('event-clicked', $event)">
       </available-event-item>
-      <div v-if="pastEvents.length>0 && ongoingAndFutureEvents.length>0" style="height: 2px; background-color: var(--app-voxxrin)"></div>
+      <div v-if="pastEvents.length>0 && ongoingAndFutureEvents.length>0" class="eventsDivider">
+        Ongoing events
+      </div>
       <available-event-item :pinned-events="pinnedEvents" v-for="(event, index) in pastEvents" :key="event.id.value"
               :event="event"
               @event-pin-toggled="(ev, transitionType) => $emit('event-pin-toggled', ev, transitionType)"
@@ -52,5 +57,13 @@ const ongoingAndFutureEvents = computed(() => props.events
 </script>
 
 <style lang="scss" scoped>
-
+  .eventsDivider {
+    position: sticky;
+    top: 120px;
+    background-color: var(--app-beige-medium);
+    border-bottom: 1px solid  var(--app-beige-line);
+    padding: var(--app-gutters);
+    font-weight: 900;
+    z-index: 5;
+  }
 </style>

@@ -18,13 +18,13 @@
           <ion-icon aria-hidden="true" src="/assets/icons/line/search-line.svg"></ion-icon>
         </ion-input>
 
-        <ion-toggle :enable-on-off-labels="true"
+        <!-- <ion-toggle :enable-on-off-labels="true"
                     labelPlacement="end"
                     @ionChange="(ev) => includePastEventUpdated(ev.target.checked)"
                     :checked="userPreferences?.showPastEvents"
                    class="conferenceToggle">
           <span class="conferenceToggle-label">{{ LL.Past_events() }}</span>
-        </ion-toggle>
+        </ion-toggle> -->
       </ion-header>
 
       <div class="conferenceContent">
@@ -41,7 +41,15 @@
           </template>
         </pinned-event-selector>
 
-        <ion-item-divider class="stickyDivider" sticky>All conferences</ion-item-divider>
+        <ion-segment value="future" class="tabsSelection _sticky">
+          <ion-segment-button value="future">
+            <ion-label>Future</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="past">
+            <ion-label>Past</ion-label>
+          </ion-segment-button>
+        </ion-segment>
+
         <available-events-list
             class="availableEventsList"
             :events="filteredAvailableEvents" @event-clicked="(event) => showEventActions(event)"
@@ -235,6 +243,15 @@ function eventPinToggled(event: ListableVoxxrinEvent, transitionType: 'unpinned-
   }
 
   .conferenceContent {
+
+    .tabsSelection {
+      &._sticky {
+        position: sticky;
+        top: 68px;
+        z-index: 4;
+      }
+    }
+
     ion-item-divider {
       --padding-top: var( --app-gutters-medium);
       --padding-bottom: var( --app-gutters-medium);
@@ -246,7 +263,7 @@ function eventPinToggled(event: ListableVoxxrinEvent, transitionType: 'unpinned-
       font-weight: bold;
 
       &.stickyDivider {
-        top: 68px;
+        top: 128px;
       }
 
       @media (prefers-color-scheme: dark) {
