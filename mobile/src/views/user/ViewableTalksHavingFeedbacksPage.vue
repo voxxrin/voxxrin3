@@ -11,12 +11,15 @@
         </ion-toolbar>
       </ion-header>
 
-      <div class="schedule-talk-event"  v-for="(feedbackViewerTalk, index) in feedbackViewerTalksRef" :key="feedbackViewerTalk.detailedTalk.id.value">
-        <span class="schedule-talk-event-title">{{feedbackViewerTalk.confDescriptor.headingTitle}}</span>
-        <schedule-talk :conf-descriptor="feedbackViewerTalk.confDescriptor" :is-highlighted="() => false" :talk="feedbackViewerTalk.detailedTalk"
-                       @click="$router.push(`/user/events/${feedbackViewerTalk.token.eventId.value}/talks/${feedbackViewerTalk.token.talkId.value}/asFeedbackViewer/${feedbackViewerTalk.token.secretToken}`)">
+      <div class="schedule-talk-event"  v-for="(eventTalksGroup, index) in talksGroupedByEventRef" :key="eventTalksGroup.confDescriptor.id.value"
+           v-themed-event-styles="eventTalksGroup.confDescriptor">
+        <span class="schedule-talk-event-title">{{eventTalksGroup.confDescriptor.headingTitle}}</span>
+
+        <schedule-talk v-for="(feedbackViewerTalk, index) in eventTalksGroup.talks" :key="feedbackViewerTalk.detailedTalk.id.value"
+                :conf-descriptor="eventTalksGroup.confDescriptor" :is-highlighted="() => false" :talk="feedbackViewerTalk.detailedTalk"
+                @click="$router.push(`/user/events/${feedbackViewerTalk.token.eventId.value}/talks/${feedbackViewerTalk.token.talkId.value}/asFeedbackViewer/${feedbackViewerTalk.token.secretToken}`)">
           <template #upper-right="{ talk }">
-            {{feedbackViewerTalk.confDescriptor.headingTitle}}
+            {{eventTalksGroup.confDescriptor.headingTitle}}
           </template>
           <template #footer-actions="{ talk, userTalkHook }">
           </template>
@@ -31,7 +34,7 @@
 import {goBackOrNavigateTo} from "@/router";
 import {useIonRouter} from "@ionic/vue";
 import {useUserTokensWallet} from "@/state/useUserTokensWallet";
-import {ref, watch} from "vue";
+import {computed, ref, unref, watch} from "vue";
 import {VoxxrinUserTokensWallet} from "@/models/VoxxrinUser";
 import {VoxxrinDetailedTalk} from "@/models/VoxxrinTalk";
 import {fetchTalkDetails} from "@/services/DetailedTalks";
@@ -41,6 +44,7 @@ import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor"
 import ScheduleTalk from "@/components/talk-card/ScheduleTalk.vue";
 import {sortBy} from "@/models/utils";
 import {typesafeI18n} from "@/i18n/i18n-vue";
+import {match} from "ts-pattern";
 
 const ionRouter = useIonRouter();
 
@@ -86,13 +90,37 @@ watch([userTokensWalletRef], async ([userTokensWallet]) => {
 
   feedbackViewerTalksRef.value = sortBy(talkWithFeedbacks, twf => -twf.confDescriptor.start.epochMilliseconds);
 })
+
+type EventTalksGroup = {
+  confDescriptor: VoxxrinConferenceDescriptor,
+  talks: FeedbackViewerTalk[]
+}
+const talksGroupedByEventRef = computed(() => {
+  const feedbackViewerTalks = unref(feedbackViewerTalksRef);
+
+  return feedbackViewerTalks.reduce((talkGroups, talk) => {
+    const talkGroup = match(talkGroups.find(group => group.confDescriptor.id.isSameThan(talk.confDescriptor.id)))
+        .with(undefined, () => {
+          const talkGroup: EventTalksGroup = {
+            confDescriptor: talk.confDescriptor,
+            talks: []
+          }
+          talkGroups.push(talkGroup);
+          return talkGroup;
+        }).otherwise((existingTalkGroup) => existingTalkGroup)
+
+    talkGroup.talks.push(talk);
+
+    return talkGroups;
+  }, [] as EventTalksGroup[])
+})
+
 </script>
 
 <style lang="scss" scoped>
 
-/* TODO Add background event */
 .schedule-talk-event {
-  background-color: var(--app-voxxrin);
+  background-color: var(--voxxrin-event-theme-colors-primary-hex);
   margin: 16px;
   padding: 8px 4px;
   border-radius: 16px;
