@@ -47,8 +47,9 @@ export function useUserTokensWallet() {
             return undefined;
         }
 
-        return {
+        const walletEntry: VoxxrinUserTokensWallet = {
             publicUserToken: firestoreUserTokensWallet.publicUserToken,
+            privateUserId: firestoreUserTokensWallet.privateUserId,
             secretTokens: {
                 eventOrganizerTokens: firestoreUserTokensWallet.secretTokens.eventOrganizerTokens.map(fsOrgToken => ({
                     ...fsOrgToken,
@@ -61,6 +62,7 @@ export function useUserTokensWallet() {
                 })),
             }
         }
+        return walletEntry;
     })
 
     const registerEventOrganizerSecretToken = async (eventOrganizerSecretToken: EventOrganizerSecretToken) => {
@@ -85,10 +87,26 @@ export function useUserTokensWallet() {
         await updateDoc(firestoreUserTokensWalletDoc, "secretTokens.talkFeedbacksViewerTokens", arrayUnion(talkFeedbacksViewerSecretToken));
     }
 
+    const talkFeedbackViewerTokensRefForEvent = (eventIdRef: Unreffable<EventId|undefined>) => {
+        return computed(() => {
+            const userTokensWallet = unref(voxxrinUserTokensWallet);
+            const eventId = unref(eventIdRef);
+
+            if(!userTokensWallet || !eventId) {
+                return undefined;
+            }
+
+            return userTokensWallet.secretTokens.talkFeedbacksViewerTokens.filter(
+                t => t.eventId.isSameThan(eventId)
+            )
+        })
+    }
+
     return {
         userTokensWalletRef: voxxrinUserTokensWallet,
         registerEventOrganizerSecretToken,
         registerTalkFeedbacksViewerSecretToken,
+        talkFeedbackViewerTokensRefForEvent,
         organizerTokenRefForEvent: (eventIdRef: Unreffable<EventId|undefined>) => {
             return computed(() => {
                 const userTokensWallet = unref(voxxrinUserTokensWallet);

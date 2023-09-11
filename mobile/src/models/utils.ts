@@ -79,3 +79,17 @@ export function createTypedCustomEventClass<D, EVENT_TYPE extends string = strin
         }
     }
 }
+
+export function numberArrayStats(values: Array<number | undefined | null>) {
+    const count = values.length;
+    const nonNullishValues = values.filter(v => !!v && v !== 0) as number[];
+    const nonNullishCount = nonNullishValues.length;
+    const nonNullishSum = nonNullishValues.reduce((sum, value) => sum+value, 0);
+    return {
+        count,
+        nonNullishValues,
+        nonNullishCount,
+        nonNullishSum: nonNullishCount===0?undefined:nonNullishSum,
+        nonNullishAverage: nonNullishCount===0?undefined:Math.round(nonNullishSum*100/nonNullishCount)/100
+    }
+}

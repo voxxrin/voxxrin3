@@ -63,7 +63,20 @@ const en = {
 	Talks_Config: "Talks",
 	Open_full_version_of_the_schedule: "Open full version of the schedule",
 	Here: "here",
-	Feedbacks_are_not_enabled_on_this_event: "Feedbacks are not enabled on this event"
+	Feedbacks_are_not_enabled_on_this_event: "Feedbacks are not enabled on this event",
+	Talk_Feedbacks: "Talk Feedbacks",
+	Detailed_Feedbacks: "Detailed Feedbacks",
+	Last_updated: "Last updated",
+	Who: "Who",
+	Linear_rating: "Linear rating",
+	Bingo: "Bingo",
+	Custom_rating: "Custom rating",
+	Stats: "Stats",
+	Number_of_Feedbacks: "Number of feedbacks",
+	Average_linear_ratings: "Average linear ratings",
+	votes: "votes",
+	Private_Bingo: "Private Bingo",
+	My_talks_with_Feedbacks: "My talks with feedbacks",
 } satisfies BaseTranslation
 
 export default en

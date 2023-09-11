@@ -251,6 +251,10 @@ const hasMissingFeedback = computed(() => {
           width: 100%;
         }
 
+        &-date {
+          position: absolute;
+        }
+
         &-schedule {
           display: flex;
           align-items: center;

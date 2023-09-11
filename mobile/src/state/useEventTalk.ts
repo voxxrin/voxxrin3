@@ -5,11 +5,12 @@ import {
 import {computed, unref, watch} from "vue";
 import {DetailedTalk} from "../../../shared/daily-schedule.firestore";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
-import {collection, doc, DocumentReference} from "firebase/firestore";
+import {collection, doc, DocumentReference, getDoc} from "firebase/firestore";
 import {db} from "@/state/firebase";
 import {Unreffable} from "@/views/vue-utils";
 import {useDocument} from "vuefire";
 import {createSharedComposable} from "@vueuse/core";
+import {EventId} from "@/models/VoxxrinEvent";
 
 
 export function useEventTalk(

@@ -121,6 +121,7 @@ import TalkFavoriteButton from "@/components/talk-card/TalkFavoriteButton.vue";
 import TalkFormatGroupsBreakdown from "@/components/schedule/TalkFormatGroupsBreakdown.vue";
 import {VoxxrinTalk} from "@/models/VoxxrinTalk";
 import {useSharedEventSelectedDay} from "@/state/useEventSelectedDay";
+import {useUserTokensWallet} from "@/state/useUserTokensWallet";
 
 const props = defineProps({
     hideHeader: {
@@ -157,6 +158,9 @@ function onceDayInitializedTo(day: VoxxrinDay, availableDays: VoxxrinDay[]) {
 }
 
 const { schedule: currentSchedule } = useSchedule(confDescriptor, selectedDayId)
+
+const userTokensWallet = useUserTokensWallet();
+const talkFeedbackViewerTokensRef = userTokensWallet.talkFeedbackViewerTokensRefForEvent(eventId);
 
 const missingFeedbacksPastTimeslots = ref<MissingFeedbackPastTimeslot[]>([])
 const expandedTimeslotIds = ref<string[]>([])
@@ -199,10 +203,14 @@ async function navigateToTimeslotFeedbackCreation(timeslot: VoxxrinScheduleTimeS
 
 async function openTalkDetails(talk: VoxxrinTalk) {
     if(talk) {
-        triggerTabbedPageNavigate(`/events/${eventId.value.value}/talks/${talk.id.value}/details`, "forward", "push");
+        const talkFeedbackViewerToken = talkFeedbackViewerTokensRef.value?.find(t => t.talkId.isSameThan(talk.id));
+        const url = talkFeedbackViewerToken
+          ?`/events/${eventId.value.value}/talks/${talk.id.value}/asFeedbackViewer/${talkFeedbackViewerToken.secretToken}/details`
+          :`/events/${eventId.value.value}/talks/${talk.id.value}/details`
+
+        triggerTabbedPageNavigate(url, "forward", "push");
     }
 }
-
 
 // Crappy hack in order to have a pretty ion-fab-list closing animation
 // Basically, we need to avoid changing display:flex => none on ion-fab-list *as soon as* the ion-fab-button

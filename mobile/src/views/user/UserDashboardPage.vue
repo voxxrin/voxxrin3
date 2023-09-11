@@ -11,9 +11,17 @@
         </ion-toolbar>
       </ion-header>
 
+      <div class="userDashboard-user">
+        <div class="userDashboard-user-icon">
+          <ion-icon src="/assets/icons/line/user-line.svg"></ion-icon>
+        </div>
+        <div class="userDashboard-user-infos">
+          <strong>User uid:</strong><br/>
+          <span class="userUid">{{currentUserRef?.uid}}</span><br/>
+          <small>Please keep this token private</small>
+        </div>
+      </div>
       <div class="userDashboard-content">
-        User uid: {{currentUserRef?.uid}}<br/>
-        <em>Please keep this token private</em>
         <div class="listCardButton">
           <ion-button class="listCardButton-item" @click="$router.push(`/user/talks`)">
             <div class="listCardButton-item-icon">
@@ -75,6 +83,36 @@ registerTabbedPageNavListeners();
 
 <style lang="scss" scoped>
   .userDashboard {
+    &-user {
+      display: flex;
+      align-items: center;
+      column-gap: 16px;
+      padding: var(--app-gutters);
+      padding-bottom: 0;
+
+      &-infos {
+        .userUid {
+          font-size: 14px;
+        }
+
+        small {
+          color: var(--app-voxxrin);
+        }
+      }
+
+      &-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 54px;
+        width: 54px;
+        border-radius: 44px;
+        font-size: 28px;
+        background: var(--app-voxxrin);
+        color: var(--app-white);
+      }
+    }
+
     &-content {
       padding: var(--app-gutters);
     }

@@ -269,6 +269,58 @@ type RootTranslation = {
 	 * F​e​e​d​b​a​c​k​s​ ​a​r​e​ ​n​o​t​ ​e​n​a​b​l​e​d​ ​o​n​ ​t​h​i​s​ ​e​v​e​n​t
 	 */
 	Feedbacks_are_not_enabled_on_this_event: string
+	/**
+	 * T​a​l​k​ ​F​e​e​d​b​a​c​k​s
+	 */
+	Talk_Feedbacks: string
+	/**
+	 * D​e​t​a​i​l​e​d​ ​F​e​e​d​b​a​c​k​s
+	 */
+	Detailed_Feedbacks: string
+	/**
+	 * L​a​s​t​ ​u​p​d​a​t​e​d
+	 */
+	Last_updated: string
+	/**
+	 * W​h​o
+	 */
+	Who: string
+	/**
+	 * L​i​n​e​a​r​ ​r​a​t​i​n​g
+	 */
+	Linear_rating: string
+	/**
+	 * B​i​n​g​o
+	 */
+	Bingo: string
+	/**
+	 * C​u​s​t​o​m​ ​r​a​t​i​n​g
+	 */
+	Custom_rating: string
+	/**
+	 * S​t​a​t​s
+	 */
+	Stats: string
+	/**
+	 * N​u​m​b​e​r​ ​o​f​ ​f​e​e​d​b​a​c​k​s
+	 */
+	Number_of_Feedbacks: string
+	/**
+	 * A​v​e​r​a​g​e​ ​l​i​n​e​a​r​ ​r​a​t​i​n​g​s
+	 */
+	Average_linear_ratings: string
+	/**
+	 * v​o​t​e​s
+	 */
+	votes: string
+	/**
+	 * P​r​i​v​a​t​e​ ​B​i​n​g​o
+	 */
+	Private_Bingo: string
+	/**
+	 * M​y​ ​t​a​l​k​s​ ​w​i​t​h​ ​f​e​e​d​b​a​c​k​s
+	 */
+	My_talks_with_Feedbacks: string
 }
 
 export type TranslationFunctions = {
@@ -524,6 +576,58 @@ export type TranslationFunctions = {
 	 * Feedbacks are not enabled on this event
 	 */
 	Feedbacks_are_not_enabled_on_this_event: () => LocalizedString
+	/**
+	 * Talk Feedbacks
+	 */
+	Talk_Feedbacks: () => LocalizedString
+	/**
+	 * Detailed Feedbacks
+	 */
+	Detailed_Feedbacks: () => LocalizedString
+	/**
+	 * Last updated
+	 */
+	Last_updated: () => LocalizedString
+	/**
+	 * Who
+	 */
+	Who: () => LocalizedString
+	/**
+	 * Linear rating
+	 */
+	Linear_rating: () => LocalizedString
+	/**
+	 * Bingo
+	 */
+	Bingo: () => LocalizedString
+	/**
+	 * Custom rating
+	 */
+	Custom_rating: () => LocalizedString
+	/**
+	 * Stats
+	 */
+	Stats: () => LocalizedString
+	/**
+	 * Number of feedbacks
+	 */
+	Number_of_Feedbacks: () => LocalizedString
+	/**
+	 * Average linear ratings
+	 */
+	Average_linear_ratings: () => LocalizedString
+	/**
+	 * votes
+	 */
+	votes: () => LocalizedString
+	/**
+	 * Private Bingo
+	 */
+	Private_Bingo: () => LocalizedString
+	/**
+	 * My talks with feedbacks
+	 */
+	My_talks_with_Feedbacks: () => LocalizedString
 }
 
 export type Formatters = {}
