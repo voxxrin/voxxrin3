@@ -18,13 +18,6 @@
           <ion-icon aria-hidden="true" src="/assets/icons/line/search-line.svg"></ion-icon>
         </ion-input>
 
-        <!-- <ion-toggle :enable-on-off-labels="true"
-                    labelPlacement="end"
-                    @ionChange="(ev) => includePastEventUpdated(ev.target.checked)"
-                    :checked="userPreferences?.showPastEvents"
-                   class="conferenceToggle">
-          <span class="conferenceToggle-label">{{ LL.Past_events() }}</span>
-        </ion-toggle> -->
       </ion-header>
 
       <div class="conferenceContent">
@@ -98,7 +91,7 @@ const filteredEventFamilies = (import.meta.env.VITE_WHITE_LABEL_FILTERING_EVENT_
     .map(rawFamily => new EventFamily(rawFamily));
 const { listableEvents: availableEventsRef } = useAvailableEvents(filteredEventFamilies);
 
-const { userPreferences, pinEvent, unpinEvent, togglePastEvent } = useSharedUserPreferences();
+const { userPreferences, pinEvent, unpinEvent } = useSharedUserPreferences();
 
 const pinnedEventIdsRef = computed(() => {
     return userPreferences.value?.pinnedEventIds || [];
@@ -112,7 +105,7 @@ watch([availableEventsRef, searchTerms, pinnedEventIdsRef, userPreferences], ([a
     if(availableEvents) {
         const {events, pinnedEvents} = searchEvents(availableEvents, {
             terms: searchTerms,
-            includePastEvents: !!userPreferences?.showPastEvents
+            includePastEvents: true
         }, pinnedEventIds)
         filteredAvailableEvents.value = events;
         filteredPinnedEvents.value = pinnedEvents;
@@ -125,10 +118,6 @@ async function selectEvent(eventId: EventId) {
 
 function searchTextUpdated(searchText: string) {
     searchTerms.value = searchText;
-}
-
-function includePastEventUpdated(includePastEvents: boolean) {
-    togglePastEvent(includePastEvents);
 }
 
 async function showEventActions(event: ListableVoxxrinEvent) {
@@ -217,29 +206,6 @@ function eventPinToggled(event: ListableVoxxrinEvent, transitionType: 'unpinned-
     background-color: var(--app-background);
     backdrop-filter: blur(2px);
     z-index: 999;
-
-    .conferenceToggle {
-      display: flex;
-      --track-background-checked: var(--app-voxxrin);
-
-      @media (prefers-color-scheme: dark) {
-        --handle-background-checked: var(--app-light-contrast);
-      }
-
-      &-label {
-        font-weight: bold;
-        font-size: 13px;
-        width: 54px;
-        display: flex;
-        white-space: break-spaces;
-        color: var(--app-primary-shade);
-        line-height: 1;
-
-        @media (prefers-color-scheme: dark) {
-          color: var(--app-white);
-        }
-      }
-    }
   }
 
   .conferenceContent {

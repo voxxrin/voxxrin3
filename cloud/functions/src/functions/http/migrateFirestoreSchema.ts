@@ -7,6 +7,9 @@ import {
 } from "../firestore/migrations/000-createExistingUsersTokensWallet";
 import {createExistingUsersInfos} from "../firestore/migrations/001-createExistingUsersInfos";
 import {addUserIdInTokenWallet} from "../firestore/migrations/002-addUserIdInTokenWallet";
+import {
+    gettingRidOfUserPreferencesPastEvents
+} from "../firestore/migrations/003-gettingRidOfUserPreferencesPastEvents";
 
 /**
  * Like Flyway, but for firestore :-)
@@ -15,6 +18,7 @@ const MIGRATIONS: Migration[] = [
     { name: "createExistingUsersTokensWallet", exec: createExistingUsersTokensWallet },
     { name: "createExistingUsersInfos", exec: createExistingUsersInfos },
     { name: "addUserIdInTokenWallet", exec: addUserIdInTokenWallet },
+    { name: "gettingRidOfUserPreferencesPastEvents", exec: gettingRidOfUserPreferencesPastEvents },
 ];
 
 export type MigrationResult = "OK"|"Error";
