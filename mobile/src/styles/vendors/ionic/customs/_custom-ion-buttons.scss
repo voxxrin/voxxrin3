@@ -88,6 +88,10 @@ ion-button {
         --border-color: rgba(var(--app-white-transparent));
         --border-width: 1px;
         --border-style: solid;
+
+        @media (prefers-color-scheme: dark) {
+            --color: white;
+        }
     }
 
     /* TODO RLZ: move it to a proper place in talk actions components */

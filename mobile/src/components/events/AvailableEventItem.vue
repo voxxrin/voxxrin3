@@ -1,4 +1,5 @@
 <template>
+  <!-- TODO Add click for nav event -->
     <ion-item class="eventItem" :class="{'_is-pined' : isPinnedRef}" v-if="event"
               v-themed-event-styles="event">
       <ion-ripple-effect type="bounded"></ion-ripple-effect>
