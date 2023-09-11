@@ -35,7 +35,7 @@ const props = defineProps({
     },
     searchTerms: {
         required: false,
-        type: Object as PropType<string|undefined>
+        type: String as PropType<string|undefined>
     }
 })
 
