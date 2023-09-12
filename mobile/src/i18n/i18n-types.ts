@@ -35,10 +35,6 @@ type RootTranslation = {
 	 */
 	No_conference_registered_yet: string
 	/**
-	 * P​a​s​t​ ​e​v​e​n​t​s
-	 */
-	Past_events: string
-	/**
 	 * S​e​a​r​c​h​ ​a​ ​c​o​n​f​e​r​e​n​c​e
 	 */
 	Search_a_conference: string
@@ -321,6 +317,28 @@ type RootTranslation = {
 	 * M​y​ ​t​a​l​k​s​ ​w​i​t​h​ ​f​e​e​d​b​a​c​k​s
 	 */
 	My_talks_with_Feedbacks: string
+	/**
+	 * *​O​n​g​o​i​n​g​*​ ​e​v​e​n​t​s
+	 */
+	Ongoing_events_highlighted: string
+	/**
+	 * *​F​u​t​u​r​e​*​ ​e​v​e​n​t​s
+	 */
+	Future_events_highlighted: string
+	/**
+	 * *​P​a​s​t​*​ ​e​v​e​n​t​s
+	 */
+	Past_events_highlighted: string
+	/**
+	 * F​u​t​u​r​e​ ​e​v​e​n​t​s​ ​(​{​n​r​O​f​E​v​e​n​t​s​}​)
+	 * @param {number} nrOfEvents
+	 */
+	Future_events: RequiredParams<'nrOfEvents'>
+	/**
+	 * P​a​s​t​ ​e​v​e​n​t​s​ ​(​{​n​r​O​f​E​v​e​n​t​s​}​)
+	 * @param {number} nrOfEvents
+	 */
+	Past_events: RequiredParams<'nrOfEvents'>
 }
 
 export type TranslationFunctions = {
@@ -344,10 +362,6 @@ export type TranslationFunctions = {
 	 * No conference registered yet
 	 */
 	No_conference_registered_yet: () => LocalizedString
-	/**
-	 * Past events
-	 */
-	Past_events: () => LocalizedString
 	/**
 	 * Search a conference
 	 */
@@ -628,6 +642,26 @@ export type TranslationFunctions = {
 	 * My talks with feedbacks
 	 */
 	My_talks_with_Feedbacks: () => LocalizedString
+	/**
+	 * *Ongoing* events
+	 */
+	Ongoing_events_highlighted: () => LocalizedString
+	/**
+	 * *Future* events
+	 */
+	Future_events_highlighted: () => LocalizedString
+	/**
+	 * *Past* events
+	 */
+	Past_events_highlighted: () => LocalizedString
+	/**
+	 * Future events ({nrOfEvents})
+	 */
+	Future_events: (arg: { nrOfEvents: number }) => LocalizedString
+	/**
+	 * Past events ({nrOfEvents})
+	 */
+	Past_events: (arg: { nrOfEvents: number }) => LocalizedString
 }
 
 export type Formatters = {}

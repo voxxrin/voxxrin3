@@ -33,7 +33,7 @@ beforeAll(async () => {
     await Promise.all([
         adminFirestore.doc('/users/alice').set({ username: 'alice' }),
         adminFirestore.doc('/users/alice/tokens-wallet/self').set({ publicUserToken: '00d8b3b4-ec51-4694-865c-5e9d0f542e41' }),
-        adminFirestore.doc('/users/alice/preferences/self').set({ pinnedEventIds: [], showPastEvents: false }),
+        adminFirestore.doc('/users/alice/preferences/self').set({ pinnedEventIds: [] }),
         adminFirestore.doc('/users/alice/events/an-event').set({}),
         adminFirestore.doc('/users/alice/events/an-event/__computed/self').set({ favoritedTalkIds: [] }),
         adminFirestore.doc('/users/alice/events/an-event/talksNotes/12345').set({ note: { isFavorite: true } }),
@@ -42,7 +42,7 @@ beforeAll(async () => {
 
         adminFirestore.doc('/users/fred').set({ username: 'fred' }),
         adminFirestore.doc('/users/fred/tokens-wallet/self').set({ publicUserToken: 'c808ad21-af33-4e20-a6f8-89adc4d14d75' }),
-        adminFirestore.doc('/users/fred/preferences/self').set({ pinnedEventIds: [], showPastEvents: false }),
+        adminFirestore.doc('/users/fred/preferences/self').set({ pinnedEventIds: [] }),
         adminFirestore.doc('/users/fred/events/an-event').set({}),
         adminFirestore.doc('/users/fred/events/an-event/__computed/self').set({ favoritedTalkIds: [] }),
         adminFirestore.doc('/users/fred/events/an-event/talksNotes/12345').set({ note: { isFavorite: true } }),
@@ -225,10 +225,10 @@ const COLLECTIONS: CollectionDescriptor[] = [{
             await assertFails(getDoc(doc(userContext.context().firestore(), '/users/alice/preferences/self')));
         })
         it(`As ${userContext.name}, I should not be able to CREATE another user's preferences`, async () => {
-            await assertFails(setDoc(doc(userContext.context().firestore(), '/users/alice/preferences/self'), { showPastEvents: true }));
+            await assertFails(setDoc(doc(userContext.context().firestore(), '/users/alice/preferences/self'), { pinnedEventIds: ['1234'] }));
         })
         it(`As ${userContext.name}, I should not be able to UPDATE another user's preferences`, async () => {
-            await assertFails(updateDoc(doc(userContext.context().firestore(), '/users/alice/preferences/self'), { showPastEvents: true }));
+            await assertFails(updateDoc(doc(userContext.context().firestore(), '/users/alice/preferences/self'), { pinnedEventIds: ['1234'] }));
         })
         it(`As ${userContext.name}, I should not be able to DELETE another user's preferences`, async () => {
             await assertFails(deleteDoc(doc(userContext.context().firestore(), '/users/alice/preferences/self')));
@@ -242,10 +242,10 @@ const COLLECTIONS: CollectionDescriptor[] = [{
                 await assertSucceeds(getDoc(doc(userContext.context().firestore(), '/users/fred/preferences/self')));
             })
             it(`As ${userContext.name}, I shoud be able to CREATE my user's preferences`, async () => {
-                await assertSucceeds(setDoc(doc(userContext.context().firestore(), '/users/fred/preferences/self'), { showPastEvents: true }));
+                await assertSucceeds(setDoc(doc(userContext.context().firestore(), '/users/fred/preferences/self'), { pinnedEventIds: ['1234'] }));
             })
             it(`As ${userContext.name}, I should be able to UPDATE my user's preferences`, async () => {
-                await assertSucceeds(updateDoc(doc(userContext.context().firestore(), '/users/fred/preferences/self'), { showPastEvents: true }))
+                await assertSucceeds(updateDoc(doc(userContext.context().firestore(), '/users/fred/preferences/self'), { pinnedEventIds: ['1234'] }))
             })
             it(`As ${userContext.name}, I should not be able to DELETE my user's preferences`, async () => {
                 await assertFails(deleteDoc(doc(userContext.context().firestore(), '/users/fred/preferences/self')));

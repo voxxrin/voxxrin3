@@ -46,7 +46,6 @@ export function useUserPreferences() {
             // Let's create an empty user preferences container
             firestoreUserPref = {
                 pinnedEventIds: [],
-                showPastEvents: false
             }
             await setDoc(firestoreUserPrefDoc, firestoreUserPref);
         }
@@ -86,16 +85,6 @@ export function useUserPreferences() {
         })
     }
 
-    const togglePastEvent = async (showPastEvents: boolean) => {
-        await onceUserPreferenceAvailable(async (firestoreUserPref, firestoreUserPrefDoc) => {
-            if(firestoreUserPref.showPastEvents === showPastEvents) {
-                return;
-            }
-
-            await updateDoc(firestoreUserPrefDoc, "showPastEvents", showPastEvents);
-        })
-    }
-
     const voxxrinUserPreferences: ComputedRef<VoxxrinUserPreferences|undefined> = computed(() => {
         const firestoreUserPref = unref(firestoreUserPreferencesRef)
 
@@ -111,7 +100,7 @@ export function useUserPreferences() {
 
     return {
         userPreferences: voxxrinUserPreferences,
-        pinEvent, unpinEvent, togglePastEvent
+        pinEvent, unpinEvent
     };
 }
 

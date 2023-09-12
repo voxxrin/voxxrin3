@@ -1,6 +1,5 @@
 <template>
-  <!-- TODO Add click for nav event -->
-    <ion-item class="eventItem" :class="{'_is-pined' : isPinnedRef}" v-if="event"
+    <ion-item @click.stop="$emit('event-clicked', event)" class="eventItem" :class="{'_is-pined' : isPinnedRef}" v-if="event"
               v-themed-event-styles="event">
       <ion-ripple-effect type="bounded"></ion-ripple-effect>
       <div class="eventItem-logoContainer">
@@ -33,11 +32,11 @@
         </ion-button>
       </div>
 
-      <div class="eventItem-dot" slot="end" @click="$emit('event-clicked', event)">
-        <span class="eventItem-dot-click">
-          <ion-icon src="/assets/icons/solid/more-menu-vertical.svg"></ion-icon>
-        </span>
-      </div>
+<!--      <div class="eventItem-dot" slot="end" @click="$emit('event-clicked', event)">-->
+<!--        <span class="eventItem-dot-click">-->
+<!--          <ion-icon src="/assets/icons/solid/more-menu-vertical.svg"></ion-icon>-->
+<!--        </span>-->
+<!--      </div>-->
     </ion-item>
 </template>
 

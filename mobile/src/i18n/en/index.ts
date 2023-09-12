@@ -6,7 +6,6 @@ const en = {
 	Pinned_events: `Pinned events`,
 	No_pinned_events_available_yet: `No pinned events available yet`,
 	No_conference_registered_yet: `No conference registered yet`,
-	Past_events: `Past events`,
 	Search_a_conference: `Search a conference`,
 	Keywords: `Keywords`,
 	Actions: `Actions`,
@@ -77,6 +76,11 @@ const en = {
 	votes: "votes",
 	Private_Bingo: "Private Bingo",
 	My_talks_with_Feedbacks: "My talks with feedbacks",
+	Ongoing_events_highlighted: "*Ongoing* events",
+	Future_events_highlighted: "*Future* events",
+	Past_events_highlighted: "*Past* events",
+	Future_events: "Future events ({nrOfEvents:number})",
+	Past_events: "Past events ({nrOfEvents:number})",
 } satisfies BaseTranslation
 
 export default en
