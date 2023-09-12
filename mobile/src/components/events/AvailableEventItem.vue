@@ -33,11 +33,11 @@
         </ion-button>
       </div>
 
-      <div class="eventItem-dot" slot="end" @click="$emit('event-clicked', event)">
-        <span class="eventItem-dot-click">
-          <ion-icon src="/assets/icons/solid/more-menu-vertical.svg"></ion-icon>
-        </span>
-      </div>
+<!--      <div class="eventItem-dot" slot="end" @click="$emit('event-clicked', event)">-->
+<!--        <span class="eventItem-dot-click">-->
+<!--          <ion-icon src="/assets/icons/solid/more-menu-vertical.svg"></ion-icon>-->
+<!--        </span>-->
+<!--      </div>-->
     </ion-item>
 </template>
 
