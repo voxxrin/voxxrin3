@@ -34,17 +34,7 @@
           </template>
         </pinned-event-selector>
 
-        <ion-segment value="future" class="tabsSelection _sticky">
-          <ion-segment-button value="future">
-            <ion-label>Future</ion-label>
-          </ion-segment-button>
-          <ion-segment-button value="past">
-            <ion-label>Past</ion-label>
-          </ion-segment-button>
-        </ion-segment>
-
         <available-events-list
-            class="availableEventsList"
             :events="filteredAvailableEvents" @event-clicked="(event) => showEventActions(event)"
             :pinned-events="pinnedEventIdsRef" @event-pin-toggled="eventPinToggled">
           <template #no-event>
@@ -61,7 +51,6 @@
 
 <script setup lang="ts">
 import {
-    IonToggle,
     IonInput,
     IonItemDivider,
     useIonRouter
@@ -209,14 +198,6 @@ function eventPinToggled(event: ListableVoxxrinEvent, transitionType: 'unpinned-
   }
 
   .conferenceContent {
-
-    .tabsSelection {
-      &._sticky {
-        position: sticky;
-        top: 68px;
-        z-index: 4;
-      }
-    }
 
     ion-item-divider {
       --padding-top: var( --app-gutters-medium);

@@ -1,19 +1,27 @@
 <template>
   <div v-if="pinnedEvents.length > 0" class="pinnedEventsContainer">
     <ion-list class="pinnedEvents">
-      <div v-if="pastEvents.length > 0 && ongoingAndFutureEvents.length > 0" class="pinnedEventsDivider">
-        <span>events <strong>Ongoing</strong></span>
+      <div v-if="ongoingEvents.length > 0" class="pinnedEventsDivider">
+        <span v-html="LL.Ongoing_events_highlighted().replace(/(.*)\*(.*)\*(.*)/gi, `$1<strong>$2</strong>$3`)"></span>
+      </div>
+
+      <pinned-event :pinned-event="pinnedEvent" @click="$emit('event-selected', pinnedEvent)"
+                    v-for="(pinnedEvent, index) in ongoingEvents" :key="pinnedEvent.id.value"></pinned-event>
+
+      <div v-if="futureEvents.length > 0" class="pinnedEventsDivider">
+        <span v-html="LL.Future_events_highlighted().replace(/(.*)\*(.*)\*(.*)/gi, `$1<strong>$2</strong>$3`)"></span>
+      </div>
+
+      <pinned-event :pinned-event="pinnedEvent" @click="$emit('event-selected', pinnedEvent)"
+                    v-for="(pinnedEvent, index) in futureEvents" :key="pinnedEvent.id.value"></pinned-event>
+
+      <div v-if="pastEvents.length > 0" class="pinnedEventsDivider">
+        <span v-html="LL.Past_events_highlighted().replace(/(.*)\*(.*)\*(.*)/gi, `$1<strong>$2</strong>$3`)"></span>
       </div>
 
       <pinned-event :pinned-event="pinnedEvent" @click="$emit('event-selected', pinnedEvent)"
                     v-for="(pinnedEvent, index) in pastEvents" :key="pinnedEvent.id.value"></pinned-event>
 
-      <div v-if="pastEvents.length > 0 && ongoingAndFutureEvents.length > 0" class="pinnedEventsDivider">
-        <span>events <strong>Future</strong></span>
-      </div>
-
-      <pinned-event :pinned-event="pinnedEvent" @click="$emit('event-selected', pinnedEvent)"
-                    v-for="(pinnedEvent, index) in ongoingAndFutureEvents" :key="pinnedEvent.id.value"></pinned-event>
     </ion-list>
   </div>
   <div v-else>
@@ -26,6 +34,7 @@ import { computed, PropType } from "vue";
 import { ListableVoxxrinEvent } from "@/models/VoxxrinEvent";
 import PinnedEvent from "@/components/events/PinnedEvent.vue";
 import { conferenceStatusOf } from "@/models/VoxxrinConferenceDescriptor";
+import {typesafeI18n} from "@/i18n/i18n-vue";
 
 const props = defineProps({
   pinnedEvents: {
@@ -38,17 +47,22 @@ defineEmits<{
   (e: "event-selected", event: ListableVoxxrinEvent): void;
 }>()
 
+const { LL } = typesafeI18n()
+
 const pastEvents = computed(() =>
     props.pinnedEvents.filter(
         (e) => conferenceStatusOf(e.start, e.end, e.timezone) === "past"
     )
 );
-const ongoingAndFutureEvents = computed(() =>
-    props.pinnedEvents
-        .filter(
-            (e) => conferenceStatusOf(e.start, e.end, e.timezone) !== "past"
-        )
-        .reverse()
+const ongoingEvents = computed(() =>
+    props.pinnedEvents.filter(
+        (e) => conferenceStatusOf(e.start, e.end, e.timezone) === "ongoing"
+    ).reverse()
+);
+const futureEvents = computed(() =>
+    props.pinnedEvents.filter(
+        (e) => conferenceStatusOf(e.start, e.end, e.timezone) === "future"
+    ).reverse()
 );
 </script>
 
@@ -105,7 +119,7 @@ const ongoingAndFutureEvents = computed(() =>
     margin-left: 0;
   }
 
-  strong { color: var(--app-voxxrin)}
+  :deep(strong) { color: var(--app-voxxrin)}
 }
 
 @keyframes scale-up-center {
