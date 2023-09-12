@@ -29,10 +29,10 @@ const tabs = [{
     id: 'feedbacks', url: `/events/${eventId.value.value}/feedbacks`, label: LL.value.Feedbacks(),
     icon: '/assets/icons/line/comments-2-line.svg',
     selectedIcon: '/assets/icons/solid/comments-2.svg',
-}, {
-    id: 'infos', url: `/events/${eventId.value.value}/infos`, label: LL.value.Infos(),
-    icon: '/assets/icons/line/info-circle-line.svg',
-    selectedIcon: '/assets/icons/solid/info-circle.svg',
+// }, {
+//     id: 'infos', url: `/events/${eventId.value.value}/infos`, label: LL.value.Infos(),
+//     icon: '/assets/icons/line/info-circle-line.svg',
+//     selectedIcon: '/assets/icons/solid/info-circle.svg',
 }];
 </script>
 
