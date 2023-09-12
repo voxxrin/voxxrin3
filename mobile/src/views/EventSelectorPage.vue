@@ -35,7 +35,7 @@
         </pinned-event-selector>
 
         <available-events-list
-            :events="filteredAvailableEvents" @event-clicked="(event) => showEventActions(event)"
+            :events="filteredAvailableEvents" @event-clicked="(event) => selectEvent(event.id)"
             :pinned-events="pinnedEventIdsRef" @event-pin-toggled="eventPinToggled">
           <template #no-event>
             <div class="infoMessage ion-text-center">
