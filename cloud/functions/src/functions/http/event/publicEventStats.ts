@@ -2,24 +2,31 @@ import * as functions from "firebase-functions";
 import {extractSingleQueryParam, roundedAverage, sendResponseMessage} from "../utils";
 import {
     checkEventLastUpdate,
-    getOrganizerSpaceByToken,
     eventTalkStatsFor
 } from "../../firestore/firestore-utils";
-import {TalkStats} from "../../../../../../shared/feedbacks.firestore";
 import {match, P} from "ts-pattern";
 import {getTalksDetailsWithRatings} from "../../firestore/services/talk-utils";
 import {getEventDescriptor} from "../../firestore/services/eventDescriptor-utils";
 import {ISOLocalDate} from "../../../../../../shared/type-utils";
+import {getFamilyEventsStatsToken} from "../../firestore/services/publicTokens-utils";
 import {sortBy} from "lodash";
 
 const publicEventStats = functions.https.onRequest(async (request, response) => {
 
-    // const organizerSecretToken = extractSingleQueryParam(request, 'organizerSecretToken');
-    // const familyToken = extractSingleQueryParam(request, 'familyToken');
     const eventId = extractSingleQueryParam(request, 'eventId');
+    const publicToken = extractSingleQueryParam(request, 'publicToken');
 
     if(!eventId) { return sendResponseMessage(response, 400, `Missing [eventId] query parameter !`) }
-    // if(!organizerSecretToken && !familyToken) { return sendResponseMessage(response, 400, `Missing either [organizerSecretToken] or [familyToken] query parameter !`) }
+    if(!publicToken) { return sendResponseMessage(response, 400, `Missing [publicToken] query parameter !`) }
+
+    const [eventDescriptor, familyEventsStatsToken] = await Promise.all([
+        getEventDescriptor(eventId),
+        getFamilyEventsStatsToken(publicToken),
+    ]);
+
+    if(!eventDescriptor.eventFamily || !familyEventsStatsToken.eventFamilies.includes(eventDescriptor.eventFamily)) {
+        return sendResponseMessage(response, 400, `Provided family events stats token doesn't match with event ${eventId} family: [${eventDescriptor.eventFamily}]`)
+    }
 
     const { cachedHash, updatesDetected } = await checkEventLastUpdate(eventId, ['favorites', 'feedbacks'], request, response)
     if(!updatesDetected) {
@@ -27,18 +34,9 @@ const publicEventStats = functions.https.onRequest(async (request, response) => 
     }
 
     try {
-        // const organizerSpace = await match([organizerSecretToken, familyToken])
-        //     .with([ P.nullish, P.nullish ], async ([_1, _2]) => { throw new Error(`Unexpected state: (undefined,undefined)`); })
-        //     .with([ P.not(P.nullish), P.any ], async ([organizerSecretToken, _]) => {
-        //         return getOrganizerSpaceByToken(eventId, 'organizerSecretToken', organizerSecretToken);
-        //     }).with([ P.any, P.not(P.nullish) ], async ([_, familyToken]) => {
-        //         return getOrganizerSpaceByToken(eventId, 'familyToken', familyToken);
-        //     }).run()
-
-        const [talkStats, talksDetailsWithRatings, eventDescriptor] = await Promise.all([
+        const [talkStats, talksDetailsWithRatings] = await Promise.all([
             eventTalkStatsFor(eventId),
             getTalksDetailsWithRatings(eventId),
-            getEventDescriptor(eventId)
         ])
 
         const perTalkStats = talksDetailsWithRatings.map(talkDetails => ({
