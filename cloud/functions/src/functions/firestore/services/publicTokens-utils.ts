@@ -1,17 +1,17 @@
 import {db} from "../../../firebase";
 import {
-    FamilyEventsFeedbacksAccessToken,
+    FamilyOrganizerToken,
     FamilyEventsStatsAccessToken,
     PublicToken
 } from "../../../../../../shared/public-tokens";
 import {match, P} from "ts-pattern";
 
 
-export function isFamilyEventsStats(publicToken: PublicToken): publicToken is FamilyEventsStatsAccessToken {
+export function isFamilyEventsStatsToken(publicToken: PublicToken): publicToken is FamilyEventsStatsAccessToken {
     return publicToken.type === 'FamilyEventsStatsAccess';
 }
-export function isFamilyEventsFeedbacks(publicToken: PublicToken): publicToken is FamilyEventsFeedbacksAccessToken {
-    return publicToken.type === 'FamilyEventsFeedbacksAccess';
+export function isFamilyOrganizerToken(publicToken: PublicToken): publicToken is FamilyOrganizerToken {
+    return publicToken.type === 'FamilyOrganizerToken';
 }
 
 async function getPublicTokenBySecret<T>(secretToken: string, transformer: (publicToken: PublicToken) => T|undefined, expectedTokenName: string) {
@@ -31,12 +31,12 @@ async function getPublicTokenBySecret<T>(secretToken: string, transformer: (publ
 
 export async function getFamilyEventsStatsToken(secretToken: string) {
     return getPublicTokenBySecret(secretToken,
-            publicToken => isFamilyEventsStats(publicToken)?publicToken:undefined,
+            publicToken => isFamilyEventsStatsToken(publicToken)?publicToken:undefined,
         "family events stats token")
 }
 
-export async function getFamilyEventsFeedbacksToken(secretToken: string) {
+export async function getFamilyOrganizerToken(secretToken: string) {
     return getPublicTokenBySecret(secretToken,
-            publicToken => isFamilyEventsFeedbacks(publicToken)?publicToken:undefined,
-        "family events feedbacks token")
+            publicToken => isFamilyOrganizerToken(publicToken)?publicToken:undefined,
+        "family organizer token")
 }

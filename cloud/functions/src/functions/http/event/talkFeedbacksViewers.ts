@@ -7,7 +7,7 @@ import {
 import {match, P} from "ts-pattern";
 import {getEventDescriptor} from "../../firestore/services/eventDescriptor-utils";
 import {
-    getFamilyEventsFeedbacksToken,
+    getFamilyOrganizerToken,
 } from "../../firestore/services/publicTokens-utils";
 import {
     ConferenceOrganizerSpace
@@ -16,22 +16,22 @@ import {
 const talkFeedbacksViewers = functions.https.onRequest(async (request, response) => {
 
     const organizerSecretToken = extractSingleQueryParam(request, 'organizerSecretToken');
-    const familyEventsPublicToken = extractSingleQueryParam(request, 'familyEventsPublicToken');
+    const familyOrganizerSecretToken = extractSingleQueryParam(request, 'familyOrganizerSecretToken');
     const eventId = extractSingleQueryParam(request, 'eventId');
     const baseUrl = extractSingleQueryParam(request, 'baseUrl');
 
     if(!eventId) { return sendResponseMessage(response, 400, `Missing [eventId] query parameter !`) }
-    if(!organizerSecretToken && !familyEventsPublicToken) { return sendResponseMessage(response, 400, `Missing either [organizerSecretToken] or [familyEventsPublicToken] query parameter !`) }
+    if(!organizerSecretToken && !familyOrganizerSecretToken) { return sendResponseMessage(response, 400, `Missing either [organizerSecretToken] or [familyOrganizerSecretToken] query parameter !`) }
     if(!baseUrl) { return sendResponseMessage(response, 400, `Missing [baseUrl] query parameter !`) }
 
-    if(familyEventsPublicToken) {
-        const [eventDescriptor, familyEventsFeedbacksToken] = await Promise.all([
+    if(familyOrganizerSecretToken) {
+        const [eventDescriptor, familyOrganizerToken] = await Promise.all([
             getEventDescriptor(eventId),
-            getFamilyEventsFeedbacksToken(familyEventsPublicToken),
+            getFamilyOrganizerToken(familyOrganizerSecretToken),
         ]);
 
-        if(!eventDescriptor.eventFamily || !familyEventsFeedbacksToken.eventFamilies.includes(eventDescriptor.eventFamily)) {
-            return sendResponseMessage(response, 400, `Provided family events feedbacks token doesn't match with event ${eventId} family: [${eventDescriptor.eventFamily}]`)
+        if(!eventDescriptor.eventFamily || !familyOrganizerToken.eventFamilies.includes(eventDescriptor.eventFamily)) {
+            return sendResponseMessage(response, 400, `Provided family organizer token doesn't match with event ${eventId} family: [${eventDescriptor.eventFamily}]`)
         }
     }
 
@@ -41,7 +41,7 @@ const talkFeedbacksViewers = functions.https.onRequest(async (request, response)
     }
 
     try {
-        const organizerSpace = await match([organizerSecretToken, familyEventsPublicToken])
+        const organizerSpace = await match([organizerSecretToken, familyOrganizerSecretToken])
             .with([ P.nullish, P.nullish ], async ([_1, _2]) => { throw new Error(`Unexpected state: (undefined,undefined)`); })
             .with([ P.not(P.nullish), P.any ], async ([organizerSecretToken, _]) => {
                 return getOrganizerSpaceByToken(eventId, 'organizerSecretToken', organizerSecretToken);
