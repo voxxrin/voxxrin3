@@ -13,6 +13,7 @@ import {match} from "ts-pattern";
 import {v4 as uuidv4} from "uuid"
 import {ConferenceOrganizerSpace} from "../../../../shared/conference-organizer-space.firestore";
 import {JUG_SUMMERCAMP_CRAWLER} from "./jugsummercamp/crawler";
+import {eventLastUpdateRefreshed} from "../functions/firestore/firestore-utils";
 const axios = require('axios');
 
 export type CrawlerKind<ZOD_TYPE extends z.ZodType> = {
@@ -155,6 +156,10 @@ const saveEvent = async function(event: FullEvent) {
             error(`Error while saving dailySchedule ${daySchedule.day}: ${e?.toString()}`)
         }
     }))
+
+    const talksCollectionRefBeforeUpdate = (await db.collection(`/events/${event.id}/talks`).listDocuments()) || []
+    const talkIdsHashBeforeUpdate = talksCollectionRefBeforeUpdate.map(talk => talk.id).sort().join(",")
+
     await Promise.all(event.talks.map(async talk => {
         try {
             info("saving talk " + talk.id + " " + talk.title);
@@ -185,6 +190,13 @@ const saveEvent = async function(event: FullEvent) {
             error(`Error while saving talk ${talk.id}: ${e?.toString()}`)
         }
     }));
+
+    const talksCollectionRefAfterUpdate = (await db.collection(`/events/${event.id}/talks`).listDocuments()) || []
+    const talkIdsHashAfterUpdate = talksCollectionRefAfterUpdate.map(talk => talk.id).sort().join(",")
+
+    if(talkIdsHashBeforeUpdate !== talkIdsHashAfterUpdate) {
+        await eventLastUpdateRefreshed(event.id, ['talkListUpdated']);
+    }
 
     try {
         // TODO: Remove me once watch later will be properly implemented !

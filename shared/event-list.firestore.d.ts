@@ -37,5 +37,6 @@ export type ListableEvent = {
 
 export type EventLastUpdates = {
     favorites: ISODatetime|undefined,
-    feedbacks: ISODatetime|undefined
+    feedbacks: ISODatetime|undefined,
+    talkListUpdated: ISODatetime|undefined,
 }
