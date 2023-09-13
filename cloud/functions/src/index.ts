@@ -8,7 +8,7 @@ import {
     onTalkFeedbackUpdated
 } from "./functions/firestore/onTalkFeedbackProvided";
 import attendeesFeedbacks from "./functions/http/event/attendeesFeedbacks";
-import eventStats from "./functions/http/event/eventStats";
+import deprecatedEventStats from "./functions/http/event/deprecatedEventStats";
 import talkFeedbacksViewers from "./functions/http/event/talkFeedbacksViewers";
 
 // For testing purposes only
@@ -19,7 +19,7 @@ exports.crawl = crawl
 exports.talkFeedbacksViewers = talkFeedbacksViewers
 // For organizers + co organizers (in same event family)
 exports.attendeesFeedbacks = attendeesFeedbacks
-exports.eventStats = eventStats
+exports.eventStats = deprecatedEventStats
 
 // Admin only
 exports.migrateFirestoreSchema = migrateFirestoreSchema
