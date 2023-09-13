@@ -1,7 +1,7 @@
 import * as functions from "firebase-functions";
 import {UserDailyFeedbacks, UserFeedback} from "../../../../../shared/feedbacks.firestore";
 import {db} from "../../firebase";
-import {eventLastUpdateRefreshed, getSecretTokenDoc} from "./firestore-utils";
+import {eventLastUpdateRefreshed, getSecretTokenDoc, getSecretTokenRef} from "./firestore-utils";
 import {ConferenceOrganizerSpace} from "../../../../../shared/conference-organizer-space.firestore";
 import {TalkAttendeeFeedback} from "../../../../../shared/talk-feedbacks.firestore";
 import {UserTokensWallet} from "../../../../../shared/user-tokens-wallet.firestore";
@@ -34,7 +34,8 @@ export const onTalkFeedbackCreated = functions.firestore
     })
 
 async function updateTalkFeedbacksFromUserFeedbacks(userId: string, eventId: string, userFeedbacks: UserFeedback[]) {
-    const organizerSpace: ConferenceOrganizerSpace = await getSecretTokenDoc(`events/${eventId}/organizer-space`);
+    const organizerSpaceRef = await getSecretTokenRef(`events/${eventId}/organizer-space`);
+    const organizerSpace = (await organizerSpaceRef.get()).data() as ConferenceOrganizerSpace;
     await Promise.all(userFeedbacks.map(async feedback => {
         if(feedback.status === 'provided') {
             const talkFeedbackViewerToken = organizerSpace.talkFeedbackViewerTokens
@@ -60,6 +61,7 @@ async function updateTalkFeedbacksFromUserFeedbacks(userId: string, eventId: str
 
             await Promise.all([
                 db.doc(`events/${eventId}/talks/${feedback.talkId}/feedbacks-access/${talkFeedbackViewerToken.secretToken}/feedbacks/${userTokensWallet.publicUserToken}`).set(attendeeFeedback),
+                db.doc(`events/${eventId}/organizer-space/${organizerSpace.organizerSecretToken}/ratings/self`).update(`${feedback.talkId}.${userTokensWallet.publicUserToken}`, feedback.ratings),
                 eventLastUpdateRefreshed(eventId, [ "feedbacks" ])
             ])
         }

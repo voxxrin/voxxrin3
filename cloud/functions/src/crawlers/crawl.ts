@@ -133,7 +133,10 @@ const saveEvent = async function(event: FullEvent) {
                 talkFeedbackViewerTokens: []
             }
 
-            await firestoreEvent.collection('organizer-space').doc(organizerSecretToken).set(organizerSpaceContent)
+            await Promise.all([
+                firestoreEvent.collection('organizer-space').doc(organizerSecretToken).set(organizerSpaceContent),
+                firestoreEvent.collection('organizer-space').doc(organizerSecretToken).collection('ratings').doc('self').create({}),
+            ])
             return {organizerSecretToken, organizerSpaceContent};
         }).with(1, async () => {
             const organizerSecretToken = await organizerSpaceEntries[0].id;

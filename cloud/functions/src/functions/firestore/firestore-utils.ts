@@ -5,19 +5,26 @@ import {TalkAttendeeFeedback} from "../../../../../shared/talk-feedbacks.firesto
 import {TalkStats} from "../../../../../shared/feedbacks.firestore";
 import {EventLastUpdates, ListableEvent} from "../../../../../shared/event-list.firestore";
 import {ISODatetime} from "../../../../../shared/type-utils";
+import {sortBy} from "lodash";
+import {firestore} from "firebase-admin";
+import DocumentReference = firestore.DocumentReference;
 
 export type EventFamilyToken = {
     families: string[],
     token: string;
 }
 
-export async function getSecretTokenDoc<T>(path: string) {
+export async function getSecretTokenRef(path: string) {
     const list = await db.collection(path).listDocuments()
     if(list.length !== 1) {
         throw new Error(`Unexpected size=${list.length} for path [${path}] (expected=1)`)
     }
 
-    return (await db.doc(`${path}/${list[0].id}`).get()).data() as T;
+    const secretTokenRef: DocumentReference = db.doc(`${path}/${list[0].id}`);
+    return secretTokenRef;
+}
+export async function getSecretTokenDoc<T>(path: string) {
+    return (await (await getSecretTokenRef(path)).get()).data() as T;
 }
 
 export async function getOrganizerSpaceByToken(

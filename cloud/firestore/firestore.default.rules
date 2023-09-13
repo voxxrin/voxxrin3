@@ -51,6 +51,10 @@ service cloud.firestore {
       match /organizer-space/{secretOrganizerToken} {
         allow get: if true;
         allow list, write: if false;
+
+        match /ratings/self {
+          allow read, write: if false;
+        }
       }
 
       match /last-updates/self {

@@ -55,6 +55,7 @@ beforeAll(async () => {
 
         adminFirestore.doc('/events/an-event').set({ title: `A super event` }),
         adminFirestore.doc('/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472').set({ organizerSecretToken: '6c902c52-9c6d-4d54-b6f2-20814d2f8472' }),
+        adminFirestore.doc('/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472/ratings/self').set({ }),
         adminFirestore.doc('/events/an-event/days/monday').set({ day: 'monday', timeSlots: [] }),
         adminFirestore.doc('/events/an-event/event-descriptor/self').set({ title: `A super event` }),
         adminFirestore.doc('/events/an-event/talksStats/12345').set({ id: `12345`, totalFavoritesCount: 0 }),
@@ -96,6 +97,7 @@ afterAll(async () => {
         adminFirestore.doc(`/events/an-event/talksStats/12345`).delete(),
         adminFirestore.doc(`/events/an-event/event-descriptor/self`).delete(),
         adminFirestore.doc(`/events/an-event/days/monday`).delete(),
+        adminFirestore.doc(`/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472/ratings/self`).delete(),
         adminFirestore.doc(`/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472`).delete(),
         adminFirestore.doc(`/events/an-event`).delete(),
     ]);
@@ -672,6 +674,29 @@ const COLLECTIONS: CollectionDescriptor[] = [{
         })
         it(`As ${userContext.name}, I should not be able to DELETE events' organizer space`, async () => {
             await assertFails(deleteDoc(doc(userContext.context().firestore(), '/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472')));
+        })
+    }
+}, {
+    name: "/events/{eventId}/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472/ratings",
+    aroundTests: (userContext: UserContext) => ({
+        beforeEach: [],
+        afterEach: [],
+    }),
+    tests: (userContext: UserContext) => {
+        it(`As ${userContext.name}, I should not be able to LIST events' organizer space ratings`, async () => {
+            await assertFails(getDocs(collection(userContext.context().firestore(), '/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472/ratings')));
+        })
+        it(`As ${userContext.name}, I should not be able to GET events' organizer space ratings`, async () => {
+            await assertFails(getDoc(doc(userContext.context().firestore(), '/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472/ratings/self')));
+        })
+        it(`As ${userContext.name}, I should not be able to CREATE events' organizer space ratings`, async () => {
+            await assertFails(setDoc(doc(userContext.context().firestore(), '/events/another-event/organizer-space/d05d6d61-53c4-496c-9269-795a30b70443/ratings/self'), { }));
+        })
+        it(`As ${userContext.name}, I should not be able to UPDATE events' organizer space ratings`, async () => {
+            await assertFails(updateDoc(doc(userContext.context().firestore(), '/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472/ratings/self'), { "12345": {} }));
+        })
+        it(`As ${userContext.name}, I should not be able to DELETE events' organizer space ratings`, async () => {
+            await assertFails(deleteDoc(doc(userContext.context().firestore(), '/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472/ratings/self')));
         })
     }
 }, {
