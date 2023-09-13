@@ -97,7 +97,7 @@ export async function eventLastUpdateRefreshed(eventId: string, fields: Array<ke
 }
 
 export async function checkEventLastUpdate(
-    eventId: string, lastUpdateFieldName: keyof EventLastUpdates,
+    eventId: string, lastUpdateFieldNames: Array<keyof EventLastUpdates>,
     request: functions.https.Request, response: functions.Response
 ): Promise<{ cachedHash: string|undefined, updatesDetected: boolean }> {
     const eventLastUpdatesDoc = await db
@@ -105,7 +105,11 @@ export async function checkEventLastUpdate(
         .collection("last-updates").doc("self")
         .get();
 
-    const cachedHash = (eventLastUpdatesDoc.data() as EventLastUpdates|undefined)?.[lastUpdateFieldName];
+    const cachedHash = sortBy(
+        lastUpdateFieldNames.map(lastUpdateFieldName => (eventLastUpdatesDoc.data() as EventLastUpdates|undefined)?.[lastUpdateFieldName])
+            .filter(v => !!v),
+        isoDate => -Date.parse(isoDate!)
+    )[0] || undefined;
 
     const ifNoneMatchHeader = request.header("If-None-Match")
     if(ifNoneMatchHeader) {
