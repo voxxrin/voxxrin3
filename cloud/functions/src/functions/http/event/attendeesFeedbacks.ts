@@ -18,7 +18,7 @@ const attendeesFeedbacks = functions.https.onRequest(async (request, response) =
     if(!organizerSecretToken && !familyToken) { return sendResponseMessage(response, 400, `Missing either [organizerSecretToken] or [familyToken] query parameter !`) }
     if(isNaN(sinceTimestamp)) { return sendResponseMessage(response, 400, `Missing valid [updatedSince] query parameter !`) }
 
-    const { cachedHash, updatesDetected } = await checkEventLastUpdate(eventId, ['feedbacks'], request, response)
+    const { cachedHash, updatesDetected } = await checkEventLastUpdate(eventId, ['feedbacks', 'talkListUpdated'], request, response)
     if(!updatesDetected) {
         return sendResponseMessage(response, 304)
     }
