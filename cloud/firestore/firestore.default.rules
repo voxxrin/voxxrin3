@@ -21,6 +21,11 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
+    match /public-tokens/{publicSecretToken} {
+      allow get: if true;
+      allow list, write: if false;
+    }
+
     match /crawlers/{crawlerId} {
       allow read, write: if false;
     }

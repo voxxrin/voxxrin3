@@ -32,9 +32,9 @@ class ConfOrganizerAllRatingsModel {
 
 export async function getEveryRatingsForEvent(eventId: string) {
     const organizerSpaceRef = await getSecretTokenRef(`/events/${eventId}/organizer-space`)
-    const eventAllRatings = (await organizerSpaceRef.collection('ratings').doc('self').get()).data() as ConferenceOrganizerAllRatings
+    const eventAllRatings = (await organizerSpaceRef.collection('ratings').doc('self').get()).data() as ConferenceOrganizerAllRatings|undefined
 
-    return new ConfOrganizerAllRatingsModel(eventAllRatings);
+    return new ConfOrganizerAllRatingsModel(eventAllRatings || {});
 }
 
 export async function getTalksDetailsWithRatings(eventId: string) {

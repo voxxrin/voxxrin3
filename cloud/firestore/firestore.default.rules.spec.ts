@@ -50,6 +50,7 @@ beforeAll(async () => {
         adminFirestore.doc('/users/fred/events/an-event/days/monday/feedbacks/self').set({ dayId: 'monday', feedbacks: [] }),
 
         adminFirestore.doc('/event-family-tokens/a-family').set({ families: ['devoxx'], token: 'd54411a2-4ceb-4c3f-a014-41e9426235ed' }),
+        adminFirestore.doc('/public-tokens/eventStats:devoxx-voxxed:a6f5d82a-353d-4e98-b86b-cfc3e7ebb5f2').set({ type: "FamilyEventsStatsAccess", eventFamilies: ["voxxed", "devoxx"] }),
         adminFirestore.doc('/crawlers/a-crawler').set({ crawlingKeys: [ '8bb30ecd-24f0-402b-9ff1-15d9826262dd' ], descriptorUrl: 'https://path-to-descriptor.json', kind: 'devoxx', stopAutoCrawlingAfter: '2023-09-01T00:00:00Z' }),
         adminFirestore.doc('/schema-migrations/self').set({ migrations: []}),
 
@@ -86,6 +87,7 @@ afterAll(async () => {
         adminFirestore.doc(`/users/fred/preferences/self`).delete(),
         adminFirestore.doc(`/users/fred`).delete(),
 
+        adminFirestore.doc('/public-tokens/eventStats:devoxx-voxxed:a6f5d82a-353d-4e98-b86b-cfc3e7ebb5f2').delete(),
         adminFirestore.doc(`/event-family-tokens/a-family`).delete(),
         adminFirestore.doc(`/crawlers/a-crawler`).delete(),
         adminFirestore.doc(`/schema-migrations/self`).delete(),
@@ -513,6 +515,29 @@ const COLLECTIONS: CollectionDescriptor[] = [{
         })
         it(`As ${userContext.name}, I should not be able to DELETE event family token`, async () => {
             await assertFails(deleteDoc(doc(userContext.context().firestore(), '/event-family-tokens/a-family')));
+        })
+    }
+}, {
+    name: "/public-tokens",
+    aroundTests: (userContext: UserContext) => ({
+        beforeEach: [],
+        afterEach: [],
+    }),
+    tests: (userContext: UserContext) => {
+        it(`As ${userContext.name}, I should not be able to LIST event family tokens`, async () => {
+            await assertFails(getDocs(collection(userContext.context().firestore(), '/public-tokens')));
+        })
+        it(`As ${userContext.name}, I should be able to GET any event family token`, async () => {
+            await assertSucceeds(getDoc(doc(userContext.context().firestore(), '/public-tokens/eventStats:devoxx-voxxed:a6f5d82a-353d-4e98-b86b-cfc3e7ebb5f2')));
+        })
+        it(`As ${userContext.name}, I should not be able to CREATE event family token`, async () => {
+            await assertFails(setDoc(doc(userContext.context().firestore(), '/public-tokens/eventStats:devoxx-only:79c44f4e-6158-4c91-9b81-fafba6049e45'), { type: "FamilyEventsStatsAccess", eventFamilies: ["devoxx"]}));
+        })
+        it(`As ${userContext.name}, I should not be able to UPDATE event family token`, async () => {
+            await assertFails(updateDoc(doc(userContext.context().firestore(), '/public-tokens/eventStats:devoxx-voxxed:a6f5d82a-353d-4e98-b86b-cfc3e7ebb5f2'), { type: "FamilyEventsStatsAccess", eventFamilies: ["voxxed"]}));
+        })
+        it(`As ${userContext.name}, I should not be able to DELETE event family token`, async () => {
+            await assertFails(deleteDoc(doc(userContext.context().firestore(), '/public-tokens/eventStats:devoxx-voxxed:a6f5d82a-353d-4e98-b86b-cfc3e7ebb5f2')));
         })
     }
 }, {
