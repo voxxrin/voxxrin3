@@ -2,7 +2,7 @@
   <ion-segment :value="currentCategoryRef" class="tabsSelection _sticky" @ion-change="(event) => categoryUpdated(event.detail.value)">
     <ion-segment-button v-for="(categorizedEvents, index) in perCategoryEventsRef" :key="index"
                         :value="categorizedEvents.category">
-      <ion-label>{{ categorizedEvents.label }}</ion-label>
+      <ion-label>{{ categorizedEvents.label }} <span class="count">{{categorizedEvents.eventsCount}}</span></ion-label>
     </ion-segment-button>
   </ion-segment>
 
@@ -70,7 +70,7 @@ const perCategoryEventsRef = computed(() => {
 
   const categories: CategoryEvents[] = [{
     category: 'future',
-    label: LL.value.Future_events({ nrOfEvents: ongoingEvents.length + futureEvents.length }),
+    label: LL.value.Future_events(),
     eventsCount: ongoingEvents.length + futureEvents.length,
     sections: [{
       label: LL.value.ConfStatus_ongoing(),
@@ -81,7 +81,7 @@ const perCategoryEventsRef = computed(() => {
     }]
   }, {
     category: 'past',
-    label: LL.value.Past_events({ nrOfEvents: pastEvents.length }),
+    label: LL.value.Past_events(),
     eventsCount: pastEvents.length,
     sections: [{
       events: pastEvents
@@ -124,6 +124,12 @@ watch([currentCategoryRef, perCategoryEventsRef], ([currentCategory, perCategory
       position: sticky;
       top: 68px;
       z-index: 4;
+    }
+
+    ion-label {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
     }
   }
   ion-list {

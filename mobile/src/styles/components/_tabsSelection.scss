@@ -10,23 +10,8 @@
 
   &.md {
     .in-segment {
-      text-transform: capitalize;
-
-      &.segment-button-checked {
-
-        .sc-ion-label-md-h {
-          color: var(--app-voxxrin);
-        }
-      }
-
-      .indicator-background {
-        width: 100%;
-        height: 44px;
-        top: -2px;
-        border-radius: 54px;
-        transform: var(--indicator-transform);
-        box-shadow: var(--indicator-box-shadow);
-        pointer-events: none;
+      &:first-letter {
+        text-transform: lowercase;
       }
     }
   }
@@ -38,14 +23,47 @@
   }
 
   ion-segment-button {
-    --border-radius: 54px;
+    top: 6px;
+    --padding-top: 16px;
+    --padding-bottom: 12px;
+    --border-radius: 16px 16px 0 0;
     --border-width: 0;
     font-weight: 900;
     font-size: 16px;
-    height: 38px;
+    height: 40px;
     color: var(--app-primary);
     --indicator-color: var(--app-voxxrin);
     --indicator-box-shadow: none;
+
+    &.md {
+      --indicator-height: 44px;
+      --indicator-transform: translateY(-2px);
+
+      .indicator-background {
+        border-radius: 54px;
+      }
+    }
+
+    @media (prefers-color-scheme: dark) {
+      color: var(--app-white);
+    }
+
+    .count {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 24px;
+      min-width: 24px;
+      margin-left: 8px;
+      background-color: var(--app-beige-medium);
+      color: var(--app-beige-dark);
+      border-radius: 34px;
+
+      @media (prefers-color-scheme: dark) {
+        background-color: var(--app-background);
+        color: var(--app-white);
+      }
+    }
 
     .segment-button-indicator {
       background: none;
@@ -53,6 +71,22 @@
 
     &.segment-button-checked {
       color: white;
+
+      .count {
+        background-color: var(--app-voxxrin);
+        color: var(--app-white);
+
+        @media (prefers-color-scheme: dark) {
+          background-color: var(--app-white);
+          color: var(--app-voxxrin);
+        }
+      }
     }
+  }
+}
+
+.md {
+  .segment-button-indicator-background {
+    border-radius: 16px 16 0 0;
   }
 }

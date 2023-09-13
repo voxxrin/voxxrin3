@@ -79,8 +79,8 @@ const en = {
 	Ongoing_events_highlighted: "*Ongoing* events",
 	Future_events_highlighted: "*Future* events",
 	Past_events_highlighted: "*Past* events",
-	Future_events: "Future events ({nrOfEvents:number})",
-	Past_events: "Past events ({nrOfEvents:number})",
+	Future_events: "Future events",
+	Past_events: "Past events",
 } satisfies BaseTranslation
 
 export default en

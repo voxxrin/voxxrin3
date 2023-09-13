@@ -330,15 +330,13 @@ type RootTranslation = {
 	 */
 	Past_events_highlighted: string
 	/**
-	 * F​u​t​u​r​e​ ​e​v​e​n​t​s​ ​(​{​n​r​O​f​E​v​e​n​t​s​}​)
-	 * @param {number} nrOfEvents
+	 * F​u​t​u​r​e​ ​e​v​e​n​t​s
 	 */
-	Future_events: RequiredParams<'nrOfEvents'>
+	Future_events: string
 	/**
-	 * P​a​s​t​ ​e​v​e​n​t​s​ ​(​{​n​r​O​f​E​v​e​n​t​s​}​)
-	 * @param {number} nrOfEvents
+	 * P​a​s​t​ ​e​v​e​n​t​s
 	 */
-	Past_events: RequiredParams<'nrOfEvents'>
+	Past_events: string
 }
 
 export type TranslationFunctions = {
@@ -655,13 +653,13 @@ export type TranslationFunctions = {
 	 */
 	Past_events_highlighted: () => LocalizedString
 	/**
-	 * Future events ({nrOfEvents})
+	 * Future events
 	 */
-	Future_events: (arg: { nrOfEvents: number }) => LocalizedString
+	Future_events: () => LocalizedString
 	/**
-	 * Past events ({nrOfEvents})
+	 * Past events
 	 */
-	Past_events: (arg: { nrOfEvents: number }) => LocalizedString
+	Past_events: () => LocalizedString
 }
 
 export type Formatters = {}
