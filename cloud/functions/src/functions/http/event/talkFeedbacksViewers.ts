@@ -1,6 +1,7 @@
 import * as functions from "firebase-functions";
 import {extractSingleQueryParam, sendResponseMessage} from "../utils";
 import {
+    checkEventLastUpdate,
     getOrganizerSpaceByToken,
 } from "../../firestore/firestore-utils";
 
@@ -14,6 +15,11 @@ const talkFeedbacksViewers = functions.https.onRequest(async (request, response)
     if(!organizerSecretToken) { return sendResponseMessage(response, 400, `Missing [organizerSecretToken] query parameter !`) }
     if(!baseUrl) { return sendResponseMessage(response, 400, `Missing [baseUrl] query parameter !`) }
 
+    const { cachedHash, updatesDetected } = await checkEventLastUpdate(eventId, ['talkListUpdated'], request, response)
+    if(!updatesDetected) {
+        return sendResponseMessage(response, 304)
+    }
+
     try {
         const organizerSpace = await getOrganizerSpaceByToken(eventId, 'organizerSecretToken', organizerSecretToken)
 
@@ -23,7 +29,9 @@ const talkFeedbacksViewers = functions.https.onRequest(async (request, response)
             })
         ));
     } catch(error) {
-        sendResponseMessage(response, 500, ""+error);
+        sendResponseMessage(response, 500, ""+error, cachedHash ? {
+            'ETag': cachedHash
+        }:{});
     }
 });
 
