@@ -8,7 +8,7 @@ import {
 import {TalkStats} from "../../../../../../shared/feedbacks.firestore";
 import {match, P} from "ts-pattern";
 
-const eventStats = functions.https.onRequest(async (request, response) => {
+const deprecatedEventStats = functions.https.onRequest(async (request, response) => {
 
     const organizerSecretToken = extractSingleQueryParam(request, 'organizerSecretToken');
     const familyToken = extractSingleQueryParam(request, 'familyToken');
@@ -49,4 +49,4 @@ const eventStats = functions.https.onRequest(async (request, response) => {
     }
 });
 
-export default eventStats
+export default deprecatedEventStats
