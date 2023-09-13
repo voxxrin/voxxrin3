@@ -111,6 +111,11 @@ export const EVENT_DESCRIPTOR_PARSER = LISTABLE_EVENT_PARSER.extend({
                 }))
             })
         }),
+        topRatedTalks: z.object({
+            minimumNumberOfRatingsToBeConsidered: z.number(),
+            minimumAverageScoreToBeConsidered: z.number().optional(),
+            numberOfDailyTopTalksConsidered: z.number()
+        }).optional()
     }),
     talkFormats: z.array(THEMABLE_TALK_FORMAT_PARSER),
     talkTracks: z.array(THEMABLE_TALK_TRACK_PARSER),
