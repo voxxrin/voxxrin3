@@ -1,13 +1,13 @@
 
-export type PublicToken = FamilyEventsStatsAccessToken | FamilyEventsFeedbacksAccessToken
+export type PublicToken = FamilyEventsStatsAccessToken | FamilyOrganizerToken
 
 export type FamilyEventsStatsAccessToken = {
     type: "FamilyEventsStatsAccess",
     eventFamilies: string[]
 }
 
-export type FamilyEventsFeedbacksAccessToken = {
-    type: "FamilyEventsFeedbacksAccess",
+export type FamilyOrganizerToken = {
+    type: "FamilyOrganizerToken",
     eventFamilies: string[]
 }
 
