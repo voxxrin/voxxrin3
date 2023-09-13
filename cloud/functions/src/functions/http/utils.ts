@@ -30,3 +30,7 @@ export function sendResponseMessage(response: Response, httpCode: number, messag
 
     return;
 }
+
+export function roundedAverage(values: number[]) {
+    return Math.round(values.reduce((sum, v) => sum+v, 0) * 100 / values.length) / 100;
+}
