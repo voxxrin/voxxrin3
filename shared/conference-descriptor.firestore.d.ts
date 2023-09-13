@@ -40,6 +40,11 @@ export type ConferenceDescriptor = ListableEvent & {
                 }>
             }
         },
+        topRatedTalks?: {
+            minimumNumberOfRatingsToBeConsidered: number,
+            minimumAverageScoreToBeConsidered?: number|undefined,
+            numberOfDailyTopTalksConsidered: number
+        }|undefined
     },
     talkFormats: Array<ThemedTalkFormat>,
     talkTracks: Array<ThemedTrack>,
