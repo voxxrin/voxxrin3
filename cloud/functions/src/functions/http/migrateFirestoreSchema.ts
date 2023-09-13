@@ -10,6 +10,7 @@ import {addUserIdInTokenWallet} from "../firestore/migrations/002-addUserIdInTok
 import {
     gettingRidOfUserPreferencesPastEvents
 } from "../firestore/migrations/003-gettingRidOfUserPreferencesPastEvents";
+import {createOrganizerSpaceRatings} from "../firestore/migrations/006-createOrganizerSpaceRatings";
 
 /**
  * Like Flyway, but for firestore :-)
@@ -19,6 +20,7 @@ const MIGRATIONS: Migration[] = [
     { name: "createExistingUsersInfos", exec: createExistingUsersInfos },
     { name: "addUserIdInTokenWallet", exec: addUserIdInTokenWallet },
     { name: "gettingRidOfUserPreferencesPastEvents", exec: gettingRidOfUserPreferencesPastEvents },
+    { name: "createOrganizerSpaceRatings", exec: createOrganizerSpaceRatings },
 ];
 
 export type MigrationResult = "OK"|"Error";
