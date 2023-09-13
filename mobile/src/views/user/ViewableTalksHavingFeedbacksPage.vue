@@ -13,6 +13,7 @@
 
       <div class="schedule-talk-event"  v-for="(eventTalksGroup, index) in talksGroupedByEventRef" :key="eventTalksGroup.confDescriptor.id.value"
            v-themed-event-styles="eventTalksGroup.confDescriptor">
+        <img :src="eventTalksGroup.confDescriptor?.backgroundUrl">
         <span class="schedule-talk-event-title">{{eventTalksGroup.confDescriptor.headingTitle}}</span>
 
         <schedule-talk v-for="(feedbackViewerTalk, index) in eventTalksGroup.talks" :key="feedbackViewerTalk.detailedTalk.id.value"
@@ -120,10 +121,23 @@ const talksGroupedByEventRef = computed(() => {
 <style lang="scss" scoped>
 
 .schedule-talk-event {
-  background-color: var(--voxxrin-event-theme-colors-primary-hex);
+  position: relative;
+  background: linear-gradient(0deg, rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.4802) 0%, rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.98) 52.84%);
   margin: 16px;
   padding: 8px 4px;
   border-radius: 16px;
+
+  img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    height: 100%;
+    width: 100%;
+    z-index: -1;
+    object-fit: cover;
+    border-radius: 16px;
+  }
 
   &-title {
     padding: 16px 12px;
