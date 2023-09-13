@@ -1,22 +1,43 @@
 <template>
   <ion-page>
     <ion-content :fullscreen="true">
-      <ion-header class="stickyHeader">
+      <ion-header class="ion-no-border">
         <ion-toolbar>
-          <ion-button class="stickyHeader-close" shape="round" slot="start" size="small" fill="outline"
-                      @click="triggerTabbedPageExitOrNavigate(`/event-selector`)">
-            <ion-icon src="/assets/icons/line/arrow-left-line.svg"></ion-icon>
-          </ion-button>
-          <ion-title class="stickyHeader-title" slot="start">Event Configuration</ion-title>
-        </ion-toolbar>
-      </ion-header>
+          <div class="viewsHeader">
+            <ion-button class="stickyHeader-close" shape="round" slot="start" size="small" fill="outline"
+                        @click="triggerTabbedPageExitOrNavigate(`/event-selector`)">
+              <ion-icon src="/assets/icons/line/arrow-left-line.svg"></ion-icon>
+            </ion-button>
+            <ion-title class="stickyHeader-title" slot="start">Event Configuration</ion-title>
+          </div>
 
-      TODO: Event configuration here... allowing to :
-      <ul>
-        <li>Trigger a manual crawling for the event</li>
-        <li>Update some features : room visibility, favorites/watch/feedbacks enabled</li>
-        <li>Update themes and see directly how this works</li>
-      </ul>
+          <div class="viewsSubHeader">
+            <div class="viewsSubHeader-title">{{ confDescriptor?.headingTitle }}</div>
+            <current-event-status :conf-descriptor="confDescriptor"></current-event-status>
+          </div>
+        </ion-toolbar>
+        <img :src="confDescriptor?.backgroundUrl">
+      </ion-header>
+      <vox-bar-section>
+        <template #title>Feature flags</template>
+      </vox-bar-section>
+      <ion-list>
+        <ion-item>
+          <ion-toggle>
+            <label><ion-icon src="/assets/icons/solid/bookmark-favorite.svg"></ion-icon>Favorites</label>
+          </ion-toggle>
+        </ion-item>
+        <ion-item>
+          <ion-toggle>
+            <label><ion-icon src="/assets/icons/solid/video.svg"></ion-icon>Watch later</label>
+          </ion-toggle>
+        </ion-item>
+        <ion-item>
+          <ion-toggle>
+            <label><ion-icon src="/assets/icons/solid/map-marker-area.svg"></ion-icon>Rooms</label>
+          </ion-toggle>
+        </ion-item>
+      </ion-list>
     </ion-content>
   </ion-page>
 </template>
@@ -25,11 +46,117 @@
 
 import {useIonRouter} from "@ionic/vue";
 import {useTabbedPageNav} from "@/state/useTabbedPageNav";
+import CurrentEventStatus from "@/components/events/CurrentEventStatus.vue";
+import {PropType} from "vue";
+import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
+import VoxBarSection from "@/components/ui/VoxBarSection.vue";
 
 const {triggerTabbedPageExitOrNavigate} = useTabbedPageNav();
-
+const props = defineProps({
+  confDescriptor: {
+    required: true,
+    type: Object as PropType<VoxxrinConferenceDescriptor>
+  }
+})
 const ionRouter = useIonRouter();
 </script>
 
-<style lang="scss" scoped>
+<style scoped lang="scss">
+ion-header {
+  img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    height: 100%;
+    width: 100%;
+    z-index: -1;
+    object-fit: cover;
+  }
+
+  .btnUser {
+    height: 48px;
+    width: 48px;
+    --padding-start: 0;
+    --padding-end: 0;
+    font-size: 18px;
+    --background: rgba(var(--app-white-transparent));
+    --border-color: rgba(var(--app-white-transparent));
+    --border-width: 1px;
+
+    :deep(ion-icon) {
+      color: white;
+    }
+  }
+}
+ion-toolbar {
+  position: relative;
+  --background: linear-gradient(0deg, rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.4802) 0%, rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.98) 52.84%);
+  z-index: 1;
+
+  ion-title {
+    position: relative;
+    padding-inline: 24px;
+    text-align: left;
+  }
+
+  .viewsHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 16px;
+    font-weight: bold;
+    color: var(--voxxrin-event-theme-colors-primary-contrast-hex);
+  }
+
+  .viewsSubHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 0;
+    font-weight: bold;
+
+    &-title {
+      color: var(--voxxrin-event-theme-colors-primary-contrast-hex);
+      font-weight: bold;
+      font-size: calc(28px + 8 * (100vw - 320px) / 1024)
+    }
+  }
+}
+
+ion-list {
+  background: transparent;
+
+  ion-item {
+    --padding-start: 0;
+    --inner-padding-top: 12px;
+    --inner-padding-bottom: 12px;
+    --background: transparent;
+
+
+    ion-toggle {
+      &.toggle-checked {
+        label {
+          font-weight: bold;
+
+          ion-icon {
+            --color: var(--voxxrin-event-theme-colors-primary-rgb);
+          }
+        }
+      }
+
+      label {
+        display: flex;
+        align-items: center;
+        padding-left: var(--app-gutters);
+        column-gap: 8px;
+
+        ion-icon {
+          font-size: 28px;
+        }
+      }
+    }
+  }
+}
+
 </style>

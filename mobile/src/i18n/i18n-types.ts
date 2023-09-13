@@ -250,6 +250,14 @@ type RootTranslation = {
 	 */
 	Config: string
 	/**
+	 * R​a​t​i​n​g
+	 */
+	Rating: string
+	/**
+	 * N​o​t​i​f​i​c​a​t​i​o​n​s
+	 */
+	Notifs: string
+	/**
 	 * T​a​l​k​s
 	 */
 	Talks_Config: string
@@ -572,6 +580,14 @@ export type TranslationFunctions = {
 	 * Config
 	 */
 	Config: () => LocalizedString
+	/**
+	 * Rating
+	 */
+	Rating: () => LocalizedString
+	/**
+	 * Notifications
+	 */
+	Notifs: () => LocalizedString
 	/**
 	 * Talks
 	 */
