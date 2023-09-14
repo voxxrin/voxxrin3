@@ -101,7 +101,8 @@ service cloud.firestore {
         allow delete: if false;
 
         match /__computed/self {
-          allow read, write: if false;
+          allow get: if true;
+          allow list, write: if false;
         }
         match /talksNotes/{talkId} {
           allow get, list, create, update: if iAm(userId);
