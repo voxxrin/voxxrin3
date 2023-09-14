@@ -317,8 +317,8 @@ const COLLECTIONS: CollectionDescriptor[] = [{
         it(`As ${userContext.name}, I should not be able to LIST another user events' computed infos`, async () => {
             await assertFails(getDocs(collection(userContext.context().firestore(), '/users/alice/events/an-event/__computed')));
         })
-        it(`As ${userContext.name}, I should not be able to GET another user events' computed infos`, async () => {
-            await assertFails(getDoc(doc(userContext.context().firestore(), '/users/alice/events/an-event/__computed/self')));
+        it(`As ${userContext.name}, I should be able to GET another user events' computed infos`, async () => {
+            await assertSucceeds(getDoc(doc(userContext.context().firestore(), '/users/alice/events/an-event/__computed/self')));
         })
         it(`As ${userContext.name}, I should not be able to CREATE another user's events' computed infos`, async () => {
             await assertFails(setDoc(doc(userContext.context().firestore(), '/users/alice/events/an-event/__computed/self'), { favoritedTalkIds: [] }));
@@ -334,8 +334,8 @@ const COLLECTIONS: CollectionDescriptor[] = [{
             it(`As ${userContext.name}, I shoud not be able to LIST my user's events' computed infos`, async () => {
                 await assertFails(getDocs(collection(userContext.context().firestore(), '/users/fred/events/an-event/__computed')));
             })
-            it(`As ${userContext.name}, I shoud not be able to GET my user's events' computed infos`, async () => {
-                await assertFails(getDoc(doc(userContext.context().firestore(), '/users/fred/events/an-event/__computed/self')));
+            it(`As ${userContext.name}, I shoud be able to GET my user's events' computed infos`, async () => {
+                await assertSucceeds(getDoc(doc(userContext.context().firestore(), '/users/fred/events/an-event/__computed/self')));
             })
             it(`As ${userContext.name}, I shoud not be able to CREATE my user's events' computed infos`, async () => {
                 await assertFails(setDoc(doc(userContext.context().firestore(), '/users/fred/events/an-event/__computed/self'), { favoritedTalkIds: [] }));
