@@ -61,7 +61,11 @@ Promise.all([
     router.isReady(),
     signInAnonymously(auth).then((anonymousUser) => {
         const userRef = doc(collection(db, 'users'), anonymousUser.user.uid)
-        return updateDoc(userRef, "userLastConnection", new Date().toISOString());
+        // Letting some time to the server to create the new user node the first time the user authenticates
+        // ... so that we can then update last connection date
+        setTimeout(() => {
+            updateDoc(userRef, "userLastConnection", new Date().toISOString())
+        }, 5000);
     })
 ]).then(async ([_1, _2, _3]) => {
     app.mount('#app');
