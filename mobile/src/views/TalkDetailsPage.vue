@@ -180,7 +180,7 @@ const theme = computed(() => {
           right: 0;
           bottom: 0;
           background-repeat: no-repeat;
-          background-image: url('assets/images/png/texture-favorited.png');
+          background-image: url('/assets/images/png/texture-favorited.png');
           background-position: right;
           background-size: cover;
           transform: scale(1);

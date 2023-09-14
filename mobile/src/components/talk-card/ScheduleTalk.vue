@@ -441,7 +441,7 @@ const theme = {
       height: 100%;
       right: 0;
       bottom: 0;
-      background-image: url('assets/images/png/texture-favorited.png');
+      background-image: url('/assets/images/png/texture-favorited.png');
       background-repeat: no-repeat;
       background-position: right;
       background-size: cover;
