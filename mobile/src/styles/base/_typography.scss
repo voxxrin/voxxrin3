@@ -65,3 +65,15 @@
     }
   }
 }
+
+.talkDetails-description {
+  ion-text {
+    * {
+      color: var(--app-primary) !important;
+
+      @media (prefers-color-scheme: dark) {
+        color: white !important;
+      }
+    }
+  }
+}
