@@ -27,7 +27,11 @@
 
       <div v-if="confDescriptorRef && talks.length">
         <schedule-talk v-for="(talk, index) in talks" :key="talk.id.value"
-            :conf-descriptor="confDescriptorRef" :is-highlighted="() => false" :talk="talk"></schedule-talk>
+            :conf-descriptor="confDescriptorRef" :is-highlighted="() => false" :talk="talk">
+          <template #footer-actions="{ talk, userTalkHook }">
+            [I would love to have multiple actions here...]
+          </template>
+        </schedule-talk>
       </div>
     </ion-content>
   </ion-page>
@@ -36,7 +40,6 @@
 <script setup lang="ts">
 
 import {useIonRouter} from "@ionic/vue";
-import {goBackOrNavigateTo} from "@/router";
 import {useRoute} from "vue-router";
 import {computed, ref, unref} from "vue";
 import {EventId} from "@/models/VoxxrinEvent";
@@ -44,7 +47,6 @@ import {getRouteParamsValue} from "@/views/vue-utils";
 import {useTabbedPageNav} from "@/state/useTabbedPageNav";
 import ScheduleTalk from "@/components/talk-card/ScheduleTalk.vue";
 import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
-import {VoxxrinTalk} from "@/models/VoxxrinTalk";
 import {useSchedule} from "@/state/useSchedule";
 import {VoxxrinScheduleTalksTimeSlot} from "@/models/VoxxrinSchedule";
 
