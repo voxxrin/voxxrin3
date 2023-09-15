@@ -44,21 +44,25 @@
 
 <script setup lang="ts">
 
-import {useIonRouter} from "@ionic/vue";
+import {useIonRouter, IonToggle} from "@ionic/vue";
 import {useTabbedPageNav} from "@/state/useTabbedPageNav";
 import CurrentEventStatus from "@/components/events/CurrentEventStatus.vue";
-import {PropType} from "vue";
-import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
+import {ref} from "vue";
 import VoxBarSection from "@/components/ui/VoxBarSection.vue";
+import {EventId} from "@/models/VoxxrinEvent";
+import {getRouteParamsValue} from "@/views/vue-utils";
+import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
+import {useRoute} from "vue-router";
+
+const ionRouter = useIonRouter();
+const route = useRoute();
+
+const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')));
+const secretOrganizerToken = ref(getRouteParamsValue(route, 'secretOrganizerToken'));
+
+const {conferenceDescriptor: confDescriptor} = useSharedConferenceDescriptor(eventId);
 
 const {triggerTabbedPageExitOrNavigate} = useTabbedPageNav();
-const props = defineProps({
-  confDescriptor: {
-    required: true,
-    type: Object as PropType<VoxxrinConferenceDescriptor>
-  }
-})
-const ionRouter = useIonRouter();
 </script>
 
 <style scoped lang="scss">

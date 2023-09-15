@@ -34,14 +34,17 @@ const tabs = [{
   id: 'event-config', url: `/events/${eventId.value.value}/asOrganizer/${secretOrganizerToken.value}/config`, label: LL.value.Config(),
   icon: '/assets/icons/line/settings-cog-line.svg', selectedIcon: '/assets/icons/solid/settings-cog.svg',
 }, {
-  id: 'event-rating', url: `/events/${eventId.value.value}/asOrganizer/${secretOrganizerToken.value}/config`, label: LL.value.Rating(),
+  id: 'event-rating', url: `/events/${eventId.value.value}/asOrganizer/${secretOrganizerToken.value}/rating`, label: LL.value.Rating(),
     icon: '/assets/icons/line/star-line.svg', selectedIcon: '/assets/icons/solid/star-solid.svg',
 }, {
   id: 'talks-config', url: `/events/${eventId.value.value}/asOrganizer/${secretOrganizerToken.value}/talks-config`, label: LL.value.Talks_Config(),
   icon: '/assets/icons/line/megaphone-line.svg', selectedIcon: '/assets/icons/solid/megaphone.svg',
 }, {
-  id: 'event-notifications', url: `/events/${eventId.value.value}/asOrganizer/${secretOrganizerToken.value}/config`, label: LL.value.Notifs(),
+  id: 'event-notifications', url: `/events/${eventId.value.value}/asOrganizer/${secretOrganizerToken.value}/notifications`, label: LL.value.Notifications(),
   icon: '/assets/icons/line/bell-line.svg', selectedIcon: '/assets/icons/solid/bell.svg',
+}, {
+  id: 'event-theming', url: `/events/${eventId.value.value}/asOrganizer/${secretOrganizerToken.value}/theming`, label: LL.value.Theming(),
+  icon: '/assets/icons/line/palette-line.svg', selectedIcon: '/assets/icons/solid/palette.svg',
 }];
 </script>
 

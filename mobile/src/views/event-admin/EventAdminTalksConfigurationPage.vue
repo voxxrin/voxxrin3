@@ -25,12 +25,7 @@
         <li>Download CSV file with every talk (CFP) id + shareable feedbacks-viewer token link, that could be shared by conference organizer to speakers</li>
       </ul>
 
-      <ion-button @click="triggerTabbedPageNavigate(`/events/${eventId.value}/asOrganizer/${secretOrganizerToken}/talk-feedbacks/1`, 'forward', 'push')">
-        Feedbacks for talk 1
-      </ion-button>
-      <ion-button @click="triggerTabbedPageNavigate(`/events/${eventId.value}/asOrganizer/${secretOrganizerToken}/talk-feedbacks/2`, 'forward', 'push')">
-        Feedbacks for talk 2
-      </ion-button>
+      <schedule-talk v-if="confDescriptorRef && dummyTalk" :conf-descriptor="confDescriptorRef" :is-highlighted="() => false" :talk="dummyTalk"></schedule-talk>
     </ion-content>
   </ion-page>
 </template>
@@ -40,10 +35,15 @@
 import {useIonRouter} from "@ionic/vue";
 import {goBackOrNavigateTo} from "@/router";
 import {useRoute} from "vue-router";
-import {ref} from "vue";
+import {computed, ref, unref} from "vue";
 import {EventId} from "@/models/VoxxrinEvent";
 import {getRouteParamsValue} from "@/views/vue-utils";
 import {useTabbedPageNav} from "@/state/useTabbedPageNav";
+import ScheduleTalk from "@/components/talk-card/ScheduleTalk.vue";
+import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
+import {VoxxrinTalk} from "@/models/VoxxrinTalk";
+import {useSchedule} from "@/state/useSchedule";
+import {VoxxrinScheduleTalksTimeSlot} from "@/models/VoxxrinSchedule";
 
 const ionRouter = useIonRouter();
 const route = useRoute()
@@ -51,7 +51,33 @@ const route = useRoute()
 const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')));
 const secretOrganizerToken = ref(getRouteParamsValue(route, 'secretOrganizerToken'));
 
+const {conferenceDescriptor: confDescriptorRef} = useSharedConferenceDescriptor(eventId);
+
 const {triggerTabbedPageNavigate, triggerTabbedPageExitOrNavigate} = useTabbedPageNav()
+
+const selectedDayId = computed(() => {
+  const confDescriptor = unref(confDescriptorRef)
+  if(!confDescriptor) {
+    return undefined;
+  }
+
+  return confDescriptor.days[0].id;
+})
+
+const { schedule: currentScheduleRef } = useSchedule(confDescriptorRef, selectedDayId);
+const dummyTalk = computed(() => {
+  const currentSchedule = unref(currentScheduleRef);
+  if(!currentSchedule) {
+    return undefined;
+  }
+
+  const firstTalksTimeslot = currentSchedule.timeSlots.find(ts => ts.type === 'talks' && ts.talks.length>0) as VoxxrinScheduleTalksTimeSlot|undefined;
+  if(!firstTalksTimeslot) {
+    return undefined;
+  }
+
+  return firstTalksTimeslot.talks[0];
+})
 
 </script>
 

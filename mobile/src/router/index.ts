@@ -33,10 +33,13 @@ const routes: Array<RouteRecordRaw> = [
   { path: '/user-tokens/register', component: () => import('@/views/UserTokenRegistrationPage.vue') },
   { path: '/events/:eventId/asOrganizer/:secretOrganizerToken', component: () => import('@/views/event-admin/_BaseEventAdminPages.vue'), children: [
       { path: '', redirect: (route) => `/events/${route.params.eventId}/asOrganizer/${route.params.secretOrganizerToken}/config` },
-      { path: 'config', component: () => import('@/views/event-admin/EventAdminConfiguration.vue') },
-      { path: 'talks-config', component: () => import('@/views/event-admin/EventAdminTalksConfiguration.vue') },
+      { path: 'config', component: () => import('@/views/event-admin/EventAdminConfigurationPage.vue') },
+      { path: 'rating', component: () => import('@/views/event-admin/EventAdminRatingConfigurationPage.vue') },
+      { path: 'talks-config', component: () => import('@/views/event-admin/EventAdminTalksConfigurationPage.vue') },
+      { path: 'notifications', component: () => import('@/views/event-admin/EventAdminNotificationsPage.vue') },
+      { path: 'theming', component: () => import('@/views/event-admin/EventAdminThemingPage.vue') },
   ]},
-  { path: '/events/:eventId/asOrganizer/:secretOrganizerToken/talk-feedbacks/:talkId', component: () => import('@/views/event-admin/EventAdminTalkFeedbacks.vue') },
+  { path: '/events/:eventId/asOrganizer/:secretOrganizerToken/talk-feedbacks/:talkId', component: () => import('@/views/event-admin/EventAdminTalkFeedbacksPage.vue') },
 ]
 
 const router = createRouter({

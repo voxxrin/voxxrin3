@@ -81,6 +81,8 @@ const en = {
 	Past_events_highlighted: "*Past* events",
 	Future_events: "Future events",
 	Past_events: "Past events",
+	Rating: "Rating",
+	Theming: "Theme",
 } satisfies BaseTranslation
 
 export default en
