@@ -10,6 +10,8 @@
 
   &.md {
     .in-segment {
+      text-transform: none;
+
       &:first-letter {
         text-transform: lowercase;
       }
@@ -38,10 +40,7 @@
     &.md {
       --indicator-height: 44px;
       --indicator-transform: translateY(-2px);
-
-      .indicator-background {
-        border-radius: 54px;
-      }
+      --border-radius: 16px 16px 0 0;
     }
 
     @media (prefers-color-scheme: dark) {
@@ -82,11 +81,5 @@
         }
       }
     }
-  }
-}
-
-.md {
-  .segment-button-indicator-background {
-    border-radius: 16px 16 0 0;
   }
 }
