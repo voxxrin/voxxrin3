@@ -25,7 +25,10 @@
         <li>Download CSV file with every talk (CFP) id + shareable feedbacks-viewer token link, that could be shared by conference organizer to speakers</li>
       </ul>
 
-      <schedule-talk v-if="confDescriptorRef && dummyTalk" :conf-descriptor="confDescriptorRef" :is-highlighted="() => false" :talk="dummyTalk"></schedule-talk>
+      <div v-if="confDescriptorRef && talks.length">
+        <schedule-talk v-for="(talk, index) in talks" :key="talk.id.value"
+            :conf-descriptor="confDescriptorRef" :is-highlighted="() => false" :talk="talk"></schedule-talk>
+      </div>
     </ion-content>
   </ion-page>
 </template>
@@ -65,18 +68,18 @@ const selectedDayId = computed(() => {
 })
 
 const { schedule: currentScheduleRef } = useSchedule(confDescriptorRef, selectedDayId);
-const dummyTalk = computed(() => {
+const talks = computed(() => {
   const currentSchedule = unref(currentScheduleRef);
   if(!currentSchedule) {
-    return undefined;
+    return [];
   }
 
   const firstTalksTimeslot = currentSchedule.timeSlots.find(ts => ts.type === 'talks' && ts.talks.length>0) as VoxxrinScheduleTalksTimeSlot|undefined;
   if(!firstTalksTimeslot) {
-    return undefined;
+    return [];
   }
 
-  return firstTalksTimeslot.talks[0];
+  return firstTalksTimeslot.talks;
 })
 
 </script>
