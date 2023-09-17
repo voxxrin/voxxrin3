@@ -8,7 +8,7 @@
                         @click="triggerTabbedPageExitOrNavigate(`/event-selector`)">
               <ion-icon src="/assets/icons/line/arrow-left-line.svg"></ion-icon>
             </ion-button>
-            <ion-title class="stickyHeader-title" slot="start">Event Configuration</ion-title>
+            <ion-title class="stickyHeader-title" slot="start">Event configuration</ion-title>
           </div>
 
           <div class="viewsSubHeader">
@@ -100,7 +100,7 @@ ion-toolbar {
 
   ion-title {
     position: relative;
-    padding-inline: 24px;
+    padding-inline: 12px;
     text-align: left;
   }
 

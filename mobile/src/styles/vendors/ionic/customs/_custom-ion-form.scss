@@ -3,6 +3,14 @@
 /* Input */
 ion-input {
 
+  &.sc-ion-input-md-h:not(.item-label):not(.item-has-modern-input), ion-item:not(.item-label):not(.item-has-modern-input) .sc-ion-input-md-h {
+    --padding-start: 12px;
+  }
+
+  &.input-fill-outline {
+    --padding-start: 12px;
+    --border-radius: 12px;
+  }
   &.sc-ion-input-md-h {
     min-height: 44px !important;
   }

@@ -9,6 +9,9 @@
 @import "@/styles/components/_listCardsButtons.scss";
 @import "@/styles/components/_tabsSelection.scss";
 
+/* ~ LAYOUT */
+@import "@/styles/layout/content.scss";
+
 /* ~ BASE */
 @import "@/styles/base/base.scss";
 @import "@/styles/base/_typography.scss";
@@ -21,6 +24,7 @@
 @import "@/styles/vendors/ionic/customs/custom-ion-header.scss";
 @import "@/styles/vendors/ionic/customs/_custom-ion-form.scss";
 @import "@/styles/vendors/ionic/customs/_custom-ion-modal.scss";
+@import "@/styles/vendors/ionic/customs/_custom-ion-range.scss";
 @import "@/styles/vendors/ionic/customs/_custom-ion-list.scss";
 @import "@/styles/vendors/ionic/customs/_custom-ion-action-sheet.scss";
 @import "@/styles/vendors/ionic/customs/custom-ion-tabs.scss";

@@ -250,6 +250,14 @@ type RootTranslation = {
 	 */
 	Config: string
 	/**
+	 * R​a​t​i​n​g
+	 */
+	Rating: string
+	/**
+	 * N​o​t​i​f​i​c​a​t​i​o​n​s
+	 */
+	Notifications: string
+	/**
 	 * T​a​l​k​s
 	 */
 	Talks_Config: string
@@ -337,10 +345,6 @@ type RootTranslation = {
 	 * P​a​s​t​ ​e​v​e​n​t​s
 	 */
 	Past_events: string
-	/**
-	 * R​a​t​i​n​g
-	 */
-	Rating: string
 	/**
 	 * T​h​e​m​e
 	 */
@@ -581,6 +585,14 @@ export type TranslationFunctions = {
 	 */
 	Config: () => LocalizedString
 	/**
+	 * Rating
+	 */
+	Rating: () => LocalizedString
+	/**
+	 * Notifications
+	 */
+	Notifications: () => LocalizedString
+	/**
 	 * Talks
 	 */
 	Talks_Config: () => LocalizedString
@@ -668,10 +680,6 @@ export type TranslationFunctions = {
 	 * Past events
 	 */
 	Past_events: () => LocalizedString
-	/**
-	 * Rating
-	 */
-	Rating: () => LocalizedString
 	/**
 	 * Theme
 	 */

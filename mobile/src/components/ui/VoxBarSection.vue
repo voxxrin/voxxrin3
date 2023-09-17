@@ -19,6 +19,8 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  height: 54px;
+  margin-bottom: 1px;
   padding: 12px var(--app-gutters);
   background-color: var(--app-beige-line);
 
