@@ -26,12 +26,17 @@
               <ion-icon src="/assets/icons/solid/video.svg"></ion-icon>
             </ion-col>
             <ion-col>
-              <ion-input fill="outline" placeholder="Enter URL"></ion-input>
+              <ion-input fill="outline" class="custom" placeholder="Enter URL"></ion-input>
             </ion-col>
           </ion-row>
           <schedule-talk :conf-descriptor="confDescriptorRef" :is-highlighted="() => false" :talk="talk">
             <template #footer-actions="{ talk, userTalkHook }">
-
+               <span class="talkConfigStateIndicator">
+                    <ion-icon class="talkConfigStateIndicator-check" src="/assets/icons/solid/settings-cog-check.svg"></ion-icon>
+                    <ion-icon src="/assets/icons/solid/link.svg" v-if="true"></ion-icon>
+                    <ion-icon src="/assets/icons/solid/bell.svg" v-if="false"></ion-icon>
+                </span>
+              <talk-watch-later-button :user-talk-notes="userTalkHook" :conf-descriptor="confDescriptor"></talk-watch-later-button>
             </template>
           </schedule-talk>
           <div class="talkConfigItem-actions" v-if="true">
@@ -49,13 +54,84 @@
             </ion-button>
           </div>
           <div class="talkConfigItem-footer">
-            <ion-button shape="round" color="primary" expand="full" size="default">
+            <ion-button shape="round" expand="full" size="default"  v-if="true">
+              Save configuration talk
+              <ion-icon src="/assets/icons/solid/save.svg" slot="end"></ion-icon>
+            </ion-button>
+          </div>
+        </div>
+        <div class="talkConfigItem" :class="{'_editMode': false}" v-for="(talk, index) in talks" :key="talk.id.value">
+          <ion-row class="talkConfigItem-head" v-if="false">
+            <ion-col size="auto" class="starNumber">
+              <ion-icon src="/assets/icons/solid/video.svg"></ion-icon>
+            </ion-col>
+            <ion-col>
+              <ion-input fill="outline" class="custom" placeholder="Enter URL"></ion-input>
+            </ion-col>
+          </ion-row>
+          <schedule-talk :conf-descriptor="confDescriptorRef" :is-highlighted="() => false" :talk="talk">
+            <template #footer-actions="{ talk, userTalkHook }">
+               <span class="talkConfigStateIndicator">
+                    <ion-icon class="talkConfigStateIndicator-check" src="/assets/icons/solid/settings-cog-check.svg"></ion-icon>
+                    <ion-icon src="/assets/icons/solid/link.svg" v-if="true"></ion-icon>
+                    <ion-icon src="/assets/icons/solid/bell.svg" v-if="true"></ion-icon>
+                </span>
+              <talk-watch-later-button :user-talk-notes="userTalkHook" :conf-descriptor="confDescriptor"></talk-watch-later-button>
+            </template>
+          </schedule-talk>
+          <div class="talkConfigItem-actions" v-if="false">
+            <ion-button class="ion-no-padding" shape="round" expand="full">
+              <div class="btnHasHelp">
+                <span class="btnHasHelp-label">Send recording notification <small>last send : 00/00/0000 - 00h00</small></span>
+                <ion-icon src="/assets/icons/solid/bell.svg" slot="end"></ion-icon>
+              </div>
+            </ion-button>
+            <ion-button class="ion-no-padding" shape="round" fill="outline" expand="full">
+              <div class="btnHasHelp">
+                <span class="btnHasHelp-label">Share token link</span>
+                <ion-icon src="/assets/icons/solid/share.svg" slot="end"></ion-icon>
+              </div>
+            </ion-button>
+          </div>
+          <div class="talkConfigItem-footer">
+            <ion-button shape="round" expand="full" size="default" v-if="true">
+              Edit talk configuration
+              <ion-icon src="/assets/icons/solid/edit-pen-2.svg" slot="end"></ion-icon>
+            </ion-button>
+
+            <ion-button shape="round" expand="full" size="default" v-if="false">
               Save configuration talk
               <ion-icon src="/assets/icons/solid/save.svg" slot="end"></ion-icon>
             </ion-button>
           </div>
         </div>
       </div>
+
+      <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+        <ion-fab-button>
+          <ion-icon src="/assets/icons/solid/settings-cog.svg"></ion-icon>
+        </ion-fab-button>
+        <ion-fab-list side="top">
+          <ion-button class="ion-no-padding" shape="round" expand="full">
+            <div class="btnHasHelp">
+              <span class="btnHasHelp-label">Download CSV file <small>for every talk (CFP) id</small></span>
+              <ion-icon src="/assets/icons/solid/file.svg" slot="end"></ion-icon>
+            </div>
+          </ion-button>
+          <ion-button class="ion-no-padding" shape="round" expand="full">
+            <div class="btnHasHelp">
+              <span class="btnHasHelp-label">Push notifications  <small>having a recording link provided</small></span>
+              <ion-icon src="/assets/icons/solid/bell.svg" slot="end"></ion-icon>
+            </div>
+          </ion-button>
+          <ion-button class="ion-no-padding" shape="round" expand="full">
+            <div class="btnHasHelp">
+              <span class="btnHasHelp-label">Automatic recording link</span>
+              <ion-icon src="/assets/icons/solid/video.svg" slot="end"></ion-icon>
+            </div>
+          </ion-button>
+        </ion-fab-list>
+      </ion-fab>
     </ion-content>
   </ion-page>
 </template>
@@ -73,6 +149,8 @@ import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
 import {useSchedule} from "@/state/useSchedule";
 import {VoxxrinScheduleTalksTimeSlot} from "@/models/VoxxrinSchedule";
 import CurrentEventStatus from "@/components/events/CurrentEventStatus.vue";
+import TalkWatchLaterButton from "@/components/talk-card/TalkWatchLaterButton.vue";
+import TalkSelectForFeedback from "@/components/talk-card/TalkSelectForFeedback.vue";
 
 const ionRouter = useIonRouter();
 const route = useRoute()
@@ -176,17 +254,43 @@ const talks = computed(() => {
   }
 
   .talkConfigItem {
+    margin-bottom: 16px;
     border-radius: 16px;
-    background: var(--app-beige-medium);
-    border: 1px solid var(--app-beige-line);
+    background: transparent;
 
     @media (prefers-color-scheme: dark) {
       background: var(--app-medium-contrast-contrast);
       border: 1px solid var(--app-beige-line);
     }
 
-    &._editMode {
+    ion-card {
+      margin: 0;
+    }
 
+    &._editMode {
+        background: var(--app-beige-medium);
+        border: 1px solid var(--app-beige-line);
+
+      @media (prefers-color-scheme: dark) {
+        background: var(--app-light-contrast-contrast);
+        border: 1px solid var(--app-beige-line);
+      }
+
+        ion-card {
+          margin: 12px var(--app-gutters) 0;
+        }
+
+      .talkConfigItem-footer {
+        top: inherit;
+        margin: 0;
+        padding: 16px;
+        background-color: var(--app-beige-line);
+
+        ion-button {
+          --border-radius: 54px;
+          --background: var(--voxxrin-event-theme-colors-primary-hex);
+        }
+      }
     }
 
     &-head {
@@ -194,8 +298,6 @@ const talks = computed(() => {
       align-items: center;
       flex-direction: row;
       padding: 12px 12px 0 12px;
-
-
 
       ion-icon {
         font-size: 28px;
@@ -209,9 +311,58 @@ const talks = computed(() => {
     }
 
     &-footer {
-      padding: 16px;
+      position: relative;
+      top: -6px;
+      margin: 0 12px;
       border-radius: 0 0 16px 16px;
-      background-color: var(--app-beige-line);
+      background-color: var(--voxxrin-event-theme-colors-primary-hex);
+
+
+      ion-button {
+        --background: transparent;
+        --box-shadow: none;
+        --border-radius: 0;
+      }
+    }
+  }
+
+  .talkConfigStateIndicator {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-items: flex-end;
+    margin: 12px 8px;
+    padding: 4px 8px 4px 34px;
+    background-color: var(--app-voxxrin);
+    border-radius: 54px;
+
+    &-check {
+      position: absolute;
+      left: 4px;
+      padding-right: 4px;
+      border-right: 1px solid var(--app-white);
+      opacity: 0.8;
+    }
+
+    ion-icon {
+      color: var(--app-white);
+      font-size: 22px;
+    }
+  }
+
+  ion-fab-list {
+    align-items: inherit;
+    right: 0;
+
+    ion-button {
+      @for $i from 0 through 1000 {
+        animation: slide-left 140ms cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+        animation-timing-function: ease-in-out;
+
+        &:nth-child(#{$i}) {
+          animation-delay: $i * calc(80ms / 6);
+        }
+      }
     }
   }
 </style>

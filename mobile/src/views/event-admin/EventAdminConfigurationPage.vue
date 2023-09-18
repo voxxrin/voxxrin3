@@ -39,7 +39,7 @@
         </ion-item>
       </ion-list>
       <div class="sectionContainer ion-text-center">
-        <ion-button size="small" fill="solid" color="primary" shape="round" expand="block">
+        <ion-button size="small" fill="solid" shape="round" expand="block">
           Trigger crawling <ion-icon slot="end" src="/assets/icons/solid/reload.svg"></ion-icon>
         </ion-button>
         <span>Last crawling :  <strong>00/00/0000 - 00:00:00</strong></span>

@@ -28,6 +28,10 @@
     font-size: 18px;
     font-weight: 900;
     color: var(--app-primary);
+
+    @media (prefers-color-scheme: dark) {
+      color: var(--app-white);
+    }
   }
 }
 </style>

@@ -354,16 +354,6 @@ async function openSchedulePreferencesModal() {
     }
   }
 
-  @keyframes slide-left {
-    0% { transform: translateX(120%);}
-    100% { transform: translateX(0);}
-  }
-
-  @keyframes slide-left-revert {
-    0% {transform: translateX(0);}
-    100% { transform: translateX(120%);}
-  }
-
   .listTalks {
     padding: 0;
   }

@@ -38,7 +38,7 @@
                 <span class="starNumber-value">1</span>
               </ion-col>
               <ion-col>
-                <ion-input fill="outline" placeholder="Enter text"></ion-input>
+                <ion-input class="custom" fill="outline" placeholder="Enter text"></ion-input>
               </ion-col>
             </ion-row>
           </ion-item>
@@ -49,7 +49,7 @@
                 <span class="starNumber-value">2</span>
               </ion-col>
               <ion-col>
-                <ion-input fill="outline" placeholder="Enter text"></ion-input>
+                <ion-input class="custom" fill="outline" placeholder="Enter text"></ion-input>
               </ion-col>
             </ion-row>
           </ion-item>
@@ -60,7 +60,7 @@
                 <span class="starNumber-value">3</span>
               </ion-col>
               <ion-col>
-                <ion-input fill="outline" placeholder="Enter text"></ion-input>
+                <ion-input class="custom" fill="outline" placeholder="Enter text"></ion-input>
               </ion-col>
             </ion-row>
           </ion-item>
@@ -184,7 +184,7 @@ ion-toolbar {
     justify-content: space-between;
     padding-top: 16px;
     font-weight: bold;
-    color: var(--voxxrin-event-theme-colors-primary-contrast-hex);
+    color: var(--voxxrin-event-theme-colors-primary-hex);
   }
 
   .viewsSubHeader {
@@ -195,7 +195,7 @@ ion-toolbar {
     font-weight: bold;
 
     &-title {
-      color: var(--voxxrin-event-theme-colors-primary-contrast-hex);
+      color: var(--app-white);
       font-weight: bold;
       font-size: calc(28px + 8 * (100vw - 320px) / 1024)
     }
@@ -227,7 +227,7 @@ ion-list {
           font-weight: bold;
 
           ion-icon {
-            --color: var(--voxxrin-event-theme-colors-primary-rgb);
+            --color: var(--voxxrin-event-theme-colors-primary-hex);
           }
         }
       }
@@ -284,8 +284,8 @@ ion-list {
     position: relative;
 
     ion-icon {
-      color: var(--voxxrin-event-theme-colors-primary-rgb);
       font-size: 44px;
+      color: var(--voxxrin-event-theme-colors-primary-hex);
     }
 
     &-value {
@@ -337,7 +337,11 @@ ion-list {
       width: 74px;
       border-radius: 74px;
       background: var(--app-beige-medium);
-      border: 3px solid var(--voxxrin-event-theme-colors-primary-rgb);
+      border: 3px solid var(--voxxrin-event-theme-colors-primary-hex);
+
+      @media (prefers-color-scheme: dark) {
+        background: var(--app-light-contrast);
+      }
     }
 
     &-delete {
@@ -349,10 +353,36 @@ ion-list {
       border-radius: 34px;
       border: 2px solid var(--app-primary);
 
+      @media (prefers-color-scheme: dark) {
+        border: 2px solid var(--app-white);
+      }
+
       ion-icon {
         font-size: 22px;
       }
     }
   }
 }
+
+ion-range {
+  --bar-background: var(--app-beige-medium);
+}
+
+ion-range::part(tick){
+  background: var(--app-background);
+  border: 4px solid var(--app-beige-medium);
+
+  @media (prefers-color-scheme: dark) {
+    background: var(--app-dark-contrast);
+    border: 4px solid var(--app-light-contrast);
+  }
+}
+
+ion-range::part(tick-active),
+ion-range::part(bar-active),
+ion-range::part(knob) {
+  background: var(--voxxrin-event-theme-colors-primary-hex);
+}
+
+
 </style>

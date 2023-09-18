@@ -11,6 +11,7 @@ ion-input {
     --padding-start: 12px;
     --border-radius: 12px;
   }
+
   &.sc-ion-input-md-h {
     min-height: 44px !important;
   }
@@ -59,6 +60,18 @@ ion-input {
       font-size: 28px;
       z-index: 1;
     }
+  }
+
+  &.custom {
+    --padding-top: 12px;
+    --padding-bottom: 12px;
+    --padding-start: 12px !important;
+    --padding-end: 12px !important;
+    --border-radius: 12px !important;
+    --border-width: 2px !important;
+    --background: var(--app-background);
+    --border-color: var(--app-beige-line);
+
   }
 }
 
