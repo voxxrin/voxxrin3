@@ -25,6 +25,7 @@
   background-color: var(--app-beige-line);
 
   &-title {
+    font-size: 18px;
     font-weight: 900;
     color: var(--app-primary);
   }

@@ -63,7 +63,7 @@ ion-button {
            --padding-start: 0;
            --padding-end: 0;
            height: 42px;
-           width: 42px;
+           min-width: 42px;
            font-size: 18px;
        }
 
@@ -115,6 +115,34 @@ ion-button {
             --background: rgba(white, 0.2);
             --color: var(--app-white);
             border-left: 1px solid var(--app-line-contrast);
+        }
+    }
+
+    .btnHasHelp {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        flex: 1;
+
+        ion-icon {
+            font-size: 34px;
+            padding: 0 16px;
+        }
+
+        &-label {
+            display: flex;
+            flex-direction: column;
+            justify-content: left;
+            text-align: left;
+            padding: 0 16px;
+            width:100%;
+
+            small {
+                margin-top: 2px;
+                opacity: 0.7;
+            }
         }
     }
 }

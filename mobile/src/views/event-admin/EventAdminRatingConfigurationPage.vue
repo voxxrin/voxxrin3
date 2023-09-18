@@ -1,5 +1,5 @@
 <template>
-  <ion-page>
+  <ion-page v-themed-event-styles="confDescriptor">
     <ion-content :fullscreen="true" class="ratingView">
       <ion-header class="ion-no-border">
         <ion-toolbar>
@@ -8,7 +8,7 @@
                         @click="triggerTabbedPageExitOrNavigate(`/event-selector`)">
               <ion-icon src="/assets/icons/line/arrow-left-line.svg"></ion-icon>
             </ion-button>
-            <ion-title class="stickyHeader-title" slot="start">Talks configuration</ion-title>
+            <ion-title class="stickyHeader-title" slot="start">Rating configuration</ion-title>
           </div>
 
           <div class="viewsSubHeader">
@@ -229,9 +229,6 @@ ion-list {
           ion-icon {
             --color: var(--voxxrin-event-theme-colors-primary-rgb);
           }
-        }
-        .toggle-icon {
-          background-color: red !important;
         }
       }
 
