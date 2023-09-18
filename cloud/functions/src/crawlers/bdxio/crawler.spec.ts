@@ -14,6 +14,6 @@ describe('web2day crawler', () => {
             const descriptor = BDXIO_CRAWLER.descriptorParser.parse(descriptorResp.data)
             const result = await BDXIO_CRAWLER.crawlerImpl(event.id, descriptor, { dayIds: ['Vendredi'] });
             FULL_EVENT_PARSER.parse(result);
-        }, { timeout: 90000 })
+        }, { timeout: 30000 })
     })
 })

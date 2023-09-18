@@ -12,12 +12,13 @@ import axios from "axios";
 import {
     BREAK_PARSER,
     BREAK_TIME_SLOT_PARSER,
-    DAY_PARSER, DETAILED_TALK_PARSER,
-    EVENT_DESCRIPTOR_PARSER, ISO_DATETIME_PARSER, SPEAKER_PARSER, TALKS_TIME_SLOT_PARSER
+    DAY_PARSER,
+    EVENT_DESCRIPTOR_PARSER, ISO_DATETIME_PARSER, SPEAKER_PARSER
 } from "../crawler-parsers";
-import {CrawlCriteria, CrawlerKind} from "../crawl";
+import {CrawlerKind} from "../crawl";
 import {ISODatetime} from "../../../../../shared/type-utils";
 import {Temporal} from "@js-temporal/polyfill";
+import {match, P} from "ts-pattern";
 
 export const BDXIO_PARSER = EVENT_DESCRIPTOR_PARSER.omit({
     id: true
@@ -68,11 +69,11 @@ export const BDXIO_CRAWLER: CrawlerKind<typeof BDXIO_PARSER> = {
         const days = descriptor.days;
         const day = days[0];
 
-        const slots = await Promise.all($schedulePage(".schedule > ul > li").map(async(_, slotLi) => {
+        const detailedTalks = (await Promise.all($schedulePage(".schedule > ul > li").map(async(_, slotLi) => {
             const rawStart = $schedulePage(".slots__slot__hour", slotLi).text().trim();
             const startZDT = Temporal.ZonedDateTime.from(`${day.localDate}T${rawStart.replace("h", ":")}:00[${descriptor.timezone}]`)
 
-            const talks = await Promise.all($schedulePage(".talk", slotLi).map(async (_, talkLi) => {
+            const detailedTalks = await Promise.all($schedulePage(".talk", slotLi).map(async (_, talkLi) => {
                 const $talkLink = $schedulePage("a", talkLi);
                 const talkUrl = $talkLink.attr()!.href;
                 const $talkPage = cheerio.load((await axios.get(`${baseUrl}${talkUrl}`, {responseType: 'text'})).data);
@@ -99,6 +100,9 @@ export const BDXIO_CRAWLER: CrawlerKind<typeof BDXIO_PARSER> = {
                 if(!format) {
                     throw new Error(`No talk format found matching [${formatLabel}] in descriptor.talkFormats (${descriptor.talkFormats.map(f => f.id).join(", ")})`)
                 }
+
+                const endZDT = startZDT.add(Temporal.Duration.from(format.duration));
+
                 const levelLabel = $tagsDiv.find("span").eq(1).text().trim()
                 const langLabel = $tagsDiv.find("span").eq(2).text().trim()
                 const lang = descriptor.supportedTalkLanguages.find(tl => tl.id === langLabel)!
@@ -151,67 +155,70 @@ export const BDXIO_CRAWLER: CrawlerKind<typeof BDXIO_PARSER> = {
                     return speaker;
                 }).get()
 
-                const detailedTalk: Omit<DetailedTalk, "end"> = {
+                const start = startZDT.toInstant().toString() as ISODatetime,
+                  end = endZDT.toInstant().toString() as ISODatetime;
+
+                const detailedTalk: DetailedTalk = {
                     id: talkId,
+                    start, end,
                     title,
-                    room,
+                    room, track, format,
                     speakers,
-                    track,
-                    format,
                     summary: summaryHtml || "",
                     description: summaryHtml || "",
                     language: lang.id,
-                    start: startZDT.toInstant().toString() as ISODatetime,
                     tags: [levelLabel]
                 };
 
                 return detailedTalk;
             }))
 
-            descriptor.additionalTalks.forEach(additionnalTalk => {
+            const additionalDetailedTalks = descriptor.additionalTalks.filter(additionnalTalk => {
                 const talkEpochStart = Temporal.ZonedDateTime.from(`${additionnalTalk.start}[${descriptor.timezone}]`).epochMilliseconds;
 
-                if(talkEpochStart === startZDT.epochMilliseconds) {
-                    const room = descriptor.rooms.find(r => r.id === additionnalTalk.roomId)!;
-                    if(!room) {
-                        throw new Error(`No room found matching additionnal talk's ${additionnalTalk.roomId} in descriptor.rooms (${descriptor.talkTracks.map(r => r.id).join(", ")})`)
-                    }
-
-                    const track = descriptor.talkTracks.find(t => t.id === additionnalTalk.trackId)!;
-                    if(!track) {
-                        throw new Error(`No track found matching additionnal talk's ${additionnalTalk.trackId} in descriptor.talkTracks (${descriptor.talkTracks.map(t => t.id).join(", ")})`)
-                    }
-
-                    const format = descriptor.talkFormats.find(f => f.id === additionnalTalk.formatId)!
-                    if(!format) {
-                        throw new Error(`No talk format found matching additionnal talk's [${additionnalTalk.formatId}] in descriptor.talkFormats (${descriptor.talkFormats.map(f => f.id).join(", ")})`)
-                    }
-
-                    const lang = descriptor.supportedTalkLanguages.find(tl => tl.id === additionnalTalk.langId)!
-                    if(!lang) {
-                        throw new Error(`No lang found matching additionnal talk's [${additionnalTalk.langId}] in descriptor.supportedTalkLanguages (${descriptor.supportedTalkLanguages.map(tl => tl.id).join(", ")})`)
-                    }
-
-                    talks.push({
-                        id: additionnalTalk.id,
-                        title: additionnalTalk.title,
-                        room, track, language: lang.id, format,
-                        start: startZDT.toInstant().toString() as ISODatetime,
-                        speakers: additionnalTalk.speakers,
-                        description: additionnalTalk.description,
-                        summary: additionnalTalk.summary,
-                        tags: []
-                    })
+                return talkEpochStart === startZDT.epochMilliseconds;
+            }).map(additionnalTalk => {
+                const room = descriptor.rooms.find(r => r.id === additionnalTalk.roomId)!;
+                if(!room) {
+                    throw new Error(`No room found matching additionnal talk's ${additionnalTalk.roomId} in descriptor.rooms (${descriptor.talkTracks.map(r => r.id).join(", ")})`)
                 }
-            })
 
+                const track = descriptor.talkTracks.find(t => t.id === additionnalTalk.trackId)!;
+                if(!track) {
+                    throw new Error(`No track found matching additionnal talk's ${additionnalTalk.trackId} in descriptor.talkTracks (${descriptor.talkTracks.map(t => t.id).join(", ")})`)
+                }
 
-            return {
-                slotStartZDT: startZDT,
-                slotStart: startZDT.toInstant().toString() as ISODatetime,
-                talks
-            }
-        }))
+                const format = descriptor.talkFormats.find(f => f.id === additionnalTalk.formatId)!
+                if(!format) {
+                    throw new Error(`No talk format found matching additionnal talk's [${additionnalTalk.formatId}] in descriptor.talkFormats (${descriptor.talkFormats.map(f => f.id).join(", ")})`)
+                }
+
+                const endZDT = startZDT.add(Temporal.Duration.from(format.duration));
+
+                const lang = descriptor.supportedTalkLanguages.find(tl => tl.id === additionnalTalk.langId)!
+                if(!lang) {
+                    throw new Error(`No lang found matching additionnal talk's [${additionnalTalk.langId}] in descriptor.supportedTalkLanguages (${descriptor.supportedTalkLanguages.map(tl => tl.id).join(", ")})`)
+                }
+
+                const start = startZDT.toInstant().toString() as ISODatetime,
+                    end = endZDT.toInstant().toString() as ISODatetime;
+
+                const detailedTalk: DetailedTalk = {
+                    id: additionnalTalk.id,
+                    title: additionnalTalk.title,
+                    start, end,
+                    room, track, language: lang.id, format,
+                    speakers: additionnalTalk.speakers,
+                    description: additionnalTalk.description,
+                    summary: additionnalTalk.summary,
+                    tags: []
+                };
+
+                return detailedTalk;
+            });
+
+            return detailedTalks.concat(additionalDetailedTalks);
+        }))).flatMap(perSlotDetailedTalks => perSlotDetailedTalks);
 
         const confDescriptor: ConferenceDescriptor = {
             id: eventId,
@@ -236,41 +243,6 @@ export const BDXIO_CRAWLER: CrawlerKind<typeof BDXIO_PARSER> = {
             supportedTalkLanguages: descriptor.supportedTalkLanguages
         };
 
-        const detailedTalks: DetailedTalk[] = [];
-
-        const slotsWithFullDetailedTalks = slots.map((slot, slotIdx) => {
-            const slotEnd = slots[slotIdx+1]?.slotStart;
-            const timeslotId: ScheduleTimeSlot['id'] = `${slot.slotStart}--${slotEnd}`
-
-            const voxxrinTimeslot: TalksTimeSlot = {
-                id: timeslotId,
-                start: slot.slotStart,
-                end: slotEnd,
-                type: 'talks',
-                talks: slot.talks.map(talkWithMissingEnd => {
-                    const fullDetailedTalk: DetailedTalk = {
-                        ...talkWithMissingEnd,
-                        end: slots[slotIdx+1]!.slotStart
-                    }
-
-                    detailedTalks.push(fullDetailedTalk);
-
-                    const talk: Talk = {
-                        id: fullDetailedTalk.id,
-                        title: fullDetailedTalk.title,
-                        room: fullDetailedTalk.room,
-                        track: fullDetailedTalk.track,
-                        format: fullDetailedTalk.format,
-                        language: fullDetailedTalk.language,
-                        speakers: fullDetailedTalk.speakers
-                    }
-                    return talk;
-                }),
-            }
-
-            return voxxrinTimeslot;
-        }).filter(slot => slot.talks.length > 0);
-
         const breakTimeSlots: BreakTimeSlot[] = descriptor.breaks
             .filter(b => b.dayId === day.id)
             .map(breakDescriptor => {
@@ -289,9 +261,39 @@ export const BDXIO_CRAWLER: CrawlerKind<typeof BDXIO_PARSER> = {
                 return breakTimeSlot;
             });
 
+        const talksTimeSlots = detailedTalks.reduce((timeslots, detailedTalk) => {
+            const talk: Talk = {
+                id: detailedTalk.id,
+                title: detailedTalk.title,
+                room: detailedTalk.room,
+                track: detailedTalk.track,
+                format: detailedTalk.format,
+                language: detailedTalk.language,
+                speakers: detailedTalk.speakers
+            }
+
+            const timeslotId: TalksTimeSlot['id'] = `${detailedTalk.start}--${detailedTalk.end}`;
+            const timeslot: TalksTimeSlot = match(timeslots.find(tts => tts.id === timeslotId))
+                .with(P.nullish, () => {
+                    const timeslot: TalksTimeSlot = {
+                        id: timeslotId,
+                        start: detailedTalk.start, end: detailedTalk.end,
+                        type: "talks" as const,
+                        talks: []
+                    }
+                    timeslots.push(timeslot);
+                    return timeslot;
+                }).otherwise((timeslot) => timeslot);
+
+            timeslot.talks.push(talk);
+
+            return timeslots;
+        }, [] as TalksTimeSlot[])
+
+
         const dailySchedules: DailySchedule[] = [{
             day: day.id,
-            timeSlots: ([] as ScheduleTimeSlot[]).concat(slotsWithFullDetailedTalks).concat(breakTimeSlots)
+            timeSlots: ([] as ScheduleTimeSlot[]).concat(talksTimeSlots).concat(breakTimeSlots)
         }]
 
         const fullEvent: FullEvent = {
