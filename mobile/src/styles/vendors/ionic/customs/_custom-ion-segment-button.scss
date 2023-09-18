@@ -1,0 +1,61 @@
+.classicSegmentButton {
+  display: flex;
+  align-items: center;
+  height: 44px;
+  border-radius: 54px;
+  background: var(--app-beige-medium);
+
+  @media (prefers-color-scheme: dark) {
+    background: var(--app-medium-contrast);
+  }
+
+  ion-segment-button {
+    --border-radius: 16px 16px 0 0;
+    --border-width: 0;
+    font-weight: 900;
+    font-size: 16px;
+    height: 40px;
+    color: var(--app-primary);
+    --indicator-color: var(--app-voxxrin);
+    --indicator-box-shadow: none;
+  }
+
+  ion-segment-button::part(indicator-background) {
+    background: var(--app-voxxrin);
+  }
+
+  /* Material Design styles */
+  ion-segment-button.md::part(native) {
+    color: var(--app-primary);
+
+    @media (prefers-color-scheme: dark) {
+      color: var(--app-white);
+    }
+  }
+
+  .segment-button-checked.md::part(native) {
+    color: var(--app-voxxrin);
+  }
+
+  ion-segment-button.md::part(indicator-background) {
+    height: 4px;
+  }
+
+  /* iOS styles */
+  ion-segment-button.ios::part(native) {
+    color: var(--app-primary);
+
+    @media (prefers-color-scheme: dark) {
+      color: var(--app-white);
+    }
+  }
+
+  .segment-button-checked.ios::part(native) {
+    color: #fff;
+  }
+
+  ion-segment-button.ios::part(indicator-background) {
+    border-radius: 20px;
+  }
+
+}
