@@ -3,6 +3,7 @@ apply plugin: 'com.android.application'
 android {
     namespace "in.voxxr.mobile"
     compileSdkVersion rootProject.ext.compileSdkVersion
+    ndkVersion "21.3.6528147"
     defaultConfig {
         applicationId "in.voxxr.mobile"
         minSdkVersion rootProject.ext.minSdkVersion
@@ -20,6 +21,9 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            ndk {
+                debugSymbolLevel 'SYMBOL_TABLE'
+            }
         }
     }
 }
