@@ -409,6 +409,7 @@ function navToEventOrganizerPage() {
     align-items: center;
     justify-content: center;
     height: 100%;
+    margin-left: 12px;
     padding-inline-start: 12px;
     padding-inline-end: 12px;
 

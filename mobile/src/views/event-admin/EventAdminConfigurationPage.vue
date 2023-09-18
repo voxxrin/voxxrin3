@@ -23,17 +23,17 @@
       </vox-bar-section>
       <ion-list>
         <ion-item>
-          <ion-toggle>
+          <ion-toggle color="dark">
             <label><ion-icon src="/assets/icons/solid/bookmark-favorite.svg"></ion-icon>Favorites</label>
           </ion-toggle>
         </ion-item>
         <ion-item>
-          <ion-toggle>
+          <ion-toggle color="dark">
             <label><ion-icon src="/assets/icons/solid/video.svg"></ion-icon>Watch later</label>
           </ion-toggle>
         </ion-item>
         <ion-item>
-          <ion-toggle>
+          <ion-toggle color="dark">
             <label><ion-icon src="/assets/icons/solid/map-marker-area.svg"></ion-icon>Rooms</label>
           </ion-toggle>
         </ion-item>

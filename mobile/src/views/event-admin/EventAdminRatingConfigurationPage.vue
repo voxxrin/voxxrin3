@@ -1,6 +1,6 @@
 <template>
   <ion-page>
-    <ion-content :fullscreen="true">
+    <ion-content :fullscreen="true" class="ratingView">
       <ion-header class="ion-no-border">
         <ion-toolbar>
           <div class="viewsHeader">
@@ -21,7 +21,7 @@
       <vox-bar-section>
         <template #title>Linear scale</template>
         <template #content>
-          <ion-toggle></ion-toggle>
+          <ion-toggle color="dark"></ion-toggle>
         </template>
       </vox-bar-section>
       <div class="sectionContainer">
@@ -70,7 +70,7 @@
       <vox-bar-section>
         <template #title>Custom scale</template>
         <template #content>
-          <ion-toggle></ion-toggle>
+          <ion-toggle color="dark"></ion-toggle>
         </template>
       </vox-bar-section>
 
@@ -95,17 +95,23 @@
       <vox-bar-section>
         <template #title>Bingo</template>
         <template #content>
-          <ion-toggle></ion-toggle>
+          <ion-toggle color="dark"></ion-toggle>
         </template>
       </vox-bar-section>
 
       <vox-bar-section>
         <template #title>Free comment</template>
         <template #content>
-          <ion-toggle></ion-toggle>
+          <ion-toggle color="dark"></ion-toggle>
         </template>
       </vox-bar-section>
     </ion-content>
+
+    <ion-fab  slot="fixed" horizontal="end" vertical="bottom">
+      <ion-fab-button>
+        <ion-icon src="/assets/icons/line/eye-line.svg"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
   </ion-page>
 </template>
 
@@ -196,6 +202,10 @@ ion-toolbar {
   }
 }
 
+.ratingView  {
+  --padding-bottom: 74px;
+}
+
 ion-range {
   margin: 0 8px;
 }
@@ -209,15 +219,19 @@ ion-list {
     --inner-padding-bottom: 12px;
     --background: transparent;
 
-
     ion-toggle {
+
       &.toggle-checked {
+
         label {
           font-weight: bold;
 
           ion-icon {
             --color: var(--voxxrin-event-theme-colors-primary-rgb);
           }
+        }
+        .toggle-icon {
+          background-color: red !important;
         }
       }
 
@@ -255,7 +269,6 @@ ion-list {
 }
 
 .ratingStarLevel {
-
   ion-item {
     --inner-padding-top: 4px;
     --inner-padding-bottom: 4px;
@@ -327,7 +340,7 @@ ion-list {
       width: 74px;
       border-radius: 74px;
       background: var(--app-beige-medium);
-      border: 2px solid var(--voxxrin-event-theme-colors-primary-rgb);
+      border: 3px solid var(--voxxrin-event-theme-colors-primary-rgb);
     }
 
     &-delete {
@@ -337,10 +350,10 @@ ion-list {
       height: 34px;
       width: 34px;
       border-radius: 34px;
-      border: 1px solid var(--app-primary);
+      border: 2px solid var(--app-primary);
 
       ion-icon {
-        font-size: 16px;
+        font-size: 22px;
       }
     }
   }
