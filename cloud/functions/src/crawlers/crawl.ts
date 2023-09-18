@@ -14,6 +14,7 @@ import {v4 as uuidv4} from "uuid"
 import {ConferenceOrganizerSpace} from "../../../../shared/conference-organizer-space.firestore";
 import {JUG_SUMMERCAMP_CRAWLER} from "./jugsummercamp/crawler";
 import {eventLastUpdateRefreshed} from "../functions/firestore/firestore-utils";
+import {BDXIO_CRAWLER} from "./bdxio/crawler";
 const axios = require('axios');
 
 export type CrawlerKind<ZOD_TYPE extends z.ZodType> = {
@@ -28,7 +29,8 @@ const CRAWLERS: CrawlerKind<any>[] = [
     LA_PRODUCT_CONF_CRAWLER,
     WEB2DAY_CRAWLER,
     CAMPING_DES_SPEAKERS_CRAWLER,
-    JUG_SUMMERCAMP_CRAWLER
+    JUG_SUMMERCAMP_CRAWLER,
+    BDXIO_CRAWLER
 ]
 
 export const TALK_FORMAT_FALLBACK_COLORS: HexColor[] = [

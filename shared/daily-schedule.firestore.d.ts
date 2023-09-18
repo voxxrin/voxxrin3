@@ -23,7 +23,7 @@ export type Speaker = {
     fullName: string,
     id: string,
     bio?: string|null,
-    social: Array<{type: "twitter"|"linkedin"|"mastodon"|"instagram"|"youtube"|"twitch", url: string}>
+    social: Array<{type: "twitter"|"linkedin"|"mastodon"|"instagram"|"youtube"|"twitch"|"github", url: string}>
 }
 export type Talk = {
     speakers: Speaker[],
