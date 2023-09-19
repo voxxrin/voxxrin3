@@ -8,14 +8,17 @@ import {computed, ref, unref} from "vue";
 import {collection, CollectionReference} from "firebase/firestore";
 import {db} from "@/state/firebase";
 import {useCollection} from "vuefire";
+import {Logger, PERF_LOGGER} from "@/services/Logger";
 
 type OverridableListableEventProperties = {eventId: string} & Partial<Pick<ListableVoxxrinEvent, "theming"|"location"|"backgroundUrl"|"logoUrl">>;
 
 const overridenListableEventPropertiesRef = ref<OverridableListableEventProperties|undefined>(undefined)
 
+const LOGGER = Logger.named("useAvailableEvents");
+
 export function useAvailableEvents(eventFamilies: EventFamily[]) {
 
-    console.debug(`useAvailableEvents()`)
+    PERF_LOGGER.debug(() => `useAvailableEvents()`)
     const firestoreListableEventsSource = computed(() =>
         collection(db, 'events') as CollectionReference<ListableEvent>
     );

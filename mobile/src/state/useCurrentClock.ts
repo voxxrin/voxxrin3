@@ -2,8 +2,9 @@ import {Ref, ref} from "vue";
 import {Temporal} from "temporal-polyfill";
 import {ISODatetime} from "../../../shared/type-utils";
 import {match, P} from "ts-pattern";
+import {Logger, PERF_LOGGER} from "@/services/Logger";
 
-
+const LOGGER = Logger.named("useCurrentClock");
 
 export type Clock = {
     zonedDateTimeISO: typeof Temporal.Now.zonedDateTimeISO
@@ -18,14 +19,14 @@ export function useCurrentClock(): Clock { return CLOCK.value; }
 export async function overrideCurrentClock(clock: Clock, callback: (() => Promise<void>)|undefined) {
     const initialClock = CLOCK.value;
 
-    console.debug(`Overriding clock...`)
+    LOGGER.debug(() => `Overriding clock...`)
     CLOCK.value = clock;
 
     if(callback) {
         try {
             await callback();
         } finally {
-            console.debug(`... until initial clock is restored !`)
+            LOGGER.debug(() => `... until initial clock is restored !`)
             CLOCK.value = initialClock;
         }
     }

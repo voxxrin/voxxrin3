@@ -16,12 +16,15 @@ import {
 } from "firebase/firestore";
 import {db} from "@/state/firebase";
 import {TalkNote, UserComputedEventInfos, UserTalkNote} from "../../../shared/feedbacks.firestore";
+import {Logger, PERF_LOGGER} from "@/services/Logger";
+
+const LOGGER = Logger.named("useUserTalkNotes");
 
 export function useUserTalkNotes(
     eventIdRef: Unreffable<EventId | undefined>,
     talkIdRef: Unreffable<TalkId | undefined>) {
 
-    console.debug(`useUserTalkNotes(${unref(eventIdRef)?.value}, ${unref(talkIdRef)?.value})`)
+    PERF_LOGGER.debug(() => `useUserTalkNotes(${unref(eventIdRef)?.value}, ${unref(talkIdRef)?.value})`)
 
     const userRef = useCurrentUser()
 
@@ -77,12 +80,12 @@ export function useUserTalkNotes(
             user = unref(userRef);
 
         if(!user || !talkId) {
-            console.warn(`${callContextName}() called with an undefined user/talkId`)
+            LOGGER.warn(() => `${callContextName}() called with an undefined user/talkId`)
             return;
         }
 
         if(!firestoreUserTalkNotesDoc) {
-            console.warn(`${callContextName}() called with an undefined firestoreUserTalkNotes/firestoreUserTalkNotesDoc (is eventId/dayId/user defined ?)`)
+            LOGGER.warn(() => `${callContextName}() called with an undefined firestoreUserTalkNotes/firestoreUserTalkNotesDoc (is eventId/dayId/user defined ?)`)
             return;
         }
 
@@ -143,7 +146,7 @@ export function useUserTalkNotes(
 
 export function useUserEventAllFavoritedTalkIds(eventIdRef: Unreffable<EventId | undefined>) {
 
-    console.debug(`useUserEventAllFavoritedTalkIds(${unref(eventIdRef)?.value})`)
+    PERF_LOGGER.debug(() => `useUserEventAllFavoritedTalkIds(${unref(eventIdRef)?.value})`)
     const userRef = useCurrentUser()
 
     const firestoreUserAllFavoritedTalkIdsSource = computed(() => {

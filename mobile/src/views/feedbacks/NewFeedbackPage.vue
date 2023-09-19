@@ -121,6 +121,9 @@ import {
     useUserTalkNotes
 } from "@/state/useUserTalkNotes";
 import {useUserFeedbacks} from "@/state/useUserFeedbacks";
+import {Logger} from "@/services/Logger";
+
+const LOGGER = Logger.named("NewFeedbackPage");
 
 const { LL } = typesafeI18n()
 
@@ -152,7 +155,7 @@ function deselectTalk() {
 
 function rateSelectedTalk() {
     if(isRefUndefined(confDescriptorRef) || isRefUndefined(selectedTalk)) {
-        console.warn(`rateSelectedTalk() triggered with empty event or selected talk !`)
+        LOGGER.warn(() => `rateSelectedTalk() triggered with empty event or selected talk !`)
         return;
     }
 
@@ -178,7 +181,7 @@ async function watchLaterAllFavoritedTalks() {
         favoritedTalks.map(async favoritedTalk => {
             const { toggleWatchLater, talkNotes } = useUserTalkNotes(eventIdRef, favoritedTalk.id)
             if(!talkNotes.value.watchLater && !favoritedTalk.id.isSameThan(selectedTalk.value?.id)) {
-                console.log(`toggling (enabling) watch later on talk: ${favoritedTalk.title}`)
+                LOGGER.debug(() => `toggling (enabling) watch later on talk: ${favoritedTalk.title}`)
                 await toggleWatchLater() // enable watch later on favorited (but not selected) talks
             }
         }).concat(
@@ -188,7 +191,7 @@ async function watchLaterAllFavoritedTalks() {
               .map(async talk => {
                 const { toggleWatchLater, talkNotes } = useUserTalkNotes(eventIdRef, talk.id)
                 if(talkNotes.value.watchLater) {
-                    console.log(`toggling (disabling) watch later on talk: ${talk.title}`)
+                    LOGGER.debug(() => `toggling (disabling) watch later on talk: ${talk.title}`)
                     await toggleWatchLater(); // disable watch later on selected talk
                 }
               })

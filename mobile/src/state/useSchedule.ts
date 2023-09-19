@@ -18,17 +18,18 @@ import {prepareUserTalkNotes} from "@/state/useUserTalkNotes";
 import {filterTalksMatching, TalkId} from "@/models/VoxxrinTalk";
 import {findTimeslotFeedback, VoxxrinTimeslotFeedback} from "@/models/VoxxrinFeedback";
 import {UserDailyFeedbacks} from "../../../shared/feedbacks.firestore";
+import {PERF_LOGGER} from "@/services/Logger";
 
 export function useSchedule(
             conferenceDescriptorRef: Unreffable<VoxxrinConferenceDescriptor | undefined>,
             dayIdRef: Unreffable<DayId | undefined>) {
 
-    console.debug(`useSchedule(${unref(conferenceDescriptorRef)?.id.value}, ${unref(dayIdRef)?.value})`)
+    PERF_LOGGER.debug(() => `useSchedule(${unref(conferenceDescriptorRef)?.id.value}, ${unref(dayIdRef)?.value})`)
     watch(() => unref(conferenceDescriptorRef), (newVal, oldVal) => {
-        console.debug(`useSchedule[conferenceDescriptorRef] updated from [${oldVal?.id.value}] to [${newVal?.id.value}]`)
+        PERF_LOGGER.debug(() => `useSchedule[conferenceDescriptorRef] updated from [${oldVal?.id.value}] to [${newVal?.id.value}]`)
     }, {immediate: true})
     watch(() => unref(dayIdRef), (newVal, oldVal) => {
-        console.debug(`useSchedule[dayIdRef] updated from [${oldVal?.value}] to [${newVal?.value}]`)
+        PERF_LOGGER.debug(() => `useSchedule[dayIdRef] updated from [${oldVal?.value}] to [${newVal?.value}]`)
     }, {immediate: true})
 
     const firestoreDailyScheduleSource = computed(() => {

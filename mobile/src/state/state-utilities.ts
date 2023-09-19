@@ -1,5 +1,7 @@
 import {match, P} from "ts-pattern";
+import {Logger} from "@/services/Logger";
 
+const LOGGER = Logger.named("state-utilities");
 
 type ExecutionContext<T> = {
     hash: string,
@@ -50,7 +52,7 @@ export async function usePromiseDebouncer<T>(executionName: string, executionHas
     ) {
         return match(lastExecContextMatchingName)
             .with({ status: 'created' }, () => {
-                console.debug(`Deferring concurrently created PromiseDebounces for ${executionName}#${executionHash}...`)
+                LOGGER.debug(() => `Deferring concurrently-created PromiseDebounces for ${executionName}#${executionHash}...`)
                 return new Promise<T>((resolve, reject) => {
                     setTimeout(() => {
                         lastExecContextMatchingName = LAST_EXECUTION_CONTEXTS.get(executionName)!;

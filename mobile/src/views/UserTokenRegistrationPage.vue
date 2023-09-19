@@ -8,6 +8,9 @@ import {useIonRouter} from "@ionic/vue";
 import {useRoute} from "vue-router";
 import {match} from "ts-pattern";
 import {useUserTokensWallet} from "@/state/useUserTokensWallet";
+import {Logger} from "@/services/Logger";
+
+const LOGGER = Logger.named("UserTokenRegistrationPage");
 
 const ionRouter = useIonRouter();
 const route = useRoute();
@@ -50,10 +53,10 @@ onMounted(async () => {
         })
 
     if(success){
-        console.log(`Successfully registered ${tokenType} token !`)
+        LOGGER.info(() => `Successfully registered ${tokenType} token !`)
         ionRouter.replace('/event-selector')
     } else {
-        console.error(`Error while registering token of type ${tokenType}`)
+        LOGGER.error(() => `Error while registering token of type ${tokenType}`)
     }
 })
 

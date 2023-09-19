@@ -19,6 +19,9 @@ import {useCurrentClock} from "@/state/useCurrentClock";
 import {useInterval} from "@/views/vue-utils";
 import {findTimeslotFeedback} from "@/models/VoxxrinFeedback";
 import {filterTalksMatching} from "@/models/VoxxrinTalk";
+import {PERF_LOGGER, Logger} from "@/services/Logger";
+
+const LOGGER = Logger.named("TimeslotIterator");
 
 const props = defineProps({
     confDescriptor: {
@@ -45,7 +48,7 @@ const emit = defineEmits<{
 }>()
 
 onMounted(async () => {
-    console.log(`SchedulePage mounted !`)
+    PERF_LOGGER.debug(`SchedulePage mounted !`)
     useInterval(recomputeMissingFeedbacksList, {freq:"low-frequency"}, {immediate: true})
 })
 

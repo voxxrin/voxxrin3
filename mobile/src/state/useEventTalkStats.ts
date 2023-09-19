@@ -8,12 +8,13 @@ import {db} from "@/state/firebase";
 import {TalkStats} from "../../../shared/feedbacks.firestore";
 import {useDocument} from "vuefire";
 import {createVoxxrinTalkStatsFromFirestore} from "@/models/VoxxrinTalkStats";
+import {PERF_LOGGER} from "@/services/Logger";
 
 
 export function useTalkStats(eventIdRef: Unreffable<EventId | undefined>,
            talkIdRef: Unreffable<TalkId | undefined>) {
 
-    console.debug(`useTalkStats(${unref(eventIdRef)?.value}, ${unref(talkIdRef)?.value})`)
+    PERF_LOGGER.debug(() => `useTalkStats(${unref(eventIdRef)?.value}, ${unref(talkIdRef)?.value})`)
     const firestoreTalkStatsSource = computed(() => {
         const eventId = unref(eventIdRef),
             talkId = unref(talkIdRef);
@@ -39,7 +40,7 @@ export function useTalkStats(eventIdRef: Unreffable<EventId | undefined>,
     // into firestore
     const inMemoryDeltaUntilFirestoreRefreshRef = ref(0);
     watch(firestoreTalkStatsRef, (newVal, oldVal) => {
-        console.debug(`useTalkStats(${unref(eventIdRef)?.value}, ${unref(talkIdRef)?.value})[firestoreTalkStatsRef] updated from [${oldVal?.id}] to [${newVal?.id}]`)
+        PERF_LOGGER.debug(() => `useTalkStats(${unref(eventIdRef)?.value}, ${unref(talkIdRef)?.value})[firestoreTalkStatsRef] updated from [${oldVal?.id}] to [${newVal?.id}]`)
         // Resetting local delta everytime we receive a firestore refresh
         inMemoryDeltaUntilFirestoreRefreshRef.value = 0;
     }, {immediate: true})

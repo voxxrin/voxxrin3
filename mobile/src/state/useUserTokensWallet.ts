@@ -18,10 +18,13 @@ import {TalkId} from "@/models/VoxxrinTalk";
 import {Unreffable} from "@/views/vue-utils";
 import {TalkFeedbacksViewerSecretToken} from "../../../shared/conference-organizer-space.firestore";
 import { arrayUnion } from "firebase/firestore";
+import {Logger, PERF_LOGGER} from "@/services/Logger";
+
+const LOGGER = Logger.named("useUserTokensWallet");
 
 export function useUserTokensWallet() {
 
-    console.debug(`useUserTokensWallet()`)
+    PERF_LOGGER.debug(() => `useUserTokensWallet()`)
 
     const userRef = useCurrentUser()
 
@@ -69,7 +72,7 @@ export function useUserTokensWallet() {
         const firestoreUserTokensWalletDoc = unref(firestoreUserTokensWalletSource);
 
         if(!firestoreUserTokensWalletDoc) {
-            console.error(`firestoreUserTokensWalletDoc is undefined !`)
+            LOGGER.error(() => `firestoreUserTokensWalletDoc is undefined !`)
             return;
         }
 
@@ -80,7 +83,7 @@ export function useUserTokensWallet() {
         const firestoreUserTokensWalletDoc = unref(firestoreUserTokensWalletSource);
 
         if(!firestoreUserTokensWalletDoc) {
-            console.error(`firestoreUserTokensWalletDoc is undefined !`)
+            LOGGER.error(() => `firestoreUserTokensWalletDoc is undefined !`)
             return;
         }
 

@@ -12,10 +12,13 @@ import {db} from "@/state/firebase";
 import {UserPreferences} from "../../../shared/user-preferences.firestore";
 import {VoxxrinUserPreferences} from "@/models/VoxxrinUser";
 import {createSharedComposable} from "@vueuse/core";
+import {Logger, PERF_LOGGER} from "@/services/Logger";
+
+const LOGGER = Logger.named("useUserPreferences");
 
 export function useUserPreferences() {
 
-    console.debug(`useUserPreferences()`)
+    PERF_LOGGER.debug(() => `useUserPreferences()`)
 
     const userRef = useCurrentUser()
 

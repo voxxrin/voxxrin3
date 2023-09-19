@@ -11,18 +11,19 @@ import {Unreffable} from "@/views/vue-utils";
 import {useDocument} from "vuefire";
 import {createSharedComposable} from "@vueuse/core";
 import {EventId} from "@/models/VoxxrinEvent";
+import {PERF_LOGGER} from "@/services/Logger";
 
 
 export function useEventTalk(
     conferenceDescriptorRef: Unreffable<VoxxrinConferenceDescriptor | undefined>,
     talkIdRef: Unreffable<TalkId | undefined>) {
 
-    console.debug(`useEventTalk(${unref(conferenceDescriptorRef)?.id.value}, ${unref(talkIdRef)?.value})`)
+    PERF_LOGGER.debug(() => `useEventTalk(${unref(conferenceDescriptorRef)?.id.value}, ${unref(talkIdRef)?.value})`)
     watch(() => unref(conferenceDescriptorRef), (newVal, oldVal) => {
-        console.debug(`useEventTalk[conferenceDescriptorRef] updated from [${oldVal?.id.value}] to [${newVal?.id.value}]`)
+        PERF_LOGGER.debug(() => `useEventTalk[conferenceDescriptorRef] updated from [${oldVal?.id.value}] to [${newVal?.id.value}]`)
     }, {immediate: true})
     watch(() => unref(talkIdRef), (newVal, oldVal) => {
-        console.debug(`useEventTalk[talkIdRef] updated from [${oldVal?.value}] to [${newVal?.value}]`)
+        PERF_LOGGER.debug(() => `useEventTalk[talkIdRef] updated from [${oldVal?.value}] to [${newVal?.value}]`)
     }, {immediate: true})
 
     const firestoreTalkDetailsSource = computed(() => {

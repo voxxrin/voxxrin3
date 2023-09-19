@@ -122,6 +122,9 @@ import TalkFormatGroupsBreakdown from "@/components/schedule/TalkFormatGroupsBre
 import {VoxxrinTalk} from "@/models/VoxxrinTalk";
 import {useSharedEventSelectedDay} from "@/state/useEventSelectedDay";
 import {useUserTokensWallet} from "@/state/useUserTokensWallet";
+import {Logger} from "@/services/Logger";
+
+const LOGGER = Logger.named("SchedulePage");
 
 const props = defineProps({
     hideHeader: {
@@ -151,7 +154,7 @@ function onceDayInitializedTo(day: VoxxrinDay, availableDays: VoxxrinDay[]) {
     setTimeout(() => {
         if(isRefDefined(confDescriptor)) {
             const otherDayIds = availableDays.filter(availableDay => !availableDay.id.isSameThan(day.id)).map(d => d.id);
-            console.log(`Preparing schedule data for other days than currently selected one (${otherDayIds.map(id => id.value).join(", ")})`)
+            LOGGER.info(() => `Preparing schedule data for other days than currently selected one (${otherDayIds.map(id => id.value).join(", ")})`)
             prepareSchedules(confDescriptor.value, day.id, otherDayIds);
         }
     }, 5000)
@@ -258,7 +261,7 @@ async function openSchedulePreferencesModal() {
     modal.present();
 
     const { data, role } = await modal.onWillDismiss();
-    console.log(`TODO: Update schedule local preferences`)
+    LOGGER.debug(() => `TODO: Update schedule local preferences`)
 }
 </script>
 

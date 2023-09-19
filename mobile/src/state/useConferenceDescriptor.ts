@@ -12,6 +12,7 @@ import {createSharedComposable} from "@vueuse/core";
 import {
     overrideListableEventProperties
 } from "@/state/useAvailableEvents";
+import {PERF_LOGGER} from "@/services/Logger";
 
 type OverridableEventDescriptorProperties = {eventId: string} & Partial<Pick<VoxxrinConferenceDescriptor, "headingTitle"|"theming"|"features"|"infos"|"location"|"backgroundUrl"|"logoUrl">>;
 
@@ -20,9 +21,9 @@ const overridenEventDescriptorPropertiesRef = ref<OverridableEventDescriptorProp
 export function useConferenceDescriptor(
     eventIdRef: Unreffable<EventId | undefined>) {
 
-    console.debug(`useConferenceDescriptor(${unref(eventIdRef)?.value})`)
+    PERF_LOGGER.debug(() => `useConferenceDescriptor(${unref(eventIdRef)?.value})`)
     watch(() => unref(eventIdRef), (newVal, oldVal) => {
-        console.debug(`useConferenceDescriptor[eventIdRef] updated from [${oldVal?.value}] to [${newVal?.value}]`)
+        PERF_LOGGER.debug(() => `useConferenceDescriptor[eventIdRef] updated from [${oldVal?.value}] to [${newVal?.value}]`)
     }, {immediate: true})
 
     const firestoreConferenceDescriptorSource = computed(() => {
