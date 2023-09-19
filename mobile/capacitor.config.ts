@@ -3,8 +3,8 @@ import { CapacitorConfig } from '@capacitor/cli';
 const isDevMode = process.env.NODE_ENV === 'dev';
 
 const config: CapacitorConfig = {
-  appId: 'com.voxxrin3.mobile',
-  appName: 'voxxrin',
+  appId: 'in.voxxr.mobile',
+  appName: 'Voxxrin 3',
   webDir: 'dist',
   plugins: {
     SplashScreen: {

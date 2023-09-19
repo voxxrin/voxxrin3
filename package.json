@@ -9,7 +9,7 @@
     "dev:mobile": "cd mobile && npm run dev",
     "dev:fn": "cd cloud/functions && npm run serve",
     "dev": "concurrently 'npm run dev:fn' 'npm run dev:mobile'",
-    "deploy:site": "npm run build-mobile && cd cloud/hosting && npm run deploy && cd -",
+    "deploy:site": "cd cloud/hosting && npm run deploy && cd -",
     "deploy:fn": "cd cloud/functions && npm run deploy",
     "deploy": "concurrently 'npm run deploy:fn' 'npm run deploy:site'"
   },
