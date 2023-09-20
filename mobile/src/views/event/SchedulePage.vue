@@ -92,7 +92,7 @@ import {
     IonInput, modalController,
 } from '@ionic/vue';
 import {useRoute} from "vue-router";
-import {watch} from "vue";
+import {onMounted, watch} from "vue";
 import {managedRef as ref} from "@/views/vue-utils";
 import {prepareSchedules, useSchedule} from "@/state/useSchedule";
 import CurrentEventHeader from "@/components/events/CurrentEventHeader.vue";
@@ -100,8 +100,9 @@ import {getRouteParamsValue, isRefDefined} from "@/views/vue-utils";
 import {EventId} from "@/models/VoxxrinEvent";
 import {VoxxrinDay} from "@/models/VoxxrinDay";
 import {
-    filterTimeslotsToAutoExpandBasedOn,
-    VoxxrinScheduleTimeSlot
+  extractTalksFromSchedule,
+  filterTimeslotsToAutoExpandBasedOn,
+  VoxxrinScheduleTimeSlot
 } from "@/models/VoxxrinSchedule";
 import DaySelector from "@/components/schedule/DaySelector.vue";
 import {
@@ -151,17 +152,24 @@ const {selectedDayId} = useSharedEventSelectedDay(eventId);
 
 const user = useCurrentUser()
 
-function onceDayInitializedTo(day: VoxxrinDay, availableDays: VoxxrinDay[]) {
+onMounted(() => {
+  const watchCleaner = watch([confDescriptor, user, currentSchedule, availableDaysRef], ([confDescriptor, user, currentSchedule, availableDays]) => {
     // Pre-loading other days data in the background, for 2 main reasons :
     // - navigation to other days will be quickier
     // - if user switches to offline without navigating to these days, information will be in his cache anyway
-    setTimeout(() => {
-        if(isRefDefined(confDescriptor) && isRefDefined(user) && user.value) {
-            const otherDayIds = availableDays.filter(availableDay => !availableDay.id.isSameThan(day.id)).map(d => d.id);
-            LOGGER.info(() => `Preparing schedule data for other days than currently selected one (${otherDayIds.map(id => id.value).join(", ")})`)
-            prepareSchedules(user.value, confDescriptor.value, day.id, otherDayIds);
-        }
-    }, 5000)
+    if(confDescriptor && user && currentSchedule && availableDays) {
+      const otherDayIds = availableDays.filter(availableDay => !availableDay.id.isSameThan(currentSchedule.day)).map(d => d.id);
+      LOGGER.info(() => `Preparing schedule data for other days than currently selected one (${otherDayIds.map(id => id.value).join(", ")})`)
+      prepareSchedules(user, confDescriptor, currentSchedule.day, extractTalksFromSchedule(currentSchedule), otherDayIds);
+
+      watchCleaner();
+    }
+  })
+})
+
+const availableDaysRef = ref<VoxxrinDay[]|undefined>(undefined);
+function onceDayInitializedTo(day: VoxxrinDay, availableDays: VoxxrinDay[]) {
+  availableDaysRef.value = availableDays;
 }
 
 const { schedule: currentSchedule } = useSchedule(confDescriptor, selectedDayId)

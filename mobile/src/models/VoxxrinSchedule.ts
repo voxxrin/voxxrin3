@@ -122,6 +122,15 @@ export function filterTimeslotsToAutoExpandBasedOn(timeslots: VoxxrinScheduleTim
     }
 }
 
+export function extractTalksFromSchedule(dailySchedule: VoxxrinDailySchedule): VoxxrinTalk[] {
+    const talks = dailySchedule.timeSlots.reduce((talks, timeslot) => {
+        Array.prototype.push.apply(talks, timeslot.type === 'talks' ? timeslot.talks : []);
+        return talks;
+    }, [] as Array<VoxxrinTalk>);
+
+    return talks;
+}
+
 export function createVoxxrinDailyScheduleFromFirestore(event: VoxxrinConferenceDescriptor, firestoreSchedule: DailySchedule) {
     const timeSlots: VoxxrinScheduleTimeSlot[] = sortBy(firestoreSchedule.timeSlots.map(ts => {
         return {

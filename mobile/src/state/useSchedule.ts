@@ -16,7 +16,7 @@ import {useDocument} from "vuefire";
 import {prepareEventTalks} from "@/state/useEventTalk";
 import {prepareTalkStats} from "@/state/useEventTalkStats";
 import {prepareUserTalkNotes} from "@/state/useUserTalkNotes";
-import {filterTalksMatching, TalkId} from "@/models/VoxxrinTalk";
+import {filterTalksMatching, TalkId, VoxxrinTalk} from "@/models/VoxxrinTalk";
 import {findTimeslotFeedback, VoxxrinTimeslotFeedback} from "@/models/VoxxrinFeedback";
 import {UserDailyFeedbacks} from "../../../shared/feedbacks.firestore";
 import {PERF_LOGGER} from "@/services/Logger";
@@ -66,33 +66,47 @@ export function dailyScheduleDocument(eventDescriptor: VoxxrinConferenceDescript
     return doc(collection(doc(collection(db, 'events'), eventDescriptor.id.value), 'days'), dayId.value) as DocumentReference<DailySchedule>;
 }
 
+async function loadTalkSpeakerUrls(talk: { speakers: Array<{ photoUrl?: VoxxrinTalk['speakers'][number]['photoUrl'] }> }) {
+    return Promise.all(talk.speakers.map(async speaker => {
+        return new Promise(resolve => {
+            if (speaker.photoUrl) {
+                const avatarImage = new Image();
+                avatarImage.src = speaker.photoUrl;
+
+                avatarImage.onload = resolve;
+            } else {
+                resolve(null);
+            }
+        })
+    }));
+}
+
 export function prepareSchedules(
     user: User,
     conferenceDescriptor: VoxxrinConferenceDescriptor,
     currentDayId: DayId,
+    currentTalks: Array<VoxxrinTalk>,
     otherDayIds: Array<DayId>
 ) {
-    PERF_LOGGER.debug(() => `prepareSchedules(userId=${user.uid}, eventId=${conferenceDescriptor.id.value}, currentDayId=${currentDayId.value}, otherDayIds=${JSON.stringify(otherDayIds.map(id => id.value))})`);
+    PERF_LOGGER.debug(() => `prepareSchedules(userId=${user.uid}, eventId=${conferenceDescriptor.id.value}, currentDayId=${currentDayId.value}, currentTalkIds=${JSON.stringify(currentTalks.map(talk => talk.id.value))}, otherDayIds=${JSON.stringify(otherDayIds.map(id => id.value))})`);
 
     [currentDayId, ...otherDayIds].forEach(async dayId => {
-        if(dayId !== currentDayId) {
+        let talkIds: TalkId[]|undefined = undefined;
+        if(dayId === currentDayId) {
+            currentTalks.map(loadTalkSpeakerUrls)
+
+            talkIds = currentTalks.map(talk => talk.id);
+        } else {
             const dailyScheduleDoc = dailyScheduleDocument(conferenceDescriptor, dayId)
+
             if(navigator.onLine && dailyScheduleDoc) {
                 const dailyScheduleSnapshot = await getDoc(dailyScheduleDoc);
                 PERF_LOGGER.debug(`getDoc(${dailyScheduleDoc.path})`)
 
-                const talkIds = dailyScheduleSnapshot.data()?.timeSlots.reduce((talkIds, timeslot) => {
-                    if(timeslot.type === 'talks') {
+                talkIds = dailyScheduleSnapshot.data()?.timeSlots.reduce((talkIds, timeslot) => {
+                    if (timeslot.type === 'talks') {
                         timeslot.talks.forEach(talk => {
-                            talk.speakers.forEach(speaker => {
-                                if(speaker.photoUrl) {
-                                    const avatarImage = new Image();
-                                    avatarImage.src = speaker.photoUrl;
-                                }
-                                // avatarImage.onload = () => {
-                                //     console.log(`Avatar ${speaker.photoUrl} pre-loaded !`)
-                                // };
-                            })
+                            loadTalkSpeakerUrls(talk);
 
                             talkIds.push(new TalkId(talk.id))
                         })
@@ -100,11 +114,16 @@ export function prepareSchedules(
 
                     return talkIds;
                 }, [] as Array<TalkId>) || [];
+            }
+        }
 
-                prepareEventTalks(conferenceDescriptor, talkIds);
+        if(navigator.onLine && talkIds) {
+            if(dayId !== currentDayId) {
                 prepareTalkStats(conferenceDescriptor.id, talkIds);
                 prepareUserTalkNotes(user, conferenceDescriptor.id, talkIds);
             }
+
+            prepareEventTalks(conferenceDescriptor, talkIds);
         }
     })
 }
