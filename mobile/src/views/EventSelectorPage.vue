@@ -56,7 +56,7 @@ import {
     useIonRouter
 } from '@ionic/vue';
 import {EventFamily, EventId, ListableVoxxrinEvent, searchEvents} from "@/models/VoxxrinEvent";
-import {computed, Ref, watch} from "vue";
+import {computed, onMounted, Ref, watch} from "vue";
 import AvailableEventsList from "@/components/events/AvailableEventsList.vue";
 import {presentActionSheetController, managedRef as ref} from "@/views/vue-utils";
 import {Browser} from "@capacitor/browser";
@@ -148,6 +148,17 @@ function eventPinToggled(event: ListableVoxxrinEvent, transitionType: 'unpinned-
         unpinEvent(event.id);
     }
 }
+
+onMounted(() => {
+  setTimeout(() => {
+    // Pre-loading all pages required for attendees in the background, once first rendering
+    // of the app has been performed
+    import('@/router/preloaded-pages');
+
+    // Note: we're not preloading preloaded-admin-pages on purpose, waiting for a first access to
+    // administration pages prior to loading these page in one batch of files
+  }, 1000)
+})
 </script>
 
 <style lang="scss" scoped>
