@@ -19,7 +19,7 @@ export default defineConfig(({ command, mode }) => {
         strategies: 'injectManifest',
         injectRegister: null,
         registerType: 'prompt',
-        includeAssets: ['favicon.png'],
+        includeAssets: ['favicon.png', 'assets/**/*'],
         srcDir: 'src',
         filename: 'sw.ts',
         mode: isDevMode?'development':'production',
