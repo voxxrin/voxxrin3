@@ -1,5 +1,4 @@
 import {computed, unref, watch} from "vue";
-import {managedRef as ref} from "@/views/vue-utils";
 import {
     createVoxxrinConferenceDescriptor, VoxxrinConferenceDescriptor,
 } from "@/models/VoxxrinConferenceDescriptor";
@@ -10,17 +9,13 @@ import {collection, doc, DocumentReference} from "firebase/firestore";
 import {db} from "@/state/firebase";
 import {useDocument} from "vuefire";
 import {createSharedComposable} from "@vueuse/core";
-import {
-    overrideListableEventProperties
-} from "@/state/useAvailableEvents";
 import {PERF_LOGGER} from "@/services/Logger";
-
-type OverridableEventDescriptorProperties = {eventId: string} & Partial<Pick<VoxxrinConferenceDescriptor, "headingTitle"|"theming"|"features"|"infos"|"location"|"backgroundUrl"|"logoUrl">>;
-
-const overridenEventDescriptorPropertiesRef = ref<OverridableEventDescriptorProperties|undefined>(undefined)
+import {useOverridenEventDescriptorProperties} from "@/state/useDevUtilities";
 
 export function useConferenceDescriptor(
     eventIdRef: Unreffable<EventId | undefined>) {
+
+    const overridenEventDescriptorPropertiesRef = useOverridenEventDescriptorProperties();
 
     PERF_LOGGER.debug(() => `useConferenceDescriptor(${unref(eventIdRef)?.value})`)
     watch(() => unref(eventIdRef), (newVal, oldVal) => {
@@ -65,8 +60,3 @@ export function useConferenceDescriptor(
 }
 
 export const useSharedConferenceDescriptor = createSharedComposable(useConferenceDescriptor);
-
-export function overrideCurrentEventDescriptorInfos(overridenEventDescriptorProperties: OverridableEventDescriptorProperties) {
-    overridenEventDescriptorPropertiesRef.value = overridenEventDescriptorProperties;
-    overrideListableEventProperties(overridenEventDescriptorProperties);
-}

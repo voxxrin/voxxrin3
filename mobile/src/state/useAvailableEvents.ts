@@ -5,19 +5,17 @@ import {
 import {ListableEvent} from "../../../shared/event-list.firestore";
 import {sortBy} from "@/models/utils";
 import {computed, unref} from "vue";
-import {managedRef as ref} from "@/views/vue-utils";
 import {collection, CollectionReference} from "firebase/firestore";
 import {db} from "@/state/firebase";
 import {useCollection} from "vuefire";
 import {Logger, PERF_LOGGER} from "@/services/Logger";
-
-type OverridableListableEventProperties = {eventId: string} & Partial<Pick<ListableVoxxrinEvent, "theming"|"location"|"backgroundUrl"|"logoUrl">>;
-
-const overridenListableEventPropertiesRef = ref<OverridableListableEventProperties|undefined>(undefined)
+import {useOverridenListableEventProperties} from "@/state/useDevUtilities";
 
 const LOGGER = Logger.named("useAvailableEvents");
 
 export function useAvailableEvents(eventFamilies: EventFamily[]) {
+
+    const overridenListableEventPropertiesRef = useOverridenListableEventProperties();
 
     PERF_LOGGER.debug(() => `useAvailableEvents()`)
     const firestoreListableEventsSource = computed(() =>
@@ -50,8 +48,4 @@ export function useAvailableEvents(eventFamilies: EventFamily[]) {
             });
         })
     };
-}
-
-export function overrideListableEventProperties(overridenListableEventProperties: OverridableListableEventProperties) {
-    overridenListableEventPropertiesRef.value = overridenListableEventProperties;
 }

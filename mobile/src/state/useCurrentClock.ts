@@ -11,24 +11,24 @@ export type Clock = {
     zonedDateTimeISO: typeof Temporal.Now.zonedDateTimeISO
 }
 
-const CLOCK: Ref<Clock> = ref(Temporal.Now)
+const CLOCK_WRAPPER: { value: Clock } = { value: Temporal.Now }
 
 // Module intended to provide time-based facilities, in order to facilitate mocking time
 // everywhere in the app
-export function useCurrentClock(): Clock { return CLOCK.value; }
+export function useCurrentClock(): Clock { return CLOCK_WRAPPER.value; }
 
 export async function overrideCurrentClock(clock: Clock, callback: (() => Promise<void>)|undefined) {
-    const initialClock = CLOCK.value;
+    const initialClock = CLOCK_WRAPPER.value;
 
     LOGGER.debug(() => `Overriding clock...`)
-    CLOCK.value = clock;
+    CLOCK_WRAPPER.value = clock;
 
     if(callback) {
         try {
             await callback();
         } finally {
             LOGGER.debug(() => `... until initial clock is restored !`)
-            CLOCK.value = initialClock;
+            CLOCK_WRAPPER.value = initialClock;
         }
     }
 }
