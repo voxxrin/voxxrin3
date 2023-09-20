@@ -60,7 +60,8 @@
 </template>
 
 <script setup lang="ts">
-import {computed, PropType, ref} from "vue";
+import {computed, PropType} from "vue";
+import {managedRef as ref} from "@/views/vue-utils";
 import {
   IonBadge,
   IonThumbnail,

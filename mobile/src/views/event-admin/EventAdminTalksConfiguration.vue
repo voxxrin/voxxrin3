@@ -38,9 +38,8 @@
 <script setup lang="ts">
 
 import {useIonRouter} from "@ionic/vue";
-import {goBackOrNavigateTo} from "@/router";
 import {useRoute} from "vue-router";
-import {ref} from "vue";
+import {managedRef as ref} from "@/views/vue-utils";
 import {EventId} from "@/models/VoxxrinEvent";
 import {getRouteParamsValue} from "@/views/vue-utils";
 import {useTabbedPageNav} from "@/state/useTabbedPageNav";

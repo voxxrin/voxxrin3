@@ -15,7 +15,7 @@
 import SchedulePage from "@/views/event/SchedulePage.vue";
 import {IonFooter} from "@ionic/vue";
 import {useRoute} from "vue-router";
-import {ref} from "vue";
+import {managedRef as ref} from "@/views/vue-utils";
 import {EventId} from "@/models/VoxxrinEvent";
 import {getRouteParamsValue} from "@/views/vue-utils";
 import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";

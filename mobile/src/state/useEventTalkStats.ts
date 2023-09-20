@@ -1,8 +1,8 @@
 import {EventId} from "@/models/VoxxrinEvent";
 import {DayId} from "@/models/VoxxrinDay";
 import {TalkId} from "@/models/VoxxrinTalk";
-import {computed, ref, Ref, unref, watch} from "vue";
-import {Unreffable} from "@/views/vue-utils";
+import {computed, unref, watch} from "vue";
+import {managedRef as ref, Unreffable} from "@/views/vue-utils";
 import {collection, doc, DocumentReference} from "firebase/firestore";
 import {db} from "@/state/firebase";
 import {TalkStats} from "../../../shared/feedbacks.firestore";

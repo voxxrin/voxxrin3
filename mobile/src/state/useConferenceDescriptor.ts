@@ -1,4 +1,5 @@
-import {computed, ref, unref, watch} from "vue";
+import {computed, unref, watch} from "vue";
+import {managedRef as ref} from "@/views/vue-utils";
 import {
     createVoxxrinConferenceDescriptor, VoxxrinConferenceDescriptor,
 } from "@/models/VoxxrinConferenceDescriptor";

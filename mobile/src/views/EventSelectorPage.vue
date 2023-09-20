@@ -56,9 +56,9 @@ import {
     useIonRouter
 } from '@ionic/vue';
 import {EventFamily, EventId, ListableVoxxrinEvent, searchEvents} from "@/models/VoxxrinEvent";
-import {computed, ref, Ref, watch} from "vue";
+import {computed, Ref, watch} from "vue";
 import AvailableEventsList from "@/components/events/AvailableEventsList.vue";
-import {presentActionSheetController} from "@/views/vue-utils";
+import {presentActionSheetController, managedRef as ref} from "@/views/vue-utils";
 import {Browser} from "@capacitor/browser";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {

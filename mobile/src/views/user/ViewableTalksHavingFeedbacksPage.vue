@@ -35,7 +35,8 @@
 import {goBackOrNavigateTo} from "@/router";
 import {useIonRouter} from "@ionic/vue";
 import {useUserTokensWallet} from "@/state/useUserTokensWallet";
-import {computed, ref, unref, watch} from "vue";
+import {computed, unref, watch} from "vue";
+import {managedRef as ref} from "@/views/vue-utils";
 import {VoxxrinUserTokensWallet} from "@/models/VoxxrinUser";
 import {VoxxrinDetailedTalk} from "@/models/VoxxrinTalk";
 import {fetchTalkDetails} from "@/services/DetailedTalks";

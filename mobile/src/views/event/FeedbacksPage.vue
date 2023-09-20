@@ -73,7 +73,7 @@
   import {getRouteParamsValue, toBeImplemented} from "@/views/vue-utils";
   import {useRoute} from "vue-router";
   import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
-  import {ref} from "vue";
+  import {managedRef as ref} from "@/views/vue-utils";
   import {typesafeI18n} from "@/i18n/i18n-vue";
   import DaySelector from "@/components/schedule/DaySelector.vue";
   import TimeSlotAccordion from "@/components/timeslots/TimeSlotAccordion.vue";

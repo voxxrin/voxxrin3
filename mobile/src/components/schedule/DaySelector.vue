@@ -48,7 +48,8 @@
 </template>
 
 <script setup lang="ts">
-import {computed, PropType, ref, toRef, watch} from "vue";
+import {computed, PropType, watch} from "vue";
+import {managedRef as ref, toManagedRef as toRef} from "@/views/vue-utils";
 import {DayId, VoxxrinDay} from "@/models/VoxxrinDay";
 import {localDateToReadableParts, toISOLocalDate} from "@/models/DatesAndTime";
 import {useCurrentUserLocale} from "@/state/useCurrentUser";

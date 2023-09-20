@@ -4,7 +4,8 @@
 </template>
 
 <script setup lang="ts">
-import {onMounted, PropType, ref, toRef, unref, watch} from "vue";
+import {onMounted, PropType, unref, watch} from "vue";
+import {managedRef as ref, toManagedRef as toRef} from "@/views/vue-utils";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {DayId} from "@/models/VoxxrinDay";
 import {LabelledTimeslotWithFeedback, useLabelledTimeslotWithFeedbacks} from "@/state/useSchedule";

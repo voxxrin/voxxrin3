@@ -100,7 +100,8 @@ import {EventId} from "@/models/VoxxrinEvent";
 import {getRouteParamsValue, isRefDefined, isRefUndefined} from "@/views/vue-utils";
 import {useRoute} from "vue-router";
 import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
-import {computed, ref, Ref, unref, watch} from "vue";
+import {computed, Ref, unref, watch} from "vue";
+import {managedRef as ref} from "@/views/vue-utils";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {
     ScheduleTimeSlotId

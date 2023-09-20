@@ -12,10 +12,11 @@
 </template>
 
 <script setup lang="ts">
-import {PropType, ref} from "vue";
+import {PropType} from "vue";
 import {
     VoxxrinConferenceDescriptor,
 } from "@/models/VoxxrinConferenceDescriptor";
+import {managedRef as ref} from "@/views/vue-utils";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import LinearRating from "@/components/ratings/LinearRating.vue";
 

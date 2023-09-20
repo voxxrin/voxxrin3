@@ -1,4 +1,5 @@
-import {Ref, ref} from "vue";
+import {Ref} from "vue";
+import {managedRef as ref} from "@/views/vue-utils";
 import {Temporal} from "temporal-polyfill";
 import {ISODatetime} from "../../../shared/type-utils";
 import {match, P} from "ts-pattern";

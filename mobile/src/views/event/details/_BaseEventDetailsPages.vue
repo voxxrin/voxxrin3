@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import {ref} from "vue";
+import {managedRef as ref} from "@/views/vue-utils";
 import {useRoute} from "vue-router";
 import {getRouteParamsValue} from "@/views/vue-utils";
 import {EventId} from "@/models/VoxxrinEvent";

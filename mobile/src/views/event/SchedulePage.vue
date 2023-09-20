@@ -92,7 +92,8 @@ import {
     IonInput, modalController,
 } from '@ionic/vue';
 import {useRoute} from "vue-router";
-import {ref, watch} from "vue";
+import {watch} from "vue";
+import {managedRef as ref} from "@/views/vue-utils";
 import {prepareSchedules, useSchedule} from "@/state/useSchedule";
 import CurrentEventHeader from "@/components/events/CurrentEventHeader.vue";
 import {getRouteParamsValue, isRefDefined} from "@/views/vue-utils";

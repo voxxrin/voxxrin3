@@ -58,10 +58,9 @@
   import {EventId} from "@/models/VoxxrinEvent";
   import {getRouteParamsValue, isRefDefined} from "@/views/vue-utils";
   import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
-  import {ref} from "vue";
   import {typesafeI18n} from "@/i18n/i18n-vue";
+  import {managedRef as ref} from "@/views/vue-utils";
   import DaySelector from "@/components/schedule/DaySelector.vue";
-  import {DayId} from "@/models/VoxxrinDay";
   import ScheduleBreak from "@/components/schedule/ScheduleBreak.vue";
   import TimeslotsIterator from "@/components/timeslots/TimeslotsIterator.vue";
   import TalkWatchLaterButton from "@/components/talk-card/TalkWatchLaterButton.vue";

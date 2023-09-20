@@ -19,7 +19,8 @@ import {
     IonTabs,
     IonRouterOutlet,
 } from '@ionic/vue';
-import {ComponentPublicInstance, onMounted, PropType, ref, watch} from "vue";
+import {ComponentPublicInstance, PropType, watch} from "vue";
+import {managedRef as ref} from "@/views/vue-utils";
 import {useRoute} from "vue-router";
 import {EventId} from "@/models/VoxxrinEvent";
 import {useTabbedPageNav} from "@/state/useTabbedPageNav";

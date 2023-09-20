@@ -7,7 +7,8 @@
 </template>
 
 <script setup lang="ts">
-import {PropType, ref} from "vue";
+import {PropType} from "vue";
+import {managedRef as ref} from "@/views/vue-utils";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {star, thumbsUp} from "ionicons/icons";
 import {VoxxrinUserFeedback} from "@/models/VoxxrinFeedback";

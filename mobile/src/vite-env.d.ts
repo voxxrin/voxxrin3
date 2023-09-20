@@ -6,6 +6,7 @@
 
 interface ImportMetaEnv {
     readonly VITE_LOGGING_ENABLED: "false"|"true",
+    readonly VITE_USE_MANAGED_REFS: "false"|"true",
     readonly VITE_FIREBASE_API_KEY: string,
     readonly VITE_FIREBASE_AUTH_DOMAIN: string,
     readonly VITE_FIREBASE_PROJECT_ID: string,

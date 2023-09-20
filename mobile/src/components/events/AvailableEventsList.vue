@@ -24,7 +24,8 @@
 </template>
 
 <script setup lang="ts">
-import {computed, onMounted, PropType, ref, toRef, unref, watch} from "vue";
+import {computed, PropType, unref, watch} from "vue";
+import {managedRef as ref, toManagedRef as toRef} from "@/views/vue-utils";
 import {EventId, ListableVoxxrinEvent} from "@/models/VoxxrinEvent";
 import AvailableEventItem from "@/components/events/AvailableEventItem.vue";
 import {conferenceStatusOf} from "@/models/VoxxrinConferenceDescriptor";

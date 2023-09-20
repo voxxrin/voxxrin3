@@ -102,7 +102,8 @@ import {TalkId} from "@/models/VoxxrinTalk";
 import {
   useConferenceDescriptor, useSharedConferenceDescriptor,
 } from "@/state/useConferenceDescriptor";
-import {computed, ref, unref} from "vue";
+import {computed, unref} from "vue";
+import {managedRef as ref} from "@/views/vue-utils";
 import {numberArrayStats, sortBy} from "@/models/utils";
 import TalkDetailsHeader from "@/components/talk-details/TalkDetailsHeader.vue";
 import {useSharedEventTalk} from "@/state/useEventTalk";

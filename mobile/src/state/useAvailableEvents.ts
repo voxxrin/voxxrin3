@@ -3,8 +3,9 @@ import {
     firestoreListableEventToVoxxrinListableEvent, ListableVoxxrinEvent,
 } from "@/models/VoxxrinEvent";
 import {ListableEvent} from "../../../shared/event-list.firestore";
-import {sortBy, ValueObject} from "@/models/utils";
-import {computed, ref, unref} from "vue";
+import {sortBy} from "@/models/utils";
+import {computed, unref} from "vue";
+import {managedRef as ref} from "@/views/vue-utils";
 import {collection, CollectionReference} from "firebase/firestore";
 import {db} from "@/state/firebase";
 import {useCollection} from "vuefire";

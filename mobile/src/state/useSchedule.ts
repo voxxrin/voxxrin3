@@ -1,4 +1,5 @@
-import {computed, Ref, ref, unref, watch} from "vue";
+import {computed, Ref, unref, watch} from "vue";
+import {managedRef as ref} from "@/views/vue-utils";
 import {DailySchedule} from "../../../shared/daily-schedule.firestore";
 import {
     createVoxxrinDailyScheduleFromFirestore,

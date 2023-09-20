@@ -12,13 +12,13 @@ import {
     IonBadge,
     IonSpinner
 } from '@ionic/vue';
-import {onMounted, PropType, ref} from "vue";
+import {onMounted, PropType} from "vue";
 import {match, P} from "ts-pattern";
 import {
     ConferenceStatus,
     conferenceStatusOf, VoxxrinConferenceDescriptor,
 } from "@/models/VoxxrinConferenceDescriptor";
-import {useInterval} from "@/views/vue-utils";
+import {useInterval, managedRef as ref} from "@/views/vue-utils";
 import {calendar, playBackCircle} from "ionicons/icons";
 import {ListableVoxxrinEvent} from "@/models/VoxxrinEvent";
 import {typesafeI18n} from "@/i18n/i18n-vue";
