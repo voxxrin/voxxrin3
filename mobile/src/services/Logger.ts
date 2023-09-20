@@ -6,6 +6,7 @@ export type LogProducer = (() => LogMessage) | LogMessage
 
 type LogConfig = {
     namesRestrictedTo: string[] | undefined;
+    globalLoggingEnabled: boolean;
     minimumLogLevel: LogLevel;
 }
 
@@ -59,8 +60,9 @@ export class Logger {
     public static isLogEnabled(name: string) {
         const loggingGloballyEnabled = import.meta.env.VITE_LOGGING_ENABLED === 'true';
 
-        return loggingGloballyEnabled &&
-            (!logConfig.namesRestrictedTo || logConfig.namesRestrictedTo.includes(name));
+        return loggingGloballyEnabled
+            || logConfig.globalLoggingEnabled
+            || (logConfig.namesRestrictedTo && logConfig.namesRestrictedTo.includes(name));
     }
 
     public static resetAllLoggersCaches() {
@@ -75,13 +77,13 @@ export const PERF_LOGGER = Logger.named("perf");
 function loadLogConfig(): LogConfig {
     const str = localStorage.getItem("_logConfig")
     if(!str) {
-        return { namesRestrictedTo: undefined, minimumLogLevel: "debug" };
+        return { namesRestrictedTo: undefined, globalLoggingEnabled: false, minimumLogLevel: "debug" };
     } else {
         return JSON.parse(str) as LogConfig;
     }
 }
 
-(window as any).updateLogConfigTo = function(updatedLogConfig: LogConfig) {
+export function updateLogConfigTo(updatedLogConfig: LogConfig) {
     localStorage.setItem("_logConfig", JSON.stringify(updatedLogConfig));
     Logger.resetAllLoggersCaches();
 

@@ -11,6 +11,7 @@ import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor"
 import {managedRef as ref} from "@/views/vue-utils";
 import {ListableVoxxrinEvent} from "@/models/VoxxrinEvent";
 import {Ref} from "vue";
+import {updateLogConfigTo} from "@/services/Logger";
 
 
 // if(import.meta.env.DEV) {
@@ -63,6 +64,7 @@ export function useDevUtilities() {
             })
         }:undefined)
     }
+    (window as any).updateLogConfigTo = updateLogConfigTo;
 }
 
 // }
