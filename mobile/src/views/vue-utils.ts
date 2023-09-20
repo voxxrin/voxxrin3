@@ -166,7 +166,7 @@ const MANAGED_REFS = new ManagedRefs();
 let ref = vueRef
 let toRef = vueToRef
 
-if(import.meta.env.VITE_USE_MANAGED_REFS === 'true') {
+if(import.meta.env.VITE_USE_MANAGED_REFS === 'true' || localStorage.getItem("_useManagedRefs") === "true") {
     ref = function managedRef(value: unknown){
         const instance = vueRef(value);
 

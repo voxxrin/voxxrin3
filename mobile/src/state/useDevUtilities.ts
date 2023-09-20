@@ -64,6 +64,10 @@ export function useDevUtilities() {
             })
         }:undefined)
     }
+    (window as any).useManagedVueRefs = (enabled: boolean) => {
+        localStorage.setItem("_useManagedRefs", ""+enabled);
+        window.location.reload();
+    }
     (window as any).updateLogConfigTo = updateLogConfigTo;
 }
 
