@@ -20,6 +20,7 @@ import {filterTalksMatching, TalkId} from "@/models/VoxxrinTalk";
 import {findTimeslotFeedback, VoxxrinTimeslotFeedback} from "@/models/VoxxrinFeedback";
 import {UserDailyFeedbacks} from "../../../shared/feedbacks.firestore";
 import {PERF_LOGGER} from "@/services/Logger";
+import { User } from 'firebase/auth';
 
 export function useSchedule(
             conferenceDescriptorRef: Unreffable<VoxxrinConferenceDescriptor | undefined>,
@@ -66,42 +67,44 @@ export function dailyScheduleDocument(eventDescriptor: VoxxrinConferenceDescript
 }
 
 export function prepareSchedules(
+    user: User,
     conferenceDescriptor: VoxxrinConferenceDescriptor,
     currentDayId: DayId,
     otherDayIds: Array<DayId>
 ) {
+    PERF_LOGGER.debug(() => `prepareSchedules(userId=${user.uid}, eventId=${conferenceDescriptor.id.value}, currentDayId=${currentDayId.value}, otherDayIds=${JSON.stringify(otherDayIds.map(id => id.value))})`);
+
     [currentDayId, ...otherDayIds].forEach(async dayId => {
         if(dayId !== currentDayId) {
-            useSchedule(conferenceDescriptor, dayId);
-        }
+            const dailyScheduleDoc = dailyScheduleDocument(conferenceDescriptor, dayId)
+            if(navigator.onLine && dailyScheduleDoc) {
+                const dailyScheduleSnapshot = await getDoc(dailyScheduleDoc);
+                PERF_LOGGER.debug(`getDoc(${dailyScheduleDoc.path})`)
 
-        const dailyScheduleDoc = dailyScheduleDocument(conferenceDescriptor, dayId)
-        if(navigator.onLine && dailyScheduleDoc) {
-            const dailyScheduleSnapshot = await getDoc(dailyScheduleDoc);
+                const talkIds = dailyScheduleSnapshot.data()?.timeSlots.reduce((talkIds, timeslot) => {
+                    if(timeslot.type === 'talks') {
+                        timeslot.talks.forEach(talk => {
+                            talk.speakers.forEach(speaker => {
+                                if(speaker.photoUrl) {
+                                    const avatarImage = new Image();
+                                    avatarImage.src = speaker.photoUrl;
+                                }
+                                // avatarImage.onload = () => {
+                                //     console.log(`Avatar ${speaker.photoUrl} pre-loaded !`)
+                                // };
+                            })
 
-            const dayAndTalkIds = dailyScheduleSnapshot.data()?.timeSlots.reduce((dayAndTalkIds, timeslot) => {
-                if(timeslot.type === 'talks') {
-                    timeslot.talks.forEach(talk => {
-                        talk.speakers.forEach(speaker => {
-                            if(speaker.photoUrl) {
-                                const avatarImage = new Image();
-                                avatarImage.src = speaker.photoUrl;
-                            }
-                            // avatarImage.onload = () => {
-                            //     console.log(`Avatar ${speaker.photoUrl} pre-loaded !`)
-                            // };
+                            talkIds.push(new TalkId(talk.id))
                         })
+                    }
 
-                        dayAndTalkIds.push({dayId, talkId: new TalkId(talk.id)})
-                    })
-                }
+                    return talkIds;
+                }, [] as Array<TalkId>) || [];
 
-                return dayAndTalkIds;
-            }, [] as Array<{dayId: DayId, talkId: TalkId}>) || [];
-
-            prepareEventTalks(conferenceDescriptor, dayAndTalkIds.map(dat => dat.talkId));
-            prepareTalkStats(conferenceDescriptor.id, dayAndTalkIds);
-            prepareUserTalkNotes(conferenceDescriptor.id, dayAndTalkIds);
+                prepareEventTalks(conferenceDescriptor, talkIds);
+                prepareTalkStats(conferenceDescriptor.id, talkIds);
+                prepareUserTalkNotes(user, conferenceDescriptor.id, talkIds);
+            }
         }
     })
 }

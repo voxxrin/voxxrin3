@@ -3,13 +3,18 @@ import {DayId} from "@/models/VoxxrinDay";
 import {TalkId} from "@/models/VoxxrinTalk";
 import {computed, unref, watch} from "vue";
 import {managedRef as ref, Unreffable} from "@/views/vue-utils";
-import {collection, doc, DocumentReference} from "firebase/firestore";
+import {collection, doc, DocumentReference, getDoc} from "firebase/firestore";
 import {db} from "@/state/firebase";
 import {TalkStats} from "../../../shared/feedbacks.firestore";
 import {useDocument} from "vuefire";
 import {createVoxxrinTalkStatsFromFirestore} from "@/models/VoxxrinTalkStats";
 import {PERF_LOGGER} from "@/services/Logger";
 
+function getTalksStatsRef(eventId: EventId, talkId: TalkId) {
+    return doc(collection(doc(collection(db,
+            'events'), eventId.value),
+        'talksStats'), talkId.value) as DocumentReference<TalkStats>;
+}
 
 export function useTalkStats(eventIdRef: Unreffable<EventId | undefined>,
            talkIdRef: Unreffable<TalkId | undefined>) {
@@ -23,9 +28,7 @@ export function useTalkStats(eventIdRef: Unreffable<EventId | undefined>,
             return undefined;
         }
 
-        return doc(collection(doc(collection(db,
-            'events'), eventId.value),
-            'talksStats'), talkId.value) as DocumentReference<TalkStats>
+        return getTalksStatsRef(eventId, talkId);
     });
 
     const firestoreTalkStatsRef = useDocument(firestoreTalkStatsSource);
@@ -40,7 +43,10 @@ export function useTalkStats(eventIdRef: Unreffable<EventId | undefined>,
     // into firestore
     const inMemoryDeltaUntilFirestoreRefreshRef = ref(0);
     watch(firestoreTalkStatsRef, (newVal, oldVal) => {
-        PERF_LOGGER.debug(() => `useTalkStats(${unref(eventIdRef)?.value}, ${unref(talkIdRef)?.value})[firestoreTalkStatsRef] updated from [${oldVal?.id}] to [${newVal?.id}]`)
+        if(newVal !== oldVal && newVal?.id !== oldVal?.id) {
+            PERF_LOGGER.debug(() => `useTalkStats(${unref(eventIdRef)?.value}, ${unref(talkIdRef)?.value})[firestoreTalkStatsRef] updated from [${oldVal?.id}] to [${newVal?.id}]`)
+        }
+
         // Resetting local delta everytime we receive a firestore refresh
         inMemoryDeltaUntilFirestoreRefreshRef.value = 0;
     }, {immediate: true})
@@ -78,12 +84,15 @@ export function useTalkStats(eventIdRef: Unreffable<EventId | undefined>,
     };
 }
 
-export function prepareTalkStats(
+export async function prepareTalkStats(
     eventId: EventId,
-    dayAndTalkIds: Array<{dayId: DayId, talkId: TalkId}>
+    talkIds: Array<TalkId>
 ) {
-    dayAndTalkIds.forEach(dayAndTalkId => {
-        useTalkStats(eventId, dayAndTalkId.talkId);
-    })
+    PERF_LOGGER.debug(`prepareTalkStats(eventId=${eventId.value}, talkIds=${JSON.stringify(talkIds.map(talkId => talkId.value))})`)
+    await Promise.all(talkIds.map(async talkId => {
+        const talksStatsRef = getTalksStatsRef(eventId, talkId);
+        await getDoc(talksStatsRef)
+        PERF_LOGGER.debug(`getDoc(${talksStatsRef.path})`)
+    }))
 }
 

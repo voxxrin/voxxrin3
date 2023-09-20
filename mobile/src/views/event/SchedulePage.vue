@@ -124,6 +124,7 @@ import {VoxxrinTalk} from "@/models/VoxxrinTalk";
 import {useSharedEventSelectedDay} from "@/state/useEventSelectedDay";
 import {useUserTokensWallet} from "@/state/useUserTokensWallet";
 import {Logger} from "@/services/Logger";
+import {useCurrentUser} from "vuefire";
 
 const LOGGER = Logger.named("SchedulePage");
 
@@ -148,15 +149,17 @@ const { LL } = typesafeI18n()
 
 const {selectedDayId} = useSharedEventSelectedDay(eventId);
 
+const user = useCurrentUser()
+
 function onceDayInitializedTo(day: VoxxrinDay, availableDays: VoxxrinDay[]) {
     // Pre-loading other days data in the background, for 2 main reasons :
     // - navigation to other days will be quickier
     // - if user switches to offline without navigating to these days, information will be in his cache anyway
     setTimeout(() => {
-        if(isRefDefined(confDescriptor)) {
+        if(isRefDefined(confDescriptor) && isRefDefined(user) && user.value) {
             const otherDayIds = availableDays.filter(availableDay => !availableDay.id.isSameThan(day.id)).map(d => d.id);
             LOGGER.info(() => `Preparing schedule data for other days than currently selected one (${otherDayIds.map(id => id.value).join(", ")})`)
-            prepareSchedules(confDescriptor.value, day.id, otherDayIds);
+            prepareSchedules(user.value, confDescriptor.value, day.id, otherDayIds);
         }
     }, 5000)
 }

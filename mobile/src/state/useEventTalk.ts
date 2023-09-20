@@ -14,6 +14,10 @@ import {EventId} from "@/models/VoxxrinEvent";
 import {PERF_LOGGER} from "@/services/Logger";
 
 
+function getTalkDetailsRef(eventId: EventId, talkId: TalkId) {
+    return doc(collection(doc(collection(db, 'events'), eventId.value), 'talks'), talkId.value) as DocumentReference<DetailedTalk>;
+}
+
 export function useEventTalk(
     conferenceDescriptorRef: Unreffable<VoxxrinConferenceDescriptor | undefined>,
     talkIdRef: Unreffable<TalkId | undefined>) {
@@ -34,7 +38,7 @@ export function useEventTalk(
             return undefined;
         }
 
-        return doc(collection(doc(collection(db, 'events'), conferenceDescriptor.id.value), 'talks'), talkId.value) as DocumentReference<DetailedTalk>;
+        return getTalkDetailsRef(conferenceDescriptor.id, talkId);
     });
 
     const firestoreTalkDetailsRef = useDocument(firestoreTalkDetailsSource);
@@ -54,13 +58,16 @@ export function useEventTalk(
     };
 }
 
-export function prepareEventTalks(
+export async function prepareEventTalks(
     conferenceDescriptor: VoxxrinConferenceDescriptor,
     talkIds: Array<TalkId>
 ) {
-    talkIds.forEach(talkId => {
-        useEventTalk(conferenceDescriptor, talkId);
-    })
+    PERF_LOGGER.debug(`prepareEventTalks(eventId=${conferenceDescriptor.id.value}, talkIds=${JSON.stringify(talkIds.map(id => id.value))})`)
+    await Promise.all(talkIds.map(async talkId => {
+        const talkDetailsRef = getTalkDetailsRef(conferenceDescriptor.id, talkId);
+        await getDoc(talkDetailsRef);
+        PERF_LOGGER.debug(`getDoc(${talkDetailsRef.path})`)
+    }))
 }
 
 export const useSharedEventTalk = createSharedComposable(useEventTalk);

@@ -12,13 +12,22 @@ import {
     DocumentReference,
     setDoc,
     updateDoc,
-    UpdateData
+    UpdateData, getDoc
 } from "firebase/firestore";
 import {db} from "@/state/firebase";
 import {TalkNote, UserComputedEventInfos, UserTalkNote} from "../../../shared/feedbacks.firestore";
 import {Logger, PERF_LOGGER} from "@/services/Logger";
+import { User } from 'firebase/auth';
 
 const LOGGER = Logger.named("useUserTalkNotes");
+
+function getTalkNotesRef(user: User, eventId: EventId, talkId: TalkId): DocumentReference<UserTalkNote> {
+    return doc(collection(doc(collection(doc(collection(db,
+                'users'), user.uid),
+            'events'), eventId.value),
+        'talksNotes'), talkId.value
+    ) as DocumentReference<UserTalkNote>
+}
 
 export function useUserTalkNotes(
     eventIdRef: Unreffable<EventId | undefined>,
@@ -37,11 +46,7 @@ export function useUserTalkNotes(
             return undefined;
         }
 
-        return doc(collection(doc(collection(doc(collection(db,
-                    'users'), user.uid),
-                'events'), eventId.value),
-            'talksNotes'), talkId.value
-        ) as DocumentReference<UserTalkNote>
+        return getTalkNotesRef(user, eventId, talkId);
     });
 
     const { eventTalkStats, incrementInMemoryTotalFavoritesCount, decrementInMemoryTotalFavoritesCount } = useTalkStats(eventIdRef, talkIdRef)
@@ -183,11 +188,16 @@ export function useUserEventAllFavoritedTalkIds(eventIdRef: Unreffable<EventId |
 
 export type UserTalkNotesHook = ReturnType<typeof useUserTalkNotes>;
 
-export function prepareUserTalkNotes(
+export async function prepareUserTalkNotes(
+    user: User,
     eventId: EventId,
-    dayAndTalkIds: Array<{dayId: DayId, talkId: TalkId}>
+    talkIds: Array<TalkId>
 ) {
-    dayAndTalkIds.forEach(dayAndTalkId => {
-        useUserTalkNotes(eventId, dayAndTalkId.talkId);
-    })
+
+    PERF_LOGGER.debug(`prepareUserTalkNotes(user=${user.uid}, eventId=${eventId.value}, talkIds=${JSON.stringify(talkIds.map(talkId => talkId.value))})`)
+    await Promise.all(talkIds.map(async (talkId) => {
+        const talkNotesRef = getTalkNotesRef(user, eventId, talkId);
+        await getDoc(talkNotesRef)
+        PERF_LOGGER.debug(`getDoc(${talkNotesRef.path})`)
+    }))
 }
