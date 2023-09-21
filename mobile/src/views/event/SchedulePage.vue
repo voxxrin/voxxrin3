@@ -101,7 +101,7 @@ import {EventId} from "@/models/VoxxrinEvent";
 import {VoxxrinDay} from "@/models/VoxxrinDay";
 import {
   extractTalksFromSchedule,
-  filterTimeslotsToAutoExpandBasedOn,
+  filterTimeslotsToAutoExpandBasedOn, VoxxrinDailySchedule,
   VoxxrinScheduleTimeSlot
 } from "@/models/VoxxrinSchedule";
 import DaySelector from "@/components/schedule/DaySelector.vue";
@@ -172,7 +172,30 @@ function onceDayInitializedTo(day: VoxxrinDay, availableDays: VoxxrinDay[]) {
   availableDaysRef.value = availableDays;
 }
 
-const { schedule: currentSchedule } = useSchedule(confDescriptor, selectedDayId)
+const FIRST_DISPLAY_TIMESLOTS_COUNT = 4;
+const { schedule: scheduleRef } = useSchedule(confDescriptor, selectedDayId)
+const currentSchedule = ref<VoxxrinDailySchedule|undefined>(undefined);
+watch([scheduleRef], ([schedule]) => {
+  if(schedule) {
+    // Loading first FIRST_DISPLAY_TIMESLOTS_COUNT displayed timeslots for performance reasons,
+    // so that we don't fill the DOM at the beginning of a day switch
+    currentSchedule.value = {
+      ...schedule,
+      timeSlots: schedule.timeSlots
+          .filter(ts => ts.type !== 'talks' || ts.talks.length>0)
+          .slice(0, FIRST_DISPLAY_TIMESLOTS_COUNT)
+    }
+
+
+    // Waiting a little bit, and loading the full list of timeslots after that (outside viewport)
+    setTimeout(() => {
+      currentSchedule.value = {
+        ...schedule,
+        timeSlots: schedule.timeSlots.slice(0) // every timeslots loaded
+      }
+    }, 800)
+  }
+})
 
 const userTokensWallet = useUserTokensWallet();
 const talkFeedbackViewerTokensRef = userTokensWallet.talkFeedbackViewerTokensRefForEvent(eventId);
@@ -187,22 +210,12 @@ const autoExpandTimeslotsRequested = ref(true);
 watch([confDescriptor, currentSchedule ], ([confDescriptor, currentSchedule]) => {
     if(currentSchedule && confDescriptor) {
         if(autoExpandTimeslotsRequested.value) {
-            // Deferring expanded timeslots so that :
-            // 1/ we don't load the DOM too much when opening a schedule
-            // 2/ this allows to show the auto-expand animation to the user
+            // Deferring expanded timeslots so that this shows the auto-expand animation to the user
             const autoExpandableTimeslotIds = filterTimeslotsToAutoExpandBasedOn(currentSchedule.timeSlots, useCurrentClock().zonedDateTimeISO())
                 .map(ts => ts.id.value)
             setTimeout(() => {
-                // Only expanding firt 2 auto-expandable timeslots first (no need to auto-expand others which
-                // will be outside the viewport
-                expandedTimeslotIds.value = autoExpandableTimeslotIds.slice(0, 3);
-            }, 300)
-            setTimeout(() => {
-                // Waiting a little bit and expanding those timeslots outside the viewport...
                 expandedTimeslotIds.value = autoExpandableTimeslotIds.slice(0);
-
-                autoExpandTimeslotsRequested.value = false;
-            }, 1200)
+            }, 300)
         }
     }
 }, {immediate: true});
