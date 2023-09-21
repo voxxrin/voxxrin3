@@ -119,11 +119,11 @@ export function prepareSchedules(
 
         if(navigator.onLine && talkIds) {
             if(dayId !== currentDayId) {
-                prepareTalkStats(conferenceDescriptor.id, talkIds);
-                prepareUserTalkNotes(user, conferenceDescriptor.id, talkIds);
+                prepareTalkStats(conferenceDescriptor.id, dayId, talkIds);
+                prepareUserTalkNotes(user, conferenceDescriptor.id, dayId, talkIds);
             }
 
-            prepareEventTalks(conferenceDescriptor, talkIds);
+            prepareEventTalks(conferenceDescriptor, dayId, talkIds);
         }
     })
 }

@@ -18,6 +18,8 @@ import {db} from "@/state/firebase";
 import {TalkNote, UserComputedEventInfos, UserTalkNote} from "../../../shared/feedbacks.firestore";
 import {Logger, PERF_LOGGER} from "@/services/Logger";
 import { User } from 'firebase/auth';
+import {Temporal} from "temporal-polyfill";
+import {checkCache} from "@/services/Cachings";
 
 const LOGGER = Logger.named("useUserTalkNotes");
 
@@ -191,13 +193,15 @@ export type UserTalkNotesHook = ReturnType<typeof useUserTalkNotes>;
 export async function prepareUserTalkNotes(
     user: User,
     eventId: EventId,
+    dayId: DayId,
     talkIds: Array<TalkId>
 ) {
-
-    PERF_LOGGER.debug(`prepareUserTalkNotes(user=${user.uid}, eventId=${eventId.value}, talkIds=${JSON.stringify(talkIds.map(talkId => talkId.value))})`)
-    await Promise.all(talkIds.map(async (talkId) => {
-        const talkNotesRef = getTalkNotesRef(user, eventId, talkId);
-        await getDoc(talkNotesRef)
-        PERF_LOGGER.debug(`getDoc(${talkNotesRef.path})`)
-    }))
+    return checkCache(`prepareUserTalkNotes(eventId=${eventId.value}, dayId=${dayId.value})`, Temporal.Duration.from({ hours: 24 }), async () => {
+        PERF_LOGGER.debug(`prepareUserTalkNotes(user=${user.uid}, eventId=${eventId.value}, talkIds=${JSON.stringify(talkIds.map(talkId => talkId.value))})`)
+        await Promise.all(talkIds.map(async (talkId) => {
+            const talkNotesRef = getTalkNotesRef(user, eventId, talkId);
+            await getDoc(talkNotesRef)
+            PERF_LOGGER.debug(`getDoc(${talkNotesRef.path})`)
+        }))
+    })
 }

@@ -12,6 +12,9 @@ import {useDocument} from "vuefire";
 import {createSharedComposable} from "@vueuse/core";
 import {EventId} from "@/models/VoxxrinEvent";
 import {PERF_LOGGER} from "@/services/Logger";
+import {DayId} from "@/models/VoxxrinDay";
+import {Temporal} from "temporal-polyfill";
+import {checkCache} from "@/services/Cachings";
 
 
 function getTalkDetailsRef(eventId: EventId, talkId: TalkId) {
@@ -60,14 +63,17 @@ export function useEventTalk(
 
 export async function prepareEventTalks(
     conferenceDescriptor: VoxxrinConferenceDescriptor,
+    dayId: DayId,
     talkIds: Array<TalkId>
 ) {
-    PERF_LOGGER.debug(`prepareEventTalks(eventId=${conferenceDescriptor.id.value}, talkIds=${JSON.stringify(talkIds.map(id => id.value))})`)
-    await Promise.all(talkIds.map(async talkId => {
-        const talkDetailsRef = getTalkDetailsRef(conferenceDescriptor.id, talkId);
-        await getDoc(talkDetailsRef);
-        PERF_LOGGER.debug(`getDoc(${talkDetailsRef.path})`)
-    }))
+    return checkCache(`eventTalksPreparation(eventId=${conferenceDescriptor.id.value}, dayId=${dayId.value})`, Temporal.Duration.from({ hours: 6 }), async () => {
+        PERF_LOGGER.debug(`prepareEventTalks(eventId=${conferenceDescriptor.id.value}, talkIds=${JSON.stringify(talkIds.map(id => id.value))})`)
+        await Promise.all(talkIds.map(async talkId => {
+            const talkDetailsRef = getTalkDetailsRef(conferenceDescriptor.id, talkId);
+            await getDoc(talkDetailsRef);
+            PERF_LOGGER.debug(`getDoc(${talkDetailsRef.path})`)
+        }))
+    });
 }
 
 export const useSharedEventTalk = createSharedComposable(useEventTalk);
