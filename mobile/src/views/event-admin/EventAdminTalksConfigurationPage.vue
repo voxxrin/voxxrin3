@@ -260,7 +260,6 @@ const talks = computed(() => {
 
     @media (prefers-color-scheme: dark) {
       background: var(--app-medium-contrast-contrast);
-      border: 1px solid var(--app-beige-line);
     }
 
     ion-card {
