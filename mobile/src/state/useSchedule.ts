@@ -90,7 +90,9 @@ export function prepareSchedules(
 ) {
     PERF_LOGGER.debug(() => `prepareSchedules(userId=${user.uid}, eventId=${conferenceDescriptor.id.value}, currentDayId=${currentDayId.value}, currentTalkIds=${JSON.stringify(currentTalks.map(talk => talk.id.value))}, otherDayIds=${JSON.stringify(otherDayIds.map(id => id.value))})`);
 
-    [currentDayId, ...otherDayIds].forEach(async dayId => {
+    [currentDayId, ...otherDayIds].reduce(async (previousDayPromise, dayId) => {
+        await previousDayPromise;
+
         let talkIds: TalkId[]|undefined = undefined;
         if(dayId === currentDayId) {
             currentTalks.map(loadTalkSpeakerUrls)
@@ -118,14 +120,17 @@ export function prepareSchedules(
         }
 
         if(navigator.onLine && talkIds) {
+            const preparations: Array<Promise<any>> = [];
             if(dayId !== currentDayId) {
-                prepareTalkStats(conferenceDescriptor.id, dayId, talkIds);
-                prepareUserTalkNotes(user, conferenceDescriptor.id, dayId, talkIds);
+                preparations.push(prepareTalkStats(conferenceDescriptor.id, dayId, talkIds));
+                preparations.push(prepareUserTalkNotes(user, conferenceDescriptor.id, dayId, talkIds));
             }
 
-            prepareEventTalks(conferenceDescriptor, dayId, talkIds);
+            preparations.push(prepareEventTalks(conferenceDescriptor, dayId, talkIds));
+
+            await Promise.all(preparations);
         }
-    })
+    }, Promise.resolve());
 }
 
 export type LabelledTimeslotWithFeedback = VoxxrinScheduleTimeSlot & {
