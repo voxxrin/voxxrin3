@@ -4,11 +4,29 @@ import {getSecretTokenRef} from "../firestore-utils";
 import {TalkAttendeeFeedback} from "../../../../../../shared/talk-feedbacks.firestore";
 import {firestore} from "firebase-admin";
 import DocumentReference = firestore.DocumentReference;
+import {v4 as uuidv4} from "uuid";
+import {
+    ConferenceOrganizerSpace
+} from "../../../../../../shared/conference-organizer-space.firestore";
 
 export async function createOrganizerSpaceRatings(): Promise<"OK"|"Error"> {
     const existingEvents = await db.collection("events").listDocuments()
 
     await Promise.all(existingEvents.map(async event => {
+        const organizerSpaceDocRefs = await db.collection(`/events/${event.id}/organizer-space`).listDocuments()
+        if(organizerSpaceDocRefs.length === 0) {
+            const organizerSecretToken = uuidv4();
+            const organizerSpaceContent: ConferenceOrganizerSpace = {
+                organizerSecretToken,
+                talkFeedbackViewerTokens: []
+            }
+
+            await Promise.all([
+                db.collection(`/events/${event.id}/organizer-space`).doc(organizerSecretToken).set(organizerSpaceContent),
+                db.collection(`/events/${event.id}/organizer-space`).doc(organizerSecretToken).collection('ratings').doc('self').create({}),
+            ])
+        }
+
         const organizerSpaceRef = await getSecretTokenRef(`/events/${event.id}/organizer-space`)
 
         const talkRefs = await db.collection(`/events/${event.id}/talks`).listDocuments()
