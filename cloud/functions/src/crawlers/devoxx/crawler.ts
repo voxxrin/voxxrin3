@@ -210,7 +210,7 @@ const crawlDevoxxDay = async (cfpBaseUrl: string, day: string) => {
             return `${schedule.id} - ${schedule.room.name} - ${title}`
         }).join("\n  -") + "\n------------------");
 
-        if (items.every((item: DevoxxScheduleItem) => { return item.sessionType.isPause })) {
+        if (items.every((item: DevoxxScheduleItem) => { return item.sessionType.pause })) {
             const icon = match<string, Break['icon']>(items[0].sessionType.name.toLowerCase())
                 .when(sessionTypeName => sessionTypeName.includes('meet') || sessionTypeName.includes('greet'), () => 'beer')
                 .when(sessionTypeName => sessionTypeName.includes('movie'), () => 'film')

@@ -17,7 +17,7 @@ export interface DevoxxScheduleItem {
           id: number,
           name: string,
           duration: number,
-          isPause: boolean,
+          pause: boolean,
           description: string,
           cssColor?: HexColor|undefined
         },
