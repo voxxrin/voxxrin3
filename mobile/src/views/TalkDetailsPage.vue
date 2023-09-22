@@ -266,11 +266,13 @@ const theme = computed(() => {
       Enforcing color for talk description, in case HTML coming from CFP overrides some colors, with
       bad contrast to our UI
        */
-      * {
-        color: var(--app-primary) !important;
+      :deep {
+        * {
+          color: var(--app-primary) !important;
 
-        @media (prefers-color-scheme: dark) {
-          color: var(--app-white) !important;
+          @media (prefers-color-scheme: dark) {
+            color: var(--app-white) !important;
+          }
         }
       }
     }
@@ -353,14 +355,16 @@ const theme = computed(() => {
               font-size: 14px;
 
               /**
-              Enforcing color for speaker description, in case HTML coming from CFP overrides some colors, with
-              bad contrast to our UI
-               */
-              * {
-                color: var(--app-primary) !important;
+               Enforcing color for speaker description, in case HTML coming from CFP overrides some colors, with
+               bad contrast to our UI
+                */
+              :deep {
+                * {
+                  color: var(--app-primary) !important;
+                }
 
                 @media (prefers-color-scheme: dark) {
-                  color: var(--app-white) !important;
+                  * { color: var(--app-white) !important;}
                 }
               }
             }
