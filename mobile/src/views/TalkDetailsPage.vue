@@ -261,6 +261,18 @@ const theme = computed(() => {
       ion-text {
         line-height: 1.6;
       }
+
+      /**
+      Enforcing color for talk description, in case HTML coming from CFP overrides some colors, with
+      bad contrast to our UI
+       */
+      * {
+        color: var(--app-primary) !important;
+
+        @media (prefers-color-scheme: dark) {
+          color: var(--app-white) !important;
+        }
+      }
     }
 
     &-speakers {
@@ -339,6 +351,18 @@ const theme = computed(() => {
             &-description {
               padding-bottom: 12px;
               font-size: 14px;
+
+              /**
+              Enforcing color for speaker description, in case HTML coming from CFP overrides some colors, with
+              bad contrast to our UI
+               */
+              * {
+                color: var(--app-primary) !important;
+
+                @media (prefers-color-scheme: dark) {
+                  color: var(--app-white) !important;
+                }
+              }
             }
           }
         }
