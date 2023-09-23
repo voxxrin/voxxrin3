@@ -36,9 +36,11 @@
       <ion-accordion-group :multiple="true" v-if="confDescriptor && selectedDayId" :value="expandedTimeslotIds">
         <timeslots-iterator :conf-descriptor="confDescriptor" :day-id="selectedDayId"
                             :daily-schedule="currentSchedule" :search-terms="searchTermsRef"
+                            @timeslots-list-updated="(displayedTimeslots) => displayedTimeslotsRef = displayedTimeslots"
                             @missing-feedback-past-timeslots-updated="updatedMissingTimeslots => missingFeedbacksPastTimeslots = updatedMissingTimeslots">
-          <template #iterator="{ timeslot }">
+          <template #iterator="{ timeslot, index: timeslotIndex }">
             <time-slot-accordion
+                :animation-delay="timeslotIndex*TimeslotAnimations.ANIMATION_BASE_DELAY.total('milliseconds')"
                 :timeslot-feedback="timeslot.feedback" :timeslot="timeslot" :conf-descriptor="confDescriptor"
                 :elements-shown="['add-feedback-btn']"
                 @add-timeslot-feedback-clicked="(ts) => navigateToTimeslotFeedbackCreation(ts)"
@@ -94,7 +96,7 @@ import {
 import {useRoute} from "vue-router";
 import {onMounted, watch} from "vue";
 import {managedRef as ref} from "@/views/vue-utils";
-import {prepareSchedules, useSchedule} from "@/state/useSchedule";
+import {LabelledTimeslotWithFeedback, prepareSchedules, useSchedule} from "@/state/useSchedule";
 import CurrentEventHeader from "@/components/events/CurrentEventHeader.vue";
 import {getRouteParamsValue, isRefDefined} from "@/views/vue-utils";
 import {EventId} from "@/models/VoxxrinEvent";
@@ -126,6 +128,8 @@ import {useSharedEventSelectedDay} from "@/state/useEventSelectedDay";
 import {useUserTokensWallet} from "@/state/useUserTokensWallet";
 import {Logger} from "@/services/Logger";
 import {useCurrentUser} from "vuefire";
+import {TimeslotAnimations} from "@/services/Animations";
+import {Temporal} from "temporal-polyfill";
 
 const LOGGER = Logger.named("SchedulePage");
 
@@ -172,30 +176,8 @@ function onceDayInitializedTo(day: VoxxrinDay, availableDays: VoxxrinDay[]) {
   availableDaysRef.value = availableDays;
 }
 
-const FIRST_DISPLAY_TIMESLOTS_COUNT = 4;
-const { schedule: scheduleRef } = useSchedule(confDescriptor, selectedDayId)
-const currentSchedule = ref<VoxxrinDailySchedule|undefined>(undefined);
-watch([scheduleRef], ([schedule]) => {
-  if(schedule) {
-    // Loading first FIRST_DISPLAY_TIMESLOTS_COUNT displayed timeslots for performance reasons,
-    // so that we don't fill the DOM at the beginning of a day switch
-    currentSchedule.value = {
-      ...schedule,
-      timeSlots: schedule.timeSlots
-          .filter(ts => ts.type !== 'talks' || ts.talks.length>0)
-          .slice(0, FIRST_DISPLAY_TIMESLOTS_COUNT)
-    }
-
-
-    // Waiting a little bit, and loading the full list of timeslots after that (outside viewport)
-    setTimeout(() => {
-      currentSchedule.value = {
-        ...schedule,
-        timeSlots: schedule.timeSlots.slice(0) // every timeslots loaded
-      }
-    }, 800)
-  }
-})
+const { schedule: currentSchedule } = useSchedule(confDescriptor, selectedDayId)
+const displayedTimeslotsRef = ref<LabelledTimeslotWithFeedback[]>([]);
 
 const userTokensWallet = useUserTokensWallet();
 const talkFeedbackViewerTokensRef = userTokensWallet.talkFeedbackViewerTokensRefForEvent(eventId);
@@ -207,15 +189,18 @@ const searchTermsRef = ref<string|undefined>(undefined);
 const $searchInput = ref<{ $el: HTMLIonInputElement }|undefined>(undefined);
 
 const autoExpandTimeslotsRequested = ref(true);
-watch([confDescriptor, currentSchedule ], ([confDescriptor, currentSchedule]) => {
-    if(currentSchedule && confDescriptor) {
+watch([confDescriptor, displayedTimeslotsRef ], ([confDescriptor, displayedTimeslots]) => {
+    if(displayedTimeslots && displayedTimeslots.length && confDescriptor) {
         if(autoExpandTimeslotsRequested.value) {
             // Deferring expanded timeslots so that this shows the auto-expand animation to the user
-            const autoExpandableTimeslotIds = filterTimeslotsToAutoExpandBasedOn(currentSchedule.timeSlots, useCurrentClock().zonedDateTimeISO())
+            const autoExpandableTimeslotIds = filterTimeslotsToAutoExpandBasedOn(displayedTimeslots, useCurrentClock().zonedDateTimeISO())
                 .map(ts => ts.id.value)
             setTimeout(() => {
                 expandedTimeslotIds.value = autoExpandableTimeslotIds.slice(0);
-            }, 300)
+            }, TimeslotAnimations.ANIMATION_BASE_DELAY.total('milliseconds')*displayedTimeslots.length
+                + TimeslotAnimations.ANIMATION_DURATION.total('milliseconds')
+                + 200
+            )
         }
     }
 }, {immediate: true});

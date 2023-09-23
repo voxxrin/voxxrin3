@@ -1,6 +1,6 @@
 <template>
-  <slot name="iterator" :timeslot="timeslot"
-        v-for="(timeslot) in timeslotsRef" :key="timeslot.id.value" />
+  <slot name="iterator" :timeslot="timeslot" :index="index"
+        v-for="(timeslot, index) in timeslotsRef" :key="timeslot.id.value" />
 </template>
 
 <script setup lang="ts">
