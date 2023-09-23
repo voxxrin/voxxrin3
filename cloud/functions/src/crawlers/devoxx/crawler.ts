@@ -213,10 +213,10 @@ const crawlDevoxxDay = async (cfpBaseUrl: string, day: string) => {
         if (items.every((item: DevoxxScheduleItem) => { return item.sessionType.pause })) {
             const icon = match<string, Break['icon']>(items[0].sessionType.name.toLowerCase())
                 .when(sessionTypeName => sessionTypeName.includes('meet') || sessionTypeName.includes('greet'), () => 'beer')
-                .when(sessionTypeName => sessionTypeName.includes('movie'), () => 'film')
+                .when(sessionTypeName => sessionTypeName.includes('movie'), () => 'movie')
                 .when(sessionTypeName => sessionTypeName.includes('lunch'), () => 'restaurant')
                 .when(sessionTypeName => sessionTypeName.includes('registration'), () => 'ticket')
-                .when(sessionTypeName => sessionTypeName.includes('travel'), () => 'train')
+                .when(sessionTypeName => sessionTypeName.includes('travel'), () => 'wallet')
                 .when(sessionTypeName => sessionTypeName.includes('coffee'), () => 'cafe')
                 .otherwise(() => 'cafe')
             daySchedule.timeSlots.push({

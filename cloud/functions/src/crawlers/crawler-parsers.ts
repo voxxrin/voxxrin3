@@ -184,8 +184,8 @@ export const BREAK_PARSER = z.object({
         z.literal('restaurant'),
         z.literal('cafe'),
         z.literal('beer'),
-        z.literal('film'),
-        z.literal('train'),
+        z.literal('movie'),
+        z.literal('wallet'),
     ]),
     title: z.string(),
     room: ROOM_PARSER

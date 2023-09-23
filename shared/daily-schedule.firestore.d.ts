@@ -4,7 +4,7 @@ import {HexColor} from "./type-utils";
 export type Room = {id: string, title: string}
 
 export type Break = {
-    icon: 'ticket' | 'restaurant' | 'cafe' | 'beer' | 'film' | 'train';
+    icon: 'ticket' | 'restaurant' | 'cafe' | 'beer' | 'movie' | 'wallet';
     title: string;
     room: Room;
 }
