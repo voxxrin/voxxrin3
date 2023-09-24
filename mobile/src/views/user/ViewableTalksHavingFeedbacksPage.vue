@@ -22,7 +22,7 @@
           <template #upper-right="{ talk }">
             {{eventTalksGroup.confDescriptor.headingTitle}}
           </template>
-          <template #footer-actions="{ talk, userTalkHook }">
+          <template #footer-actions="{ talk }">
           </template>
         </schedule-talk>
       </div>

@@ -50,13 +50,13 @@
                 <talk-format-groups-breakdown :conf-descriptor="confDescriptor" v-if="timeslot.type==='talks'" :talks="timeslot.talks">
                   <template #talk="{ talk }">
                     <ion-item class="listTalks-item">
-                      <schedule-talk :talk="talk" @talkClicked="openTalkDetails($event)" :is-highlighted="(talk, talkNotes) => talkNotes.isFavorite" :conf-descriptor="confDescriptor">
+                      <schedule-talk :talk-stats="talkStatsRefByTalkId.get(talk.id.value)" :talk="talk" @talkClicked="openTalkDetails($event)" :is-highlighted="(talk, talkNotes) => talkNotes.isFavorite" :conf-descriptor="confDescriptor">
                         <template #upper-right="{ talk }">
                           <talk-room :talk="talk" :conf-descriptor="confDescriptor" />
                         </template>
-                        <template #footer-actions="{ talk, userTalkHook }">
-                          <talk-watch-later-button v-if="confDescriptor && !hideWatchLater" :conf-descriptor="confDescriptor" :user-talk-notes="userTalkHook" />
-                          <talk-favorite-button v-if="confDescriptor" :conf-descriptor="confDescriptor" :user-talk-notes="userTalkHook" />
+                        <template #footer-actions="{ talk, talkStats, talkNotes }">
+                          <talk-watch-later-button v-if="confDescriptor && !hideWatchLater" :conf-descriptor="confDescriptor" :user-talk-notes="talkNotes" />
+                          <talk-favorite-button v-if="confDescriptor" :conf-descriptor="confDescriptor" :user-talk-notes="talkNotes" :talk-stats="talkStats" />
                         </template>
                       </schedule-talk>
                     </ion-item>
@@ -94,7 +94,7 @@ import {
     IonInput, modalController,
 } from '@ionic/vue';
 import {useRoute} from "vue-router";
-import {onMounted, watch} from "vue";
+import {computed, onMounted, toValue, watch} from "vue";
 import {managedRef as ref} from "@/views/vue-utils";
 import {LabelledTimeslotWithFeedback, prepareSchedules, useSchedule} from "@/state/useSchedule";
 import CurrentEventHeader from "@/components/events/CurrentEventHeader.vue";
@@ -103,7 +103,7 @@ import {EventId} from "@/models/VoxxrinEvent";
 import {VoxxrinDay} from "@/models/VoxxrinDay";
 import {
   extractTalksFromSchedule,
-  filterTimeslotsToAutoExpandBasedOn, VoxxrinDailySchedule,
+  filterTimeslotsToAutoExpandBasedOn,
   VoxxrinScheduleTimeSlot
 } from "@/models/VoxxrinSchedule";
 import DaySelector from "@/components/schedule/DaySelector.vue";
@@ -118,7 +118,6 @@ import SchedulePreferencesModal from '@/components/modals/SchedulePreferencesMod
 import {useTabbedPageNav} from "@/state/useTabbedPageNav";
 import TimeslotsIterator, {MissingFeedbackPastTimeslot} from "@/components/timeslots/TimeslotsIterator.vue";
 import ScheduleBreak from "@/components/schedule/ScheduleBreak.vue";
-import TalkWatchLaterButton from "@/components/talk-card/TalkWatchLaterButton.vue";
 import ScheduleTalk from "@/components/talk-card/ScheduleTalk.vue";
 import TalkRoom from "@/components/talk-card/TalkRoom.vue";
 import TalkFavoriteButton from "@/components/talk-card/TalkFavoriteButton.vue";
@@ -129,7 +128,9 @@ import {useUserTokensWallet} from "@/state/useUserTokensWallet";
 import {Logger} from "@/services/Logger";
 import {useCurrentUser} from "vuefire";
 import {TimeslotAnimations} from "@/services/Animations";
-import {Temporal} from "temporal-polyfill";
+import {useAllEventTalkStats} from "@/state/useEventTalkStats";
+import {TalkStats} from "../../../../shared/feedbacks.firestore";
+import TalkWatchLaterButton from "@/components/talk-card/TalkWatchLaterButton.vue";
 
 const LOGGER = Logger.named("SchedulePage");
 
@@ -177,6 +178,21 @@ function onceDayInitializedTo(day: VoxxrinDay, availableDays: VoxxrinDay[]) {
 }
 
 const { schedule: currentSchedule } = useSchedule(confDescriptor, selectedDayId)
+
+const talkIdsRef = computed(() => {
+    const schedule = toValue(currentSchedule);
+    return schedule ? extractTalksFromSchedule(schedule).map(talk => talk.id) : [];
+})
+const {firestoreAllEventTalkStatsRef} = useAllEventTalkStats(eventId, talkIdsRef)
+const talkStatsRefByTalkId = computed(() => {
+    const firestoreAllEventTalkStats = toValue(firestoreAllEventTalkStatsRef)
+    const talkStatsRefByTalkId = firestoreAllEventTalkStats.reduce((talkStatsRefByTalkId, talkStats) => {
+        talkStatsRefByTalkId.set(talkStats.id, talkStats);
+        return talkStatsRefByTalkId;
+    }, new Map<string, TalkStats>());
+    return talkStatsRefByTalkId;
+})
+
 const displayedTimeslotsRef = ref<LabelledTimeslotWithFeedback[]>([]);
 
 const userTokensWallet = useUserTokensWallet();

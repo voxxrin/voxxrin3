@@ -68,13 +68,27 @@ export function useUserTalkNotes(
         };
     })
 
+    return {
+        eventTalkStats,
+        talkNotes: talkNoteRef,
+    };
+}
+
+export function useUserTalkNoteActions(
+    eventIdRef: Ref<EventId | undefined>,
+    talkIdRef: Ref<TalkId | undefined>
+) {
+
+    PERF_LOGGER.debug(() => `useUserTalkNoteActions(${unref(eventIdRef)?.value}, ${unref(talkIdRef)?.value})`)
+
+    const userRef = useCurrentUser()
+
     const updateTalkNotesDocument = async (
         callContextName: string,
         talkNoteUpdater: (talkNote: TalkNote) => Partial<TalkNote>,
         afterUpdate: (updatedTalkNote: TalkNote) => Promise<void>|void = () => {}
     ) => {
         const eventId = toValue(eventIdRef),
-            firestoreUserTalkNotes = toValue(firestoreUserTalkNotesRef),
             talkId = toValue(talkIdRef),
             user = toValue(userRef),
             firestoreUserTalkNotesDoc = getTalkNotesRef(user, eventId, talkId);
@@ -89,7 +103,9 @@ export function useUserTalkNotes(
             return;
         }
 
-        const initialNote: TalkNote = firestoreUserTalkNotes?.note || {
+        const firestoreUserTalkNote = (await getDoc(firestoreUserTalkNotesDoc)).data();
+
+        const initialNote: TalkNote = firestoreUserTalkNote?.note || {
             talkId: talkId.value,
             isFavorite: false,
             watchLater: null
@@ -100,7 +116,7 @@ export function useUserTalkNotes(
             ...initialNote,
             ...fieldsToUpdate
         }
-        if(!firestoreUserTalkNotes) {
+        if(!firestoreUserTalkNote) {
             await setDoc(firestoreUserTalkNotesDoc, {
                 userId: user.uid,
                 note: updatedTalkNotes
@@ -121,11 +137,12 @@ export function useUserTalkNotes(
             'toggleFavorite',
             talkNotes => ({ isFavorite: !talkNotes.isFavorite }),
             updatedTalkNotes => {
-                if(updatedTalkNotes.isFavorite) {
-                    incrementInMemoryTotalFavoritesCount();
-                } else {
-                    decrementInMemoryTotalFavoritesCount();
-                }
+                // TODO: Put this back maybe at some time ?
+                // if(updatedTalkNotes.isFavorite) {
+                //     incrementInMemoryTotalFavoritesCount();
+                // } else {
+                //     decrementInMemoryTotalFavoritesCount();
+                // }
             });
     }
     const toggleWatchLater = async () => {
@@ -136,11 +153,9 @@ export function useUserTalkNotes(
     }
 
     return {
-        eventTalkStats,
-        talkNotes: talkNoteRef,
         toggleFavorite,
         toggleWatchLater
-    };
+    }
 }
 
 function getAllFavoritedUserTalkIdsRefs(user: User|null|undefined, eventId: EventId|undefined) {
@@ -177,8 +192,6 @@ export function useUserEventAllFavoritedTalkIds(eventIdRef: Ref<EventId | undefi
         allUserFavoritedTalkIds: allUserFavoritedTalkIdsRef
     };
 }
-
-export type UserTalkNotesHook = ReturnType<typeof useUserTalkNotes>;
 
 export async function prepareUserTalkNotes(
     user: User,

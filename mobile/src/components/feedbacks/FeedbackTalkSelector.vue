@@ -5,10 +5,10 @@
         <ion-item class="listTalks-item">
           <schedule-talk :talk="talk" @talkClicked="updateSelected($event)" :is-highlighted="(talk, talkNotes) => talk.id.isSameThan(selectedTalkId)" :conf-descriptor="confDescriptor">
             <template #upper-right="{ talk, talkNotes }">
-              <talk-is-favorited :talk-notes="talkNotes.value" />
+              <talk-is-favorited :talk-notes="talkNotes" />
             </template>
-            <template #footer-actions="{ talk, userTalkHook }">
-              <talk-watch-later-button :user-talk-notes="userTalkHook" :conf-descriptor="confDescriptor"></talk-watch-later-button>
+            <template #footer-actions="{ talk, talkNotes }">
+              <talk-watch-later-button :user-talk-notes="talkNotes" :conf-descriptor="confDescriptor"></talk-watch-later-button>
               <talk-select-for-feedback :is-active="talk.id.isSameThan(selectedTalkId)" @click.stop="() => updateSelected(talk)"></talk-select-for-feedback>
             </template>
           </schedule-talk>

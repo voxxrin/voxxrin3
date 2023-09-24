@@ -1,6 +1,6 @@
 <template>
   <div class="talkAction">
-    <ion-button :class="{ 'btnTalk': true, 'btn-favorite': true, '_is-active': !!talkNotes?.isFavorite }" @click.stop="() => userTalkNotes.toggleFavorite()" v-if="confDescriptor?.features.favoritesEnabled">
+    <ion-button :class="{ 'btnTalk': true, 'btn-favorite': true, '_is-active': !!talkNotes?.isFavorite }" @click.stop="() => toggleFavorite()" v-if="confDescriptor?.features.favoritesEnabled">
     <span class="btn-favorite-group">
       <ion-icon class="btn-favorite-group-icon" v-if="!talkNotes?.isFavorite" aria-hidden="true" src="/assets/icons/line/bookmark-line-favorite.svg"></ion-icon>
       <ion-icon class="btn-favorite-group-icon" v-if="!!talkNotes?.isFavorite" aria-hidden="true" src="/assets/icons/solid/bookmark-favorite.svg"></ion-icon>
@@ -12,22 +12,30 @@
 
 <script setup lang="ts">
 import {computed, PropType} from "vue";
-import type {UserTalkNotesHook} from "@/state/useUserTalkNotes";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
+import {useUserTalkNoteActions} from "@/state/useUserTalkNotes";
+import {toManagedRef as toRef} from "@/views/vue-utils";
+import {TalkId} from "@/models/VoxxrinTalk";
+import {TalkNote, TalkStats} from "../../../../shared/feedbacks.firestore";
 
 const props = defineProps({
     confDescriptor: {
         required: true,
         type: Object as PropType<VoxxrinConferenceDescriptor>,
     },
+    talkStats: {
+        required: false,
+        type: Object as PropType<TalkStats|undefined>
+    },
     userTalkNotes: {
         required: true,
-        type: Object as PropType<UserTalkNotesHook>
+        type: Object as PropType<TalkNote>
     }
 });
 
-const talkNotes = computed(() => props.userTalkNotes?.talkNotes.value)
-const eventTalkStats = computed(() => props.userTalkNotes?.eventTalkStats.value)
+const talkNotes = computed(() => props.userTalkNotes)
+const eventTalkStats = computed(() => props.talkStats)
+const {toggleFavorite} = useUserTalkNoteActions(toRef(() => props.confDescriptor?.id), toRef(() => props.userTalkNotes?.talkId ? new TalkId(props.userTalkNotes.talkId) : undefined))
 </script>
 
 <style scoped lang="scss">
