@@ -12,8 +12,9 @@ import {Temporal} from "temporal-polyfill";
 import {actionSheetController, ActionSheetOptions, alertController} from "@ionic/vue";
 import {match, P} from "ts-pattern";
 import {
-    useCollection as vuefireUseCollection,
+    useCollection as vuefireUseCollection, UseCollectionOptions,
     useDocument as vuefireUseDocument,
+    UseDocumentOptions
 } from "vuefire";
 import { CollectionReference, DocumentReference} from "firebase/firestore";
 import {MultiWatchSources} from "@vueuse/core";
@@ -104,31 +105,60 @@ export async function toBeImplemented(message: string) {
 
 type BaseRegisteredManagedRefEntry = { name: string, refs: Array<Ref>, callStack: string }
 type VueRegisteredManagedRefEntry = BaseRegisteredManagedRefEntry & { type: "vue", fct: string, componentName: string, line: string, col: string }
-type RegisteredManagedRefEntry = BaseRegisteredManagedRefEntry & { type: "vue", fct: string, componentName: string, line: string, col: string }
+type FirebaseRegisteredManagedRefEntry = BaseRegisteredManagedRefEntry & { type: "firebase", path: string }
+type RegisteredManagedRefEntry = VueRegisteredManagedRefEntry | FirebaseRegisteredManagedRefEntry
 
 class ManagedRefs {
     constructor(
         public readonly registeredRefs: Array<RegisteredManagedRefEntry> = []
     ){}
 
-    registerRef(context: {type:"vue", fct: string}, instance: Ref) {
+    getOrRegisterFirebaseEntry(path: string, callStack: string): FirebaseRegisteredManagedRefEntry {
+        const name = path
+
+        const existingEntry = this.registeredRefs.find(rf => rf.type === "firebase" && rf.name === name) as FirebaseRegisteredManagedRefEntry
+        if(existingEntry) {
+            return existingEntry;
+        }
+
+        const firebaseEntry: FirebaseRegisteredManagedRefEntry = {
+            type: "firebase" as const, name: path, refs: [], callStack, path
+        }
+        this.registeredRefs.push(firebaseEntry)
+        return firebaseEntry;
+    }
+
+    getOrRegisterVueEntry(fct: string, callStack: string): VueRegisteredManagedRefEntry {
+        const [ componentName, line, col ] = callStack.split("\n")[2]
+            .replace(/.*\(https?:\/\/[^\/]*\/([^)]*)\)/gi, "$1")
+            .split(":")
+            .map((chunk, idx) => idx===0
+                ?chunk.split("?")[0] // Sometimes, we have query parameters in the component's URL => removing it
+                :chunk
+            )
+
+        const name = `${fct}@${componentName}:${line}:${col}`
+
+        const existingEntry = this.registeredRefs.find(rf => rf.type === "vue" && rf.name === name) as VueRegisteredManagedRefEntry
+        if(existingEntry) {
+            return existingEntry;
+        }
+
+        const vueEntry: VueRegisteredManagedRefEntry = {
+            type: "vue" as const, fct: fct, name, refs: [], callStack, componentName, line, col
+        }
+        this.registeredRefs.push(vueEntry);
+        return vueEntry;
+    }
+
+    registerRef(context: {type:"vue", fct: string}|{type:"firebase", path: string}, instance: Ref) {
         const callStack = (new Error().stack || "").substring("Error".length).trim()
 
         const registeredEntry: RegisteredManagedRefEntry = match(context)
             .with({type:"vue"}, (context) => {
-                const [ componentName, line, col ] = callStack.split("\n")[2].replace(/.*\(https?:\/\/[^\/]*\/([^)]*)\)/gi, "$1").split(":")
-                const name = `${context.fct}@${componentName}:${line}:${col}`
-
-                const existingEntry = this.registeredRefs.find(rf => rf.type === context.type && rf.name === name)
-                if(existingEntry) {
-                    return existingEntry;
-                }
-
-                const vueEntry: VueRegisteredManagedRefEntry = {
-                    type: "vue" as const, fct: context.fct, name, refs: [], callStack, componentName, line, col
-                }
-                this.registeredRefs.push(vueEntry);
-                return vueEntry;
+                return this.getOrRegisterVueEntry(context.fct, callStack);
+            }).with({type:"firebase"}, (context) => {
+                return this.getOrRegisterFirebaseEntry(context.path, callStack);
             }).exhaustive();
 
         registeredEntry.refs.push(instance);
@@ -168,6 +198,19 @@ class ManagedRefs {
     componentDeclarationsRef() {
         return this.distinctComponentsDeclarations().map(decl => ({ decl, refs: this.refsForDeclaration(decl) }))
     }
+
+    updateFirebaseRefPath(firebaseRef: Ref, updatedPath: string) {
+        const entryIncludingRef = this.registeredRefs.find(entry => entry.type === 'firebase' && entry.refs.includes(firebaseRef));
+        if(entryIncludingRef) {
+            const indexToDelete = entryIncludingRef.refs.findIndex(ref => ref === firebaseRef);
+            entryIncludingRef.refs.splice(indexToDelete, 1);
+
+            const entryMatchingPath = this.getOrRegisterFirebaseEntry(updatedPath, entryIncludingRef.callStack);
+            entryMatchingPath.refs.push(firebaseRef);
+        } else {
+            console.warn(`No entry found matching firebase ref instance, that's weird (this might be caused by a user navigation triggered while every firebase docs were not resolved yet) !`)
+        }
+    }
 }
 
 const MANAGED_REFS = new ManagedRefs();
@@ -175,6 +218,8 @@ const MANAGED_REFS = new ManagedRefs();
 let ref = vueRef
 let toRef = vueToRef
 let shallowRef = vueShallowRef
+let useDocument = vuefireUseDocument
+let useCollection = vuefireUseCollection
 
 if(import.meta.env.VITE_USE_MANAGED_REFS === 'true' || localStorage.getItem("_useManagedRefs") === "true") {
     ref = function managedRef(value: unknown){
@@ -204,11 +249,45 @@ if(import.meta.env.VITE_USE_MANAGED_REFS === 'true' || localStorage.getItem("_us
 
         return instance;
     } as any
+
+    useDocument = function managedUseDocument<T extends DocumentReference<unknown>>(documentSourceRef: Ref<T>|T, options?: UseDocumentOptions){
+        let instance = vuefireUseDocument<T>(documentSourceRef, options);
+        if(options?.target) {
+            instance === options.target;
+        }
+
+        const documentSource = toValue(documentSourceRef);
+        if(documentSource) {
+            MANAGED_REFS.registerRef({type:'firebase', path: documentSource.path}, instance);
+        } else {
+            MANAGED_REFS.registerRef({type:'firebase', path: "???"}, instance);
+        }
+
+        return instance;
+    }
+
+    useCollection = function managedUseCollection<T extends CollectionReference<unknown>>(collectionSourceRef: Ref<T>|T, options?: UseCollectionOptions){
+        const instance = vuefireUseCollection(collectionSourceRef, options);
+        if(options?.target) {
+            instance === options.target;
+        }
+
+        const collectionSource = toValue(collectionSourceRef);
+        if(collectionSource) {
+            MANAGED_REFS.registerRef({type:'firebase', path: collectionSource.path}, instance);
+        } else {
+            MANAGED_REFS.registerRef({type:'firebase', path: "???"}, instance);
+        }
+
+        return instance;
+    }
 }
 
 export const managedRef = ref;
 export const toManagedRef = toRef;
 export const managedShallowRef = shallowRef;
+export const managedUseDocument = useDocument;
+export const managedUseCollection = useCollection;
 
 (window as any).MANAGED_VUE_REFS = MANAGED_REFS;
 
@@ -222,12 +301,13 @@ export function deferredVuefireUseDocument<SOURCES extends MultiWatchSources, T>
     const documentRef = shallowRef<T>()
 
     const docSourceRef = shallowRef<DocumentReference<T>|null>(null);
-    vuefireUseDocument(docSourceRef, {target: documentRef });
+    useDocument(docSourceRef, {target: documentRef });
 
     const handleSourceUpdates = (values: any[]) => {
         const docSource = resolveDocSource(values);
         if(docSource) {
             docSourceRef.value = docSource;
+            MANAGED_REFS.updateFirebaseRefPath(documentRef, docSource.path);
         }
     };
 
@@ -249,12 +329,13 @@ export function deferredVuefireUseCollection<SOURCES extends MultiWatchSources, 
     const collectionRef = shallowRef<T[]>([]);
 
     const collectionSourceRef = shallowRef<CollectionReference<T>|null>(null);
-    vuefireUseCollection(collectionSourceRef, {target: collectionRef });
+    useCollection(collectionSourceRef, {target: collectionRef });
 
     const handleSourceUpdates = (values: any[]) => {
         const collectionSource = resolveCollectionSource(values);
         if(collectionSource) {
             collectionSourceRef.value = collectionSource;
+            MANAGED_REFS.updateFirebaseRefPath(collectionRef, collectionSource.path);
         }
     };
 
