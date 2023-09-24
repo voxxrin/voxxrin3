@@ -5,7 +5,8 @@ import {
     unref,
     ref as vueRef,
     toRef as vueToRef,
-    MaybeRef, watch, shallowRef
+    shallowRef as vueShallowRef,
+    MaybeRef, watch, toValue
 } from "vue";
 import {Temporal} from "temporal-polyfill";
 import {actionSheetController, ActionSheetOptions, alertController} from "@ionic/vue";
@@ -101,25 +102,34 @@ export async function toBeImplemented(message: string) {
     alert.present();
 }
 
-type RegisteredManagedRefEntry = { componentName: string, line: string, col: string, refs: Array<Ref>, callStack: string };
+type BaseRegisteredManagedRefEntry = { name: string, refs: Array<Ref>, callStack: string }
+type VueRegisteredManagedRefEntry = BaseRegisteredManagedRefEntry & { type: "vue", fct: string, componentName: string, line: string, col: string }
+type RegisteredManagedRefEntry = BaseRegisteredManagedRefEntry & { type: "vue", fct: string, componentName: string, line: string, col: string }
+
 class ManagedRefs {
     constructor(
         public readonly registeredRefs: Array<RegisteredManagedRefEntry> = []
     ){}
 
-    registerRef(instance: Ref) {
+    registerRef(context: {type:"vue", fct: string}, instance: Ref) {
         const callStack = (new Error().stack || "").substring("Error".length).trim()
 
-        const [ componentName, line, col ] = callStack.split("\n")[2].replace(/.*\(https?:\/\/[^\/]*\/([^)]*)\)/gi, "$1").split(":")
+        const registeredEntry: RegisteredManagedRefEntry = match(context)
+            .with({type:"vue"}, (context) => {
+                const [ componentName, line, col ] = callStack.split("\n")[2].replace(/.*\(https?:\/\/[^\/]*\/([^)]*)\)/gi, "$1").split(":")
+                const name = `${context.fct}@${componentName}:${line}:${col}`
 
-        const registeredEntry = match(this.registeredRefs.find(rf => rf.componentName === componentName && rf.line === line && rf.col === col))
-            .with(P.nullish, () => {
-                const entry: RegisteredManagedRefEntry = {
-                    componentName, line, col, refs: [], callStack
+                const existingEntry = this.registeredRefs.find(rf => rf.type === context.type && rf.name === name)
+                if(existingEntry) {
+                    return existingEntry;
                 }
-                this.registeredRefs.push(entry);
-                return entry;
-            }).otherwise((entry) => entry)
+
+                const vueEntry: VueRegisteredManagedRefEntry = {
+                    type: "vue" as const, fct: context.fct, name, refs: [], callStack, componentName, line, col
+                }
+                this.registeredRefs.push(vueEntry);
+                return vueEntry;
+            }).exhaustive();
 
         registeredEntry.refs.push(instance);
 
@@ -129,13 +139,14 @@ class ManagedRefs {
 
             if(!registeredEntry.refs.length) {
                 const entryIndex = this.registeredRefs.findIndex(rf =>
-                    rf.componentName === registeredEntry.componentName
-                    && rf.line === registeredEntry.line
-                    && rf.col === registeredEntry.col
+                    rf.type === registeredEntry.type
+                    && rf.name === registeredEntry.name
                 )
                 this.registeredRefs.splice(entryIndex, 1);
             }
         })
+
+        return instance;
     }
 
     allRefs() {
@@ -143,27 +154,19 @@ class ManagedRefs {
     }
 
     distinctComponents() {
-        return Array.from(new Set(this.registeredRefs.map(rr => rr.componentName)));
+        return Array.from(new Set(this.registeredRefs.map(rr => rr.name)));
     }
     distinctComponentsDeclarations() {
-        return Array.from(new Set(this.registeredRefs.map(rr => `${rr.componentName}:${rr.line}:${rr.col}`)));
-    }
-    componentsRefs() {
-        return this.distinctComponents().map(component => ({ component, refs: this.refsForComponent(component)}))
+        return Array.from(new Set(this.registeredRefs.map(rr => `${rr.type}:${rr.name}`))).sort();
     }
 
-    refsForComponent(componentName: string) {
+    refsForDeclaration(declaration: string) {
         return this.registeredRefs
-            .filter(rr => rr.componentName === componentName)
-            .flatMap(rr => rr.refs);
-    }
-    refsForComponentDeclaration(componentDeclaration: string) {
-        return this.registeredRefs
-            .filter(rr => `${rr.componentName}:${rr.line}:${rr.col}` === componentDeclaration)
+            .filter(rr => `${rr.type}:${rr.name}` === declaration)
             .flatMap(rr => rr.refs);
     }
     componentDeclarationsRef() {
-        return this.distinctComponentsDeclarations().map(decl => ({ declaration: decl, refs: this.refsForComponentDeclaration(decl) }))
+        return this.distinctComponentsDeclarations().map(decl => ({ decl, refs: this.refsForDeclaration(decl) }))
     }
 }
 
@@ -171,12 +174,13 @@ const MANAGED_REFS = new ManagedRefs();
 
 let ref = vueRef
 let toRef = vueToRef
+let shallowRef = vueShallowRef
 
 if(import.meta.env.VITE_USE_MANAGED_REFS === 'true' || localStorage.getItem("_useManagedRefs") === "true") {
     ref = function managedRef(value: unknown){
         const instance = vueRef(value);
 
-        MANAGED_REFS.registerRef(instance);
+        MANAGED_REFS.registerRef({type:'vue', fct: 'ref'}, instance);
 
         return instance;
     } as any
@@ -188,7 +192,15 @@ if(import.meta.env.VITE_USE_MANAGED_REFS === 'true' || localStorage.getItem("_us
     ): Ref {
         const instance = key?vueToRef(source, key, defaultValue):vueToRef(source);
 
-        MANAGED_REFS.registerRef(instance);
+        MANAGED_REFS.registerRef({type:'vue', fct: 'toRef'}, instance);
+
+        return instance;
+    } as any
+
+    shallowRef = function managedShallowRef(value: unknown){
+        const instance = vueShallowRef(value);
+
+        MANAGED_REFS.registerRef({type:'vue', fct: 'shallowRef'}, instance);
 
         return instance;
     } as any
@@ -196,6 +208,7 @@ if(import.meta.env.VITE_USE_MANAGED_REFS === 'true' || localStorage.getItem("_us
 
 export const managedRef = ref;
 export const toManagedRef = toRef;
+export const managedShallowRef = shallowRef;
 
 (window as any).MANAGED_VUE_REFS = MANAGED_REFS;
 
@@ -206,8 +219,10 @@ export function deferredVuefireUseDocument<T, S1, S2>(sources: [Ref<S1|undefined
 export function deferredVuefireUseDocument<T, S1, S2, S3>(sources: [Ref<S1|undefined>, Ref<S2|undefined>, Ref<S3|undefined>], resolveDocSource: (params: [S1|undefined, S2|undefined, S3|undefined]) => DocumentReference<T>|undefined): Ref<T|undefined>;
 export function deferredVuefireUseDocument<T, S1, S2, S3, S4>(sources: [Ref<S1|undefined>, Ref<S2|undefined>, Ref<S3|undefined>, Ref<S4|undefined>], resolveDocSource: (params: [S1|undefined, S2|undefined, S3|undefined, S4|undefined]) => DocumentReference<T>|undefined): Ref<T|undefined>;
 export function deferredVuefireUseDocument<SOURCES extends MultiWatchSources, T>(sources: SOURCES, resolveDocSource: (...values: any[]) => DocumentReference<T>|undefined): Ref<T|undefined> {
+    const documentRef = shallowRef<T>()
+
     const docSourceRef = shallowRef<DocumentReference<T>|null>(null);
-    const documentRef = vuefireUseDocument(docSourceRef);
+    vuefireUseDocument(docSourceRef, {target: documentRef });
 
     const handleSourceUpdates = (values: any[]) => {
         const docSource = resolveDocSource(values);
@@ -231,8 +246,10 @@ export function deferredVuefireUseCollection<T, S1, S2>(sources: [Ref<S1|undefin
 export function deferredVuefireUseCollection<T, S1, S2, S3>(sources: [Ref<S1|undefined>, Ref<S2|undefined>, Ref<S3|undefined>], resolveDocSource: (params: [S1|undefined, S2|undefined, S3|undefined]) => CollectionReference<T>|undefined): Ref<T[]>;
 export function deferredVuefireUseCollection<T, S1, S2, S3, S4>(sources: [Ref<S1|undefined>, Ref<S2|undefined>, Ref<S3|undefined>, Ref<S4|undefined>], resolveDocSource: (params: [S1|undefined, S2|undefined, S3|undefined, S4|undefined]) => CollectionReference<T>|undefined): Ref<T[]>;
 export function deferredVuefireUseCollection<SOURCES extends MultiWatchSources, T>(sources: SOURCES, resolveCollectionSource: (...values: any[]) => CollectionReference<T>|undefined): Ref<T[]> {
+    const collectionRef = shallowRef<T[]>([]);
+
     const collectionSourceRef = shallowRef<CollectionReference<T>|null>(null);
-    const collectionRef = vuefireUseCollection(collectionSourceRef);
+    vuefireUseCollection(collectionSourceRef, {target: collectionRef });
 
     const handleSourceUpdates = (values: any[]) => {
         const collectionSource = resolveCollectionSource(values);
