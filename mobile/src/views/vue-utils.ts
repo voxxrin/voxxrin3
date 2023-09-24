@@ -360,11 +360,11 @@ export function deferredVuefireUseCollection<SOURCES extends MultiWatchSources, 
                 snapshot.docChanges().forEach((change) => {
                     if (change.type === "added") {
                         collectionRef.value.set(change.doc.id, firestoreValueTransformer(change.doc.data()))
-                        LOGGER.debug(() => `New document: ${change.doc.data()}`);
+                        LOGGER.debug(() => `New document: `, change.doc.data());
                     }
                     if (change.type === "modified") {
                         collectionRef.value.set(change.doc.id, firestoreValueTransformer(change.doc.data()));
-                        LOGGER.debug(() => `Updated document: ${change.doc.data()}`);
+                        LOGGER.debug(() => `Updated document: `, change.doc.data());
                     }
                     if (change.type === "removed") {
                         collectionRef.value.delete(change.doc.id);
