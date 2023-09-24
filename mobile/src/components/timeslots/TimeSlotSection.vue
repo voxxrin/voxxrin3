@@ -14,7 +14,7 @@
 
 <script setup lang="ts">
 import {PropType} from "vue";
-import {managedRef as ref} from "@/views/vue-utils";
+import {managedRef as ref, toManagedRef as toRef} from "@/views/vue-utils";
 import {
   getTimeslotLabel,
   getTimeslotTimingProgress,
@@ -48,7 +48,7 @@ defineEmits<{
 
 const { LL } = typesafeI18n()
 
-const { conferenceDescriptor } = useSharedConferenceDescriptor(props.confDescriptor?.id);
+const { conferenceDescriptor } = useSharedConferenceDescriptor(toRef(() => props.confDescriptor?.id));
 
 const progress = ref<TimeslotTimingProgress>()
 useInterval(() => {

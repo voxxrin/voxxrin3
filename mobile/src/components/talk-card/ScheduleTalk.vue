@@ -61,7 +61,7 @@
 
 <script setup lang="ts">
 import {computed, PropType} from "vue";
-import {managedRef as ref} from "@/views/vue-utils";
+import {managedRef as ref, toManagedRef as toRef} from "@/views/vue-utils";
 import {
   IonBadge,
   IonThumbnail,
@@ -107,7 +107,7 @@ const talkLang = computed(() => {
 const route = useRoute();
 const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')));
 
-const userTalkNotesHook: UserTalkNotesHook = useUserTalkNotes(eventId, props.talk?.id)
+const userTalkNotesHook: UserTalkNotesHook = useUserTalkNotes(eventId, toRef(() => props.talk?.id))
 const { talkNotes } = userTalkNotesHook;
 
 const displayedSpeakers = props.talk!.speakers

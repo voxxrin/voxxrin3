@@ -5,11 +5,17 @@ import {
     unref,
     ref as vueRef,
     toRef as vueToRef,
-    MaybeRef
+    MaybeRef, watch, shallowRef
 } from "vue";
 import {Temporal} from "temporal-polyfill";
 import {actionSheetController, ActionSheetOptions, alertController} from "@ionic/vue";
 import {match, P} from "ts-pattern";
+import {
+    useCollection as vuefireUseCollection,
+    useDocument as vuefireUseDocument,
+} from "vuefire";
+import { CollectionReference, DocumentReference} from "firebase/firestore";
+import {MultiWatchSources} from "@vueuse/core";
 
 // Ensure that we only get a single value from route params
 // this is intended to workaround the fact that route.params.foo is string|string[] and we want
@@ -192,3 +198,55 @@ export const managedRef = ref;
 export const toManagedRef = toRef;
 
 (window as any).MANAGED_VUE_REFS = MANAGED_REFS;
+
+
+// I'm pretty sure we should be able to make it generic, but spent too much time trying to implement the proper infer impl for this :(
+export function deferredVuefireUseDocument<T, S1>(sources: [Ref<S1|undefined>], resolveDocSource: (params: [S1|undefined]) => DocumentReference<T>|undefined): Ref<T|undefined>;
+export function deferredVuefireUseDocument<T, S1, S2>(sources: [Ref<S1|undefined>, Ref<S2|undefined>], resolveDocSource: (params: [S1|undefined, S2|undefined]) => DocumentReference<T>|undefined): Ref<T|undefined>;
+export function deferredVuefireUseDocument<T, S1, S2, S3>(sources: [Ref<S1|undefined>, Ref<S2|undefined>, Ref<S3|undefined>], resolveDocSource: (params: [S1|undefined, S2|undefined, S3|undefined]) => DocumentReference<T>|undefined): Ref<T|undefined>;
+export function deferredVuefireUseDocument<T, S1, S2, S3, S4>(sources: [Ref<S1|undefined>, Ref<S2|undefined>, Ref<S3|undefined>, Ref<S4|undefined>], resolveDocSource: (params: [S1|undefined, S2|undefined, S3|undefined, S4|undefined]) => DocumentReference<T>|undefined): Ref<T|undefined>;
+export function deferredVuefireUseDocument<SOURCES extends MultiWatchSources, T>(sources: SOURCES, resolveDocSource: (...values: any[]) => DocumentReference<T>|undefined): Ref<T|undefined> {
+    const docSourceRef = shallowRef<DocumentReference<T>|null>(null);
+    const documentRef = vuefireUseDocument(docSourceRef);
+
+    const handleSourceUpdates = (values: any[]) => {
+        const docSource = resolveDocSource(values);
+        if(docSource) {
+            docSourceRef.value = docSource;
+        }
+    };
+
+    if(sources.length) {
+        watch(sources, handleSourceUpdates, {immediate: true})
+    } else {
+        handleSourceUpdates([])
+    }
+
+    return documentRef;
+}
+
+export function deferredVuefireUseCollection<T>(sources: [], resolveDocSource: (params: []) => CollectionReference<T>|undefined): Ref<T[]>;
+export function deferredVuefireUseCollection<T, S1>(sources: [Ref<S1|undefined>], resolveDocSource: (params: [S1|undefined]) => CollectionReference<T>|undefined): Ref<T[]>;
+export function deferredVuefireUseCollection<T, S1, S2>(sources: [Ref<S1|undefined>, Ref<S2|undefined>], resolveDocSource: (params: [S1|undefined, S2|undefined]) => CollectionReference<T>|undefined): Ref<T[]>;
+export function deferredVuefireUseCollection<T, S1, S2, S3>(sources: [Ref<S1|undefined>, Ref<S2|undefined>, Ref<S3|undefined>], resolveDocSource: (params: [S1|undefined, S2|undefined, S3|undefined]) => CollectionReference<T>|undefined): Ref<T[]>;
+export function deferredVuefireUseCollection<T, S1, S2, S3, S4>(sources: [Ref<S1|undefined>, Ref<S2|undefined>, Ref<S3|undefined>, Ref<S4|undefined>], resolveDocSource: (params: [S1|undefined, S2|undefined, S3|undefined, S4|undefined]) => CollectionReference<T>|undefined): Ref<T[]>;
+export function deferredVuefireUseCollection<SOURCES extends MultiWatchSources, T>(sources: SOURCES, resolveCollectionSource: (...values: any[]) => CollectionReference<T>|undefined): Ref<T[]> {
+    const collectionSourceRef = shallowRef<CollectionReference<T>|null>(null);
+    const collectionRef = vuefireUseCollection(collectionSourceRef);
+
+    const handleSourceUpdates = (values: any[]) => {
+        const collectionSource = resolveCollectionSource(values);
+        if(collectionSource) {
+            collectionSourceRef.value = collectionSource;
+        }
+    };
+
+    if(sources.length) {
+        watch(sources, handleSourceUpdates,{immediate: true})
+    } else {
+        handleSourceUpdates([]);
+    }
+
+
+    return collectionRef;
+}

@@ -101,7 +101,7 @@ import {getRouteParamsValue, isRefDefined, isRefUndefined} from "@/views/vue-uti
 import {useRoute} from "vue-router";
 import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
 import {computed, Ref, unref, watch} from "vue";
-import {managedRef as ref} from "@/views/vue-utils";
+import {managedRef as ref, toManagedRef as toRef} from "@/views/vue-utils";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {
     ScheduleTimeSlotId
@@ -180,7 +180,7 @@ async function watchLaterAllFavoritedTalks() {
     await Promise.all(
         // Enabling watch later on every *favorited* talks...
         favoritedTalks.map(async favoritedTalk => {
-            const { toggleWatchLater, talkNotes } = useUserTalkNotes(eventIdRef, favoritedTalk.id)
+            const { toggleWatchLater, talkNotes } = useUserTalkNotes(eventIdRef, toRef(() => favoritedTalk.id))
             if(!talkNotes.value.watchLater && !favoritedTalk.id.isSameThan(selectedTalk.value?.id)) {
                 LOGGER.debug(() => `toggling (enabling) watch later on talk: ${favoritedTalk.title}`)
                 await toggleWatchLater() // enable watch later on favorited (but not selected) talks
@@ -190,7 +190,7 @@ async function watchLaterAllFavoritedTalks() {
             everyCandidateTalksRef.value
               .filter(talk => talk.id.isSameThan(selectedTalk.value?.id))
               .map(async talk => {
-                const { toggleWatchLater, talkNotes } = useUserTalkNotes(eventIdRef, talk.id)
+                const { toggleWatchLater, talkNotes } = useUserTalkNotes(eventIdRef, toRef(() => talk.id))
                 if(talkNotes.value.watchLater) {
                     LOGGER.debug(() => `toggling (disabling) watch later on talk: ${talk.title}`)
                     await toggleWatchLater(); // disable watch later on selected talk

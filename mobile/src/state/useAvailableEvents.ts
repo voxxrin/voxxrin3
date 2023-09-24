@@ -7,9 +7,11 @@ import {sortBy} from "@/models/utils";
 import {computed, unref} from "vue";
 import {collection, CollectionReference} from "firebase/firestore";
 import {db} from "@/state/firebase";
-import {useCollection} from "vuefire";
 import {Logger, PERF_LOGGER} from "@/services/Logger";
 import {useOverridenListableEventProperties} from "@/state/useDevUtilities";
+import {
+    deferredVuefireUseCollection
+} from "@/views/vue-utils";
 
 const LOGGER = Logger.named("useAvailableEvents");
 
@@ -18,11 +20,9 @@ export function useAvailableEvents(eventFamilies: EventFamily[]) {
     const overridenListableEventPropertiesRef = useOverridenListableEventProperties();
 
     PERF_LOGGER.debug(() => `useAvailableEvents()`)
-    const firestoreListableEventsSource = computed(() =>
-        collection(db, 'events') as CollectionReference<ListableEvent>
-    );
 
-    const firestoreListableEventsRef = useCollection(firestoreListableEventsSource);
+    const firestoreListableEventsRef = deferredVuefireUseCollection([],
+        () => collection(db, 'events') as CollectionReference<ListableEvent>);
 
     return {
         listableEvents: computed(() => {

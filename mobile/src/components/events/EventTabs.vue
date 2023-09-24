@@ -20,7 +20,7 @@ import {
     IonRouterOutlet,
 } from '@ionic/vue';
 import {ComponentPublicInstance, PropType, watch} from "vue";
-import {managedRef as ref} from "@/views/vue-utils";
+import {managedRef as ref, toManagedRef as toRef} from "@/views/vue-utils";
 import {useRoute} from "vue-router";
 import {EventId} from "@/models/VoxxrinEvent";
 import {useTabbedPageNav} from "@/state/useTabbedPageNav";
@@ -41,7 +41,7 @@ const props = defineProps({
     }
 })
 
-const {conferenceDescriptor: confDescriptor} = useSharedConferenceDescriptor(props.eventId);
+const {conferenceDescriptor: confDescriptor} = useSharedConferenceDescriptor(toRef(() => props.eventId));
 
 const { registerTabbedPageNavListeners } = useTabbedPageNav();
 registerTabbedPageNavListeners();

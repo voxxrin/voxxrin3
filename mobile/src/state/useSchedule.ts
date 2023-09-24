@@ -1,5 +1,5 @@
 import {computed, Ref, unref, watch} from "vue";
-import {managedRef as ref} from "@/views/vue-utils";
+import {deferredVuefireUseDocument, managedRef as ref} from "@/views/vue-utils";
 import {DailySchedule} from "../../../shared/daily-schedule.firestore";
 import {
     createVoxxrinDailyScheduleFromFirestore,
@@ -11,8 +11,6 @@ import {DayId} from "@/models/VoxxrinDay";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {DocumentReference, doc, collection, getDoc} from "firebase/firestore";
 import {db} from "@/state/firebase";
-import {Unreffable} from "@/views/vue-utils";
-import {useDocument} from "vuefire";
 import {prepareEventTalks} from "@/state/useEventTalk";
 import {prepareTalkStats} from "@/state/useEventTalkStats";
 import {prepareUserTalkNotes} from "@/state/useUserTalkNotes";
@@ -23,8 +21,8 @@ import {PERF_LOGGER} from "@/services/Logger";
 import { User } from 'firebase/auth';
 
 export function useSchedule(
-            conferenceDescriptorRef: Unreffable<VoxxrinConferenceDescriptor | undefined>,
-            dayIdRef: Unreffable<DayId | undefined>) {
+            conferenceDescriptorRef: Ref<VoxxrinConferenceDescriptor | undefined>,
+            dayIdRef: Ref<DayId | undefined>) {
 
     PERF_LOGGER.debug(() => `useSchedule(${unref(conferenceDescriptorRef)?.id.value}, ${unref(dayIdRef)?.value})`)
     watch(() => unref(conferenceDescriptorRef), (newVal, oldVal) => {
@@ -34,14 +32,8 @@ export function useSchedule(
         PERF_LOGGER.debug(() => `useSchedule[dayIdRef] updated from [${oldVal?.value}] to [${newVal?.value}]`)
     }, {immediate: true})
 
-    const firestoreDailyScheduleSource = computed(() => {
-        const conferenceDescriptor = unref(conferenceDescriptorRef),
-            dayId = unref(dayIdRef);
-
-        return dailyScheduleDocument(conferenceDescriptor, dayId);
-    });
-
-    const firestoreDailyScheduleRef = useDocument(firestoreDailyScheduleSource)
+    const firestoreDailyScheduleRef = deferredVuefireUseDocument([conferenceDescriptorRef, dayIdRef],
+        ([conferenceDescriptor, dayId]) => dailyScheduleDocument(conferenceDescriptor, dayId));
 
     return {
         schedule: computed(() => {

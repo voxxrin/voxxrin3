@@ -1,20 +1,32 @@
 import {EventId} from "@/models/VoxxrinEvent";
-import {computed, ComputedRef, unref} from "vue";
-import {useDocument} from "vuefire";
+import {computed, ComputedRef, toValue, unref} from "vue";
 import {useCurrentUser} from "@/state/useCurrentUser";
 import {
     collection,
     doc,
     DocumentReference,
-    setDoc, updateDoc,
+    setDoc,
 } from "firebase/firestore";
 import {db} from "@/state/firebase";
 import {UserPreferences} from "../../../shared/user-preferences.firestore";
 import {VoxxrinUserPreferences} from "@/models/VoxxrinUser";
 import {createSharedComposable} from "@vueuse/core";
 import {Logger, PERF_LOGGER} from "@/services/Logger";
+import {deferredVuefireUseDocument} from "@/views/vue-utils";
+import {User} from "firebase/auth";
 
 const LOGGER = Logger.named("useUserPreferences");
+
+function getUserPreferencesDoc(user: User|undefined|null) {
+    if(!user) {
+        return undefined;
+    }
+
+    return doc(collection(doc(collection(db,
+            'users'), user.uid),
+        'preferences'), 'self'
+    ) as DocumentReference<UserPreferences>;
+}
 
 export function useUserPreferences() {
 
@@ -22,24 +34,13 @@ export function useUserPreferences() {
 
     const userRef = useCurrentUser()
 
-    const firestoreUserPreferencesSource = computed(() => {
-        const user = unref(userRef);
-
-        if(!user) {
-            return undefined;
-        }
-
-        return doc(collection(doc(collection(db,
-            'users'), user.uid),
-            'preferences'), 'self'
-        ) as DocumentReference<UserPreferences>
-    });
-
-    const firestoreUserPreferencesRef = useDocument(firestoreUserPreferencesSource);
+    const firestoreUserPreferencesRef = deferredVuefireUseDocument([userRef],
+        ([user]) => getUserPreferencesDoc(user));
 
     async function onceUserPreferenceAvailable(call: (firestoreUserPref: UserPreferences, firestoreUserPrefDoc: DocumentReference<UserPreferences>) => Promise<void>) {
-        const firestoreUserPrefDoc = unref(firestoreUserPreferencesSource);
-        let firestoreUserPref = unref(firestoreUserPreferencesRef);
+        const user = toValue(userRef);
+        const firestoreUserPrefDoc = getUserPreferencesDoc(user);
+        let firestoreUserPref = toValue(firestoreUserPreferencesRef);
 
         if(!firestoreUserPrefDoc) {
             return;

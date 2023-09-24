@@ -53,7 +53,7 @@ onMounted(async () => {
     useInterval(recomputeMissingFeedbacksList, {freq:"low-frequency"}, {immediate: true})
 })
 
-const { userFeedbacks: dailyUserFeedbacksRef  } = useUserFeedbacks(props.confDescriptor?.id, props.dayId)
+const { userFeedbacks: dailyUserFeedbacksRef  } = useUserFeedbacks(toRef(() => props.confDescriptor?.id), toRef(() => props.dayId))
 const { timeslotsRef } = useLabelledTimeslotWithFeedbacks(
     toRef(props, 'dailySchedule'),
     dailyUserFeedbacksRef, toRef(props, 'searchTerms'));

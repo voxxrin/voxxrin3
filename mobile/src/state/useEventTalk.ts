@@ -2,13 +2,14 @@ import {
     createVoxxrinDetailedTalkFromFirestore,
     TalkId,
 } from "@/models/VoxxrinTalk";
-import {computed, unref, watch} from "vue";
+import {computed, Ref, unref, watch} from "vue";
 import {DetailedTalk} from "../../../shared/daily-schedule.firestore";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {collection, doc, DocumentReference, getDoc} from "firebase/firestore";
 import {db} from "@/state/firebase";
-import {Unreffable} from "@/views/vue-utils";
-import {useDocument} from "vuefire";
+import {
+    deferredVuefireUseDocument
+} from "@/views/vue-utils";
 import {createSharedComposable} from "@vueuse/core";
 import {EventId} from "@/models/VoxxrinEvent";
 import {PERF_LOGGER} from "@/services/Logger";
@@ -17,13 +18,17 @@ import {Temporal} from "temporal-polyfill";
 import {checkCache} from "@/services/Cachings";
 
 
-function getTalkDetailsRef(eventId: EventId, talkId: TalkId) {
+function getTalkDetailsRef(eventId: EventId|undefined, talkId: TalkId|undefined) {
+    if(!eventId || !eventId.value || !talkId || !talkId.value) {
+        return undefined;
+    }
+
     return doc(collection(doc(collection(db, 'events'), eventId.value), 'talks'), talkId.value) as DocumentReference<DetailedTalk>;
 }
 
 export function useEventTalk(
-    conferenceDescriptorRef: Unreffable<VoxxrinConferenceDescriptor | undefined>,
-    talkIdRef: Unreffable<TalkId | undefined>) {
+    conferenceDescriptorRef: Ref<VoxxrinConferenceDescriptor | undefined>,
+    talkIdRef: Ref<TalkId | undefined>) {
 
     PERF_LOGGER.debug(() => `useEventTalk(${unref(conferenceDescriptorRef)?.id.value}, ${unref(talkIdRef)?.value})`)
     watch(() => unref(conferenceDescriptorRef), (newVal, oldVal) => {
@@ -33,18 +38,8 @@ export function useEventTalk(
         PERF_LOGGER.debug(() => `useEventTalk[talkIdRef] updated from [${oldVal?.value}] to [${newVal?.value}]`)
     }, {immediate: true})
 
-    const firestoreTalkDetailsSource = computed(() => {
-        const conferenceDescriptor = unref(conferenceDescriptorRef),
-            talkId = unref(talkIdRef);
-
-        if(!conferenceDescriptor || !talkId || !talkId.value) {
-            return undefined;
-        }
-
-        return getTalkDetailsRef(conferenceDescriptor.id, talkId);
-    });
-
-    const firestoreTalkDetailsRef = useDocument(firestoreTalkDetailsSource);
+    const firestoreTalkDetailsRef = deferredVuefireUseDocument([conferenceDescriptorRef, talkIdRef],
+        ([conferenceDescriptor, talkId]) => getTalkDetailsRef(conferenceDescriptor?.id, talkId))
 
     return {
         talkDetails: computed(() => {
@@ -70,8 +65,10 @@ export async function prepareEventTalks(
         PERF_LOGGER.debug(`prepareEventTalks(eventId=${conferenceDescriptor.id.value}, talkIds=${JSON.stringify(talkIds.map(id => id.value))})`)
         await Promise.all(talkIds.map(async talkId => {
             const talkDetailsRef = getTalkDetailsRef(conferenceDescriptor.id, talkId);
-            await getDoc(talkDetailsRef);
-            PERF_LOGGER.debug(`getDoc(${talkDetailsRef.path})`)
+            if(talkDetailsRef) {
+                await getDoc(talkDetailsRef);
+                PERF_LOGGER.debug(`getDoc(${talkDetailsRef.path})`)
+            }
         }))
     });
 }

@@ -1,39 +1,36 @@
 import {EventId} from "@/models/VoxxrinEvent";
 import {DayId} from "@/models/VoxxrinDay";
 import {TalkId} from "@/models/VoxxrinTalk";
-import {computed, unref, watch} from "vue";
-import {managedRef as ref, Unreffable} from "@/views/vue-utils";
+import {computed, Ref, unref, watch, watchEffect} from "vue";
+import {
+    deferredVuefireUseDocument,
+    managedRef as ref,
+} from "@/views/vue-utils";
 import {collection, doc, DocumentReference, getDoc} from "firebase/firestore";
 import {db} from "@/state/firebase";
 import {TalkStats} from "../../../shared/feedbacks.firestore";
-import {useDocument} from "vuefire";
 import {createVoxxrinTalkStatsFromFirestore} from "@/models/VoxxrinTalkStats";
 import {PERF_LOGGER} from "@/services/Logger";
 import {checkCache} from "@/services/Cachings";
 import {Temporal} from "temporal-polyfill";
 
-function getTalksStatsRef(eventId: EventId, talkId: TalkId) {
+function getTalksStatsRef(eventId: EventId|undefined, talkId: TalkId|undefined) {
+    if(!eventId || !eventId.value || !talkId || !talkId.value) {
+        return undefined;
+    }
+
     return doc(collection(doc(collection(db,
             'events'), eventId.value),
         'talksStats'), talkId.value) as DocumentReference<TalkStats>;
 }
 
-export function useTalkStats(eventIdRef: Unreffable<EventId | undefined>,
-           talkIdRef: Unreffable<TalkId | undefined>) {
+export function useTalkStats(eventIdRef: Ref<EventId | undefined>,
+           talkIdRef: Ref<TalkId | undefined>) {
 
     PERF_LOGGER.debug(() => `useTalkStats(${unref(eventIdRef)?.value}, ${unref(talkIdRef)?.value})`)
-    const firestoreTalkStatsSource = computed(() => {
-        const eventId = unref(eventIdRef),
-            talkId = unref(talkIdRef);
 
-        if(!eventId || !eventId.value || !talkId || !talkId.value) {
-            return undefined;
-        }
-
-        return getTalksStatsRef(eventId, talkId);
-    });
-
-    const firestoreTalkStatsRef = useDocument(firestoreTalkStatsSource);
+    const firestoreTalkStatsRef = deferredVuefireUseDocument([eventIdRef, talkIdRef],
+        ([eventId, talkId]) => getTalksStatsRef(eventId, talkId));
 
     // This ref is used to store an increment/decrement of the total number of votes *in memory*
     //
@@ -95,8 +92,10 @@ export async function prepareTalkStats(
         PERF_LOGGER.debug(`prepareTalkStats(eventId=${eventId.value}, talkIds=${JSON.stringify(talkIds.map(talkId => talkId.value))})`)
         await Promise.all(talkIds.map(async talkId => {
             const talksStatsRef = getTalksStatsRef(eventId, talkId);
-            await getDoc(talksStatsRef)
-            PERF_LOGGER.debug(`getDoc(${talksStatsRef.path})`)
+            if(talksStatsRef) {
+                await getDoc(talksStatsRef)
+                PERF_LOGGER.debug(`getDoc(${talksStatsRef.path})`)
+            }
         }))
     });
 }
