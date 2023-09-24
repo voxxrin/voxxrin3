@@ -1,5 +1,5 @@
 import {EventId} from "@/models/VoxxrinEvent";
-import {computed, ComputedRef, toValue, unref, watch} from "vue";
+import {computed, ComputedRef, Ref, toValue, unref, watch} from "vue";
 import {useCurrentUser} from "@/state/useCurrentUser";
 import {
     collection,
@@ -7,7 +7,7 @@ import {
     DocumentReference, updateDoc,
 } from "firebase/firestore";
 import {db} from "@/state/firebase";
-import {VoxxrinUserTokensWallet} from "@/models/VoxxrinUser";
+import {TalkFeedbacksViewerToken, VoxxrinUserTokensWallet} from "@/models/VoxxrinUser";
 import {createSharedComposable} from "@vueuse/core";
 import {
     EventOrganizerSecretToken,
@@ -105,7 +105,7 @@ export function useUserTokensWallet() {
             return userTokensWallet.secretTokens.talkFeedbacksViewerTokens.filter(
                 t => t.eventId.isSameThan(eventId)
             )
-        })
+        }) as Ref<TalkFeedbacksViewerToken[]>
     }
 
     return {

@@ -100,7 +100,7 @@ import {EventId} from "@/models/VoxxrinEvent";
 import {getRouteParamsValue, isRefDefined, isRefUndefined} from "@/views/vue-utils";
 import {useRoute} from "vue-router";
 import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
-import {computed, Ref, unref, watch} from "vue";
+import {computed, Ref, toValue, unref, watch} from "vue";
 import {managedRef as ref, toManagedRef as toRef} from "@/views/vue-utils";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {
@@ -111,7 +111,7 @@ import FeedbackTalkSelector from "@/components/feedbacks/FeedbackTalkSelector.vu
 import {VoxxrinTalk} from "@/models/VoxxrinTalk";
 import BaseFeedbackStep from "@/components/feedbacks/BaseFeedbackStep.vue";
 import {
-    findLabelledTimeslotWithOverlappingsForTimeslotId,
+    findLabelledTimeslotWithOverlappingsForTimeslotId, LabelledTimeslot,
     LabelledTimeslotWithOverlappings
 } from "@/state/findTimeslot";
 import FeedbackFooter from "@/components/feedbacks/FeedbackFooter.vue";
@@ -168,9 +168,9 @@ function rateSelectedTalk() {
 const everyCandidateTalksRef = computed(() => {
     const labelledTimeslotWithOverlappings = unref(labelledTimeslotWithOverlappingsRef);
 
-    const overlappingTimeslots = (labelledTimeslotWithOverlappings?.overlappingLabelledTimeslots || []);
-    const overlappingTalks = overlappingTimeslots.flatMap(ts => ts.talks);
-    const everyCandidateTalks = (labelledTimeslotWithOverlappings?.labelledTimeslot.talks || []).concat(overlappingTalks)
+    const overlappingTimeslots: LabelledTimeslot[] = (labelledTimeslotWithOverlappings?.overlappingLabelledTimeslots || []);
+    const overlappingTalks: VoxxrinTalk[] = overlappingTimeslots.flatMap(ts => ts.talks);
+    const everyCandidateTalks: VoxxrinTalk[] = (labelledTimeslotWithOverlappings?.labelledTimeslot.talks || []).concat(overlappingTalks)
     return everyCandidateTalks;
 })
 

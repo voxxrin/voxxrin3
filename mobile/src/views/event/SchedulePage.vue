@@ -94,7 +94,7 @@ import {
     IonInput, modalController,
 } from '@ionic/vue';
 import {useRoute} from "vue-router";
-import {computed, onMounted, toValue, watch} from "vue";
+import {computed, onMounted, Ref, toValue, watch} from "vue";
 import {managedRef as ref} from "@/views/vue-utils";
 import {LabelledTimeslotWithFeedback, prepareSchedules, useSchedule} from "@/state/useSchedule";
 import CurrentEventHeader from "@/components/events/CurrentEventHeader.vue";
@@ -193,10 +193,10 @@ const talkStatsRefByTalkId = computed(() => {
     return talkStatsRefByTalkId;
 })
 
-const displayedTimeslotsRef = ref<LabelledTimeslotWithFeedback[]>([]);
+const displayedTimeslotsRef = ref<LabelledTimeslotWithFeedback[]>([]) as Ref<LabelledTimeslotWithFeedback[]>;
 
-const userTokensWallet = useUserTokensWallet();
-const talkFeedbackViewerTokensRef = userTokensWallet.talkFeedbackViewerTokensRefForEvent(eventId);
+const {talkFeedbackViewerTokensRefForEvent} = useUserTokensWallet();
+const talkFeedbackViewerTokensRef = talkFeedbackViewerTokensRefForEvent(eventId);
 
 const missingFeedbacksPastTimeslots = ref<MissingFeedbackPastTimeslot[]>([])
 const expandedTimeslotIds = ref<string[]>([])
@@ -232,7 +232,7 @@ async function navigateToTimeslotFeedbackCreation(timeslot: VoxxrinScheduleTimeS
 
 async function openTalkDetails(talk: VoxxrinTalk) {
     if(talk) {
-        const talkFeedbackViewerToken = talkFeedbackViewerTokensRef.value?.find(t => t.talkId.isSameThan(talk.id));
+        const talkFeedbackViewerToken = toValue(talkFeedbackViewerTokensRef)?.find(t => t.talkId.isSameThan(talk.id));
         const url = talkFeedbackViewerToken
           ?`/events/${eventId.value.value}/talks/${talk.id.value}/asFeedbackViewer/${talkFeedbackViewerToken.secretToken}/details`
           :`/events/${eventId.value.value}/talks/${talk.id.value}/details`

@@ -16,14 +16,17 @@ export type VoxxrinUserPreferences = Replace<UserPreferences, {
     pinnedEventIds: Array<EventId>
 }>
 
+export type EventOrganizerToken = Replace<EventOrganizerSecretToken, {
+    eventId: EventId
+}>
+export type TalkFeedbacksViewerToken = Replace<TalkFeedbacksViewerSecretToken, {
+    eventId: EventId,
+    talkId: TalkId
+}>
+
 export type VoxxrinUserTokensWallet = Replace<UserTokensWallet, {
     secretTokens: {
-        eventOrganizerTokens: Array<Replace<EventOrganizerSecretToken, {
-            eventId: EventId
-        }>>,
-        talkFeedbacksViewerTokens: Array<Replace<TalkFeedbacksViewerSecretToken, {
-            eventId: EventId,
-            talkId: TalkId
-        }>>
+        eventOrganizerTokens: EventOrganizerToken[],
+        talkFeedbacksViewerTokens: TalkFeedbacksViewerToken[]
     }
 }>
