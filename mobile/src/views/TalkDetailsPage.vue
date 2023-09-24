@@ -96,7 +96,7 @@ function closeAndNavigateBack() {
 
 const route = useRoute();
 const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')));
-const talkId = computed(() => new TalkId(getRouteParamsValue(route, 'talkId')));
+const talkId = ref(new TalkId(getRouteParamsValue(route, 'talkId')));
 const {conferenceDescriptor: confDescriptor} = useSharedConferenceDescriptor(eventId);
 
 const { eventTalkStats, talkNotes, toggleFavorite, toggleWatchLater} = useUserTalkNotes(eventId, talkId)
