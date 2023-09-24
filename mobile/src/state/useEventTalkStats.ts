@@ -1,18 +1,28 @@
 import {EventId} from "@/models/VoxxrinEvent";
 import {DayId} from "@/models/VoxxrinDay";
 import {TalkId} from "@/models/VoxxrinTalk";
-import {computed, Ref, unref, watch, watchEffect} from "vue";
+import {computed, Ref, toValue, unref, watch, watchEffect} from "vue";
 import {
+    deferredVuefireUseCollection,
     deferredVuefireUseDocument,
-    managedRef as ref,
+    managedRef as ref, MAX_NUMBER_OF_PARAMS_IN_FIREBASE_IN_CLAUSES,
 } from "@/views/vue-utils";
-import {collection, doc, DocumentReference, getDoc} from "firebase/firestore";
+import {
+    collection,
+    CollectionReference,
+    doc,
+    DocumentReference,
+    getDoc,
+    query,
+    where,
+} from "firebase/firestore";
 import {db} from "@/state/firebase";
 import {TalkStats} from "../../../shared/feedbacks.firestore";
 import {createVoxxrinTalkStatsFromFirestore} from "@/models/VoxxrinTalkStats";
 import {PERF_LOGGER} from "@/services/Logger";
 import {checkCache} from "@/services/Cachings";
 import {Temporal} from "temporal-polyfill";
+import {partitionArray, toValueObjectValues} from "@/models/utils";
 
 function getTalksStatsRef(eventId: EventId|undefined, talkId: TalkId|undefined) {
     if(!eventId || !eventId.value || !talkId || !talkId.value) {
@@ -24,13 +34,20 @@ function getTalksStatsRef(eventId: EventId|undefined, talkId: TalkId|undefined) 
         'talksStats'), talkId.value) as DocumentReference<TalkStats>;
 }
 
+/**
+ * @deprecated use useAllEventTalkStats() instead
+ * Keeping it only because of inMemoryDeltaUntilFirestoreRefreshRef (in case we would reuse it someday)
+ * @param eventIdRef
+ * @param talkIdRef
+ */
 export function useTalkStats(eventIdRef: Ref<EventId | undefined>,
            talkIdRef: Ref<TalkId | undefined>) {
 
     PERF_LOGGER.debug(() => `useTalkStats(${unref(eventIdRef)?.value}, ${unref(talkIdRef)?.value})`)
 
     const firestoreTalkStatsRef = deferredVuefireUseDocument([eventIdRef, talkIdRef],
-        ([eventId, talkId]) => getTalksStatsRef(eventId, talkId));
+        ([eventId, talkId]) => getTalksStatsRef(eventId, talkId),
+    );
 
     // This ref is used to store an increment/decrement of the total number of votes *in memory*
     //
@@ -82,6 +99,46 @@ export function useTalkStats(eventIdRef: Ref<EventId | undefined>,
         }
     };
 }
+
+function getEventTalkStatsSources(eventId: EventId|undefined, talkIds: TalkId[]|undefined) {
+    if(!eventId || !eventId.value || !talkIds || !talkIds.filter(id => id && id.value).length) {
+        return undefined;
+    }
+
+    return partitionArray(talkIds, MAX_NUMBER_OF_PARAMS_IN_FIREBASE_IN_CLAUSES).map(partitionnedTalkIds =>
+        query(collection(doc(collection(db,
+                'events'), eventId.value),
+            'talksStats'), where("id", 'in', toValueObjectValues(partitionnedTalkIds))
+        ) as CollectionReference<TalkStats>
+    );
+}
+
+export function useEventTalkStats(eventIdRef: Ref<EventId|undefined>, talkIdsRef: Ref<TalkId[]|undefined>) {
+    PERF_LOGGER.debug(() => `useEventTalkStats(eventId=${toValue(eventIdRef)?.value}, talkIds=${toValueObjectValues(toValue(talkIdsRef))})`)
+
+    const firestoreEventTalkStatsRef = deferredVuefireUseCollection([eventIdRef, talkIdsRef],
+        ([eventId, talkIds]) => getEventTalkStatsSources(eventId, talkIds),
+        firestoreData => firestoreData,
+        (eventTalkStatsRef, eventId, talkIds) => {
+            eventTalkStatsRef.value.clear();
+            // Filling map with "empty" stats by default, so that we have one stat for every talk
+            // Map will then be filled with proper fetched stats snapshots afterwards
+            talkIds.forEach(talkId => {
+                if(!eventTalkStatsRef.value.has(talkId.value)) {
+                    eventTalkStatsRef.value.set(talkId.value, {
+                        id: talkId.value,
+                        totalFavoritesCount: 0
+                    });
+                }
+            })
+        }
+    );
+
+    return {
+        firestoreEventTalkStatsRef
+    }
+}
+
 
 export async function prepareTalkStats(
     eventId: EventId,

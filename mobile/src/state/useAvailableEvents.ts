@@ -3,7 +3,7 @@ import {
     firestoreListableEventToVoxxrinListableEvent, ListableVoxxrinEvent,
 } from "@/models/VoxxrinEvent";
 import {ListableEvent} from "../../../shared/event-list.firestore";
-import {sortBy} from "@/models/utils";
+import {sortBy, toCollectionReferenceArray} from "@/models/utils";
 import {computed, unref} from "vue";
 import {collection, CollectionReference} from "firebase/firestore";
 import {db} from "@/state/firebase";
@@ -22,14 +22,14 @@ export function useAvailableEvents(eventFamilies: EventFamily[]) {
     PERF_LOGGER.debug(() => `useAvailableEvents()`)
 
     const firestoreListableEventsRef = deferredVuefireUseCollection([],
-        () => collection(db, 'events') as CollectionReference<ListableEvent>);
+        () => toCollectionReferenceArray(collection(db, 'events') as CollectionReference<ListableEvent>));
 
     return {
         listableEvents: computed(() => {
             const firestoreListableEvents = unref(firestoreListableEventsRef),
                 overridenListableEventProperties = unref(overridenListableEventPropertiesRef);
 
-            const filteredFirestoreListableEvents = firestoreListableEvents
+            const filteredFirestoreListableEvents = Array.from(firestoreListableEvents.values())
                 .filter(le => eventFamilies.length===0
                     || (le.eventFamily!==undefined && eventFamilies.map(ef => ef.value).includes(le.eventFamily)));
 

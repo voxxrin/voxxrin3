@@ -118,8 +118,7 @@ import FeedbackFooter from "@/components/feedbacks/FeedbackFooter.vue";
 import SlotOverlaps from "@/components/schedule/SlotOverlaps.vue";
 import {goBackOrNavigateTo} from "@/router";
 import {
-    useUserEventAllFavoritedTalkIds,
-    useUserTalkNotes
+    useUserEventAllFavoritedTalkIds, useUserEventTalkNotes, useUserTalkNoteActions,
 } from "@/state/useUserTalkNotes";
 import {useUserFeedbacks} from "@/state/useUserFeedbacks";
 import {Logger} from "@/services/Logger";
@@ -174,14 +173,23 @@ const everyCandidateTalksRef = computed(() => {
     return everyCandidateTalks;
 })
 
+const talkIdsRef = computed(() => {
+    const labelledTimeslotWithOverlappings = toValue(labelledTimeslotWithOverlappingsRef)
+    return labelledTimeslotWithOverlappings?.labelledTimeslot?.talks?.map(talk => talk.id) || [];
+})
+const {userEventTalkNotesRef} = useUserEventTalkNotes(eventIdRef, talkIdsRef);
+
 const { allUserFavoritedTalkIds: allUserFavoritedTalkIdsRef } = useUserEventAllFavoritedTalkIds(eventIdRef)
 async function watchLaterAllFavoritedTalks() {
     const favoritedTalks = everyCandidateTalksRef.value.filter(talk => talk.id.isIncludedIntoArray(allUserFavoritedTalkIdsRef.value))
+    const userEventTalkNotesById = toValue(userEventTalkNotesRef);
+
     await Promise.all(
         // Enabling watch later on every *favorited* talks...
         favoritedTalks.map(async favoritedTalk => {
-            const { toggleWatchLater, talkNotes } = useUserTalkNotes(eventIdRef, toRef(() => favoritedTalk.id))
-            if(!talkNotes.value.watchLater && !favoritedTalk.id.isSameThan(selectedTalk.value?.id)) {
+            const talkNotes = userEventTalkNotesById.get(favoritedTalk.id.value);
+            const { toggleWatchLater } = useUserTalkNoteActions(eventIdRef, toRef(() => favoritedTalk.id))
+            if(!talkNotes?.watchLater && !favoritedTalk.id.isSameThan(selectedTalk.value?.id)) {
                 LOGGER.debug(() => `toggling (enabling) watch later on talk: ${favoritedTalk.title}`)
                 await toggleWatchLater() // enable watch later on favorited (but not selected) talks
             }
@@ -190,8 +198,9 @@ async function watchLaterAllFavoritedTalks() {
             everyCandidateTalksRef.value
               .filter(talk => talk.id.isSameThan(selectedTalk.value?.id))
               .map(async talk => {
-                const { toggleWatchLater, talkNotes } = useUserTalkNotes(eventIdRef, toRef(() => talk.id))
-                if(talkNotes.value.watchLater) {
+                const talkNotes = userEventTalkNotesById.get(talk.id.value);
+                const { toggleWatchLater } = useUserTalkNoteActions(eventIdRef, toRef(() => talk.id))
+                if(talkNotes?.watchLater) {
                     LOGGER.debug(() => `toggling (disabling) watch later on talk: ${talk.title}`)
                     await toggleWatchLater(); // disable watch later on selected talk
                 }

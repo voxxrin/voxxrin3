@@ -50,7 +50,7 @@
                 <talk-format-groups-breakdown :conf-descriptor="confDescriptor" v-if="timeslot.type==='talks'" :talks="timeslot.talks">
                   <template #talk="{ talk }">
                     <ion-item class="listTalks-item">
-                      <schedule-talk :talk-stats="talkStatsRefByTalkId.get(talk.id.value)" :talk="talk" @talkClicked="openTalkDetails($event)" :is-highlighted="(talk, talkNotes) => talkNotes.isFavorite" :conf-descriptor="confDescriptor">
+                      <schedule-talk :talk="talk" :talk-stats="talkStatsRefByTalkId.get(talk.id.value)" :talk-notes="userTalkNotesRefByTalkId.get(talk.id.value)" @talkClicked="openTalkDetails($event)" :is-highlighted="(talk, talkNotes) => talkNotes.isFavorite" :conf-descriptor="confDescriptor">
                         <template #upper-right="{ talk }">
                           <talk-room :talk="talk" :conf-descriptor="confDescriptor" />
                         </template>
@@ -128,9 +128,9 @@ import {useUserTokensWallet} from "@/state/useUserTokensWallet";
 import {Logger} from "@/services/Logger";
 import {useCurrentUser} from "vuefire";
 import {TimeslotAnimations} from "@/services/Animations";
-import {useAllEventTalkStats} from "@/state/useEventTalkStats";
-import {TalkStats} from "../../../../shared/feedbacks.firestore";
+import {useEventTalkStats} from "@/state/useEventTalkStats";
 import TalkWatchLaterButton from "@/components/talk-card/TalkWatchLaterButton.vue";
+import {useUserEventTalkNotes} from "@/state/useUserTalkNotes";
 
 const LOGGER = Logger.named("SchedulePage");
 
@@ -183,15 +183,9 @@ const talkIdsRef = computed(() => {
     const schedule = toValue(currentSchedule);
     return schedule ? extractTalksFromSchedule(schedule).map(talk => talk.id) : [];
 })
-const {firestoreAllEventTalkStatsRef} = useAllEventTalkStats(eventId, talkIdsRef)
-const talkStatsRefByTalkId = computed(() => {
-    const firestoreAllEventTalkStats = toValue(firestoreAllEventTalkStatsRef)
-    const talkStatsRefByTalkId = firestoreAllEventTalkStats.reduce((talkStatsRefByTalkId, talkStats) => {
-        talkStatsRefByTalkId.set(talkStats.id, talkStats);
-        return talkStatsRefByTalkId;
-    }, new Map<string, TalkStats>());
-    return talkStatsRefByTalkId;
-})
+
+const {firestoreEventTalkStatsRef: talkStatsRefByTalkId} = useEventTalkStats(eventId, talkIdsRef)
+const {userEventTalkNotesRef: userTalkNotesRefByTalkId} = useUserEventTalkNotes(eventId, talkIdsRef)
 
 const displayedTimeslotsRef = ref<LabelledTimeslotWithFeedback[]>([]) as Ref<LabelledTimeslotWithFeedback[]>;
 

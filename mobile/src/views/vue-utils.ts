@@ -6,7 +6,7 @@ import {
     ref as vueRef,
     toRef as vueToRef,
     shallowRef as vueShallowRef,
-    MaybeRef, watch, toValue
+    MaybeRef, watch, toValue, WatchSource
 } from "vue";
 import {Temporal} from "temporal-polyfill";
 import {actionSheetController, ActionSheetOptions, alertController} from "@ionic/vue";
@@ -16,8 +16,11 @@ import {
     useDocument as vuefireUseDocument,
     UseDocumentOptions
 } from "vuefire";
-import { CollectionReference, DocumentReference} from "firebase/firestore";
+import {CollectionReference, DocumentReference, onSnapshot, Unsubscribe} from "firebase/firestore";
 import {MultiWatchSources} from "@vueuse/core";
+import {Logger} from "@/services/Logger";
+
+const LOGGER = Logger.named("vue-utils")
 
 // Ensure that we only get a single value from route params
 // this is intended to workaround the fact that route.params.foo is string|string[] and we want
@@ -297,8 +300,11 @@ export function deferredVuefireUseDocument<T, S1>(sources: [Ref<S1|undefined>], 
 export function deferredVuefireUseDocument<T, S1, S2>(sources: [Ref<S1|undefined>, Ref<S2|undefined>], resolveDocSource: (params: [S1|undefined, S2|undefined]) => DocumentReference<T>|undefined): Ref<T|undefined>;
 export function deferredVuefireUseDocument<T, S1, S2, S3>(sources: [Ref<S1|undefined>, Ref<S2|undefined>, Ref<S3|undefined>], resolveDocSource: (params: [S1|undefined, S2|undefined, S3|undefined]) => DocumentReference<T>|undefined): Ref<T|undefined>;
 export function deferredVuefireUseDocument<T, S1, S2, S3, S4>(sources: [Ref<S1|undefined>, Ref<S2|undefined>, Ref<S3|undefined>, Ref<S4|undefined>], resolveDocSource: (params: [S1|undefined, S2|undefined, S3|undefined, S4|undefined]) => DocumentReference<T>|undefined): Ref<T|undefined>;
-export function deferredVuefireUseDocument<SOURCES extends MultiWatchSources, T>(sources: SOURCES, resolveDocSource: (...values: any[]) => DocumentReference<T>|undefined): Ref<T|undefined> {
-    const documentRef = shallowRef<T>()
+export function deferredVuefireUseDocument<SOURCES extends MultiWatchSources, T>(
+    sources: SOURCES,
+    resolveDocSource: (...values: any[]) => DocumentReference<T>|undefined,
+): Ref<T|undefined> {
+    const documentRef = ref<T>()
 
     const docSourceRef = shallowRef<DocumentReference<T>|null>(null);
     useDocument(docSourceRef, {target: documentRef });
@@ -320,31 +326,68 @@ export function deferredVuefireUseDocument<SOURCES extends MultiWatchSources, T>
     return documentRef;
 }
 
-export function deferredVuefireUseCollection<T>(sources: [], resolveDocSource: (params: []) => CollectionReference<T>|undefined): Ref<T[]>;
-export function deferredVuefireUseCollection<T, S1>(sources: [Ref<S1|undefined>], resolveDocSource: (params: [S1|undefined]) => CollectionReference<T>|undefined): Ref<T[]>;
-export function deferredVuefireUseCollection<T, S1, S2>(sources: [Ref<S1|undefined>, Ref<S2|undefined>], resolveDocSource: (params: [S1|undefined, S2|undefined]) => CollectionReference<T>|undefined): Ref<T[]>;
-export function deferredVuefireUseCollection<T, S1, S2, S3>(sources: [Ref<S1|undefined>, Ref<S2|undefined>, Ref<S3|undefined>], resolveDocSource: (params: [S1|undefined, S2|undefined, S3|undefined]) => CollectionReference<T>|undefined): Ref<T[]>;
-export function deferredVuefireUseCollection<T, S1, S2, S3, S4>(sources: [Ref<S1|undefined>, Ref<S2|undefined>, Ref<S3|undefined>, Ref<S4|undefined>], resolveDocSource: (params: [S1|undefined, S2|undefined, S3|undefined, S4|undefined]) => CollectionReference<T>|undefined): Ref<T[]>;
-export function deferredVuefireUseCollection<SOURCES extends MultiWatchSources, T>(sources: SOURCES, resolveCollectionSource: (...values: any[]) => CollectionReference<T>|undefined): Ref<T[]> {
-    const collectionRef = shallowRef<T[]>([]);
+export function deferredVuefireUseCollection<T, TV = T>(sources: [], resolveDocSource: (params: []) => Array<CollectionReference<T>>|undefined, firestoreValueTransformer?: (firestoreValue: T) => TV, collectionInitializer?: (ref: Ref<Map<string, TV>>) => void): Ref<Map<string, TV>>;
+export function deferredVuefireUseCollection<S1, T, TV = T>(sources: [Ref<S1|undefined>], resolveDocSource: (params: [S1|undefined]) => Array<CollectionReference<T>>|undefined, firestoreValueTransformer?: (firestoreValue: T) => TV, collectionInitializer?: (ref: Ref<Map<string, TV>>, s1: S1) => void): Ref<Map<string, TV>>;
+export function deferredVuefireUseCollection<S1, S2, T, TV = T>(sources: [Ref<S1|undefined>, Ref<S2|undefined>], resolveDocSource: (params: [S1|undefined, S2|undefined]) => Array<CollectionReference<T>>|undefined, firestoreValueTransformer?: (firestoreValue: T) => TV, collectionInitializer?: (ref: Ref<Map<string, TV>>, s1: S1, s2: S2) => void): Ref<Map<string, TV>>;
+export function deferredVuefireUseCollection<S1, S2, S3, T, TV = T>(sources: [Ref<S1|undefined>, Ref<S2|undefined>, Ref<S3|undefined>], resolveDocSource: (params: [S1|undefined, S2|undefined, S3|undefined]) => Array<CollectionReference<T>>|undefined, firestoreValueTransformer?: (firestoreValue: T) => TV, collectionInitializer?: (ref: Ref<Map<string, TV>>, s1: S1, s2: S2, s3: S3) => void): Ref<Map<string, TV>>;
+export function deferredVuefireUseCollection<S1, S2, S3, S4, T, TV = T>(sources: [Ref<S1|undefined>, Ref<S2|undefined>, Ref<S3|undefined>, Ref<S4|undefined>], resolveDocSource: (params: [S1|undefined, S2|undefined, S3|undefined, S4|undefined]) => Array<CollectionReference<T>>|undefined, firestoreValueTransformer?: (firestoreValue: T) => TV, collectionInitializer?: (ref: Ref<Map<string, TV>>, s1: S1, s2: S2, s3: S3, s4: S4) => void): Ref<Map<string, TV>>;
+export function deferredVuefireUseCollection<SOURCES extends MultiWatchSources, T, TV = T>(
+    sources: SOURCES,
+    resolveCollectionSources: (...values: any[]) => Array<CollectionReference<T>>|undefined,
+    firestoreValueTransformer: (firestoreValue: T) => TV = (value) => value as unknown as TV,
+    collectionInitializer: (ref: Ref<Map<string, TV>>, ...values: (Object|WatchSource<unknown>)[]) => void = () => {},
+): Ref<Map<string, TV>> {
 
-    const collectionSourceRef = shallowRef<CollectionReference<T>|null>(null);
-    useCollection(collectionSourceRef, {target: collectionRef });
+    const collectionRef = ref<Map<string, TV>>(new Map()) as Ref<Map<string, TV>>;
 
-    const handleSourceUpdates = (values: any[]) => {
-        const collectionSource = resolveCollectionSource(values);
-        if(collectionSource) {
-            collectionSourceRef.value = collectionSource;
-            MANAGED_REFS.updateFirebaseRefPath(collectionRef, collectionSource.path);
+    const registeredSnapshotCleaners: Unsubscribe[] = [];
+
+    const handleSourceUpdates = (values: (Object|WatchSource<unknown>)[]) => {
+        const collectionSources = resolveCollectionSources(values);
+        if(collectionSources && collectionSources.length){
+
+            // Resetting collection ref...
+            // Important note: resetting map should be up to collectionInitializer() implementation
+            // (sometimes, we might want it, sometimes not)
+            collectionInitializer(collectionRef, ...values);
+
+            // Cleaning previous snapshot cleaners...
+            registeredSnapshotCleaners.forEach(snapshotCleaner => snapshotCleaner());
+            registeredSnapshotCleaners.splice(0, registeredSnapshotCleaners.length);
+
+            // Re-subscribing to collection updates...
+            const snapshotCleaners = collectionSources.map(collectionSource => onSnapshot(collectionSource, snapshot => {
+                snapshot.docChanges().forEach((change) => {
+                    if (change.type === "added") {
+                        collectionRef.value.set(change.doc.id, firestoreValueTransformer(change.doc.data()))
+                        LOGGER.debug(() => `New document: ${change.doc.data()}`);
+                    }
+                    if (change.type === "modified") {
+                        collectionRef.value.set(change.doc.id, firestoreValueTransformer(change.doc.data()));
+                        LOGGER.debug(() => `Updated document: ${change.doc.data()}`);
+                    }
+                    if (change.type === "removed") {
+                        collectionRef.value.delete(change.doc.id);
+                        LOGGER.debug(() => `Deleted document having id: ${change.doc.id}`);
+                    }
+                });
+            }));
+
+            registeredSnapshotCleaners.push(...snapshotCleaners);
         }
     };
 
     if(sources.length) {
-        watch(sources, handleSourceUpdates,{immediate: true})
+        watch(sources, handleSourceUpdates, {immediate:true})
     } else {
         handleSourceUpdates([]);
     }
 
+    onUnmounted(() => {
+        registeredSnapshotCleaners.forEach(snapshotCleaner => snapshotCleaner());
+    })
 
     return collectionRef;
 }
+
+export const MAX_NUMBER_OF_PARAMS_IN_FIREBASE_IN_CLAUSES = 30;

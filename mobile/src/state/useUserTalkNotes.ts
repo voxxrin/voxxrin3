@@ -2,16 +2,18 @@ import {EventId} from "@/models/VoxxrinEvent";
 import {DayId} from "@/models/VoxxrinDay";
 import {TalkId} from "@/models/VoxxrinTalk";
 import {computed, ref, Ref, toValue, unref, watch} from "vue";
-import {useTalkStats} from "@/state/useEventTalkStats";
 import {useCurrentUser} from "@/state/useCurrentUser";
-import {deferredVuefireUseDocument, managedUseDocument} from "@/views/vue-utils";
+import {
+    deferredVuefireUseCollection,
+    deferredVuefireUseDocument, MAX_NUMBER_OF_PARAMS_IN_FIREBASE_IN_CLAUSES,
+} from "@/views/vue-utils";
 import {
     collection,
     doc,
     DocumentReference,
     setDoc,
     updateDoc,
-    UpdateData, getDoc
+    UpdateData, getDoc, query, CollectionReference, where
 } from "firebase/firestore";
 import {db} from "@/state/firebase";
 import {TalkNote, UserComputedEventInfos, UserTalkNote} from "../../../shared/feedbacks.firestore";
@@ -19,6 +21,7 @@ import {Logger, PERF_LOGGER} from "@/services/Logger";
 import { User } from 'firebase/auth';
 import {Temporal} from "temporal-polyfill";
 import {checkCache} from "@/services/Cachings";
+import {partitionArray, toValueObjectValues} from "@/models/utils";
 
 const LOGGER = Logger.named("useUserTalkNotes");
 
@@ -32,46 +35,6 @@ function getTalkNotesRef(user: User|undefined|null, eventId: EventId|undefined, 
             'events'), eventId.value),
         'talksNotes'), talkId.value
     ) as DocumentReference<UserTalkNote>
-}
-
-export function useUserTalkNotes(
-    eventIdRef: Ref<EventId | undefined>,
-    talkIdRef: Ref<TalkId | undefined>) {
-
-    PERF_LOGGER.debug(() => `useUserTalkNotes(${unref(eventIdRef)?.value}, ${unref(talkIdRef)?.value})`)
-
-    const userRef = useCurrentUser()
-
-    const { eventTalkStats, incrementInMemoryTotalFavoritesCount, decrementInMemoryTotalFavoritesCount } = useTalkStats(eventIdRef, talkIdRef)
-
-    const firestoreUserTalkNotesRef = deferredVuefireUseDocument([eventIdRef, userRef, talkIdRef],
-        ([eventId, user, talkId]) => getTalkNotesRef(user, eventId, talkId));
-
-    const talkNoteRef: Ref<TalkNote> = computed(() => {
-        const firestoreUserTalkNotes = unref(firestoreUserTalkNotesRef),
-            talkId = unref(talkIdRef),
-            user = unref(userRef);
-
-        if(firestoreUserTalkNotes) {
-            return firestoreUserTalkNotes.note;
-        }
-
-        return {
-            talkId: talkId?.value || '???',
-            isFavorite: false,
-            watchLater: null,
-            ratings: {
-                bingo: null,
-                scale: null
-            },
-            comment: null
-        };
-    })
-
-    return {
-        eventTalkStats,
-        talkNotes: talkNoteRef,
-    };
 }
 
 export function useUserTalkNoteActions(
@@ -155,6 +118,64 @@ export function useUserTalkNoteActions(
     return {
         toggleFavorite,
         toggleWatchLater
+    }
+}
+
+function getUserEventTalkNotesSources(user: User|null|undefined, eventId: EventId|undefined, talkIds: TalkId[]|undefined) {
+    if(!user || !eventId || !eventId.value || !talkIds || !talkIds.length) {
+        return undefined;
+    }
+
+    return partitionArray(talkIds, MAX_NUMBER_OF_PARAMS_IN_FIREBASE_IN_CLAUSES).map(partitionnedTalkIds =>
+        query(collection(doc(collection(doc(collection(db,
+                'users'), user.uid),
+            'events'), eventId.value),
+        'talksNotes'), where("id", 'in', partitionnedTalkIds.map(id => id.value))
+        ) as CollectionReference<UserTalkNote>
+    );
+}
+
+export function useUserEventTalkNotes(eventIdRef: Ref<EventId|undefined>, talkIdsRef: Ref<TalkId[]|undefined>) {
+    PERF_LOGGER.debug(() => `useUserEventTalkNotes(eventId=${toValue(eventIdRef)?.value}, talkIds=${toValueObjectValues(toValue(talkIdsRef))})`)
+    const userRef = useCurrentUser()
+
+    const {allUserFavoritedTalkIds: allUserFavoritedTalkIdsRef} = useUserEventAllFavoritedTalkIds(eventIdRef)
+
+    const userEventTalkNotesRef = deferredVuefireUseCollection(
+        [eventIdRef, userRef, talkIdsRef],
+        ([eventId, user, talkIds]) => getUserEventTalkNotesSources(user, eventId, talkIds),
+        firestoreUserTalkNote => firestoreUserTalkNote.note, // TODO: transform to Voxxrin ???
+        (firestoreUserTalkNotesByTalkIdRef, eventId, user, talkIds) => {
+            const allUserFavoritedTalkIds = toValueObjectValues(toValue(allUserFavoritedTalkIdsRef)) || [];
+            // Filling map with an "empty" note by default, so that we have one note for every talk
+            // Map will then be filled with proper fetched note snapshots
+            talkIds.forEach(talkId => {
+                if(!firestoreUserTalkNotesByTalkIdRef.value.has(talkId.value)) {
+                    firestoreUserTalkNotesByTalkIdRef.value.set(talkId.value, {
+                        talkId: talkId?.value || '???',
+                        isFavorite: allUserFavoritedTalkIds.includes(talkId.value),
+                        watchLater: null,
+                    });
+                }
+            })
+        }
+    );
+
+    watch([allUserFavoritedTalkIdsRef], ([allUserFavoritedTalkIds]) => {
+        const userEventTalkNotes = toValue(userEventTalkNotesRef);
+        Array.from(userEventTalkNotes.keys()).forEach(talkId => {
+            const isFavorited = (toValueObjectValues(allUserFavoritedTalkIds) || []).includes(talkId);
+            if(userEventTalkNotes.get(talkId)!.isFavorite !== isFavorited) {
+                userEventTalkNotes.set(talkId, {
+                    ...userEventTalkNotes.get(talkId)!,
+                    isFavorite: isFavorited
+                })
+            }
+        })
+    })
+
+    return {
+        userEventTalkNotesRef
     }
 }
 

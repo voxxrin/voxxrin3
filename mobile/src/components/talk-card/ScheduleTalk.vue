@@ -70,10 +70,6 @@ import { VoxxrinTalk} from "@/models/VoxxrinTalk";
 import {useRoute} from "vue-router";
 import {EventId} from "@/models/VoxxrinEvent";
 import {getRouteParamsValue} from "@/views/vue-utils";
-import {
-    useUserTalkNoteActions,
-    useUserTalkNotes
-} from "@/state/useUserTalkNotes";
 import {TalkNote, TalkStats} from "../../../../shared/feedbacks.firestore";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 
@@ -100,6 +96,10 @@ const props = defineProps({
   talkStats: {
       required: false,
       type: Object as PropType<TalkStats|undefined>
+  },
+  talkNotes: {
+      required: false,
+      type: Object as PropType<TalkNote|undefined>
   }
 })
 
@@ -113,8 +113,6 @@ const talkLang = computed(() => {
 
 const route = useRoute();
 const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')));
-
-const { talkNotes } = useUserTalkNotes(eventId, toRef(() => props.talk?.id));
 
 const displayedSpeakers = props.talk!.speakers
     .map(s => `${s.fullName}${s.companyName?` (${s.companyName})`:``}`)

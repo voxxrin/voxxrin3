@@ -10,6 +10,7 @@ import {
 import {TalkId} from "@/models/VoxxrinTalk";
 import {TalkAttendeeFeedback} from "../../../shared/talk-feedbacks.firestore";
 import {Ref} from "vue";
+import {toCollectionReferenceArray} from "@/models/utils";
 
 function getTalkFeedbacksRef(eventId: EventId|undefined, talkId: TalkId|undefined, talkFeedbackViewerToken: string|undefined) {
     if(!talkId || !talkId.value || !eventId || !eventId.value || !talkFeedbackViewerToken) {
@@ -29,10 +30,13 @@ export function useTalkFeedbacks(
     talkFeedbackViewerTokenRef: Ref<string|undefined>
 ) {
 
-    const firestoreTalkFeedbacksRef = deferredVuefireUseCollection([eventIdRef, talkIdRef, talkFeedbackViewerTokenRef],
-        ([eventId, talkId, talkFeedbackViewerToken]) => getTalkFeedbacksRef(eventId, talkId, talkFeedbackViewerToken))
+    const firestoreTalkFeedbacksByPublicUserIdRef = deferredVuefireUseCollection(
+        [eventIdRef, talkIdRef, talkFeedbackViewerTokenRef],
+        ([eventId, talkId, talkFeedbackViewerToken]) =>
+            toCollectionReferenceArray(getTalkFeedbacksRef(eventId, talkId, talkFeedbackViewerToken))
+    )
 
     return {
-        talkFeedbacksRef: firestoreTalkFeedbacksRef
+        firestoreTalkFeedbacksByPublicUserIdRef
     };
 }

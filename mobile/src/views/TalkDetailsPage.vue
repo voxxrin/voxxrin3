@@ -75,12 +75,14 @@
 <script setup lang="ts">
 import {useRoute} from "vue-router";
 import {EventId} from "@/models/VoxxrinEvent";
-import {getRouteParamsValue, isRefDefined} from "@/views/vue-utils";
-import {useUserTalkNotes} from "@/state/useUserTalkNotes";
+import {getRouteParamsValue, isRefDefined, toManagedRef as toRef, managedRef as ref} from "@/views/vue-utils";
+import {
+    useUserEventTalkNotes,
+    useUserTalkNoteActions,
+} from "@/state/useUserTalkNotes";
 import {TalkId} from "@/models/VoxxrinTalk";
 import {useSharedEventTalk} from "@/state/useEventTalk";
-import {computed} from "vue";
-import {managedRef as ref} from "@/views/vue-utils";
+import {computed, toValue} from "vue";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {IonBadge, IonAvatar, IonText, useIonRouter} from "@ionic/vue";
 import {business} from "ionicons/icons";
@@ -88,6 +90,7 @@ import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
 import VoxDivider from "@/components/ui/VoxDivider.vue";
 import {goBackOrNavigateTo} from "@/router";
 import TalkDetailsHeader from "@/components/talk-details/TalkDetailsHeader.vue";
+import {useEventTalkStats} from "@/state/useEventTalkStats";
 
 const ionRouter = useIonRouter();
 function closeAndNavigateBack() {
@@ -99,7 +102,17 @@ const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')));
 const talkId = ref(new TalkId(getRouteParamsValue(route, 'talkId')));
 const {conferenceDescriptor: confDescriptor} = useSharedConferenceDescriptor(eventId);
 
-const { eventTalkStats, talkNotes, toggleFavorite, toggleWatchLater} = useUserTalkNotes(eventId, talkId)
+const {toggleFavorite, toggleWatchLater} = useUserTalkNoteActions(eventId, talkId);
+const { userEventTalkNotesRef } = useUserEventTalkNotes(eventId, toRef(() => talkId ? [talkId.value] : undefined))
+const talkNotes = computed(() => {
+    const userEventTalkNotes = toValue(userEventTalkNotesRef)
+    return Array.from(userEventTalkNotes.values())[0];
+})
+const {firestoreEventTalkStatsRef} = useEventTalkStats(eventId, toRef(() => talkId ? [talkId.value] : undefined));
+const eventTalkStats = computed(() => {
+    const firestoreEventTalkStats = toValue(firestoreEventTalkStatsRef);
+    return Array.from(firestoreEventTalkStats.values())[0];
+})
 const { talkDetails: detailedTalk } = useSharedEventTalk(confDescriptor, talkId);
 const { LL } = typesafeI18n()
 
