@@ -27,7 +27,7 @@
             <feedback-talk-selector
                 :conf-descriptor="confDescriptorRef"
                 :talks="labelledTimeslotWithOverlappingsRef.labelledTimeslot.talks || []"
-                :all-user-favorited-talk-ids="allUserFavoritedTalkIdsRef"
+                :all-user-favorited-talk-ids="favoritedTalkIdsRef"
                 :selected-talk-id="selectedTalk?.id"
                 @talk-selected="selectTalk($event)"
                 @talk-deselected="deselectTalk()"
@@ -54,7 +54,7 @@
                   <feedback-talk-selector
                       :conf-descriptor="confDescriptorRef"
                       :talks="overlappingTimeslot.talks"
-                      :all-user-favorited-talk-ids="allUserFavoritedTalkIdsRef"
+                      :all-user-favorited-talk-ids="favoritedTalkIdsRef"
                       :selected-talk-id="selectedTalk?.id"
                       @talk-selected="selectTalk($event)"
                       @talk-deselected="deselectTalk()">
@@ -108,7 +108,7 @@ import {
 } from "@/models/VoxxrinSchedule";
 import {IonAccordion, IonAccordionGroup, useIonRouter} from "@ionic/vue";
 import FeedbackTalkSelector from "@/components/feedbacks/FeedbackTalkSelector.vue";
-import {VoxxrinTalk} from "@/models/VoxxrinTalk";
+import {TalkId, VoxxrinTalk} from "@/models/VoxxrinTalk";
 import BaseFeedbackStep from "@/components/feedbacks/BaseFeedbackStep.vue";
 import {
     findLabelledTimeslotWithOverlappingsForTimeslotId, LabelledTimeslot,
@@ -118,7 +118,7 @@ import FeedbackFooter from "@/components/feedbacks/FeedbackFooter.vue";
 import SlotOverlaps from "@/components/schedule/SlotOverlaps.vue";
 import {goBackOrNavigateTo} from "@/router";
 import {
-    useUserEventAllFavoritedTalkIds, useUserEventTalkNotes, useUserTalkNoteActions,
+    useUserEventTalkNotes, useUserTalkNoteActions,
 } from "@/state/useUserTalkNotes";
 import {useUserFeedbacks} from "@/state/useUserFeedbacks";
 import {Logger} from "@/services/Logger";
@@ -177,18 +177,27 @@ const talkIdsRef = computed(() => {
     const labelledTimeslotWithOverlappings = toValue(labelledTimeslotWithOverlappingsRef)
     return labelledTimeslotWithOverlappings?.labelledTimeslot?.talks?.map(talk => talk.id) || [];
 })
-const {userEventTalkNotesRef} = useUserEventTalkNotes(eventIdRef, talkIdsRef);
+const {userEventTalkNotesRef } = useUserEventTalkNotes(eventIdRef, talkIdsRef);
 
-const { allUserFavoritedTalkIds: allUserFavoritedTalkIdsRef } = useUserEventAllFavoritedTalkIds(eventIdRef)
+const favoritedTalkIdsRef = computed(() => {
+    const userEventTalkNotes = toValue(userEventTalkNotesRef)
+    return Array.from(userEventTalkNotes.values())
+        .filter(talkNotes => talkNotes.isFavorite)
+        .map(talkNotes => new TalkId(talkNotes.talkId))
+})
+
 async function watchLaterAllFavoritedTalks() {
-    const favoritedTalks = everyCandidateTalksRef.value.filter(talk => talk.id.isIncludedIntoArray(allUserFavoritedTalkIdsRef.value))
+    const favoritedTalks = everyCandidateTalksRef.value.filter(talk => talk.id.isIncludedIntoArray(favoritedTalkIdsRef.value))
     const userEventTalkNotesById = toValue(userEventTalkNotesRef);
 
     await Promise.all(
         // Enabling watch later on every *favorited* talks...
         favoritedTalks.map(async favoritedTalk => {
             const talkNotes = userEventTalkNotesById.get(favoritedTalk.id.value);
-            const { toggleWatchLater } = useUserTalkNoteActions(eventIdRef, toRef(() => favoritedTalk.id))
+            const { toggleWatchLater } = useUserTalkNoteActions(
+                eventIdRef, toRef(() => favoritedTalk.id),
+                toRef(() => userEventTalkNotesRef.value.get(favoritedTalk.id.value)),
+            )
             if(!talkNotes?.watchLater && !favoritedTalk.id.isSameThan(selectedTalk.value?.id)) {
                 LOGGER.debug(() => `toggling (enabling) watch later on talk: ${favoritedTalk.title}`)
                 await toggleWatchLater() // enable watch later on favorited (but not selected) talks
@@ -199,7 +208,11 @@ async function watchLaterAllFavoritedTalks() {
               .filter(talk => talk.id.isSameThan(selectedTalk.value?.id))
               .map(async talk => {
                 const talkNotes = userEventTalkNotesById.get(talk.id.value);
-                const { toggleWatchLater } = useUserTalkNoteActions(eventIdRef, toRef(() => talk.id))
+                const { toggleWatchLater } = useUserTalkNoteActions(
+                    eventIdRef, toRef(() => talk.id),
+                    toRef(() => userEventTalkNotesRef.value.get(talk.id.value)),
+                )
+
                 if(talkNotes?.watchLater) {
                     LOGGER.debug(() => `toggling (disabling) watch later on talk: ${talk.title}`)
                     await toggleWatchLater(); // disable watch later on selected talk

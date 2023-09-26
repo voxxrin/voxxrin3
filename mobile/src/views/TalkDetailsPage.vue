@@ -16,9 +16,7 @@
               <ion-icon class="favorite-btn-icon" v-if="!talkNotes.isFavorite" aria-hidden="true" src="/assets/icons/line/bookmark-line-favorite.svg"></ion-icon>
               <ion-icon class="favorite-btn-icon" v-if="talkNotes.isFavorite" aria-hidden="true" src="/assets/icons/solid/bookmark-favorite.svg"></ion-icon>
             </ion-button>
-            <ion-label class="favorite-btn-nb" v-if="eventTalkStats !== undefined">{{
-                eventTalkStats.totalFavoritesCount
-              }}</ion-label>
+            <ion-label class="favorite-btn-nb" v-if="eventTalkStats !== undefined">{{ eventTalkStats.totalFavoritesCount }}</ion-label>
           </div>
         </ion-toolbar>
       </ion-header>
@@ -91,6 +89,9 @@ import VoxDivider from "@/components/ui/VoxDivider.vue";
 import {goBackOrNavigateTo} from "@/router";
 import TalkDetailsHeader from "@/components/talk-details/TalkDetailsHeader.vue";
 import {useEventTalkStats} from "@/state/useEventTalkStats";
+import {Logger} from "@/services/Logger";
+
+const LOGGER = Logger.named("TalkDetailsPage");
 
 const ionRouter = useIonRouter();
 function closeAndNavigateBack() {
@@ -102,9 +103,8 @@ const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')));
 const talkId = ref(new TalkId(getRouteParamsValue(route, 'talkId')));
 const {conferenceDescriptor: confDescriptor} = useSharedConferenceDescriptor(eventId);
 
-const {toggleFavorite, toggleWatchLater} = useUserTalkNoteActions(eventId, talkId);
 const { userEventTalkNotesRef } = useUserEventTalkNotes(eventId, toRef(() => talkId ? [talkId.value] : undefined))
-const talkNotes = computed(() => {
+const talkNotes = toRef(() => {
     const userEventTalkNotes = toValue(userEventTalkNotesRef)
     return Array.from(userEventTalkNotes.values())[0];
 })
@@ -115,6 +115,11 @@ const eventTalkStats = computed(() => {
 })
 const { talkDetails: detailedTalk } = useSharedEventTalk(confDescriptor, talkId);
 const { LL } = typesafeI18n()
+
+const {toggleFavorite, toggleWatchLater} = useUserTalkNoteActions(
+    eventId, talkId,
+    talkNotes,
+);
 
 const theme = computed(() => {
     if(isRefDefined(detailedTalk)) {

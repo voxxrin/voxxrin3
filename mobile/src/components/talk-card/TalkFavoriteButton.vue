@@ -11,10 +11,10 @@
 </template>
 
 <script setup lang="ts">
-import {computed, PropType} from "vue";
+import {computed, PropType, Ref, toValue} from "vue";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {useUserTalkNoteActions} from "@/state/useUserTalkNotes";
-import {toManagedRef as toRef} from "@/views/vue-utils";
+import {managedRef as ref, toManagedRef as toRef} from "@/views/vue-utils";
 import {TalkId} from "@/models/VoxxrinTalk";
 import {TalkNote, TalkStats} from "../../../../shared/feedbacks.firestore";
 
@@ -33,9 +33,19 @@ const props = defineProps({
     }
 });
 
-const talkNotes = computed(() => props.userTalkNotes)
+const emits = defineEmits<{
+    (e: 'talkNoteUpdated', updatedTalkNote: TalkNote): void,
+}>()
+
+const talkNotes: Ref<TalkNote|undefined> = toRef(() => props.userTalkNotes);
+
 const eventTalkStats = computed(() => props.talkStats)
-const {toggleFavorite} = useUserTalkNoteActions(toRef(() => props.confDescriptor?.id), toRef(() => props.userTalkNotes?.talkId ? new TalkId(props.userTalkNotes.talkId) : undefined))
+const {toggleFavorite} = useUserTalkNoteActions(
+    toRef(() => props.confDescriptor?.id),
+    toRef(() => props.userTalkNotes?.talkId ? new TalkId(props.userTalkNotes.talkId) : undefined),
+    talkNotes,
+    (updatedTalkNote) => emits('talkNoteUpdated', updatedTalkNote)
+)
 </script>
 
 <style scoped lang="scss">

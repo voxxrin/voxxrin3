@@ -12,6 +12,7 @@ import {useOverridenListableEventProperties} from "@/state/useDevUtilities";
 import {
     deferredVuefireUseCollection
 } from "@/views/vue-utils";
+import {match} from "ts-pattern";
 
 const LOGGER = Logger.named("useAvailableEvents");
 
@@ -22,7 +23,17 @@ export function useAvailableEvents(eventFamilies: EventFamily[]) {
     PERF_LOGGER.debug(() => `useAvailableEvents()`)
 
     const firestoreListableEventsRef = deferredVuefireUseCollection([],
-        () => toCollectionReferenceArray(collection(db, 'events') as CollectionReference<ListableEvent>));
+        () => toCollectionReferenceArray(collection(db, 'events') as CollectionReference<ListableEvent>),
+        firestoreEvent => firestoreEvent,
+        () => {},
+        (change, docId, collectionRef) => {
+            match(change)
+                .with({type:'created'}, change => collectionRef.value.set(docId, change.createdDoc))
+                .with({type:'updated'}, change => collectionRef.value.set(docId, change.updatedDoc))
+                .with({type:'deleted'}, change => collectionRef.value.delete(docId))
+                .exhaustive()
+        }
+    );
 
     return {
         listableEvents: computed(() => {

@@ -8,7 +8,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, PropType} from "vue";
+import {PropType} from "vue";
 import {
     useUserTalkNoteActions
 } from "@/state/useUserTalkNotes";
@@ -28,8 +28,18 @@ const props = defineProps({
     }
 });
 
-const {toggleWatchLater} = useUserTalkNoteActions(toRef(() => props.confDescriptor?.id), toRef(() => props.userTalkNotes?.talkId ? new TalkId(props.userTalkNotes?.talkId) : undefined))
-const talkNotes = computed(() => props.userTalkNotes)
+const emits = defineEmits<{
+    (e: 'talkNoteUpdated', updatedTalkNote: TalkNote): void,
+}>()
+
+const talkNotes = toRef(() => props.userTalkNotes)
+
+const {toggleWatchLater} = useUserTalkNoteActions(
+    toRef(() => props.confDescriptor?.id),
+    toRef(() => props.userTalkNotes?.talkId ? new TalkId(props.userTalkNotes?.talkId) : undefined),
+    talkNotes,
+    updatedTalkNote => emits("talkNoteUpdated", updatedTalkNote)
+)
 </script>
 
 <style scoped lang="scss">

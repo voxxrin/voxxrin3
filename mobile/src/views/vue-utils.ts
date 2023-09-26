@@ -297,7 +297,8 @@ export const managedUseCollection = useCollection;
 
 // I'm pretty sure we should be able to make it generic, but spent too much time trying to implement the proper infer impl for this :(
 export function deferredVuefireUseDocument<T, S1>(sources: [Ref<S1|undefined>], resolveDocSource: (params: [S1|undefined]) => DocumentReference<T>|undefined): Ref<T|undefined>;
-export function deferredVuefireUseDocument<T, S1, S2>(sources: [Ref<S1|undefined>, Ref<S2|undefined>], resolveDocSource: (params: [S1|undefined, S2|undefined]) => DocumentReference<T>|undefined): Ref<T|undefined>;
+export function
+deferredVuefireUseDocument<T, S1, S2>(sources: [Ref<S1|undefined>, Ref<S2|undefined>], resolveDocSource: (params: [S1|undefined, S2|undefined]) => DocumentReference<T>|undefined): Ref<T|undefined>;
 export function deferredVuefireUseDocument<T, S1, S2, S3>(sources: [Ref<S1|undefined>, Ref<S2|undefined>, Ref<S3|undefined>], resolveDocSource: (params: [S1|undefined, S2|undefined, S3|undefined]) => DocumentReference<T>|undefined): Ref<T|undefined>;
 export function deferredVuefireUseDocument<T, S1, S2, S3, S4>(sources: [Ref<S1|undefined>, Ref<S2|undefined>, Ref<S3|undefined>, Ref<S4|undefined>], resolveDocSource: (params: [S1|undefined, S2|undefined, S3|undefined, S4|undefined]) => DocumentReference<T>|undefined): Ref<T|undefined>;
 export function deferredVuefireUseDocument<SOURCES extends MultiWatchSources, T>(
@@ -326,16 +327,17 @@ export function deferredVuefireUseDocument<SOURCES extends MultiWatchSources, T>
     return documentRef;
 }
 
-export function deferredVuefireUseCollection<T, TV = T>(sources: [], resolveDocSource: (params: []) => Array<CollectionReference<T>>|undefined, firestoreValueTransformer?: (firestoreValue: T) => TV, collectionInitializer?: (ref: Ref<Map<string, TV>>) => void): Ref<Map<string, TV>>;
-export function deferredVuefireUseCollection<S1, T, TV = T>(sources: [Ref<S1|undefined>], resolveDocSource: (params: [S1|undefined]) => Array<CollectionReference<T>>|undefined, firestoreValueTransformer?: (firestoreValue: T) => TV, collectionInitializer?: (ref: Ref<Map<string, TV>>, s1: S1) => void): Ref<Map<string, TV>>;
-export function deferredVuefireUseCollection<S1, S2, T, TV = T>(sources: [Ref<S1|undefined>, Ref<S2|undefined>], resolveDocSource: (params: [S1|undefined, S2|undefined]) => Array<CollectionReference<T>>|undefined, firestoreValueTransformer?: (firestoreValue: T) => TV, collectionInitializer?: (ref: Ref<Map<string, TV>>, s1: S1, s2: S2) => void): Ref<Map<string, TV>>;
-export function deferredVuefireUseCollection<S1, S2, S3, T, TV = T>(sources: [Ref<S1|undefined>, Ref<S2|undefined>, Ref<S3|undefined>], resolveDocSource: (params: [S1|undefined, S2|undefined, S3|undefined]) => Array<CollectionReference<T>>|undefined, firestoreValueTransformer?: (firestoreValue: T) => TV, collectionInitializer?: (ref: Ref<Map<string, TV>>, s1: S1, s2: S2, s3: S3) => void): Ref<Map<string, TV>>;
-export function deferredVuefireUseCollection<S1, S2, S3, S4, T, TV = T>(sources: [Ref<S1|undefined>, Ref<S2|undefined>, Ref<S3|undefined>, Ref<S4|undefined>], resolveDocSource: (params: [S1|undefined, S2|undefined, S3|undefined, S4|undefined]) => Array<CollectionReference<T>>|undefined, firestoreValueTransformer?: (firestoreValue: T) => TV, collectionInitializer?: (ref: Ref<Map<string, TV>>, s1: S1, s2: S2, s3: S3, s4: S4) => void): Ref<Map<string, TV>>;
+export function deferredVuefireUseCollection<T, TV = T>(sources: [], resolveDocSource: (params: []) => Array<CollectionReference<T>>|undefined, firestoreValueTransformer: (firestoreValue: T) => TV, collectionInitializer: (ref: Ref<Map<string, TV>>) => void, onSnapshotChange: (change: {'type': 'created', createdDoc: TV}|{'type': 'updated', updatedDoc: TV}|{'type':'deleted', deletedDoc: TV}, docId: string, collectionRef: Ref<Map<string, TV>>) => void): Ref<Map<string, TV>>;
+export function deferredVuefireUseCollection<S1, T, TV = T>(sources: [Ref<S1|undefined>], resolveDocSource: (params: [S1|undefined]) => Array<CollectionReference<T>>|undefined, firestoreValueTransformer: (firestoreValue: T) => TV, collectionInitializer: (ref: Ref<Map<string, TV>>, s1: S1) => void, onSnapshotChange: (change: {'type': 'created', createdDoc: TV}|{'type': 'updated', updatedDoc: TV}|{'type':'deleted', deletedDoc: TV}, docId: string, collectionRef: Ref<Map<string, TV>>) => void): Ref<Map<string, TV>>;
+export function deferredVuefireUseCollection<S1, S2, T, TV = T>(sources: [Ref<S1|undefined>, Ref<S2|undefined>], resolveDocSource: (params: [S1|undefined, S2|undefined]) => Array<CollectionReference<T>>|undefined, firestoreValueTransformer: (firestoreValue: T) => TV, collectionInitializer: (ref: Ref<Map<string, TV>>, s1: S1, s2: S2) => void, onSnapshotChange: (change: {'type': 'created', createdDoc: TV}|{'type': 'updated', updatedDoc: TV}|{'type':'deleted', deletedDoc: TV}, docId: string, collectionRef: Ref<Map<string, TV>>) => void): Ref<Map<string, TV>>;
+export function deferredVuefireUseCollection<S1, S2, S3, T, TV = T>(sources: [Ref<S1|undefined>, Ref<S2|undefined>, Ref<S3|undefined>], resolveDocSource: (params: [S1|undefined, S2|undefined, S3|undefined]) => Array<CollectionReference<T>>|undefined, firestoreValueTransformer: (firestoreValue: T) => TV, collectionInitializer: (ref: Ref<Map<string, TV>>, s1: S1, s2: S2, s3: S3) => void, onSnapshotChange: (change: {'type': 'created', createdDoc: TV}|{'type': 'updated', updatedDoc: TV}|{'type':'deleted', deletedDoc: TV}, docId: string, collectionRef: Ref<Map<string, TV>>) => void): Ref<Map<string, TV>>;
+export function deferredVuefireUseCollection<S1, S2, S3, S4, T, TV = T>(sources: [Ref<S1|undefined>, Ref<S2|undefined>, Ref<S3|undefined>, Ref<S4|undefined>], resolveDocSource: (params: [S1|undefined, S2|undefined, S3|undefined, S4|undefined]) => Array<CollectionReference<T>>|undefined, firestoreValueTransformer: (firestoreValue: T) => TV, collectionInitializer: (ref: Ref<Map<string, TV>>, s1: S1, s2: S2, s3: S3, s4: S4) => void, onSnapshotChange: (change: {'type': 'created', createdDoc: TV}|{'type': 'updated', updatedDoc: TV}|{'type':'deleted', deletedDoc: TV}, docId: string, collectionRef: Ref<Map<string, TV>>) => void): Ref<Map<string, TV>>;
 export function deferredVuefireUseCollection<SOURCES extends MultiWatchSources, T, TV = T>(
     sources: SOURCES,
     resolveCollectionSources: (...values: any[]) => Array<CollectionReference<T>>|undefined,
     firestoreValueTransformer: (firestoreValue: T) => TV = (value) => value as unknown as TV,
     collectionInitializer: (ref: Ref<Map<string, TV>>, ...values: (Object|WatchSource<unknown>)[]) => void = () => {},
+    onSnapshotChange: (change: {'type': 'created', createdDoc: TV}|{'type': 'updated', updatedDoc: TV}|{'type':'deleted', deletedDoc: TV}, docId: string, collectionRef: Ref<Map<string, TV>>) => void,
 ): Ref<Map<string, TV>> {
 
     const collectionRef = ref<Map<string, TV>>(new Map()) as Ref<Map<string, TV>>;
@@ -359,16 +361,16 @@ export function deferredVuefireUseCollection<SOURCES extends MultiWatchSources, 
             const snapshotCleaners = collectionSources.map(collectionSource => onSnapshot(collectionSource, snapshot => {
                 snapshot.docChanges().forEach((change) => {
                     if (change.type === "added") {
-                        collectionRef.value.set(change.doc.id, firestoreValueTransformer(change.doc.data()))
-                        LOGGER.debug(() => `New document: `, change.doc.data());
+                        onSnapshotChange({type:'created', createdDoc: firestoreValueTransformer(change.doc.data())}, change.doc.id, collectionRef)
+                        LOGGER.debug(() => `New document @/${collectionSource.path || `query(${(collectionSource as any)._query?.path})`}: `, change.doc.data());
                     }
                     if (change.type === "modified") {
-                        collectionRef.value.set(change.doc.id, firestoreValueTransformer(change.doc.data()));
-                        LOGGER.debug(() => `Updated document: `, change.doc.data());
+                        onSnapshotChange({type:'updated', updatedDoc: firestoreValueTransformer(change.doc.data())}, change.doc.id, collectionRef)
+                        LOGGER.debug(() => `Updated document @/${collectionSource.path || `query(${(collectionSource as any)._query?.path})`}: `, change.doc.data());
                     }
                     if (change.type === "removed") {
-                        collectionRef.value.delete(change.doc.id);
-                        LOGGER.debug(() => `Deleted document having id: ${change.doc.id}`);
+                        onSnapshotChange({type:'deleted', deletedDoc: collectionRef.value.get(change.doc.id)!}, change.doc.id, collectionRef)
+                        LOGGER.debug(() => `Deleted document @/${collectionSource.path || `query(${(collectionSource as any)._query?.path})`} having id: ${change.doc.id}`);
                     }
                 });
             }));

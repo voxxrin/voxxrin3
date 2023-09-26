@@ -23,6 +23,7 @@ import {PERF_LOGGER} from "@/services/Logger";
 import {checkCache} from "@/services/Cachings";
 import {Temporal} from "temporal-polyfill";
 import {partitionArray, toValueObjectValues} from "@/models/utils";
+import {match} from "ts-pattern";
 
 function getTalksStatsRef(eventId: EventId|undefined, talkId: TalkId|undefined) {
     if(!eventId || !eventId.value || !talkId || !talkId.value) {
@@ -131,7 +132,15 @@ export function useEventTalkStats(eventIdRef: Ref<EventId|undefined>, talkIdsRef
                     });
                 }
             })
+        },
+        (change, docId, collectionRef) => {
+            match(change)
+                .with({type:'created'}, change => collectionRef.value.set(docId, change.createdDoc))
+                .with({type:'updated'}, change => collectionRef.value.set(docId, change.updatedDoc))
+                .with({type:'deleted'}, change => collectionRef.value.delete(docId))
+                .exhaustive()
         }
+
     );
 
     return {
