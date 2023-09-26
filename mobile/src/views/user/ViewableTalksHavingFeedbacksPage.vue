@@ -13,18 +13,9 @@
 
       <div class="schedule-talk-event"  v-for="(eventTalksGroup, index) in talksGroupedByEventRef" :key="eventTalksGroup.confDescriptor.id.value"
            v-themed-event-styles="eventTalksGroup.confDescriptor">
-        <img :src="eventTalksGroup.confDescriptor?.backgroundUrl">
-        <span class="schedule-talk-event-title">{{eventTalksGroup.confDescriptor.headingTitle}}</span>
 
-        <schedule-talk v-for="(feedbackViewerTalk, index) in eventTalksGroup.talks" :key="feedbackViewerTalk.detailedTalk.id.value"
-                :conf-descriptor="eventTalksGroup.confDescriptor" :is-highlighted="() => false" :talk="feedbackViewerTalk.detailedTalk"
-                @click="$router.push(`/user/events/${feedbackViewerTalk.token.eventId.value}/talks/${feedbackViewerTalk.token.talkId.value}/asFeedbackViewer/${feedbackViewerTalk.token.secretToken}`)">
-          <template #upper-right="{ talk }">
-            {{eventTalksGroup.confDescriptor.headingTitle}}
-          </template>
-          <template #footer-actions="{ talk }">
-          </template>
-        </schedule-talk>
+        <event-talks-group :conf-descriptor="eventTalksGroup.confDescriptor" :talks="eventTalksGroup.talks"
+          @talk-clicked="openTalkDetails($event)"/>
       </div>
     </ion-content>
   </ion-page>
@@ -35,18 +26,18 @@
 import {goBackOrNavigateTo} from "@/router";
 import {useIonRouter} from "@ionic/vue";
 import {useUserTokensWallet} from "@/state/useUserTokensWallet";
-import {computed, unref, watch} from "vue";
+import {computed, Ref, toValue, unref, watch} from "vue";
 import {managedRef as ref} from "@/views/vue-utils";
 import {VoxxrinUserTokensWallet} from "@/models/VoxxrinUser";
-import {VoxxrinDetailedTalk} from "@/models/VoxxrinTalk";
+import {VoxxrinDetailedTalk, VoxxrinTalk} from "@/models/VoxxrinTalk";
 import {fetchTalkDetails} from "@/services/DetailedTalks";
 import {fetchConferenceDescriptor} from "@/services/ConferenceDescriptors";
 import {EventId} from "@/models/VoxxrinEvent";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
-import ScheduleTalk from "@/components/talk-card/ScheduleTalk.vue";
 import {sortBy} from "@/models/utils";
 import {typesafeI18n} from "@/i18n/i18n-vue";
-import {match} from "ts-pattern";
+import {match, P} from "ts-pattern";
+import EventTalksGroup from "@/components/events/EventTalksGroup.vue";
 
 const ionRouter = useIonRouter();
 
@@ -58,7 +49,7 @@ type FeedbackViewerTalk = {
     confDescriptor: VoxxrinConferenceDescriptor,
     detailedTalk: VoxxrinDetailedTalk
 }
-const feedbackViewerTalksRef = ref<FeedbackViewerTalk[]>([]);
+const feedbackViewerTalksRef = ref<FeedbackViewerTalk[]>([]) as Ref<FeedbackViewerTalk[]>;
 watch([userTokensWalletRef], async ([userTokensWallet]) => {
   if(!userTokensWallet || !userTokensWallet.secretTokens.talkFeedbacksViewerTokens.length) {
       feedbackViewerTalksRef.value = [];
@@ -95,14 +86,14 @@ watch([userTokensWalletRef], async ([userTokensWallet]) => {
 
 type EventTalksGroup = {
   confDescriptor: VoxxrinConferenceDescriptor,
-  talks: FeedbackViewerTalk[]
+  talks: VoxxrinDetailedTalk[]
 }
 const talksGroupedByEventRef = computed(() => {
   const feedbackViewerTalks = unref(feedbackViewerTalksRef);
 
   return feedbackViewerTalks.reduce((talkGroups, talk) => {
     const talkGroup = match(talkGroups.find(group => group.confDescriptor.id.isSameThan(talk.confDescriptor.id)))
-        .with(undefined, () => {
+        .with(P.nullish, () => {
           const talkGroup: EventTalksGroup = {
             confDescriptor: talk.confDescriptor,
             talks: []
@@ -111,11 +102,20 @@ const talksGroupedByEventRef = computed(() => {
           return talkGroup;
         }).otherwise((existingTalkGroup) => existingTalkGroup)
 
-    talkGroup.talks.push(talk);
+    talkGroup.talks.push(talk.detailedTalk);
 
     return talkGroups;
   }, [] as EventTalksGroup[])
 })
+
+function openTalkDetails(talk: VoxxrinTalk) {
+    const feedbackViewerTalks = toValue(feedbackViewerTalksRef)
+
+    const feedbackViewerTalk = feedbackViewerTalks.find(feedbackViewerTalk => feedbackViewerTalk.detailedTalk.id.isSameThan(talk.id));
+    if(feedbackViewerTalk) {
+        ionRouter.push(`/user/events/${feedbackViewerTalk.token.eventId.value}/talks/${feedbackViewerTalk.token.talkId.value}/asFeedbackViewer/${feedbackViewerTalk.token.secretToken}`)
+    }
+}
 
 </script>
 
