@@ -31,7 +31,7 @@ async function getPublicTokenBySecret<T>(secretToken: string, transformer: (publ
 
 export async function getFamilyEventsStatsToken(secretToken: string) {
     return getPublicTokenBySecret(secretToken,
-            publicToken => isFamilyEventsStatsToken(publicToken)?publicToken:undefined,
+            publicToken => isFamilyEventsStatsToken(publicToken) || isFamilyOrganizerToken(publicToken)?publicToken:undefined,
         "family events stats token")
 }
 
