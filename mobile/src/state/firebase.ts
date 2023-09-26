@@ -31,8 +31,10 @@ initializeFirestore(app,
 
 export const db = getFirestore(app);
 
-if (location.hostname === "localhost" && import.meta.env.DEV && import.meta.env.VITE_USE_LOCAL_FIREBASE_INSTANCE === 'true') {
+if (["localhost", "127.0.0.1"].includes(location.hostname) && import.meta.env.DEV && import.meta.env.VITE_USE_LOCAL_FIREBASE_INSTANCE === 'true') {
     connectFirestoreEmulator(db, 'localhost', 8080);
+}
+if (["localhost", "127.0.0.1"].includes(location.hostname) && import.meta.env.DEV && import.meta.env.VITE_USE_LOCAL_FIREBASE_INSTANCE_FOR_AUTH === 'true') {
     connectAuthEmulator(getAuth(), "http://localhost:9099");
 }
 

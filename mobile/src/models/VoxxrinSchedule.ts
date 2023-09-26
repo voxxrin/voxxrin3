@@ -20,7 +20,7 @@ import {
 } from "@/models/VoxxrinConferenceDescriptor";
 import {formatHourMinutes, localDateToReadableParts} from "@/models/DatesAndTime";
 import {NumberRange, sortBy, ValueObject} from "@/models/utils";
-import {useCurrentUserLocale} from "@/state/useCurrentUserLocale";
+import {useCurrentUserLocale} from "@/state/useCurrentUser";
 
 export class ScheduleTimeSlotId extends ValueObject<string>{ _scheduleTimeSlotIdClassDiscriminator!: never; }
 
@@ -120,6 +120,15 @@ export function filterTimeslotsToAutoExpandBasedOn(timeslots: VoxxrinScheduleTim
     } else {
         return expandedTimeslots;
     }
+}
+
+export function extractTalksFromSchedule(dailySchedule: VoxxrinDailySchedule): VoxxrinTalk[] {
+    const talks = dailySchedule.timeSlots.reduce((talks, timeslot) => {
+        Array.prototype.push.apply(talks, timeslot.type === 'talks' ? timeslot.talks : []);
+        return talks;
+    }, [] as Array<VoxxrinTalk>);
+
+    return talks;
 }
 
 export function createVoxxrinDailyScheduleFromFirestore(event: VoxxrinConferenceDescriptor, firestoreSchedule: DailySchedule) {

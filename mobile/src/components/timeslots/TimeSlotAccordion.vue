@@ -1,6 +1,7 @@
 <template>
   <ion-accordion :value="timeslot.id.value"
-       :class="{ 'slot-accordion': true, [`_${progress?.status}`]: true, '_feedback-provided': !hasMissingFeedback, '_missing-feedback': hasMissingFeedback, '_is-break': timeslot.type==='break' }">
+       :style="{ 'animation-delay': `${animationDelay}ms` }"
+       :class="{ 'slot-accordion': true, [`_chronological_status_is_${progress?.status}`]: true, '_feedback-provided': !hasMissingFeedback, '_missing-feedback': hasMissingFeedback, '_is-break': timeslot.type==='break' }">
     <ion-item slot="header" color="light">
       <ion-ripple-effect type="bounded"></ion-ripple-effect>
       <ion-grid class="slot">
@@ -18,7 +19,8 @@
           </ion-col>
           <ion-col class="slot-actions" size="auto">
             <ion-icon class="_provided-feedback" aria-hidden="true" src="/assets/icons/solid/comment-check.svg" v-if="areFeedbacksEnabled(confDescriptor)"></ion-icon>
-            <ion-button class="_missing-feedback" @click.stop="$emit('add-timeslot-feedback-clicked', timeslot)" v-if="areFeedbacksEnabled(confDescriptor)">
+            <ion-button class="_missing-feedback" v-if="elementsShown.includes('add-feedback-btn') && areFeedbacksEnabled(confDescriptor)"
+                        @click.stop="$emit('add-timeslot-feedback-clicked', timeslot)">
               <ion-icon src="/assets/icons/line/comment-line-add.svg"></ion-icon>
             </ion-button>
           </ion-col>
@@ -28,13 +30,14 @@
     </ion-item>
 
     <div class="ion-padding accordion-content" slot="content">
-      <slot name="accordion-content" :timeslot="timeslot" :feedback="timeslotFeedback" />
+      <slot name="accordion-content" :timeslot="timeslot" :feedback="timeslotFeedback" :progressStatus="progress?.status" />
     </div>
   </ion-accordion>
 </template>
 
 <script setup lang="ts">
-import {computed, PropType, ref} from "vue";
+import {computed, PropType} from "vue";
+import {managedRef as ref, toManagedRef as toRef} from "@/views/vue-utils";
 import {
   IonProgressBar,
   IonAccordion,
@@ -73,6 +76,16 @@ const props = defineProps({
   confDescriptor: {
     required: true,
     type: Object as PropType<VoxxrinConferenceDescriptor>
+  },
+  elementsShown: {
+      required: false,
+      type: Object as PropType<Array<"add-feedback-btn">>,
+      default: []
+  },
+  animationDelay: {
+    required: false,
+    type: Number as PropType<Number|undefined>,
+    default: undefined
   }
 })
 
@@ -82,14 +95,14 @@ defineEmits<{
 
 const { LL } = typesafeI18n()
 
-const { conferenceDescriptor } = useSharedConferenceDescriptor(props.confDescriptor?.id);
+const { conferenceDescriptor } = useSharedConferenceDescriptor(toRef(() => props.confDescriptor?.id));
 
 const progress = ref<TimeslotTimingProgress>()
 useInterval(() => {
   if(props.timeslot) {
     progress.value = getTimeslotTimingProgress(props.timeslot, useCurrentClock().zonedDateTimeISO())
   }
-}, {seconds:5}, { immediate: true });
+}, {freq:"high-frequency"}, { immediate: true });
 
 const timeslotLabel = getTimeslotLabel(props.timeslot!);
 
@@ -99,8 +112,14 @@ const hasMissingFeedback = computed(() => {
 </script>
 
 <style lang="scss" scoped>
+  // Hint: some .slot-accordion class are defined in _custom-ion-accordion.css and should have to be
+  // moved here at some point
+
   // * Base Style Accordion *//
   ion-accordion {
+    transition: var(--app-voxxrin-animations-timeslots-anim-duration);
+    animation: scale-up-center var(--app-voxxrin-animations-timeslots-anim-duration) cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+
     border-bottom: 1px solid var(--app-background);
 
     &.accordion-expanded {
@@ -148,6 +167,83 @@ const hasMissingFeedback = computed(() => {
       border: 1px solid rgba(var(--ion-color-light-rgb), 0.6);
     }
 
+    &._chronological_status_is_past {
+      @media (prefers-color-scheme: dark) {
+        border-bottom: 1px solid var(--app-light-contrast);
+      }
+
+      .ion-color-light {
+        --ion-color-base: var(--app-beige-line) !important;
+        --ripple-color: var(--app-beige-dark) !important;
+
+        @media (prefers-color-scheme: dark) {
+          --ion-color-base: var(--app-background) !important;
+        }
+
+        ion-label {
+          color: var(--app-primary-tint);
+
+          @media (prefers-color-scheme: dark) {
+            color: var(--app-white);
+          }
+        }
+      }
+
+      ._accordion-icon._past-icon {
+        display: inline-block;
+        color: var(--app-primary-tint);
+
+        @media (prefers-color-scheme: dark) {
+          color: rgba(white, 0.5);
+        }
+      }
+      &._missing-feedback:not(._is-break) ._missing-feedback { display: inline-block;}
+      &._feedback-provided:not(._is-break) ._provided-feedback {display: inline-block;}
+    }
+
+    &._chronological_status_is_ongoing {
+      .ion-color-light {
+        --ion-color-base:  var(--voxxrin-event-theme-colors-primary-hex) !important;
+        --ripple-color: var(--app-beige-dark) !important;
+
+        ion-label { color: var(--app-white);}
+      }
+
+      ._accordion-icon._ongoing-icon { display: inline-block; }
+      ._ongoing-progress { display: block; }
+      ._accordion-icon { color: var(--app-white) !important;}
+
+      .ion-accordion-toggle-icon {
+        color: var(--app-white) !important;
+      }
+    }
+
+    &._chronological_status_is_future {
+      --color: var(--app-white);
+
+      .ion-color-light {
+        --ion-color-base: var(--app-primary-shade) !important;
+        --ripple-color: var(--app-primary) !important;
+
+        @media (prefers-color-scheme: dark) {
+          --ion-color-base: var(--app-light-contrast) !important;
+        }
+
+        ion-label { color: var(--app-white);}
+      }
+
+      ._accordion-icon._future-icon { display: inline-block; }
+      ._accordion-icon { color: var(--app-white) !important;}
+
+      .ion-accordion-toggle-icon {
+        color: var(--app-white) !important;
+
+        @media (prefers-color-scheme: dark) {
+          color: var(--app-medium-contrast);
+        }
+      }
+    }
+
     ion-item {
       --padding-start: 0;
       --padding-end: 0;
@@ -163,6 +259,10 @@ const hasMissingFeedback = computed(() => {
         ion-row {
           height: 100%;
           width: 100%;
+        }
+
+        &-date {
+          position: absolute;
         }
 
         &-schedule {
@@ -226,4 +326,16 @@ const hasMissingFeedback = computed(() => {
       }
     }
   }
+
+  @keyframes scale-up-center {
+    0% {
+      opacity: 0;
+      transform: scale(0.2);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
 </style>

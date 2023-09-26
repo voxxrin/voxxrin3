@@ -1,40 +1,37 @@
-import {computed, ref, unref, watch} from "vue";
+import {computed, Ref, unref, watch} from "vue";
 import {
     createVoxxrinConferenceDescriptor, VoxxrinConferenceDescriptor,
 } from "@/models/VoxxrinConferenceDescriptor";
 import {EventId} from "@/models/VoxxrinEvent";
 import {ConferenceDescriptor} from "../../../shared/conference-descriptor.firestore";
-import {Unreffable} from "@/views/vue-utils";
+import {
+    deferredVuefireUseDocument
+} from "@/views/vue-utils";
 import {collection, doc, DocumentReference} from "firebase/firestore";
 import {db} from "@/state/firebase";
-import {useDocument} from "vuefire";
 import {createSharedComposable} from "@vueuse/core";
-import {
-    overrideListableEventProperties
-} from "@/state/useAvailableEvents";
+import {PERF_LOGGER} from "@/services/Logger";
+import {useOverridenEventDescriptorProperties} from "@/state/useDevUtilities";
 
-type OverridableEventDescriptorProperties = {eventId: string} & Partial<Pick<VoxxrinConferenceDescriptor, "headingTitle"|"theming"|"features"|"infos"|"location"|"backgroundUrl"|"logoUrl">>;
+function getConferenceDescriptorDoc(eventId: EventId|undefined) {
+    if(!eventId || !eventId.value) {
+        return undefined;
+    }
 
-const overridenEventDescriptorPropertiesRef = ref<OverridableEventDescriptorProperties|undefined>(undefined)
-
+    return doc(collection(doc(collection(db, 'events'), eventId.value), 'event-descriptor'), 'self') as DocumentReference<ConferenceDescriptor & {__initialId: string}>;;
+}
 export function useConferenceDescriptor(
-    eventIdRef: Unreffable<EventId | undefined>) {
+    eventIdRef: Ref<EventId | undefined>) {
 
-    console.debug(`useConferenceDescriptor(${unref(eventIdRef)?.value})`)
+    const overridenEventDescriptorPropertiesRef = useOverridenEventDescriptorProperties();
+
+    PERF_LOGGER.debug(() => `useConferenceDescriptor(${unref(eventIdRef)?.value})`)
     watch(() => unref(eventIdRef), (newVal, oldVal) => {
-        console.debug(`useConferenceDescriptor[eventIdRef] updated from [${oldVal?.value}] to [${newVal?.value}]`)
+        PERF_LOGGER.debug(() => `useConferenceDescriptor[eventIdRef] updated from [${oldVal?.value}] to [${newVal?.value}]`)
     }, {immediate: true})
 
-    const firestoreConferenceDescriptorSource = computed(() => {
-        const eventId = unref(eventIdRef);
-        if(!eventId || !eventId.value) {
-            return undefined;
-        }
-
-        return doc(collection(doc(collection(db, 'events'), eventId.value), 'event-descriptor'), 'self') as DocumentReference<ConferenceDescriptor & {__initialId: string}>
-    });
-
-    const firestoreConferenceDescriptorRef = useDocument(firestoreConferenceDescriptorSource);
+    const firestoreConferenceDescriptorRef = deferredVuefireUseDocument([eventIdRef],
+        ([eventId]) => getConferenceDescriptorDoc(eventId));
 
     return {
         conferenceDescriptor: computed(() => {
@@ -63,8 +60,3 @@ export function useConferenceDescriptor(
 }
 
 export const useSharedConferenceDescriptor = createSharedComposable(useConferenceDescriptor);
-
-export function overrideCurrentEventDescriptorInfos(overridenEventDescriptorProperties: OverridableEventDescriptorProperties) {
-    overridenEventDescriptorPropertiesRef.value = overridenEventDescriptorProperties;
-    overrideListableEventProperties(overridenEventDescriptorProperties);
-}

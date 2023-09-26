@@ -7,8 +7,10 @@ import {useCurrentClock} from "@/state/useCurrentClock";
 import {zonedDateTimeRangeOf} from "@/models/DatesAndTime";
 
 export class EventId extends ValueObject<string>{ _eventIdClassDiscriminator!: never; }
+export class EventFamily extends ValueObject<string>{ _eventFamilyClassDiscriminator!: never; }
 export type ListableVoxxrinEvent = Replace<ListableEvent, {
     id: EventId,
+    eventFamily: EventFamily|undefined,
     days: Array<VoxxrinDay>,
     start: Temporal.ZonedDateTime,
     end: Temporal.ZonedDateTime,
@@ -62,6 +64,7 @@ export function firestoreListableEventToVoxxrinListableEvent(firestoreListableEv
     return {
         ...firestoreListableEvent,
         id: new EventId(firestoreListableEvent.id),
+        eventFamily: firestoreListableEvent.eventFamily===undefined?undefined:new EventFamily(firestoreListableEvent.eventFamily),
         days: firestoreListableEvent.days.map(d => ({...d, id: new DayId(d.id)})),
         start,
         end,

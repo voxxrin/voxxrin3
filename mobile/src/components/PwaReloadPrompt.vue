@@ -7,8 +7,11 @@ import { pwaInfo } from 'virtual:pwa-info'
 import {toastController} from "@ionic/vue";
 import {watch} from "vue";
 import {reload} from "ionicons/icons";
+import {Logger} from "@/services/Logger";
 
-console.log(pwaInfo)
+const LOGGER = Logger.named("PwaReloadPrompt");
+
+LOGGER.info(() => pwaInfo)
 
 const {
     offlineReady,
@@ -18,11 +21,11 @@ const {
     immediate: true,
     onRegisteredSW(swUrl, r) {
         // eslint-disable-next-line no-console
-        console.log(`Service Worker at: ${swUrl}`)
+        LOGGER.info(() => `Service Worker at: ${swUrl}`)
 
         r && setInterval(async () => {
             // eslint-disable-next-line no-console
-            console.debug('Checking for sw update...')
+            LOGGER.debug(() => 'Checking for sw update...')
             await r.update()
         }, 60000)
     },
@@ -39,7 +42,7 @@ watch([needRefresh], async ([_needRefresh]) => {
                 side: 'end',
                 icon: reload,
                 role: 'reload',
-                handler: updateServiceWorker,
+                handler: () => updateServiceWorker(true),
             }],
             color: 'primary'
         })

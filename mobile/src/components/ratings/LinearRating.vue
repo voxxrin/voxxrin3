@@ -7,10 +7,14 @@
 </template>
 
 <script setup lang="ts">
-import {PropType, ref} from "vue";
+import {PropType} from "vue";
+import {managedRef as ref} from "@/views/vue-utils";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {star, thumbsUp} from "ionicons/icons";
 import {VoxxrinUserFeedback} from "@/models/VoxxrinFeedback";
+import {Logger} from "@/services/Logger";
+
+const LOGGER = Logger.named("LinearRating");
 
 const ICONS: Record<VoxxrinConferenceDescriptor['features']['ratings']['scale']['icon'], string> = {
     "star": star,
@@ -44,7 +48,7 @@ const $emits = defineEmits<{
 const selectedIndex = ref<number|null>(null);
 if(props.userFeedback && props.userFeedback.ratings["linear-rating"] !== null) {
     selectedIndex.value = props.userFeedback.ratings["linear-rating"]-1;
-    console.log(`selected value: ${selectedIndex.value}`)
+    LOGGER.debug(() => `selected value: ${selectedIndex.value}`)
 }
 function ratingSelected(index: number) {
     if(props.readonly) {

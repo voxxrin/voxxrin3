@@ -1,22 +1,6 @@
 <template>
-    <ion-item class="eventItem" v-if="event"
-              :class="{'_is-pined' : isPinnedRef}"
-              :style="{
-        '--voxxrin-event-background-url': `url('${event.backgroundUrl}')`,
-        '--voxxrin-event-logo-url': `url('${event.logoUrl}')`,
-        '--voxxrin-event-theme-colors-primary-hex': event.theming.colors.primaryHex,
-        '--voxxrin-event-theme-colors-primary-rgb': event.theming.colors.primaryRGB,
-        '--voxxrin-event-theme-colors-primary-contrast-hex': event.theming.colors.primaryContrastHex,
-        '--voxxrin-event-theme-colors-primary-contrast-rgb': event.theming.colors.primaryContrastRGB,
-        '--voxxrin-event-theme-colors-secondary-hex': event.theming.colors.secondaryHex,
-        '--voxxrin-event-theme-colors-secondary-rgb': event.theming.colors.secondaryRGB,
-        '--voxxrin-event-theme-colors-secondary-contrast-hex': event.theming.colors.secondaryContrastHex,
-        '--voxxrin-event-theme-colors-secondary-contrast-rgb': event.theming.colors.secondaryContrastRGB,
-        '--voxxrin-event-theme-colors-tertiary-hex': event.theming.colors.tertiaryHex,
-        '--voxxrin-event-theme-colors-tertiary-rgb': event.theming.colors.tertiaryRGB,
-        '--voxxrin-event-theme-colors-tertiary-contrast-hex': event.theming.colors.tertiaryContrastHex,
-        '--voxxrin-event-theme-colors-tertiary-contrast-rgb': event.theming.colors.tertiaryContrastRGB,
-    }" @click="$emit('event-clicked', event)">
+    <ion-item @click.stop="$emit('event-clicked', event)" class="eventItem" :class="{'_is-pined' : isPinnedRef}" v-if="event"
+              v-themed-event-styles="event">
       <ion-ripple-effect type="bounded"></ion-ripple-effect>
       <div class="eventItem-logoContainer">
         <div class="logo">
@@ -35,22 +19,35 @@
         </div>
       </div>
 
+      <div class="eventItem-config" slot="end" v-if="eventOrganizerToken">
+        <ion-button fill="clear" shape="round" @click.stop="navToEventOrganizerPage()">
+          <ion-icon src="/assets/icons/line/settings-cog-line.svg"></ion-icon>
+        </ion-button>
+      </div>
+
       <div class="eventItem-end" slot="end">
         <ion-button class="btnPin" fill="clear" shape="round" @click.stop="$emit('event-pin-toggled', event, isPinnedRef?'pinned-to-unpinned':'unpinned-to-pinned')">
           <ion-icon src="/assets/icons/line/pin-line.svg" v-if="!isPinnedRef"></ion-icon>
           <ion-icon class="_is-pined" src="/assets/icons/solid/pin.svg" v-if="isPinnedRef"></ion-icon>
         </ion-button>
       </div>
+
+<!--      <div class="eventItem-dot" slot="end" @click="$emit('event-clicked', event)">-->
+<!--        <span class="eventItem-dot-click">-->
+<!--          <ion-icon src="/assets/icons/solid/more-menu-vertical.svg"></ion-icon>-->
+<!--        </span>-->
+<!--      </div>-->
     </ion-item>
 </template>
 
 <script setup lang="ts">
-import {computed, PropType} from "vue";
+import {computed, PropType, toRef, unref} from "vue";
 import {
-    IonImg,
+    IonImg, useIonRouter,
 } from '@ionic/vue';
 import {EventId, ListableVoxxrinEvent} from "@/models/VoxxrinEvent";
 import MonthDayDateRange from "@/components/MonthDayDateRange.vue";
+import {useSharedUserTokensWallet} from "@/state/useUserTokensWallet";
 
 const props = defineProps({
     event: {
@@ -68,6 +65,12 @@ defineEmits<{
     (e: 'event-pin-toggled', event: ListableVoxxrinEvent, transitionType: 'unpinned-to-pinned'|'pinned-to-unpinned'): void,
 }>()
 
+const ionRouter = useIonRouter();
+
+const { organizerTokenRefForEvent } = useSharedUserTokensWallet()
+const eventRef = toRef(props, 'event');
+const eventIdRef = computed<EventId|undefined>(() => { const event = unref(eventRef); return event?.id; })
+
 const isPinnedRef = computed(() => {
     if(props.pinnedEvents && props.event) {
         return !!props.pinnedEvents?.find(eventId => props.event?.id.isSameThan(eventId))
@@ -75,6 +78,12 @@ const isPinnedRef = computed(() => {
         return false;
     }
 })
+
+const eventOrganizerToken = organizerTokenRefForEvent(eventIdRef)
+
+function navToEventOrganizerPage() {
+    ionRouter.push(`/events/${eventRef.value.id.value}/asOrganizer/${eventOrganizerToken.value}`)
+}
 
 </script>
 
@@ -109,14 +118,17 @@ const isPinnedRef = computed(() => {
     position: relative;
     transition: 140ms ease-in-out;
     transform: rotate(0deg);
-
-    ion-icon {
-      transition: 140ms;
-    }
+    animation: reversePinedAnimation 600ms both;
 
     &:after {
       transition: 140ms;
       transform: rotate(0) scale(0);
+      animation: reversePinedAnimationShadow 500ms both;
+    }
+
+    ion-icon {
+      transition: 140ms;
+      animation: reversePinedAnimationIcon 500ms both;
     }
   }
 
@@ -153,23 +165,78 @@ const isPinnedRef = computed(() => {
     }
   }
 
+
+  // -- UnPin Animations
+  @keyframes reversePinedAnimation {
+    0% {
+      transform: rotate(-45deg) translateY(-8px) translateX(8px);
+      top: 0;
+    }
+    30% {
+      top: -10px;
+    }
+    60% {
+      top: -8px;
+    }
+    100% {
+      transform: rotate(0) translateY(8px) translateX(0);
+      top: -8px;
+    }
+  }
+  @keyframes reversePinedAnimationIcon {
+    0% {
+      top: 7px;
+      left: -7px;
+    }
+    30% {
+      top: 0;
+      left: 0;
+    }
+    60% {
+      top: 0;
+      left: 0;
+    }
+    100% {
+      top: 0;
+      left: 0;
+    }
+  }
+  @keyframes reversePinedAnimationShadow {
+    0% {
+      transform: rotate(31deg) scale(1);
+      opacity: 0.4;
+    }
+    30% {
+      transform: rotate(31deg) scale(0.5);
+      opacity: 0.2;
+    }
+    60% {
+      transform: rotate(31deg) scale(0);
+      opacity: 0;
+    }
+    100% {
+      transform: rotate(31deg) scale(0);
+      opacity: 0;
+    }
+  }
+
+  // -- Pinned Animations
   @keyframes pinedAnimation {
     0% {
       transform: rotate(0);
     }
     30% {
-      transform: rotate(-45deg);
+      transform: rotate(-45deg) translateY(-12px) translateX(12px);
       top: -8px;
     }
     60% {
       top: -10px;
     }
     100% {
-      transform: rotate(-45deg);
+      transform: rotate(-45deg) translateY(-8px) translateX(8px);
       top: 0;
     }
   }
-
   @keyframes pinedAnimationIcon {
     0% {
       top: 0;
@@ -188,7 +255,6 @@ const isPinnedRef = computed(() => {
       left: -7px;
     }
   }
-
   @keyframes pinedAnimationShadow {
     0% {
       transform: rotate(31deg)scale(0);
@@ -222,7 +288,7 @@ const isPinnedRef = computed(() => {
   }
 
   &-logoContainer {
-    padding: var(--app-gutters) ;
+    padding: 12px 12px;
 
     .logo {
       position: relative;
@@ -288,7 +354,7 @@ const isPinnedRef = computed(() => {
       margin-bottom: 4px;
       column-gap: 4px;
       font-size: 13px;
-      font-weight: 500;
+      font-weight: 700;
       text-align: end;
       color: var(--app-grey-dark);
 
@@ -310,15 +376,30 @@ const isPinnedRef = computed(() => {
       display: flex;
       align-items: center;
       column-gap: 4px;
-      color: var(--app-beige-dark);
+      color: var(--app-grey-dark);
       font-size: 13px;
       text-align: left;
       word-break: break-word;
 
       ion-icon {
         font-size: 16px;
-        color: var(--app-grey-dark);
+        color: var(--app-beige-dark);
       }
+    }
+  }
+
+  &-config {
+    padding-inline-start: 8px;
+    padding-inline-end: 12px;
+
+    ion-button {
+      height: 100% !important;
+    }
+
+    ion-icon {
+      width: 34px;
+      font-size: 34px;
+      color: var(--app-voxxrin);
     }
   }
 
@@ -328,8 +409,8 @@ const isPinnedRef = computed(() => {
     align-items: center;
     justify-content: center;
     height: 100%;
-    padding-inline-start: 16px;
-    padding-inline-end: 16px;
+    padding-inline-start: 12px;
+    padding-inline-end: 12px;
 
     &:before {
       position: absolute;
@@ -338,8 +419,9 @@ const isPinnedRef = computed(() => {
       transform: translate(0, -50%);
       width: 1px;
       height: calc(100% - 34px);
-      background-color: var(--app-beige-line);
+      background: linear-gradient(180deg, rgba(var(--app-beige-line-rgb),0) 0%, rgba(var(--app-beige-line-rgb),1) 50%, rgba(var(--app-beige-line-rgb),0) 100%);
       content: '';
+
     }
 
     ion-button {
@@ -354,6 +436,29 @@ const isPinnedRef = computed(() => {
 
     ._is-pined {
       color: var(--app-voxxrin) !important;
+    }
+  }
+
+  &-dot {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding-right: 20px;
+
+    &-click  {
+      position: relative;
+      height: 100%;
+      width: 12px;
+
+      ion-icon {
+        position: absolute;
+        top: 0;
+        left: -14px;
+        height: 100%;
+        width: 38px;
+        font-size: 40px;
+        color: var(--app-beige-dark);
+      }
     }
   }
 }

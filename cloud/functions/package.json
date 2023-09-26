@@ -7,7 +7,7 @@
     "serve": "npm run build && MIGRATION_TOKEN=42 firebase emulators:start  --import data --export-on-exit --inspect-functions",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
-    "deploy": "firebase deploy --only functions",
+    "deploy": "firebase use ${FIREBASE_PROJECT_NAME:-voxxrin-v3} && firebase deploy --only functions",
     "logs": "firebase functions:log",
     "test": "vitest"
   },

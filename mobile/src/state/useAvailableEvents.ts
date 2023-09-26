@@ -1,33 +1,51 @@
 import {
+    EventFamily,
     firestoreListableEventToVoxxrinListableEvent, ListableVoxxrinEvent,
 } from "@/models/VoxxrinEvent";
 import {ListableEvent} from "../../../shared/event-list.firestore";
-import {sortBy} from "@/models/utils";
-import {computed, ref, unref} from "vue";
+import {sortBy, toCollectionReferenceArray} from "@/models/utils";
+import {computed, unref} from "vue";
 import {collection, CollectionReference} from "firebase/firestore";
 import {db} from "@/state/firebase";
-import {useCollection} from "vuefire";
+import {Logger, PERF_LOGGER} from "@/services/Logger";
+import {useOverridenListableEventProperties} from "@/state/useDevUtilities";
+import {
+    deferredVuefireUseCollection
+} from "@/views/vue-utils";
+import {match} from "ts-pattern";
 
-type OverridableListableEventProperties = {eventId: string} & Partial<Pick<ListableVoxxrinEvent, "theming"|"location"|"backgroundUrl"|"logoUrl">>;
+const LOGGER = Logger.named("useAvailableEvents");
 
-const overridenListableEventPropertiesRef = ref<OverridableListableEventProperties|undefined>(undefined)
+export function useAvailableEvents(eventFamilies: EventFamily[]) {
 
-export function useAvailableEvents() {
+    const overridenListableEventPropertiesRef = useOverridenListableEventProperties();
 
-    console.debug(`useAvailableEvents()`)
-    const firestoreListableEventsSource = computed(() =>
-        collection(db, 'events') as CollectionReference<ListableEvent>
+    PERF_LOGGER.debug(() => `useAvailableEvents()`)
+
+    const firestoreListableEventsRef = deferredVuefireUseCollection([],
+        () => toCollectionReferenceArray(collection(db, 'events') as CollectionReference<ListableEvent>),
+        firestoreEvent => firestoreEvent,
+        () => {},
+        (change, docId, collectionRef) => {
+            match(change)
+                .with({type:'created'}, change => collectionRef.value.set(docId, change.createdDoc))
+                .with({type:'updated'}, change => collectionRef.value.set(docId, change.updatedDoc))
+                .with({type:'deleted'}, change => collectionRef.value.delete(docId))
+                .exhaustive()
+        }
     );
-
-    const firestoreListableEventsRef = useCollection(firestoreListableEventsSource);
 
     return {
         listableEvents: computed(() => {
             const firestoreListableEvents = unref(firestoreListableEventsRef),
                 overridenListableEventProperties = unref(overridenListableEventPropertiesRef);
 
+            const filteredFirestoreListableEvents = Array.from(firestoreListableEvents.values())
+                .filter(le => eventFamilies.length===0
+                    || (le.eventFamily!==undefined && eventFamilies.map(ef => ef.value).includes(le.eventFamily)));
+
             const availableSortedEvents = sortBy(
-                firestoreListableEvents.map(firestoreListableEventToVoxxrinListableEvent),
+                filteredFirestoreListableEvents.map(firestoreListableEventToVoxxrinListableEvent),
                 event => -event.start.epochMilliseconds
             );
 
@@ -41,8 +59,4 @@ export function useAvailableEvents() {
             });
         })
     };
-}
-
-export function overrideListableEventProperties(overridenListableEventProperties: OverridableListableEventProperties) {
-    overridenListableEventPropertiesRef.value = overridenListableEventProperties;
 }

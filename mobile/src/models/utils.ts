@@ -1,4 +1,5 @@
 import {HexColor} from "../../../shared/type-utils";
+import {CollectionReference} from "firebase/firestore";
 
 export class ValueObject<T> {
     constructor(readonly value: T) {}
@@ -15,6 +16,15 @@ export class ValueObject<T> {
         return array.map(vo => vo.value).includes(this.value);
     }
 }
+
+export function toValueObjectValues<T>(valueObject: Array<ValueObject<T>>|undefined): T[] | undefined {
+    if(valueObject === undefined){
+        return undefined;
+    }
+
+    return valueObject.map(vo => vo.value);
+}
+
 
 export function sortBy<T, H extends string|number>(arr: T[], hash: (val: T) => H) {
     return arr.sort((a, b) => {
@@ -78,4 +88,36 @@ export function createTypedCustomEventClass<D, EVENT_TYPE extends string = strin
             super(eventType, data);
         }
     }
+}
+
+export function numberArrayStats(values: Array<number | undefined | null>) {
+    const count = values.length;
+    const nonNullishValues = values.filter(v => !!v && v !== 0) as number[];
+    const nonNullishCount = nonNullishValues.length;
+    const nonNullishSum = nonNullishValues.reduce((sum, value) => sum+value, 0);
+    return {
+        count,
+        nonNullishValues,
+        nonNullishCount,
+        nonNullishSum: nonNullishCount===0?undefined:nonNullishSum,
+        nonNullishAverage: nonNullishCount===0?undefined:Math.round(nonNullishSum*100/nonNullishCount)/100
+    }
+}
+
+export function partitionArray<T>(array: T[], partitionSize: number) {
+    if(partitionSize <= 0) {
+        throw new Error(`Partition size should be >0`)
+    }
+    let partitions = [] as T[][];
+    let start = 0;
+    while(start < array.length) {
+        partitions.push(array.slice(start, Math.min(start + partitionSize, array.length)));
+        start += partitionSize;
+    }
+
+    return partitions;
+}
+
+export function toCollectionReferenceArray<T>(collection: CollectionReference<T>|undefined): Array<CollectionReference<T>> {
+    return collection?[collection]:[];
 }

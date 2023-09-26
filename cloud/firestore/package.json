@@ -1,0 +1,26 @@
+{
+  "name": "voxxrin-firestore",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "scripts": {
+    "test": "firebase emulators:exec \"jest\"",
+    "test:start-dev": "concurrently \"cd ../functions && npm run serve\" \"sleep 5 && npm run test:dev\"",
+    "test:dev": "FIRESTORE_EMULATOR_HOST=127.0.0.1:8080 FIREBASE_AUTH_EMULATOR_HOST=127.0.0.1:9099 jest --watch --detectOpenHandles",
+    "deploy": "firebase use ${FIREBASE_PROJECT_NAME:-voxxrin-v3} && firebase deploy --only firestore"
+  },
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "3.0.0",
+    "@types/jest": "29.5.4",
+    "concurrently": "8.2.1",
+    "firebase-tools": "12.4.7",
+    "jest": "29.6.4",
+    "ts-jest": "29.1.1",
+    "typescript": "5.2.2"
+  },
+  "dependencies": {
+    "firebase-admin": "11.10.1",
+    "ts-pattern": "5.0.5"
+  }
+}

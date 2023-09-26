@@ -3,7 +3,7 @@ import {UserLocale} from "@/models/VoxxrinUser";
 import {Temporal} from "temporal-polyfill";
 import {match, P} from "ts-pattern";
 import {useCurrentClock} from "@/state/useCurrentClock";
-import {useCurrentUserLocale} from "@/state/useCurrentUserLocale";
+import {useCurrentUserLocale} from "@/state/useCurrentUser";
 
 
 type ReadableLocalDatePartsOpts = {
@@ -49,17 +49,52 @@ export type MonthDayFormatOpts = {
     month: Intl.DateTimeFormatOptions['month'],
     separator: string
 }
+export type WeekDayMonthYearFormatOps = MonthDayFormatOpts & {
+    weekday: Intl.DateTimeFormatOptions['weekday']
+    year: Intl.DateTimeFormatOptions['year']
+}
+
 const DEFAULT_MONTH_DAY_FORMAT_OPTS: Partial<MonthDayFormatOpts> = {
     day: "numeric",
     month: "short",
 }
-export function monthDayFormattedRange(start: ISOLocalDate | Temporal.ZonedDateTime, end: ISOLocalDate | Temporal.ZonedDateTime, format: Partial<MonthDayFormatOpts> = DEFAULT_MONTH_DAY_FORMAT_OPTS) {
+const DEFAULT_WEEKDAY_MONTH_YEAR_FORMAT_OPTS: Partial<WeekDayMonthYearFormatOps> = {
+    ...DEFAULT_MONTH_DAY_FORMAT_OPTS,
+    weekday: "short",
+    year: "numeric"
+}
+
+function userDateTimeFormatterFrom<T extends Intl.DateTimeFormatOptions>(format: Partial<T>, defaultFormat: Partial<T>) {
     const userLocale = useCurrentUserLocale();
 
-    const formatter = new Intl.DateTimeFormat(userLocale.value, {
-        ...DEFAULT_MONTH_DAY_FORMAT_OPTS,
+    return new Intl.DateTimeFormat(userLocale.value, {
+        ...defaultFormat,
         ...format
     });
+}
+
+function mergeParts(parts: Array<{type: string, value: string}>, separator: string|undefined) {
+    // Replacing separator
+    const transformedRangeParts: typeof parts = parts.map(p => {
+        if(separator && p.type==='literal' && p.value===' – ') {
+            return {...p, value: ` ${separator} ` };
+        } else {
+            return p;
+        }
+    });
+
+    return transformedRangeParts.map(p => p.value).join("");
+}
+
+export function weekDayMonthYearFormattedDate(date: Temporal.ZonedDateTime, format: Partial<WeekDayMonthYearFormatOps> = DEFAULT_WEEKDAY_MONTH_YEAR_FORMAT_OPTS) {
+    const formatter = userDateTimeFormatterFrom(format, DEFAULT_WEEKDAY_MONTH_YEAR_FORMAT_OPTS);
+    const parts = formatter.formatToParts(new Date(date.epochMilliseconds)) as Array<{type: string, value: any}>
+
+    return mergeParts(parts, format.separator);
+}
+
+export function monthDayFormattedRange(start: ISOLocalDate | Temporal.ZonedDateTime, end: ISOLocalDate | Temporal.ZonedDateTime, format: Partial<MonthDayFormatOpts> = DEFAULT_MONTH_DAY_FORMAT_OPTS) {
+    const formatter = userDateTimeFormatterFrom(format, DEFAULT_MONTH_DAY_FORMAT_OPTS);
 
     const startZDT = match(start)
         .with(P.instanceOf(Temporal.ZonedDateTime), zdt => zdt)
@@ -73,16 +108,7 @@ export function monthDayFormattedRange(start: ISOLocalDate | Temporal.ZonedDateT
         new Date(endZDT.epochMilliseconds)
     ) as Array<{type: string, value: any}>;
 
-    // Replacing separator
-    const transformedRangeParts: typeof rangeParts = rangeParts.map(p => {
-        if(format.separator && p.type==='literal' && p.value===' – ') {
-            return {...p, value: ` ${format.separator} ` };
-        } else {
-            return p;
-        }
-    });
-
-    return transformedRangeParts.map(p => p.value).join("");
+    return mergeParts(rangeParts, format.separator);
 }
 
 export function formatHourMinutes(datetime: Temporal.ZonedDateTime) {

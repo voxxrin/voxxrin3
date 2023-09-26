@@ -1,6 +1,6 @@
 import {EventId} from "@/models/VoxxrinEvent";
-import {computed, unref} from "vue";
-import {useCurrentUser, useDocument} from "vuefire";
+import {Ref, toValue, unref} from "vue";
+import {useCurrentUser} from "@/state/useCurrentUser";
 import {
     collection,
     doc,
@@ -8,7 +8,10 @@ import {
 } from "firebase/firestore";
 import {db} from "@/state/firebase";
 import {createSharedComposable} from "@vueuse/core";
-import {Unreffable} from "@/views/vue-utils";
+import {
+    Unreffable,
+    deferredVuefireUseDocument
+} from "@/views/vue-utils";
 import {DayId} from "@/models/VoxxrinDay";
 import {
     ProvidedUserFeedback, SkippedUserFeedback,
@@ -19,40 +22,39 @@ import {ScheduleTimeSlotId} from "@/models/VoxxrinSchedule";
 import {useCurrentClock} from "@/state/useCurrentClock";
 import {ISODatetime} from "../../../shared/type-utils";
 import {match} from "ts-pattern";
+import {User} from "firebase/auth";
 
+function getUserFeedbacksSourceDoc(user: User|undefined|null, eventId: EventId|undefined, dayId: DayId|undefined) {
+    if(!user || !eventId || !eventId.value || !dayId || !dayId.value) {
+        return undefined;
+    }
+    return doc(collection(doc(collection(doc(collection(doc(collection(db,
+                    'users'), user.uid),
+                'events'), eventId.value),
+            'days'), dayId.value),
+        'feedbacks'), 'self'
+    ) as DocumentReference<UserDailyFeedbacks>;
+}
 export function useUserFeedbacks(
-    eventIdRef: Unreffable<EventId|undefined>,
-    dayIdRef: Unreffable<DayId|undefined>
+    eventIdRef: Ref<EventId|undefined>,
+    dayIdRef: Ref<DayId|undefined>
 ) {
 
     const userRef = useCurrentUser()
 
-    const firestoreUserFeedbacksSource = computed(() => {
-        const user = unref(userRef),
-            eventId = unref(eventIdRef),
-            dayId = unref(dayIdRef);
-
-        if(!user || !eventId || !dayId) {
-            return undefined;
-        }
-
-        return doc(collection(doc(collection(doc(collection(doc(collection(db,
-            'users'), user.uid),
-            'events'), eventId.value),
-            'days'), dayId.value),
-            'feedbacks'), 'self'
-        ) as DocumentReference<UserDailyFeedbacks>
-    });
-
-    const firestoreDailyUserFeedbacksRef = useDocument(firestoreUserFeedbacksSource);
+    const firestoreDailyUserFeedbacksRef = deferredVuefireUseDocument([userRef, eventIdRef, dayIdRef],
+        ([user, eventId, dayId]) => getUserFeedbacksSourceDoc(user, eventId, dayId));
 
     const updateTimeslotFeedback = async (timeslotIdRef: Unreffable<ScheduleTimeSlotId>, feedback: Omit<UserFeedback, 'createdOn'|'lastUpdatedOn'>) => {
         const clock = useCurrentClock()
 
-        const firestoreUserFeedbacksDoc = unref(firestoreUserFeedbacksSource),
+        const user = toValue(userRef),
+            eventId = toValue(eventIdRef),
             timeslotId = unref(timeslotIdRef),
-            dayId = unref(dayIdRef),
+            dayId = toValue(dayIdRef),
             firestoreDailyUserFeedbacks = unref(firestoreDailyUserFeedbacksRef);
+
+        const firestoreUserFeedbacksDoc = getUserFeedbacksSourceDoc(user, eventId, dayId);
 
         if(!firestoreUserFeedbacksDoc || !dayId) {
             return;

@@ -22,21 +22,23 @@
               <template #section-content="{ timeslot }">
                 <schedule-break v-if="timeslot.type==='break'" :conf-descriptor="confDescriptor" :talk-break="timeslot.break"></schedule-break>
                 <div v-if="timeslot.type === 'talks'">
-                  <div class="infoMessage ion-text-center" v-if="timeslot.talks.filter(t => t.id.isIncludedIntoArray(allUserFavoritedTalkIds)).length === 0">
+                  <div class="infoMessage ion-text-center" v-if="timeslot.talks.filter(t => t.id.isIncludedIntoArray(favoritedTalkIdsRef)).length === 0">
                     <ion-icon class="infoMessage-iconIllu" src="/assets/images/svg/illu-no-favorites.svg"></ion-icon>
                     <span class="infoMessage-title">{{ LL.No_favorites_defined_yet() }}</span>
                   </div>
-                  <talk-format-groups-breakdown :conf-descriptor="confDescriptor" v-if="timeslot.type==='talks'" :talks="timeslot.talks.filter(t => t.id.isIncludedIntoArray(allUserFavoritedTalkIds))">
+                  <talk-format-groups-breakdown :conf-descriptor="confDescriptor" v-if="timeslot.type==='talks'" :talks="timeslot.talks.filter(t => t.id.isIncludedIntoArray(favoritedTalkIdsRef))">
                     <template #talk="{ talk }">
-                      <schedule-talk :talk="talk" @talkClicked="openTalkDetails($event)" :is-highlighted="(talk, talkNotes) => talkNotes.isFavorite" :conf-descriptor="confDescriptor">
+                      <schedule-talk :talk="talk" :talk-stats="talkStatsRefByTalkId.get(talk.id.value)" :talk-notes="userEventTalkNotesRef.get(talk.id.value)"
+                                     :is-highlighted="(talk, talkNotes) => talkNotes.isFavorite" :conf-descriptor="confDescriptor"
+                                     @talkClicked="openTalkDetails($event)" >
                         <template #upper-right="{ talk }">
                           <div class="room" v-if="confDescriptor?.features.roomsDisplayed">
                             {{talk.room.title}}
                           </div>
                         </template>
-                        <template #footer-actions="{ talk, userTalkHook }">
-                          <talk-watch-later-button v-if="confDescriptor" :conf-descriptor="confDescriptor" :user-talk-notes="userTalkHook" />
-                          <talk-favorite-button v-if="confDescriptor" :conf-descriptor="confDescriptor" :user-talk-notes="userTalkHook" />
+                        <template #footer-actions="{ talk, talkNotes, talkStats }">
+                          <talk-watch-later-button v-if="confDescriptor" :conf-descriptor="confDescriptor" :user-talk-notes="talkNotes" />
+                          <talk-favorite-button v-if="confDescriptor" :conf-descriptor="confDescriptor" :user-talk-notes="talkNotes" :talk-stats="talkStats" />
                         </template>
                       </schedule-talk>
                     </template>
@@ -58,10 +60,9 @@
   import {EventId} from "@/models/VoxxrinEvent";
   import {getRouteParamsValue, isRefDefined} from "@/views/vue-utils";
   import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
-  import {ref} from "vue";
   import {typesafeI18n} from "@/i18n/i18n-vue";
+  import {managedRef as ref} from "@/views/vue-utils";
   import DaySelector from "@/components/schedule/DaySelector.vue";
-  import {DayId} from "@/models/VoxxrinDay";
   import ScheduleBreak from "@/components/schedule/ScheduleBreak.vue";
   import TimeslotsIterator from "@/components/timeslots/TimeslotsIterator.vue";
   import TalkWatchLaterButton from "@/components/talk-card/TalkWatchLaterButton.vue";
@@ -70,14 +71,17 @@
   import TalkFavoriteButton from "@/components/talk-card/TalkFavoriteButton.vue";
   import TalkFormatGroupsBreakdown from "@/components/schedule/TalkFormatGroupsBreakdown.vue";
   import {
+      extractTalksFromSchedule,
       VoxxrinScheduleTimeSlot
   } from "@/models/VoxxrinSchedule";
   import {useSchedule} from "@/state/useSchedule";
   import {useTabbedPageNav} from "@/state/useTabbedPageNav";
-  import {VoxxrinTalk} from "@/models/VoxxrinTalk";
-  import {useUserEventAllFavoritedTalkIds} from "@/state/useUserTalkNotes";
+  import {TalkId, VoxxrinTalk} from "@/models/VoxxrinTalk";
+  import {useUserEventTalkNotes} from "@/state/useUserTalkNotes";
   import TimeSlotSection from "@/components/timeslots/TimeSlotSection.vue";
   import {useSharedEventSelectedDay} from "@/state/useEventSelectedDay";
+  import {computed, toValue} from "vue";
+  import {useEventTalkStats} from "@/state/useEventTalkStats";
 
   const { LL } = typesafeI18n()
 
@@ -88,7 +92,21 @@
   const {selectedDayId} = useSharedEventSelectedDay(eventId);
 
   const { schedule: currentSchedule } = useSchedule(confDescriptor, selectedDayId)
-  const { allUserFavoritedTalkIds } = useUserEventAllFavoritedTalkIds(eventId)
+
+  const talkIdsRef = computed(() => {
+      const schedule = toValue(currentSchedule);
+      return schedule ? extractTalksFromSchedule(schedule).map(talk => talk.id) : [];
+  })
+
+  const {firestoreEventTalkStatsRef: talkStatsRefByTalkId} = useEventTalkStats(eventId, talkIdsRef)
+  const {userEventTalkNotesRef } = useUserEventTalkNotes(eventId, talkIdsRef)
+
+  const favoritedTalkIdsRef = computed(() => {
+      const userEventTalkNotes = toValue(userEventTalkNotesRef)
+      return Array.from(userEventTalkNotes.values())
+          .filter(talkNotes => talkNotes.isFavorite)
+          .map(talkNotes => new TalkId(talkNotes.talkId))
+  })
 
   const expandedTimeslotIds = ref<string[]>([])
 
@@ -99,7 +117,7 @@
   }
   async function openTalkDetails(talk: VoxxrinTalk) {
       if(talk) {
-          triggerTabbedPageNavigate(`/events/${eventId.value}/talks/${talk.id.value}/details`, "forward", "push");
+          triggerTabbedPageNavigate(`/events/${eventId.value.value}/talks/${talk.id.value}/details`, "forward", "push");
       }
   }
 </script>

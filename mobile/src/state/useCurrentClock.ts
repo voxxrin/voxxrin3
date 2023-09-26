@@ -1,32 +1,34 @@
-import {Ref, ref} from "vue";
+import {Ref} from "vue";
+import {managedRef as ref} from "@/views/vue-utils";
 import {Temporal} from "temporal-polyfill";
 import {ISODatetime} from "../../../shared/type-utils";
 import {match, P} from "ts-pattern";
+import {Logger, PERF_LOGGER} from "@/services/Logger";
 
-
+const LOGGER = Logger.named("useCurrentClock");
 
 export type Clock = {
     zonedDateTimeISO: typeof Temporal.Now.zonedDateTimeISO
 }
 
-const CLOCK: Ref<Clock> = ref(Temporal.Now)
+const CLOCK_WRAPPER: { value: Clock } = { value: Temporal.Now }
 
 // Module intended to provide time-based facilities, in order to facilitate mocking time
 // everywhere in the app
-export function useCurrentClock(): Clock { return CLOCK.value; }
+export function useCurrentClock(): Clock { return CLOCK_WRAPPER.value; }
 
 export async function overrideCurrentClock(clock: Clock, callback: (() => Promise<void>)|undefined) {
-    const initialClock = CLOCK.value;
+    const initialClock = CLOCK_WRAPPER.value;
 
-    console.debug(`Overriding clock...`)
-    CLOCK.value = clock;
+    LOGGER.debug(() => `Overriding clock...`)
+    CLOCK_WRAPPER.value = clock;
 
     if(callback) {
         try {
             await callback();
         } finally {
-            console.debug(`... until initial clock is restored !`)
-            CLOCK.value = initialClock;
+            LOGGER.debug(() => `... until initial clock is restored !`)
+            CLOCK_WRAPPER.value = initialClock;
         }
     }
 }

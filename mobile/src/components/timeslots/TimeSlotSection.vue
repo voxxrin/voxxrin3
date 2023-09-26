@@ -13,7 +13,8 @@
 </template>
 
 <script setup lang="ts">
-import {PropType, ref} from "vue";
+import {PropType} from "vue";
+import {managedRef as ref, toManagedRef as toRef} from "@/views/vue-utils";
 import {
   getTimeslotLabel,
   getTimeslotTimingProgress,
@@ -47,14 +48,14 @@ defineEmits<{
 
 const { LL } = typesafeI18n()
 
-const { conferenceDescriptor } = useSharedConferenceDescriptor(props.confDescriptor?.id);
+const { conferenceDescriptor } = useSharedConferenceDescriptor(toRef(() => props.confDescriptor?.id));
 
 const progress = ref<TimeslotTimingProgress>()
 useInterval(() => {
   if(props.timeslot) {
     progress.value = getTimeslotTimingProgress(props.timeslot, useCurrentClock().zonedDateTimeISO())
   }
-}, {seconds:5}, { immediate: true });
+}, {freq:"high-frequency"}, { immediate: true });
 
 const timeslotLabel = getTimeslotLabel(props.timeslot!);
 </script>

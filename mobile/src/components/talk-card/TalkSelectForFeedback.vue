@@ -20,7 +20,7 @@ const props = defineProps({
   font-size: 22px;
 
   &._is-active {
-    --background: var(--voxxrin-event-theme-colors-tertiary-hex);
+    --background: var(--ion-color-primary);
     --color: var(--voxxrin-event-theme-colors-secondary-tertiary-hex);
     border-left: 1px solid var(--voxxrin-event-theme-colors-tertiary-hex);
     color: white;

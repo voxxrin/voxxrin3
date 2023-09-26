@@ -1,6 +1,6 @@
 <template>
   <div class="talkAction">
-    <ion-button :class="{ 'btnTalk': true, 'btn-favorite': true, '_is-active': !!talkNotes?.isFavorite }" @click.stop="() => userTalkNotes.toggleFavorite()" v-if="confDescriptor?.features.favoritesEnabled">
+    <ion-button :class="{ 'btnTalk': true, 'btn-favorite': true, '_is-active': !!talkNotes?.isFavorite }" @click.stop="() => toggleFavorite()" v-if="confDescriptor?.features.favoritesEnabled">
     <span class="btn-favorite-group">
       <ion-icon class="btn-favorite-group-icon" v-if="!talkNotes?.isFavorite" aria-hidden="true" src="/assets/icons/line/bookmark-line-favorite.svg"></ion-icon>
       <ion-icon class="btn-favorite-group-icon" v-if="!!talkNotes?.isFavorite" aria-hidden="true" src="/assets/icons/solid/bookmark-favorite.svg"></ion-icon>
@@ -11,23 +11,41 @@
 </template>
 
 <script setup lang="ts">
-import {computed, PropType} from "vue";
-import type {UserTalkNotesHook} from "@/state/useUserTalkNotes";
+import {computed, PropType, Ref, toValue} from "vue";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
+import {useUserTalkNoteActions} from "@/state/useUserTalkNotes";
+import {managedRef as ref, toManagedRef as toRef} from "@/views/vue-utils";
+import {TalkId} from "@/models/VoxxrinTalk";
+import {TalkNote, TalkStats} from "../../../../shared/feedbacks.firestore";
 
 const props = defineProps({
     confDescriptor: {
         required: true,
         type: Object as PropType<VoxxrinConferenceDescriptor>,
     },
+    talkStats: {
+        required: false,
+        type: Object as PropType<TalkStats|undefined>
+    },
     userTalkNotes: {
         required: true,
-        type: Object as PropType<UserTalkNotesHook>
+        type: Object as PropType<TalkNote>
     }
 });
 
-const talkNotes = computed(() => props.userTalkNotes?.talkNotes.value)
-const eventTalkStats = computed(() => props.userTalkNotes?.eventTalkStats.value)
+const emits = defineEmits<{
+    (e: 'talkNoteUpdated', updatedTalkNote: TalkNote): void,
+}>()
+
+const talkNotes: Ref<TalkNote|undefined> = toRef(() => props.userTalkNotes);
+
+const eventTalkStats = computed(() => props.talkStats)
+const {toggleFavorite} = useUserTalkNoteActions(
+    toRef(() => props.confDescriptor?.id),
+    toRef(() => props.userTalkNotes?.talkId ? new TalkId(props.userTalkNotes.talkId) : undefined),
+    talkNotes,
+    (updatedTalkNote) => emits('talkNoteUpdated', updatedTalkNote)
+)
 </script>
 
 <style scoped lang="scss">

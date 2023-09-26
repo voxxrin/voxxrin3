@@ -34,6 +34,7 @@ const DEVOXX_SCALA_DESCRIPTOR_PARSER = EVENT_DESCRIPTOR_PARSER.omit({
     description: true
 }).extend({
     cfpHostname: z.string(),
+    eventFamily: z.string(),
     talkTracks: z.array(THEMABLE_TALK_TRACK_PARSER.omit({ title: true })),
     talkFormats: z.array(THEMABLE_TALK_FORMAT_PARSER.omit({ id: true, duration: true }))
 })
@@ -268,6 +269,7 @@ export const DEVOXX_SCALA_CRAWLER: CrawlerKind<typeof DEVOXX_SCALA_DESCRIPTOR_PA
 
         const eventInfo = {
             id: eventId,
+            eventFamily: descriptor.eventFamily || 'devoxx',
             title: descriptor.title,
             description: conferenceResourceUrl.resource.label,
             peopleDescription: descriptor.peopleDescription,

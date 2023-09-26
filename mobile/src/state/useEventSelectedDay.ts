@@ -3,6 +3,7 @@ import {EventId} from "@/models/VoxxrinEvent";
 import {computed, reactive, unref} from "vue";
 import {DayId} from "@/models/VoxxrinDay";
 import {createSharedComposable} from "@vueuse/core";
+import {PERF_LOGGER} from "@/services/Logger";
 
 
 const perEventIdSelectedDayIdRef = reactive(new Map<string, string>());
@@ -10,7 +11,7 @@ const perEventIdSelectedDayIdRef = reactive(new Map<string, string>());
 function useEventSelectedDay(
     eventIdRef: Unreffable<EventId|undefined>
 ) {
-    console.debug(`useEventSelectedDay(${unref(eventIdRef)?.value})`)
+    PERF_LOGGER.debug(() => `useEventSelectedDay(${unref(eventIdRef)?.value})`)
 
     return {
         setSelectedDayId: (dayIdRef: Unreffable<DayId>) => {

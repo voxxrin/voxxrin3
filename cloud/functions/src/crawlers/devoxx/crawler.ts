@@ -27,7 +27,7 @@ import {match} from "ts-pattern";
 
 const daysOfWeek = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
 
-const DEVOXX_DESCRIPTOR_PARSER = EVENT_DESCRIPTOR_PARSER.omit({
+export const DEVOXX_DESCRIPTOR_PARSER = EVENT_DESCRIPTOR_PARSER.omit({
     // All these fields can be extracted from the devoxx API
     title: true, description: true, days: true,
     timezone: true, location: true,
@@ -35,14 +35,17 @@ const DEVOXX_DESCRIPTOR_PARSER = EVENT_DESCRIPTOR_PARSER.omit({
     // because we need a theme color for them that are currently *not* provided by the API
     talkFormats: true, rooms: true,
 }).extend({
-    cfpId: z.string()
+    cfpId: z.string().nullish(),
+    cfpBaseUrl: z.string().nullish(),
+    eventFamily: z.string()
 })
 
 export const DEVOXX_CRAWLER: CrawlerKind<typeof DEVOXX_DESCRIPTOR_PARSER> = {
     kind: 'devoxx',
     descriptorParser: DEVOXX_DESCRIPTOR_PARSER,
     crawlerImpl: async (eventId: string, descriptor: z.infer<typeof DEVOXX_DESCRIPTOR_PARSER>, criteria: { dayIds?: string[]|undefined }) => {
-        const res = await axios.get(`https://${descriptor.cfpId}.cfp.dev/api/public/event`)
+        const cfpBaseUrl = descriptor.cfpBaseUrl || `https://${descriptor.cfpId}.cfp.dev`;
+        const res = await axios.get(`${cfpBaseUrl+(cfpBaseUrl.endsWith("/")?"":"/")}api/public/event`)
         const e: CfpEvent = res.data;
 
         const start = e.fromDate.substring(0, 10) as ISOLocalDate
@@ -63,6 +66,7 @@ export const DEVOXX_CRAWLER: CrawlerKind<typeof DEVOXX_DESCRIPTOR_PARSER> = {
 
         const eventInfo = {
             id: eventId,
+            eventFamily: descriptor.eventFamily || 'devoxx',
             title: e.name,
             description: e.description,
             peopleDescription: descriptor.peopleDescription,
@@ -71,7 +75,7 @@ export const DEVOXX_CRAWLER: CrawlerKind<typeof DEVOXX_DESCRIPTOR_PARSER> = {
             end: end,
             days: days,
             logoUrl: descriptor.logoUrl,
-            backgroundUrl: e.eventImageURL || descriptor.backgroundUrl,
+            backgroundUrl: descriptor.backgroundUrl,
             websiteUrl: e.website,
             location: { city: e.locationCity, country: e.locationCountry },
             theming: descriptor.theming,
@@ -83,7 +87,7 @@ export const DEVOXX_CRAWLER: CrawlerKind<typeof DEVOXX_DESCRIPTOR_PARSER> = {
             eventRooms: ConferenceDescriptor['rooms'] = [],
             eventTalkFormats: ConferenceDescriptor['talkFormats'] = [];
         await Promise.all(daysMatchingCriteria.map(async day => {
-            const {daySchedule, talkStats, talks, rooms, talkFormats} = await crawlDevoxxDay(eventId, day.id)
+            const {daySchedule, talkStats, talks, rooms, talkFormats} = await crawlDevoxxDay(cfpBaseUrl, day.id)
             daySchedules.push(daySchedule)
             for (const talk of talks) {
                 eventTalks.push(talk)
@@ -120,8 +124,8 @@ export const DEVOXX_CRAWLER: CrawlerKind<typeof DEVOXX_DESCRIPTOR_PARSER> = {
 };
 
 
-const crawlDevoxxDay = async (eventId: string, day: string) => {
-    const res = await axios.get(`https://${eventId}.cfp.dev/api/public/schedules/${day}`)
+const crawlDevoxxDay = async (cfpBaseUrl: string, day: string) => {
+    const res = await axios.get(`${cfpBaseUrl+(cfpBaseUrl.endsWith("/")?"":"/")}api/public/schedules/${day}`)
 
     const schedules:DevoxxScheduleItem[] = res.data;
 
@@ -185,13 +189,14 @@ const crawlDevoxxDay = async (eventId: string, day: string) => {
             language: "EN"
         };
 
+        const upperFirstAudience = item.proposal.audienceLevel.charAt(0).toUpperCase() + item.proposal.audienceLevel.slice(1).toLowerCase();
         const detailedTalk: DetailedTalk = {
             ...talk,
             start: start as ISODatetime,
             end: end as ISODatetime,
             summary: item.proposal.summary || "",
             description: item.proposal.description || "",
-            tags: item.proposal.tags.map(t => t.name)
+            tags: [`Audience:${upperFirstAudience}`].concat(item.proposal.tags.map(t => t.name))
         };
 
         return { talk, detailedTalk };
@@ -205,13 +210,13 @@ const crawlDevoxxDay = async (eventId: string, day: string) => {
             return `${schedule.id} - ${schedule.room.name} - ${title}`
         }).join("\n  -") + "\n------------------");
 
-        if (items.every((item: DevoxxScheduleItem) => { return item.sessionType.isPause })) {
+        if (items.every((item: DevoxxScheduleItem) => { return item.sessionType.pause })) {
             const icon = match<string, Break['icon']>(items[0].sessionType.name.toLowerCase())
                 .when(sessionTypeName => sessionTypeName.includes('meet') || sessionTypeName.includes('greet'), () => 'beer')
-                .when(sessionTypeName => sessionTypeName.includes('movie'), () => 'film')
+                .when(sessionTypeName => sessionTypeName.includes('movie'), () => 'movie')
                 .when(sessionTypeName => sessionTypeName.includes('lunch'), () => 'restaurant')
                 .when(sessionTypeName => sessionTypeName.includes('registration'), () => 'ticket')
-                .when(sessionTypeName => sessionTypeName.includes('travel'), () => 'train')
+                .when(sessionTypeName => sessionTypeName.includes('travel'), () => 'wallet')
                 .when(sessionTypeName => sessionTypeName.includes('coffee'), () => 'cafe')
                 .otherwise(() => 'cafe')
             daySchedule.timeSlots.push({

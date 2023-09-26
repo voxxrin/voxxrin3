@@ -1,21 +1,6 @@
 <template>
   <ion-page>
-    <ion-content :fullscreen="true" v-if="confDescriptor" :style="{
-          '--voxxrin-event-background-url': `url('${confDescriptor.backgroundUrl}')`,
-          '--voxxrin-event-logo-url': `url('${confDescriptor.logoUrl}')`,
-          '--voxxrin-event-theme-colors-primary-hex': confDescriptor.theming.colors.primaryHex,
-          '--voxxrin-event-theme-colors-primary-rgb': confDescriptor.theming.colors.primaryRGB,
-          '--voxxrin-event-theme-colors-primary-contrast-hex': confDescriptor.theming.colors.primaryContrastHex,
-          '--voxxrin-event-theme-colors-primary-contrast-rgb': confDescriptor.theming.colors.primaryContrastRGB,
-          '--voxxrin-event-theme-colors-secondary-hex': confDescriptor.theming.colors.secondaryHex,
-          '--voxxrin-event-theme-colors-secondary-rgb': confDescriptor.theming.colors.secondaryRGB,
-          '--voxxrin-event-theme-colors-secondary-contrast-hex': confDescriptor.theming.colors.secondaryContrastHex,
-          '--voxxrin-event-theme-colors-secondary-contrast-rgb': confDescriptor.theming.colors.secondaryContrastRGB,
-          '--voxxrin-event-theme-colors-tertiary-hex': confDescriptor.theming.colors.tertiaryHex,
-          '--voxxrin-event-theme-colors-tertiary-rgb': confDescriptor.theming.colors.tertiaryRGB,
-          '--voxxrin-event-theme-colors-tertiary-contrast-hex': confDescriptor.theming.colors.tertiaryContrastHex,
-          '--voxxrin-event-theme-colors-tertiary-contrast-rgb': confDescriptor.theming.colors.tertiaryContrastRGB,
-    }">
+    <ion-content v-themed-event-styles="confDescriptor" :fullscreen="true" v-if="confDescriptor && detailedTalk">
       <ion-header class="stickyHeader" v-if="talkNotes" :class="{ 'is-favorited': talkNotes.isFavorite, 'to-watch-later': talkNotes.watchLater }">
         <ion-toolbar>
           <ion-button class="stickyHeader-close" shape="round" slot="start" size="small" fill="outline" @click="closeAndNavigateBack()">
@@ -31,54 +16,16 @@
               <ion-icon class="favorite-btn-icon" v-if="!talkNotes.isFavorite" aria-hidden="true" src="/assets/icons/line/bookmark-line-favorite.svg"></ion-icon>
               <ion-icon class="favorite-btn-icon" v-if="talkNotes.isFavorite" aria-hidden="true" src="/assets/icons/solid/bookmark-favorite.svg"></ion-icon>
             </ion-button>
-            <ion-label class="favorite-btn-nb" v-if="eventTalkStats !== undefined">{{
-                eventTalkStats.totalFavoritesCount
-              }}</ion-label>
+            <ion-label class="favorite-btn-nb" v-if="eventTalkStats !== undefined">{{ eventTalkStats.totalFavoritesCount }}</ion-label>
           </div>
         </ion-toolbar>
       </ion-header>
 
-      <ion-text class="talkDetails">
-        <ion-header class="subHeader">
-          <div class="subHeader-schedule">
-            <ion-icon class="_accordion-icon _future-icon" aria-hidden="true" src="assets/icons/solid/clock.svg"></ion-icon>
-            <ion-label v-if="timeslotLabel">
-              <span class="slot-schedule-start">{{timeslotLabel.start}}</span>
-              <ion-icon class="slot-schedule-icon" aria-hidden="true" src="assets/icons/line/chevron-right-line.svg"></ion-icon>
-              <span class="slot-schedule-end">{{timeslotLabel.end}}</span>
-            </ion-label>
-          </div>
-          <div class="subHeader-room" v-if="confDescriptor.features.roomsDisplayed">
-            <ion-icon aria-hidden="true" src="/assets/icons/solid/map-marker.svg"></ion-icon>
-            {{talk?.room.title}}
-          </div>
-        </ion-header>
+      <talk-details-header :conf-descriptor="confDescriptor" :talk="detailedTalk"></talk-details-header>
 
-
-        <h1 class="talkDetails-title"
-            :class="{'_hasTalkLand' : talkLang && confDescriptor.features.hideLanguages.indexOf(talkLang.id.value)===-1}">
-          <ion-badge v-if="talkLang && confDescriptor.features.hideLanguages.indexOf(talkLang.id.value)===-1"
-                     :style="{ '--background': talkLang.themeColor }"
-                     class="talkLang">
-            {{talkLang.label}}
-          </ion-badge>
-          {{talk?.title}}
-        </h1>
-        <div class="talkDetails-infos">
-          <div class="talkDetails-infos-listTrack">
-            <ion-badge v-if="confDescriptor.talkTracks.length > 1" class="trackBadge" :style="{
-                '--background': talk?.track.themeColor
-            }">{{talk?.track.title}}</ion-badge>
-          </div>
-          <ion-label :style="{ 'color': talk?.format.themeColor }">
-            {{talk?.format.title}} ({{talk?.format.hmmDuration}})
-          </ion-label>
-        </div>
-      </ion-text>
-
-      <div class="talkDetails-tags" v-if="talk?.tags.length">
+      <div class="talkDetails-tags" v-if="detailedTalk?.tags.length">
         <div class="talkDetails-tags-list">
-          <ion-badge v-if="true" class="tagBadge" v-for="(tag) in talk?.tags" :key="tag">
+          <ion-badge v-if="true" class="tagBadge" v-for="(tag) in detailedTalk?.tags" :key="tag">
             <ion-icon aria-hidden="true" src="assets/icons/solid/tag.svg"></ion-icon>
             {{tag}}
           </ion-badge>
@@ -90,7 +37,7 @@
         <vox-divider>
           {{ LL.Talk_summary() }}
         </vox-divider>
-        <ion-text v-html="talk?.description">
+        <ion-text v-html="detailedTalk?.description">
         </ion-text>
       </div>
 
@@ -99,7 +46,7 @@
           {{ LL.Speakers() }}
         </vox-divider>
         <ion-list class="talkDetails-speakers-list">
-          <ion-item v-for="(speaker, index) in talk?.speakers" :key="speaker.id.value">
+          <ion-item v-for="(speaker, index) in detailedTalk?.speakers" :key="speaker.id.value">
             <ion-avatar>
               <img :src="speaker.photoUrl" v-if="speaker.photoUrl"/>
               <img src="/assets/images/svg/avatar-shadow.svg" v-if="!speaker.photoUrl"/>
@@ -126,19 +73,25 @@
 <script setup lang="ts">
 import {useRoute} from "vue-router";
 import {EventId} from "@/models/VoxxrinEvent";
-import {getRouteParamsValue, isRefDefined} from "@/views/vue-utils";
-import {useUserTalkNotes} from "@/state/useUserTalkNotes";
+import {getRouteParamsValue, isRefDefined, toManagedRef as toRef, managedRef as ref} from "@/views/vue-utils";
+import {
+    useUserEventTalkNotes,
+    useUserTalkNoteActions,
+} from "@/state/useUserTalkNotes";
 import {TalkId} from "@/models/VoxxrinTalk";
 import {useSharedEventTalk} from "@/state/useEventTalk";
-import {computed, ref, unref, watch} from "vue";
+import {computed, toValue} from "vue";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {IonBadge, IonAvatar, IonText, useIonRouter} from "@ionic/vue";
 import {business} from "ionicons/icons";
 import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
-import {formatHourMinutes} from "@/models/DatesAndTime";
-import {Temporal} from "temporal-polyfill";
 import VoxDivider from "@/components/ui/VoxDivider.vue";
 import {goBackOrNavigateTo} from "@/router";
+import TalkDetailsHeader from "@/components/talk-details/TalkDetailsHeader.vue";
+import {useEventTalkStats} from "@/state/useEventTalkStats";
+import {Logger} from "@/services/Logger";
+
+const LOGGER = Logger.named("TalkDetailsPage");
 
 const ionRouter = useIonRouter();
 function closeAndNavigateBack() {
@@ -147,39 +100,32 @@ function closeAndNavigateBack() {
 
 const route = useRoute();
 const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')));
-const talkId = computed(() => new TalkId(getRouteParamsValue(route, 'talkId')));
+const talkId = ref(new TalkId(getRouteParamsValue(route, 'talkId')));
 const {conferenceDescriptor: confDescriptor} = useSharedConferenceDescriptor(eventId);
 
-const { eventTalkStats, talkNotes, toggleFavorite, toggleWatchLater} = useUserTalkNotes(eventId, talkId)
-const { talkDetails: talk } = useSharedEventTalk(confDescriptor, talkId);
+const { userEventTalkNotesRef } = useUserEventTalkNotes(eventId, toRef(() => talkId ? [talkId.value] : undefined))
+const talkNotes = toRef(() => {
+    const userEventTalkNotes = toValue(userEventTalkNotesRef)
+    return Array.from(userEventTalkNotes.values())[0];
+})
+const {firestoreEventTalkStatsRef} = useEventTalkStats(eventId, toRef(() => talkId ? [talkId.value] : undefined));
+const eventTalkStats = computed(() => {
+    const firestoreEventTalkStats = toValue(firestoreEventTalkStatsRef);
+    return Array.from(firestoreEventTalkStats.values())[0];
+})
+const { talkDetails: detailedTalk } = useSharedEventTalk(confDescriptor, talkId);
 const { LL } = typesafeI18n()
 
-const talkLang = computed(() => {
-    const eventDescriptor = unref(confDescriptor),
-        unreffedTalk = unref(talk);
-    if(!eventDescriptor || !unreffedTalk) {
-        return undefined;
-    }
-
-    return eventDescriptor.supportedTalkLanguages.find(lang => lang.id.isSameThan(unreffedTalk.language))
-})
-
-const timeslotLabel = computed(() => {
-    if(isRefDefined(talk) && isRefDefined(confDescriptor)) {
-        return {
-            start: formatHourMinutes(Temporal.ZonedDateTime.from(`${talk.value.start}[${confDescriptor.value.timezone}]`)),
-            end: formatHourMinutes(Temporal.ZonedDateTime.from(`${talk.value.end}[${confDescriptor.value.timezone}]`)),
-        }
-    } else {
-        return undefined;
-    }
-})
+const {toggleFavorite, toggleWatchLater} = useUserTalkNoteActions(
+    eventId, talkId,
+    talkNotes,
+);
 
 const theme = computed(() => {
-    if(isRefDefined(talk)) {
+    if(isRefDefined(detailedTalk)) {
         return {
             track: {
-                color: talk.value.track.themeColor
+                color: detailedTalk.value.track.themeColor
             }
         }
     } else {
@@ -253,7 +199,7 @@ const theme = computed(() => {
           right: 0;
           bottom: 0;
           background-repeat: no-repeat;
-          background-image: url('assets/images/png/texture-favorited.png');
+          background-image: url('/assets/images/png/texture-favorited.png');
           background-position: right;
           background-size: cover;
           transform: scale(1);
@@ -291,43 +237,6 @@ const theme = computed(() => {
   }
 
   .talkDetails {
-
-    &-title {
-      font-weight: 900;
-      padding: 0 var(--app-gutters);
-
-      &._hasTalkLand { text-indent: 4px;}
-
-      .talkLang {
-        position: relative;
-        float: left;
-        top: 4px;
-        font-size: 14px;
-        height: 24px;
-        width: 34px !important;
-        text-indent: 0;
-      }
-    }
-
-    &-infos {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-between;
-      padding: 8px var(--app-gutters) var(--app-gutters) var(--app-gutters);
-
-      .listTrack {
-        display: inline-flex;
-        flex-direction: row;
-        row-gap: 12px;
-      }
-
-      ion-label {
-        font-size: 14px;
-        font-weight: 500;
-      }
-    }
-
     &-tags {
       padding: 8px 16px;
       border-radius: 16px;
@@ -369,6 +278,20 @@ const theme = computed(() => {
 
       ion-text {
         line-height: 1.6;
+      }
+
+      /**
+      Enforcing color for talk description, in case HTML coming from CFP overrides some colors, with
+      bad contrast to our UI
+       */
+      :deep {
+        * {
+          color: var(--app-primary) !important;
+
+          @media (prefers-color-scheme: dark) {
+            color: var(--app-white) !important;
+          }
+        }
       }
     }
 
@@ -448,6 +371,20 @@ const theme = computed(() => {
             &-description {
               padding-bottom: 12px;
               font-size: 14px;
+
+              /**
+               Enforcing color for speaker description, in case HTML coming from CFP overrides some colors, with
+               bad contrast to our UI
+                */
+              :deep {
+                * {
+                  color: var(--app-primary) !important;
+                }
+
+                @media (prefers-color-scheme: dark) {
+                  * { color: var(--app-white) !important;}
+                }
+              }
             }
           }
         }

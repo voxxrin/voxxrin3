@@ -12,6 +12,9 @@ import {DEVOXX_SCALA_CRAWLER} from "./devoxx-scala/crawler";
 import {match} from "ts-pattern";
 import {v4 as uuidv4} from "uuid"
 import {ConferenceOrganizerSpace} from "../../../../shared/conference-organizer-space.firestore";
+import {JUG_SUMMERCAMP_CRAWLER} from "./jugsummercamp/crawler";
+import {eventLastUpdateRefreshed} from "../functions/firestore/firestore-utils";
+import {BDXIO_CRAWLER} from "./bdxio/crawler";
 const axios = require('axios');
 
 export type CrawlerKind<ZOD_TYPE extends z.ZodType> = {
@@ -25,7 +28,9 @@ const CRAWLERS: CrawlerKind<any>[] = [
     DEVOXX_SCALA_CRAWLER,
     LA_PRODUCT_CONF_CRAWLER,
     WEB2DAY_CRAWLER,
-    CAMPING_DES_SPEAKERS_CRAWLER
+    CAMPING_DES_SPEAKERS_CRAWLER,
+    JUG_SUMMERCAMP_CRAWLER,
+    BDXIO_CRAWLER
 ]
 
 export const TALK_FORMAT_FALLBACK_COLORS: HexColor[] = [
@@ -43,6 +48,7 @@ export const LANGUAGE_FALLBACK_COLORS: HexColor[] = [
 ];
 
 export type CrawlCriteria = {
+    eventIds?: string[]|undefined;
     crawlingToken?: string|undefined;
     dayIds?: string[]|undefined;
 }
@@ -61,7 +67,7 @@ const crawlAll = async function(criteria: CrawlCriteria) {
 
 
     if (fbCrawlerDescriptorSnapshot.empty) {
-        info(`No crawler found matching [${criteria.crawlingToken}] token !`)
+        throw new Error(`No crawler found matching [${criteria.crawlingToken}] token !`)
         return;
     }
 
@@ -69,9 +75,18 @@ const crawlAll = async function(criteria: CrawlCriteria) {
     const matchingCrawlerDescriptors = fbCrawlerDescriptorSnapshot.docs.map((snap, _) => {
         return {...FIREBASE_CRAWLER_DESCRIPTOR_PARSER.parse(snap.data()), id: snap.id }
     }).filter(firestoreCrawler => {
-        return isAutoCrawling
+        const dateConstraintMatches = isAutoCrawling
             || Temporal.Now.instant().epochMilliseconds < Date.parse(firestoreCrawler.stopAutoCrawlingAfter)
+
+        const eventIdConstraintMatches = !criteria.eventIds || !criteria.eventIds.length || criteria.eventIds.includes(firestoreCrawler.id);
+
+        return dateConstraintMatches && eventIdConstraintMatches;
     });
+
+    if(!matchingCrawlerDescriptors.length) {
+        throw new Error(`No crawler found matching either eventIds=${JSON.stringify(criteria.eventIds)} or crawlers' 'stopAutoCrawlingAfter' deadline`);
+        return;
+    }
 
     return await Promise.all(matchingCrawlerDescriptors.map(async crawlerDescriptor => {
         try {
@@ -79,7 +94,7 @@ const crawlAll = async function(criteria: CrawlCriteria) {
 
             const crawler = CRAWLERS.find(c => c.kind === crawlerDescriptor.kind);
             if(!crawler) {
-                error(`Error: no crawler found for kind: ${crawlerDescriptor.kind} (with id=${crawlerDescriptor.id})`)
+                throw new Error(`Error: no crawler found for kind: ${crawlerDescriptor.kind} (with id=${crawlerDescriptor.id})`)
                 return;
             }
 
@@ -97,7 +112,7 @@ const crawlAll = async function(criteria: CrawlCriteria) {
                 durationInSeconds: start.until(end).total('seconds')
             }
         }catch(e: any) {
-            error(`Error during crawler with id ${crawlerDescriptor.id}: ${e?.toString()}`)
+            throw new Error(`Error during crawler with id ${crawlerDescriptor.id}: ${e?.toString()}`)
             throw e;
         }
     }))
@@ -121,7 +136,10 @@ const saveEvent = async function(event: FullEvent) {
                 talkFeedbackViewerTokens: []
             }
 
-            await firestoreEvent.collection('organizer-space').doc(organizerSecretToken).set(organizerSpaceContent)
+            await Promise.all([
+                firestoreEvent.collection('organizer-space').doc(organizerSecretToken).set(organizerSpaceContent),
+                firestoreEvent.collection('organizer-space').doc(organizerSecretToken).collection('ratings').doc('self').create({}),
+            ])
             return {organizerSecretToken, organizerSpaceContent};
         }).with(1, async () => {
             const organizerSecretToken = await organizerSpaceEntries[0].id;
@@ -140,6 +158,10 @@ const saveEvent = async function(event: FullEvent) {
             error(`Error while saving dailySchedule ${daySchedule.day}: ${e?.toString()}`)
         }
     }))
+
+    const talksCollectionRefBeforeUpdate = (await db.collection(`/events/${event.id}/talks`).listDocuments()) || []
+    const talkIdsHashBeforeUpdate = talksCollectionRefBeforeUpdate.map(talk => talk.id).sort().join(",")
+
     await Promise.all(event.talks.map(async talk => {
         try {
             info("saving talk " + talk.id + " " + talk.title);
@@ -171,7 +193,17 @@ const saveEvent = async function(event: FullEvent) {
         }
     }));
 
+    const talksCollectionRefAfterUpdate = (await db.collection(`/events/${event.id}/talks`).listDocuments()) || []
+    const talkIdsHashAfterUpdate = talksCollectionRefAfterUpdate.map(talk => talk.id).sort().join(",")
+
+    if(talkIdsHashBeforeUpdate !== talkIdsHashAfterUpdate) {
+        await eventLastUpdateRefreshed(event.id, ['talkListUpdated']);
+    }
+
     try {
+        // TODO: Remove me once watch later will be properly implemented !
+        event.conferenceDescriptor.features.remindMeOnceVideosAreAvailableEnabled = false;
+
         await firestoreEvent.collection('event-descriptor')
             .doc('self')
             .set(event.conferenceDescriptor);

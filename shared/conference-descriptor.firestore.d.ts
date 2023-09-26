@@ -13,6 +13,7 @@ export type ConferenceDescriptor = ListableEvent & {
         ratings: {
             bingo: {
                 enabled: boolean,
+                isPublic?: boolean|undefined,
                 choices: Array<{
                     id: string,
                     label: string
@@ -39,6 +40,11 @@ export type ConferenceDescriptor = ListableEvent & {
                 }>
             }
         },
+        topRatedTalks?: {
+            minimumNumberOfRatingsToBeConsidered: number,
+            minimumAverageScoreToBeConsidered?: number|undefined,
+            numberOfDailyTopTalksConsidered: number
+        }|undefined
     },
     talkFormats: Array<ThemedTalkFormat>,
     talkTracks: Array<ThemedTrack>,

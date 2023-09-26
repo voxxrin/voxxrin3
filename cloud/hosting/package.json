@@ -1,0 +1,13 @@
+{
+  "name": "voxxrin-firebase-hosting",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "copy-from-mobile": "rm -Rf ./public/* && cp -a ../../mobile/dist/* ./public/",
+    "deploy": "npm run copy-from-mobile && firebase use ${FIREBASE_PROJECT_NAME:-voxxrin-v3} && firebase deploy --only hosting"
+  },
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "firebase-tools": "12.3.1"
+  }
+}

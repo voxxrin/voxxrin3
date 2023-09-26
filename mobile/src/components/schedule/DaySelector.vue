@@ -48,10 +48,11 @@
 </template>
 
 <script setup lang="ts">
-import {computed, PropType, ref, toRef, watch} from "vue";
+import {computed, PropType, watch} from "vue";
+import {managedRef as ref, toManagedRef as toRef} from "@/views/vue-utils";
 import {DayId, VoxxrinDay} from "@/models/VoxxrinDay";
 import {localDateToReadableParts, toISOLocalDate} from "@/models/DatesAndTime";
-import {useCurrentUserLocale} from "@/state/useCurrentUserLocale";
+import {useCurrentUserLocale} from "@/state/useCurrentUser";
 import {useInterval} from "@/views/vue-utils";
 import {ISOLocalDate} from "../../../../shared/type-utils";
 import {useCurrentClock} from "@/state/useCurrentClock";
@@ -124,7 +125,7 @@ useInterval(() => {
     let todayZDT = useCurrentClock().zonedDateTimeISO();
     today.value = toISOLocalDate(todayZDT)
     tomorrow.value = toISOLocalDate(todayZDT.add({days:1}))
-}, {minutes:1}, { immediate: true })
+}, {freq:"low-frequency"}, { immediate: true })
 
 const formattedDays = computed(() => {
     return (confDescriptorRef.value.days || []).map(d => ({

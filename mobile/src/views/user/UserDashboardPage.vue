@@ -11,6 +11,16 @@
         </ion-toolbar>
       </ion-header>
 
+      <div class="userDashboard-user">
+        <div class="userDashboard-user-icon">
+          <ion-icon src="/assets/icons/line/user-line.svg"></ion-icon>
+        </div>
+        <div class="userDashboard-user-infos">
+          <strong>User uid:</strong><br/>
+          <span class="userUid">{{currentUserRef?.uid}}</span><br/>
+          <small>Please keep this token private</small>
+        </div>
+      </div>
       <div class="userDashboard-content">
         <div class="listCardButton">
           <ion-button class="listCardButton-item" @click="$router.push(`/user/talks`)">
@@ -45,15 +55,26 @@
         </div>
       </div>
     </ion-content>
+    <ion-footer class="userDashboardFooter">
+      <ion-toolbar>
+        <ion-button fill="outline" size="default" expand="block">
+          Logout
+          <ion-icon src="/assets/icons/line/logout-half-circle-line.svg"></ion-icon>
+        </ion-button>
+      </ion-toolbar>
+    </ion-footer>
   </ion-page>
 </template>
 
 <script setup lang="ts">
 
-import {useIonRouter} from "@ionic/vue";
+import {IonFooter, useIonRouter} from "@ionic/vue";
 import {useTabbedPageNav} from "@/state/useTabbedPageNav";
+import {useCurrentUser} from "@/state/useCurrentUser";
 
 const ionRouter = useIonRouter();
+
+const currentUserRef = useCurrentUser();
 
 const {registerTabbedPageNavListeners, triggerTabbedPageExitOrNavigate} = useTabbedPageNav()
 
@@ -62,8 +83,66 @@ registerTabbedPageNavListeners();
 
 <style lang="scss" scoped>
   .userDashboard {
+    &-user {
+      display: flex;
+      align-items: center;
+      column-gap: 16px;
+      padding: var(--app-gutters);
+      padding-bottom: 0;
+
+      &-infos {
+        .userUid {
+          font-size: 14px;
+        }
+
+        small {
+          color: var(--app-voxxrin);
+        }
+      }
+
+      &-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 54px;
+        width: 54px;
+        border-radius: 44px;
+        font-size: 28px;
+        background: var(--app-voxxrin);
+        color: var(--app-white);
+      }
+    }
+
     &-content {
       padding: var(--app-gutters);
+    }
+  }
+
+  .userDashboardFooter {
+    --ion-toolbar-background: var(--app-background);
+
+    &::before  {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: -20px !important;
+      height: 20px;
+      pointer-events: none;
+    }
+
+    &::before {
+      top: 0;
+      background: linear-gradient(to bottom, transparent, var(--app-background));
+    }
+
+
+    ion-toolbar {
+      --padding-bottom: 12px;
+      --padding-top: 12px;
+      --padding-end: 16px;
+      --padding-start: 16px;
+      --border-width: 0;
     }
   }
 </style>

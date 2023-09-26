@@ -1,6 +1,6 @@
 <template>
   <div class="talkAction">
-    <ion-button :class="{ 'btnTalk': true, 'btn-watchLater': true, '_is-active': !!talkNotes?.watchLater }" @click.stop="() => userTalkNotes.toggleWatchLater()" v-if="confDescriptor?.features.remindMeOnceVideosAreAvailableEnabled">
+    <ion-button :class="{ 'btnTalk': true, 'btn-watchLater': true, '_is-active': !!talkNotes?.watchLater }" @click.stop="() => toggleWatchLater()" v-if="confDescriptor?.features.remindMeOnceVideosAreAvailableEnabled">
       <ion-icon v-if="!talkNotes?.watchLater" aria-hidden="true" src="/assets/icons/line/video-line.svg"></ion-icon>
       <ion-icon v-if="!!talkNotes?.watchLater" aria-hidden="true" src="/assets/icons/solid/video.svg"></ion-icon>
     </ion-button>
@@ -8,9 +8,14 @@
 </template>
 
 <script setup lang="ts">
-import {computed, PropType} from "vue";
-import {UserTalkNotesHook} from "@/state/useUserTalkNotes";
+import {PropType} from "vue";
+import {
+    useUserTalkNoteActions
+} from "@/state/useUserTalkNotes";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
+import {toManagedRef as toRef} from "@/views/vue-utils";
+import {TalkId} from "@/models/VoxxrinTalk";
+import {TalkNote} from "../../../../shared/feedbacks.firestore";
 
 const props = defineProps({
     confDescriptor: {
@@ -19,11 +24,22 @@ const props = defineProps({
     },
     userTalkNotes: {
         required: true,
-        type: Object as PropType<UserTalkNotesHook>
+        type: Object as PropType<TalkNote>
     }
 });
 
-const talkNotes = computed(() => props.userTalkNotes?.talkNotes.value)
+const emits = defineEmits<{
+    (e: 'talkNoteUpdated', updatedTalkNote: TalkNote): void,
+}>()
+
+const talkNotes = toRef(() => props.userTalkNotes)
+
+const {toggleWatchLater} = useUserTalkNoteActions(
+    toRef(() => props.confDescriptor?.id),
+    toRef(() => props.userTalkNotes?.talkId ? new TalkId(props.userTalkNotes?.talkId) : undefined),
+    talkNotes,
+    updatedTalkNote => emits("talkNoteUpdated", updatedTalkNote)
+)
 </script>
 
 <style scoped lang="scss">

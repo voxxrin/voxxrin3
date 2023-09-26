@@ -1,4 +1,5 @@
-import {computed, Ref, ref, unref, watch} from "vue";
+import {computed, Ref, unref, watch} from "vue";
+import {deferredVuefireUseDocument, managedRef as ref} from "@/views/vue-utils";
 import {DailySchedule} from "../../../shared/daily-schedule.firestore";
 import {
     createVoxxrinDailyScheduleFromFirestore,
@@ -10,35 +11,29 @@ import {DayId} from "@/models/VoxxrinDay";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {DocumentReference, doc, collection, getDoc} from "firebase/firestore";
 import {db} from "@/state/firebase";
-import {Unreffable} from "@/views/vue-utils";
-import {useDocument} from "vuefire";
 import {prepareEventTalks} from "@/state/useEventTalk";
 import {prepareTalkStats} from "@/state/useEventTalkStats";
 import {prepareUserTalkNotes} from "@/state/useUserTalkNotes";
-import {filterTalksMatching, TalkId} from "@/models/VoxxrinTalk";
+import {filterTalksMatching, TalkId, VoxxrinTalk} from "@/models/VoxxrinTalk";
 import {findTimeslotFeedback, VoxxrinTimeslotFeedback} from "@/models/VoxxrinFeedback";
 import {UserDailyFeedbacks} from "../../../shared/feedbacks.firestore";
+import {PERF_LOGGER} from "@/services/Logger";
+import { User } from 'firebase/auth';
 
 export function useSchedule(
-            conferenceDescriptorRef: Unreffable<VoxxrinConferenceDescriptor | undefined>,
-            dayIdRef: Unreffable<DayId | undefined>) {
+            conferenceDescriptorRef: Ref<VoxxrinConferenceDescriptor | undefined>,
+            dayIdRef: Ref<DayId | undefined>) {
 
-    console.debug(`useSchedule(${unref(conferenceDescriptorRef)?.id.value}, ${unref(dayIdRef)?.value})`)
+    PERF_LOGGER.debug(() => `useSchedule(${unref(conferenceDescriptorRef)?.id.value}, ${unref(dayIdRef)?.value})`)
     watch(() => unref(conferenceDescriptorRef), (newVal, oldVal) => {
-        console.debug(`useSchedule[conferenceDescriptorRef] updated from [${oldVal?.id.value}] to [${newVal?.id.value}]`)
+        PERF_LOGGER.debug(() => `useSchedule[conferenceDescriptorRef] updated from [${oldVal?.id.value}] to [${newVal?.id.value}]`)
     }, {immediate: true})
     watch(() => unref(dayIdRef), (newVal, oldVal) => {
-        console.debug(`useSchedule[dayIdRef] updated from [${oldVal?.value}] to [${newVal?.value}]`)
+        PERF_LOGGER.debug(() => `useSchedule[dayIdRef] updated from [${oldVal?.value}] to [${newVal?.value}]`)
     }, {immediate: true})
 
-    const firestoreDailyScheduleSource = computed(() => {
-        const conferenceDescriptor = unref(conferenceDescriptorRef),
-            dayId = unref(dayIdRef);
-
-        return dailyScheduleDocument(conferenceDescriptor, dayId);
-    });
-
-    const firestoreDailyScheduleRef = useDocument(firestoreDailyScheduleSource)
+    const firestoreDailyScheduleRef = deferredVuefireUseDocument([conferenceDescriptorRef, dayIdRef],
+        ([conferenceDescriptor, dayId]) => dailyScheduleDocument(conferenceDescriptor, dayId));
 
     return {
         schedule: computed(() => {
@@ -63,45 +58,71 @@ export function dailyScheduleDocument(eventDescriptor: VoxxrinConferenceDescript
     return doc(collection(doc(collection(db, 'events'), eventDescriptor.id.value), 'days'), dayId.value) as DocumentReference<DailySchedule>;
 }
 
+async function loadTalkSpeakerUrls(talk: { speakers: Array<{ photoUrl?: VoxxrinTalk['speakers'][number]['photoUrl'] }> }) {
+    return Promise.all(talk.speakers.map(async speaker => {
+        return new Promise(resolve => {
+            if (speaker.photoUrl) {
+                const avatarImage = new Image();
+                avatarImage.src = speaker.photoUrl;
+
+                avatarImage.onload = resolve;
+            } else {
+                resolve(null);
+            }
+        })
+    }));
+}
+
 export function prepareSchedules(
+    user: User,
     conferenceDescriptor: VoxxrinConferenceDescriptor,
     currentDayId: DayId,
+    currentTalks: Array<VoxxrinTalk>,
     otherDayIds: Array<DayId>
 ) {
-    [currentDayId, ...otherDayIds].forEach(async dayId => {
-        if(dayId !== currentDayId) {
-            useSchedule(conferenceDescriptor, dayId);
-        }
+    PERF_LOGGER.debug(() => `prepareSchedules(userId=${user.uid}, eventId=${conferenceDescriptor.id.value}, currentDayId=${currentDayId.value}, currentTalkIds=${JSON.stringify(currentTalks.map(talk => talk.id.value))}, otherDayIds=${JSON.stringify(otherDayIds.map(id => id.value))})`);
 
-        const dailyScheduleDoc = dailyScheduleDocument(conferenceDescriptor, dayId)
-        if(navigator.onLine && dailyScheduleDoc) {
-            const dailyScheduleSnapshot = await getDoc(dailyScheduleDoc);
+    [currentDayId, ...otherDayIds].reduce(async (previousDayPromise, dayId) => {
+        await previousDayPromise;
 
-            const dayAndTalkIds = dailyScheduleSnapshot.data()?.timeSlots.reduce((dayAndTalkIds, timeslot) => {
-                if(timeslot.type === 'talks') {
-                    timeslot.talks.forEach(talk => {
-                        talk.speakers.forEach(speaker => {
-                            if(speaker.photoUrl) {
-                                const avatarImage = new Image();
-                                avatarImage.src = speaker.photoUrl;
-                            }
-                            // avatarImage.onload = () => {
-                            //     console.log(`Avatar ${speaker.photoUrl} pre-loaded !`)
-                            // };
+        let talkIds: TalkId[]|undefined = undefined;
+        if(dayId === currentDayId) {
+            currentTalks.map(loadTalkSpeakerUrls)
+
+            talkIds = currentTalks.map(talk => talk.id);
+        } else {
+            const dailyScheduleDoc = dailyScheduleDocument(conferenceDescriptor, dayId)
+
+            if(navigator.onLine && dailyScheduleDoc) {
+                const dailyScheduleSnapshot = await getDoc(dailyScheduleDoc);
+                PERF_LOGGER.debug(`getDoc(${dailyScheduleDoc.path})`)
+
+                talkIds = dailyScheduleSnapshot.data()?.timeSlots.reduce((talkIds, timeslot) => {
+                    if (timeslot.type === 'talks') {
+                        timeslot.talks.forEach(talk => {
+                            loadTalkSpeakerUrls(talk);
+
+                            talkIds.push(new TalkId(talk.id))
                         })
+                    }
 
-                        dayAndTalkIds.push({dayId, talkId: new TalkId(talk.id)})
-                    })
-                }
-
-                return dayAndTalkIds;
-            }, [] as Array<{dayId: DayId, talkId: TalkId}>) || [];
-
-            prepareEventTalks(conferenceDescriptor, dayAndTalkIds.map(dat => dat.talkId));
-            prepareTalkStats(conferenceDescriptor.id, dayAndTalkIds);
-            prepareUserTalkNotes(conferenceDescriptor.id, dayAndTalkIds);
+                    return talkIds;
+                }, [] as Array<TalkId>) || [];
+            }
         }
-    })
+
+        if(navigator.onLine && talkIds) {
+            const preparations: Array<Promise<any>> = [];
+            if(dayId !== currentDayId) {
+                preparations.push(prepareTalkStats(conferenceDescriptor.id, dayId, talkIds));
+                preparations.push(prepareUserTalkNotes(user, conferenceDescriptor.id, dayId, talkIds));
+            }
+
+            preparations.push(prepareEventTalks(conferenceDescriptor, dayId, talkIds));
+
+            await Promise.all(preparations);
+        }
+    }, Promise.resolve());
 }
 
 export type LabelledTimeslotWithFeedback = VoxxrinScheduleTimeSlot & {

@@ -1,41 +1,46 @@
 import {EventId} from "@/models/VoxxrinEvent";
-import {computed, ComputedRef, unref} from "vue";
-import {useCurrentUser, useDocument} from "vuefire";
+import {computed, ComputedRef, toValue, unref} from "vue";
+import {useCurrentUser} from "@/state/useCurrentUser";
 import {
     collection,
     doc,
     DocumentReference,
-    setDoc, updateDoc,
+    setDoc,
 } from "firebase/firestore";
 import {db} from "@/state/firebase";
 import {UserPreferences} from "../../../shared/user-preferences.firestore";
 import {VoxxrinUserPreferences} from "@/models/VoxxrinUser";
 import {createSharedComposable} from "@vueuse/core";
+import {Logger, PERF_LOGGER} from "@/services/Logger";
+import {deferredVuefireUseDocument} from "@/views/vue-utils";
+import {User} from "firebase/auth";
+
+const LOGGER = Logger.named("useUserPreferences");
+
+function getUserPreferencesDoc(user: User|undefined|null) {
+    if(!user) {
+        return undefined;
+    }
+
+    return doc(collection(doc(collection(db,
+            'users'), user.uid),
+        'preferences'), 'self'
+    ) as DocumentReference<UserPreferences>;
+}
 
 export function useUserPreferences() {
 
-    console.debug(`useUserPreferences()`)
+    PERF_LOGGER.debug(() => `useUserPreferences()`)
 
     const userRef = useCurrentUser()
 
-    const firestoreUserPreferencesSource = computed(() => {
-        const user = unref(userRef);
-
-        if(!user) {
-            return undefined;
-        }
-
-        return doc(collection(doc(collection(db,
-            'users'), user.uid),
-            'preferences'), 'self'
-        ) as DocumentReference<UserPreferences>
-    });
-
-    const firestoreUserPreferencesRef = useDocument(firestoreUserPreferencesSource);
+    const firestoreUserPreferencesRef = deferredVuefireUseDocument([userRef],
+        ([user]) => getUserPreferencesDoc(user));
 
     async function onceUserPreferenceAvailable(call: (firestoreUserPref: UserPreferences, firestoreUserPrefDoc: DocumentReference<UserPreferences>) => Promise<void>) {
-        const firestoreUserPrefDoc = unref(firestoreUserPreferencesSource);
-        let firestoreUserPref = unref(firestoreUserPreferencesRef);
+        const user = toValue(userRef);
+        const firestoreUserPrefDoc = getUserPreferencesDoc(user);
+        let firestoreUserPref = toValue(firestoreUserPreferencesRef);
 
         if(!firestoreUserPrefDoc) {
             return;
@@ -45,7 +50,6 @@ export function useUserPreferences() {
             // Let's create an empty user preferences container
             firestoreUserPref = {
                 pinnedEventIds: [],
-                showPastEvents: false
             }
             await setDoc(firestoreUserPrefDoc, firestoreUserPref);
         }
@@ -85,16 +89,6 @@ export function useUserPreferences() {
         })
     }
 
-    const togglePastEvent = async (showPastEvents: boolean) => {
-        await onceUserPreferenceAvailable(async (firestoreUserPref, firestoreUserPrefDoc) => {
-            if(firestoreUserPref.showPastEvents === showPastEvents) {
-                return;
-            }
-
-            await updateDoc(firestoreUserPrefDoc, "showPastEvents", showPastEvents);
-        })
-    }
-
     const voxxrinUserPreferences: ComputedRef<VoxxrinUserPreferences|undefined> = computed(() => {
         const firestoreUserPref = unref(firestoreUserPreferencesRef)
 
@@ -110,7 +104,7 @@ export function useUserPreferences() {
 
     return {
         userPreferences: voxxrinUserPreferences,
-        pinEvent, unpinEvent, togglePastEvent
+        pinEvent, unpinEvent
     };
 }
 

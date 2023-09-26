@@ -17,7 +17,7 @@ export interface DevoxxScheduleItem {
           id: number,
           name: string,
           duration: number,
-          isPause: boolean,
+          pause: boolean,
           description: string,
           cssColor?: HexColor|undefined
         },
@@ -43,7 +43,7 @@ export interface DevoxxScheduleProposal {
       description: string,
       summary: string,
       afterVideoURL: string,
-      audienceLevel: string,
+      audienceLevel: "BEGINNER"|"INTERMEDIATE"|"ADVANCED",
       track: {
         id: number,
         name: string,

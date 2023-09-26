@@ -35,10 +35,6 @@ type RootTranslation = {
 	 */
 	No_conference_registered_yet: string
 	/**
-	 * P​a​s​t​ ​e​v​e​n​t​s
-	 */
-	Past_events: string
-	/**
 	 * S​e​a​r​c​h​ ​a​ ​c​o​n​f​e​r​e​n​c​e
 	 */
 	Search_a_conference: string
@@ -249,6 +245,98 @@ type RootTranslation = {
 	 * I​n​c​l​u​d​i​n​g​ ​s​l​o​t​s​ ​w​i​t​h​o​u​t​ ​f​e​e​d​b​a​c​k
 	 */
 	Including_slots_without_feedback: string
+	/**
+	 * C​o​n​f​i​g
+	 */
+	Config: string
+	/**
+	 * T​a​l​k​s
+	 */
+	Talks_Config: string
+	/**
+	 * O​p​e​n​ ​f​u​l​l​ ​v​e​r​s​i​o​n​ ​o​f​ ​t​h​e​ ​s​c​h​e​d​u​l​e
+	 */
+	Open_full_version_of_the_schedule: string
+	/**
+	 * h​e​r​e
+	 */
+	Here: string
+	/**
+	 * F​e​e​d​b​a​c​k​s​ ​a​r​e​ ​n​o​t​ ​e​n​a​b​l​e​d​ ​o​n​ ​t​h​i​s​ ​e​v​e​n​t
+	 */
+	Feedbacks_are_not_enabled_on_this_event: string
+	/**
+	 * T​a​l​k​ ​F​e​e​d​b​a​c​k​s
+	 */
+	Talk_Feedbacks: string
+	/**
+	 * D​e​t​a​i​l​e​d​ ​F​e​e​d​b​a​c​k​s
+	 */
+	Detailed_Feedbacks: string
+	/**
+	 * L​a​s​t​ ​u​p​d​a​t​e​d
+	 */
+	Last_updated: string
+	/**
+	 * W​h​o
+	 */
+	Who: string
+	/**
+	 * L​i​n​e​a​r​ ​r​a​t​i​n​g
+	 */
+	Linear_rating: string
+	/**
+	 * B​i​n​g​o
+	 */
+	Bingo: string
+	/**
+	 * C​u​s​t​o​m​ ​r​a​t​i​n​g
+	 */
+	Custom_rating: string
+	/**
+	 * S​t​a​t​s
+	 */
+	Stats: string
+	/**
+	 * N​u​m​b​e​r​ ​o​f​ ​f​e​e​d​b​a​c​k​s
+	 */
+	Number_of_Feedbacks: string
+	/**
+	 * A​v​e​r​a​g​e​ ​l​i​n​e​a​r​ ​r​a​t​i​n​g​s
+	 */
+	Average_linear_ratings: string
+	/**
+	 * v​o​t​e​s
+	 */
+	votes: string
+	/**
+	 * P​r​i​v​a​t​e​ ​B​i​n​g​o
+	 */
+	Private_Bingo: string
+	/**
+	 * M​y​ ​t​a​l​k​s​ ​w​i​t​h​ ​f​e​e​d​b​a​c​k​s
+	 */
+	My_talks_with_Feedbacks: string
+	/**
+	 * *​O​n​g​o​i​n​g​*​ ​e​v​e​n​t​s
+	 */
+	Ongoing_events_highlighted: string
+	/**
+	 * *​F​u​t​u​r​e​*​ ​e​v​e​n​t​s
+	 */
+	Future_events_highlighted: string
+	/**
+	 * *​P​a​s​t​*​ ​e​v​e​n​t​s
+	 */
+	Past_events_highlighted: string
+	/**
+	 * F​u​t​u​r​e​ ​e​v​e​n​t​s
+	 */
+	Future_events: string
+	/**
+	 * P​a​s​t​ ​e​v​e​n​t​s
+	 */
+	Past_events: string
 }
 
 export type TranslationFunctions = {
@@ -272,10 +360,6 @@ export type TranslationFunctions = {
 	 * No conference registered yet
 	 */
 	No_conference_registered_yet: () => LocalizedString
-	/**
-	 * Past events
-	 */
-	Past_events: () => LocalizedString
 	/**
 	 * Search a conference
 	 */
@@ -484,6 +568,98 @@ export type TranslationFunctions = {
 	 * Including slots without feedback
 	 */
 	Including_slots_without_feedback: () => LocalizedString
+	/**
+	 * Config
+	 */
+	Config: () => LocalizedString
+	/**
+	 * Talks
+	 */
+	Talks_Config: () => LocalizedString
+	/**
+	 * Open full version of the schedule
+	 */
+	Open_full_version_of_the_schedule: () => LocalizedString
+	/**
+	 * here
+	 */
+	Here: () => LocalizedString
+	/**
+	 * Feedbacks are not enabled on this event
+	 */
+	Feedbacks_are_not_enabled_on_this_event: () => LocalizedString
+	/**
+	 * Talk Feedbacks
+	 */
+	Talk_Feedbacks: () => LocalizedString
+	/**
+	 * Detailed Feedbacks
+	 */
+	Detailed_Feedbacks: () => LocalizedString
+	/**
+	 * Last updated
+	 */
+	Last_updated: () => LocalizedString
+	/**
+	 * Who
+	 */
+	Who: () => LocalizedString
+	/**
+	 * Linear rating
+	 */
+	Linear_rating: () => LocalizedString
+	/**
+	 * Bingo
+	 */
+	Bingo: () => LocalizedString
+	/**
+	 * Custom rating
+	 */
+	Custom_rating: () => LocalizedString
+	/**
+	 * Stats
+	 */
+	Stats: () => LocalizedString
+	/**
+	 * Number of feedbacks
+	 */
+	Number_of_Feedbacks: () => LocalizedString
+	/**
+	 * Average linear ratings
+	 */
+	Average_linear_ratings: () => LocalizedString
+	/**
+	 * votes
+	 */
+	votes: () => LocalizedString
+	/**
+	 * Private Bingo
+	 */
+	Private_Bingo: () => LocalizedString
+	/**
+	 * My talks with feedbacks
+	 */
+	My_talks_with_Feedbacks: () => LocalizedString
+	/**
+	 * *Ongoing* events
+	 */
+	Ongoing_events_highlighted: () => LocalizedString
+	/**
+	 * *Future* events
+	 */
+	Future_events_highlighted: () => LocalizedString
+	/**
+	 * *Past* events
+	 */
+	Past_events_highlighted: () => LocalizedString
+	/**
+	 * Future events
+	 */
+	Future_events: () => LocalizedString
+	/**
+	 * Past events
+	 */
+	Past_events: () => LocalizedString
 }
 
 export type Formatters = {}

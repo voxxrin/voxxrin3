@@ -1,10 +1,11 @@
 <template>
-  <slot name="iterator" :timeslot="timeslot"
-        v-for="(timeslot) in timeslotsRef" :key="timeslot.id.value" />
+  <slot name="iterator" :timeslot="timeslot" :index="index"
+        v-for="(timeslot, index) in timeslotsRef" :key="timeslot.id.value" />
 </template>
 
 <script setup lang="ts">
-import {onMounted, PropType, ref, toRef, unref, watch} from "vue";
+import {onMounted, PropType, unref, watch} from "vue";
+import {managedRef as ref, toManagedRef as toRef} from "@/views/vue-utils";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {DayId} from "@/models/VoxxrinDay";
 import {LabelledTimeslotWithFeedback, useLabelledTimeslotWithFeedbacks} from "@/state/useSchedule";
@@ -19,6 +20,9 @@ import {useCurrentClock} from "@/state/useCurrentClock";
 import {useInterval} from "@/views/vue-utils";
 import {findTimeslotFeedback} from "@/models/VoxxrinFeedback";
 import {filterTalksMatching} from "@/models/VoxxrinTalk";
+import {PERF_LOGGER, Logger} from "@/services/Logger";
+
+const LOGGER = Logger.named("TimeslotIterator");
 
 const props = defineProps({
     confDescriptor: {
@@ -35,7 +39,7 @@ const props = defineProps({
     },
     searchTerms: {
         required: false,
-        type: Object as PropType<string|undefined>
+        type: String as PropType<string|undefined>
     }
 })
 
@@ -45,11 +49,11 @@ const emit = defineEmits<{
 }>()
 
 onMounted(async () => {
-    console.log(`SchedulePage mounted !`)
-    useInterval(recomputeMissingFeedbacksList, {seconds:10}, {immediate: true})
+    PERF_LOGGER.debug(`SchedulePage mounted !`)
+    useInterval(recomputeMissingFeedbacksList, {freq:"low-frequency"}, {immediate: true})
 })
 
-const { userFeedbacks: dailyUserFeedbacksRef  } = useUserFeedbacks(props.confDescriptor?.id, props.dayId)
+const { userFeedbacks: dailyUserFeedbacksRef  } = useUserFeedbacks(toRef(() => props.confDescriptor?.id), toRef(() => props.dayId))
 const { timeslotsRef } = useLabelledTimeslotWithFeedbacks(
     toRef(props, 'dailySchedule'),
     dailyUserFeedbacksRef, toRef(props, 'searchTerms'));

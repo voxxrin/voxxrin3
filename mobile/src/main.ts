@@ -1,13 +1,11 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import {app as firebaseApp} from './state/firebase'
+import {app as firebaseApp, db} from './state/firebase'
 import router from './router';
 import globalComponents from './global-components';
 import { i18nPlugin } from './i18n/i18n-vue'
 
 import { IonicVue } from '@ionic/vue';
-
-import './state/useDevUtilities'
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/vue/css/core.css';
@@ -34,6 +32,8 @@ import {navigatorDetector} from "typesafe-i18n/detectors";
 import {loadLocaleAsync} from "@/i18n/i18n-util.async";
 import {useFirebaseAuth, VueFire, VueFireAuth} from "vuefire";
 import { signInAnonymously } from 'firebase/auth';
+import { provideThemedEventStyles } from "@/directives/ThemedEventStyles";
+import {collection, doc, updateDoc} from "firebase/firestore";
 
 const app = createApp(App);
 app
@@ -45,6 +45,7 @@ app
     ]
   }).use(router)
   .use(globalComponents)
+    .directive('themedEventStyles', provideThemedEventStyles)
 
 
 // const detectedLocale = detectLocale(navigatorDetector)
@@ -56,7 +57,14 @@ const auth = useFirebaseAuth()!
 Promise.all([
     loadLocaleAsync(detectedLocale).then(() => app.use(i18nPlugin, detectedLocale)),
     router.isReady(),
-    signInAnonymously(auth)
-]).then(async ([_1, _2]) => {
+    signInAnonymously(auth).then((anonymousUser) => {
+        const userRef = doc(collection(db, 'users'), anonymousUser.user.uid)
+        // Letting some time to the server to create the new user node the first time the user authenticates
+        // ... so that we can then update last connection date
+        setTimeout(() => {
+            updateDoc(userRef, "userLastConnection", new Date().toISOString())
+        }, 5000);
+    })
+]).then(async ([_1, _2, _3]) => {
     app.mount('#app');
 })

@@ -16,13 +16,13 @@
 
       <div class="middle">
         <div class="item">
-          <slot name="upper-middle" :talk="talk" :talkNotes="userTalkNotesHook.talkNotes" :talkStats="userTalkNotesHook.eventTalkStats" :userTalkHook="userTalkNotesHook"></slot>
+          <slot name="upper-middle" :talk="talk" :talkNotes="talkNotes" :talkStats="talkStats"></slot>
         </div>
       </div>
 
       <div class="end">
         <div class="item">
-          <slot name="upper-right" :talk="talk" :talkNotes="userTalkNotesHook.talkNotes" :talkStats="userTalkNotesHook.eventTalkStats" :userTalkHook="userTalkNotesHook"></slot>
+          <slot name="upper-right" :talk="talk" :talkNotes="talkNotes" :talkStats="talkStats"></slot>
         </div>
       </div>
     </div>
@@ -53,14 +53,15 @@
         <span class="speakers-list">{{displayedSpeakers}}</span>
       </div>
       <div class="talkActions">
-        <slot name="footer-actions" :talk="talk" :talkNotes="userTalkNotesHook.talkNotes" :talkStats="userTalkNotesHook.eventTalkStats" :userTalkHook="userTalkNotesHook" />
+        <slot name="footer-actions" :talk="talk" :talkNotes="talkNotes" :talkStats="talkStats" />
       </div>
     </div>
   </ion-card>
 </template>
 
 <script setup lang="ts">
-import {computed, PropType, ref} from "vue";
+import {computed, PropType} from "vue";
+import {managedRef as ref, toManagedRef as toRef} from "@/views/vue-utils";
 import {
   IonBadge,
   IonThumbnail,
@@ -69,8 +70,7 @@ import { VoxxrinTalk} from "@/models/VoxxrinTalk";
 import {useRoute} from "vue-router";
 import {EventId} from "@/models/VoxxrinEvent";
 import {getRouteParamsValue} from "@/views/vue-utils";
-import {UserTalkNotesHook, useUserTalkNotes} from "@/state/useUserTalkNotes";
-import {TalkNote} from "../../../../shared/feedbacks.firestore";
+import {TalkNote, TalkStats} from "../../../../shared/feedbacks.firestore";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 
 const baseUrl = import.meta.env.BASE_URL;
@@ -93,6 +93,14 @@ const props = defineProps({
       required: true,
       type: Object as PropType<VoxxrinConferenceDescriptor>
   },
+  talkStats: {
+      required: false,
+      type: Object as PropType<TalkStats|undefined>
+  },
+  talkNotes: {
+      required: false,
+      type: Object as PropType<TalkNote|undefined>
+  }
 })
 
 defineEmits<{
@@ -105,9 +113,6 @@ const talkLang = computed(() => {
 
 const route = useRoute();
 const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')));
-
-const userTalkNotesHook: UserTalkNotesHook = useUserTalkNotes(eventId, props.talk?.id)
-const { talkNotes } = userTalkNotesHook;
 
 const displayedSpeakers = props.talk!.speakers
     .map(s => `${s.fullName}${s.companyName?` (${s.companyName})`:``}`)
@@ -441,7 +446,7 @@ const theme = {
       height: 100%;
       right: 0;
       bottom: 0;
-      background-image: url('assets/images/png/texture-favorited.png');
+      background-image: url('/assets/images/png/texture-favorited.png');
       background-repeat: no-repeat;
       background-position: right;
       background-size: cover;

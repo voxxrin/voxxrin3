@@ -1,4 +1,4 @@
-import {HexColor, ISOLocalDate} from "./type-utils";
+import {HexColor, ISODatetime, ISOLocalDate} from "./type-utils";
 
 export type EventTheme = {
     colors: {
@@ -18,6 +18,7 @@ export type Day = {
 
 export type ListableEvent = {
     id: string;
+    eventFamily: string|undefined,
     title: string,
     description?: string|undefined|null,
     days: Array<Day>,
@@ -32,4 +33,10 @@ export type ListableEvent = {
     logoUrl: string,
     websiteUrl: string,
     theming: EventTheme
+}
+
+export type EventLastUpdates = {
+    favorites: ISODatetime|undefined,
+    feedbacks: ISODatetime|undefined,
+    talkListUpdated: ISODatetime|undefined,
 }

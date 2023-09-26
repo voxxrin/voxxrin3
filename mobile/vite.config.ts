@@ -3,6 +3,7 @@ import vue from '@vitejs/plugin-vue'
 import { VitePWA } from 'vite-plugin-pwa'
 import path from 'path'
 import {defineConfig, UserConfigExport} from 'vite'
+import manifestConfig from './manifest-config.json'
 
 // https://vitejs.dev/config/
 export default defineConfig(({ command, mode }) => {
@@ -18,7 +19,7 @@ export default defineConfig(({ command, mode }) => {
         strategies: 'injectManifest',
         injectRegister: null,
         registerType: 'prompt',
-        includeAssets: ['favicon.png'],
+        includeAssets: ['favicon.png', 'assets/**/*'],
         srcDir: 'src',
         filename: 'sw.ts',
         mode: isDevMode?'development':'production',
@@ -29,19 +30,7 @@ export default defineConfig(({ command, mode }) => {
           sourcemap: isDevMode,
           swDest: 'sw.js',
         },
-        manifest: {
-          name: "Voxxrin - Your conference companion",
-          short_name: "Voxxrin",
-          start_url: "index.html",
-          display: "standalone",
-          icons: [{
-            src: "assets/imgs/logo.png",
-            sizes: "512x512",
-            type: "image/png"
-          }],
-          background_color: "#E30A63",
-          theme_color: "transparent"
-        }
+        manifest: manifestConfig
       })
     ],
     resolve: {

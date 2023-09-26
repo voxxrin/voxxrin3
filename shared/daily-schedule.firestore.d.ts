@@ -4,7 +4,7 @@ import {HexColor} from "./type-utils";
 export type Room = {id: string, title: string}
 
 export type Break = {
-    icon: 'ticket' | 'restaurant' | 'cafe' | 'beer' | 'film' | 'train';
+    icon: 'ticket' | 'restaurant' | 'cafe' | 'beer' | 'movie' | 'wallet';
     title: string;
     room: Room;
 }
@@ -23,7 +23,7 @@ export type Speaker = {
     fullName: string,
     id: string,
     bio?: string|null,
-    social: Array<{type: "twitter"|"linkedin"|"mastodon"|"instagram"|"youtube"|"twitch", url: string}>
+    social: Array<{type: "twitter"|"linkedin"|"mastodon"|"instagram"|"youtube"|"twitch"|"github", url: string}>
 }
 export type Talk = {
     speakers: Speaker[],

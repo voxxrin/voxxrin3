@@ -14,6 +14,10 @@
       ]
     }
   ],
+  "firestore": [{
+    "database": "default",
+    "rules": "firestore/firestore.default.rules"
+  }],
   "emulators": {
     "auth": {
       "port": 9099
@@ -30,6 +34,7 @@
     "singleProjectMode": true
   },
   "hosting": {
+    "site": "voxxrin-v3",
     "public": "hosting/public",
     "ignore": [
       "firebase.json",
@@ -38,12 +43,9 @@
     ],
     "rewrites": [
       {
-        "source": "**",
+        "source": "!(/assets/**|/favicon.*|/sw.js|/manifest.webmanifest)",
         "destination": "/index.html"
       }
     ]
-  },
-  "hosting:voxxrin-v3": {
-    "site": "voxxrin-v3"
   }
 }
