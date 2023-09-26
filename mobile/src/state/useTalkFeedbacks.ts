@@ -1,41 +1,52 @@
 import {EventId} from "@/models/VoxxrinEvent";
-import {computed, unref} from "vue";
-import {useCollection} from "vuefire";
 import {
     collection, CollectionReference,
     doc,
 } from "firebase/firestore";
 import {db} from "@/state/firebase";
-import {Unreffable} from "@/views/vue-utils";
+import {
+    deferredVuefireUseCollection
+} from "@/views/vue-utils";
 import {TalkId} from "@/models/VoxxrinTalk";
 import {TalkAttendeeFeedback} from "../../../shared/talk-feedbacks.firestore";
+import {Ref} from "vue";
+import {toCollectionReferenceArray} from "@/models/utils";
+import {match} from "ts-pattern";
 
+function getTalkFeedbacksRef(eventId: EventId|undefined, talkId: TalkId|undefined, talkFeedbackViewerToken: string|undefined) {
+    if(!talkId || !talkId.value || !eventId || !eventId.value || !talkFeedbackViewerToken) {
+        return undefined;
+    }
+
+    return collection(doc(collection(doc(collection(doc(collection(db,
+                    'events'), eventId.value),
+                'talks'), talkId.value),
+            'feedbacks-access'), talkFeedbackViewerToken),
+        'feedbacks'
+    ) as CollectionReference<TalkAttendeeFeedback>
+}
 export function useTalkFeedbacks(
-    eventIdRef: Unreffable<EventId|undefined>,
-    talkIdRef: Unreffable<TalkId|undefined>,
-    talkFeedbackViewerTokenRef: Unreffable<string|undefined>
+    eventIdRef: Ref<EventId|undefined>,
+    talkIdRef: Ref<TalkId|undefined>,
+    talkFeedbackViewerTokenRef: Ref<string|undefined>
 ) {
 
-    const firestoreTalkFeedbacksSource = computed(() => {
-        const eventId = unref(eventIdRef),
-            talkId = unref(talkIdRef),
-            talkFeedbackViewerToken = unref(talkFeedbackViewerTokenRef);
-
-        if(!talkId || !eventId || !talkFeedbackViewerToken) {
-            return undefined;
+    const firestoreTalkFeedbacksByPublicUserIdRef = deferredVuefireUseCollection(
+        [eventIdRef, talkIdRef, talkFeedbackViewerTokenRef],
+        ([eventId, talkId, talkFeedbackViewerToken]) =>
+            toCollectionReferenceArray(getTalkFeedbacksRef(eventId, talkId, talkFeedbackViewerToken)),
+        firestoreEvent => firestoreEvent,
+        () => {},
+        (change, docId, collectionRef) => {
+            match(change)
+                .with({type:'created'}, change => collectionRef.value.set(docId, change.createdDoc))
+                .with({type:'updated'}, change => collectionRef.value.set(docId, change.updatedDoc))
+                .with({type:'deleted'}, change => collectionRef.value.delete(docId))
+                .exhaustive()
         }
-
-        return collection(doc(collection(doc(collection(doc(collection(db,
-            'events'), eventId.value),
-            'talks'), talkId.value),
-            'feedbacks-access'), talkFeedbackViewerToken),
-            'feedbacks'
-        ) as CollectionReference<TalkAttendeeFeedback>
-    });
-
-    const firestoreTalkFeedbacksRef = useCollection(firestoreTalkFeedbacksSource);
+    )
 
     return {
-        talkFeedbacksRef: firestoreTalkFeedbacksRef
+        firestoreTalkFeedbacksByPublicUserIdRef
     };
 }

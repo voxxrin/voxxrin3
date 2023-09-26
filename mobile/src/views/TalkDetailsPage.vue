@@ -16,9 +16,7 @@
               <ion-icon class="favorite-btn-icon" v-if="!talkNotes.isFavorite" aria-hidden="true" src="/assets/icons/line/bookmark-line-favorite.svg"></ion-icon>
               <ion-icon class="favorite-btn-icon" v-if="talkNotes.isFavorite" aria-hidden="true" src="/assets/icons/solid/bookmark-favorite.svg"></ion-icon>
             </ion-button>
-            <ion-label class="favorite-btn-nb" v-if="eventTalkStats !== undefined">{{
-                eventTalkStats.totalFavoritesCount
-              }}</ion-label>
+            <ion-label class="favorite-btn-nb" v-if="eventTalkStats !== undefined">{{ eventTalkStats.totalFavoritesCount }}</ion-label>
           </div>
         </ion-toolbar>
       </ion-header>
@@ -75,12 +73,14 @@
 <script setup lang="ts">
 import {useRoute} from "vue-router";
 import {EventId} from "@/models/VoxxrinEvent";
-import {getRouteParamsValue, isRefDefined} from "@/views/vue-utils";
-import {useUserTalkNotes} from "@/state/useUserTalkNotes";
+import {getRouteParamsValue, isRefDefined, toManagedRef as toRef, managedRef as ref} from "@/views/vue-utils";
+import {
+    useUserEventTalkNotes,
+    useUserTalkNoteActions,
+} from "@/state/useUserTalkNotes";
 import {TalkId} from "@/models/VoxxrinTalk";
 import {useSharedEventTalk} from "@/state/useEventTalk";
-import {computed} from "vue";
-import {managedRef as ref} from "@/views/vue-utils";
+import {computed, toValue} from "vue";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {IonBadge, IonAvatar, IonText, useIonRouter} from "@ionic/vue";
 import {business} from "ionicons/icons";
@@ -88,6 +88,10 @@ import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
 import VoxDivider from "@/components/ui/VoxDivider.vue";
 import {goBackOrNavigateTo} from "@/router";
 import TalkDetailsHeader from "@/components/talk-details/TalkDetailsHeader.vue";
+import {useEventTalkStats} from "@/state/useEventTalkStats";
+import {Logger} from "@/services/Logger";
+
+const LOGGER = Logger.named("TalkDetailsPage");
 
 const ionRouter = useIonRouter();
 function closeAndNavigateBack() {
@@ -96,12 +100,26 @@ function closeAndNavigateBack() {
 
 const route = useRoute();
 const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')));
-const talkId = computed(() => new TalkId(getRouteParamsValue(route, 'talkId')));
+const talkId = ref(new TalkId(getRouteParamsValue(route, 'talkId')));
 const {conferenceDescriptor: confDescriptor} = useSharedConferenceDescriptor(eventId);
 
-const { eventTalkStats, talkNotes, toggleFavorite, toggleWatchLater} = useUserTalkNotes(eventId, talkId)
+const { userEventTalkNotesRef } = useUserEventTalkNotes(eventId, toRef(() => talkId ? [talkId.value] : undefined))
+const talkNotes = toRef(() => {
+    const userEventTalkNotes = toValue(userEventTalkNotesRef)
+    return Array.from(userEventTalkNotes.values())[0];
+})
+const {firestoreEventTalkStatsRef} = useEventTalkStats(eventId, toRef(() => talkId ? [talkId.value] : undefined));
+const eventTalkStats = computed(() => {
+    const firestoreEventTalkStats = toValue(firestoreEventTalkStatsRef);
+    return Array.from(firestoreEventTalkStats.values())[0];
+})
 const { talkDetails: detailedTalk } = useSharedEventTalk(confDescriptor, talkId);
 const { LL } = typesafeI18n()
+
+const {toggleFavorite, toggleWatchLater} = useUserTalkNoteActions(
+    eventId, talkId,
+    talkNotes,
+);
 
 const theme = computed(() => {
     if(isRefDefined(detailedTalk)) {

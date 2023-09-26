@@ -102,7 +102,7 @@ import {TalkId} from "@/models/VoxxrinTalk";
 import {
   useConferenceDescriptor, useSharedConferenceDescriptor,
 } from "@/state/useConferenceDescriptor";
-import {computed, unref} from "vue";
+import {computed, toValue, unref} from "vue";
 import {managedRef as ref} from "@/views/vue-utils";
 import {numberArrayStats, sortBy} from "@/models/utils";
 import TalkDetailsHeader from "@/components/talk-details/TalkDetailsHeader.vue";
@@ -122,9 +122,9 @@ const { talkDetails: detailedTalk } = useSharedEventTalk(confDescriptorRef, talk
 
 const { LL } = typesafeI18n()
 
-const {talkFeedbacksRef} = useTalkFeedbacks(eventId, talkId, secretFeedbacksViewerToken);
+const {firestoreTalkFeedbacksByPublicUserIdRef} = useTalkFeedbacks(eventId, talkId, secretFeedbacksViewerToken);
 const displayableTalkFeedbacks = computed(() => {
-    const talkFeedbacks = unref(talkFeedbacksRef);
+    const firestoreTalkFeedbacksByPublicUserId = unref(firestoreTalkFeedbacksByPublicUserIdRef);
     const confDescriptor = unref(confDescriptorRef);
 
     if(!confDescriptor) {
@@ -136,7 +136,7 @@ const displayableTalkFeedbacks = computed(() => {
         return choiceLabelsById;
     }, new Map<string,string>())
 
-    return sortBy(talkFeedbacks.map(tf => ({
+    return sortBy(Array.from(firestoreTalkFeedbacksByPublicUserId.values()).map(tf => ({
         ...tf,
         ratings: {
             ...tf.ratings,
@@ -146,12 +146,14 @@ const displayableTalkFeedbacks = computed(() => {
 })
 
 const talkFeedbacksStats = computed(() => {
-    const feedbacks = unref(talkFeedbacksRef);
+    const firestoreTalkFeedbacksByPublicUserId = toValue(firestoreTalkFeedbacksByPublicUserIdRef);
     const confDescriptor = unref(confDescriptorRef);
 
     if(!confDescriptor) {
         return undefined;
     }
+
+    const feedbacks = Array.from(firestoreTalkFeedbacksByPublicUserId.values());
 
     const linearRatingsStats = numberArrayStats(feedbacks.map(f => f.ratings["linear-rating"]))
 
@@ -159,7 +161,7 @@ const talkFeedbacksStats = computed(() => {
         bingo.push({
             choiceId: choice.id,
             choiceLabel: choice.label,
-            count: feedbacks.filter(f => (f.ratings.bingo || []).includes(choice.id)).length
+            count: feedbacks.filter(f => (f.ratings['bingo'] || []).includes(choice.id)).length
         })
         return bingo;
     }, [] as Array<{ choiceId: string, choiceLabel: string, count: number }>),

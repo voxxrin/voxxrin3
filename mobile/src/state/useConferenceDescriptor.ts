@@ -1,19 +1,27 @@
-import {computed, unref, watch} from "vue";
+import {computed, Ref, unref, watch} from "vue";
 import {
     createVoxxrinConferenceDescriptor, VoxxrinConferenceDescriptor,
 } from "@/models/VoxxrinConferenceDescriptor";
 import {EventId} from "@/models/VoxxrinEvent";
 import {ConferenceDescriptor} from "../../../shared/conference-descriptor.firestore";
-import {Unreffable} from "@/views/vue-utils";
+import {
+    deferredVuefireUseDocument
+} from "@/views/vue-utils";
 import {collection, doc, DocumentReference} from "firebase/firestore";
 import {db} from "@/state/firebase";
-import {useDocument} from "vuefire";
 import {createSharedComposable} from "@vueuse/core";
 import {PERF_LOGGER} from "@/services/Logger";
 import {useOverridenEventDescriptorProperties} from "@/state/useDevUtilities";
 
+function getConferenceDescriptorDoc(eventId: EventId|undefined) {
+    if(!eventId || !eventId.value) {
+        return undefined;
+    }
+
+    return doc(collection(doc(collection(db, 'events'), eventId.value), 'event-descriptor'), 'self') as DocumentReference<ConferenceDescriptor & {__initialId: string}>;;
+}
 export function useConferenceDescriptor(
-    eventIdRef: Unreffable<EventId | undefined>) {
+    eventIdRef: Ref<EventId | undefined>) {
 
     const overridenEventDescriptorPropertiesRef = useOverridenEventDescriptorProperties();
 
@@ -22,16 +30,8 @@ export function useConferenceDescriptor(
         PERF_LOGGER.debug(() => `useConferenceDescriptor[eventIdRef] updated from [${oldVal?.value}] to [${newVal?.value}]`)
     }, {immediate: true})
 
-    const firestoreConferenceDescriptorSource = computed(() => {
-        const eventId = unref(eventIdRef);
-        if(!eventId || !eventId.value) {
-            return undefined;
-        }
-
-        return doc(collection(doc(collection(db, 'events'), eventId.value), 'event-descriptor'), 'self') as DocumentReference<ConferenceDescriptor & {__initialId: string}>
-    });
-
-    const firestoreConferenceDescriptorRef = useDocument(firestoreConferenceDescriptorSource);
+    const firestoreConferenceDescriptorRef = deferredVuefireUseDocument([eventIdRef],
+        ([eventId]) => getConferenceDescriptorDoc(eventId));
 
     return {
         conferenceDescriptor: computed(() => {

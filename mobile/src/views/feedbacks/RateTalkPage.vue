@@ -6,7 +6,9 @@
       <slot>
         <div class="rateTalkView">
           <div class="rateTalkView-head">
-            <schedule-talk :conf-descriptor="confDescriptorRef" :is-highlighted="() => false" :talk="labelledTimeslotWithTalkRef.talk">
+            <schedule-talk :conf-descriptor="confDescriptorRef" :is-highlighted="() => false"
+                           :talk="labelledTimeslotWithTalkRef.talk"
+                           :talk-notes="userEventTalkNotesRef.get(labelledTimeslotWithTalkRef.talk.id.value)">
             </schedule-talk>
           </div>
 
@@ -65,10 +67,10 @@
 
 <script setup lang="ts">
 import {EventId} from "@/models/VoxxrinEvent";
-import {getRouteParamsValue} from "@/views/vue-utils";
+import {getRouteParamsValue, toManagedRef as toRef} from "@/views/vue-utils";
 import {useRoute} from "vue-router";
 import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
-import {computed, reactive, unref, watch} from "vue";
+import {computed, reactive, toValue, unref, watch} from "vue";
 import {managedRef as ref} from "@/views/vue-utils";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {TalkId} from "@/models/VoxxrinTalk";
@@ -88,12 +90,13 @@ import VoxDivider from "@/components/ui/VoxDivider.vue";
 import FeedbackFooter from "@/components/feedbacks/FeedbackFooter.vue";
 import {goBackOrNavigateTo} from "@/router";
 import LabelledLinearRating from "@/components/ratings/LabelledLinearRating.vue";
+import {useUserEventTalkNotes} from "@/state/useUserTalkNotes";
 
 const { LL } = typesafeI18n()
 
 const route = useRoute();
 const eventIdRef = computed(() => new EventId(getRouteParamsValue(route, 'eventId')));
-const talkId = new TalkId(getRouteParamsValue(route, 'talkId'));
+const talkIdRef = ref(new TalkId(getRouteParamsValue(route, 'talkId')));
 const {conferenceDescriptor: confDescriptorRef } = useSharedConferenceDescriptor(eventIdRef);
 
 const labelledTimeslotWithTalkRef = ref<undefined | DailyLabelledTimeslotWithTalk>(undefined);
@@ -104,7 +107,7 @@ const dayIdRef = computed(() => {
 
 const feedback: UnwrapNestedRefs<Omit<ProvidedUserFeedback, 'createdOn'|'lastUpdatedOn'>> = reactive({
     timeslotId: '',
-    talkId: talkId.value,
+    talkId: talkIdRef.value.value,
     alsoConcernsOverlappingTimeslotIds: [],
     status: 'provided',
     ratings: {
@@ -115,7 +118,7 @@ const feedback: UnwrapNestedRefs<Omit<ProvidedUserFeedback, 'createdOn'|'lastUpd
     comment: null
 })
 
-watch([confDescriptorRef], async ([confDescriptor]) => {
+watch([confDescriptorRef, talkIdRef], async ([confDescriptor, talkId]) => {
     if(!confDescriptor) {
         labelledTimeslotWithTalkRef.value = undefined;
         return;
@@ -161,6 +164,12 @@ const feedbackCanBeSubmitted = computed(() => {
 })
 
 const {updateTimeslotFeedback} = useUserFeedbacks(eventIdRef, dayIdRef);
+
+const { userEventTalkNotesRef } = useUserEventTalkNotes(eventIdRef, toRef(() => talkIdRef ? [talkIdRef.value] : undefined))
+const talkNotes = toRef(() => {
+    const userEventTalkNotes = toValue(userEventTalkNotesRef)
+    return Array.from(userEventTalkNotes.values())[0];
+})
 
 async function submitFeedback() {
     const labelledTimeslotWithTalk = unref(labelledTimeslotWithTalkRef);

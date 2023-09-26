@@ -3,12 +3,14 @@
     <talk-format-groups-breakdown :conf-descriptor="confDescriptor" :talks="displayedTalks">
       <template #talk="{ talk }">
         <ion-item class="listTalks-item">
-          <schedule-talk :talk="talk" @talkClicked="updateSelected($event)" :is-highlighted="(talk, talkNotes) => talk.id.isSameThan(selectedTalkId)" :conf-descriptor="confDescriptor">
+          <schedule-talk :talk="talk" :talk-stats="talkStatsRefByTalkId.get(talk.id.value)" :talk-notes="userTalkNotesRefByTalkId.get(talk.id.value)"
+                         :is-highlighted="(talk, talkNotes) => talk.id.isSameThan(selectedTalkId)" :conf-descriptor="confDescriptor"
+                         @talkClicked="updateSelected($event)" >
             <template #upper-right="{ talk, talkNotes }">
-              <talk-is-favorited :talk-notes="talkNotes.value" />
+              <talk-is-favorited :talk-notes="talkNotes" />
             </template>
-            <template #footer-actions="{ talk, userTalkHook }">
-              <talk-watch-later-button :user-talk-notes="userTalkHook" :conf-descriptor="confDescriptor"></talk-watch-later-button>
+            <template #footer-actions="{ talk, talkNotes, talkStats }">
+              <talk-watch-later-button :user-talk-notes="talkNotes" :conf-descriptor="confDescriptor"></talk-watch-later-button>
               <talk-select-for-feedback :is-active="talk.id.isSameThan(selectedTalkId)" @click.stop="() => updateSelected(talk)"></talk-select-for-feedback>
             </template>
           </schedule-talk>
@@ -24,8 +26,8 @@
 </template>
 
 <script setup lang="ts">
-import {computed, PropType, Ref, unref} from "vue";
-import {managedRef as ref} from "@/views/vue-utils";
+import {computed, PropType, Ref, toValue} from "vue";
+import {managedRef as ref, toManagedRef as toRef} from "@/views/vue-utils";
 import {TalkId, VoxxrinTalk} from "@/models/VoxxrinTalk";
 import TalkFormatGroupsBreakdown from "@/components/schedule/TalkFormatGroupsBreakdown.vue";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
@@ -34,6 +36,8 @@ import TalkWatchLaterButton from "@/components/talk-card/TalkWatchLaterButton.vu
 import TalkSelectForFeedback from "@/components/talk-card/TalkSelectForFeedback.vue";
 import ScheduleTalk from "@/components/talk-card/ScheduleTalk.vue";
 import TalkIsFavorited from "@/components/talk-card/TalkIsFavorited.vue";
+import {useEventTalkStats} from "@/state/useEventTalkStats";
+import {useUserEventTalkNotes} from "@/state/useUserTalkNotes";
 
 const { LL } = typesafeI18n()
 
@@ -61,6 +65,12 @@ const emits = defineEmits<{
     (e: 'talk-deselected', talk: VoxxrinTalk): void,
 }>()
 
+const eventId = toRef(() => props.confDescriptor?.id);
+const talkIdsRef = toRef(() => props.talks?.map(talk => talk.id));
+
+const {firestoreEventTalkStatsRef: talkStatsRefByTalkId} = useEventTalkStats(eventId, talkIdsRef)
+const {userEventTalkNotesRef: userTalkNotesRefByTalkId} = useUserEventTalkNotes(eventId, talkIdsRef)
+
 function updateSelected(talk: VoxxrinTalk) {
     if(talk.id.isSameThan(props.selectedTalkId)) {
         emits('talk-deselected', talk);
@@ -72,10 +82,10 @@ function updateSelected(talk: VoxxrinTalk) {
 const showUnfavoritedTalksRef = ref<boolean>(false);
 
 const displayedTalks: Ref<VoxxrinTalk[]> = computed(() => {
-    const showUnfavoritedTalks = unref(showUnfavoritedTalksRef),
-        allUserFavoritedTalkIds = props.allUserFavoritedTalkIds;
+    const showUnfavoritedTalks = toValue(showUnfavoritedTalksRef),
+        allUserFavoritedTalkIds = toValue(props.allUserFavoritedTalkIds);
 
-    if(!props.talks) {
+    if(!props.talks || !allUserFavoritedTalkIds) {
         return []
     }
 

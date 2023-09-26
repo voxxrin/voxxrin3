@@ -20,7 +20,7 @@ export class Logger {
 
     private constructor(private readonly name: string) {}
 
-    public log(level: LogLevel, content: LogProducer) {
+    public log(level: LogLevel, content: LogProducer, param?: unknown) {
         if(this.logEnabled === undefined) {
             this.logEnabled = Logger.isLogEnabled(this.name);
         }
@@ -36,16 +36,16 @@ export class Logger {
 
         const message = typeof content === 'function' ? content() : content;
         if(typeof message === 'string') {
-            console[level](`[${this.name}] ${message}`);
+            console[level](`[${this.name}] ${message}`, param);
         } else {
-            console[level](`[${this.name}]`, message);
+            console[level](`[${this.name}]`, ...[message].concat(param?[param]:[]));
         }
     }
 
-    public debug(content: LogProducer) { this.log('debug', content); }
-    public info(content: LogProducer) { this.log('info', content); }
-    public warn(content: LogProducer) { this.log('warn', content); }
-    public error(content: LogProducer) { this.log('error', content); }
+    public debug(content: LogProducer, param?: unknown) { this.log('debug', content, param); }
+    public info(content: LogProducer, param?: unknown) { this.log('info', content, param); }
+    public warn(content: LogProducer, param?: unknown) { this.log('warn', content, param); }
+    public error(content: LogProducer, param?: unknown) { this.log('error', content, param); }
 
     public static named(name: string) {
         if(LOGGERS_BY_NAME.has(name)) {

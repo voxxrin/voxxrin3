@@ -1,5 +1,6 @@
 <template>
   <ion-accordion :value="timeslot.id.value"
+       :style="{ 'animation-delay': `${animationDelay}ms` }"
        :class="{ 'slot-accordion': true, [`_chronological_status_is_${progress?.status}`]: true, '_feedback-provided': !hasMissingFeedback, '_missing-feedback': hasMissingFeedback, '_is-break': timeslot.type==='break' }">
     <ion-item slot="header" color="light">
       <ion-ripple-effect type="bounded"></ion-ripple-effect>
@@ -36,7 +37,7 @@
 
 <script setup lang="ts">
 import {computed, PropType} from "vue";
-import {managedRef as ref} from "@/views/vue-utils";
+import {managedRef as ref, toManagedRef as toRef} from "@/views/vue-utils";
 import {
   IonProgressBar,
   IonAccordion,
@@ -80,6 +81,11 @@ const props = defineProps({
       required: false,
       type: Object as PropType<Array<"add-feedback-btn">>,
       default: []
+  },
+  animationDelay: {
+    required: false,
+    type: Number as PropType<Number|undefined>,
+    default: undefined
   }
 })
 
@@ -89,7 +95,7 @@ defineEmits<{
 
 const { LL } = typesafeI18n()
 
-const { conferenceDescriptor } = useSharedConferenceDescriptor(props.confDescriptor?.id);
+const { conferenceDescriptor } = useSharedConferenceDescriptor(toRef(() => props.confDescriptor?.id));
 
 const progress = ref<TimeslotTimingProgress>()
 useInterval(() => {
@@ -111,6 +117,9 @@ const hasMissingFeedback = computed(() => {
 
   // * Base Style Accordion *//
   ion-accordion {
+    transition: var(--app-voxxrin-animations-timeslots-anim-duration);
+    animation: scale-up-center var(--app-voxxrin-animations-timeslots-anim-duration) cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+
     border-bottom: 1px solid var(--app-background);
 
     &.accordion-expanded {
@@ -317,4 +326,16 @@ const hasMissingFeedback = computed(() => {
       }
     }
   }
+
+  @keyframes scale-up-center {
+    0% {
+      opacity: 0;
+      transform: scale(0.2);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
 </style>

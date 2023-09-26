@@ -1,6 +1,6 @@
 <template>
-  <slot name="iterator" :timeslot="timeslot"
-        v-for="(timeslot) in timeslotsRef" :key="timeslot.id.value" />
+  <slot name="iterator" :timeslot="timeslot" :index="index"
+        v-for="(timeslot, index) in timeslotsRef" :key="timeslot.id.value" />
 </template>
 
 <script setup lang="ts">
@@ -53,7 +53,7 @@ onMounted(async () => {
     useInterval(recomputeMissingFeedbacksList, {freq:"low-frequency"}, {immediate: true})
 })
 
-const { userFeedbacks: dailyUserFeedbacksRef  } = useUserFeedbacks(props.confDescriptor?.id, props.dayId)
+const { userFeedbacks: dailyUserFeedbacksRef  } = useUserFeedbacks(toRef(() => props.confDescriptor?.id), toRef(() => props.dayId))
 const { timeslotsRef } = useLabelledTimeslotWithFeedbacks(
     toRef(props, 'dailySchedule'),
     dailyUserFeedbacksRef, toRef(props, 'searchTerms'));

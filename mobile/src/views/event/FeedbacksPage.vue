@@ -41,7 +41,11 @@
                     </div>
                   </ion-item>
                   <ion-item v-else-if="feedback.status === 'provided'" class="listTalks-item">
-                    <schedule-talk :talk="findTimeslotTalkMatchingFeedback(timeslot, feedback.userFeedback)!" @talkClicked="toBeImplemented('To be implemented: opening feedback page in EDIT mode')" :is-highlighted="(talk, talkNotes) => talkNotes.isFavorite" :conf-descriptor="confDescriptor">
+                    <schedule-talk :talk="findTimeslotTalkMatchingFeedback(timeslot, feedback.userFeedback)!"
+                                   :talk-notes="userEventTalkNotesRef.get(findTimeslotTalkMatchingFeedback(timeslot, feedback.userFeedback)!.id.value)"
+                                   :is-highlighted="(talk, talkNotes) => talkNotes.isFavorite"
+                                   :conf-descriptor="confDescriptor"
+                                   @talkClicked="toBeImplemented('To be implemented: opening feedback page in EDIT mode')">
                       <template #upper-right="{ talk }">
                         <talk-format :format="talk.format" class="talkFormatContainer" />
                       </template>
@@ -78,7 +82,7 @@
   import DaySelector from "@/components/schedule/DaySelector.vue";
   import TimeSlotAccordion from "@/components/timeslots/TimeSlotAccordion.vue";
   import {IonAccordionGroup} from "@ionic/vue";
-  import {VoxxrinScheduleTimeSlot} from "@/models/VoxxrinSchedule";
+  import {extractTalksFromSchedule, VoxxrinScheduleTimeSlot} from "@/models/VoxxrinSchedule";
   import TimeslotsIterator from "@/components/timeslots/TimeslotsIterator.vue";
   import ScheduleTalk from "@/components/talk-card/ScheduleTalk.vue";
   import {useTabbedPageNav} from "@/state/useTabbedPageNav";
@@ -88,6 +92,8 @@
   import LinearRating from "@/components/ratings/LinearRating.vue";
   import {useSharedEventSelectedDay} from "@/state/useEventSelectedDay";
   import {areFeedbacksEnabled} from "@/models/VoxxrinConferenceDescriptor";
+  import {useUserEventTalkNotes} from "@/state/useUserTalkNotes";
+  import {computed, toValue} from "vue";
 
   const { LL } = typesafeI18n()
 
@@ -98,6 +104,13 @@
   const {selectedDayId} = useSharedEventSelectedDay(eventId);
 
   const { schedule: currentSchedule } = useSchedule(confDescriptor, selectedDayId)
+
+  const talkIdsRef = computed(() => {
+      const schedule = toValue(currentSchedule);
+      return schedule ? extractTalksFromSchedule(schedule).map(talk => talk.id) : [];
+  })
+
+  const {userEventTalkNotesRef} = useUserEventTalkNotes(eventId, talkIdsRef)
 
   const expandedTimeslotIds = ref<string[]>([])
   function toggleExpandedTimeslot(timeslot: VoxxrinScheduleTimeSlot) {

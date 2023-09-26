@@ -1,6 +1,5 @@
 import {EventId} from "@/models/VoxxrinEvent";
-import {computed, ComputedRef, unref} from "vue";
-import {useDocument} from "vuefire";
+import {computed, ComputedRef, Ref, toValue, unref, watch} from "vue";
 import {useCurrentUser} from "@/state/useCurrentUser";
 import {
     collection,
@@ -8,40 +7,42 @@ import {
     DocumentReference, updateDoc,
 } from "firebase/firestore";
 import {db} from "@/state/firebase";
-import {VoxxrinUserTokensWallet} from "@/models/VoxxrinUser";
+import {TalkFeedbacksViewerToken, VoxxrinUserTokensWallet} from "@/models/VoxxrinUser";
 import {createSharedComposable} from "@vueuse/core";
 import {
     EventOrganizerSecretToken,
     UserTokensWallet
 } from "../../../shared/user-tokens-wallet.firestore";
 import {TalkId} from "@/models/VoxxrinTalk";
-import {Unreffable} from "@/views/vue-utils";
+import {
+    Unreffable,
+    deferredVuefireUseDocument
+} from "@/views/vue-utils";
 import {TalkFeedbacksViewerSecretToken} from "../../../shared/conference-organizer-space.firestore";
 import { arrayUnion } from "firebase/firestore";
 import {Logger, PERF_LOGGER} from "@/services/Logger";
+import {User} from "firebase/auth";
 
 const LOGGER = Logger.named("useUserTokensWallet");
 
+function getUserTokensWalletDoc(user: User|null|undefined) {
+    if(!user) {
+        return undefined;
+    }
+
+    return doc(collection(doc(collection(db,
+            'users'), user.uid),
+        'tokens-wallet'), 'self'
+    ) as DocumentReference<UserTokensWallet>;
+}
 export function useUserTokensWallet() {
 
     PERF_LOGGER.debug(() => `useUserTokensWallet()`)
 
     const userRef = useCurrentUser()
 
-    const firestoreUserTokensWalletSource = computed(() => {
-        const user = unref(userRef);
-
-        if(!user) {
-            return undefined;
-        }
-
-        return doc(collection(doc(collection(db,
-            'users'), user.uid),
-            'tokens-wallet'), 'self'
-        ) as DocumentReference<UserTokensWallet>
-    });
-
-    const firestoreUserTokensWalletRef = useDocument(firestoreUserTokensWalletSource);
+    const firestoreUserTokensWalletRef = deferredVuefireUseDocument([userRef],
+        ([user]) => getUserTokensWalletDoc(user));
 
     const voxxrinUserTokensWallet: ComputedRef<VoxxrinUserTokensWallet|undefined> = computed(() => {
         const firestoreUserTokensWallet = unref(firestoreUserTokensWalletRef)
@@ -69,7 +70,8 @@ export function useUserTokensWallet() {
     })
 
     const registerEventOrganizerSecretToken = async (eventOrganizerSecretToken: EventOrganizerSecretToken) => {
-        const firestoreUserTokensWalletDoc = unref(firestoreUserTokensWalletSource);
+        const user = toValue(userRef);
+        const firestoreUserTokensWalletDoc = getUserTokensWalletDoc(user);
 
         if(!firestoreUserTokensWalletDoc) {
             LOGGER.error(() => `firestoreUserTokensWalletDoc is undefined !`)
@@ -80,7 +82,8 @@ export function useUserTokensWallet() {
     }
 
     const registerTalkFeedbacksViewerSecretToken = async (talkFeedbacksViewerSecretToken: TalkFeedbacksViewerSecretToken) => {
-        const firestoreUserTokensWalletDoc = unref(firestoreUserTokensWalletSource);
+        const user = toValue(userRef);
+        const firestoreUserTokensWalletDoc = getUserTokensWalletDoc(user);
 
         if(!firestoreUserTokensWalletDoc) {
             LOGGER.error(() => `firestoreUserTokensWalletDoc is undefined !`)
@@ -102,7 +105,7 @@ export function useUserTokensWallet() {
             return userTokensWallet.secretTokens.talkFeedbacksViewerTokens.filter(
                 t => t.eventId.isSameThan(eventId)
             )
-        })
+        }) as Ref<TalkFeedbacksViewerToken[]>
     }
 
     return {
