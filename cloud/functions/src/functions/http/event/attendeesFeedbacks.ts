@@ -25,11 +25,9 @@ const attendeesFeedbacks = functions.https.onRequest(async (request, response) =
     if(!organizerSecretToken && !familyToken && !familyOrganizerSecretToken) { return sendResponseMessage(response, 400, `Missing either [organizerSecretToken] or [familyToken] or [familyOrganizerSecretToken] query parameter !`) }
     if(isNaN(sinceTimestamp)) { return sendResponseMessage(response, 400, `Missing valid [updatedSince] query parameter !`) }
 
+    const eventDescriptor = await getEventDescriptor(eventId);
     if(familyOrganizerSecretToken) {
-        const [eventDescriptor, familyOrganizerToken] = await Promise.all([
-            getEventDescriptor(eventId),
-            getFamilyOrganizerToken(familyOrganizerSecretToken),
-        ]);
+        const familyOrganizerToken = await getFamilyOrganizerToken(familyOrganizerSecretToken);
 
         if(!eventDescriptor.eventFamily || !familyOrganizerToken.eventFamilies.includes(eventDescriptor.eventFamily)) {
             return sendResponseMessage(response, 400, `Provided family organizer token doesn't match with event ${eventId} family: [${eventDescriptor.eventFamily}]`)
@@ -56,10 +54,23 @@ const attendeesFeedbacks = functions.https.onRequest(async (request, response) =
 
         const perTalkFeedbacks = await Promise.all(organizerSpace.talkFeedbackViewerTokens.map(async (talkFeedbackViewerToken) => {
             const feedbacks = await ensureTalkFeedbackViewerTokenIsValidThenGetFeedbacks(talkFeedbackViewerToken.eventId, talkFeedbackViewerToken.talkId, talkFeedbackViewerToken.secretToken, updatedSince);
+
+            // Enriching bingo entries with label
+            const enrichedFeedbacks = feedbacks.map(feedback => ({
+                ...feedback,
+                ratings: {
+                    ...feedback.ratings,
+                    bingo: feedback.ratings.bingo.map(bingoId => {
+                        const bingoEntry = eventDescriptor.features.ratings.bingo.choices.find(choice => choice.id === bingoId);
+                        return bingoEntry || {id: bingoId, label: null};
+                    })
+                }
+            }))
+
             return {
                 eventId: talkFeedbackViewerToken.eventId,
                 talkId: talkFeedbackViewerToken.talkId,
-                feedbacks
+                feedbacks: enrichedFeedbacks
             };
         }))
 
