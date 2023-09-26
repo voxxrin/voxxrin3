@@ -11,6 +11,9 @@ import {
     gettingRidOfUserPreferencesPastEvents
 } from "../firestore/migrations/003-gettingRidOfUserPreferencesPastEvents";
 import {createOrganizerSpaceRatings} from "../firestore/migrations/006-createOrganizerSpaceRatings";
+import {
+    deleteComputedTalkFavoritesCollections
+} from "../firestore/migrations/007-deleteComputedTalkFavoritesCollection";
 
 /**
  * Like Flyway, but for firestore :-)
@@ -21,12 +24,18 @@ const MIGRATIONS: Migration[] = [
     { name: "addUserIdInTokenWallet", exec: addUserIdInTokenWallet },
     { name: "gettingRidOfUserPreferencesPastEvents", exec: gettingRidOfUserPreferencesPastEvents },
     { name: "createOrganizerSpaceRatings", exec: createOrganizerSpaceRatings },
+    // This migration can wait Devoxx BE '23 to be completed, as __computed collection might still be
+    // used by people having an old version of the app in their service worker cache, so the longer we keep
+    // the collection and the safer we will be
+    { name: "deleteComputedTalkFavoritesCollections", exec: deleteComputedTalkFavoritesCollections, minimumMigrationDate: "2023-10-09T00:00:00Z" },
 ];
 
 export type MigrationResult = "OK"|"Error";
 
 type Migration = {
-    name: string, exec: () => Promise<MigrationResult>
+    name: string,
+    exec: () => Promise<MigrationResult>,
+    minimumMigrationDate?: ISODatetime
 }
 
 type SuccessfulPersistedMigration = {
@@ -75,7 +84,9 @@ export const migrateFirestoreSchema = https.onRequest(async (request, response) 
         Known migrations: ${migrationNames.join(", ")}`)
     }
 
-    const { executedMigrations: alreadyExecutedMigrations, migrationsToExecute, error } = MIGRATIONS.reduce((result, migration, idx) => {
+    const { executedMigrations: alreadyExecutedMigrations, migrationsToExecute, error } = MIGRATIONS
+        .filter(migration => !migration.minimumMigrationDate || new Date(migration.minimumMigrationDate).getTime() < Date.now())
+        .reduce((result, migration, idx) => {
         if(result.error) {
             return result;
         }

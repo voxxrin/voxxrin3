@@ -4,11 +4,8 @@ import { db, info } from "../../firebase"
 import { FieldValue } from "firebase-admin/firestore";
 import {
     TalkStats,
-    UserComputedEventInfos,
     UserTalkNote
 } from "../../../../../shared/feedbacks.firestore";
-import {firestore} from "firebase-admin";
-import DocumentReference = firestore.DocumentReference;
 import {eventLastUpdateRefreshed} from "./firestore-utils";
 
 async function upsertTalkStats(eventId: string, talkId: string, isFavorite: boolean) {
@@ -25,26 +22,6 @@ async function upsertTalkStats(eventId: string, talkId: string, isFavorite: bool
             totalFavoritesCount: isFavorite?1:0
         }
         await existingTalksStatsEntryRef.set(newTalkStatsEntry);
-    }
-}
-
-async function updateUserTalkAllFavorites(userId: string, eventId: string, talkId: string, isFavorite: boolean) {
-    const existingUserTalkComputedRef = db
-        .collection("users").doc(userId)
-        .collection("events").doc(eventId)
-        .collection("__computed").doc("self") as DocumentReference<UserComputedEventInfos>;
-
-    const existingUserTalkComputedDoc = await existingUserTalkComputedRef.get()
-    if(existingUserTalkComputedDoc.exists) {
-        const updatedFavorites = isFavorite
-            ?Array.from(new Set((existingUserTalkComputedDoc.data()?.favoritedTalkIds||[]).concat(talkId)))
-            :(existingUserTalkComputedDoc.data()?.favoritedTalkIds||[]).filter(favoritedTalkId => favoritedTalkId !== talkId);
-
-        await existingUserTalkComputedRef.update({ favoritedTalkIds: updatedFavorites });
-    } else {
-        await existingUserTalkComputedRef.set({
-            favoritedTalkIds: isFavorite?[talkId]:[]
-        });
     }
 }
 
@@ -67,7 +44,6 @@ export const onUserTalksNoteUpdate = functions.firestore
             await Promise.all([
                 eventLastUpdateRefreshed(eventId, [ "favorites" ]),
                 upsertTalkStats(eventId, talkId, isFavorite),
-                updateUserTalkAllFavorites(userId, eventId, talkId, isFavorite),
             ])
         }
     });
@@ -88,7 +64,6 @@ export const onUserTalksNoteCreate = functions.firestore
             await Promise.all([
                 eventLastUpdateRefreshed(eventId, [ "favorites" ]),
                 upsertTalkStats(eventId, talkId, isFavorite),
-                updateUserTalkAllFavorites(userId, eventId, talkId, isFavorite),
             ])
         }
     });
