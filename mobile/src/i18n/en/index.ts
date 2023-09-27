@@ -83,6 +83,7 @@ const en = {
 	Past_events: "Past events",
 	New_content_available_click_on_reload_button_to_update: "New content available. Click on reload button to update in background then auto-reload page once content is downloaded.",
 	Reload: "Reload",
+	No_talks_matching_search_terms: "No talks found for selected day",
 } satisfies BaseTranslation
 
 export default en

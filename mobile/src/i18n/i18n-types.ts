@@ -345,6 +345,10 @@ type RootTranslation = {
 	 * R​e​l​o​a​d
 	 */
 	Reload: string
+	/**
+	 * N​o​ ​t​a​l​k​s​ ​f​o​u​n​d​ ​f​o​r​ ​s​e​l​e​c​t​e​d​ ​d​a​y
+	 */
+	No_talks_matching_search_terms: string
 }
 
 export type TranslationFunctions = {
@@ -676,6 +680,10 @@ export type TranslationFunctions = {
 	 * Reload
 	 */
 	Reload: () => LocalizedString
+	/**
+	 * No talks found for selected day
+	 */
+	No_talks_matching_search_terms: () => LocalizedString
 }
 
 export type Formatters = {}

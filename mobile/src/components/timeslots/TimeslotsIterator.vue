@@ -1,6 +1,10 @@
 <template>
   <slot name="iterator" :timeslot="timeslot" :index="index"
         v-for="(timeslot, index) in timeslotsRef" :key="timeslot.id.value" />
+
+  <no-results v-if="searchTerms && !timeslotsRef.length" illu-path="images/svg/illu-no-result.svg">
+    <template #title>{{ LL.No_talks_matching_search_terms() }}</template>
+  </no-results>
 </template>
 
 <script setup lang="ts">
@@ -19,6 +23,8 @@ import {useUserFeedbacks} from "@/state/useUserFeedbacks";
 import {useCurrentClock} from "@/state/useCurrentClock";
 import {useInterval} from "@/views/vue-utils";
 import {PERF_LOGGER, Logger} from "@/services/Logger";
+import NoResults from "@/components/ui/NoResults.vue";
+import {typesafeI18n} from "@/i18n/i18n-vue";
 
 const LOGGER = Logger.named("TimeslotIterator");
 
@@ -50,6 +56,8 @@ onMounted(async () => {
     PERF_LOGGER.debug(`SchedulePage mounted !`)
     useInterval(recomputeMissingFeedbacksList, {freq:"low-frequency"}, {immediate: true})
 })
+
+const { LL } = typesafeI18n()
 
 const { userFeedbacks: dailyUserFeedbacksRef  } = useUserFeedbacks(toRef(() => props.confDescriptor?.id), toRef(() => props.dayId))
 const { timeslotsRef } = useLabelledTimeslotWithFeedbacks(
