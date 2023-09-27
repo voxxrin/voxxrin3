@@ -1,11 +1,11 @@
 import {
     BreakTimeSlot,
     DailySchedule,
-    ScheduleTimeSlot, TalksTimeSlot,
+    TalksTimeSlot,
     TimeSlotBase
 } from "../../../shared/daily-schedule.firestore";
 import {
-    createVoxxrinTalkFromFirestore, TalkId,
+    createVoxxrinTalkFromFirestore, filterTalksMatching, TalkId,
     VoxxrinBreak,
     VoxxrinTalk
 } from "@/models/VoxxrinTalk";
@@ -21,6 +21,9 @@ import {
 import {formatHourMinutes, localDateToReadableParts} from "@/models/DatesAndTime";
 import {NumberRange, sortBy, ValueObject} from "@/models/utils";
 import {useCurrentUserLocale} from "@/state/useCurrentUser";
+import {LabelledTimeslotWithFeedback} from "@/state/useSchedule";
+import {findTimeslotFeedback} from "@/models/VoxxrinFeedback";
+import {UserDailyFeedbacks} from "../../../shared/feedbacks.firestore";
 
 export class ScheduleTimeSlotId extends ValueObject<string>{ _scheduleTimeSlotIdClassDiscriminator!: never; }
 
@@ -180,4 +183,17 @@ export function createVoxxrinDailyScheduleFromFirestore(event: VoxxrinConference
     };
 
     return voxxrinSchedule;
+}
+
+export function toFilteredLabelledTimeslotWithFeedback(dailySchedule: VoxxrinDailySchedule, dailyUserFeedbacks: UserDailyFeedbacks|undefined, searchTerms: string|undefined) {
+    return dailySchedule.timeSlots.map((ts: VoxxrinScheduleTimeSlot): LabelledTimeslotWithFeedback => {
+        const label = getTimeslotLabel(ts);
+        if (ts.type === 'break') {
+            return {...ts, label, feedback: {status: 'missing'}};
+        } else {
+            const feedback = findTimeslotFeedback(dailyUserFeedbacks, ts.id);
+            const filteredTalks = filterTalksMatching(ts.talks, searchTerms);
+            return {...ts, label, talks: filteredTalks, feedback};
+        }
+    }).filter(ts => (ts.type === 'break' && !searchTerms) || (ts.type === 'talks' && ts.talks.length !== 0));
 }

@@ -3,7 +3,7 @@ import {deferredVuefireUseDocument, managedRef as ref} from "@/views/vue-utils";
 import {DailySchedule} from "../../../shared/daily-schedule.firestore";
 import {
     createVoxxrinDailyScheduleFromFirestore,
-    getTimeslotLabel,
+    getTimeslotLabel, toFilteredLabelledTimeslotWithFeedback,
     VoxxrinDailySchedule,
     VoxxrinScheduleTimeSlot,
 } from "@/models/VoxxrinSchedule";
@@ -135,20 +135,11 @@ export function useLabelledTimeslotWithFeedbacks(
     dailyUserFeedbacksRef: Ref<UserDailyFeedbacks|undefined>,
     searchTermsRef: Ref<string|undefined>
 ) {
-    const timeslotsRef = ref<LabelledTimeslotWithFeedback[]>([]);
+    const timeslotsRef = ref<LabelledTimeslotWithFeedback[]>([]) as Ref<LabelledTimeslotWithFeedback[]>;
 
     watch([dailyScheduleRef, searchTermsRef, dailyUserFeedbacksRef], ([dailySchedule, searchTerms, dailyUserFeedbacks]) => {
         if (dailySchedule) {
-            timeslotsRef.value = dailySchedule.timeSlots.map((ts: VoxxrinScheduleTimeSlot): LabelledTimeslotWithFeedback => {
-                const label = getTimeslotLabel(ts);
-                if (ts.type === 'break') {
-                    return {...ts, label, feedback: {status: 'missing'}};
-                } else {
-                    const feedback = findTimeslotFeedback(dailyUserFeedbacks, ts.id);
-                    const filteredTalks = filterTalksMatching(ts.talks, searchTerms);
-                    return {...ts, label, talks: filteredTalks, feedback};
-                }
-            }).filter(ts => ts.type === 'break' || (ts.type === 'talks' && ts.talks.length !== 0));
+            timeslotsRef.value = toFilteredLabelledTimeslotWithFeedback(dailySchedule, dailyUserFeedbacks, searchTerms);
         }
     })
 
