@@ -1,5 +1,5 @@
 import _BaseEventPages from "@/views/event/_BaseEventPages.vue";
-import SchedulePage from "@/views/event/SchedulePage.vue";
+import _SchedulePage from "@/views/event/SchedulePage.vue";
 import FavoritesPage from "@/views/event/FavoritesPage.vue";
 import FeedbacksPage from "@/views/event/FeedbacksPage.vue";
 import NotificationsPage from "@/views/event/NotificationsPage.vue";
@@ -17,7 +17,7 @@ import UserTokenRegistrationPage from '@/views/UserTokenRegistrationPage.vue';
 
 const modules = {
     _BaseEventPages,
-    SchedulePage,
+    SchedulePage: _SchedulePage,
     FavoritesPage,
     FeedbacksPage,
     NotificationsPage,
@@ -37,3 +37,4 @@ const modules = {
 export type PreloadedModules = typeof modules;
 
 export default modules;
+export const SchedulePage = modules.SchedulePage;

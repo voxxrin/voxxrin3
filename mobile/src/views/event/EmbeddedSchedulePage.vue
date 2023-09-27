@@ -12,7 +12,7 @@
   </ion-page>
 </template>
 <script setup lang="ts">
-import SchedulePage from "@/views/event/SchedulePage.vue";
+import {SchedulePage} from "@/router/preloaded-pages";
 import {IonFooter} from "@ionic/vue";
 import {useRoute} from "vue-router";
 import {managedRef as ref} from "@/views/vue-utils";
