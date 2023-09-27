@@ -26,6 +26,8 @@ export default defineConfig(({ command, mode }) => {
         minify: !isDevMode,
         selfDestroying: false,
         workbox: {
+          clientsClaim: true,
+          skipWaiting: true,
           mode: isDevMode?'development':'production',
           sourcemap: isDevMode,
           swDest: 'sw.js',

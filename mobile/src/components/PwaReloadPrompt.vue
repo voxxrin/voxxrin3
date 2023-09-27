@@ -8,8 +8,11 @@ import {toastController} from "@ionic/vue";
 import {watch} from "vue";
 import {reload} from "ionicons/icons";
 import {Logger} from "@/services/Logger";
+import {typesafeI18n} from "@/i18n/i18n-vue";
 
 const LOGGER = Logger.named("PwaReloadPrompt");
+
+const { LL } = typesafeI18n()
 
 LOGGER.info(() => pwaInfo)
 
@@ -20,11 +23,9 @@ const {
 } = useRegisterSW({
     immediate: true,
     onRegisteredSW(swUrl, r) {
-        // eslint-disable-next-line no-console
         LOGGER.info(() => `Service Worker at: ${swUrl}`)
 
         r && setInterval(async () => {
-            // eslint-disable-next-line no-console
             LOGGER.debug(() => 'Checking for sw update...')
             await r.update()
         }, 60000)
@@ -34,11 +35,11 @@ const {
 watch([needRefresh], async ([_needRefresh]) => {
     if(_needRefresh) {
         const toast = await toastController.create({
-            message: 'New content available, click on reload button to update.',
+            message: LL.value.New_content_available_click_on_reload_button_to_update(),
             duration: undefined,
             position: 'top',
             buttons: [{
-                text: 'Reload',
+                text: LL.value.Reload(),
                 side: 'end',
                 icon: reload,
                 role: 'reload',

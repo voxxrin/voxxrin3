@@ -337,6 +337,14 @@ type RootTranslation = {
 	 * P​a​s​t​ ​e​v​e​n​t​s
 	 */
 	Past_events: string
+	/**
+	 * N​e​w​ ​c​o​n​t​e​n​t​ ​a​v​a​i​l​a​b​l​e​.​ ​C​l​i​c​k​ ​o​n​ ​r​e​l​o​a​d​ ​b​u​t​t​o​n​ ​t​o​ ​u​p​d​a​t​e​ ​i​n​ ​b​a​c​k​g​r​o​u​n​d​ ​t​h​e​n​ ​a​u​t​o​-​r​e​l​o​a​d​ ​p​a​g​e​ ​o​n​c​e​ ​c​o​n​t​e​n​t​ ​i​s​ ​d​o​w​n​l​o​a​d​e​d​.
+	 */
+	New_content_available_click_on_reload_button_to_update: string
+	/**
+	 * R​e​l​o​a​d
+	 */
+	Reload: string
 }
 
 export type TranslationFunctions = {
@@ -660,6 +668,14 @@ export type TranslationFunctions = {
 	 * Past events
 	 */
 	Past_events: () => LocalizedString
+	/**
+	 * New content available. Click on reload button to update in background then auto-reload page once content is downloaded.
+	 */
+	New_content_available_click_on_reload_button_to_update: () => LocalizedString
+	/**
+	 * Reload
+	 */
+	Reload: () => LocalizedString
 }
 
 export type Formatters = {}

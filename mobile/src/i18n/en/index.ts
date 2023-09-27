@@ -81,6 +81,8 @@ const en = {
 	Past_events_highlighted: "*Past* events",
 	Future_events: "Future events",
 	Past_events: "Past events",
+	New_content_available_click_on_reload_button_to_update: "New content available. Click on reload button to update in background then auto-reload page once content is downloaded.",
+	Reload: "Reload",
 } satisfies BaseTranslation
 
 export default en
