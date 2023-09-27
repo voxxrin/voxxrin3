@@ -82,10 +82,9 @@
             </div>
           </ion-card>
         </div>
-        <div class="infoMessage _small" v-else>
-          <ion-icon class="infoMessage-iconIllu" src="/assets/images/svg/illu-no-feedback.svg"></ion-icon>
-          <span class="infoMessage-title ion-color-secondary"><em>{{LL.No_feedback_yet()}}</em></span>
-        </div>
+        <no-results illu-path="images/svg/illu-no-feedback.svg" class="_small">
+          <template #title><em class="ion-color-secondary">{{LL.No_feedback_yet()}}</em></template>
+        </no-results>
       </div>
     </ion-content>
   </ion-page>
@@ -109,6 +108,7 @@ import TalkDetailsHeader from "@/components/talk-details/TalkDetailsHeader.vue";
 import {useSharedEventTalk} from "@/state/useEventTalk";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import VoxDivider from "@/components/ui/VoxDivider.vue";
+import NoResults from "@/components/ui/NoResults.vue";
 
 const ionRouter = useIonRouter();
 const route = useRoute();
