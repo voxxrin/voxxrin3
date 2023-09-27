@@ -216,6 +216,9 @@ const hasMissingFeedback = computed(() => {
       .ion-accordion-toggle-icon {
         color: var(--app-white) !important;
       }
+
+      &._missing-feedback:not(._is-break) ._missing-feedback { display: inline-block;}
+      &._feedback-provided:not(._is-break) ._provided-feedback {display: inline-block;}
     }
 
     &._chronological_status_is_future {

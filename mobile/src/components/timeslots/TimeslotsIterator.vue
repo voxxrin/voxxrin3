@@ -104,7 +104,9 @@ function recomputeMissingFeedbacksList() {
     missingFeedbacksPastTimeslotsRef.value = timeslots.filter(ts => {
         return ts.type === 'talks'
             && ts.feedback.status === 'missing'
-            && getTimeslotTimingProgress(ts, useCurrentClock().zonedDateTimeISO()).status === 'past'
+            && (getTimeslotTimingProgress(ts, useCurrentClock().zonedDateTimeISO()).status === 'past'
+                || getTimeslotTimingProgress(ts, useCurrentClock().zonedDateTimeISO()).status === 'ongoing')
+
     }).map(timeslot => {
         const labels = getTimeslotLabel(timeslot)
         return {timeslot, start: labels.start, end: labels.end };

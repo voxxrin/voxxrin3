@@ -43,7 +43,7 @@ const provideFeedbackButtonShown = computed(() => {
     }
     
     return (timeslotFeedbackAlreadyProvided === undefined || timeslotFeedbackAlreadyProvided.status === 'missing')
-        && timeslotProgressStatus === 'past'
+        && (timeslotProgressStatus === 'past' || timeslotProgressStatus === 'ongoing')
         && areFeedbacksEnabled(confDescriptor)
         && !confDescriptor.features.remindMeOnceVideosAreAvailableEnabled;
 })
