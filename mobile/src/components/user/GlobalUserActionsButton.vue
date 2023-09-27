@@ -1,5 +1,5 @@
 <template>
-  <ion-button class="btnUser" shape="round" size="large" @click="openUserDashboard()">
+  <ion-button class="btnUser" shape="round" size="large" @click="openUserDashboard()" v-if="viewableUserDashboard">
     <ion-icon src="/assets/icons/line/user-line.svg"></ion-icon>
     <ion-ripple-effect type="unbounded"></ion-ripple-effect>
   </ion-button>
@@ -9,11 +9,11 @@
 import {useIonRouter} from "@ionic/vue";
 import {goBackOrNavigateTo} from "@/router";
 
-const viewableUserDashboard = import.meta.env.VITE_VIEWABLE_USER_DASHBOARD
+const viewableUserDashboard = import.meta.env.VITE_VIEWABLE_USER_DASHBOARD === "true"
 
 const ionRouter = useIonRouter();
 function openUserDashboard() {
-    if(viewableUserDashboard === 'true') {
+    if(viewableUserDashboard) {
         goBackOrNavigateTo(ionRouter, `/user/dashboard`, 0);
     }
 }
