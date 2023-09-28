@@ -2,7 +2,7 @@
   <slot name="iterator" :timeslot="timeslot" :index="index"
         v-for="(timeslot, index) in timeslotsRef" :key="timeslot.id.value" />
 
-  <no-results v-if="searchTerms && !timeslotsRef.length" illu-path="images/svg/illu-no-result.svg">
+  <no-results v-if="searchTerms && !timeslotsRef.length" illu-path="images/svg/illu-no-result-theming.svg">
     <template #title>{{ LL.No_talks_matching_search_terms() }}</template>
   </no-results>
 </template>
