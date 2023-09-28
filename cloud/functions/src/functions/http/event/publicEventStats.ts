@@ -28,7 +28,11 @@ const publicEventStats = functions.https.onRequest(async (request, response) => 
         return sendResponseMessage(response, 400, `Provided family events stats token doesn't match with event ${eventId} family: [${eventDescriptor.eventFamily}]`)
     }
 
-    const { cachedHash, updatesDetected } = await checkEventLastUpdate(eventId, ['favorites', 'feedbacks', 'talkListUpdated'], request, response)
+    const { cachedHash, updatesDetected } = await checkEventLastUpdate(eventId, [
+        root => root.favorites,
+        root => root.allFeedbacks,
+        root => root.talkListUpdated
+    ], request, response)
     if(!updatesDetected) {
         return sendResponseMessage(response, 304)
     }

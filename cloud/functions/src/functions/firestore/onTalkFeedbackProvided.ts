@@ -5,6 +5,7 @@ import {eventLastUpdateRefreshed, getSecretTokenDoc, getSecretTokenRef} from "./
 import {ConferenceOrganizerSpace} from "../../../../../shared/conference-organizer-space.firestore";
 import {TalkAttendeeFeedback} from "../../../../../shared/talk-feedbacks.firestore";
 import {UserTokensWallet} from "../../../../../shared/user-tokens-wallet.firestore";
+import {EventLastUpdates} from "../../../../../shared/event-list.firestore";
 
 
 export const onTalkFeedbackUpdated = functions.firestore
@@ -61,8 +62,13 @@ async function updateTalkFeedbacksFromUserFeedbacks(userId: string, eventId: str
 
             await Promise.all([
                 db.doc(`events/${eventId}/talks/${feedback.talkId}/feedbacks-access/${talkFeedbackViewerToken.secretToken}/feedbacks/${userTokensWallet.publicUserToken}`).set(attendeeFeedback),
-                db.doc(`events/${eventId}/organizer-space/${organizerSpace.organizerSecretToken}/ratings/self`).update(`${feedback.talkId}.${userTokensWallet.publicUserToken}`, feedback.ratings),
-                eventLastUpdateRefreshed(eventId, [ "feedbacks" ])
+                db.doc(`events/${eventId}/organizer-space/${organizerSpace.organizerSecretToken}/ratings/${feedback.talkId}`).update(`${userTokensWallet.publicUserToken}`, feedback.ratings),
+                eventLastUpdateRefreshed(eventId, [ "allFeedbacks" ]),
+                eventLastUpdateRefreshed(eventId, [ feedback.talkId ], rootNode => {
+                    const feedbacks = {} as EventLastUpdates['feedbacks'];
+                    rootNode.feedbacks = feedbacks;
+                    return { pathPrefix: "feedbacks.", parentNode: feedbacks };
+                }),
             ])
         }
     }))

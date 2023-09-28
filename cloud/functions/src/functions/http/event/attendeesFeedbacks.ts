@@ -34,7 +34,10 @@ const attendeesFeedbacks = functions.https.onRequest(async (request, response) =
         }
     }
 
-    const { cachedHash, updatesDetected } = await checkEventLastUpdate(eventId, ['feedbacks', 'talkListUpdated'], request, response)
+    const { cachedHash, updatesDetected } = await checkEventLastUpdate(eventId, [
+        root => root.allFeedbacks,
+        root => root.talkListUpdated
+    ], request, response)
     if(!updatesDetected) {
         return sendResponseMessage(response, 304)
     }

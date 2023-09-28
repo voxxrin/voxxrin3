@@ -35,7 +35,7 @@ const talkFeedbacksViewers = functions.https.onRequest(async (request, response)
         }
     }
 
-    const { cachedHash, updatesDetected } = await checkEventLastUpdate(eventId, ['talkListUpdated'], request, response)
+    const { cachedHash, updatesDetected } = await checkEventLastUpdate(eventId, [root => root.talkListUpdated], request, response)
     if(!updatesDetected) {
         return sendResponseMessage(response, 304)
     }

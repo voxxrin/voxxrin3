@@ -73,16 +73,22 @@ export async function eventTalkStatsFor(eventId: string) {
     return talkStats;
 }
 
-export async function eventLastUpdateRefreshed(eventId: string, fields: Array<keyof EventLastUpdates>) {
+export async function eventLastUpdateRefreshed<T extends {[field in keyof T]: ISODatetime|null}>(
+    eventId: string, fields: Array<keyof T>,
+    parentNodeToUpdate: (root: Partial<EventLastUpdates>) => ({ pathPrefix: string, parentNode: T }) = (root: Partial<EventLastUpdates>) => ({ pathPrefix: "", parentNode: root as T})
+) {
     if(!fields.length) {
         return;
     }
 
     const now = new Date().toISOString() as ISODatetime;
-    const fieldUpdates: Partial<EventLastUpdates> = fields.reduce((fieldUpdates, field) => {
-        fieldUpdates[field] = now;
+    const rootObj = {} as Partial<EventLastUpdates>;
+    const {pathPrefix, parentNode} = parentNodeToUpdate(rootObj);
+    const fieldUpdates = fields.reduce((fieldUpdates, field) => {
+        (parentNode[field] as unknown) = now;
+        fieldUpdates.push({ path: `${pathPrefix}${String(field)}`, value: now })
         return fieldUpdates;
-    }, {} as Partial<EventLastUpdates>)
+    }, [] as Array<{ path: string, value: ISODatetime }>)
 
     const existingLastUpdates = await db
         .collection("events").doc(eventId)
@@ -90,14 +96,16 @@ export async function eventLastUpdateRefreshed(eventId: string, fields: Array<ke
         .get();
 
     if(existingLastUpdates.exists) {
-        existingLastUpdates.ref.update(fieldUpdates);
+        fieldUpdates.forEach(fieldUpdate => {
+            existingLastUpdates.ref.update(fieldUpdate.path, fieldUpdate.value);
+        })
     } else {
-        existingLastUpdates.ref.set(fieldUpdates);
+        existingLastUpdates.ref.set(parentNode);
     }
 }
 
 export async function checkEventLastUpdate(
-    eventId: string, lastUpdateFieldNames: Array<keyof EventLastUpdates>,
+    eventId: string, lastUpdateFieldExtractors: Array<(root: EventLastUpdates) => ISODatetime|undefined|null>,
     request: functions.https.Request, response: functions.Response
 ): Promise<{ cachedHash: string|undefined, updatesDetected: boolean }> {
     const eventLastUpdatesDoc = await db
@@ -105,8 +113,9 @@ export async function checkEventLastUpdate(
         .collection("last-updates").doc("self")
         .get();
 
+    const eventLastUpdates = eventLastUpdatesDoc.data() as EventLastUpdates|undefined
     const cachedHash = sortBy(
-        lastUpdateFieldNames.map(lastUpdateFieldName => (eventLastUpdatesDoc.data() as EventLastUpdates|undefined)?.[lastUpdateFieldName])
+        lastUpdateFieldExtractors.map(lastUpdateFieldExtractor => eventLastUpdates?lastUpdateFieldExtractor(eventLastUpdates):undefined)
             .filter(v => !!v),
         isoDate => -Date.parse(isoDate!)
     )[0] || undefined;

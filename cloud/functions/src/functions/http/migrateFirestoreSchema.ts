@@ -14,6 +14,9 @@ import {createOrganizerSpaceRatings} from "../firestore/migrations/006-createOrg
 import {
     deleteComputedTalkFavoritesCollections
 } from "../firestore/migrations/007-deleteComputedTalkFavoritesCollection";
+import {
+    introducingPerTalkFeedbacksLastUpdates,
+} from "../firestore/migrations/008-introducingPerTalkFeedbacksLastUpdates";
 
 /**
  * Like Flyway, but for firestore :-)
@@ -28,6 +31,7 @@ const MIGRATIONS: Migration[] = [
     // used by people having an old version of the app in their service worker cache, so the longer we keep
     // the collection and the safer we will be
     { name: "deleteComputedTalkFavoritesCollections", exec: deleteComputedTalkFavoritesCollections, minimumMigrationDate: "2023-10-09T00:00:00Z" },
+    { name: "introducingPerTalkFeedbacksLastUpdates", exec: introducingPerTalkFeedbacksLastUpdates },
 ];
 
 export type MigrationResult = "OK"|"Error";

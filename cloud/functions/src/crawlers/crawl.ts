@@ -112,8 +112,8 @@ const crawlAll = async function(criteria: CrawlCriteria) {
                 durationInSeconds: start.until(end).total('seconds')
             }
         }catch(e: any) {
+            console.error(`Error during crawler with id ${crawlerDescriptor.id}:`, e);
             throw new Error(`Error during crawler with id ${crawlerDescriptor.id}: ${e?.toString()}`)
-            throw e;
         }
     }))
 };
