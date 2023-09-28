@@ -21,6 +21,20 @@
           <small>Please keep this token private</small>
         </div>
       </div>
+
+      <div class="ion-padding-top ion-padding-start ion-padding-end">
+        <!-- TODO #46 Transform this example into a component -->
+        <div class="callout _info" :class="'_info'">
+          <ion-icon class="callout-illu" aria-hidden="true" :icon="checkmarkCircle" />
+          <div class="callout-content">
+            <span class="callout-content-title">Title</span>
+            <ion-text class="callout-content-description">
+             Texte
+            </ion-text>
+          </div>
+        </div>
+      </div>
+
       <div class="userDashboard-content">
         <div class="listCardButton">
           <ion-button class="listCardButton-item" @click="$router.push(`/user/talks`)">
@@ -71,6 +85,7 @@
 import {IonFooter, useIonRouter} from "@ionic/vue";
 import {useTabbedPageNav} from "@/state/useTabbedPageNav";
 import {useCurrentUser} from "@/state/useCurrentUser";
+import {shieldCheckmark, checkmarkCircle, warning, closeCircle} from "ionicons/icons";
 
 const ionRouter = useIonRouter();
 
