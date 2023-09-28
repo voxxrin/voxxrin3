@@ -1,5 +1,5 @@
 import * as functions from "firebase-functions";
-import {extractSingleQueryParam, sendResponseMessage} from "../utils";
+import {extractMultiQueryParam, extractSingleQueryParam, sendResponseMessage} from "../utils";
 import {
     checkEventLastUpdate,
     getOrganizerSpaceByToken,
@@ -11,16 +11,20 @@ import {getFamilyOrganizerToken} from "../../firestore/services/publicTokens-uti
 import {
     ConferenceOrganizerSpace
 } from "../../../../../../shared/conference-organizer-space.firestore";
+import {EventLastUpdates} from "../../../../../../shared/event-list.firestore";
+import talkFeedbacksViewers from "./talkFeedbacksViewers";
 
 const attendeesFeedbacks = functions.https.onRequest(async (request, response) => {
 
     const organizerSecretToken = extractSingleQueryParam(request, 'organizerSecretToken');
+    const talkIds = extractMultiQueryParam(request, 'talkIds');
     // deprecated
     const familyToken = extractSingleQueryParam(request, 'familyToken');
     const familyOrganizerSecretToken = extractSingleQueryParam(request, 'familyOrganizerSecretToken');
     const eventId = extractSingleQueryParam(request, 'eventId');
     const sinceTimestamp = Date.parse(extractSingleQueryParam(request, 'updatedSince') || "");
 
+    if(!talkIds || !talkIds.length) { return sendResponseMessage(response, 400, `Missing [talkIds] (multi) query parameter !`) }
     if(!eventId) { return sendResponseMessage(response, 400, `Missing [eventId] query parameter !`) }
     if(!organizerSecretToken && !familyToken && !familyOrganizerSecretToken) { return sendResponseMessage(response, 400, `Missing either [organizerSecretToken] or [familyToken] or [familyOrganizerSecretToken] query parameter !`) }
     if(isNaN(sinceTimestamp)) { return sendResponseMessage(response, 400, `Missing valid [updatedSince] query parameter !`) }
@@ -36,7 +40,10 @@ const attendeesFeedbacks = functions.https.onRequest(async (request, response) =
 
     const { cachedHash, updatesDetected } = await checkEventLastUpdate(eventId, [
         root => root.allFeedbacks,
-        root => root.talkListUpdated
+        root => root.talkListUpdated,
+        ...talkIds.map(talkId => {
+            return (root: EventLastUpdates) => root.feedbacks[talkId]
+        })
     ], request, response)
     if(!updatesDetected) {
         return sendResponseMessage(response, 304)
@@ -55,7 +62,10 @@ const attendeesFeedbacks = functions.https.onRequest(async (request, response) =
                 return getSecretTokenDoc<ConferenceOrganizerSpace>(`/events/${eventId}/organizer-space`);
             }).run()
 
-        const perTalkFeedbacks = await Promise.all(organizerSpace.talkFeedbackViewerTokens.map(async (talkFeedbackViewerToken) => {
+        const perTalkFeedbacks = await Promise.all(organizerSpace.talkFeedbackViewerTokens
+            .filter(talkFeedbacksViewerToken => talkIds.includes(talkFeedbacksViewerToken.talkId))
+            .map(async (talkFeedbackViewerToken) => {
+
             const feedbacks = await ensureTalkFeedbackViewerTokenIsValidThenGetFeedbacks(talkFeedbackViewerToken.eventId, talkFeedbackViewerToken.talkId, talkFeedbackViewerToken.secretToken, updatedSince);
 
             // Enriching bingo entries with label
