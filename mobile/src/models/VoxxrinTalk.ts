@@ -4,15 +4,13 @@ import {RoomId, VoxxrinRoom} from "@/models/VoxxrinRoom";
 import {SpeakerId, VoxxrinDetailedSpeaker, VoxxrinSimpleSpeaker} from "@/models/VoxxrinSpeaker";
 import {TalkFormatId, VoxxrinTalkFormat} from "@/models/VoxxrinTalkFormat";
 import {TrackId, VoxxrinTrack} from "@/models/VoxxrinTrack";
-import {Replace} from "@/models/type-utils";
 import {
     findRoom,
     findTalkFormat, findTalkFormatIndex, findTrack, TalkLanguageCode,
     VoxxrinConferenceDescriptor
 } from "@/models/VoxxrinConferenceDescriptor";
 import {match} from "ts-pattern";
-import {VoxxrinDailySchedule, VoxxrinScheduleTimeSlot} from "@/models/VoxxrinSchedule";
-import {ISODatetime} from "../../../shared/type-utils";
+import {Replace} from "../../../shared/type-utils";
 
 export class TalkId extends ValueObject<string>{ _talkIdClassDiscriminator!: never; }
 

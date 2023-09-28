@@ -14,7 +14,6 @@ import {DayId} from "@/models/VoxxrinDay";
 import {match} from "ts-pattern";
 import {RoomId} from "@/models/VoxxrinRoom";
 import {Temporal} from "temporal-polyfill";
-import {Replace} from "@/models/type-utils";
 import {
     VoxxrinConferenceDescriptor
 } from "@/models/VoxxrinConferenceDescriptor";
@@ -24,6 +23,7 @@ import {useCurrentUserLocale} from "@/state/useCurrentUser";
 import {LabelledTimeslotWithFeedback} from "@/state/useSchedule";
 import {findTimeslotFeedback} from "@/models/VoxxrinFeedback";
 import {UserDailyFeedbacks} from "../../../shared/feedbacks.firestore";
+import {Replace} from "../../../shared/type-utils";
 
 export class ScheduleTimeSlotId extends ValueObject<string>{ _scheduleTimeSlotIdClassDiscriminator!: never; }
 
