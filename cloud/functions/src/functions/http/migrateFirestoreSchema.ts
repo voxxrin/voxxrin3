@@ -48,6 +48,10 @@ type SkippedPersistedMigration = {
     name: string,
     status: 'skipped',
 }
+type IgnoredPersistedMigration = {
+    name: string,
+    status: 'ignored',
+}
 type FailurePersistedMigration = {
     name: string,
     startedOn: ISODatetime,
@@ -56,7 +60,7 @@ type FailurePersistedMigration = {
     errorMessage: string
 }
 
-type PersistedMigration = SuccessfulPersistedMigration | FailurePersistedMigration | SkippedPersistedMigration;
+type PersistedMigration = SuccessfulPersistedMigration | FailurePersistedMigration | SkippedPersistedMigration | IgnoredPersistedMigration;
 
 type SchemaMigrations = {
     migrations: PersistedMigration[];
@@ -85,31 +89,35 @@ export const migrateFirestoreSchema = https.onRequest(async (request, response) 
     }
 
     const { executedMigrations: alreadyExecutedMigrations, migrationsToExecute, error } = MIGRATIONS
-        .filter(migration => !migration.minimumMigrationDate || new Date(migration.minimumMigrationDate).getTime() < Date.now())
-        .reduce((result, migration, idx) => {
+        .map((migration, index) => ({ migration, index }))
+        .reduce((result, { migration, index}) => {
         if(result.error) {
             return result;
         }
 
-        if(idx < persistedMigrations.length && migration.name !== persistedMigrations[idx].name) {
-            return { ...result, error: `Unexpected migration at index ${idx}: expected: ${persistedMigrations[idx].name}, got: ${migration.name}` }
+        if(index < persistedMigrations.length && migration.name !== persistedMigrations[index].name) {
+            return { ...result, error: `Unexpected migration at index ${index}: expected: ${persistedMigrations[index].name}, got: ${migration.name}` }
         }
 
-        if(idx >= persistedMigrations.length || persistedMigrations[idx].status === 'skipped' || persistedMigrations[idx].status === 'failure') {
-            result.migrationsToExecute.push(migration);
+        if(index >= persistedMigrations.length
+            || persistedMigrations[index].status === 'skipped'
+            || persistedMigrations[index].status === 'failure'
+            || persistedMigrations[index].status === 'ignored'
+        ) {
+            result.migrationsToExecute.push({ migration, atIndex: index });
         } else {
-            result.executedMigrations.push(persistedMigrations[idx]);
+            result.executedMigrations.push(persistedMigrations[index]);
         }
 
         return result;
-    }, { executedMigrations: [] as PersistedMigration[], migrationsToExecute: [] as Migration[], error: undefined as string|undefined });
+    }, { executedMigrations: [] as PersistedMigration[], migrationsToExecute: [] as { migration: Migration, atIndex: number }[], error: undefined as string|undefined });
 
     if(error) {
         return sendResponseMessage(response, 500, `Error: ${error}`)
     }
 
-    const { success, migrationsToPersist, executedMigrations, migrationFailure } = await migrationsToExecute.reduce(async (previousPromise, migration) => {
-        const {success: previousSuccess, migrationsToPersist, executedMigrations, migrationFailure: previousMigrationFailure} = await previousPromise;
+    const { success, migrationsToPersist, executedMigrations, migrationFailure } = await migrationsToExecute.reduce(async (previousPromise, { migration, atIndex }) => {
+        const {success: previousSuccess, migrationsToPersist, ignoredMigrations, executedMigrations, migrationFailure: previousMigrationFailure} = await previousPromise;
 
         let persistedMigration: PersistedMigration;
         if(!previousSuccess) {
@@ -117,6 +125,11 @@ export const migrateFirestoreSchema = https.onRequest(async (request, response) 
                 name: migration.name,
                 status: 'skipped',
             };
+        } else if(migration.minimumMigrationDate && new Date(migration.minimumMigrationDate).getTime() > Date.now()) {
+            persistedMigration = {
+                name: migration.name,
+                status: "ignored",
+            }
         } else {
             const start = new Date();
             try {
@@ -138,16 +151,20 @@ export const migrateFirestoreSchema = https.onRequest(async (request, response) 
             }
         }
 
+        migrationsToPersist.splice(atIndex, 0, persistedMigration)
+
         return {
-            success: persistedMigration.status === 'success',
-            migrationsToPersist: migrationsToPersist.concat(persistedMigration),
+            success: persistedMigration.status === 'success' || persistedMigration.status === 'ignored',
+            migrationsToPersist,
             executedMigrations: executedMigrations.concat(...(persistedMigration.status === 'success'?[persistedMigration]:[])),
+            ignoredMigrations: ignoredMigrations.concat(...(persistedMigration.status === 'ignored'?[persistedMigration]:[])),
             migrationFailure: persistedMigration.status === 'failure' ? persistedMigration : previousMigrationFailure
         };
     }, Promise.resolve({
         success: true,
         migrationsToPersist: alreadyExecutedMigrations,
         executedMigrations: [] as SuccessfulPersistedMigration[],
+        ignoredMigrations: [] as IgnoredPersistedMigration[],
         migrationFailure: undefined as undefined|FailurePersistedMigration
     }))
 
