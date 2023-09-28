@@ -49,6 +49,7 @@
 
 <script setup lang="ts">
 import {
+    ActionSheetButton,
     IonInput,
     IonItemDivider,
     useIonRouter
@@ -59,9 +60,6 @@ import AvailableEventsList from "@/components/events/AvailableEventsList.vue";
 import {presentActionSheetController, managedRef as ref} from "@/views/vue-utils";
 import {Browser} from "@capacitor/browser";
 import {typesafeI18n} from "@/i18n/i18n-vue";
-import {
-    ActionSheetButton
-} from "@ionic/core/dist/types/components/action-sheet/action-sheet-interface";
 import PinnedEventSelector from "@/components/events/PinnedEventSelector.vue";
 import {useAvailableEvents} from "@/state/useAvailableEvents";
 import {useSharedUserPreferences} from "@/state/useUserPreferences";
