@@ -28,7 +28,7 @@ const props = defineProps({
 })
 
 const emits = defineEmits<{
-    (e: 'button-clicked')
+    (e: 'button-clicked'): void
 }>()
 
 const slots = defineSlots<{
