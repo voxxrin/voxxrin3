@@ -57,7 +57,7 @@ service cloud.firestore {
         allow get: if true;
         allow list, write: if false;
 
-        match /ratings/self {
+        match /ratings/{talkId} {
           allow read, write: if false;
         }
       }

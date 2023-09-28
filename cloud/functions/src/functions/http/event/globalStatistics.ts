@@ -26,19 +26,19 @@ export const globalStats = https.onRequest(async (request, response) => {
 
     const events = await db.collection(`events`).listDocuments()
     const eventsStats = await Promise.all(events.map(async event => {
-        const [eventTalkStats, eventFeedbacksCount] = await Promise.all([
+        const [eventTalkStats/* , eventFeedbacksCount */] = await Promise.all([
             db.collection(`events/${event.id}/talksStats`).listDocuments().then(async (talkStatsSnaps) => {
                 const talkStats = await Promise.all(talkStatsSnaps.map(async talkStatsSnap => (await talkStatsSnap.get()).data() as TalkStats))
                 return talkStats;
             }),
-            db.collection(`events/${event.id}/organizer-space`).listDocuments().then(async (orgSpaces) => {
-                const perTalkIdUserFeedbacks = ((await db.doc(`events/${event.id}/organizer-space/${orgSpaces[0].id}/ratings/self`).get()).data() || {}) as {[talkId: string]: {[userPublicToken: string]: FeedbackRatings }}
-                const feedbacksCount = Object.keys(perTalkIdUserFeedbacks).reduce((feedbacksCount, talkId) => feedbacksCount + Object.keys(perTalkIdUserFeedbacks[talkId]).length, 0);
-                return feedbacksCount;
-            }),
+            // db.collection(`events/${event.id}/organizer-space`).listDocuments().then(async (orgSpaces) => {
+            //     const perTalkIdUserFeedbacks = TODO: CHANGE IMPL TO RELY ON FeedbackViewerTokens available from orga space
+            //     const feedbacksCount = Object.keys(perTalkIdUserFeedbacks).reduce((feedbacksCount, talkId) => feedbacksCount + Object.keys(perTalkIdUserFeedbacks[talkId]).length, 0);
+            //     return feedbacksCount;
+            // }),
         ])
 
-        return {eventId: event.id, eventTalkStats, eventFeedbacksCount};
+        return {eventId: event.id, eventTalkStats, /* eventFeedbacksCount */ };
     }))
 
     sendResponseMessage(response, 200, {
@@ -49,9 +49,9 @@ export const globalStats = https.onRequest(async (request, response) => {
             totalFavorites + eventStat.eventTalkStats.reduce((eventFavorites, talkStat) => eventFavorites + talkStat.totalFavoritesCount, 0),
             0
         ),
-        totalFeedbacks: eventsStats.reduce((totalFeedbacks, eventStat) =>
-            totalFeedbacks + eventStat.eventFeedbacksCount,
-            0
-        ),
+        // totalFeedbacks: eventsStats.reduce((totalFeedbacks, eventStat) =>
+        //     totalFeedbacks + eventStat.eventFeedbacksCount,
+        //     0
+        // ),
     });
 });

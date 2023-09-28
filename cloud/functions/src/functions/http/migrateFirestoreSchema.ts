@@ -17,6 +17,9 @@ import {
 import {
     introducingPerTalkFeedbacksLastUpdates,
 } from "../firestore/migrations/008-introducingPerTalkFeedbacksLastUpdates";
+import {
+    refactoOrgaSpaceRatingsToPerTalkRatings
+} from "../firestore/migrations/009-refactoOrgaSpaceRatingsToPerTalkRatings";
 
 /**
  * Like Flyway, but for firestore :-)
@@ -32,6 +35,7 @@ const MIGRATIONS: Migration[] = [
     // the collection and the safer we will be
     { name: "deleteComputedTalkFavoritesCollections", exec: deleteComputedTalkFavoritesCollections, minimumMigrationDate: "2023-10-09T00:00:00Z" },
     { name: "introducingPerTalkFeedbacksLastUpdates", exec: introducingPerTalkFeedbacksLastUpdates },
+    { name: "refactoOrgaSpaceRatingsToPerTalkRatings", exec: refactoOrgaSpaceRatingsToPerTalkRatings },
 ];
 
 export type MigrationResult = "OK"|"Error";

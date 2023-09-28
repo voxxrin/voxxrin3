@@ -1,9 +1,8 @@
 import {db} from "../../../firebase";
-import {ConferenceDescriptor} from "../../../../../../shared/conference-descriptor.firestore";
 import {DetailedTalk} from "../../../../../../shared/daily-schedule.firestore";
 import {getSecretTokenRef} from "../firestore-utils";
 import {
-    ConferenceOrganizerAllRatings
+    PerPublicUserIdFeedbackRatings
 } from "../../../../../../shared/conference-organizer-space.firestore";
 
 
@@ -18,23 +17,42 @@ export async function getTalkDetails(eventId: string) {
     return talks;
 }
 
+type PerTalkPublicUserIdFeedbackRating = {
+    talkId: string,
+    perPublicUserIdRatings: PerPublicUserIdFeedbackRatings,
+}
+
 class ConfOrganizerAllRatingsModel {
-    constructor(private allRatings: ConferenceOrganizerAllRatings) {}
+    constructor(private allRatings: PerTalkPublicUserIdFeedbackRating[]) {}
 
     ratingsForTalk(talkId: string) {
-        return this.allRatings[talkId]?Object.values(this.allRatings[talkId]):[];
+        const talkFeedbacks = this.allRatings
+            .find(rating => rating.talkId === talkId)
+
+        if(!talkFeedbacks) {
+            return [];
+        }
+
+        return Object.keys(talkFeedbacks.perPublicUserIdRatings).map(publicUserId => ({
+            publicUserId,
+            ...talkFeedbacks.perPublicUserIdRatings[publicUserId]
+        }));
     }
 
     userRating(talkId: string, publicUserId: string) {
-        return this.allRatings[talkId] ? this.allRatings[talkId][publicUserId] : undefined;
+        const talkFeedbacks = this.ratingsForTalk(talkId);
+        return talkFeedbacks?.find(ratings => ratings.publicUserId === publicUserId) || undefined
     }
 }
 
 export async function getEveryRatingsForEvent(eventId: string) {
     const organizerSpaceRef = await getSecretTokenRef(`/events/${eventId}/organizer-space`)
-    const eventAllRatings = (await organizerSpaceRef.collection('ratings').doc('self').get()).data() as ConferenceOrganizerAllRatings|undefined
+    const eventAllRatings: PerTalkPublicUserIdFeedbackRating[] = await Promise.all(
+        (await organizerSpaceRef.collection('ratings').listDocuments() || [])
+            .map(talkRatingRef => talkRatingRef.get().then(doc => ({ talkId: talkRatingRef.id, perPublicUserIdRatings: doc.data() as PerPublicUserIdFeedbackRatings })))
+    );
 
-    return new ConfOrganizerAllRatingsModel(eventAllRatings || {});
+    return new ConfOrganizerAllRatingsModel(eventAllRatings);
 }
 
 export async function getTalksDetailsWithRatings(eventId: string) {
