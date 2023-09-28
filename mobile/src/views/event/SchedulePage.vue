@@ -2,7 +2,7 @@
   <ion-page>
     <ion-content :fullscreen="true" v-if="confDescriptor">
       <current-event-header v-if="!hideHeader" :conf-descriptor="confDescriptor"/>
-      <ion-header class="toolbarHeader">
+      <ion-header class="toolbarHeader stickyHeader">
         <ion-toolbar>
           <ion-title slot="start">{{ LL.Schedule() }}</ion-title>
           <div v-if="searchFieldDisplayed" class="search-input">
@@ -26,7 +26,7 @@
         </ion-toolbar>
       </ion-header>
 
-      <ion-header class="stickyHeader">
+      <ion-header class="stickyHeader _subHeader">
         <day-selector
             :conf-descriptor="confDescriptor"
             @once-initialized-with-day="(day, days) => onceDayInitializedTo(day, days)">

@@ -33,6 +33,10 @@ ion-header  {
         top: -1px;
         border-bottom: 1px solid var(--app-beige-line);
 
+        &._subHeader {
+            top: 68px;
+        }
+
         &.header-ios ion-toolbar:last-of-type {
             --border-width: 0;
         }

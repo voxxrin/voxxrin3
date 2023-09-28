@@ -4,10 +4,18 @@
     <strong class="day">{{formattedDays[0].formatted.day}}</strong>
     <span class="month">{{formattedDays[0].formatted.month}}</span>
   </ion-item>
-
-  <ion-list class="dayList" v-if="formattedDays.length > 1">
-    <ion-item  v-for="(day, index) in formattedDays" :key="day.id.value" :class="{past: today.localeCompare(day.localDate) === 1}">
+  <!-- TODO  #17 Add class when search active -->
+  <ion-list class="dayList" v-if="formattedDays.length > 1" :class="'_searchActive'">
+    <ion-item v-for="(day, index) in formattedDays"
+              :key="day.id.value"
+              :class="{past: today.localeCompare(day.localDate) === 1}">
       <div class="dayList-content">
+        <!-- TODO  #17 Add condition for add total result -->
+        <span class="totalResult" v-if="true"
+              :class="{selected: day.id.isSameThan(currentlySelectedDayIdRef)}">
+             <ion-icon aria-hidden="true" src="/assets/icons/line/search-line.svg"></ion-icon>
+             <strong>-</strong>
+        </span>
         <ion-button class="dayList-button" @click="changeDayTo(day)" :class="{
           selected: day.id.isSameThan(currentlySelectedDayIdRef),
           past: today.localeCompare(day.localDate) === 1,
@@ -168,21 +176,83 @@ function findDayByLocalDate(localDate: string) {
   .dayList  {
     display: flex;
     overflow-x: auto;
+    overflow-y: hidden;
     margin-left: -44px;
     margin-right: -34px;
     padding: 0;
-    background: var(--background);
+    background: rgba(white, 0.6);
+    backdrop-filter: blur(30px) saturate(120%);
     box-shadow: rgba(99, 99, 99, 0.2) 0 2px 8px 0;
 
     @media (prefers-color-scheme: dark) {
+      border-bottom: 1px solid var(--app-line-contrast);
       background: rgba(var(--app-medium-contrast-rgb), 0.5);
     }
+
+    &._searchActive {
+       ion-item {
+         transition: 240ms ease-in-out;
+         top: 8px;
+         height: 66px;
+       }
+      }
 
     &-content {
       display: flex;
       align-items: center;
       justify-content: center;
       width: 100%;
+      transition: 240ms ease-in-out;
+
+      .totalResult {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        column-gap: 2px;
+        position: absolute;
+        top: -14px;
+        padding: 1px 4px;
+        border-radius: 0 0 8px 8px;
+        border: 2px solid var(--app-background);
+        background-color: var(--app-primary);
+        color: var(--app-white);
+        animation: appearTotalResult 240ms cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+        z-index: 1;
+
+        @keyframes appearTotalResult {
+          0% {
+            transform: translateY(-24px) scale(0);
+            opacity: 0;
+          }
+          100% {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+          }
+        }
+
+        @media (prefers-color-scheme: dark) {
+          border: 2px solid var(--app-white);
+          background-color: var(--app-white);
+          color: var(--app-primary);
+        }
+
+        &.selected {
+          background-color: var(--voxxrin-event-theme-colors-primary-hex);
+
+          @media (prefers-color-scheme: dark) {
+            border: 2px solid var(--app-light-contrast);
+            color: var(--app-white);
+          }
+        }
+
+        ion-icon {
+          font-size: 16px;
+        }
+
+        strong {
+          font-size: 12px;
+        }
+      }
     }
 
     ion-item {
@@ -197,6 +267,7 @@ function findDayByLocalDate(localDate: string) {
       --border-style: none;
       overflow: visible !important;
       flex: 1;
+      transition: 240ms ease-in-out;
 
       &:last-child:after {
         display: none;
@@ -235,6 +306,7 @@ function findDayByLocalDate(localDate: string) {
       --border-radius: 44px;
       --border-width: 1px;
       --border-style: solid;
+      --background-activated: var(--app-beige-line);
       transition: 140ms ease-in-out;
       overflow: visible !important;
 
