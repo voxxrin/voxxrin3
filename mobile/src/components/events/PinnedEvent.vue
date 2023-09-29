@@ -61,7 +61,7 @@ const props = defineProps({
   width: 268px;
   height: 268px;
   margin: var(--app-gutters) 0;
-  border-radius: 16px;
+  border-radius: var(--app-bloc-radius);
   background-image: linear-gradient(to bottom, var(--voxxrin-event-theme-colors-primary-hex) 50%, transparent 200%),var(--voxxrin-event-background-url);
   contain: initial;
   overflow: visible;

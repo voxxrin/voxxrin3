@@ -4,6 +4,7 @@
 /* ~ UTILS*/
 @import "@/styles/utils/variables.scss";
 @import "@/styles/utils/_helpers.scss";
+@import "@/styles/utils/_animations.scss";
 
 /* ~ COMPONENTS*/
 @import "@/styles/components/_listCardsButtons.scss";
@@ -29,6 +30,5 @@
 @import "@/styles/vendors/ionic/theme-ionic-variables.scss";
 @import "@/styles/vendors/font.scss";
 
-
-/* ~ UTILS*/
-@import "@/styles/utils/_animations.scss";
+/* ~ LAYOUT*/
+@import "@/styles/layout/_content.scss";

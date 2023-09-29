@@ -47,7 +47,7 @@ const props = defineProps({
   row-gap: 8px;
   padding: 8px;
   margin: 0;
-  border-radius: 8px 12px 12px 8px;
+  border-radius: var(--app-card-radius);
   border : {
     top: 1px solid var(--app-grey-line);
     right: 1px solid var(--app-grey-line);
