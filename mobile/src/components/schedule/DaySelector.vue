@@ -168,8 +168,8 @@ function findDayByLocalDate(localDate: string) {
   .dayList  {
     display: flex;
     overflow-x: auto;
-    margin-left: -44px;
-    margin-right: -34px;
+    margin-left: -27px;
+    margin-right: -14px;
     padding: 0;
     background: var(--background);
     box-shadow: rgba(99, 99, 99, 0.2) 0 2px 8px 0;
@@ -187,7 +187,7 @@ function findDayByLocalDate(localDate: string) {
 
     ion-item {
       position: relative;
-      min-width: 144px;
+      min-width: 124px;
       --ion-item-background: transparent;
       --padding-top: 4px;
       --padding-bottom: 4px;
