@@ -22,6 +22,8 @@ import MyGlobalSettingsPage from '@/views/user/MyGlobalSettingsPage.vue';
 import MyPersonalDataPage from '@/views/user/MyPersonalDataPage.vue';
 import UserTokenRegistrationPage from '@/views/UserTokenRegistrationPage.vue';
 import FAQPage from '@/views/FAQPage.vue';
+import ExportUserDataPage from '@/views/user/ExportUserDataPage.vue';
+import ImportUserDataPage from '@/views/user/ImportUserDataPage.vue';
 
 const modules = {
     _BaseEventPages,
@@ -41,6 +43,8 @@ const modules = {
     MyPersonalDataPage,
     UserTokenRegistrationPage,
     FAQPage,
+    ExportUserDataPage,
+    ImportUserDataPage,
 } as const;
 
 export type PreloadedModules = typeof modules;

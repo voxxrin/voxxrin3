@@ -57,6 +57,8 @@ const routes: Array<RouteRecordRaw> = [
   ]),
   { path: '/user/my-global-settings', component: () => preloadedPage('MyGlobalSettingsPage') },
   { path: '/user/my-personal-data', component: () => preloadedPage('MyPersonalDataPage') },
+  { path: '/user/export', component: () => preloadedPage('ExportUserDataPage') },
+  { path: '/user/import', component: () => preloadedPage('ImportUserDataPage') },
   { path: '/user-tokens/register', component: () => preloadedPage('UserTokenRegistrationPage') },
 ]
 
