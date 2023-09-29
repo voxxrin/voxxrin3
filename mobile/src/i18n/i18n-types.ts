@@ -366,13 +366,21 @@ type RootTranslation = {
 	 */
 	Logout: string
 	/**
-	 * A​n​o​n​y​m​o​u​s​ ​u​s​e​r​ ​i​d
+	 * A​n​o​n​y​m​o​u​s​ ​(​p​r​i​v​a​t​e​)​ ​u​s​e​r​ ​t​o​k​e​n
 	 */
-	Anonymous_user_id: string
+	Anonymous_private_user_id: string
+	/**
+	 * P​u​b​l​i​c​ ​u​s​e​r​ ​t​o​k​e​n
+	 */
+	Public_user_id: string
 	/**
 	 * H​o​w​ ​a​n​d​ ​w​h​e​r​e​ ​c​a​n​ ​I​ ​c​o​n​t​a​c​t​ ​t​h​e​ ​t​e​a​m​ ​?
 	 */
 	How_and_where_can_I_contact_the_team: string
+	/**
+	 * T​h​i​s​ ​t​o​k​e​n​ ​w​i​l​l​ ​b​e​ ​u​s​e​d​ ​t​o​ ​(​a​n​o​n​y​m​o​u​s​l​y​)​ ​r​e​f​e​r​e​n​c​e​ ​y​o​u​ ​i​n​ ​f​e​e​d​b​a​c​k​s
+	 */
+	This_token_will_be_used_to_reference_you_in_APIs: string
 	/**
 	 * A​p​p​ ​s​e​t​t​i​n​g​s
 	 */
@@ -737,13 +745,21 @@ export type TranslationFunctions = {
 	 */
 	Logout: () => LocalizedString
 	/**
-	 * Anonymous user id
+	 * Anonymous (private) user token
 	 */
-	Anonymous_user_id: () => LocalizedString
+	Anonymous_private_user_id: () => LocalizedString
+	/**
+	 * Public user token
+	 */
+	Public_user_id: () => LocalizedString
 	/**
 	 * How and where can I contact the team ?
 	 */
 	How_and_where_can_I_contact_the_team: () => LocalizedString
+	/**
+	 * This token will be used to (anonymously) reference you in feedbacks
+	 */
+	This_token_will_be_used_to_reference_you_in_APIs: () => LocalizedString
 	/**
 	 * App settings
 	 */
