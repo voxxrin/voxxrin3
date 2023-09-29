@@ -36,6 +36,7 @@ const routes: Array<RouteRecordRaw> = [
       { path: 'details', component: () => preloadedPage('TalkDetailsPage') },
       { path: 'feedbacks', component: () => preloadedPage('TalkFeedbacksPage') },
   ]},
+  { path: '/faq', component: () => preloadedPage('FAQPage') },
   { path: '/user/dashboard', component: () => preloadedPage('UserDashboardPage') },
   { path: '/user/talks', component: () => preloadedPage('ViewableTalksHavingFeedbacksPage') },
   { path: '/user/events/:eventId/talks/:talkId/asFeedbackViewer/:secretFeedbacksViewerToken', component: () => preloadedPage('TalkFeedbacksPage') },

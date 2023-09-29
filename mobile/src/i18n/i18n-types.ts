@@ -349,6 +349,42 @@ type RootTranslation = {
 	 * N​o​ ​t​a​l​k​s​ ​f​o​u​n​d​ ​f​o​r​ ​s​e​l​e​c​t​e​d​ ​d​a​y
 	 */
 	No_talks_matching_search_terms: string
+	/**
+	 * P​l​e​a​s​e​ ​k​e​e​p​ ​t​h​i​s​ ​t​o​k​e​n​ ​p​r​i​v​a​t​e
+	 */
+	Please_keep_this_token_private: string
+	/**
+	 * U​s​e​r​ ​u​i​d
+	 */
+	User_uid: string
+	/**
+	 * P​r​o​f​i​l​e
+	 */
+	Profile: string
+	/**
+	 * L​o​g​o​u​t
+	 */
+	Logout: string
+	/**
+	 * A​n​o​n​y​m​o​u​s​ ​u​s​e​r​ ​i​d
+	 */
+	Anonymous_user_id: string
+	/**
+	 * H​o​w​ ​a​n​d​ ​w​h​e​r​e​ ​c​a​n​ ​I​ ​c​o​n​t​a​c​t​ ​t​h​e​ ​t​e​a​m​ ​?
+	 */
+	How_and_where_can_I_contact_the_team: string
+	/**
+	 * A​p​p​ ​s​e​t​t​i​n​g​s
+	 */
+	App_settings: string
+	/**
+	 * C​o​n​f​i​g​u​r​e​ ​m​y​ ​p​r​e​f​e​r​e​n​c​e​s​ ​a​p​p
+	 */
+	Configure_my_preferences_app: string
+	/**
+	 * F​r​e​q​u​e​n​t​l​y​ ​a​s​k​e​d​ ​q​u​e​s​t​i​o​n​s
+	 */
+	Frequently_asked_questions: string
 }
 
 export type TranslationFunctions = {
@@ -684,6 +720,42 @@ export type TranslationFunctions = {
 	 * No talks found for selected day
 	 */
 	No_talks_matching_search_terms: () => LocalizedString
+	/**
+	 * Please keep this token private
+	 */
+	Please_keep_this_token_private: () => LocalizedString
+	/**
+	 * User uid
+	 */
+	User_uid: () => LocalizedString
+	/**
+	 * Profile
+	 */
+	Profile: () => LocalizedString
+	/**
+	 * Logout
+	 */
+	Logout: () => LocalizedString
+	/**
+	 * Anonymous user id
+	 */
+	Anonymous_user_id: () => LocalizedString
+	/**
+	 * How and where can I contact the team ?
+	 */
+	How_and_where_can_I_contact_the_team: () => LocalizedString
+	/**
+	 * App settings
+	 */
+	App_settings: () => LocalizedString
+	/**
+	 * Configure my preferences app
+	 */
+	Configure_my_preferences_app: () => LocalizedString
+	/**
+	 * Frequently asked questions
+	 */
+	Frequently_asked_questions: () => LocalizedString
 }
 
 export type Formatters = {}
