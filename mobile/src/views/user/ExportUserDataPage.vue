@@ -19,6 +19,7 @@
 
         <div class="exportContent">
           <span class="illu-export" v-if="true"></span>
+
           <div class="urlLink" v-if="false">
             <span class="qrcode">
               <ion-img :src="'assets/images/svg/qrcode-demo.svg'"></ion-img>
@@ -26,6 +27,10 @@
             <span class="url">
               url.import.voxxrin.d4f4545454ez
             </span>
+          </div>
+
+          <div class="importProgress" v-if="false">
+            <ion-spinner name="dots"></ion-spinner>
           </div>
         </div>
       </div>
@@ -158,6 +163,17 @@ registerTabbedPageNavListeners();
     border-radius: 16px;
     animation: slide-in-elliptic-bottom-fwd 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
     z-index: 1;
+  }
+
+  .importProgress {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    ion-spinner {
+      transform: scale(4);
+      color: var(--app-voxxrin);
+    }
   }
 
   .exportActions {
