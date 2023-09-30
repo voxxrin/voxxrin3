@@ -22,7 +22,12 @@ const attendeesFeedbacks = functions.https.onRequest(async (request, response) =
     const familyToken = extractSingleQueryParam(request, 'familyToken');
     const familyOrganizerSecretToken = extractSingleQueryParam(request, 'familyOrganizerSecretToken');
     const eventId = extractSingleQueryParam(request, 'eventId');
-    const sinceTimestamp = Date.parse(extractSingleQueryParam(request, 'updatedSince') || "");
+    let sinceTimestamp = Date.parse(extractSingleQueryParam(request, 'updatedSince') || "");
+
+    // TODO: Remove me
+    if(isNaN(sinceTimestamp)) {
+        sinceTimestamp = Date.parse("1970-01-01T00:00:00Z")
+    }
 
     if(!talkIds || !talkIds.length) { return sendResponseMessage(response, 400, `Missing [talkIds] (multi) query parameter !`) }
     if(!eventId) { return sendResponseMessage(response, 400, `Missing [eventId] query parameter !`) }
@@ -45,9 +50,9 @@ const attendeesFeedbacks = functions.https.onRequest(async (request, response) =
             return (root: EventLastUpdates) => root.feedbacks[talkId]
         })
     ], request, response)
-    if(!updatesDetected) {
-        return sendResponseMessage(response, 304)
-    }
+    // if(!updatesDetected) {
+    //     return sendResponseMessage(response, 304)
+    // }
 
     const updatedSince = new Date(sinceTimestamp);
 
@@ -88,7 +93,7 @@ const attendeesFeedbacks = functions.https.onRequest(async (request, response) =
         }))
 
         sendResponseMessage(response, 200, perTalkFeedbacks, cachedHash ? {
-            'ETag': cachedHash
+            // 'ETag': cachedHash
         }:{});
     } catch(error) {
         sendResponseMessage(response, 500, ""+error);
