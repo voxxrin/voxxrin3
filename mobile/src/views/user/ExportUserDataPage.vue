@@ -140,6 +140,10 @@ registerTabbedPageNavListeners();
     .url {
       font-weight: 700;
       color: var(--app-primary);
+
+      @media (prefers-color-scheme: dark) {
+        color: var(--app-white);
+      }
     }
   }
 
@@ -150,8 +154,7 @@ registerTabbedPageNavListeners();
     width: 234px;
     margin: 16px 0;
     padding: 24px;
-    background: rgba(white, 0.8);
-    backdrop-filter: blur(4px);
+    background: var(--app-white);
     border-radius: 16px;
     animation: slide-in-elliptic-bottom-fwd 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
     z-index: 1;
