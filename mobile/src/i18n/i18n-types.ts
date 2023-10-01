@@ -350,6 +350,22 @@ type RootTranslation = {
 	 */
 	No_talks_matching_search_terms: string
 	/**
+	 * S​o​c​i​a​l​ ​m​e​d​i​a
+	 */
+	Social_media: string
+	/**
+	 * E​v​e​n​t​ ​p​l​a​n​s
+	 */
+	Event_plans: string
+	/**
+	 * E​v​e​n​t​ ​s​u​m​m​a​r​y
+	 */
+	Event_summary: string
+	/**
+	 * S​p​o​n​s​o​r​s
+	 */
+	Sponsors: string
+	/**
 	 * P​l​e​a​s​e​ ​k​e​e​p​ ​t​h​i​s​ ​t​o​k​e​n​ ​p​r​i​v​a​t​e
 	 */
 	Please_keep_this_token_private: string
@@ -728,6 +744,22 @@ export type TranslationFunctions = {
 	 * No talks found for selected day
 	 */
 	No_talks_matching_search_terms: () => LocalizedString
+	/**
+	 * Social media
+	 */
+	Social_media: () => LocalizedString
+	/**
+	 * Event plans
+	 */
+	Event_plans: () => LocalizedString
+	/**
+	 * Event summary
+	 */
+	Event_summary: () => LocalizedString
+	/**
+	 * Sponsors
+	 */
+	Sponsors: () => LocalizedString
 	/**
 	 * Please keep this token private
 	 */

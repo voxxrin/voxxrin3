@@ -21,7 +21,7 @@ import { Temporal } from "@js-temporal/polyfill";
 import {z} from "zod";
 import {ConferenceDescriptor} from "../../../../../shared/conference-descriptor.firestore";
 import axios from "axios";
-import {EVENT_DESCRIPTOR_PARSER, TALK_FORMAT_PARSER} from "../crawler-parsers";
+import {EVENT_DESCRIPTOR_PARSER, INFOS_PARSER, TALK_FORMAT_PARSER} from "../crawler-parsers";
 import {CrawlerKind, TALK_FORMAT_FALLBACK_COLORS} from "../crawl";
 import {match} from "ts-pattern";
 
@@ -37,7 +37,11 @@ export const DEVOXX_DESCRIPTOR_PARSER = EVENT_DESCRIPTOR_PARSER.omit({
 }).extend({
     cfpId: z.string().nullish(),
     cfpBaseUrl: z.string().nullish(),
-    eventFamily: z.string()
+    eventFamily: z.string(),
+    infos: INFOS_PARSER.extend({
+        address: z.string().nullish(),
+        coords: z.object({ latitude: z.number(), longitude: z.number() }).nullish(),
+    })
 })
 
 export const DEVOXX_CRAWLER: CrawlerKind<typeof DEVOXX_DESCRIPTOR_PARSER> = {
@@ -77,7 +81,11 @@ export const DEVOXX_CRAWLER: CrawlerKind<typeof DEVOXX_DESCRIPTOR_PARSER> = {
             logoUrl: descriptor.logoUrl,
             backgroundUrl: descriptor.backgroundUrl,
             websiteUrl: e.website,
-            location: { city: e.locationCity, country: e.locationCountry },
+            location: {
+                city: e.locationCity, country: e.locationCountry,
+                ...(descriptor.infos.address ? {address: descriptor.infos.address} : {}),
+                ...(descriptor.infos.coords ? {coords: descriptor.infos.coords} : {}),
+            },
             theming: descriptor.theming,
             keywords: descriptor.keywords
         } as ListableEvent
@@ -112,7 +120,12 @@ export const DEVOXX_CRAWLER: CrawlerKind<typeof DEVOXX_DESCRIPTOR_PARSER> = {
             talkTracks: descriptor.talkTracks,
             supportedTalkLanguages: descriptor.supportedTalkLanguages,
             rooms: eventRooms,
-            infos: descriptor.infos
+            infos: {
+                eventDescription: descriptor.infos.eventDescription,
+                venuePicture: descriptor.infos.venuePicture,
+            },
+            ...(descriptor.socialMedias ? {socialMedias: descriptor.socialMedias} : {}),
+            ...(descriptor.sponsors ? {sponsors: descriptor.sponsors} : {}),
         }
 
         const event: FullEvent = {

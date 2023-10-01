@@ -1,17 +1,12 @@
 <template>
   <ion-page>
-    <ion-content :fullscreen="true">
-      <current-event-header v-if="confDescriptor" :conf-descriptor="confDescriptor" />
+    <ion-content :fullscreen="true" v-if="confDescriptorRef">
+      <current-event-header v-if="confDescriptorRef" :conf-descriptor="confDescriptorRef" />
 
       <div class="contentInfoConf contentView">
         <div class="headInfoConf">
           <div class="headInfoConf-logo">
-            <img src="./">
-          </div>
-          <div class="headInfoConf-actions">
-            <ion-button slot="end" shape="round" size="small" fill="outline" v-if="true">
-              <ion-icon src="/assets/icons/solid/settings-cog.svg"></ion-icon>
-            </ion-button>
+            <img :src="confDescriptorRef.logoUrl">
           </div>
         </div>
 
@@ -19,94 +14,52 @@
           <div class="utilsInfoConf-item">
             <ion-icon aria-hidden="true" :icon="location"></ion-icon>
             <div class="utilsInfoConf-item-infos">
-              <span class="title">75017 Paris, FRANCE</span>
-              <span class="subTitle">2 Place de la porte maillot</span>
+              <a v-if="confDescriptorRef.location.coords" :href="`geo:${confDescriptorRef.location.coords.latitude},${confDescriptorRef.location.coords.longitude}`" target="_blank">
+                <div><span class="title">{{ confDescriptorRef.location.city }}, {{ confDescriptorRef.location.country }}</span></div>
+                <div v-if="confDescriptorRef.location.address"><span class="subTitle">{{ confDescriptorRef.location.address }}</span></div>
+              </a>
+              <div v-else>
+                <span class="title">{{ confDescriptorRef.location.city }}, {{ confDescriptorRef.location.country }}</span>
+                <span class="subTitle" v-if="confDescriptorRef.location.address">{{ confDescriptorRef.location.address }}</span>
+              </div>
             </div>
           </div>
           <div class="utilsInfoConf-item">
             <ion-icon aria-hidden="true" :icon="calendar"></ion-icon>
             <div class="utilsInfoConf-item-infos">
-              <span class="title">Du 12 au 14 Avril</span>
+              <span class="title">
+                <month-day-date-range :format="{separator: '>'}" :range="{ start: confDescriptorRef.start, end: confDescriptorRef.end }" /> {{ confDescriptorRef.start.year }}
+              </span>
             </div>
           </div>
         </div>
 
-        <ion-button size="default" expand="block">
-          Event plans
-          <ion-icon aria-hidden="true" :icon="map" slot="end"></ion-icon>
-        </ion-button>
 
-        <div class="linksInfoConf">
-          <vox-divider>Utils links</vox-divider>
+        <div class="linksInfoConf" v-if="socialMedias.length">
+          <vox-divider>{{ LL.Social_media() }}</vox-divider>
           <ul class="linksInfoConf-list">
-            <li v-if="true">
-              <ion-button color="theming" slot="end" shape="round" size="small">
-                <ion-icon :icon="link"></ion-icon>
-              </ion-button>
-            </li>
-            <li>
-              <ion-button color="theming" slot="end" shape="round" size="small">
-                <ion-icon :icon="logoYoutube"></ion-icon>
-              </ion-button>
-            </li>
-            <li>
-              <ion-button color="theming" slot="end" shape="round" size="small">
-                <ion-icon :icon="logoFacebook"></ion-icon>
-              </ion-button>
-            </li>
-            <li>
-              <ion-button color="theming" slot="end" shape="round" size="small">
-                <ion-icon :icon="logoLinkedin"></ion-icon>
-              </ion-button>
-            </li>
-            <li>
-              <ion-button color="theming" slot="end" shape="round" size="small">
-                <ion-icon :icon="logoFlickr"></ion-icon>
+            <li v-for="(socialMedia) in socialMedias" :key="socialMedia.type">
+              <ion-button color="theming" slot="end" shape="round" size="small" :href="socialMedia.href">
+                <ion-icon :icon="socialMedia.icon" :alt="socialMedia.label"></ion-icon>
               </ion-button>
             </li>
           </ul>
         </div>
 
-        <div class="descriptionInfoConf">
-          <vox-divider>Event summary</vox-divider>
+        <div class="descriptionInfoConf" v-if="confDescriptorRef.description">
+          <vox-divider>{{LL.Event_summary()}}</vox-divider>
           <ion-text>
-            Depuis plus de 10 ans, la conférence Devoxx France propose pendant 3 jours de venir partager et écouter plus de 200 présentations, par 240 orateurs.
-            La conférence est accompagnée d’un salon/hall d’exposition avec 70 exposants.
-            Avec plus de 3200 participants, orateurs et exposants en avril 2022 dernier, c’est l’un des événements les plus importants pour la communauté des développeurs, en France.Devoxx France est l’occasion de faire des rencontres, de venir découvrir les dernières technologies et de participer à un grand moment communautaire.
+            {{confDescriptorRef.description}}
           </ion-text>
         </div>
 
-        <div class="sponsorsInfoConf">
-          <vox-divider>Sponsors</vox-divider>
-          <ul class="sponsorsInfoConf-list">
-            <li v-if="true">
-              <a class="sponsorItem" :class="'_type1'">
-                <ion-img :src="'https://www.devoxx.fr/wp-content/uploads/2019/09/logo_devoxx_france_2019_simple-1.png'"></ion-img>
-                <span class="sponsorItem-type">Diamond</span>
-              </a>
-            </li>
-            <li v-if="true">
-              <a class="sponsorItem" :class="'_type1'">
-                <ion-img :src="'https://www.devoxx.fr/wp-content/uploads/2019/09/logo_devoxx_france_2019_simple-1.png'"></ion-img>
-                <span class="sponsorItem-type">Diamond</span>
-              </a>
-            </li>
-            <li v-if="true">
-              <a class="sponsorItem" :class="'_type2'">
-                <ion-img :src="'https://www.devoxx.fr/wp-content/uploads/2019/09/logo_devoxx_france_2019_simple-1.png'"></ion-img>
-                <span class="sponsorItem-type">Platinium</span>
-              </a>
-            </li>
-            <li v-if="true">
-              <a class="sponsorItem" :class="'_type2'">
-                <ion-img :src="'https://www.devoxx.fr/wp-content/uploads/2019/09/logo_devoxx_france_2019_simple-1.png'"></ion-img>
-                <span class="sponsorItem-type">Platinium</span>
-              </a>
-            </li>
-            <li v-if="true">
-              <a class="sponsorItem" :class="'_type2'">
-                <ion-img :src="'https://www.devoxx.fr/wp-content/uploads/2019/09/logo_devoxx_france_2019_simple-1.png'"></ion-img>
-                <span class="sponsorItem-type">Platinium</span>
+        <div class="sponsorsInfoConf" v-if="confDescriptorRef.sponsors?.length > 0">
+          <vox-divider>{{ LL.Sponsors() }}</vox-divider>
+          <ul class="sponsorsInfoConf-list" v-for="(groupedSponsor) in groupedSponsors" :key="groupedSponsor.type">
+            <li v-for="(sponsor) in groupedSponsor.sponsors" :key="sponsor.name">
+              <a class="sponsorItem" :href="sponsor.href" target="_blank">
+                <ion-img :src="sponsor.logoUrl" :alt="sponsor.name"></ion-img>
+                <span class="sponsorItem-type" :style="{'background-color': sponsor.typeColor, 'color': sponsor.typeFontColor || 'white'}">{{ sponsor.type }}</span>
               </a>
             </li>
           </ul>
@@ -120,28 +73,78 @@
   import CurrentEventHeader from "@/components/events/CurrentEventHeader.vue";
   import {useRoute} from "vue-router";
   import {EventId} from "@/models/VoxxrinEvent";
-  import {getRouteParamsValue} from "@/views/vue-utils";
+  import {managedRef as ref, getRouteParamsValue} from "@/views/vue-utils";
   import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
-  import {managedRef as ref} from "@/views/vue-utils";
   import {typesafeI18n} from "@/i18n/i18n-vue";
   import {
-    location,
-    calendar,
-    map,
-    link,
-    logoYoutube,
-    logoFacebook,
-    logoLinkedin,
-    logoFlickr,
-    diamond
+      location,
+      calendar,
+      link,
+      logoYoutube,
+      logoLinkedin,
+      logoTwitter, logoMastodon, logoInstagram, logoTwitch, logoGithub, logoFacebook, logoFlickr
   } from "ionicons/icons";
   import VoxDivider from "@/components/ui/VoxDivider.vue";
+  import {IonText, IonImg} from "@ionic/vue"
+  import MonthDayDateRange from "@/components/MonthDayDateRange.vue";
+  import {computed, Ref, toValue} from "vue";
+  import {SocialMediaType} from "../../../../shared/type-utils";
+  import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
+  import {match, P} from "ts-pattern";
 
   const { LL } = typesafeI18n()
 
   const route = useRoute();
   const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')));
-  const {conferenceDescriptor: confDescriptor} = useSharedConferenceDescriptor(eventId);
+  const {conferenceDescriptor: confDescriptorRef} = useSharedConferenceDescriptor(eventId);
+
+  const SUPPORTED_SOCIAL_MEDIAS = {
+    "website": { icon: link, label: "Website" },
+    "twitter": { icon: logoTwitter, label: "Twitter" },
+    "linkedin": { icon: logoLinkedin, label: "Linkedin" },
+    "mastodon": { icon: logoMastodon, label: "Mastodon" },
+    "instagram": { icon: logoInstagram, label: "Instagram" },
+    "youtube": { icon: logoYoutube, label: "Youtube" },
+    "twitch": { icon: logoTwitch, label: "Twitch" },
+    "github": { icon: logoGithub, label: "Github" },
+    "facebook": { icon: logoFacebook, label: "Facebook" },
+    "flickr": { icon: logoFlickr, label: "Flickr" },
+  } as const
+
+  const socialMedias: Ref<Array<{type: SocialMediaType, href: string, icon: string, label: string}>> = computed(() => {
+    const confDescriptor = toValue(confDescriptorRef)
+    if(!confDescriptor || !confDescriptor.socialMedias) {
+      return [];
+    }
+
+    return (Object.keys(SUPPORTED_SOCIAL_MEDIAS) as Array<keyof typeof SUPPORTED_SOCIAL_MEDIAS>)
+      .map((socialMediaType) => {
+        const confSocialMedia = confDescriptor.socialMedias?.find(sm => sm.type === socialMediaType)
+        const maybeSocialMediaWithLink = confSocialMedia ? {...SUPPORTED_SOCIAL_MEDIAS[socialMediaType], ...confSocialMedia} : undefined;
+        return maybeSocialMediaWithLink
+      }).filter(v => !!v).map(v => v!);
+  })
+
+  const groupedSponsors = computed(() => {
+      const confDescriptor = toValue(confDescriptorRef)
+      if(!confDescriptor || !confDescriptor.sponsors) {
+          return [];
+      }
+
+      return confDescriptor.sponsors.reduce((groupedSponsors, sponsor) => {
+          const group = match([ groupedSponsors.find(group => group.type === sponsor.type) ])
+              .with([ P.not(P.nullish) ], ([group]) => group)
+              .otherwise(() => {
+                  const newGroup = {type: sponsor.type, sponsors: []};
+                  groupedSponsors.push(newGroup);
+                  return newGroup;
+              });
+
+          group.sponsors.push(sponsor);
+
+          return groupedSponsors;
+      }, [] as Array<{type: string, sponsors: VoxxrinConferenceDescriptor['sponsors']}>)
+  })
 </script>
 
 <style lang="scss" scoped>
@@ -211,6 +214,7 @@
     &-list {
       display: flex;
       flex-direction: row;
+      flex-wrap: wrap;
       column-gap: 8px;
       margin: 0;
       padding: 0;
@@ -225,7 +229,7 @@
     &-list {
       display: flex;
       flex-direction: row;
-      flex-wrap: nowrap;
+      flex-wrap: wrap;
       column-gap: 16px;
       position: relative;
       left: -16px;
@@ -247,10 +251,6 @@
         border-radius: 74px;
         background: var(--app-white);
         border: 1px solid var(--app-beige-line);
-
-        &._type1 { .sponsorItem-type { background-color: #9CBFC7;}}
-        &._type2 { .sponsorItem-type { background-color: #A79CC7;}}
-
 
         &-type {
           position: absolute;

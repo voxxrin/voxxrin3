@@ -26,7 +26,9 @@ export type ListableEvent = {
     keywords: string[],
     location: {
         country: string,
-        city: string
+        city: string,
+        address?: string|undefined,
+        coords?: { latitude: number, longitude: number }|undefined,
     },
     peopleDescription?: string|undefined|null,
     backgroundUrl: string,
