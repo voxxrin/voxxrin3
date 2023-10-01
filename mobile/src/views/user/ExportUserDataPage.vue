@@ -19,7 +19,7 @@
 
         <div class="exportContent">
           <!-- Step 1 -->
-          <span class="illu-export" v-if="true"></span>
+          <span class="illu-export" v-if="false"></span>
 
           <!-- Step 2 -->
           <div class="urlLink" v-if="false">
@@ -32,7 +32,16 @@
           </div>
 
           <!-- Step 3 -->
-          <div class="importProgress" v-if="false">
+          <div class="importProgress" v-if="true">
+            <div class="linesTransfert">
+              <span class="line"></span>
+              <span class="line"></span>
+              <span class="line"></span>
+              <span class="line"></span>
+              <span class="line"></span>
+              <span class="line"></span>
+              <span class="line"></span>
+            </div>
             <div class="importProgress-blur">
               <div class="circle">
                 <div class="circle circle-lg">
@@ -43,7 +52,7 @@
               </div>
             </div>
             <ion-spinner name="dots"></ion-spinner>
-            <ion-text>Data transfer in progress...</ion-text>
+            <ion-text class="importProgress-title">Data transfer in progress...</ion-text>
             <div class="datasLabelsAnimation">
               <div class="datasLabelsAnimation-label _first"><div>My kick-ass program</div></div>
               <div class="datasLabelsAnimation-label _second"><div> My best feedback</div></div>
@@ -191,7 +200,28 @@ registerTabbedPageNavListeners();
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    animation: scale-in-center 340ms cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
 
+    ion-spinner {
+      transform: scale(2.4);
+      color: var(--app-voxxrin);
+    }
+
+    &-title {
+      display: block;
+      margin-top: 16px;
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--app-primary);
+
+      @media (prefers-color-scheme: dark) {
+        color: var(--app-white);
+      }
+    }
+
+    /* ===== Decoration Import Progress */
+
+    /* Blur Colors */
     &:after {
       position: absolute;
       height: 400px;
@@ -300,23 +330,7 @@ registerTabbedPageNavListeners();
       }
     }
 
-    ion-spinner {
-      transform: scale(4);
-      color: var(--app-voxxrin);
-    }
-
-    ion-text {
-      display: block;
-      margin-top: 16px;
-      font-size: 18px;
-      font-weight: 500;
-      color: var(--app-primary);
-
-      @media (prefers-color-scheme: dark) {
-        color: var(--app-white);
-      }
-    }
-
+    /* Labels */
     .datasLabelsAnimation {
       height:44px;
       overflow:hidden;
@@ -352,14 +366,74 @@ registerTabbedPageNavListeners();
       90% {margin-top: 0;}
       100% {margin-top: 0;}
     }
+  }
 
-    .dataLabel {
+  .linesTransfert {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    row-gap: 38px;
+    position: absolute;
+    top: 50%;
+    left: -50%;
+    transform: translate(0, -50%) scale(0.5);
+    width: calc(100% + 44px);
+    z-index: 5;
+
+    .line {
       display: block;
-      margin-top: 6px;
-      font-size: 13px;
-      font-weight: 900;
-      color: var(--app-voxxrin);
+      height: 4px;
+      width: 100%;
+      background: linear-gradient(270deg, rgba(233, 8, 102, 0) 34%, rgba(233, 8, 102, 0.15) 50%, rgba(251, 109, 168, 0) 73%);
+      background-size: 300% 100%;
+      animation: animateBg-1c8dca9b 2s linear infinite, animateRandom-1c8dca9b 2s linear infinite;
+      border-radius: 8px;
+
+      @media (prefers-color-scheme: dark) {
+        background: linear-gradient(270deg, rgba(white, 0) 34%, rgba(white, 0.15) 50%, rgba(white, 0) 73%);
+      }
     }
+
+    .line:nth-child(1) {
+      animation-delay: 0.5s; /* Ajustez le délai comme vous le souhaitez */
+    }
+    .line:nth-child(2) {
+      animation-delay: 1.2s; /* Ajustez le délai comme vous le souhaitez */
+    }
+    .line:nth-child(3) {
+      animation-delay: 0.8s; /* Ajustez le délai comme vous le souhaitez */
+    }
+    .line:nth-child(4) {
+      animation-delay: 1.2s; /* Ajustez le délai comme vous le souhaitez */
+    }
+    .line:nth-child(5) {
+      animation-delay: 0.7s; /* Ajustez le délai comme vous le souhaitez */
+    }
+    .line:nth-child(6) {
+      animation-delay: 1.1s; /* Ajustez le délai comme vous le souhaitez */
+    }
+  }
+
+  @keyframes animateBg {
+    0% { background-position: 100% 0%; }
+    100% { background-position: 0% 0%; }
+  }
+
+  @keyframes animateRandom {
+    0% {
+      transform: translateX(0);
+      opacity: 0;
+    }
+    100% {
+      transform: translateX(calc(100% + 10px));
+      opacity: 1;
+    }
+  }
+
+  @keyframes animateBg {
+    0% { background-position: 100% 0%; }
+    100% { background-position: 0% 0%; }
   }
 
   .exportActions {
