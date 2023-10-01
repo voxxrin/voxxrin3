@@ -220,7 +220,6 @@ registerTabbedPageNavListeners();
     }
 
     /* ===== Decoration Import Progress */
-
     /* Blur Colors */
     &:after {
       position: absolute;
@@ -230,11 +229,13 @@ registerTabbedPageNavListeners();
       backdrop-filter: blur(30px) saturate(120%);
       background: rgba(white, 0.5);
       animation: scaleUpDown 4s ease-in-out alternate-reverse infinite;
+      box-shadow: rgb(0 0 0 / 5%) -4px -19px 60px -12px inset, rgb(50 50 93 / 21%) 0px 18px 36px -18px inset;
       content: '';
       z-index: -2;
 
       @media (prefers-color-scheme: dark) {
         background: rgba(#242935, 0.5);
+        box-shadow: rgb(255 255 255 / 5%) -4px -19px 60px -12px inset, rgb(255 255 255 / 21%) 0px 18px 36px -18px inset;
       }
     }
 
