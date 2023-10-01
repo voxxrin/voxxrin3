@@ -19,10 +19,10 @@
 
         <div class="exportContent">
           <!-- Step 1 -->
-          <span class="illu-export" v-if="false"></span>
+          <span class="step1 illu-export" v-if="true"></span>
 
           <!-- Step 2 -->
-          <div class="urlLink" v-if="false">
+          <div class="step2 urlLink" v-if="false">
             <span class="qrcode">
               <ion-img :src="'assets/images/svg/qrcode-demo.svg'"></ion-img>
             </span>
@@ -32,7 +32,7 @@
           </div>
 
           <!-- Step 3 -->
-          <div class="importProgress" v-if="true">
+          <div class="step3 importProgress" v-if="false">
             <div class="linesTransfert">
               <span class="line"></span>
               <span class="line"></span>
@@ -65,6 +65,10 @@
 
     <ion-footer class="exportActions">
       <!-- Step 1 -->
+      <div class="export-option">
+        Export my feedback
+        <ion-toggle></ion-toggle>
+      </div>
       <ion-button  fill="solid" shape="round" expand="block" v-if="true">
         Generate link for import <ion-icon :icon="download" slot="end"></ion-icon>
       </ion-button>
@@ -440,5 +444,13 @@ registerTabbedPageNavListeners();
   .exportActions {
     padding: 24px;
     background: var(--app-background);
+
+    .export-option {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 24px 0;
+      width: 100%;
+    }
   }
 </style>
