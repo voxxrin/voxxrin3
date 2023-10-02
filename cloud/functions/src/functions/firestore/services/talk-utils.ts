@@ -45,10 +45,10 @@ class ConfOrganizerAllRatingsModel {
     }
 }
 
-export async function getEveryRatingsForEvent(eventId: string) {
-    const organizerSpaceRef = await getSecretTokenRef(`/events/${eventId}/organizer-space`)
+export async function getEveryRatingsForEvent(eventId: string, organizerSpaceToken: string) {
+    const ratingsColl = db.collection(`/events/${eventId}/organizer-space/${organizerSpaceToken}/ratings`)
     const eventAllRatings: PerTalkPublicUserIdFeedbackRating[] = await Promise.all(
-        (await organizerSpaceRef.collection('ratings').listDocuments() || [])
+        (await ratingsColl.listDocuments() || [])
             .map(talkRatingRef => talkRatingRef.get().then(doc => ({ talkId: talkRatingRef.id, perPublicUserIdRatings: doc.data() as PerPublicUserIdFeedbackRatings })))
     );
 
@@ -56,8 +56,10 @@ export async function getEveryRatingsForEvent(eventId: string) {
 }
 
 export async function getTalksDetailsWithRatings(eventId: string) {
+    const organizerSpaceRef = await getSecretTokenRef(`/events/${eventId}/organizer-space`)
+
     const talks = await getTalkDetails(eventId);
-    const everyRatings = await getEveryRatingsForEvent(eventId);
+    const everyRatings = await getEveryRatingsForEvent(eventId, organizerSpaceRef.id);
     return talks.map(talk => ({
         talk,
         ratings: everyRatings.ratingsForTalk(talk.id)
