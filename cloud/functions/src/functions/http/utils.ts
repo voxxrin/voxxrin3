@@ -34,3 +34,13 @@ export function sendResponseMessage(response: Response, httpCode: number, messag
 export function roundedAverage(values: number[]) {
     return Math.round(values.reduce((sum, v) => sum+v, 0) * 100 / values.length) / 100;
 }
+
+export async function logPerf<T>(message: string, callback: () => Promise<T>) {
+    const start = Date.now();
+
+    console.log(`START: ${message}`)
+    const results = await callback()
+    console.log(`END: ${message} -- Elapsed: ${Date.now()-start}ms`)
+
+    return results;
+}

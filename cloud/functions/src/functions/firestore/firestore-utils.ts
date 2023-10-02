@@ -8,6 +8,7 @@ import {ISODatetime} from "../../../../../shared/type-utils";
 import {sortBy} from "lodash";
 import {firestore} from "firebase-admin";
 import DocumentReference = firestore.DocumentReference;
+import {logPerf} from "../http/utils";
 
 export type EventFamilyToken = {
     families: string[],
@@ -65,8 +66,10 @@ export async function ensureTalkFeedbackViewerTokenIsValidThenGetFeedbacks(event
 }
 
 export async function eventTalkStatsFor(eventId: string) {
-    const eventTalkStatsPerTalkId = (await db.doc(`events/${eventId}/talksStats-allInOne/self`).get()).data() as Record<string, TalkStats>;
-    return Object.values(eventTalkStatsPerTalkId);
+    return logPerf(`eventTalkStatsFor(${eventId})`, async () => {
+        const eventTalkStatsPerTalkId = (await db.doc(`events/${eventId}/talksStats-allInOne/self`).get()).data() as Record<string, TalkStats>;
+        return Object.values(eventTalkStatsPerTalkId);
+    })
 }
 
 export async function eventLastUpdateRefreshed<T extends {[field in keyof T]: ISODatetime|null}>(

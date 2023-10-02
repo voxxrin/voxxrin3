@@ -5,6 +5,7 @@ import {
     PublicToken
 } from "../../../../../../shared/public-tokens";
 import {match, P} from "ts-pattern";
+import {logPerf} from "../../http/utils";
 
 
 export function isFamilyEventsStatsToken(publicToken: PublicToken): publicToken is FamilyEventsStatsAccessToken {
@@ -30,13 +31,17 @@ async function getPublicTokenBySecret<T>(secretToken: string, transformer: (publ
 }
 
 export async function getFamilyEventsStatsToken(secretToken: string) {
-    return getPublicTokenBySecret(secretToken,
+    return logPerf("getFamilyEventsStatsToken()", async () => {
+        return getPublicTokenBySecret(secretToken,
             publicToken => isFamilyEventsStatsToken(publicToken) || isFamilyOrganizerToken(publicToken)?publicToken:undefined,
-        "family events stats token")
+            "family events stats token")
+    })
 }
 
 export async function getFamilyOrganizerToken(secretToken: string) {
-    return getPublicTokenBySecret(secretToken,
-            publicToken => isFamilyOrganizerToken(publicToken)?publicToken:undefined,
-        "family organizer token")
+    return logPerf("getFamilyOrganizerToken()", async () => {
+        return getPublicTokenBySecret(secretToken,
+            publicToken => isFamilyOrganizerToken(publicToken) ? publicToken : undefined,
+            "family organizer token")
+    })
 }

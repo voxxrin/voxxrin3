@@ -6,6 +6,7 @@ import {
     PerPublicUserIdFeedbackRatings
 } from "../../../../../../shared/conference-organizer-space.firestore";
 import {ISOLocalDate} from "../../../../../../shared/type-utils";
+import {logPerf} from "../../http/utils";
 
 
 export async function getTalkDetails(eventId: string) {
@@ -65,15 +66,17 @@ export async function getEveryRatingsForEvent(eventId: string, organizerSpaceTok
 }
 
 export async function getTalksDetailsWithRatings(eventId: string) {
-    const organizerSpaceRef = await getSecretTokenRef(`/events/${eventId}/organizer-space`)
+    return logPerf(`getTalksDetailsWithRatings(${eventId})`, async () => {
+        const organizerSpaceRef = await getSecretTokenRef(`/events/${eventId}/organizer-space`)
 
-    const [ talks, everyRatings ] = await Promise.all([
-        getTalkDetails(eventId),
-        getEveryRatingsForEvent(eventId, organizerSpaceRef.id)
-    ]);
+        const [ talks, everyRatings ] = await Promise.all([
+            getTalkDetails(eventId),
+            getEveryRatingsForEvent(eventId, organizerSpaceRef.id)
+        ]);
 
-    return talks.map(talk => ({
-        talk,
-        ratings: everyRatings.ratingsForTalk(talk.id)
-    }))
+        return talks.map(talk => ({
+            talk,
+            ratings: everyRatings.ratingsForTalk(talk.id)
+        }))
+    })
 }
