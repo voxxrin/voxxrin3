@@ -1,24 +1,12 @@
 import {db} from "../../../firebase";
-import {DetailedTalk} from "../../../../../../shared/daily-schedule.firestore";
 import {getSecretTokenRef} from "../firestore-utils";
 import {
     DailyTalkFeedbackRatings,
     PerPublicUserIdFeedbackRatings
 } from "../../../../../../shared/conference-organizer-space.firestore";
-import {ISOLocalDate} from "../../../../../../shared/type-utils";
 import {logPerf} from "../../http/utils";
+import {getTimeslottedTalks} from "./schedule-utils";
 
-
-export async function getTalkDetails(eventId: string) {
-    const talkRefs = await db
-        .collection("events").doc(eventId)
-        .collection("talks")
-        .listDocuments();
-
-    const talks  = await Promise.all(talkRefs.map(async talkRef => (await talkRef.get()).data() as DetailedTalk))
-
-    return talks;
-}
 
 type PerTalkPublicUserIdFeedbackRating = {
     talkId: string,
@@ -70,7 +58,7 @@ export async function getTalksDetailsWithRatings(eventId: string) {
         const organizerSpaceRef = await getSecretTokenRef(`/events/${eventId}/organizer-space`)
 
         const [ talks, everyRatings ] = await Promise.all([
-            getTalkDetails(eventId),
+            getTimeslottedTalks(eventId),
             getEveryRatingsForEvent(eventId, organizerSpaceRef.id)
         ]);
 
