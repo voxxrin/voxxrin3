@@ -79,6 +79,8 @@ async function updateTalkFeedbacksFromUserFeedbacks(userId: string, eventId: str
             await Promise.all([
                 db.doc(`events/${eventId}/talks/${feedback.talkId}/feedbacks-access/${talkFeedbackViewerToken.secretToken}/feedbacks/${userTokensWallet.publicUserToken}`).set(attendeeFeedback),
                 db.doc(`events/${eventId}/organizer-space/${organizerSpace.organizerSecretToken}/ratings/${feedback.talkId}`).update(`${userTokensWallet.publicUserToken}`, feedback.ratings),
+                db.doc(`events/${eventId}/organizer-space/${organizerSpace.organizerSecretToken}/daily-ratings/${dayId}`)
+                    .update(`${feedback.talkId}.${userTokensWallet.publicUserToken}`, feedback.ratings),
                 eventLastUpdateRefreshed(eventId, [ "allFeedbacks" ]),
                 eventLastUpdateRefreshed(eventId, [ feedback.talkId ], rootNode => {
                     const feedbacks = {} as EventLastUpdates['feedbacks'];

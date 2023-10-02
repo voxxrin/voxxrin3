@@ -23,6 +23,9 @@ import {
 import {
     introduceTalksStats_allInOneDocument
 } from "../firestore/migrations/010-introduceTalksStats-allInOneDocument";
+import {
+    introduceOrganizerSpaceDailyRatings
+} from "../firestore/migrations/011-introduceOrganizerSpaceDailyRatings";
 
 /**
  * Like Flyway, but for firestore :-)
@@ -40,6 +43,7 @@ const MIGRATIONS: Migration[] = [
     { name: "introducingPerTalkFeedbacksLastUpdates", exec: introducingPerTalkFeedbacksLastUpdates },
     { name: "refactoOrgaSpaceRatingsToPerTalkRatings", exec: refactoOrgaSpaceRatingsToPerTalkRatings },
     { name: "introduceTalksStats_allInOneDocument", exec: introduceTalksStats_allInOneDocument },
+    { name: "introduceOrganizerSpaceDailyRatings", exec: introduceOrganizerSpaceDailyRatings },
 ];
 
 export type MigrationResult = "OK"|"Error";

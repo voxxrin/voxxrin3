@@ -14,3 +14,7 @@ export type ConferenceOrganizerSpace = {
 export type PerPublicUserIdFeedbackRatings = {
     [publicUserId: string]: FeedbackRatings
 }
+
+export type DailyTalkFeedbackRatings = {
+    [taklId: string]: PerPublicUserIdFeedbackRatings
+}

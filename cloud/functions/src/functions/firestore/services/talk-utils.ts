@@ -2,8 +2,10 @@ import {db} from "../../../firebase";
 import {DetailedTalk} from "../../../../../../shared/daily-schedule.firestore";
 import {getSecretTokenRef} from "../firestore-utils";
 import {
+    DailyTalkFeedbackRatings,
     PerPublicUserIdFeedbackRatings
 } from "../../../../../../shared/conference-organizer-space.firestore";
+import {ISOLocalDate} from "../../../../../../shared/type-utils";
 
 
 export async function getTalkDetails(eventId: string) {
@@ -46,20 +48,30 @@ class ConfOrganizerAllRatingsModel {
 }
 
 export async function getEveryRatingsForEvent(eventId: string, organizerSpaceToken: string) {
-    const ratingsColl = db.collection(`/events/${eventId}/organizer-space/${organizerSpaceToken}/ratings`)
-    const eventAllRatings: PerTalkPublicUserIdFeedbackRating[] = await Promise.all(
-        (await ratingsColl.listDocuments() || [])
-            .map(talkRatingRef => talkRatingRef.get().then(doc => ({ talkId: talkRatingRef.id, perPublicUserIdRatings: doc.data() as PerPublicUserIdFeedbackRatings })))
-    );
+    const dailyRatingsColl = await db.collection(`/events/${eventId}/organizer-space/${organizerSpaceToken}/daily-ratings`).listDocuments()
 
-    return new ConfOrganizerAllRatingsModel(eventAllRatings);
+    const allDailyRatings: PerTalkPublicUserIdFeedbackRating[][] = await Promise.all(dailyRatingsColl.map(async dailyRatingsDoc => {
+        const dailyPerTalkIdRatings = (await dailyRatingsDoc.get()).data() as DailyTalkFeedbackRatings;
+        const talkIds = Object.keys(dailyPerTalkIdRatings)
+        return talkIds.map(talkId => {
+            return {
+                talkId,
+                perPublicUserIdRatings: dailyPerTalkIdRatings[talkId]
+            }
+        })
+    }))
+
+    return new ConfOrganizerAllRatingsModel(allDailyRatings.flatMap(dailyRatings => dailyRatings));
 }
 
 export async function getTalksDetailsWithRatings(eventId: string) {
     const organizerSpaceRef = await getSecretTokenRef(`/events/${eventId}/organizer-space`)
 
-    const talks = await getTalkDetails(eventId);
-    const everyRatings = await getEveryRatingsForEvent(eventId, organizerSpaceRef.id);
+    const [ talks, everyRatings ] = await Promise.all([
+        getTalkDetails(eventId),
+        getEveryRatingsForEvent(eventId, organizerSpaceRef.id)
+    ]);
+
     return talks.map(talk => ({
         talk,
         ratings: everyRatings.ratingsForTalk(talk.id)

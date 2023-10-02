@@ -5,7 +5,9 @@ import {
     eventTalkStatsFor
 } from "../../firestore/firestore-utils";
 import {match, P} from "ts-pattern";
-import {getTalksDetailsWithRatings} from "../../firestore/services/talk-utils";
+import {
+    getTalksDetailsWithRatings
+} from "../../firestore/services/talk-utils";
 import {getEventDescriptor} from "../../firestore/services/eventDescriptor-utils";
 import {ISOLocalDate} from "../../../../../../shared/type-utils";
 import {getFamilyEventsStatsToken} from "../../firestore/services/publicTokens-utils";
@@ -49,7 +51,7 @@ const publicEventStats = functions.https.onRequest(async (request, response) => 
             totalFavoritesCount: talkStats.find(ts => ts.id === talkDetails.talk.id)?.totalFavoritesCount || 0
         }))
 
-        type DailyTalksAndRatigns = {
+        type DailyTalksAndRatings = {
             dayId: string,
             date: ISOLocalDate,
             talks: typeof talksDetailsWithRatings
@@ -58,7 +60,7 @@ const publicEventStats = functions.https.onRequest(async (request, response) => 
             let talkLocalDate = talkAndRatings.talk.start.substring(0, "yyyy-mm-dd".length) as ISOLocalDate;
             const day = match(dailyTalks.find(dt => dt.date === talkLocalDate))
                 .with(P.nullish, (_) => {
-                    const day: DailyTalksAndRatigns = {
+                    const day: DailyTalksAndRatings = {
                         dayId: eventDescriptor.days.find(d => d.localDate === talkLocalDate)!.id,
                         date: talkLocalDate,
                         talks: []
@@ -70,7 +72,7 @@ const publicEventStats = functions.https.onRequest(async (request, response) => 
             day.talks.push(talkAndRatings)
 
             return dailyTalks;
-        }, [] as DailyTalksAndRatigns[])
+        }, [] as DailyTalksAndRatings[])
 
         const eventTopRatedTalksConfig = eventDescriptor.features.topRatedTalks || {
             numberOfDailyTopTalksConsidered: 10,
