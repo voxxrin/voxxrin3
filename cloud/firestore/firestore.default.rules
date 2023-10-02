@@ -52,12 +52,19 @@ service cloud.firestore {
         allow read: if true;
         allow write: if false;
       }
+      match /talksStats-allInOne/self {
+        allow read: if true;
+        allow write: if false;
+      }
 
       match /organizer-space/{secretOrganizerToken} {
         allow get: if true;
         allow list, write: if false;
 
         match /ratings/{talkId} {
+          allow read, write: if false;
+        }
+        match /daily-ratings/{dayIf} {
           allow read, write: if false;
         }
       }

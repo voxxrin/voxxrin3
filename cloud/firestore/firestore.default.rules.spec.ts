@@ -55,8 +55,10 @@ beforeAll(async () => {
         adminFirestore.doc('/events/an-event').set({ title: `A super event` }),
         adminFirestore.doc('/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472').set({ organizerSecretToken: '6c902c52-9c6d-4d54-b6f2-20814d2f8472' }),
         adminFirestore.doc('/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472/ratings/12345').set({ }),
+        adminFirestore.doc('/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472/daily-ratings/monday').set({ }),
         adminFirestore.doc('/events/an-event/days/monday').set({ day: 'monday', timeSlots: [] }),
         adminFirestore.doc('/events/an-event/event-descriptor/self').set({ title: `A super event` }),
+        adminFirestore.doc('/events/an-event/talksStats-allInOne/self').set({ "12345": { id: `12345`, totalFavoritesCount: 0 } }),
         adminFirestore.doc('/events/an-event/talksStats/12345').set({ id: `12345`, totalFavoritesCount: 0 }),
         adminFirestore.doc('/events/an-event/last-updates/self').set({ favorites: '2023-09-01T00:00:00Z' }),
         adminFirestore.doc('/events/an-event/talks/1234').set({ id: '1234', title: 'A super talk' }),
@@ -92,9 +94,11 @@ afterAll(async () => {
         adminFirestore.doc(`/events/an-event/talks/1234/feedbacks-access/1f0b405a-c3ba-46df-8d02-cce03bc34e5d`).delete(),
         adminFirestore.doc(`/events/an-event/talks/1234`).delete(),
         adminFirestore.doc(`/events/an-event/last-updates/self`).delete(),
+        adminFirestore.doc(`/events/an-event/talksStats-allInOne/self`).delete(),
         adminFirestore.doc(`/events/an-event/talksStats/12345`).delete(),
         adminFirestore.doc(`/events/an-event/event-descriptor/self`).delete(),
         adminFirestore.doc(`/events/an-event/days/monday`).delete(),
+        adminFirestore.doc(`/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472/daily-ratings/monday`).delete(),
         adminFirestore.doc(`/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472/ratings/12345`).delete(),
         adminFirestore.doc(`/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472`).delete(),
         adminFirestore.doc(`/events/an-event`).delete(),
@@ -629,6 +633,29 @@ const COLLECTIONS: CollectionDescriptor[] = [{
         })
     }
 }, {
+    name: "/events/{eventId}/talksStats-allInOne",
+    aroundTests: (userContext: UserContext) => ({
+        beforeEach: [],
+        afterEach: [],
+    }),
+    tests: (userContext: UserContext) => {
+        it(`As ${userContext.name}, I should be able to LIST events' all-in-one talks stats`, async () => {
+            await assertFails(getDocs(collection(userContext.context().firestore(), '/events/an-event/talksStats-allInOne')));
+        })
+        it(`As ${userContext.name}, I should be able to GET events' all-in-one talks stats`, async () => {
+            await assertSucceeds(getDoc(doc(userContext.context().firestore(), '/events/an-event/talksStats-allInOne/self')));
+        })
+        it(`As ${userContext.name}, I should not be able to CREATE events' all-in-one talks stats`, async () => {
+            await assertFails(setDoc(doc(userContext.context().firestore(), '/events/another-event/talksStats-allInOne/self'), { "23456": { id: `23456`, totalFavoritesCount: 0 } }));
+        })
+        it(`As ${userContext.name}, I should not be able to UPDATE events' all-in-one talks stats`, async () => {
+            await assertFails(updateDoc(doc(userContext.context().firestore(), '/events/an-event/talksStats-allInOne/self'), { "12345": { id: `12345`, totalFavoritesCount: 1 } }));
+        })
+        it(`As ${userContext.name}, I should not be able to DELETE events' all-in-one talks stats`, async () => {
+            await assertFails(deleteDoc(doc(userContext.context().firestore(), '/events/an-event/talksStats-allInOne/self')));
+        })
+    }
+}, {
     name: "/events/{eventId}/organizer-space",
     aroundTests: (userContext: UserContext) => ({
         beforeEach: [],
@@ -672,6 +699,29 @@ const COLLECTIONS: CollectionDescriptor[] = [{
         })
         it(`As ${userContext.name}, I should not be able to DELETE events' organizer space ratings`, async () => {
             await assertFails(deleteDoc(doc(userContext.context().firestore(), '/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472/ratings/12345')));
+        })
+    }
+}, {
+    name: "/events/{eventId}/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472/daily-ratings",
+    aroundTests: (userContext: UserContext) => ({
+        beforeEach: [],
+        afterEach: [],
+    }),
+    tests: (userContext: UserContext) => {
+        it(`As ${userContext.name}, I should not be able to LIST events' organizer space daily ratings`, async () => {
+            await assertFails(getDocs(collection(userContext.context().firestore(), '/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472/daily-ratings')));
+        })
+        it(`As ${userContext.name}, I should not be able to GET events' organizer space daily ratings`, async () => {
+            await assertFails(getDoc(doc(userContext.context().firestore(), '/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472/daily-ratings/monday')));
+        })
+        it(`As ${userContext.name}, I should not be able to CREATE events' organizer space daily ratings`, async () => {
+            await assertFails(setDoc(doc(userContext.context().firestore(), '/events/another-event/organizer-space/d05d6d61-53c4-496c-9269-795a30b70443/daily-ratings/tuesday'), { }));
+        })
+        it(`As ${userContext.name}, I should not be able to UPDATE events' organizer space daily ratings`, async () => {
+            await assertFails(updateDoc(doc(userContext.context().firestore(), '/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472/daily-ratings/monday'), { }));
+        })
+        it(`As ${userContext.name}, I should not be able to DELETE events' organizer space daily ratings`, async () => {
+            await assertFails(deleteDoc(doc(userContext.context().firestore(), '/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472/daily-ratings/monday')));
         })
     }
 }, {
