@@ -25,6 +25,11 @@ async function upsertTalkStats(eventId: string, talkId: string, isFavorite: bool
     }
 }
 
+async function incrementAllInOneTalkStats(eventId: string, talkId: string, isFavorite: boolean) {
+    const allInOneTalkStats = db.doc(`events/${eventId}/talksStats-allInOne/self`)
+    await allInOneTalkStats.update(`${talkId}.totalFavoritesCount`, FieldValue.increment(isFavorite ? 1 : -1))
+}
+
 export const onUserTalksNoteUpdate = functions.firestore
     .document("users/{userId}/events/{eventId}/talksNotes/{talkId}")
     .onUpdate(async (change, context) => {
@@ -44,6 +49,7 @@ export const onUserTalksNoteUpdate = functions.firestore
             await Promise.all([
                 eventLastUpdateRefreshed(eventId, [ "favorites" ]),
                 upsertTalkStats(eventId, talkId, isFavorite),
+                incrementAllInOneTalkStats(eventId, talkId, isFavorite),
             ])
         }
     });
@@ -56,7 +62,7 @@ export const onUserTalksNoteCreate = functions.firestore
         const talkId = context.params.talkId;
 
         const talkNote = change.data() as UserTalkNote
-        const isFavorite = talkNote.note.isFavorite;
+        const isFavorite = !!talkNote.note.isFavorite;
 
         if(isFavorite) {
             info(`favorite create by ${userId} on ${eventId} // ${talkId}: ${isFavorite}`);
@@ -64,6 +70,7 @@ export const onUserTalksNoteCreate = functions.firestore
             await Promise.all([
                 eventLastUpdateRefreshed(eventId, [ "favorites" ]),
                 upsertTalkStats(eventId, talkId, isFavorite),
+                incrementAllInOneTalkStats(eventId, talkId, isFavorite),
             ])
         }
     });

@@ -65,12 +65,8 @@ export async function ensureTalkFeedbackViewerTokenIsValidThenGetFeedbacks(event
 }
 
 export async function eventTalkStatsFor(eventId: string) {
-    const eventTalkStatsDocs = await db.collection(`events/${eventId}/talksStats`).listDocuments();
-
-    const talkStatsSnapshot = await Promise.all(eventTalkStatsDocs.map(ref => ref.get()))
-    const talkStats = talkStatsSnapshot.map(snap => snap.data() as TalkStats);
-
-    return talkStats;
+    const eventTalkStatsPerTalkId = (await db.doc(`events/${eventId}/talksStats-allInOne/self`).get()).data() as Record<string, TalkStats>;
+    return Object.values(eventTalkStatsPerTalkId);
 }
 
 export async function eventLastUpdateRefreshed<T extends {[field in keyof T]: ISODatetime|null}>(
