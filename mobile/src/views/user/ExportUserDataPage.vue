@@ -19,7 +19,7 @@
 
         <div class="exportContent">
           <!-- Step 1 -->
-          <span class="step1 illu-export" v-if="true"></span>
+          <span class="step1 illu-export" v-if="false"></span>
 
           <!-- Step 2 -->
           <div class="step2 urlLink" v-if="false">
@@ -32,7 +32,7 @@
           </div>
 
           <!-- Step 3 -->
-          <div class="step3 import" v-if="false">
+          <div class="step3 import" v-if="true">
             <div class="import-blur">
               <div class="circle">
                 <div class="circle circle-lg">
@@ -53,7 +53,7 @@
                 <span class="line"></span>
               </div>
               <div class="importProgress">
-                <ion-spinner name="dots"></ion-spinner>
+                <ion-img class="importProgress-loader" :src="'/assets/images/gif/spinner.gif'"></ion-img>
                 <ion-text class="importProgress-title">Data transfer in progress...</ion-text>
                 <div class="datasLabelsAnimation">
                   <div class="datasLabelsAnimation-label _first"><div>My kick-ass program</div></div>
@@ -273,9 +273,10 @@ registerTabbedPageNavListeners();
       justify-content: center;
       flex-direction: column;
       align-items: center;
-      ion-spinner {
-        transform: scale(2.4);
-        color: var(--app-voxxrin);
+
+      &-loader {
+        height: 140px;
+        width: 124px;
       }
 
       &-title {
