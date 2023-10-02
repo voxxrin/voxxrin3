@@ -74,19 +74,8 @@
               <ion-icon src="/assets/icons/solid/lock.svg"></ion-icon>
             </div>
             <div class="listCardButton-item-text">
-              <span class="titleItem">My personal data</span>
-              <small class="subTitleItem">Export my data</small>
-<!--              <small class="subTitleItem">Export or delete my data</small>-->
-            </div>
-            <ion-icon class="listCardButton-item-nav" src="/assets/icons/line/chevron-right-line.svg"></ion-icon>
-          </ion-button>
-          <ion-button class="listCardButton-item" @click="ionRouter.push(`/user/import`)">
-            <div class="listCardButton-item-icon">
-              <ion-icon src="/assets/icons/solid/data.svg"></ion-icon>
-            </div>
-            <div class="listCardButton-item-text">
-              <span class="titleItem">Importing data</span>
-              <small class="subTitleItem">This entry will be removed as this is pointless..</small>
+              <span class="titleItem">Export data</span>
+              <small class="subTitleItem">Transfert my personal data other device</small>
             </div>
             <ion-icon class="listCardButton-item-nav" src="/assets/icons/line/chevron-right-line.svg"></ion-icon>
           </ion-button>
