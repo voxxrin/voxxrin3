@@ -32,17 +32,8 @@
           </div>
 
           <!-- Step 3 -->
-          <div class="step3 importProgress" v-if="false">
-            <div class="linesTransfert">
-              <span class="line"></span>
-              <span class="line"></span>
-              <span class="line"></span>
-              <span class="line"></span>
-              <span class="line"></span>
-              <span class="line"></span>
-              <span class="line"></span>
-            </div>
-            <div class="importProgress-blur">
+          <div class="step3 import" v-if="false">
+            <div class="import-blur">
               <div class="circle">
                 <div class="circle circle-lg">
                   <div class="circle circle-md">
@@ -51,12 +42,34 @@
                 </div>
               </div>
             </div>
-            <ion-spinner name="dots"></ion-spinner>
-            <ion-text class="importProgress-title">Data transfer in progress...</ion-text>
-            <div class="datasLabelsAnimation">
-              <div class="datasLabelsAnimation-label _first"><div>My kick-ass program</div></div>
-              <div class="datasLabelsAnimation-label _second"><div> My best feedback</div></div>
-              <div class="datasLabelsAnimation-label _third"><div>My params</div></div>
+            <div class="importContentOverlay">
+              <div class="linesTransfert">
+                <span class="line"></span>
+                <span class="line"></span>
+                <span class="line"></span>
+                <span class="line"></span>
+                <span class="line"></span>
+                <span class="line"></span>
+                <span class="line"></span>
+              </div>
+              <div class="importProgress">
+                <ion-spinner name="dots"></ion-spinner>
+                <ion-text class="importProgress-title">Data transfer in progress...</ion-text>
+                <div class="datasLabelsAnimation">
+                  <div class="datasLabelsAnimation-label _first"><div>My kick-ass program</div></div>
+                  <div class="datasLabelsAnimation-label _second"><div> My best feedback</div></div>
+                  <div class="datasLabelsAnimation-label _third"><div>My params</div></div>
+                </div>
+              </div>
+              <div class="importFinish" v-if="true">
+                <ion-icon :icon="checkmarkCircle"></ion-icon>
+                <ion-text class="importFinish-title">Data transfer is now complete!</ion-text>
+                <ul class="importFinish-stats">
+                  <li>Impacted conferences <strong>3</strong></li>
+                  <li>Favorites<strong>30</strong></li>
+                  <li>Feedbacks<strong>12</strong></li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
@@ -84,7 +97,8 @@
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {useTabbedPageNav} from "@/state/useTabbedPageNav";
 import {managedRef as ref} from "@/views/vue-utils";
-import {copy, download} from "ionicons/icons";
+import {checkmarkCircle, copy, download} from "ionicons/icons";
+import Callout from "@/components/ui/Callout.vue";
 
 const { LL } = typesafeI18n()
 
@@ -98,6 +112,7 @@ registerTabbedPageNavListeners();
 </script>
 
 <style lang="scss" scoped>
+  /* Head & Layout */
   .shapeHead {
     flex: 0 0 auto;
     position: relative;
@@ -170,6 +185,20 @@ registerTabbedPageNavListeners();
     }
   }
 
+  .importContentOverlay {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 400px;
+    width: 400px;
+    border-radius: 600px;
+    background: transparent;
+    overflow: hidden;
+  }
+
+  /* Step 2 */
   .urlLink {
     display: flex;
     flex-direction: column;
@@ -198,7 +227,8 @@ registerTabbedPageNavListeners();
     z-index: 1;
   }
 
-  .importProgress {
+  /* Step 3 */
+  .import {
     position: relative;
     display: flex;
     flex-direction: column;
@@ -206,25 +236,145 @@ registerTabbedPageNavListeners();
     justify-content: center;
     animation: scale-in-center 340ms cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
 
-    ion-spinner {
-      transform: scale(2.4);
-      color: var(--app-voxxrin);
-    }
+    &._importSuccess {
 
-    &-title {
-      display: block;
-      margin-top: 16px;
-      font-size: 18px;
-      font-weight: 500;
-      color: var(--app-primary);
+      .import-blur {
+        .circle {
+          &:before { background: rgba(var(--app-green-rgb), 0.2);}
+          .circle-sm, .circle-md, .circle-lg { animation: inherit !important;}
+        }
+      }
 
-      @media (prefers-color-scheme: dark) {
-        color: var(--app-white);
+      .importProgress {
+        display: none;
+        visibility: collapse;
+        animation: slide-out-blurred-bottom 0.45s cubic-bezier(0.755, 0.050, 0.855, 0.060) both;
+      }
+
+      .importFinish {
+        display: block;
+        visibility: visible;
+        animation: slide-in-blurred-top 0.6s cubic-bezier(0.230, 1.000, 0.320, 1.000) both;
+      }
+
+      .linesTransfert {
+        display: none;
+      }
+
+      &:after {
+        background: rgba(var(--app-green-rgb), 0.05);
+        box-shadow: rgb(var(--app-green-rgb) / 5%) -4px -19px 60px -12px inset, rgb(var(--app-green-rgb) / 21%) 0px 18px 36px -18px inset;
+        animation: inherit !important;
       }
     }
 
-    /* ===== Decoration Import Progress */
-    /* Blur Colors */
+    .importProgress {
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+      ion-spinner {
+        transform: scale(2.4);
+        color: var(--app-voxxrin);
+      }
+
+      &-title {
+        display: block;
+        margin-top: 16px;
+        font-size: 18px;
+        font-weight: 500;
+        color: var(--app-primary);
+
+        @media (prefers-color-scheme: dark) {
+          color: var(--app-white);
+        }
+      }
+
+      /* Labels */
+      .datasLabelsAnimation {
+        height:44px;
+        overflow:hidden;
+        margin-top: 8px;
+
+        & > div > div {
+          height: 44px;
+          margin-bottom: 2.81rem;
+          display:inline-block;
+        }
+
+        div:first-child {
+          animation: text-animation 20s infinite reverse;
+        }
+
+        &-label {
+          width: 100%;
+          text-align: center;
+          font-weight: 900;
+          color: var(--app-voxxrin);
+        }
+      }
+
+      @keyframes text-animation {
+        0% {margin-top: 0;}
+        10% {margin-top: 0;}
+        20% {margin-top: -5.62rem;}
+        30% {margin-top: -5.62rem;}
+        40% {margin-top: -11.24rem;}
+        60% {margin-top: -11.24rem;}
+        70% {margin-top: -5.62rem;}
+        80% {margin-top: -5.62rem;}
+        90% {margin-top: 0;}
+        100% {margin-top: 0;}
+      }
+    }
+
+    .importFinish {
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      visibility: collapse;
+      display: none;
+
+      &-title {
+        display: block;
+        margin-top: 16px;
+        font-size: 18px;
+        font-weight: 900;
+        color: var(--app-green);
+
+        @media (prefers-color-scheme: dark) {
+          color: var(--app-green);
+        }
+      }
+
+      &-stats {
+        padding: 0;
+        margin: 0;
+        margin-top: 24px;
+
+        li {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          column-gap: 8px;
+          margin-bottom: 8px;
+
+          strong {
+            font-weight: 900;
+            color: var(--app-voxxrin);
+          }
+        }
+      }
+
+      ion-icon {
+        font-size: 64px;
+        color: var(--app-green);
+      }
+    }
+
+    /* ===== Decoration Import */
+    /* Bubble Circle */
     &:after {
       position: absolute;
       height: 400px;
@@ -335,112 +485,77 @@ registerTabbedPageNavListeners();
       }
     }
 
-    /* Labels */
-    .datasLabelsAnimation {
-      height:44px;
-      overflow:hidden;
-      margin-top: 8px;
+    /* Lines animations */
+    .linesTransfert {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      row-gap: 38px;
+      position: absolute;
+      top: 50%;
+      left: -50%;
+      transform: translate(0, -50%) scale(0.5);
+      width: calc(100% + 44px);
+      z-index: 5;
 
-      & > div > div {
-        height: 44px;
-        margin-bottom: 2.81rem;
-        display:inline-block;
-      }
-
-      div:first-child {
-        animation: text-animation 20s infinite reverse;
-      }
-
-      &-label {
+      .line {
+        display: block;
+        height: 4px;
         width: 100%;
-        text-align: center;
-        font-weight: 900;
-        color: var(--app-voxxrin);
+        background: linear-gradient(270deg, rgba(233, 8, 102, 0) 34%, rgba(233, 8, 102, 0.15) 50%, rgba(251, 109, 168, 0) 73%);
+        background-size: 300% 100%;
+        animation: animateBg-1c8dca9b 2s linear infinite, animateRandom-1c8dca9b 2s linear infinite;
+        border-radius: 8px;
+
+        @media (prefers-color-scheme: dark) {
+          background: linear-gradient(270deg, rgba(white, 0) 34%, rgba(white, 0.15) 50%, rgba(white, 0) 73%);
+        }
+      }
+
+      .line:nth-child(1) {
+        animation-delay: 0.5s; /* Ajustez le délai comme vous le souhaitez */
+      }
+      .line:nth-child(2) {
+        animation-delay: 1.2s; /* Ajustez le délai comme vous le souhaitez */
+      }
+      .line:nth-child(3) {
+        animation-delay: 0.8s; /* Ajustez le délai comme vous le souhaitez */
+      }
+      .line:nth-child(4) {
+        animation-delay: 1.2s; /* Ajustez le délai comme vous le souhaitez */
+      }
+      .line:nth-child(5) {
+        animation-delay: 0.7s; /* Ajustez le délai comme vous le souhaitez */
+      }
+      .line:nth-child(6) {
+        animation-delay: 1.1s; /* Ajustez le délai comme vous le souhaitez */
       }
     }
 
-    @keyframes text-animation {
-      0% {margin-top: 0;}
-      10% {margin-top: 0;}
-      20% {margin-top: -5.62rem;}
-      30% {margin-top: -5.62rem;}
-      40% {margin-top: -11.24rem;}
-      60% {margin-top: -11.24rem;}
-      70% {margin-top: -5.62rem;}
-      80% {margin-top: -5.62rem;}
-      90% {margin-top: 0;}
-      100% {margin-top: 0;}
+    @keyframes animateBg {
+      0% { background-position: 100% 0%; }
+      100% { background-position: 0% 0%; }
     }
-  }
 
-  .linesTransfert {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    row-gap: 38px;
-    position: absolute;
-    top: 50%;
-    left: -50%;
-    transform: translate(0, -50%) scale(0.5);
-    width: calc(100% + 44px);
-    z-index: 5;
-
-    .line {
-      display: block;
-      height: 4px;
-      width: 100%;
-      background: linear-gradient(270deg, rgba(233, 8, 102, 0) 34%, rgba(233, 8, 102, 0.15) 50%, rgba(251, 109, 168, 0) 73%);
-      background-size: 300% 100%;
-      animation: animateBg-1c8dca9b 2s linear infinite, animateRandom-1c8dca9b 2s linear infinite;
-      border-radius: 8px;
-
-      @media (prefers-color-scheme: dark) {
-        background: linear-gradient(270deg, rgba(white, 0) 34%, rgba(white, 0.15) 50%, rgba(white, 0) 73%);
+    @keyframes animateRandom {
+      0% {
+        transform: translateX(0);
+        opacity: 0;
+      }
+      100% {
+        transform: translateX(calc(100% + 10px));
+        opacity: 1;
       }
     }
 
-    .line:nth-child(1) {
-      animation-delay: 0.5s; /* Ajustez le délai comme vous le souhaitez */
-    }
-    .line:nth-child(2) {
-      animation-delay: 1.2s; /* Ajustez le délai comme vous le souhaitez */
-    }
-    .line:nth-child(3) {
-      animation-delay: 0.8s; /* Ajustez le délai comme vous le souhaitez */
-    }
-    .line:nth-child(4) {
-      animation-delay: 1.2s; /* Ajustez le délai comme vous le souhaitez */
-    }
-    .line:nth-child(5) {
-      animation-delay: 0.7s; /* Ajustez le délai comme vous le souhaitez */
-    }
-    .line:nth-child(6) {
-      animation-delay: 1.1s; /* Ajustez le délai comme vous le souhaitez */
+    @keyframes animateBg {
+      0% { background-position: 100% 0%; }
+      100% { background-position: 0% 0%; }
     }
   }
 
-  @keyframes animateBg {
-    0% { background-position: 100% 0%; }
-    100% { background-position: 0% 0%; }
-  }
-
-  @keyframes animateRandom {
-    0% {
-      transform: translateX(0);
-      opacity: 0;
-    }
-    100% {
-      transform: translateX(calc(100% + 10px));
-      opacity: 1;
-    }
-  }
-
-  @keyframes animateBg {
-    0% { background-position: 100% 0%; }
-    100% { background-position: 0% 0%; }
-  }
-
+  /* Footer */
   .exportActions {
     padding: 24px;
     background: var(--app-background);
