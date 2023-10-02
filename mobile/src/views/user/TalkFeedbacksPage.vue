@@ -15,7 +15,7 @@
       <talk-details-header :conf-descriptor="confDescriptorRef" :talk="detailedTalk"></talk-details-header>
 
       <div class="TalkFeedBacksContent">
-        <h4 class="TalkFeedBacksContent-title">Talk Feedbacks</h4>
+        <h4 class="TalkFeedBacksContent-title">{{LL.Talk_Feedbacks()}}</h4>
         <div v-if="talkFeedbacksStats.count>0">
           <vox-divider>{{LL.Stats()}}</vox-divider>
           <div class="TalkFeedBacksStats">
@@ -82,7 +82,7 @@
             </div>
           </ion-card>
         </div>
-        <no-results illu-path="images/svg/illu-no-feedback.svg" class="_small">
+        <no-results v-if="talkFeedbacksStats.count === 0" illu-path="images/svg/illu-no-feedback.svg" class="_small">
           <template #title><em class="ion-color-secondary">{{LL.No_feedback_yet()}}</em></template>
         </no-results>
       </div>
