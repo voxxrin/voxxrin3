@@ -16,4 +16,8 @@ _To be added (once we have all the screens implemented)_
 
 ## How to add your own conference to the list ?
 
-_To be detailed_
+Voxxrin is currently in a closed beta mode.
+
+However, if you are interested into adding your conference to the list, drop us an email at `contact` at `voxxr.in`, describing where we can retrieve your schedule (API ? Website ?).
+
+We will try to get back to you as soon as possible.
