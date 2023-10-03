@@ -4,7 +4,7 @@
       <ion-header class="stickyHeader">
         <ion-toolbar>
           <ion-button class="stickyHeader-close" shape="round" slot="start" size="small" fill="outline"
-                      @click="triggerTabbedPageExitOrNavigate(`/user/dashboard`)">
+                      @click="goBackOrNavigateTo(ionRouter, `/user/dashboard`, 0)">
             <ion-icon src="/assets/icons/line/arrow-left-line.svg"></ion-icon>
           </ion-button>
           <ion-title class="stickyHeader-title" slot="start">{{ LL.Frequently_asked_questions() }}</ion-title>
@@ -71,15 +71,14 @@
 
 <script setup lang="ts">
 import {typesafeI18n} from "@/i18n/i18n-vue";
-import {useTabbedPageNav} from "@/state/useTabbedPageNav";
+import {goBackOrNavigateTo} from "@/router";
+import {useIonRouter} from "@ionic/vue";
 
 const publicUrl = import.meta.env.VITE_WHITE_LABEL_PUBLIC_URL
 
+const ionRouter = useIonRouter();
 const { LL } = typesafeI18n()
 
-
-const {registerTabbedPageNavListeners, triggerTabbedPageExitOrNavigate} = useTabbedPageNav()
-registerTabbedPageNavListeners();
 </script>
 
 <style lang="scss" scoped>

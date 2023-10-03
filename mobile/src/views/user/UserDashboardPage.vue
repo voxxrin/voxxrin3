@@ -4,7 +4,7 @@
       <ion-header class="stickyHeader">
         <ion-toolbar>
           <ion-button class="stickyHeader-close" shape="round" slot="start" size="small" fill="outline"
-                      @click="triggerTabbedPageExitOrNavigate(`/event-selector`)">
+                      @click="goBackOrNavigateTo(ionRouter, `/event-selector`, 0)">
             <ion-icon src="/assets/icons/line/arrow-left-line.svg"></ion-icon>
           </ion-button>
           <ion-title class="stickyHeader-title" slot="start">{{ LL.Profile() }}</ion-title>
@@ -95,14 +95,13 @@
 
 <script setup lang="ts">
 
-import {IonFooter, useIonRouter} from "@ionic/vue";
-import {useTabbedPageNav} from "@/state/useTabbedPageNav";
+import {useIonRouter} from "@ionic/vue";
 import {useCurrentUser} from "@/state/useCurrentUser";
-import {shieldCheckmark, checkmarkCircle, warning, closeCircle} from "ionicons/icons";
 import Callout from "@/components/ui/Callout.vue";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {computed, toValue} from "vue";
 import {useUserTokensWallet} from "@/state/useUserTokensWallet";
+import {goBackOrNavigateTo} from "@/router";
 
 const ionRouter = useIonRouter();
 
@@ -110,10 +109,6 @@ const currentUserRef = useCurrentUser();
 const { LL } = typesafeI18n()
 
 const { userTokensWalletRef } = useUserTokensWallet();
-
-const {registerTabbedPageNavListeners, triggerTabbedPageExitOrNavigate} = useTabbedPageNav()
-
-registerTabbedPageNavListeners();
 
 const isMyTalksButtonEnabled = computed(() => {
   const userTokensWallet = toValue(userTokensWalletRef);
