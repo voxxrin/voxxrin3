@@ -71,7 +71,7 @@
 <!--          </ion-button>-->
           <ion-button class="listCardButton-item" @click="ionRouter.push(`/faq`)">
             <div class="listCardButton-item-icon">
-              <ion-icon src="/assets/icons/solid/puzzle.svg"></ion-icon>
+              <ion-icon :icon="helpCircle"></ion-icon>
             </div>
             <div class="listCardButton-item-text">
               <span class="titleItem">{{ LL.Frequently_asked_questions() }}</span>
@@ -102,6 +102,7 @@ import {typesafeI18n} from "@/i18n/i18n-vue";
 import {computed, toValue} from "vue";
 import {useUserTokensWallet} from "@/state/useUserTokensWallet";
 import {goBackOrNavigateTo} from "@/router";
+import {helpCircle} from "ionicons/icons";
 
 const ionRouter = useIonRouter();
 
