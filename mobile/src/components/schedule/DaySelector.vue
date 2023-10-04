@@ -14,6 +14,11 @@
           today: today.localeCompare(day.localDate) === 0,
           future: today.localeCompare(day.localDate) === -1,
         }">
+          <ion-spinner v-if="today.localeCompare(day.localDate) === 0"
+                       class="todayIndicator"
+                       name="lines-sharp"
+                      duration="2500">
+          </ion-spinner>
           <div class="dayList-button-content">
             <strong class="day">{{day.formatted.day}}</strong>
             <span class="month">{{day.formatted.month}}</span>
@@ -209,20 +214,20 @@ function findDayByLocalDate(localDate: string) {
         width: calc(100% - 64px);
         min-width: 32px;
         height: 0;
-        border-bottom: 2px dashed var(--app-beige-line);
+        border-bottom: 2px solid var(--voxxrin-event-theme-colors-primary-hex);
         content: '';
         border-radius: 8px;
 
         @media (prefers-color-scheme: dark) {
-          border-bottom: 2px dashed var(--app-white);
+          border-bottom: 2px solid var(--app-white);
         }
       }
 
       &.past:after {
-        border-bottom: 2px solid var(--app-grey-light);
+        border-bottom: 2px dashed var(--app-beige-line);
 
         @media (prefers-color-scheme: dark) {
-          border-bottom: 2px solid var(--app-light-contrast);
+          border-bottom: 2px dashed var(--app-light-contrast);
         }
       }
     }
@@ -262,39 +267,58 @@ function findDayByLocalDate(localDate: string) {
       }
 
       &.past {
-        border-radius: 44px;
-        --border-color: var(--app-grey-light);
-        --background: var(--app-grey-light);
-        --background-activated: var(--app-grey-line);
-        --color: var(--app-grey-medium);
+        --border-color: var(--app-primary-shade);
+        --background: transparent;
+        --color: var(--app-primary-shade);
+        opacity: 0.4;
 
         @media (prefers-color-scheme: dark) {
-          --border-color: var(--app-dark-contrast);
-          --background: var(--app-light-contrast);
-          --background-activated: var(--app-dark);
-          --color: var(--app-grey-medium);
+          --border-color: var(--app-white);
+          --color: var(--app-white);
         }
 
-        &.selected {@extend %selected;}
+        &.selected {
+          @extend %selected;
+          opacity: 1;
+        }
       }
 
       &.today {
+        border-radius: 44px;
+        --border-color: var(--voxxrin-event-theme-colors-primary-hex);
+        --background: white;
+        --background-activated: var(--app-grey-line);
+        --color: var(--voxxrin-event-theme-colors-primary-hex);
+        box-shadow: 0 0 0 1px rgba(var(--voxxrin-event-theme-colors-primary-rgb), 1);
+
+        @media (prefers-color-scheme: dark) {
+          --background: transparent;
+          --color: white;
+        }
+
+        .todayIndicator {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%) scale(2.7);
+        }
+
+        &.selected { @extend %selected;}
+      }
+
+      &.future {
+        border-radius: 44px;
         --border-color: var(--voxxrin-event-theme-colors-primary-hex);
         --background: transparent;
         --background-activated: var(--app-grey-line);
         --color: var(--voxxrin-event-theme-colors-primary-hex);
 
-        &.selected {@extend %selected;}
-      }
-
-      &.future {
-        --border-color: var(--app-primary-shade);
-        --background: transparent;
-        --color: var(--app-primary-shade);
-
         @media (prefers-color-scheme: dark) {
-          --border-color: var(--app-white);
-          --color: var(--app-white);
+          --border-color: var(--voxxrin-event-theme-colors-primary-hex);
+          --background: transparent;
+          --background-activated: var(--app-dark);
+          --color: rgba(white, 0.5);
+          --color-activated: var(--app-white);
         }
 
         &.selected { @extend %selected;}
