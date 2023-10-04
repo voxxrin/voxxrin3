@@ -8,7 +8,9 @@
         <div class="item">
           <div class="track">
             <ion-badge class="trackBadge" v-if="hasTrack">
-              <ion-icon src="/assets/icons/solid/tag.svg"></ion-icon>{{talk.track.title}}
+              <div class="trackBadge-content">
+                <ion-icon src="/assets/icons/solid/tag.svg"></ion-icon>{{talk.track.title}}
+              </div>
             </ion-badge>
           </div>
         </div>
