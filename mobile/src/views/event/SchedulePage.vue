@@ -235,10 +235,12 @@ async function navigateToTalkRatingScreenFor(talk: VoxxrinTalk) {
 
 async function openTalkDetails(talk: VoxxrinTalk) {
     if(talk) {
-        const talkFeedbackViewerToken = toValue(talkFeedbackViewerTokensRef)?.find(t => t.talkId.isSameThan(talk.id));
-        const url = talkFeedbackViewerToken
-          ?`/events/${eventId.value.value}/talks/${talk.id.value}/asFeedbackViewer/${talkFeedbackViewerToken.secretToken}/details`
-          :`/events/${eventId.value.value}/talks/${talk.id.value}/details`
+        // TODO: Re-enable this once *tabbed* talk details as feedback viewer routing has been fixed
+        // const talkFeedbackViewerToken = toValue(talkFeedbackViewerTokensRef)?.find(t => t.talkId.isSameThan(talk.id));
+        // const url = talkFeedbackViewerToken
+        //   ?`/events/${eventId.value.value}/talks/${talk.id.value}/asFeedbackViewer/${talkFeedbackViewerToken.secretToken}/details`
+        //   :`/events/${eventId.value.value}/talks/${talk.id.value}/details`
+        const url = `/events/${eventId.value.value}/talks/${talk.id.value}/details`
 
         triggerTabbedPageNavigate(url, "forward", "push");
     }

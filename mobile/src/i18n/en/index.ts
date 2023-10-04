@@ -84,6 +84,17 @@ const en = {
 	New_content_available_click_on_reload_button_to_update: "New content available. Click on reload button to update in background then auto-reload page once content is downloaded.",
 	Reload: "Reload",
 	No_talks_matching_search_terms: "No talks found for selected day",
+  Please_keep_this_token_private: "Please keep this token private",
+  User_uid: "User uid",
+  Profile: "Profile",
+  Logout: "Logout",
+  Anonymous_private_user_id: "Anonymous (private) user token",
+  Public_user_id: "Public user token",
+  How_and_where_can_I_contact_the_team: "How and where can I contact the team ?",
+  This_token_will_be_used_to_reference_you_in_APIs: "This token will be used to (anonymously) reference you in feedbacks",
+  App_settings: "App settings",
+  Configure_my_preferences_app: "Configure my preferences app",
+  Frequently_asked_questions: "Frequently asked questions",
 } satisfies BaseTranslation
 
 export default en

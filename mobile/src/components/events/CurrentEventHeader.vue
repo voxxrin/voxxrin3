@@ -5,7 +5,8 @@
         <ion-button class="viewsHeader-back" @click="backButtonClicked" shape="round">
           <ion-icon src="/assets/icons/solid/checkbox-list.svg"></ion-icon>
         </ion-button>
-        <global-user-actions-button />
+<!-- TODO: Fix router navigation from preferences/schedule prior to re-enabling this one -->
+<!--        <global-user-actions-button :tabbed-navigation="true" />-->
       </div>
 
       <div class="viewsSubHeader">

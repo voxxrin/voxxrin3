@@ -79,7 +79,7 @@ const eventId = new EventId(getRouteParamsValue(route, 'eventId'));
 
 const ionRouter = useIonRouter();
 function backButtonClicked() {
-    goBackOrNavigateTo(ionRouter, `/events/${eventId.value}`, 0)
+    goBackOrNavigateTo(ionRouter, `/events/${eventId.value}`)
 }
 </script>
 
