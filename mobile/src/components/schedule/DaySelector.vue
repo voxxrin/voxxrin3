@@ -178,7 +178,8 @@ function findDayByLocalDate(localDate: string) {
       margin-right: -24px;
       padding: 0;
       background: rgba(white, 0.6);
-      backdrop-filter: blur(30px) saturate(120%);
+      -webkit-backdrop-filter:  blur(30px) saturate(120%);
+      backdrop-filter:  blur(30px) saturate(120%);
       box-shadow: rgba(99, 99, 99, 0.2) 0 2px 8px 0;
 
       @media (prefers-color-scheme: dark) {
