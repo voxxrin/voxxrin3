@@ -40,12 +40,11 @@ watch([needRefresh], async ([_needRefresh]) => {
             position: 'top',
             buttons: [{
                 text: LL.value.Reload(),
-                side: 'end',
-                icon: reload,
+                side: 'bottom',
                 role: 'reload',
                 handler: () => updateServiceWorker(true),
             }],
-            color: 'primary'
+            cssClass: 'majNotification',
         })
         await toast.present()
     }

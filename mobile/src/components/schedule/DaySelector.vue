@@ -170,18 +170,21 @@ function findDayByLocalDate(localDate: string) {
       }
     }
 
-  .dayList  {
-    display: flex;
-    overflow-x: auto;
-    margin-left: -27px;
-    margin-right: -14px;
-    padding: 0;
-    background: var(--background);
-    box-shadow: rgba(99, 99, 99, 0.2) 0 2px 8px 0;
+    .dayList  {
+      display: flex;
+      overflow-x: auto;
+      overflow-y: hidden;
+      margin-left: -27px;
+      margin-right: -24px;
+      padding: 0;
+      background: rgba(white, 0.6);
+      backdrop-filter: blur(30px) saturate(120%);
+      box-shadow: rgba(99, 99, 99, 0.2) 0 2px 8px 0;
 
-    @media (prefers-color-scheme: dark) {
-      background: rgba(var(--app-medium-contrast-rgb), 0.5);
-    }
+      @media (prefers-color-scheme: dark) {
+        border-bottom: 1px solid var(--app-line-contrast);
+        background: rgba(var(--app-medium-contrast-rgb), 0.5);
+      }
 
     &-content {
       display: flex;
