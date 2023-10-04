@@ -49,16 +49,16 @@
             </div>
             <ion-icon class="listCardButton-item-nav" src="/assets/icons/line/chevron-right-line.svg"></ion-icon>
           </ion-button>
-          <ion-button class="listCardButton-item" @click="ionRouter.push(`/user/my-global-settings`)">
-            <div class="listCardButton-item-icon">
-              <ion-icon src="/assets/icons/solid/settings-cog.svg"></ion-icon>
-            </div>
-            <div class="listCardButton-item-text">
-              <span class="titleItem">{{ LL.App_settings() }}</span>
-              <small class="subTitleItem">{{ LL.Configure_my_preferences_app() }}</small>
-            </div>
-            <ion-icon class="listCardButton-item-nav" src="/assets/icons/line/chevron-right-line.svg"></ion-icon>
-          </ion-button>
+<!--          <ion-button class="listCardButton-item" @click="ionRouter.push(`/user/my-global-settings`)">-->
+<!--            <div class="listCardButton-item-icon">-->
+<!--              <ion-icon src="/assets/icons/solid/settings-cog.svg"></ion-icon>-->
+<!--            </div>-->
+<!--            <div class="listCardButton-item-text">-->
+<!--              <span class="titleItem">{{ LL.App_settings() }}</span>-->
+<!--              <small class="subTitleItem">{{ LL.Configure_my_preferences_app() }}</small>-->
+<!--            </div>-->
+<!--            <ion-icon class="listCardButton-item-nav" src="/assets/icons/line/chevron-right-line.svg"></ion-icon>-->
+<!--          </ion-button>-->
 <!--          <ion-button class="listCardButton-item" @click="$router.push(`/user/my-personal-data`)">-->
 <!--            <div class="listCardButton-item-icon">-->
 <!--              <ion-icon src="/assets/icons/solid/data.svg"></ion-icon>-->
