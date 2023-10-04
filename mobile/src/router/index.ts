@@ -80,7 +80,7 @@ export default router
  *     (after some vue-router's back() magic: if you want further explanation on the why, look at useTabbedPageNav hook)
  *   - If this is not possible, then a navigation on fallback url will replace actual history state
  */
-export async function goBackOrNavigateTo(ionRouter: UseIonRouterResult, fallbackUrl: string, routerGoBacks: number, routeDirection: RouteDirection = 'back', onEventCaught: (() => Promise<void>)|undefined = undefined) {
+export async function goBackOrNavigateTo(ionRouter: UseIonRouterResult, fallbackUrl: string, routerGoBacks: number = 0, routeDirection: RouteDirection = 'back', onEventCaught: (() => Promise<void>)|undefined = undefined) {
   if(onEventCaught) {
     await onEventCaught();
   }

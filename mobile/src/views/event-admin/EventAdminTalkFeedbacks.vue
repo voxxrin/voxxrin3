@@ -4,7 +4,7 @@
       <ion-header class="stickyHeader">
         <ion-toolbar>
           <ion-button class="stickyHeader-close" shape="round" slot="start" size="small" fill="outline"
-                      @click="goBackOrNavigateTo(ionRouter, `/event-selector`, 0)">
+                      @click="goBackOrNavigateTo(ionRouter, `/event-selector`)">
             <ion-icon src="/assets/icons/line/arrow-left-line.svg"></ion-icon>
           </ion-button>
           <ion-title class="stickyHeader-title" slot="start">Event Talk Feedbacks</ion-title>

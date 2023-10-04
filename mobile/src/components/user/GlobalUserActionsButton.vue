@@ -14,7 +14,7 @@ const viewableUserDashboard = import.meta.env.VITE_VIEWABLE_USER_DASHBOARD === "
 const ionRouter = useIonRouter();
 function openUserDashboard() {
     if(viewableUserDashboard) {
-        goBackOrNavigateTo(ionRouter, `/user/dashboard`, 0);
+        goBackOrNavigateTo(ionRouter, `/user/dashboard`);
     }
 }
 </script>
