@@ -66,6 +66,55 @@
           </ion-item>
         </ion-list>
       </div>
+
+      <div class="navigationBar">
+        <div class="navigationBar-previous">
+          <ion-button slot="start" shape="round" size="small">
+            <ion-icon :icon="arrowBackCircleOutline"></ion-icon>
+            <span class="btnNavLabel">Prev <small>talk</small></span>
+          </ion-button>
+        </div>
+
+        <ion-popover class="slotSelectorDropdown"
+                     trigger="popover-button"
+                     :dismiss-on-select="false"
+                     size="auto"
+                     side="top" alignment="center">
+          <ion-content>
+            <ion-list>
+              <ion-item :button="true" :detail="false" class="_isActive">
+                09:30 - 12:30
+              </ion-item>
+              <ion-item :button="true" :detail="false">12:30 - 14h:00</ion-item>
+              <ion-item :button="true" :detail="false">14:00 - 15:00</ion-item>
+              <ion-item :button="true" :detail="false">15:00 - 16:00</ion-item>
+              <ion-item :button="true" :detail="false">16:00 - 17:00</ion-item>
+              <ion-item :button="true" :detail="false">17:00 - 18:00</ion-item>
+              <ion-item :button="true" :detail="false">18:00 - 19:00</ion-item>
+            </ion-list>
+          </ion-content>
+        </ion-popover>
+
+        <div class="currentSlot">
+          <ion-button id="popover-button" class="slotSelector">
+            <ion-text> 09:30 - 12:30 <ion-icon :icon="chevronUp"></ion-icon></ion-text>
+          </ion-button>
+
+          <ul class="bulletsList">
+            <li class="bulletsList-item"></li>
+            <li class="bulletsList-item _isActive"></li>
+            <li class="bulletsList-item"></li>
+            <li class="bulletsList-item"></li>
+          </ul>
+        </div>
+
+        <div class="navigationBar-next">
+          <ion-button slot="start" shape="round" size="small">
+            <span class="btnNavLabel">Next <small>talk</small></span>
+            <ion-icon :icon="arrowForwardCircleOutline"></ion-icon>
+          </ion-button>
+        </div>
+      </div>
     </ion-content>
   </ion-page>
 </template>
@@ -83,7 +132,7 @@ import {useSharedEventTalk} from "@/state/useEventTalk";
 import {computed, toValue} from "vue";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {IonBadge, IonAvatar, IonText, useIonRouter} from "@ionic/vue";
-import {business} from "ionicons/icons";
+import {arrowBackCircleOutline, arrowForwardCircleOutline, business, checkmarkCircle, chevronUp} from "ionicons/icons";
 import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
 import VoxDivider from "@/components/ui/VoxDivider.vue";
 import {goBackOrNavigateTo} from "@/router";
@@ -132,7 +181,6 @@ const theme = computed(() => {
         return undefined;
     }
 });
-
 </script>
 
 <style lang="scss" scoped>
@@ -386,6 +434,135 @@ const theme = computed(() => {
                 }
               }
             }
+          }
+        }
+      }
+    }
+  }
+
+  .slotSelectorDropdown {
+    ion-item {
+      --padding-start: 0;
+      --inner-padding-start: 12px;
+
+      @for $i from 0 through 1000 {
+        animation: slide-top 140ms cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+        animation-timing-function: ease-in-out;
+
+        &:nth-child(#{$i}) {
+          animation-delay: $i * calc(80ms / 6);
+        }
+      }
+
+      &._isActive {
+        font-weight: bold;
+      }
+
+      &:last-child {
+        --inner-border-width: 0;
+      }
+    }
+  }
+
+  .navigationBar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;
+    bottom: 24px;
+    height: 54px;
+    width: calc(100vw - 34px);
+    padding: 0 4px;
+    margin: 0 16px;
+    border-radius: 54px;
+    background: var(--app-primary);
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+    animation: slide-in-bottom 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+
+    &-previous, &-next {
+      display: flex;
+      align-items: center;
+      --inner-padding-end: 16px;
+      font-weight: 600;
+      color: var(--app-white);
+      font-size: 12px;
+
+      ion-icon {
+        font-size: 38px;
+      }
+
+      .btnNavLabel {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: left;
+        font-size: 13px;
+        padding: 0 2px;
+        font-weight: bold;
+
+        small {
+          opacity: 0.5;
+        }
+      }
+    }
+
+    &-previous  {
+      ion-button {
+        --padding-end: 16px;
+      }
+      .btnNavLabel {align-items: start;}
+    }
+
+    &-next  {
+      ion-button {
+        --padding-start: 16px;
+      }
+      .btnNavLabel {align-items: end;}
+    }
+
+    .currentSlot {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      .slotSelector {
+        height: 44px;
+        --padding-bottom: 16px;
+
+        ion-text {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          column-gap: 8px;
+          color: var(--app-white);
+          font-weight: bold;
+          letter-spacing: -1px;
+        }
+      }
+
+      .bulletsList {
+        position: absolute;
+        bottom: 8px;
+        display: flex;
+        flex-direction: row;
+        column-gap: 8px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+
+        &-item {
+          height: 10px;
+          width: 10px;
+          border-radius: 12px;
+          border: 1px solid var(--app-white);
+          transition: 240ms ease-in-out;
+
+          &._isActive {
+            transition: 240ms ease-in-out;
+            transform: scale(1.2);
+            background-color: var(--app-white);
           }
         }
       }
