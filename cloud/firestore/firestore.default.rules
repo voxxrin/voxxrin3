@@ -52,12 +52,19 @@ service cloud.firestore {
         allow read: if true;
         allow write: if false;
       }
+      match /talksStats-allInOne/self {
+        allow read: if true;
+        allow write: if false;
+      }
 
       match /organizer-space/{secretOrganizerToken} {
         allow get: if true;
         allow list, write: if false;
 
-        match /ratings/self {
+        match /ratings/{talkId} {
+          allow read, write: if false;
+        }
+        match /daily-ratings/{dayIf} {
           allow read, write: if false;
         }
       }
@@ -100,6 +107,7 @@ service cloud.firestore {
         allow get, list, create, update: if iAm(userId);
         allow delete: if false;
 
+        // TODO: Remove it once Devoxx BE is over
         match /__computed/self {
           allow get: if true;
           allow list, write: if false;

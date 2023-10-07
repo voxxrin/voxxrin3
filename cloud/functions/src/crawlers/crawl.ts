@@ -112,8 +112,8 @@ const crawlAll = async function(criteria: CrawlCriteria) {
                 durationInSeconds: start.until(end).total('seconds')
             }
         }catch(e: any) {
+            console.error(`Error during crawler with id ${crawlerDescriptor.id}:`, e);
             throw new Error(`Error during crawler with id ${crawlerDescriptor.id}: ${e?.toString()}`)
-            throw e;
         }
     }))
 };
@@ -123,7 +123,7 @@ const saveEvent = async function(event: FullEvent) {
 
     await db.collection("events").doc(event.id).set(event.info)
 
-    const firestoreEvent = await db.collection("events").doc(event.id);
+    const firestoreEvent = db.collection("events").doc(event.id);
     const organizerSpaceEntries = await firestoreEvent
         .collection('organizer-space')
         .listDocuments();
@@ -138,7 +138,13 @@ const saveEvent = async function(event: FullEvent) {
 
             await Promise.all([
                 firestoreEvent.collection('organizer-space').doc(organizerSecretToken).set(organizerSpaceContent),
-                firestoreEvent.collection('organizer-space').doc(organizerSecretToken).collection('ratings').doc('self').create({}),
+                ...event.talks.map(async talk => {
+                    const talkFeedbacksDoc = db.doc(`events/${event.id}/organizer-space/${organizerSecretToken}/ratings/${talk.id}`)
+                    const talkFeedbacks = await talkFeedbacksDoc.get();
+                    if(!talkFeedbacks.exists) {
+                        await talkFeedbacksDoc.create({});
+                    }
+                })
             ])
             return {organizerSecretToken, organizerSpaceContent};
         }).with(1, async () => {

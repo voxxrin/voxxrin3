@@ -5,6 +5,8 @@ import {eventLastUpdateRefreshed, getSecretTokenDoc, getSecretTokenRef} from "./
 import {ConferenceOrganizerSpace} from "../../../../../shared/conference-organizer-space.firestore";
 import {TalkAttendeeFeedback} from "../../../../../shared/talk-feedbacks.firestore";
 import {UserTokensWallet} from "../../../../../shared/user-tokens-wallet.firestore";
+import {EventLastUpdates} from "../../../../../shared/event-list.firestore";
+import {ISODatetime} from "../../../../../shared/type-utils";
 
 
 export const onTalkFeedbackUpdated = functions.firestore
@@ -12,6 +14,7 @@ export const onTalkFeedbackUpdated = functions.firestore
     .onUpdate(async (change, context) => {
         const eventId = context.params.eventId;
         const userId = context.params.userId;
+        const dayId = context.params.dayId;
 
         const feedbacksBefore = change.before.data() as UserDailyFeedbacks;
         const feedbacksAfter = change.after.data() as UserDailyFeedbacks;
@@ -19,7 +22,7 @@ export const onTalkFeedbackUpdated = functions.firestore
         const lastModificationTimestampBefore = Math.max(...feedbacksBefore.feedbacks.map(f => Date.parse(f.lastUpdatedOn)));
         const feedbacksModifiedAfter = feedbacksAfter.feedbacks.filter(f => Date.parse(f.lastUpdatedOn) > lastModificationTimestampBefore);
 
-        await updateTalkFeedbacksFromUserFeedbacks(userId, eventId, feedbacksModifiedAfter);
+        await updateTalkFeedbacksFromUserFeedbacks(userId, eventId, dayId, feedbacksModifiedAfter, ['lastUpdatedOn']);
     })
 
 export const onTalkFeedbackCreated = functions.firestore
@@ -27,16 +30,30 @@ export const onTalkFeedbackCreated = functions.firestore
     .onCreate(async (snapshot, context) => {
         const eventId = context.params.eventId;
         const userId = context.params.userId;
+        const dayId = context.params.dayId;
 
         const userDailyFeedbacks = snapshot.data() as UserDailyFeedbacks
 
-        await updateTalkFeedbacksFromUserFeedbacks(userId, eventId, userDailyFeedbacks.feedbacks);
+        await updateTalkFeedbacksFromUserFeedbacks(userId, eventId, dayId, userDailyFeedbacks.feedbacks, ['createdOn', 'lastUpdatedOn']);
     })
 
-async function updateTalkFeedbacksFromUserFeedbacks(userId: string, eventId: string, userFeedbacks: UserFeedback[]) {
+async function updateTalkFeedbacksFromUserFeedbacks(userId: string, eventId: string, dayId: string, userFeedbacks: UserFeedback[], enforceTimestampOnFields: Array<'lastUpdatedOn'|'createdOn'>) {
     const organizerSpaceRef = await getSecretTokenRef(`events/${eventId}/organizer-space`);
     const organizerSpace = (await organizerSpaceRef.get()).data() as ConferenceOrganizerSpace;
+
+    const dbFeedbacks = (await db.doc(`users/${userId}/events/${eventId}/days/${dayId}/feedbacks/self`).get()).data() as UserDailyFeedbacks;
     await Promise.all(userFeedbacks.map(async feedback => {
+        const existingDBFeedback = dbFeedbacks.feedbacks.find(dbFeedback => dbFeedback.timeslotId === feedback.timeslotId);
+
+        if(!existingDBFeedback) {
+            console.warn(`No feedback found for userId=${userId}, eventId=${eventId}, dayId=${dayId}, timeslotId=${feedback.timeslotId} => skipping !`)
+            return;
+        }
+
+        // Important note: We're not updating `users/${userId}/events/${eventId}/days/${dayId}/feedbacks/self` document's
+        // createdOn / lastUpdatedOn based on enforceTimestampOnFields on purpose
+        // If we would do it, it would trigger onTalkFeedbackUpdated() without, leading to an infinite update loop
+
         if(feedback.status === 'provided') {
             const talkFeedbackViewerToken = organizerSpace.talkFeedbackViewerTokens
                 .find(tfvt => tfvt.eventId === eventId && tfvt.talkId === feedback.talkId);
@@ -53,16 +70,23 @@ async function updateTalkFeedbacksFromUserFeedbacks(userId: string, eventId: str
             const attendeeFeedback: TalkAttendeeFeedback = {
                 talkId: feedback.talkId,
                 comment: feedback.comment,
-                createdOn: feedback.createdOn,
-                lastUpdatedOn: feedback.lastUpdatedOn,
+                createdOn: enforceTimestampOnFields.includes("createdOn")?new Date().toISOString() as ISODatetime : existingDBFeedback.createdOn,
+                lastUpdatedOn: enforceTimestampOnFields.includes("lastUpdatedOn")?new Date().toISOString() as ISODatetime : existingDBFeedback.lastUpdatedOn,
                 ratings: feedback.ratings,
                 attendeePublicToken: userTokensWallet.publicUserToken
             }
 
             await Promise.all([
                 db.doc(`events/${eventId}/talks/${feedback.talkId}/feedbacks-access/${talkFeedbackViewerToken.secretToken}/feedbacks/${userTokensWallet.publicUserToken}`).set(attendeeFeedback),
-                db.doc(`events/${eventId}/organizer-space/${organizerSpace.organizerSecretToken}/ratings/self`).update(`${feedback.talkId}.${userTokensWallet.publicUserToken}`, feedback.ratings),
-                eventLastUpdateRefreshed(eventId, [ "feedbacks" ])
+                db.doc(`events/${eventId}/organizer-space/${organizerSpace.organizerSecretToken}/ratings/${feedback.talkId}`).update(`${userTokensWallet.publicUserToken}`, feedback.ratings),
+                db.doc(`events/${eventId}/organizer-space/${organizerSpace.organizerSecretToken}/daily-ratings/${dayId}`)
+                    .update(`${feedback.talkId}.${userTokensWallet.publicUserToken}`, feedback.ratings),
+                eventLastUpdateRefreshed(eventId, [ "allFeedbacks" ]),
+                eventLastUpdateRefreshed(eventId, [ feedback.talkId ], rootNode => {
+                    const feedbacks = {} as EventLastUpdates['feedbacks'];
+                    rootNode.feedbacks = feedbacks;
+                    return { pathPrefix: "feedbacks.", parentNode: feedbacks };
+                }),
             ])
         }
     }))

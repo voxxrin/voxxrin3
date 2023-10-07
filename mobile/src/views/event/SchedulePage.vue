@@ -45,7 +45,7 @@
                 :elements-shown="['add-feedback-btn']"
                 @add-timeslot-feedback-clicked="(ts) => navigateToTimeslotFeedbackCreation(ts)"
                 @click="() => toggleExpandedTimeslot(timeslot)">
-              <template #accordion-content="{ timeslot }">
+              <template #accordion-content="{ timeslot, progressStatus, feedback }">
                 <schedule-break v-if="timeslot.type==='break'" :conf-descriptor="confDescriptor" :talk-break="timeslot.break"></schedule-break>
                 <talk-format-groups-breakdown :conf-descriptor="confDescriptor" v-if="timeslot.type==='talks'" :talks="timeslot.talks">
                   <template #talk="{ talk }">
@@ -55,6 +55,8 @@
                           <talk-room :talk="talk" :conf-descriptor="confDescriptor" />
                         </template>
                         <template #footer-actions="{ talk, talkStats, talkNotes }">
+                          <provide-feedback-talk-button :conf-descriptor="confDescriptor" :timeslot-progress-status="progressStatus"
+                                :timeslot-feedback="feedback" @click.stop="navigateToTalkRatingScreenFor(talk)" />
                           <talk-watch-later-button v-if="confDescriptor && !hideWatchLater" :conf-descriptor="confDescriptor" :user-talk-notes="talkNotes"
                                                 @talk-note-updated="updatedTalkNote => userEventTalkNotesRef.set(talk.id.value, updatedTalkNote) " />
                           <talk-favorite-button v-if="confDescriptor" :conf-descriptor="confDescriptor" :user-talk-notes="talkNotes" :talk-stats="talkStats"
@@ -133,6 +135,7 @@ import {TimeslotAnimations} from "@/services/Animations";
 import {useEventTalkStats} from "@/state/useEventTalkStats";
 import TalkWatchLaterButton from "@/components/talk-card/TalkWatchLaterButton.vue";
 import {useUserEventTalkNotes} from "@/state/useUserTalkNotes";
+import ProvideFeedbackTalkButton from "@/components/talk-card/ProvideFeedbackTalkButton.vue";
 
 const LOGGER = Logger.named("SchedulePage");
 
@@ -226,12 +229,18 @@ async function navigateToTimeslotFeedbackCreation(timeslot: VoxxrinScheduleTimeS
     triggerTabbedPageNavigate(`/events/${eventId.value.value}/new-feedback-for-timeslot/${timeslot.id.value}`, "forward", "push");
 }
 
+async function navigateToTalkRatingScreenFor(talk: VoxxrinTalk) {
+    triggerTabbedPageNavigate(`/events/${eventId.value.value}/rate-talk/${talk.id.value}`, "forward", "push");
+}
+
 async function openTalkDetails(talk: VoxxrinTalk) {
     if(talk) {
-        const talkFeedbackViewerToken = toValue(talkFeedbackViewerTokensRef)?.find(t => t.talkId.isSameThan(talk.id));
-        const url = talkFeedbackViewerToken
-          ?`/events/${eventId.value.value}/talks/${talk.id.value}/asFeedbackViewer/${talkFeedbackViewerToken.secretToken}/details`
-          :`/events/${eventId.value.value}/talks/${talk.id.value}/details`
+        // TODO: Re-enable this once *tabbed* talk details as feedback viewer routing has been fixed
+        // const talkFeedbackViewerToken = toValue(talkFeedbackViewerTokensRef)?.find(t => t.talkId.isSameThan(talk.id));
+        // const url = talkFeedbackViewerToken
+        //   ?`/events/${eventId.value.value}/talks/${talk.id.value}/asFeedbackViewer/${talkFeedbackViewerToken.secretToken}/details`
+        //   :`/events/${eventId.value.value}/talks/${talk.id.value}/details`
+        const url = `/events/${eventId.value.value}/talks/${talk.id.value}/details`
 
         triggerTabbedPageNavigate(url, "forward", "push");
     }

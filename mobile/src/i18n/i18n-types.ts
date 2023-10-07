@@ -337,6 +337,62 @@ type RootTranslation = {
 	 * P​a​s​t​ ​e​v​e​n​t​s
 	 */
 	Past_events: string
+	/**
+	 * N​e​w​ ​c​o​n​t​e​n​t​ ​a​v​a​i​l​a​b​l​e​.​ ​C​l​i​c​k​ ​o​n​ ​r​e​l​o​a​d​ ​b​u​t​t​o​n​ ​t​o​ ​u​p​d​a​t​e​ ​i​n​ ​b​a​c​k​g​r​o​u​n​d​ ​t​h​e​n​ ​a​u​t​o​-​r​e​l​o​a​d​ ​p​a​g​e​ ​o​n​c​e​ ​c​o​n​t​e​n​t​ ​i​s​ ​d​o​w​n​l​o​a​d​e​d​.
+	 */
+	New_content_available_click_on_reload_button_to_update: string
+	/**
+	 * R​e​l​o​a​d
+	 */
+	Reload: string
+	/**
+	 * N​o​ ​t​a​l​k​s​ ​f​o​u​n​d​ ​f​o​r​ ​s​e​l​e​c​t​e​d​ ​d​a​y
+	 */
+	No_talks_matching_search_terms: string
+	/**
+	 * P​l​e​a​s​e​ ​k​e​e​p​ ​t​h​i​s​ ​t​o​k​e​n​ ​p​r​i​v​a​t​e
+	 */
+	Please_keep_this_token_private: string
+	/**
+	 * U​s​e​r​ ​u​i​d
+	 */
+	User_uid: string
+	/**
+	 * P​r​o​f​i​l​e
+	 */
+	Profile: string
+	/**
+	 * L​o​g​o​u​t
+	 */
+	Logout: string
+	/**
+	 * A​n​o​n​y​m​o​u​s​ ​(​p​r​i​v​a​t​e​)​ ​u​s​e​r​ ​t​o​k​e​n
+	 */
+	Anonymous_private_user_id: string
+	/**
+	 * P​u​b​l​i​c​ ​u​s​e​r​ ​t​o​k​e​n
+	 */
+	Public_user_id: string
+	/**
+	 * H​o​w​ ​a​n​d​ ​w​h​e​r​e​ ​c​a​n​ ​I​ ​c​o​n​t​a​c​t​ ​t​h​e​ ​t​e​a​m​ ​?
+	 */
+	How_and_where_can_I_contact_the_team: string
+	/**
+	 * T​h​i​s​ ​t​o​k​e​n​ ​w​i​l​l​ ​b​e​ ​u​s​e​d​ ​t​o​ ​(​a​n​o​n​y​m​o​u​s​l​y​)​ ​r​e​f​e​r​e​n​c​e​ ​y​o​u​ ​i​n​ ​f​e​e​d​b​a​c​k​s
+	 */
+	This_token_will_be_used_to_reference_you_in_APIs: string
+	/**
+	 * A​p​p​ ​s​e​t​t​i​n​g​s
+	 */
+	App_settings: string
+	/**
+	 * C​o​n​f​i​g​u​r​e​ ​m​y​ ​p​r​e​f​e​r​e​n​c​e​s​ ​a​p​p
+	 */
+	Configure_my_preferences_app: string
+	/**
+	 * F​r​e​q​u​e​n​t​l​y​ ​a​s​k​e​d​ ​q​u​e​s​t​i​o​n​s
+	 */
+	Frequently_asked_questions: string
 }
 
 export type TranslationFunctions = {
@@ -660,6 +716,62 @@ export type TranslationFunctions = {
 	 * Past events
 	 */
 	Past_events: () => LocalizedString
+	/**
+	 * New content available. Click on reload button to update in background then auto-reload page once content is downloaded.
+	 */
+	New_content_available_click_on_reload_button_to_update: () => LocalizedString
+	/**
+	 * Reload
+	 */
+	Reload: () => LocalizedString
+	/**
+	 * No talks found for selected day
+	 */
+	No_talks_matching_search_terms: () => LocalizedString
+	/**
+	 * Please keep this token private
+	 */
+	Please_keep_this_token_private: () => LocalizedString
+	/**
+	 * User uid
+	 */
+	User_uid: () => LocalizedString
+	/**
+	 * Profile
+	 */
+	Profile: () => LocalizedString
+	/**
+	 * Logout
+	 */
+	Logout: () => LocalizedString
+	/**
+	 * Anonymous (private) user token
+	 */
+	Anonymous_private_user_id: () => LocalizedString
+	/**
+	 * Public user token
+	 */
+	Public_user_id: () => LocalizedString
+	/**
+	 * How and where can I contact the team ?
+	 */
+	How_and_where_can_I_contact_the_team: () => LocalizedString
+	/**
+	 * This token will be used to (anonymously) reference you in feedbacks
+	 */
+	This_token_will_be_used_to_reference_you_in_APIs: () => LocalizedString
+	/**
+	 * App settings
+	 */
+	App_settings: () => LocalizedString
+	/**
+	 * Configure my preferences app
+	 */
+	Configure_my_preferences_app: () => LocalizedString
+	/**
+	 * Frequently asked questions
+	 */
+	Frequently_asked_questions: () => LocalizedString
 }
 
 export type Formatters = {}

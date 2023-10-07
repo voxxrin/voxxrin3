@@ -26,11 +26,10 @@
             class="pinnedEventSelector"
             :pinned-events="filteredPinnedEvents" @event-selected="(event) => selectEvent(event.id)">
           <template #no-pinned-events>
-            <div class="infoMessage ion-text-center">
-              <ion-icon class="infoMessage-iconIllu" src="/assets/images/svg/illu-list-pinned.svg"></ion-icon>
-              <span class="infoMessage-title">{{ LL.No_pinned_events_available_yet() }}</span>
-              <span class="infoMessage-subTitle">{{ LL.Add_from_the_list_below() }}</span>
-            </div>
+            <no-results illu-path="images/svg/illu-list-pinned.svg">
+              <template #title>{{ LL.No_pinned_events_available_yet() }}</template>
+              <template #subTitle>{{ LL.Add_from_the_list_below() }}</template>
+            </no-results>
           </template>
         </pinned-event-selector>
 
@@ -38,10 +37,9 @@
             :events="filteredAvailableEvents" @event-clicked="(event) => selectEvent(event.id)"
             :pinned-events="pinnedEventIdsRef" @event-pin-toggled="eventPinToggled">
           <template #no-event>
-            <div class="infoMessage ion-text-center">
-              <ion-icon class="infoMessage-iconIllu" src="/assets/images/svg/illu-no-result.svg"></ion-icon>
-              <span class="infoMessage-title">{{ LL.No_conference_registered_yet() }}</span>
-            </div>
+            <no-results illu-path="images/svg/illu-no-result.svg">
+              <template #title>{{ LL.No_conference_registered_yet() }}</template>
+            </no-results>
           </template>
         </available-events-list>
       </div>
@@ -51,6 +49,7 @@
 
 <script setup lang="ts">
 import {
+    ActionSheetButton,
     IonInput,
     IonItemDivider,
     useIonRouter
@@ -61,13 +60,11 @@ import AvailableEventsList from "@/components/events/AvailableEventsList.vue";
 import {presentActionSheetController, managedRef as ref} from "@/views/vue-utils";
 import {Browser} from "@capacitor/browser";
 import {typesafeI18n} from "@/i18n/i18n-vue";
-import {
-    ActionSheetButton
-} from "@ionic/core/dist/types/components/action-sheet/action-sheet-interface";
 import PinnedEventSelector from "@/components/events/PinnedEventSelector.vue";
 import {useAvailableEvents} from "@/state/useAvailableEvents";
 import {useSharedUserPreferences} from "@/state/useUserPreferences";
 import GlobalUserActionsButton from "@/components/user/GlobalUserActionsButton.vue";
+import NoResults from "@/components/ui/NoResults.vue";
 
 const appTitle = import.meta.env.VITE_WHITE_LABEL_NAME;
 

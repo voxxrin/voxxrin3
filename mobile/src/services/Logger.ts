@@ -36,7 +36,7 @@ export class Logger {
 
         const message = typeof content === 'function' ? content() : content;
         if(typeof message === 'string') {
-            console[level](`[${this.name}] ${message}`, param);
+            console[level](`[${this.name}] ${message}`, ...(param===undefined?[]:[param]));
         } else {
             console[level](`[${this.name}]`, ...[message].concat(param?[param]:[]));
         }

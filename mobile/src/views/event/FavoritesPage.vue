@@ -22,10 +22,9 @@
               <template #section-content="{ timeslot }">
                 <schedule-break v-if="timeslot.type==='break'" :conf-descriptor="confDescriptor" :talk-break="timeslot.break"></schedule-break>
                 <div v-if="timeslot.type === 'talks'">
-                  <div class="infoMessage ion-text-center" v-if="timeslot.talks.filter(t => t.id.isIncludedIntoArray(favoritedTalkIdsRef)).length === 0">
-                    <ion-icon class="infoMessage-iconIllu" src="/assets/images/svg/illu-no-favorites.svg"></ion-icon>
-                    <span class="infoMessage-title">{{ LL.No_favorites_defined_yet() }}</span>
-                  </div>
+                  <no-results illu-path="images/svg/illu-no-favorites.svg" v-if="timeslot.talks.filter(t => t.id.isIncludedIntoArray(favoritedTalkIdsRef)).length === 0">
+                    <template #title>{{ LL.No_favorites_defined_yet() }}</template>
+                  </no-results>
                   <talk-format-groups-breakdown :conf-descriptor="confDescriptor" v-if="timeslot.type==='talks'" :talks="timeslot.talks.filter(t => t.id.isIncludedIntoArray(favoritedTalkIdsRef))">
                     <template #talk="{ talk }">
                       <schedule-talk :talk="talk" :talk-stats="talkStatsRefByTalkId.get(talk.id.value)" :talk-notes="userEventTalkNotesRef.get(talk.id.value)"
@@ -82,6 +81,7 @@
   import {useSharedEventSelectedDay} from "@/state/useEventSelectedDay";
   import {computed, toValue} from "vue";
   import {useEventTalkStats} from "@/state/useEventTalkStats";
+  import NoResults from "@/components/ui/NoResults.vue";
 
   const { LL } = typesafeI18n()
 

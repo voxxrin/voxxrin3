@@ -1,6 +1,5 @@
 import {ValueObject} from "@/models/utils";
 import {UserPreferences} from "../../../shared/user-preferences.firestore";
-import {Replace} from "@/models/type-utils";
 import {EventId} from "@/models/VoxxrinEvent";
 import {
     EventOrganizerSecretToken,
@@ -8,6 +7,7 @@ import {
 } from "../../../shared/user-tokens-wallet.firestore";
 import {TalkFeedbacksViewerSecretToken} from "../../../shared/conference-organizer-space.firestore";
 import {TalkId} from "@/models/VoxxrinTalk";
+import {Replace} from "../../../shared/type-utils";
 
 
 export class UserLocale extends ValueObject<string>{ _userLocaleClassDiscriminator!: never; }

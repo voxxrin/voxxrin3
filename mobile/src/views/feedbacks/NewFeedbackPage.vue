@@ -223,7 +223,7 @@ async function watchLaterAllFavoritedTalks() {
 }
 
 function backToSchedulePage() {
-    goBackOrNavigateTo(ionRouter, `/events/${eventIdRef.value.value}`, 0)
+    goBackOrNavigateTo(ionRouter, `/events/${eventIdRef.value.value}`)
 }
 
 const dayIdRef = computed(() => labelledTimeslotWithOverlappingsRef.value?.dayId)
@@ -234,7 +234,7 @@ async function submitSkippedFeedback() {
         timeslotId: labelledTimeslotWithOverlappingsRef.value!.labelledTimeslot.id.value,
         alsoConcernsOverlappingTimeslotIds: labelledTimeslotWithOverlappingsRef.value!.overlappingLabelledTimeslots.map(ts => ts.id.value)
     })
-    goBackOrNavigateTo(ionRouter, `/events/${eventIdRef.value.value}`, 0)
+    goBackOrNavigateTo(ionRouter, `/events/${eventIdRef.value.value}`)
 }
 
 </script>

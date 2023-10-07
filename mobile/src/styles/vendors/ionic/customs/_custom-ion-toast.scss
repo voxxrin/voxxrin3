@@ -1,0 +1,67 @@
+ion-toast {
+  font-weight: bold;
+}
+
+/* ==== Specifics Toast ==== */
+
+.majNotification {
+  --border-radius: 16px;
+  --background: rgba(0, 0, 0, 0.94);
+  --color: var(--app-white);
+  --button-color: var(--app-white);
+  --box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
+
+  @media (prefers-color-scheme: dark) {
+    --background: rgba(255, 255, 255, 0.94);
+    --color: var(--app-primary);
+    --button-color: var(--app-primary);
+  }
+
+  &::part(container) {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 4px 12px 4px 4px;
+
+    &:after {
+      position: absolute;
+      bottom: -23px;
+      right: -16px;
+      height: 160px;
+      width: 160px;
+      transform: rotate(45deg);
+      background-image: url("../../../assets/images/svg/illu-refresh-white.svg");
+      background-repeat: no-repeat;
+      content: '';
+      z-index: -1;
+      opacity: 0.4;
+
+      @media (prefers-color-scheme: dark) {
+        opacity: 0.1;
+        background-image: url("../../../assets/images/svg/illu-refresh-primary.svg");
+      }
+    }
+  }
+
+  &::part(message) {
+    line-height: 1.2;
+  }
+
+  &::part(button) {
+    display: flex;
+    border-radius: 54px;
+    background: var(--app-white);
+    color: var(--app-primary);
+    font-weight: 900;
+    justify-content: center;
+
+    @media (prefers-color-scheme: dark) {
+      background: var(--app-primary);
+      color: var(--app-white);
+    }
+  }
+}
+
+.toast-button {
+  display: none;
+}

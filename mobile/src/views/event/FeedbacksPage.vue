@@ -31,14 +31,11 @@
                                    @click="() => toggleExpandedTimeslot(timeslot)">
                 <template #accordion-content="{ timeslot, feedback, progressStatus }">
                   <ion-item v-if="feedback.status === 'missing'" class="listTalks-item">
-                    <div class="infoMessage _small">
-                      <ion-icon class="infoMessage-iconIllu" src="/assets/images/svg/illu-no-feedback.svg"></ion-icon>
-                      <span class="infoMessage-title">{{LL.No_feedback_yet()}}</span>
-                      <ion-button v-if="progressStatus === 'past'" @click="navigateToTimeslotFeedbackCreation(timeslot)"
-                                  size="default" fill="outline"  expand="block">
-                        {{LL.Add_Feedback()}}
-                      </ion-button>
-                    </div>
+                    <no-results illu-path="images/svg/illu-no-feedback.svg" class="_small"
+                          @button-clicked="navigateToTimeslotFeedbackCreation(timeslot)"
+                          :button-label="progressStatus === 'past' ? LL.Add_Feedback() : undefined" position="absolute">
+                      <template #title>{{LL.No_feedback_yet()}}</template>
+                    </no-results>
                   </ion-item>
                   <ion-item v-else-if="feedback.status === 'provided'" class="listTalks-item">
                     <schedule-talk :talk="findTimeslotTalkMatchingFeedback(timeslot, feedback.userFeedback)!"
@@ -56,10 +53,9 @@
                     </schedule-talk>
                   </ion-item>
                   <ion-item v-else>
-                    <div class="infoMessage _small">
-                      <ion-icon class="infoMessage-iconIllu _skipped" src="assets/icons/solid/comment-feedback-skipped.svg"></ion-icon>
-                      <span class="infoMessage-title ion-color-secondary"><em>{{ LL.Skipped() }}</em></span>
-                    </div>
+                    <no-results illu-path="icons/solid/comment-feedback-skipped.svg" class="_small" position="absolute">
+                      <template #title><em class="ion-color-secondary">{{ LL.Skipped() }}</em></template>
+                    </no-results>
                   </ion-item>
                 </template>
               </time-slot-accordion>
@@ -94,6 +90,7 @@
   import {areFeedbacksEnabled} from "@/models/VoxxrinConferenceDescriptor";
   import {useUserEventTalkNotes} from "@/state/useUserTalkNotes";
   import {computed, toValue} from "vue";
+  import NoResults from "@/components/ui/NoResults.vue";
 
   const { LL } = typesafeI18n()
 
@@ -133,19 +130,6 @@
   .listTalks-item {
     --padding-start: 0;
     --inner-padding-end: 0;
-  }
-
-  .infoMessage-iconIllu {
-    position: absolute;
-    opacity: 0.2;
-    left: 0;
-    top: 0;
-
-    &._skipped {
-      font-size: 64px;
-      opacity: 0.1;
-      top: -4px;
-    }
   }
 
   .talkCard {

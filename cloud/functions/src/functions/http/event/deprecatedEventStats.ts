@@ -17,7 +17,10 @@ const deprecatedEventStats = functions.https.onRequest(async (request, response)
     if(!eventId) { return sendResponseMessage(response, 400, `Missing [eventId] query parameter !`) }
     if(!organizerSecretToken && !familyToken) { return sendResponseMessage(response, 400, `Missing either [organizerSecretToken] or [familyToken] query parameter !`) }
 
-    const { cachedHash, updatesDetected } = await checkEventLastUpdate(eventId, ['favorites', 'talkListUpdated'], request, response)
+    const { cachedHash, updatesDetected } = await checkEventLastUpdate(eventId, [
+        root => root.favorites,
+        root => root.talkListUpdated
+    ], request, response)
     if(!updatesDetected) {
         return sendResponseMessage(response, 304)
     }

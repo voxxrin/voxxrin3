@@ -4,7 +4,7 @@
       <ion-header class="stickyHeader">
         <ion-toolbar>
           <ion-button class="stickyHeader-close" shape="round" slot="start" size="small" fill="outline"
-                      @click="goBackOrNavigateTo(ionRouter, `/user/talks`, 0)">
+                      @click="goBackOrNavigateTo(ionRouter, `/user/talks`)">
             <ion-icon src="/assets/icons/solid/close.svg"></ion-icon>
           </ion-button>
           <ion-title class="stickyHeader-title" slot="start">{{LL.Talk_Feedbacks()}}</ion-title>
@@ -15,7 +15,7 @@
       <talk-details-header :conf-descriptor="confDescriptorRef" :talk="detailedTalk"></talk-details-header>
 
       <div class="TalkFeedBacksContent">
-        <h4 class="TalkFeedBacksContent-title">Talk Feedbacks</h4>
+        <h4 class="TalkFeedBacksContent-title">{{LL.Talk_Feedbacks()}}</h4>
         <div v-if="talkFeedbacksStats.count>0">
           <vox-divider>{{LL.Stats()}}</vox-divider>
           <div class="TalkFeedBacksStats">
@@ -82,10 +82,9 @@
             </div>
           </ion-card>
         </div>
-        <div class="infoMessage _small" v-else>
-          <ion-icon class="infoMessage-iconIllu" src="/assets/images/svg/illu-no-feedback.svg"></ion-icon>
-          <span class="infoMessage-title ion-color-secondary"><em>{{LL.No_feedback_yet()}}</em></span>
-        </div>
+        <no-results v-if="talkFeedbacksStats.count === 0" illu-path="images/svg/illu-no-feedback.svg" class="_small">
+          <template #title><em class="ion-color-secondary">{{LL.No_feedback_yet()}}</em></template>
+        </no-results>
       </div>
     </ion-content>
   </ion-page>
@@ -109,6 +108,7 @@ import TalkDetailsHeader from "@/components/talk-details/TalkDetailsHeader.vue";
 import {useSharedEventTalk} from "@/state/useEventTalk";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import VoxDivider from "@/components/ui/VoxDivider.vue";
+import NoResults from "@/components/ui/NoResults.vue";
 
 const ionRouter = useIonRouter();
 const route = useRoute();

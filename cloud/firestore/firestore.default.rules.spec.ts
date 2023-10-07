@@ -35,7 +35,6 @@ beforeAll(async () => {
         adminFirestore.doc('/users/alice/tokens-wallet/self').set({ publicUserToken: '00d8b3b4-ec51-4694-865c-5e9d0f542e41' }),
         adminFirestore.doc('/users/alice/preferences/self').set({ pinnedEventIds: [] }),
         adminFirestore.doc('/users/alice/events/an-event').set({}),
-        adminFirestore.doc('/users/alice/events/an-event/__computed/self').set({ favoritedTalkIds: [] }),
         adminFirestore.doc('/users/alice/events/an-event/talksNotes/12345').set({ note: { isFavorite: true } }),
         adminFirestore.doc('/users/alice/events/an-event/days/monday').set({ }),
         adminFirestore.doc('/users/alice/events/an-event/days/monday/feedbacks/self').set({ dayId: 'monday', feedbacks: [] }),
@@ -44,7 +43,6 @@ beforeAll(async () => {
         adminFirestore.doc('/users/fred/tokens-wallet/self').set({ publicUserToken: 'c808ad21-af33-4e20-a6f8-89adc4d14d75' }),
         adminFirestore.doc('/users/fred/preferences/self').set({ pinnedEventIds: [] }),
         adminFirestore.doc('/users/fred/events/an-event').set({}),
-        adminFirestore.doc('/users/fred/events/an-event/__computed/self').set({ favoritedTalkIds: [] }),
         adminFirestore.doc('/users/fred/events/an-event/talksNotes/12345').set({ note: { isFavorite: true } }),
         adminFirestore.doc('/users/fred/events/an-event/days/monday').set({ }),
         adminFirestore.doc('/users/fred/events/an-event/days/monday/feedbacks/self').set({ dayId: 'monday', feedbacks: [] }),
@@ -56,9 +54,11 @@ beforeAll(async () => {
 
         adminFirestore.doc('/events/an-event').set({ title: `A super event` }),
         adminFirestore.doc('/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472').set({ organizerSecretToken: '6c902c52-9c6d-4d54-b6f2-20814d2f8472' }),
-        adminFirestore.doc('/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472/ratings/self').set({ }),
+        adminFirestore.doc('/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472/ratings/12345').set({ }),
+        adminFirestore.doc('/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472/daily-ratings/monday').set({ }),
         adminFirestore.doc('/events/an-event/days/monday').set({ day: 'monday', timeSlots: [] }),
         adminFirestore.doc('/events/an-event/event-descriptor/self').set({ title: `A super event` }),
+        adminFirestore.doc('/events/an-event/talksStats-allInOne/self').set({ "12345": { id: `12345`, totalFavoritesCount: 0 } }),
         adminFirestore.doc('/events/an-event/talksStats/12345').set({ id: `12345`, totalFavoritesCount: 0 }),
         adminFirestore.doc('/events/an-event/last-updates/self').set({ favorites: '2023-09-01T00:00:00Z' }),
         adminFirestore.doc('/events/an-event/talks/1234').set({ id: '1234', title: 'A super talk' }),
@@ -72,7 +72,6 @@ afterAll(async () => {
         adminFirestore.doc(`/users/alice/events/an-event/days/monday/feedbacks/self`).delete(),
         adminFirestore.doc(`/users/alice/events/an-event/days/monday`).delete(),
         adminFirestore.doc(`/users/alice/events/an-event/talksNotes/12345`).delete(),
-        adminFirestore.doc('/users/alice/events/an-event/__computed/self').delete(),
         adminFirestore.doc(`/users/alice/events/an-event`).delete(),
         adminFirestore.doc(`/users/alice/tokens-wallet/self`).delete(),
         adminFirestore.doc(`/users/alice/preferences/self`).delete(),
@@ -81,7 +80,6 @@ afterAll(async () => {
         adminFirestore.doc(`/users/fred/events/an-event/days/monday/feedbacks/self`).delete(),
         adminFirestore.doc(`/users/fred/events/an-event/days/monday`).delete(),
         adminFirestore.doc(`/users/fred/events/an-event/talksNotes/12345`).delete(),
-        adminFirestore.doc('/users/fred/events/an-event/__computed/self').delete(),
         adminFirestore.doc(`/users/fred/events/an-event`).delete(),
         adminFirestore.doc(`/users/fred/tokens-wallet/self`).delete(),
         adminFirestore.doc(`/users/fred/preferences/self`).delete(),
@@ -96,10 +94,12 @@ afterAll(async () => {
         adminFirestore.doc(`/events/an-event/talks/1234/feedbacks-access/1f0b405a-c3ba-46df-8d02-cce03bc34e5d`).delete(),
         adminFirestore.doc(`/events/an-event/talks/1234`).delete(),
         adminFirestore.doc(`/events/an-event/last-updates/self`).delete(),
+        adminFirestore.doc(`/events/an-event/talksStats-allInOne/self`).delete(),
         adminFirestore.doc(`/events/an-event/talksStats/12345`).delete(),
         adminFirestore.doc(`/events/an-event/event-descriptor/self`).delete(),
         adminFirestore.doc(`/events/an-event/days/monday`).delete(),
-        adminFirestore.doc(`/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472/ratings/self`).delete(),
+        adminFirestore.doc(`/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472/daily-ratings/monday`).delete(),
+        adminFirestore.doc(`/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472/ratings/12345`).delete(),
         adminFirestore.doc(`/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472`).delete(),
         adminFirestore.doc(`/events/an-event`).delete(),
     ]);
@@ -299,52 +299,6 @@ const COLLECTIONS: CollectionDescriptor[] = [{
             })
             it(`As ${userContext.name}, I should not be able to DELETE my user's events`, async () => {
                 await assertFails(deleteDoc(doc(userContext.context().firestore(), '/users/fred/events/an-event')));
-            })
-        }
-    }
-}, {
-    name: "/users/{userId}/events/{eventId}/__computed",
-    aroundTests: (userContext: UserContext) => match(userContext)
-        .with({ name: "unauthenticated user" },  () => ({
-            beforeEach: [],
-            afterEach: [],
-        }))
-        .with({ name: "fred user" },  () => ({
-            beforeEach: [],
-            afterEach: [],
-        })).run(),
-    tests: (userContext: UserContext) => {
-        it(`As ${userContext.name}, I should not be able to LIST another user events' computed infos`, async () => {
-            await assertFails(getDocs(collection(userContext.context().firestore(), '/users/alice/events/an-event/__computed')));
-        })
-        it(`As ${userContext.name}, I should be able to GET another user events' computed infos`, async () => {
-            await assertSucceeds(getDoc(doc(userContext.context().firestore(), '/users/alice/events/an-event/__computed/self')));
-        })
-        it(`As ${userContext.name}, I should not be able to CREATE another user's events' computed infos`, async () => {
-            await assertFails(setDoc(doc(userContext.context().firestore(), '/users/alice/events/an-event/__computed/self'), { favoritedTalkIds: [] }));
-        })
-        it(`As ${userContext.name}, I should not be able to UPDATE another user's events' computed infos`, async () => {
-            await assertFails(updateDoc(doc(userContext.context().firestore(), '/users/alice/events/an-event/__computed/self'), { favoritedTalkIds: ['1'] }));
-        })
-        it(`As ${userContext.name}, I should not be able to DELETE another user's events' computed infos`, async () => {
-            await assertFails(deleteDoc(doc(userContext.context().firestore(), '/users/alice/events/an-event/__computed/self')));
-        })
-
-        if(userContext.name === 'fred user') {
-            it(`As ${userContext.name}, I shoud not be able to LIST my user's events' computed infos`, async () => {
-                await assertFails(getDocs(collection(userContext.context().firestore(), '/users/fred/events/an-event/__computed')));
-            })
-            it(`As ${userContext.name}, I shoud be able to GET my user's events' computed infos`, async () => {
-                await assertSucceeds(getDoc(doc(userContext.context().firestore(), '/users/fred/events/an-event/__computed/self')));
-            })
-            it(`As ${userContext.name}, I shoud not be able to CREATE my user's events' computed infos`, async () => {
-                await assertFails(setDoc(doc(userContext.context().firestore(), '/users/fred/events/an-event/__computed/self'), { favoritedTalkIds: [] }));
-            })
-            it(`As ${userContext.name}, I should not be able to UPDATE my user's events' computed infos`, async () => {
-                await assertFails(updateDoc(doc(userContext.context().firestore(), '/users/fred/events/an-event/__computed/self'), { favoritedTalkIds: ['1'] }))
-            })
-            it(`As ${userContext.name}, I should not be able to DELETE my user's events' computed infos`, async () => {
-                await assertFails(deleteDoc(doc(userContext.context().firestore(), '/users/fred/events/an-event/__computed/self')));
             })
         }
     }
@@ -679,6 +633,29 @@ const COLLECTIONS: CollectionDescriptor[] = [{
         })
     }
 }, {
+    name: "/events/{eventId}/talksStats-allInOne",
+    aroundTests: (userContext: UserContext) => ({
+        beforeEach: [],
+        afterEach: [],
+    }),
+    tests: (userContext: UserContext) => {
+        it(`As ${userContext.name}, I should be able to LIST events' all-in-one talks stats`, async () => {
+            await assertFails(getDocs(collection(userContext.context().firestore(), '/events/an-event/talksStats-allInOne')));
+        })
+        it(`As ${userContext.name}, I should be able to GET events' all-in-one talks stats`, async () => {
+            await assertSucceeds(getDoc(doc(userContext.context().firestore(), '/events/an-event/talksStats-allInOne/self')));
+        })
+        it(`As ${userContext.name}, I should not be able to CREATE events' all-in-one talks stats`, async () => {
+            await assertFails(setDoc(doc(userContext.context().firestore(), '/events/another-event/talksStats-allInOne/self'), { "23456": { id: `23456`, totalFavoritesCount: 0 } }));
+        })
+        it(`As ${userContext.name}, I should not be able to UPDATE events' all-in-one talks stats`, async () => {
+            await assertFails(updateDoc(doc(userContext.context().firestore(), '/events/an-event/talksStats-allInOne/self'), { "12345": { id: `12345`, totalFavoritesCount: 1 } }));
+        })
+        it(`As ${userContext.name}, I should not be able to DELETE events' all-in-one talks stats`, async () => {
+            await assertFails(deleteDoc(doc(userContext.context().firestore(), '/events/an-event/talksStats-allInOne/self')));
+        })
+    }
+}, {
     name: "/events/{eventId}/organizer-space",
     aroundTests: (userContext: UserContext) => ({
         beforeEach: [],
@@ -712,16 +689,39 @@ const COLLECTIONS: CollectionDescriptor[] = [{
             await assertFails(getDocs(collection(userContext.context().firestore(), '/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472/ratings')));
         })
         it(`As ${userContext.name}, I should not be able to GET events' organizer space ratings`, async () => {
-            await assertFails(getDoc(doc(userContext.context().firestore(), '/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472/ratings/self')));
+            await assertFails(getDoc(doc(userContext.context().firestore(), '/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472/ratings/12345')));
         })
         it(`As ${userContext.name}, I should not be able to CREATE events' organizer space ratings`, async () => {
-            await assertFails(setDoc(doc(userContext.context().firestore(), '/events/another-event/organizer-space/d05d6d61-53c4-496c-9269-795a30b70443/ratings/self'), { }));
+            await assertFails(setDoc(doc(userContext.context().firestore(), '/events/another-event/organizer-space/d05d6d61-53c4-496c-9269-795a30b70443/ratings/23456'), { }));
         })
         it(`As ${userContext.name}, I should not be able to UPDATE events' organizer space ratings`, async () => {
-            await assertFails(updateDoc(doc(userContext.context().firestore(), '/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472/ratings/self'), { "12345": {} }));
+            await assertFails(updateDoc(doc(userContext.context().firestore(), '/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472/ratings/12345'), { "12345": {} }));
         })
         it(`As ${userContext.name}, I should not be able to DELETE events' organizer space ratings`, async () => {
-            await assertFails(deleteDoc(doc(userContext.context().firestore(), '/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472/ratings/self')));
+            await assertFails(deleteDoc(doc(userContext.context().firestore(), '/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472/ratings/12345')));
+        })
+    }
+}, {
+    name: "/events/{eventId}/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472/daily-ratings",
+    aroundTests: (userContext: UserContext) => ({
+        beforeEach: [],
+        afterEach: [],
+    }),
+    tests: (userContext: UserContext) => {
+        it(`As ${userContext.name}, I should not be able to LIST events' organizer space daily ratings`, async () => {
+            await assertFails(getDocs(collection(userContext.context().firestore(), '/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472/daily-ratings')));
+        })
+        it(`As ${userContext.name}, I should not be able to GET events' organizer space daily ratings`, async () => {
+            await assertFails(getDoc(doc(userContext.context().firestore(), '/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472/daily-ratings/monday')));
+        })
+        it(`As ${userContext.name}, I should not be able to CREATE events' organizer space daily ratings`, async () => {
+            await assertFails(setDoc(doc(userContext.context().firestore(), '/events/another-event/organizer-space/d05d6d61-53c4-496c-9269-795a30b70443/daily-ratings/tuesday'), { }));
+        })
+        it(`As ${userContext.name}, I should not be able to UPDATE events' organizer space daily ratings`, async () => {
+            await assertFails(updateDoc(doc(userContext.context().firestore(), '/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472/daily-ratings/monday'), { }));
+        })
+        it(`As ${userContext.name}, I should not be able to DELETE events' organizer space daily ratings`, async () => {
+            await assertFails(deleteDoc(doc(userContext.context().firestore(), '/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472/daily-ratings/monday')));
         })
     }
 }, {

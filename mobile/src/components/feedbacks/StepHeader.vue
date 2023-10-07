@@ -1,6 +1,6 @@
 <template>
   <ion-header class="stepHeader">
-    <span class="stepHeader-nb">{{ step }}</span>
+<!--    <span class="stepHeader-nb">{{ step }}</span>-->
     {{ stepLabel }}
   </ion-header>
 </template>

@@ -1,26 +1,30 @@
 <template>
   <slot name="iterator" :timeslot="timeslot" :index="index"
         v-for="(timeslot, index) in timeslotsRef" :key="timeslot.id.value" />
+
+  <no-results v-if="searchTerms && !timeslotsRef.length" illu-path="images/svg/illu-no-result-theming.svg">
+    <template #title>{{ LL.No_talks_matching_search_terms() }}</template>
+  </no-results>
 </template>
 
 <script setup lang="ts">
-import {onMounted, PropType, unref, watch} from "vue";
+import {onMounted, PropType, Ref, toValue, unref, watch} from "vue";
 import {managedRef as ref, toManagedRef as toRef} from "@/views/vue-utils";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {DayId} from "@/models/VoxxrinDay";
 import {LabelledTimeslotWithFeedback, useLabelledTimeslotWithFeedbacks} from "@/state/useSchedule";
 import {
     getTimeslotLabel,
-    getTimeslotTimingProgress,
+    getTimeslotTimingProgress, toFilteredLabelledTimeslotWithFeedback,
     VoxxrinDailySchedule,
     VoxxrinScheduleTimeSlot
 } from "@/models/VoxxrinSchedule";
 import {useUserFeedbacks} from "@/state/useUserFeedbacks";
 import {useCurrentClock} from "@/state/useCurrentClock";
 import {useInterval} from "@/views/vue-utils";
-import {findTimeslotFeedback} from "@/models/VoxxrinFeedback";
-import {filterTalksMatching} from "@/models/VoxxrinTalk";
 import {PERF_LOGGER, Logger} from "@/services/Logger";
+import NoResults from "@/components/ui/NoResults.vue";
+import {typesafeI18n} from "@/i18n/i18n-vue";
 
 const LOGGER = Logger.named("TimeslotIterator");
 
@@ -53,6 +57,8 @@ onMounted(async () => {
     useInterval(recomputeMissingFeedbacksList, {freq:"low-frequency"}, {immediate: true})
 })
 
+const { LL } = typesafeI18n()
+
 const { userFeedbacks: dailyUserFeedbacksRef  } = useUserFeedbacks(toRef(() => props.confDescriptor?.id), toRef(() => props.dayId))
 const { timeslotsRef } = useLabelledTimeslotWithFeedbacks(
     toRef(props, 'dailySchedule'),
@@ -63,7 +69,7 @@ export type MissingFeedbackPastTimeslot = {
     end: string,
     timeslot: VoxxrinScheduleTimeSlot
 }
-const missingFeedbacksPastTimeslotsRef = ref<MissingFeedbackPastTimeslot[]>([])
+const missingFeedbacksPastTimeslotsRef = ref<MissingFeedbackPastTimeslot[]>([]) as Ref<MissingFeedbackPastTimeslot[]>
 
 watch([timeslotsRef], ([timeslots]) => {
     emit('timeslots-list-updated', timeslots);
@@ -76,16 +82,7 @@ watch([
     dailyUserFeedbacksRef,
 ], ([confDescriptor, dailySchedule, searchTerms, dailyUserFeedbacks]) => {
     if(dailySchedule && confDescriptor) {
-        timeslotsRef.value = dailySchedule.timeSlots.map((ts: VoxxrinScheduleTimeSlot): LabelledTimeslotWithFeedback => {
-            const label = getTimeslotLabel(ts);
-            if(ts.type === 'break') {
-                return { ...ts, label, feedback: {status: 'missing'} };
-            } else {
-                const feedback = findTimeslotFeedback(dailyUserFeedbacks, ts.id);
-                const filteredTalks = filterTalksMatching(ts.talks, searchTerms);
-                return {...ts, label, talks: filteredTalks, feedback };
-            }
-        }).filter(ts => ts.type === 'break' || (ts.type === 'talks' && ts.talks.length !== 0));
+        timeslotsRef.value = toFilteredLabelledTimeslotWithFeedback(dailySchedule, dailyUserFeedbacks, searchTerms);
 
         recomputeMissingFeedbacksList();
     }
@@ -95,7 +92,7 @@ watch([missingFeedbacksPastTimeslotsRef], ([missingFeedbacksPastTimeslots]) => {
     emit('missing-feedback-past-timeslots-updated', missingFeedbacksPastTimeslots)
 })
 function recomputeMissingFeedbacksList() {
-    const timeslots = unref(timeslotsRef);
+    const timeslots = toValue(timeslotsRef);
     if(!timeslots) {
         missingFeedbacksPastTimeslotsRef.value = [];
         return;
@@ -104,7 +101,9 @@ function recomputeMissingFeedbacksList() {
     missingFeedbacksPastTimeslotsRef.value = timeslots.filter(ts => {
         return ts.type === 'talks'
             && ts.feedback.status === 'missing'
-            && getTimeslotTimingProgress(ts, useCurrentClock().zonedDateTimeISO()).status === 'past'
+            && (getTimeslotTimingProgress(ts, useCurrentClock().zonedDateTimeISO()).status === 'past'
+                || getTimeslotTimingProgress(ts, useCurrentClock().zonedDateTimeISO()).status === 'ongoing')
+
     }).map(timeslot => {
         const labels = getTimeslotLabel(timeslot)
         return {timeslot, start: labels.start, end: labels.end };

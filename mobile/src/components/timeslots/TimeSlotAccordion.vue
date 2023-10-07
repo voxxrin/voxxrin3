@@ -161,7 +161,7 @@ const hasMissingFeedback = computed(() => {
       transform: translate(0, -50%);
       height: 24px;
       border-radius: 8px;
-      width: 116px;
+      width: 138px;
       z-index: -1;
       --progress-background: rgba(var(--ion-color-light-rgb), 0.4);
       border: 1px solid rgba(var(--ion-color-light-rgb), 0.6);
@@ -216,6 +216,9 @@ const hasMissingFeedback = computed(() => {
       .ion-accordion-toggle-icon {
         color: var(--app-white) !important;
       }
+
+      &._missing-feedback:not(._is-break) ._missing-feedback { display: inline-block;}
+      &._feedback-provided:not(._is-break) ._provided-feedback {display: inline-block;}
     }
 
     &._chronological_status_is_future {

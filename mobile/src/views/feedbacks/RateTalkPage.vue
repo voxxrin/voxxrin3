@@ -183,7 +183,7 @@ async function submitFeedback() {
 
 const ionRouter = useIonRouter();
 function backToSchedulePage() {
-    goBackOrNavigateTo(ionRouter, `/events/${eventIdRef.value.value}`, 0)
+    goBackOrNavigateTo(ionRouter, `/events/${eventIdRef.value.value}`)
 }
 
 </script>

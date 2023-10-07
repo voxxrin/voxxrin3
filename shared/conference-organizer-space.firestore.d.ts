@@ -11,8 +11,10 @@ export type ConferenceOrganizerSpace = {
     talkFeedbackViewerTokens: TalkFeedbacksViewerSecretToken[];
 }
 
-export type ConferenceOrganizerAllRatings = {
-    [talkId: string]: {
-        [publicUserId: string]: FeedbackRatings
-    }
+export type PerPublicUserIdFeedbackRatings = {
+    [publicUserId: string]: FeedbackRatings
+}
+
+export type DailyTalkFeedbackRatings = {
+    [taklId: string]: PerPublicUserIdFeedbackRatings
 }

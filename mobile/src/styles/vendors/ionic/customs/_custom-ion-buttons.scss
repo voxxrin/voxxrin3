@@ -91,6 +91,10 @@ ion-button {
 
         @media (prefers-color-scheme: dark) {
             --color: white;
+
+            ion-icon {
+                color: white;
+            }
         }
     }
 

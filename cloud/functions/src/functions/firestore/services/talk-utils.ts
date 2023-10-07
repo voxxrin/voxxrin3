@@ -1,47 +1,94 @@
 import {db} from "../../../firebase";
-import {ConferenceDescriptor} from "../../../../../../shared/conference-descriptor.firestore";
-import {DetailedTalk} from "../../../../../../shared/daily-schedule.firestore";
 import {getSecretTokenRef} from "../firestore-utils";
 import {
-    ConferenceOrganizerAllRatings
+    DailyTalkFeedbackRatings,
+    PerPublicUserIdFeedbackRatings
 } from "../../../../../../shared/conference-organizer-space.firestore";
+import {logPerf} from "../../http/utils";
+import {getTimeslottedTalks} from "./schedule-utils";
 
 
-export async function getTalkDetails(eventId: string) {
-    const talkRefs = await db
-        .collection("events").doc(eventId)
-        .collection("talks")
-        .listDocuments();
-
-    const talks  = await Promise.all(talkRefs.map(async talkRef => (await talkRef.get()).data() as DetailedTalk))
-
-    return talks;
+type PerTalkPublicUserIdFeedbackRating = {
+    talkId: string,
+    perPublicUserIdRatings: PerPublicUserIdFeedbackRatings,
 }
 
 class ConfOrganizerAllRatingsModel {
-    constructor(private allRatings: ConferenceOrganizerAllRatings) {}
+    constructor(private allRatings: PerTalkPublicUserIdFeedbackRating[]) {}
 
     ratingsForTalk(talkId: string) {
-        return this.allRatings[talkId]?Object.values(this.allRatings[talkId]):[];
+        const talkFeedbacks = this.allRatings
+            .find(rating => rating.talkId === talkId)
+
+        if(!talkFeedbacks) {
+            return [];
+        }
+
+        return Object.keys(talkFeedbacks.perPublicUserIdRatings).map(publicUserId => ({
+            publicUserId,
+            ...talkFeedbacks.perPublicUserIdRatings[publicUserId]
+        }));
     }
 
     userRating(talkId: string, publicUserId: string) {
-        return this.allRatings[talkId] ? this.allRatings[talkId][publicUserId] : undefined;
+        const talkFeedbacks = this.ratingsForTalk(talkId);
+        return talkFeedbacks?.find(ratings => ratings.publicUserId === publicUserId) || undefined
     }
 }
 
-export async function getEveryRatingsForEvent(eventId: string) {
-    const organizerSpaceRef = await getSecretTokenRef(`/events/${eventId}/organizer-space`)
-    const eventAllRatings = (await organizerSpaceRef.collection('ratings').doc('self').get()).data() as ConferenceOrganizerAllRatings|undefined
+export async function getEveryRatingsForEvent(eventId: string, organizerSpaceToken: string) {
+    // FIXME: move this to conference descriptor at some point
+    const devoxxOverflowTalkIds: Record<string, string[]> = eventId === 'dvbe23' ? {
+        "67956": ["72002", "72003", "72004"],
+        "67953": ["72007", "72006", "72005"],
+        "70101": ["72009", "72008", "72010"],
+    }: {}
 
-    return new ConfOrganizerAllRatingsModel(eventAllRatings || {});
+    const talkIdByOverflowTalkId = Object.entries(devoxxOverflowTalkIds).reduce((talkIdByOverflowTalkId, [talkId, overflowTalkIds]) => {
+        overflowTalkIds.forEach(overflowTalkId => talkIdByOverflowTalkId[overflowTalkId] = talkId);
+        return talkIdByOverflowTalkId;
+    }, {} as Record<string, string>)
+
+    const dailyRatingsColl = await db.collection(`/events/${eventId}/organizer-space/${organizerSpaceToken}/daily-ratings`).listDocuments()
+
+    const allDailyRatings: PerTalkPublicUserIdFeedbackRating[][] = await Promise.all(dailyRatingsColl.map(async dailyRatingsDoc => {
+        const dailyPerTalkIdRatings = (await dailyRatingsDoc.get()).data() as DailyTalkFeedbackRatings;
+
+        Object.entries(talkIdByOverflowTalkId).forEach(([overflowTalkId, aliasedTalkId]) => {
+            if(dailyPerTalkIdRatings[overflowTalkId]) {
+                // Merging overflow talk id ratings into aliased talk id ratings
+                dailyPerTalkIdRatings[aliasedTalkId] = {
+                    ...(dailyPerTalkIdRatings[aliasedTalkId] || {}),
+                    ...dailyPerTalkIdRatings[overflowTalkId]
+                }
+                delete dailyPerTalkIdRatings[overflowTalkId];
+            }
+        })
+
+        const talkIds = Object.keys(dailyPerTalkIdRatings)
+        return talkIds.map(talkId => {
+            return {
+                talkId,
+                perPublicUserIdRatings: dailyPerTalkIdRatings[talkId]
+            }
+        })
+    }))
+
+    return new ConfOrganizerAllRatingsModel(allDailyRatings.flatMap(dailyRatings => dailyRatings));
 }
 
 export async function getTalksDetailsWithRatings(eventId: string) {
-    const talks = await getTalkDetails(eventId);
-    const everyRatings = await getEveryRatingsForEvent(eventId);
-    return talks.map(talk => ({
-        talk,
-        ratings: everyRatings.ratingsForTalk(talk.id)
-    }))
+    return logPerf(`getTalksDetailsWithRatings(${eventId})`, async () => {
+        const organizerSpaceRef = await getSecretTokenRef(`/events/${eventId}/organizer-space`)
+
+        const [ talks, everyRatings ] = await Promise.all([
+            getTimeslottedTalks(eventId),
+            getEveryRatingsForEvent(eventId, organizerSpaceRef.id)
+        ]);
+
+        return talks.map(talk => ({
+            talk,
+            ratings: everyRatings.ratingsForTalk(talk.id)
+        }))
+    })
 }
