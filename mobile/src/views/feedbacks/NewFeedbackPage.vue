@@ -165,7 +165,7 @@ function rateSelectedTalk() {
 }
 
 const everyCandidateTalksRef = computed(() => {
-    const labelledTimeslotWithOverlappings = unref(labelledTimeslotWithOverlappingsRef);
+    const labelledTimeslotWithOverlappings = toValue(labelledTimeslotWithOverlappingsRef);
 
     const overlappingTimeslots: LabelledTimeslot[] = (labelledTimeslotWithOverlappings?.overlappingLabelledTimeslots || []);
     const overlappingTalks: VoxxrinTalk[] = overlappingTimeslots.flatMap(ts => ts.talks);
@@ -174,8 +174,8 @@ const everyCandidateTalksRef = computed(() => {
 })
 
 const talkIdsRef = computed(() => {
-    const labelledTimeslotWithOverlappings = toValue(labelledTimeslotWithOverlappingsRef)
-    return labelledTimeslotWithOverlappings?.labelledTimeslot?.talks?.map(talk => talk.id) || [];
+    const everyCandidateTalks = toValue(everyCandidateTalksRef);
+    return everyCandidateTalks.map(talk => talk.id);
 })
 const {userEventTalkNotesRef } = useUserEventTalkNotes(eventIdRef, talkIdsRef);
 
