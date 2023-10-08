@@ -12,7 +12,7 @@ Each of these directories have their own `README.md` describing how to set them 
 
 ## Tour of the features
 
-_To be added (once we have all the screens implemented)_
+Look at [this discussion](https://github.com/voxxrin/voxxrin3/discussions/61) to have an overview of currently-implemented Voxxrin features.
 
 ## How to add your own conference to the list ?
 
