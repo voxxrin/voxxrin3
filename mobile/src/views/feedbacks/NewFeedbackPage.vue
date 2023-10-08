@@ -42,8 +42,9 @@
               </div>
             </ion-header>
 
-            <ion-accordion-group>
-              <ion-accordion class="slot-accordion" v-for="(overlappingTimeslot) in labelledTimeslotWithOverlappingsRef.overlappingLabelledTimeslots" :key="overlappingTimeslot.id.value">
+            <ion-accordion-group :multiple="true" :value="overlappingTimeslotsAutoExpandIdsRef">
+              <ion-accordion v-for="(overlappingTimeslot) in labelledTimeslotWithOverlappingsRef.overlappingLabelledTimeslots" :key="overlappingTimeslot.id.value"
+                             class="slot-accordion" :value="overlappingTimeslot.id.value">
                 <ion-item slot="header" color="light">
                   <ion-label>
                     <ion-icon aria-hidden="true" src="assets/icons/solid/slot-overlay.svg" />
@@ -184,6 +185,17 @@ const favoritedTalkIdsRef = computed(() => {
     return Array.from(userEventTalkNotes.values())
         .filter(talkNotes => talkNotes.isFavorite)
         .map(talkNotes => new TalkId(talkNotes.talkId))
+})
+
+const overlappingTimeslotsAutoExpandIdsRef = ref<string[]>([]);
+watch([favoritedTalkIdsRef, labelledTimeslotWithOverlappingsRef], ([favoritedTalkIds, labelledTimeslotWithOverlappings]) => {
+    if(!favoritedTalkIds || !labelledTimeslotWithOverlappings) {
+        return;
+    }
+
+    overlappingTimeslotsAutoExpandIdsRef.value = labelledTimeslotWithOverlappings.overlappingLabelledTimeslots
+        .filter(overlappingTimeslot => overlappingTimeslot.talks.filter(talk => talk.id.isIncludedIntoArray(favoritedTalkIds)).length > 0)
+        .map(overlappingTimeslot => overlappingTimeslot.id.value);
 })
 
 async function watchLaterAllFavoritedTalks() {
