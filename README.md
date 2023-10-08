@@ -12,7 +12,8 @@ Each of these directories have their own `README.md` describing how to set them 
 
 ## Tour of the features
 
-Look at [this discussion](https://github.com/voxxrin/voxxrin3/discussions/61) to have an overview of currently-implemented Voxxrin features.
+
+Look at [Feature showcase](https://github.com/voxxrin/voxxrin3/wiki/Voxxrin-3-features-showcase) to have an overview of currently-implemented Voxxrin features.
 
 ## How to add your own conference to the list ?
 
