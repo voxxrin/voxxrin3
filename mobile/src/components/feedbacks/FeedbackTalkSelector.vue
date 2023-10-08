@@ -3,7 +3,7 @@
     <talk-format-groups-breakdown :conf-descriptor="confDescriptor" :talks="displayedTalks">
       <template #talk="{ talk }">
         <ion-item class="listTalks-item">
-          <schedule-talk :talk="talk" :talk-stats="talkStatsRefByTalkId.get(talk.id.value)" :talk-notes="userTalkNotesRefByTalkId.get(talk.id.value)"
+          <schedule-talk :talk="talk" :talk-stats="talkStatsRefByTalkId.get(talk.id.value)" :talk-notes="userTalkNotesRefByTalkIdRef.get(talk.id.value)"
                          :is-highlighted="(talk, talkNotes) => talk.id.isSameThan(selectedTalkId)" :conf-descriptor="confDescriptor"
                          @talkClicked="updateSelected($event)" >
             <template #upper-right="{ talk, talkNotes }">
@@ -11,7 +11,8 @@
             </template>
             <template #footer-actions="{ talk, talkNotes, talkStats }">
               <talk-watch-later-button :user-talk-notes="talkNotes" :conf-descriptor="confDescriptor"
-                   @talk-note-updated="updatedTalkNote => userTalkNotesRefByTalkId.set(talk.id.value, updatedTalkNote)" />
+                   @talk-note-updated="updatedTalkNote => userTalkNotesRefByTalkIdRef.set(talk.id.value, updatedTalkNote)"
+                   :ref="talkWatchLaterBtn => talkWatchLaterButtonPerTalkIdRef.set(talk.id.value, talkWatchLaterBtn)"/>
               <talk-select-for-feedback :is-active="talk.id.isSameThan(selectedTalkId)" @click.stop="() => updateSelected(talk)"></talk-select-for-feedback>
             </template>
           </schedule-talk>
@@ -38,7 +39,9 @@ import TalkSelectForFeedback from "@/components/talk-card/TalkSelectForFeedback.
 import ScheduleTalk from "@/components/talk-card/ScheduleTalk.vue";
 import TalkIsFavorited from "@/components/talk-card/TalkIsFavorited.vue";
 import {useEventTalkStats} from "@/state/useEventTalkStats";
-import {useUserEventTalkNotes} from "@/state/useUserTalkNotes";
+import {useUserEventTalkNotes, useUserTalkNoteActions} from "@/state/useUserTalkNotes";
+import {match} from "ts-pattern";
+import {TalkNote} from "../../../../shared/feedbacks.firestore";
 
 const { LL } = typesafeI18n()
 
@@ -70,7 +73,7 @@ const eventId = toRef(() => props.confDescriptor?.id);
 const talkIdsRef = toRef(() => props.talks?.map(talk => talk.id));
 
 const {firestoreEventTalkStatsRef: talkStatsRefByTalkId} = useEventTalkStats(eventId, talkIdsRef)
-const {userEventTalkNotesRef: userTalkNotesRefByTalkId} = useUserEventTalkNotes(eventId, talkIdsRef)
+const {userEventTalkNotesRef: userTalkNotesRefByTalkIdRef} = useUserEventTalkNotes(eventId, talkIdsRef)
 
 function updateSelected(talk: VoxxrinTalk) {
     if(talk.id.isSameThan(props.selectedTalkId)) {
@@ -101,6 +104,36 @@ const nonFavoritedTalksCount = computed(() => {
     return props.talks.length - displayedTalks.value.length;
 })
 
+const talkWatchLaterButtonPerTalkIdRef = ref(new Map<string, TalkWatchLaterButton>())
+
+defineExpose({
+    watchLaterAllFavoritedTalks: () => {
+        const talks = toValue(props.talks) as VoxxrinTalk[],
+            allUserFavoritedTalkIds = toValue(props.allUserFavoritedTalkIds) as TalkId[],
+            selectedTalkId = toValue(props.selectedTalkId),
+            userTalkNotesRefByTalkId = toValue(userTalkNotesRefByTalkIdRef);
+
+        talks.forEach(talk => {
+            if(!talk.id.isIncludedIntoArray(allUserFavoritedTalkIds)) {
+                return;
+            }
+
+            const favoritedTalkId = talk.id;
+            const talkNotes: TalkNote|undefined = userTalkNotesRefByTalkId.get(favoritedTalkId.value);
+            const watchLaterButton = talkWatchLaterButtonPerTalkIdRef.value.get(favoritedTalkId.value);
+
+            if(favoritedTalkId.isSameThan(selectedTalkId) && !!talkNotes?.watchLater) {
+                // We want to disable watch on selected talk
+                watchLaterButton.toggleWatchLater();
+            } else if(!favoritedTalkId.isSameThan(selectedTalkId) && !talkNotes?.watchLater) {
+                // We want to enable watch on non-selected talk which are not marked as watch (yet)
+                watchLaterButton.toggleWatchLater();
+            } else {
+                // no op
+            }
+        })
+    }
+})
 </script>
 
 <style lang="scss" scoped>

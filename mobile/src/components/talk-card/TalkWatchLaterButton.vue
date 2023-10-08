@@ -40,6 +40,10 @@ const {toggleWatchLater} = useUserTalkNoteActions(
     talkNotes,
     updatedTalkNote => emits("talkNoteUpdated", updatedTalkNote)
 )
+
+defineExpose({
+    toggleWatchLater
+})
 </script>
 
 <style scoped lang="scss">
