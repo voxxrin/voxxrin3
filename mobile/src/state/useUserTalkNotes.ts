@@ -192,7 +192,7 @@ export function useUserTalkNoteActions(
     const toggleWatchLater = async () => {
         await updateTalkNotesDocument(
             'toggleWatchLater',
-            talkNoteBeforeUpdate => talkNoteBeforeUpdate.isFavorite ? 'unmark-watch-later' : 'mark-watch-later',
+            talkNoteBeforeUpdate => talkNoteBeforeUpdate.watchLater ? 'unmark-watch-later' : 'mark-watch-later',
             talkNotes => ({ watchLater: !talkNotes.watchLater }),
         );
     }

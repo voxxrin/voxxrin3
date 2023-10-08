@@ -10,7 +10,8 @@
               <talk-is-favorited :talk-notes="talkNotes" />
             </template>
             <template #footer-actions="{ talk, talkNotes, talkStats }">
-              <talk-watch-later-button :user-talk-notes="talkNotes" :conf-descriptor="confDescriptor"></talk-watch-later-button>
+              <talk-watch-later-button :user-talk-notes="talkNotes" :conf-descriptor="confDescriptor"
+                   @talk-note-updated="updatedTalkNote => userTalkNotesRefByTalkId.set(talk.id.value, updatedTalkNote)" />
               <talk-select-for-feedback :is-active="talk.id.isSameThan(selectedTalkId)" @click.stop="() => updateSelected(talk)"></talk-select-for-feedback>
             </template>
           </schedule-talk>
