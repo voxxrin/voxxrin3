@@ -109,6 +109,7 @@ const crawlAll = async function(criteria: CrawlCriteria) {
             return {
                 eventId: crawlerDescriptor.id,
                 days: event.daySchedules.map(ds => ds.day),
+                descriptorUrlUsed: crawlerDescriptor.descriptorUrl,
                 durationInSeconds: start.until(end).total('seconds')
             }
         }catch(e: any) {
