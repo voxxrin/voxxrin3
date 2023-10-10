@@ -17,7 +17,7 @@
         <timeslots-iterator :conf-descriptor="confDescriptor" :day-id="selectedDayId"
                             :daily-schedule="currentSchedule"
                             @timeslots-list-updated="timeslots => expandedTimeslotIds = timeslots.map(t => t.id.value)">
-          <template #iterator="{ timeslot }">
+          <template #iterator="{ timeslot, progress }">
             <time-slot-section :timeslot="timeslot" :conf-descriptor="confDescriptor">
               <template #section-content="{ timeslot }">
                 <schedule-break v-if="timeslot.type==='break'" :conf-descriptor="confDescriptor" :talk-break="timeslot.break"></schedule-break>
