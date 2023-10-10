@@ -17,7 +17,7 @@
           <ion-spinner v-if="today.localeCompare(day.localDate) === 0"
                        class="todayIndicator"
                        name="lines-sharp"
-                      duration="2500">
+                       :duration="2500">
           </ion-spinner>
           <div class="dayList-button-content">
             <strong class="day">{{day.formatted.day}}</strong>
