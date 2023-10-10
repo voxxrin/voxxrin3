@@ -44,6 +44,7 @@ const MIGRATIONS: Migration[] = [
     { name: "refactoOrgaSpaceRatingsToPerTalkRatings", exec: refactoOrgaSpaceRatingsToPerTalkRatings },
     { name: "introduceTalksStats_allInOneDocument", exec: introduceTalksStats_allInOneDocument },
     { name: "introduceOrganizerSpaceDailyRatings", exec: introduceOrganizerSpaceDailyRatings },
+    { name: "introduceOrganizerSpaceDailyRatingsAgain", exec: introduceOrganizerSpaceDailyRatings },
 ];
 
 export type MigrationResult = "OK"|"Error";

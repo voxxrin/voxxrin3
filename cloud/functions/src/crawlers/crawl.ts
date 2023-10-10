@@ -137,8 +137,16 @@ const saveEvent = async function(event: FullEvent) {
                 talkFeedbackViewerTokens: []
             }
 
+            await firestoreEvent.collection('organizer-space').doc(organizerSecretToken).set(organizerSpaceContent)
+
+            await Promise.all(event.daySchedules.map(async daySchedule => {
+                const dailyRating = await db.doc(`events/${event.id}/organizer-space/${organizerSecretToken}/daily-ratings/${daySchedule.day}`).get()
+                if(!dailyRating.exists) {
+                    await db.doc(`events/${event.id}/organizer-space/${organizerSecretToken}/daily-ratings/${daySchedule.day}`).set({});
+                }
+            }))
+
             await Promise.all([
-                firestoreEvent.collection('organizer-space').doc(organizerSecretToken).set(organizerSpaceContent),
                 ...event.talks.map(async talk => {
                     const talkFeedbacksDoc = db.doc(`events/${event.id}/organizer-space/${organizerSecretToken}/ratings/${talk.id}`)
                     const talkFeedbacks = await talkFeedbacksDoc.get();
