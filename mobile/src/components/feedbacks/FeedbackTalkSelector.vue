@@ -12,7 +12,7 @@
             <template #footer-actions="{ talk, talkNotes, talkStats }">
               <talk-watch-later-button :user-talk-notes="talkNotes" :conf-descriptor="confDescriptor"
                    @talk-note-updated="updatedTalkNote => userTalkNotesRefByTalkIdRef.set(talk.id.value, updatedTalkNote)"
-                   :ref="talkWatchLaterBtn => talkWatchLaterButtonPerTalkIdRef.set(talk.id.value, talkWatchLaterBtn)"/>
+                   :ref="talkWatchLaterBtn => updateTalkWatchLaterRefTo(talk.id, talkWatchLaterBtn)"/>
               <talk-select-for-feedback :is-active="talk.id.isSameThan(selectedTalkId)" @click.stop="() => updateSelected(talk)"></talk-select-for-feedback>
             </template>
           </schedule-talk>
@@ -104,7 +104,7 @@ const nonFavoritedTalksCount = computed(() => {
     return props.talks.length - displayedTalks.value.length;
 })
 
-const talkWatchLaterButtonPerTalkIdRef = ref(new Map<string, TalkWatchLaterButton>())
+const talkWatchLaterButtonPerTalkIdRef = ref(new Map<string, InstanceType<typeof TalkWatchLaterButton>>())
 
 defineExpose({
     watchLaterAllFavoritedTalks: () => {
@@ -121,6 +121,9 @@ defineExpose({
             const favoritedTalkId = talk.id;
             const talkNotes: TalkNote|undefined = userTalkNotesRefByTalkId.get(favoritedTalkId.value);
             const watchLaterButton = talkWatchLaterButtonPerTalkIdRef.value.get(favoritedTalkId.value);
+            if(!watchLaterButton) {
+                return;
+            }
 
             if(favoritedTalkId.isSameThan(selectedTalkId) && !!talkNotes?.watchLater) {
                 // We want to disable watch on selected talk
@@ -134,6 +137,10 @@ defineExpose({
         })
     }
 })
+
+function updateTalkWatchLaterRefTo(talkId: TalkId, talkWatchLaterBtn: any) {
+    talkWatchLaterButtonPerTalkIdRef.value.set(talkId.value, talkWatchLaterBtn)
+}
 </script>
 
 <style lang="scss" scoped>

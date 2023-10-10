@@ -25,7 +25,7 @@
           </ion-header>
           <div>
             <feedback-talk-selector
-                :ref="(feedbackSelector) => perTimeslotIdFeedbackTalkSelectorsRef.set(labelledTimeslotWithOverlappingsRef.labelledTimeslot.id.value, feedbackSelector)"
+                :ref="(feedbackSelector) => updateFeedbackSelectorRefTo(labelledTimeslotWithOverlappingsRef?.labelledTimeslot?.id, feedbackSelector)"
                 :conf-descriptor="confDescriptorRef"
                 :talks="labelledTimeslotWithOverlappingsRef.labelledTimeslot.talks || []"
                 :all-user-favorited-talk-ids="favoritedTalkIdsRef"
@@ -54,7 +54,7 @@
                 </ion-item>
                 <div slot="content">
                   <feedback-talk-selector
-                      :ref="(feedbackSelector) => perTimeslotIdFeedbackTalkSelectorsRef.set(overlappingTimeslot.id.value, feedbackSelector)"
+                      :ref="(feedbackSelector) => updateFeedbackSelectorRefTo(overlappingTimeslot.id, feedbackSelector)"
                       :conf-descriptor="confDescriptorRef"
                       :talks="overlappingTimeslot.talks"
                       :all-user-favorited-talk-ids="favoritedTalkIdsRef"
@@ -103,7 +103,7 @@ import {EventId} from "@/models/VoxxrinEvent";
 import {getRouteParamsValue, isRefDefined, isRefUndefined} from "@/views/vue-utils";
 import {useRoute} from "vue-router";
 import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
-import {computed, Ref, toValue, watch} from "vue";
+import {ComponentPublicInstance, computed, Ref, toValue, watch} from "vue";
 import {managedRef as ref, toManagedRef as toRef} from "@/views/vue-utils";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {
@@ -136,7 +136,7 @@ const eventIdRef = computed(() => new EventId(getRouteParamsValue(route, 'eventI
 const timeslotIdRef = computed(() => new ScheduleTimeSlotId(getRouteParamsValue(route, 'timeslotId')));
 const {conferenceDescriptor: confDescriptorRef } = useSharedConferenceDescriptor(eventIdRef);
 
-const perTimeslotIdFeedbackTalkSelectorsRef = ref(new Map<string, FeedbackTalkSelector>())
+const perTimeslotIdFeedbackTalkSelectorsRef = ref(new Map<string, InstanceType<typeof FeedbackTalkSelector>>())
 
 const labelledTimeslotWithOverlappingsRef = ref<undefined | LabelledTimeslotWithOverlappings>(undefined)
 
@@ -203,9 +203,6 @@ watch([favoritedTalkIdsRef, labelledTimeslotWithOverlappingsRef], ([favoritedTal
 })
 
 async function watchLaterAllFavoritedTalks() {
-    const favoritedTalks = everyCandidateTalksRef.value.filter(talk => talk.id.isIncludedIntoArray(favoritedTalkIdsRef.value))
-    const userEventTalkNotesById = toValue(userEventTalkNotesRef);
-
     perTimeslotIdFeedbackTalkSelectorsRef.value.forEach((overlappingTimeslotsFeedbackTalkSelector, timeslotId) => {
         overlappingTimeslotsFeedbackTalkSelector.watchLaterAllFavoritedTalks()
     })
@@ -226,6 +223,11 @@ async function submitSkippedFeedback() {
     goBackOrNavigateTo(ionRouter, `/events/${eventIdRef.value.value}`)
 }
 
+function updateFeedbackSelectorRefTo(timeslotId: ScheduleTimeSlotId|undefined, feedbackSelector: any) {
+    if(timeslotId && feedbackSelector) {
+        perTimeslotIdFeedbackTalkSelectorsRef.value.set(timeslotId.value, feedbackSelector)
+    }
+}
 </script>
 
 <style scoped lang="scss">
