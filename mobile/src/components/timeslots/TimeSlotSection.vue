@@ -1,4 +1,5 @@
 <template>
+  <!--TODO #44 Add class _past, _onGoing -->
   <div :class="{ 'slotSection': true,[`_timeslot-is-${timeslot.type}`]: true }">
     <div class="slotSection-timeline">
       <span class="slot-schedule-start">{{timeslotLabel.start}}</span>
@@ -128,7 +129,7 @@ const timeslotLabel = getTimeslotLabel(props.timeslot!);
         height: 10px;
         border-radius: 18px;
         border: 4px solid var(--app-beige-medium);
-        background: var(--voxxrin-event-theme-colors-secondary-hex);;
+        background: var(--voxxrin-event-theme-colors-secondary-hex);
         content: '';
 
         @media (prefers-color-scheme: dark) {
@@ -158,22 +159,18 @@ const timeslotLabel = getTimeslotLabel(props.timeslot!);
     padding-bottom: 12px;
   }
 
-
   /* Stats Sections */
   &._past {
+    opacity: 0.5;
+
     .slotSection-timeline {
       background-image: linear-gradient(45deg, #e6e6e6 25%, #dbdbdb 25%, #dbdbdb 50%, #e6e6e6 50%, #e6e6e6 75%, #dbdbdb 75%, #dbdbdb 100%);
       background-size: 11.31px 11.31px;
-      color: var(--app-beige-dark);
+      color: var(--app-grey-dark);
 
       .slot-schedule-maillon {
         filter: grayscale(1);
         border-left: 2px dashed var(--voxxrin-event-theme-colors-secondary-hex);
-
-        &:after, &:before {
-          border-left: 2px dashed var(--app-beige-dark);
-          border-color: var(--app-beige-dark);
-        }
       }
     }
 
@@ -182,6 +179,46 @@ const timeslotLabel = getTimeslotLabel(props.timeslot!);
     .slotOverlap,
     .slotSection-content {
       filter: grayscale(1);
+    }
+  }
+
+  &._onGoing {
+    .slotSection-timeline {
+      background-color: var(--voxxrin-event-theme-colors-secondary-hex);
+      color: var(--app-white);
+      overflow: hidden;
+
+      &:after {
+        position: absolute;
+        left: -16px;
+        height: 84px;
+        width: 200%;
+        background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 50%, rgba(255,255,255,0) 100%);
+        transform: rotate(-20deg);
+        content: '';
+        opacity: 0.2;
+        animation: reflect 1s ease infinite;
+      }
+
+      .slot-schedule-maillon {
+        border-left: 2px solid var(--app-white);
+
+        &:after, &:before {
+          border: 4px solid var(--voxxrin-event-theme-colors-secondary-hex);
+          background-color: var(--app-white);
+        }
+      }
+    }
+
+    :deep(.listTalks) {background: none;}
+  }
+
+  @keyframes reflect {
+    0% {
+     transform: translateY(-100%);
+    }
+    100% {
+      transform: translateY(200%);
     }
   }
 }
