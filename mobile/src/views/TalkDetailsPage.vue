@@ -32,7 +32,6 @@
         </div>
       </div>
 
-
       <div class="talkDetails-description">
         <vox-divider>
           {{ LL.Talk_summary() }}
@@ -115,6 +114,7 @@
           </ion-button>
         </div>
       </div>
+      <div class="spacerNavigationBar"></div>
     </ion-content>
   </ion-page>
 </template>
@@ -577,5 +577,16 @@ const theme = computed(() => {
         }
       }
     }
+  }
+
+  .spacerNavigationBar {
+    height: 54px;
+    background-color: var(--app-beige-medium);
+    padding: var(--app-gutters);
+
+    @media (prefers-color-scheme: dark) {
+      background-color: var(--app-medium-contrast);
+    }
+
   }
 </style>
