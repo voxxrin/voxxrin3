@@ -10,7 +10,7 @@
     <div class="slotSection-content">
       <slot name="section-content" :timeslot="timeslot" />
       <!--TODO #44 Add btn feedback slot -->
-      <ion-button class="_missing-feedback" v-if="false">
+      <ion-button class="_missing-feedback" v-if="true">
         <ion-icon src="/assets/icons/line/comment-line-add.svg"></ion-icon>
       </ion-button>
     </div>
@@ -81,7 +81,7 @@ const timeslotLabel = getTimeslotLabel(props.timeslot!);
     text-align: center;
     column-gap: 16px;
     height: 100%;
-    width: 64px;
+    width: 54px;
     padding: 16px 0 8px 0;
     border-bottom: 1px dashed var(--app-beige-line);
     border-right: 1px solid var(--app-beige-line);
@@ -98,7 +98,7 @@ const timeslotLabel = getTimeslotLabel(props.timeslot!);
       flex: 0 0 auto;
       margin: 2px 0;
       font-weight: bold;
-      font-size: 15px;
+      font-size: 14px;
       color:  var(--app-primary-dark);
     }
 
@@ -156,17 +156,17 @@ const timeslotLabel = getTimeslotLabel(props.timeslot!);
 
   .slotSection-content {
     flex: 1;
-    padding: 0 0 0 64px;
+    padding: 0 0 0 54px;
     border-bottom: 1px dashed var(--app-beige-line);
 
 
     ._missing-feedback {
       position: absolute;
-      left: 63px;
+      left: 52px;
       bottom: -4px;
       --background: var(--voxxrin-event-theme-colors-secondary-hex);
       --box-shadow: none;
-      --border-radius: 0 24px 0 0;
+      --border-radius: 0 16px 0 0;
       height: 38px;
       width: 38px;
       margin-right: 0;
