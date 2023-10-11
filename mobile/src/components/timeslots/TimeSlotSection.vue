@@ -1,5 +1,5 @@
 <template>
-  <!--TODO #44 Add class _past, _onGoing -->
+  <!--TODO #44 Add class _past _onGoing -->
   <div :class="{ 'slotSection': true,[`_timeslot-is-${timeslot.type}`]: true }">
     <div class="slotSection-timeline">
       <span class="slot-schedule-start">{{timeslotLabel.start}}</span>
@@ -9,6 +9,10 @@
     </div>
     <div class="slotSection-content">
       <slot name="section-content" :timeslot="timeslot" />
+      <!--TODO #44 Add btn feedback slot -->
+      <ion-button class="_missing-feedback" v-if="false">
+        <ion-icon src="/assets/icons/line/comment-line-add.svg"></ion-icon>
+      </ion-button>
     </div>
   </div>
 </template>
@@ -25,7 +29,8 @@ import {
 import {useInterval} from "@/views/vue-utils";
 import {useCurrentClock} from "@/state/useCurrentClock";
 import {
-    VoxxrinConferenceDescriptor
+  areFeedbacksEnabled,
+  VoxxrinConferenceDescriptor
 } from "@/models/VoxxrinConferenceDescriptor";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {
@@ -146,12 +151,34 @@ const timeslotLabel = getTimeslotLabel(props.timeslot!);
       transform: translate(0, -50%) rotate(-90deg);
       border: 2px solid var(--voxxrin-event-theme-colors-secondary-hex);
     }
+
   }
 
   .slotSection-content {
     flex: 1;
     padding: 0 0 0 64px;
     border-bottom: 1px dashed var(--app-beige-line);
+
+
+    ._missing-feedback {
+      position: absolute;
+      left: 63px;
+      bottom: -4px;
+      --background: var(--voxxrin-event-theme-colors-secondary-hex);
+      --box-shadow: none;
+      --border-radius: 0 24px 0 0;
+      height: 38px;
+      width: 38px;
+      margin-right: 0;
+      --padding-top: 4px;
+      --padding-start: 4px;
+      --padding-end: 8px;
+      font-size: 18px;
+
+      @media (prefers-color-scheme: dark) {
+        color: var(--app-white);
+      }
+    }
   }
 
   :deep(.listTalks) {
@@ -161,7 +188,6 @@ const timeslotLabel = getTimeslotLabel(props.timeslot!);
 
   /* Stats Sections */
   &._past {
-    opacity: 0.5;
 
     .slotSection-timeline {
       background-image: linear-gradient(45deg, #e6e6e6 25%, #dbdbdb 25%, #dbdbdb 50%, #e6e6e6 50%, #e6e6e6 75%, #dbdbdb 75%, #dbdbdb 100%);
@@ -176,10 +202,6 @@ const timeslotLabel = getTimeslotLabel(props.timeslot!);
 
     :deep(.listTalks) {background: none;}
 
-    .slotOverlap,
-    .slotSection-content {
-      filter: grayscale(1);
-    }
   }
 
   &._onGoing {
