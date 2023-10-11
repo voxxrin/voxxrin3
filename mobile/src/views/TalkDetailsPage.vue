@@ -80,19 +80,19 @@
                      :dismiss-on-select="false"
                      size="auto"
                      side="top" alignment="center">
-          <ion-content>
-            <ion-list>
-              <ion-item :button="true" :detail="false">18:00 - 19:00</ion-item>
-              <ion-item :button="true" :detail="false">17:00 - 18:00</ion-item>
-              <ion-item :button="true" :detail="false">16:00 - 17:00</ion-item>
-              <ion-item :button="true" :detail="false">15:00 - 16:00</ion-item>
-              <ion-item :button="true" :detail="false">14:00 - 15:00</ion-item>
-              <ion-item :button="true" :detail="false">12:30 - 14h:00</ion-item>
-              <ion-item :button="true" :detail="false" class="_isActive">
-                09:30 - 12:30
-              </ion-item>
-            </ion-list>
-          </ion-content>
+          <ion-list>
+            <ion-item :button="true" :detail="false">8:00 - 08:30</ion-item>
+            <ion-item :button="true" :detail="false">08:30 - 09:30</ion-item>
+            <ion-item :button="true" :detail="false" class="_isActive">
+              09:30 - 12:30<ion-icon :icon="checkmarkCircle" slot="end"></ion-icon>
+            </ion-item>
+            <ion-item :button="true" :detail="false">12:30 - 14h:00</ion-item>
+            <ion-item :button="true" :detail="false">14:00 - 15:00</ion-item>
+            <ion-item :button="true" :detail="false">15:00 - 16:00</ion-item>
+            <ion-item :button="true" :detail="false">16:00 - 17:00</ion-item>
+            <ion-item :button="true" :detail="false">17:00 - 18:00</ion-item>
+            <ion-item :button="true" :detail="false">18:00 - 19:00</ion-item>
+          </ion-list>
         </ion-popover>
 
         <div class="currentSlot">
@@ -441,6 +441,16 @@ const theme = computed(() => {
   }
 
   .slotSelectorDropdown {
+
+    .popover-viewport {
+      height: 124px;
+      overflow-y: hidden;
+    }
+
+    &::part(arrow) {
+      display: none;
+    }
+
     ion-item {
       --padding-start: 0;
       --inner-padding-start: 12px;
