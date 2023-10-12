@@ -1,6 +1,6 @@
 <template>
   <!--TODO #44 Add class _past _onGoing _future -->
-  <div :class="{ 'slotSection _onGoing': true,[`_timeslot-is-${timeslot.type}`]: true }">
+  <div :class="{ 'slotSection': true,[`_timeslot-is-${timeslot.type}`]: true }">
     <div class="slotSection-timeline">
       <span class="slot-schedule-start">{{timeslotLabel.start}}</span>
       <span class="slot-schedule-maillon">
@@ -86,7 +86,7 @@ const timeslotLabel = getTimeslotLabel(props.timeslot!);
     column-gap: 16px;
     height: 100%;
     width: 54px;
-    padding: 16px 0 8px 0;
+    padding: 6px 0 6px 0;
     border-bottom: 1px dashed var(--app-beige-dark);
     border-right: 1px solid var(--app-beige-line);
     background: var(--app-beige-medium);
