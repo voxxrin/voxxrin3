@@ -131,6 +131,10 @@
 </script>
 
 <style lang="scss" scoped>
+  :deep .infoMessage-iconIllu  {
+    height: 54px;
+  }
+
   .room {
     position: relative;
     top: -8px;

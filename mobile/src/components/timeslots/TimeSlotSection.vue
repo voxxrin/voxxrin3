@@ -1,9 +1,12 @@
 <template>
-  <!--TODO #44 Add class _past _onGoing -->
-  <div :class="{ 'slotSection': true,[`_timeslot-is-${timeslot.type}`]: true }">
+  <!--TODO #44 Add class _past _onGoing _future -->
+  <div :class="{ 'slotSection _onGoing': true,[`_timeslot-is-${timeslot.type}`]: true }">
     <div class="slotSection-timeline">
       <span class="slot-schedule-start">{{timeslotLabel.start}}</span>
-      <span class="slot-schedule-maillon"></span>
+      <span class="slot-schedule-maillon">
+          <!--TODO #44 Add condition for progress bar, and add dynamic height -->
+          <div class="_ongoing-progress-vertical"></div>
+      </span>
       <span class="slot-schedule-end">{{timeslotLabel.end}}</span>
       <slot-overlaps v-if="timeslot.type === 'talks'" :overlappingTimeslots="timeslot.overlappingTimeSlots"></slot-overlaps>
     </div>
@@ -37,6 +40,7 @@ import {
     useSharedConferenceDescriptor
 } from "@/state/useConferenceDescriptor";
 import SlotOverlaps from "@/components/schedule/SlotOverlaps.vue";
+import {IonProgressBar} from "@ionic/vue";
 
 const props = defineProps({
   timeslot: {
@@ -83,7 +87,7 @@ const timeslotLabel = getTimeslotLabel(props.timeslot!);
     height: 100%;
     width: 54px;
     padding: 16px 0 8px 0;
-    border-bottom: 1px dashed var(--app-beige-line);
+    border-bottom: 1px dashed var(--app-beige-dark);
     border-right: 1px solid var(--app-beige-line);
     background: var(--app-beige-medium);
     z-index: 2;
@@ -108,7 +112,7 @@ const timeslotLabel = getTimeslotLabel(props.timeslot!);
       margin: 0 auto;
       width: 1px;
       height: 100%;
-      border-left: 2px solid var(--voxxrin-event-theme-colors-secondary-hex);
+      border-left: 2px solid var(--voxxrin-event-theme-colors-primary-hex);
 
       &:after {
         position: absolute;
@@ -118,7 +122,7 @@ const timeslotLabel = getTimeslotLabel(props.timeslot!);
         height: 10px;
         border-radius: 18px;
         border: 4px solid var(--app-beige-medium);
-        background: var(--voxxrin-event-theme-colors-secondary-hex);
+        background: var(--voxxrin-event-theme-colors-primary-hex);
         content: '';
 
         @media (prefers-color-scheme: dark) {
@@ -134,7 +138,7 @@ const timeslotLabel = getTimeslotLabel(props.timeslot!);
         height: 10px;
         border-radius: 18px;
         border: 4px solid var(--app-beige-medium);
-        background: var(--voxxrin-event-theme-colors-secondary-hex);
+        background: var(--voxxrin-event-theme-colors-primary-hex);
         content: '';
 
         @media (prefers-color-scheme: dark) {
@@ -146,19 +150,17 @@ const timeslotLabel = getTimeslotLabel(props.timeslot!);
     .slotOverlap {
       position: absolute;
       top: 50%;
-      left: -4px;
+      left: -10px;
       white-space: nowrap;
       transform: translate(0, -50%) rotate(-90deg);
-      border: 2px solid var(--voxxrin-event-theme-colors-secondary-hex);
+      border: 2px solid var(--voxxrin-event-theme-colors-primary-hex);
     }
-
   }
 
   .slotSection-content {
     flex: 1;
     padding: 0 0 0 54px;
     border-bottom: 1px dashed var(--app-beige-line);
-
 
     ._missing-feedback {
       position: absolute;
@@ -188,45 +190,46 @@ const timeslotLabel = getTimeslotLabel(props.timeslot!);
 
   /* Stats Sections */
   &._past {
-
     .slotSection-timeline {
-      background-image: linear-gradient(45deg, #e6e6e6 25%, #dbdbdb 25%, #dbdbdb 50%, #e6e6e6 50%, #e6e6e6 75%, #dbdbdb 75%, #dbdbdb 100%);
-      background-size: 11.31px 11.31px;
+      background-color: var(--app-beige-line);
       color: var(--app-grey-dark);
 
       .slot-schedule-maillon {
-        filter: grayscale(1);
-        border-left: 2px dashed var(--voxxrin-event-theme-colors-secondary-hex);
+        border-left: 2px dashed var(--app-grey-dark);
+
+        &:after, &:before {
+          border: 4px solid var(--app-beige-line);
+          background-color: var(--app-beige-dark);
+        }
       }
     }
 
     :deep(.listTalks) {background: none;}
-
   }
 
   &._onGoing {
     .slotSection-timeline {
-      background-color: var(--voxxrin-event-theme-colors-secondary-hex);
+      background-color: var(--voxxrin-event-theme-colors-primary-hex);
       color: var(--app-white);
       overflow: hidden;
 
-      &:after {
+      ._ongoing-progress-vertical {
         position: absolute;
-        left: -16px;
-        height: 84px;
-        width: 200%;
-        background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 50%, rgba(255,255,255,0) 100%);
-        transform: rotate(-20deg);
-        content: '';
-        opacity: 0.2;
-        animation: reflect 1s ease infinite;
+        left: -15px;
+        top: 0;
+        height: 100%;
+        border-radius: 24px;
+        width: 28px;
+        z-index: -1;
+        opacity: 0.3;
+        background-color: var(--app-white);
       }
 
       .slot-schedule-maillon {
         border-left: 2px solid var(--app-white);
 
         &:after, &:before {
-          border: 4px solid var(--voxxrin-event-theme-colors-secondary-hex);
+          border: 4px solid var(--voxxrin-event-theme-colors-primary-hex);
           background-color: var(--app-white);
         }
       }
@@ -235,12 +238,20 @@ const timeslotLabel = getTimeslotLabel(props.timeslot!);
     :deep(.listTalks) {background: none;}
   }
 
-  @keyframes reflect {
-    0% {
-     transform: translateY(-100%);
-    }
-    100% {
-      transform: translateY(200%);
+  &._future {
+    .slotSection-timeline {
+      background-color: var(--app-primary-shade);
+      color: var(--app-white);
+      overflow: hidden;
+
+      .slot-schedule-maillon {
+        border-left: 2px solid var(--app-white);
+
+        &:after, &:before {
+          border: 4px solid var(--app-primary-shade);
+          background-color: var(--app-white);
+        }
+      }
     }
   }
 }
