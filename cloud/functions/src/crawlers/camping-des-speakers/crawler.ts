@@ -54,7 +54,6 @@ function extractRawTimeCoordinatesFrom(rawTimeCoords: string, confDescriptor: z.
 }
 
 export const CAMPING_DES_SPEAKERS_CRAWLER: CrawlerKind<typeof CAMPING_DES_SPEAKERS_PARSER> = {
-    kind: 'camping-des-speakers',
     descriptorParser: CAMPING_DES_SPEAKERS_PARSER,
     crawlerImpl: async (eventId: string, descriptor: z.infer<typeof CAMPING_DES_SPEAKERS_PARSER>, criteria: { dayIds?: string[]|undefined }): Promise<FullEvent> => {
         const $schedulePage = cheerio.load((await axios.get(`https://camping-speakers.fr/sessions/`, {responseType: 'text'})).data);
@@ -271,3 +270,5 @@ export const CAMPING_DES_SPEAKERS_CRAWLER: CrawlerKind<typeof CAMPING_DES_SPEAKE
         return fullEvent;
     }
 } as const;
+
+export default CAMPING_DES_SPEAKERS_CRAWLER;

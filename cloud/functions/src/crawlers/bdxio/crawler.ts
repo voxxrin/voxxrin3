@@ -60,7 +60,6 @@ function extractRangeFromTimeslot(rawTimeslot: string, day: Day, timezone: strin
 }
 
 export const BDXIO_CRAWLER: CrawlerKind<typeof BDXIO_PARSER> = {
-    kind: 'bdxio',
     descriptorParser: BDXIO_PARSER,
     crawlerImpl: async (eventId: string, descriptor: z.infer<typeof BDXIO_PARSER>, criteria: { dayIds?: string[]|undefined }): Promise<FullEvent> => {
         let baseUrl = `https://bdxio.fr`;
@@ -321,3 +320,5 @@ export const BDXIO_CRAWLER: CrawlerKind<typeof BDXIO_PARSER> = {
         return fullEvent;
     }
 } as const;
+
+export default BDXIO_CRAWLER;

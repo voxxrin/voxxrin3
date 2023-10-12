@@ -1,37 +1,37 @@
 import {db, info, error} from "../firebase"
-import {DEVOXX_CRAWLER} from "./devoxx/crawler"
 import { FullEvent } from "../models/Event";
 import {z} from "zod";
-import {LA_PRODUCT_CONF_CRAWLER} from "./la-product-conf/crawler";
 import {FIREBASE_CRAWLER_DESCRIPTOR_PARSER} from "./crawler-parsers";
 import {HexColor} from "../../../../shared/type-utils";
-import {WEB2DAY_CRAWLER} from "./web2day/crawler";
 import {Temporal} from "@js-temporal/polyfill";
-import {CAMPING_DES_SPEAKERS_CRAWLER} from "./camping-des-speakers/crawler";
-import {DEVOXX_SCALA_CRAWLER} from "./devoxx-scala/crawler";
 import {match} from "ts-pattern";
 import {v4 as uuidv4} from "uuid"
 import {ConferenceOrganizerSpace} from "../../../../shared/conference-organizer-space.firestore";
-import {JUG_SUMMERCAMP_CRAWLER} from "./jugsummercamp/crawler";
 import {eventLastUpdateRefreshed} from "../functions/firestore/firestore-utils";
-import {BDXIO_CRAWLER} from "./bdxio/crawler";
 const axios = require('axios');
 
 export type CrawlerKind<ZOD_TYPE extends z.ZodType> = {
-    kind: string,
     crawlerImpl: (eventId: string, crawlerDescriptor: z.infer<ZOD_TYPE>, criteria: { dayIds?: string[]|undefined }) => Promise<FullEvent>,
     descriptorParser: ZOD_TYPE
 }
 
-const CRAWLERS: CrawlerKind<any>[] = [
-    DEVOXX_CRAWLER,
-    DEVOXX_SCALA_CRAWLER,
-    LA_PRODUCT_CONF_CRAWLER,
-    WEB2DAY_CRAWLER,
-    CAMPING_DES_SPEAKERS_CRAWLER,
-    JUG_SUMMERCAMP_CRAWLER,
-    BDXIO_CRAWLER
-]
+async function resolveCrawler(kind: string): Promise<CrawlerKind<any>|undefined> {
+    const crawler = await match(kind)
+        .with("devoxx", async () => import("./devoxx/crawler"))
+        .with("devoxx-scala", async () => import("./devoxx-scala/crawler"))
+        .with("la-product-conf", async () => import("./la-product-conf/crawler"))
+        .with("web2day", async () => import("./web2day/crawler"))
+        .with("camping-des-speakers", async () => import("./camping-des-speakers/crawler"))
+        .with("jugsummercamp", async () => import("./jugsummercamp/crawler"))
+        .with("bdxio", async () => import("./bdxio/crawler"))
+        .run()
+
+    if(!crawler) {
+        return undefined;
+    }
+
+    return crawler.default;
+}
 
 export const TALK_FORMAT_FALLBACK_COLORS: HexColor[] = [
     "#165CE3", "#EA7872", "#935A59", "#3EDDEF",
@@ -92,7 +92,7 @@ const crawlAll = async function(criteria: CrawlCriteria) {
         try {
             const start = Temporal.Now.instant()
 
-            const crawler = CRAWLERS.find(c => c.kind === crawlerDescriptor.kind);
+            const crawler = await resolveCrawler(crawlerDescriptor.kind);
             if(!crawler) {
                 throw new Error(`Error: no crawler found for kind: ${crawlerDescriptor.kind} (with id=${crawlerDescriptor.id})`)
                 return;
