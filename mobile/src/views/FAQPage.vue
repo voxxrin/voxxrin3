@@ -131,11 +131,18 @@ const { LL } = typesafeI18n()
         margin: 0 0 34px 0;
       }
 
+      .title {
+        color: var(--app-voxxrin);
+      }
+
       &::part(content) {
         background: var(--app-background);
         color: var(--app-primary);
-      }
 
+        @media (prefers-color-scheme: dark) {
+          color: var(--app-white) !important;
+        }
+      }
     }
     ion-item {
       --background: var(--app-background);
