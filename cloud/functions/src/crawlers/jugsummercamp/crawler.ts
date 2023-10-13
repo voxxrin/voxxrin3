@@ -35,7 +35,6 @@ function extractIdFromUrl(url: string) {
 }
 
 export const JUG_SUMMERCAMP_CRAWLER: CrawlerKind<typeof JUG_SUMMERCAMP_PARSER> = {
-    kind: 'jugsummercamp',
     descriptorParser: JUG_SUMMERCAMP_PARSER,
     crawlerImpl: async (eventId: string, descriptor: z.infer<typeof JUG_SUMMERCAMP_PARSER>, criteria: { dayIds?: string[]|undefined }): Promise<FullEvent> => {
         const $schedulePage = cheerio.load((await axios.get(descriptor.startUrl, {responseType: 'text'})).data);
@@ -261,3 +260,5 @@ export const JUG_SUMMERCAMP_CRAWLER: CrawlerKind<typeof JUG_SUMMERCAMP_PARSER> =
         return fullEvent;
     }
 } as const;
+
+export default JUG_SUMMERCAMP_CRAWLER

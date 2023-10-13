@@ -17,13 +17,14 @@ export type TalkFormat = {
     title: string
 }
 export type ThemedTalkFormat = TalkFormat & { themeColor: HexColor }
+export type SocialLink = {type: "twitter"|"linkedin"|"mastodon"|"instagram"|"youtube"|"twitch"|"github", url: string}
 export type Speaker = {
     photoUrl?: string|null,
     companyName?: string|null,
     fullName: string,
     id: string,
     bio?: string|null,
-    social: Array<{type: "twitter"|"linkedin"|"mastodon"|"instagram"|"youtube"|"twitch"|"github", url: string}>
+    social: SocialLink[]
 }
 export type Talk = {
     speakers: Speaker[],

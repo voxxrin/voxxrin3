@@ -1,12 +1,15 @@
 import {z, ZodLiteral} from "zod";
 import {ISODatetime, ISOLocalDate} from "../../../../shared/type-utils";
 import {ConferenceDescriptor} from "../../../../shared/conference-descriptor.firestore";
+import {ScheduleTimeSlot} from "../../../../shared/daily-schedule.firestore";
 
 
 export const HEX_COLOR_PARSER = z.string().regex(/#[0-9a-fA-F]{6}/gi) as unknown as ZodLiteral<`#${string}`>
 export const DURATION_PARSER = z.string().regex(/PT\d+m/gi) as unknown as ZodLiteral<`PT${number}m`>
 export const ISO_LOCAL_DATE_PARSER = z.string().regex(/\d{4}-\d{2}-\d{2}/gi) as unknown as ZodLiteral<ISOLocalDate>
 export const ISO_DATETIME_PARSER = z.string().regex(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?(?:Z|(?:[+-]\d{2}:\d{2}))/gi) as unknown as ZodLiteral<ISODatetime>
+export const TIMESLOT_ID_PARSER = z.string()
+    .regex(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?(?:Z|(?:[+-]\d{2}:\d{2}))--\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?(?:Z|(?:[+-]\d{2}:\d{2}))/gi) as unknown as ZodLiteral<ScheduleTimeSlot['id']>
 
 export const DAY_PARSER = z.object({
     id: z.string(),
@@ -149,6 +152,7 @@ export const SPEAKER_PARSER = z.object({
             z.literal('instagram'),
             z.literal('youtube'),
             z.literal('twitch'),
+            z.literal('github'),
         ]),
         url: z.string()
     }))
@@ -175,7 +179,7 @@ export const DETAILED_TALK_PARSER =  TALK_PARSER.extend({
 export const TIME_SLOT_BASE_PARSER = z.object({
     start: ISO_DATETIME_PARSER,
     end: ISO_DATETIME_PARSER,
-    id: z.string()
+    id: TIMESLOT_ID_PARSER
 })
 
 export const BREAK_PARSER = z.object({
