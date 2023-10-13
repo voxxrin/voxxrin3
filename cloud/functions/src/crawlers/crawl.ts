@@ -124,6 +124,11 @@ const saveEvent = async function(event: FullEvent) {
 
     await db.collection("events").doc(event.id).set(event.info)
 
+    const talksStatsAllInOneDoc = await db.doc(`events/${event.id}/talksStats-allInOne/self`).get()
+    if(!talksStatsAllInOneDoc.exists) {
+        await db.doc(`events/${event.id}/talksStats-allInOne/self`).set({})
+    }
+
     const firestoreEvent = db.collection("events").doc(event.id);
     const organizerSpaceEntries = await firestoreEvent
         .collection('organizer-space')
