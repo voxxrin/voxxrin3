@@ -85,10 +85,18 @@ export const LISTABLE_EVENT_PARSER = z.object({
 })
 
 export const INFOS_PARSER = z.object({
-    venuePicture: z.string(),
-    eventDescription: z.string(),
-    plans: z.array(z.object({
-        title: z.string(), pictureUrl: z.string()
+    floorPlans: z.array(z.object({
+        label: z.string(), pictureUrl: z.string()
+    })).optional(),
+    socialMedias: z.array(z.object({
+        type: SOCIAL_MEDIA_TYPE,
+        href: z.string()
+    })).optional(),
+    sponsors: z.array(z.object({
+        type: z.string(), typeColor: z.string(), typeFontColor: z.string().optional(),
+        sponsorships: z.array(z.object({
+            name: z.string(), logoUrl: z.string(), href: z.string()
+        }))
     })).optional()
 });
 
@@ -144,13 +152,6 @@ export const EVENT_DESCRIPTOR_PARSER = LISTABLE_EVENT_PARSER.extend({
     supportedTalkLanguages: z.array(THEMABLE_LANGUAGE_PARSER),
     rooms: z.array(ROOM_PARSER),
     infos: INFOS_PARSER,
-    socialMedias: z.array(z.object({
-        type: SOCIAL_MEDIA_TYPE,
-        href: z.string()
-    })).optional(),
-    sponsors: z.array(z.object({
-        name: z.string(), type: z.string(), typeColor: z.string(), typeFontColor: z.string().optional(), logoUrl: z.string(), href: z.string(),
-    })).optional()
 })
 
 export const DAILY_TALKS_STATS_PARSER = z.object({

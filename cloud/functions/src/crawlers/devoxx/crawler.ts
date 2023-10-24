@@ -40,7 +40,7 @@ export const DEVOXX_DESCRIPTOR_PARSER = EVENT_DESCRIPTOR_PARSER.omit({
     eventFamily: z.string(),
     infos: INFOS_PARSER.extend({
         address: z.string().nullish(),
-    }).omit({ plans: true })
+    }).omit({ floorPlans: true })
 })
 
 type DevoxxFloorPlan = {
@@ -134,15 +134,13 @@ export const DEVOXX_CRAWLER: CrawlerKind<typeof DEVOXX_DESCRIPTOR_PARSER> = {
             supportedTalkLanguages: descriptor.supportedTalkLanguages,
             rooms: eventRooms,
             infos: {
-                eventDescription: descriptor.infos.eventDescription,
-                venuePicture: descriptor.infos.venuePicture,
-                plans: (cfpFloorPlans || []).map(cfpFloorPlan => ({
-                    title: cfpFloorPlan.name,
+                floorPlans: (cfpFloorPlans || []).map(cfpFloorPlan => ({
+                    label: cfpFloorPlan.name,
                     pictureUrl: cfpFloorPlan.imageURL
-                }))
+                })),
+                socialMedias: descriptor.infos.socialMedias || [],
+                sponsors: descriptor.infos.sponsors || []
             },
-            ...(descriptor.socialMedias ? {socialMedias: descriptor.socialMedias} : {}),
-            ...(descriptor.sponsors ? {sponsors: descriptor.sponsors} : {}),
         }
 
         const event: FullEvent = {

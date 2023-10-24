@@ -53,13 +53,13 @@
           </ion-text>
         </div>
 
-        <div class="sponsorsInfoConf" v-if="confDescriptorRef.sponsors?.length > 0">
+        <div class="sponsorsInfoConf" v-if="confDescriptorRef.infos.sponsors?.length > 0">
           <vox-divider>{{ LL.Sponsors() }}</vox-divider>
-          <ul class="sponsorsInfoConf-list" v-for="(groupedSponsor) in groupedSponsors" :key="groupedSponsor.type">
-            <li v-for="(sponsor) in groupedSponsor.sponsors" :key="sponsor.name">
+          <ul class="sponsorsInfoConf-list" v-for="(groupedSponsor) in confDescriptorRef.infos.sponsors" :key="groupedSponsor.type">
+            <li v-for="(sponsor) in groupedSponsor.sponsorships" :key="sponsor.name">
               <a class="sponsorItem" :href="sponsor.href" target="_blank">
                 <ion-img :src="sponsor.logoUrl" :alt="sponsor.name"></ion-img>
-                <span class="sponsorItem-type" :style="{'background-color': sponsor.typeColor, 'color': sponsor.typeFontColor || 'white'}">{{ sponsor.type }}</span>
+                <span class="sponsorItem-type" :style="{'background-color': groupedSponsor.typeColor, 'color': groupedSponsor.typeFontColor || 'white'}">{{ groupedSponsor.type }}</span>
               </a>
             </li>
           </ul>
@@ -113,38 +113,18 @@
 
   const socialMedias: Ref<Array<{type: SocialMediaType, href: string, icon: string, label: string}>> = computed(() => {
     const confDescriptor = toValue(confDescriptorRef)
-    if(!confDescriptor || !confDescriptor.socialMedias) {
+    if(!confDescriptor || !confDescriptor.infos || !confDescriptor.infos.socialMedias) {
       return [];
     }
 
     return (Object.keys(SUPPORTED_SOCIAL_MEDIAS) as Array<keyof typeof SUPPORTED_SOCIAL_MEDIAS>)
       .map((socialMediaType) => {
-        const confSocialMedia = confDescriptor.socialMedias?.find(sm => sm.type === socialMediaType)
+        const confSocialMedia = confDescriptor.infos.socialMedias.find(sm => sm.type === socialMediaType)
         const maybeSocialMediaWithLink = confSocialMedia ? {...SUPPORTED_SOCIAL_MEDIAS[socialMediaType], ...confSocialMedia} : undefined;
         return maybeSocialMediaWithLink
       }).filter(v => !!v).map(v => v!);
   })
 
-  const groupedSponsors = computed(() => {
-      const confDescriptor = toValue(confDescriptorRef)
-      if(!confDescriptor || !confDescriptor.sponsors) {
-          return [];
-      }
-
-      return confDescriptor.sponsors.reduce((groupedSponsors, sponsor) => {
-          const group = match([ groupedSponsors.find(group => group.type === sponsor.type) ])
-              .with([ P.not(P.nullish) ], ([group]) => group)
-              .otherwise(() => {
-                  const newGroup = {type: sponsor.type, sponsors: []};
-                  groupedSponsors.push(newGroup);
-                  return newGroup;
-              });
-
-          group.sponsors.push(sponsor);
-
-          return groupedSponsors;
-      }, [] as Array<{type: string, sponsors: VoxxrinConferenceDescriptor['sponsors']}>)
-  })
 </script>
 
 <style lang="scss" scoped>

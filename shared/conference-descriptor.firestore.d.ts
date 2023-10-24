@@ -52,13 +52,17 @@ export type ConferenceDescriptor = ListableEvent & {
     supportedTalkLanguages: Array<{ id: string, label: string, themeColor: HexColor }>,
     rooms: Array<{ id: string, title: string }>,
     infos: {
-        venuePicture: string,
-        eventDescription: string,
+        floorPlans?: Array<{
+            label: string, pictureUrl: string
+        }>|undefined,
+        socialMedias?: Array<{
+            type: SocialMediaType, href: string
+        }>|undefined,
+        sponsors?: Array<{
+            type: string, typeColor: string, typeFontColor?: string,
+            sponsorships: Array<{
+                name: string, logoUrl: string, href: string
+            }>
+        }>|undefined,
     },
-    socialMedias?: Array<{
-      type: SocialMediaType, href: string
-    }>|undefined,
-    sponsors?: Array<{
-      name: string, type: string, typeColor: string, typeFontColor?: string, logoUrl: string, href: string
-    }>|undefined,
 }
