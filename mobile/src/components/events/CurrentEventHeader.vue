@@ -71,7 +71,9 @@ function backButtonClicked() {
       }
     }
   }
+
   ion-toolbar {
+    padding-top: 0 !important;
     position: relative;
     --background: linear-gradient(0deg, rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.4802) 0%, rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.98) 52.84%);
     z-index: 1;
