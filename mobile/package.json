@@ -39,6 +39,7 @@
     "@vueuse/core": "^10.1.2",
     "firebase": "9.23.0",
     "ionicons": "7.0.0",
+    "swiper": "11.0.2",
     "temporal-polyfill": "0.1.1",
     "ts-pattern": "4.2.2",
     "typesafe-i18n": "5.24.3",

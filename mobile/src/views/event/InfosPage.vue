@@ -34,6 +34,7 @@
           </div>
         </div>
 
+        <carousel-swiper v-if="confDescriptorRef.infos.floorPlans?.length" :items="confDescriptorRef.infos.floorPlans || []"></carousel-swiper>
 
         <div class="linksInfoConf" v-if="socialMedias.length">
           <vox-divider>{{ LL.Social_media() }}</vox-divider>
@@ -89,8 +90,7 @@
   import MonthDayDateRange from "@/components/MonthDayDateRange.vue";
   import {computed, Ref, toValue} from "vue";
   import {SocialMediaType} from "../../../../shared/type-utils";
-  import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
-  import {match, P} from "ts-pattern";
+  import CarouselSwiper from "@/components/ui/CarouselSwiper.vue";
 
   const { LL } = typesafeI18n()
 
