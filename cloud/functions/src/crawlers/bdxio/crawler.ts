@@ -2,7 +2,7 @@ import {z} from "zod";
 import {FullEvent} from "../../models/Event";
 import {
     BreakTimeSlot,
-    DailySchedule, DetailedTalk, ScheduleTimeSlot,
+    DailySchedule, DetailedTalk, Room, ScheduleTimeSlot,
     Speaker, Talk, TalksTimeSlot,
 } from "../../../../../shared/daily-schedule.firestore";
 import * as cheerio from 'cheerio';
@@ -60,7 +60,6 @@ function extractRangeFromTimeslot(rawTimeslot: string, day: Day, timezone: strin
 }
 
 export const BDXIO_CRAWLER: CrawlerKind<typeof BDXIO_PARSER> = {
-    kind: 'bdxio',
     descriptorParser: BDXIO_PARSER,
     crawlerImpl: async (eventId: string, descriptor: z.infer<typeof BDXIO_PARSER>, criteria: { dayIds?: string[]|undefined }): Promise<FullEvent> => {
         let baseUrl = `https://bdxio.fr`;
@@ -68,6 +67,11 @@ export const BDXIO_CRAWLER: CrawlerKind<typeof BDXIO_PARSER> = {
 
         const days = descriptor.days;
         const day = days[0];
+
+        const UNALLOCATED_ROOM: Room = {
+            id: "Unallocated room",
+            title: "Unallocated room"
+        }
 
         const detailedTalks = (await Promise.all($schedulePage(".schedule > ul > li").map(async(_, slotLi) => {
             const rawStart = $schedulePage(".slots__slot__hour", slotLi).text().trim();
@@ -81,9 +85,9 @@ export const BDXIO_CRAWLER: CrawlerKind<typeof BDXIO_PARSER> = {
                 const talkId = extractIdFromUrl(talkUrl);
 
                 const roomId = $schedulePage(".room", talkLi).text();
-                const room = descriptor.rooms.find(r => r.id === roomId)!;
+                const room = roomId===''?UNALLOCATED_ROOM:descriptor.rooms.find(r => r.id === roomId)!;
                 if(!room) {
-                    throw new Error(`No room found matching ${roomId} in descriptor.rooms (${descriptor.talkTracks.map(r => r.id).join(", ")})`)
+                    throw new Error(`No room found matching [${roomId}] in descriptor.rooms (${descriptor.rooms.map(r => r.id).join(", ")}) for talk id ${talkId}`)
                 }
 
                 const trackId = $talkPage("main section").first().text()
@@ -107,7 +111,7 @@ export const BDXIO_CRAWLER: CrawlerKind<typeof BDXIO_PARSER> = {
                 const langLabel = $tagsDiv.find("span").eq(2).text().trim()
                 const lang = descriptor.supportedTalkLanguages.find(tl => tl.id === langLabel)!
                 if(!lang) {
-                    throw new Error(`No lang found matching [${langLabel}] in descriptor.supportedTalkLanguages (${descriptor.supportedTalkLanguages.map(tl => tl.id).join(", ")})`)
+                    throw new Error(`No lang found matching [${langLabel}] in descriptor.supportedTalkLanguages (${descriptor.supportedTalkLanguages.map(tl => tl.id).join(", ")}) for talkId=${talkId}`)
                 }
 
                 const $summaryDiv = $talkPage("section").eq(1).find("div").eq(1)
@@ -235,7 +239,7 @@ export const BDXIO_CRAWLER: CrawlerKind<typeof BDXIO_PARSER> = {
             peopleDescription: descriptor.peopleDescription || "",
             backgroundUrl: descriptor.backgroundUrl,
             theming: descriptor.theming as ConferenceDescriptor['theming'],
-            rooms: descriptor.rooms,
+            rooms: descriptor.rooms.concat(UNALLOCATED_ROOM),
             talkTracks: descriptor.talkTracks,
             talkFormats: descriptor.talkFormats as ConferenceDescriptor['talkFormats'],
             infos: descriptor.infos,
@@ -321,3 +325,5 @@ export const BDXIO_CRAWLER: CrawlerKind<typeof BDXIO_PARSER> = {
         return fullEvent;
     }
 } as const;
+
+export default BDXIO_CRAWLER;

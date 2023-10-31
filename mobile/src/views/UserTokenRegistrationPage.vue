@@ -23,38 +23,38 @@ onMounted(async () => {
     if(!tokenType) { alert("Missing token type !"); return; }
     if(!secretToken) { alert("Missing secret token !"); return; }
 
-    const success = await match(tokenType)
+    const { success, redirectTo } = await match(tokenType)
         .with('EventOrganizer', async () => {
             const eventId = route.query['eventId'] as string;
 
-            if(!eventId) { alert("Missing event id !"); return false; }
+            if(!eventId) { alert("Missing event id !"); return { success: false, redirectTo: undefined }; }
 
             await registerEventOrganizerSecretToken({
                 secretToken, eventId
             })
 
-            return true;
+            return { success: true, redirectTo: `/events/${eventId}/asOrganizer/${secretToken}` };
         }).with('TalkFeedbacksViewer', async () => {
             const eventId = route.query['eventId'] as string;
             const talkId = route.query['talkId'] as string;
 
-            if(!eventId) { alert("Missing event id !"); return false; }
-            if(!talkId) { alert("Missing talk id !"); return false; }
+            if(!eventId) { alert("Missing event id !"); return { success: false, redirectTo: undefined }; }
+            if(!talkId) { alert("Missing talk id !"); return { success: false, redirectTo: undefined }; }
 
             await registerTalkFeedbacksViewerSecretToken({
                 secretToken, eventId, talkId
             })
 
-            return true;
+            return { success: true, redirectTo: `/user/talks` };
         }).otherwise(() => {
             alert(`Unsupported type: ${tokenType}`)
 
-            return false;
+            return { success: false, redirectTo: undefined };
         })
 
     if(success){
         LOGGER.info(() => `Successfully registered ${tokenType} token !`)
-        ionRouter.replace('/event-selector')
+        ionRouter.replace(redirectTo)
     } else {
         LOGGER.error(() => `Error while registering token of type ${tokenType}`)
     }

@@ -50,7 +50,6 @@ type DevoxxFloorPlan = {
 }
 
 export const DEVOXX_CRAWLER: CrawlerKind<typeof DEVOXX_DESCRIPTOR_PARSER> = {
-    kind: 'devoxx',
     descriptorParser: DEVOXX_DESCRIPTOR_PARSER,
     crawlerImpl: async (eventId: string, descriptor: z.infer<typeof DEVOXX_DESCRIPTOR_PARSER>, criteria: { dayIds?: string[]|undefined }) => {
         const rawCfpBaseUrl = descriptor.cfpBaseUrl || `https://${descriptor.cfpId}.cfp.dev`;
@@ -289,3 +288,5 @@ const crawlDevoxxDay = async (cfpBaseUrl: string, day: string) => {
     info("devoxx day crawling done for " + day)
     return {daySchedule, talkStats, talks: detailedTalks, rooms, talkFormats }
 }
+
+export default DEVOXX_CRAWLER;

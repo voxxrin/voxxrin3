@@ -22,11 +22,12 @@
           <timeslots-iterator :conf-descriptor="confDescriptor" :day-id="selectedDayId"
                               :daily-schedule="currentSchedule"
                               @timeslots-list-updated="timeslots => expandedTimeslotIds = timeslots.map(t => t.id.value)">
-            <template #iterator="{ timeslot }">
+            <template #iterator="{ timeslot, progress }">
               <time-slot-accordion v-if="timeslot.type==='talks' && timeslot.feedback.status !== 'provided-on-overlapping-timeslot'"
                                    :conf-descriptor="confDescriptor"
                                    :timeslot-feedback="timeslot.feedback"
                                    :timeslot="timeslot" :event="confDescriptor"
+                                   :progress="progress"
                                    @add-timeslot-feedback-clicked="(ts) => navigateToTimeslotFeedbackCreation(ts)"
                                    @click="() => toggleExpandedTimeslot(timeslot)">
                 <template #accordion-content="{ timeslot, feedback, progressStatus }">

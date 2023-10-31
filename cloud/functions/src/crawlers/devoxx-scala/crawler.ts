@@ -68,7 +68,6 @@ async function loadResource<T>(
 }
 
 export const DEVOXX_SCALA_CRAWLER: CrawlerKind<typeof DEVOXX_SCALA_DESCRIPTOR_PARSER> = {
-    kind: 'devoxx-scala',
     descriptorParser: DEVOXX_SCALA_DESCRIPTOR_PARSER,
     crawlerImpl: async (eventId: string, descriptor: z.infer<typeof DEVOXX_SCALA_DESCRIPTOR_PARSER>, criteria: { dayIds?: string[]|undefined }) => {
         const conferences: DevoxxScalaConferences = (await axios.get(`https://${descriptor.cfpHostname}/api/conferences`)).data
@@ -303,3 +302,5 @@ export const DEVOXX_SCALA_CRAWLER: CrawlerKind<typeof DEVOXX_SCALA_DESCRIPTOR_PA
         return event
     }
 };
+
+export default DEVOXX_SCALA_CRAWLER;

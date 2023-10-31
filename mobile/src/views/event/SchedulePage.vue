@@ -38,11 +38,12 @@
                             :daily-schedule="currentSchedule" :search-terms="searchTermsRef"
                             @timeslots-list-updated="(displayedTimeslots) => displayedTimeslotsRef = displayedTimeslots"
                             @missing-feedback-past-timeslots-updated="updatedMissingTimeslots => missingFeedbacksPastTimeslots = updatedMissingTimeslots">
-          <template #iterator="{ timeslot, index: timeslotIndex }">
+          <template #iterator="{ timeslot, index: timeslotIndex, progress }">
             <time-slot-accordion
                 :animation-delay="timeslotIndex*TimeslotAnimations.ANIMATION_BASE_DELAY.total('milliseconds')"
                 :timeslot-feedback="timeslot.feedback" :timeslot="timeslot" :conf-descriptor="confDescriptor"
                 :elements-shown="['add-feedback-btn']"
+                :progress="progress"
                 @add-timeslot-feedback-clicked="(ts) => navigateToTimeslotFeedbackCreation(ts)"
                 @click="() => toggleExpandedTimeslot(timeslot)">
               <template #accordion-content="{ timeslot, progressStatus, feedback }">

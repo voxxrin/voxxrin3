@@ -40,7 +40,7 @@ watch([needRefresh], async ([_needRefresh]) => {
             position: 'top',
             buttons: [{
                 text: LL.value.Reload(),
-                side: 'bottom',
+                side: 'end',
                 role: 'reload',
                 handler: () => updateServiceWorker(true),
             }],

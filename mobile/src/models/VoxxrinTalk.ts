@@ -69,7 +69,7 @@ export function createVoxxrinDetailedTalkFromFirestore(event: VoxxrinConferenceD
 
 
 export function sortThenGroupByFormat(talks: VoxxrinTalk[], confDescriptor: VoxxrinConferenceDescriptor) {
-    return sortBy(talks, t => findTalkFormatIndex(confDescriptor, t.format.id))
+    const talksPerFormat = sortBy(talks, t => findTalkFormatIndex(confDescriptor, t.format.id))
         .reduce((talksGroupedByFormat, talk) => {
             const talks = match(talksGroupedByFormat.findIndex(formatGroup => formatGroup.format.id.isSameThan(talk.format.id)))
                 .with(-1, () => {
@@ -82,6 +82,14 @@ export function sortThenGroupByFormat(talks: VoxxrinTalk[], confDescriptor: Voxx
 
             return talksGroupedByFormat;
         }, [] as Array<{format: VoxxrinTalkFormat, talks: VoxxrinTalk[]}>)
+
+    talksPerFormat.forEach(format => {
+        // Ensuring all talks for a given format are always sorted by rooms declaration order
+        // in conf descriptor
+        format.talks = sortBy(format.talks, talk => confDescriptor.rooms.findIndex(room => room.id.isSameThan(talk.room.id)))
+    })
+
+    return talksPerFormat
 }
 
 export function filterTalksMatching(talks: VoxxrinTalk[], searchTerms: string|undefined) {

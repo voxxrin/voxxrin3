@@ -17,7 +17,7 @@
           <ion-spinner v-if="today.localeCompare(day.localDate) === 0"
                        class="todayIndicator"
                        name="lines-sharp"
-                      duration="2500">
+                       :duration="2500">
           </ion-spinner>
           <div class="dayList-button-content">
             <strong class="day">{{day.formatted.day}}</strong>
@@ -61,7 +61,7 @@ import {useCurrentUserLocale} from "@/state/useCurrentUser";
 import {useInterval} from "@/views/vue-utils";
 import {ISOLocalDate} from "../../../../shared/type-utils";
 import {useCurrentClock} from "@/state/useCurrentClock";
-import {IonGrid} from "@ionic/vue";
+import {IonGrid, IonSpinner} from "@ionic/vue";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {useSharedEventSelectedDay} from "@/state/useEventSelectedDay";

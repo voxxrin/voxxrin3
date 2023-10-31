@@ -138,6 +138,8 @@ const theme = computed(() => {
 <style lang="scss" scoped>
   ion-header {
     ion-toolbar {
+      padding-top: 0;
+
       &:before, &:after {
         position: absolute;
         content: '';

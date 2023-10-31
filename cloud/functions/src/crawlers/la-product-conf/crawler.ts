@@ -28,7 +28,6 @@ const LOCAL_DATE: ISOLocalDate = "2023-05-24";
 const TIMEZONE_OFFSET = Temporal.Duration.from({hours: 2})
 
 export const LA_PRODUCT_CONF_CRAWLER: CrawlerKind<typeof LA_PRODUCT_CONF_DESCRIPTOR_PARSER> = {
-    kind: 'la-product-conf',
     descriptorParser: LA_PRODUCT_CONF_DESCRIPTOR_PARSER,
     crawlerImpl: async (eventId: string, descriptor: z.infer<typeof LA_PRODUCT_CONF_DESCRIPTOR_PARSER>, criteria: { dayIds?: string[]|undefined }): Promise<FullEvent> => {
         const $speakersPage = cheerio.load((await axios.get('https://www.laproductconf.com/paris/lpc', {responseType: 'text'})).data);
@@ -316,3 +315,5 @@ function findSpeakers(rawSpeakers: string, speakers: Speaker[]): Speaker[] {
         return lowercasedSpeaker.includes(lastName);
     });
 }
+
+export default LA_PRODUCT_CONF_CRAWLER

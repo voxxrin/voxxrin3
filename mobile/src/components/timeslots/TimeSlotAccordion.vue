@@ -77,6 +77,10 @@ const props = defineProps({
     required: true,
     type: Object as PropType<VoxxrinConferenceDescriptor>
   },
+  progress: {
+    required: false,
+    type: Object as PropType<TimeslotTimingProgress|undefined>
+  },
   elementsShown: {
       required: false,
       type: Object as PropType<Array<"add-feedback-btn">>,
@@ -96,13 +100,6 @@ defineEmits<{
 const { LL } = typesafeI18n()
 
 const { conferenceDescriptor } = useSharedConferenceDescriptor(toRef(() => props.confDescriptor?.id));
-
-const progress = ref<TimeslotTimingProgress>()
-useInterval(() => {
-  if(props.timeslot) {
-    progress.value = getTimeslotTimingProgress(props.timeslot, useCurrentClock().zonedDateTimeISO())
-  }
-}, {freq:"high-frequency"}, { immediate: true });
 
 const timeslotLabel = getTimeslotLabel(props.timeslot!);
 
