@@ -13,6 +13,7 @@ import EventTabs from "@/components/events/EventTabs.vue";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
 import {computed, toValue} from "vue";
+import {areFeedbacksEnabled} from "@/models/VoxxrinConferenceDescriptor";
 
 const route = useRoute();
 const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')));
@@ -30,11 +31,11 @@ const tabs = computed(() => {
         id: 'favorites', url: `/events/${eventId.value.value}/favorites`, label: LL.value.Favorites(),
         icon: '/assets/icons/line/bookmark-line-favorite.svg',
         selectedIcon: '/assets/icons/solid/bookmark-favorite.svg',
-    }]:[]).concat([{
+    }]:[]).concat(confDescriptor && areFeedbacksEnabled(confDescriptor) ? [{
         id: 'feedbacks', url: `/events/${eventId.value.value}/feedbacks`, label: LL.value.Feedbacks(),
         icon: '/assets/icons/line/comments-2-line.svg',
         selectedIcon: '/assets/icons/solid/comments-2.svg',
-    }]) /* .concat(confDescriptor?.features?.showInfosTab ? [{
+    }]:[]) /* .concat(confDescriptor?.features?.showInfosTab ? [{
         id: 'infos', url: `/events/${eventId.value.value}/infos`, label: LL.value.Infos(),
         icon: '/assets/icons/line/info-circle-line.svg',
         selectedIcon: '/assets/icons/solid/info-circle.svg',
