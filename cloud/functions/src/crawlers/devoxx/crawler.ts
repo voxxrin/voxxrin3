@@ -21,7 +21,7 @@ import { Temporal } from "@js-temporal/polyfill";
 import {z} from "zod";
 import {ConferenceDescriptor} from "../../../../../shared/conference-descriptor.firestore";
 import axios from "axios";
-import {EVENT_DESCRIPTOR_PARSER, TALK_FORMAT_PARSER} from "../crawler-parsers";
+import {EVENT_DESCRIPTOR_PARSER, INFOS_PARSER, TALK_FORMAT_PARSER} from "../crawler-parsers";
 import {CrawlerKind, TALK_FORMAT_FALLBACK_COLORS} from "../crawl";
 import {match} from "ts-pattern";
 
@@ -37,18 +37,32 @@ export const DEVOXX_DESCRIPTOR_PARSER = EVENT_DESCRIPTOR_PARSER.omit({
 }).extend({
     cfpId: z.string().nullish(),
     cfpBaseUrl: z.string().nullish(),
-    eventFamily: z.string()
+    eventFamily: z.string(),
+    infos: INFOS_PARSER.extend({
+        address: z.string().nullish(),
+    }).omit({ floorPlans: true })
 })
+
+type DevoxxFloorPlan = {
+    id: number,
+    name: string,
+    imageURL: string,
+}
 
 export const DEVOXX_CRAWLER: CrawlerKind<typeof DEVOXX_DESCRIPTOR_PARSER> = {
     descriptorParser: DEVOXX_DESCRIPTOR_PARSER,
     crawlerImpl: async (eventId: string, descriptor: z.infer<typeof DEVOXX_DESCRIPTOR_PARSER>, criteria: { dayIds?: string[]|undefined }) => {
-        const cfpBaseUrl = descriptor.cfpBaseUrl || `https://${descriptor.cfpId}.cfp.dev`;
-        const res = await axios.get(`${cfpBaseUrl+(cfpBaseUrl.endsWith("/")?"":"/")}api/public/event`)
-        const e: CfpEvent = res.data;
+        const rawCfpBaseUrl = descriptor.cfpBaseUrl || `https://${descriptor.cfpId}.cfp.dev`;
+        const cfpBaseUrl = rawCfpBaseUrl+(rawCfpBaseUrl.endsWith("/")?"":"/")
+        const [eventResp, floorPlansResp] = await Promise.all([
+            axios.get(`${cfpBaseUrl}api/public/event`),
+            axios.get(`${cfpBaseUrl}api/public/floorplans`),
+        ])
+        const cfpEvent: CfpEvent = eventResp.data;
+        const cfpFloorPlans: DevoxxFloorPlan[]|undefined = floorPlansResp?.data;
 
-        const start = e.fromDate.substring(0, 10) as ISOLocalDate
-        const end = e.toDate.substring(0, 10) as ISOLocalDate
+        const start = cfpEvent.fromDate.substring(0, 10) as ISOLocalDate
+        const end = cfpEvent.toDate.substring(0, 10) as ISOLocalDate
 
         // collect days
         const days: Day[] = []
@@ -66,17 +80,24 @@ export const DEVOXX_CRAWLER: CrawlerKind<typeof DEVOXX_DESCRIPTOR_PARSER> = {
         const eventInfo = {
             id: eventId,
             eventFamily: descriptor.eventFamily || 'devoxx',
-            title: e.name,
-            description: e.description,
+            title: cfpEvent.name,
+            description: cfpEvent.description,
             peopleDescription: descriptor.peopleDescription,
-            timezone: e.timezone,
+            timezone: cfpEvent.timezone,
             start: start,
             end: end,
             days: days,
             logoUrl: descriptor.logoUrl,
             backgroundUrl: descriptor.backgroundUrl,
-            websiteUrl: e.website,
-            location: { city: e.locationCity, country: e.locationCountry },
+            websiteUrl: cfpEvent.website,
+            location: {
+                city: cfpEvent.locationCity, country: cfpEvent.locationCountry,
+                coords: {
+                    latitude: cfpEvent.venueLatitude,
+                    longitude: cfpEvent.venueLongitude
+                },
+                ...(descriptor.infos.address ? {address: descriptor.infos.address} : {}),
+            },
             theming: descriptor.theming,
             keywords: descriptor.keywords
         } as ListableEvent
@@ -111,7 +132,14 @@ export const DEVOXX_CRAWLER: CrawlerKind<typeof DEVOXX_DESCRIPTOR_PARSER> = {
             talkTracks: descriptor.talkTracks,
             supportedTalkLanguages: descriptor.supportedTalkLanguages,
             rooms: eventRooms,
-            infos: descriptor.infos
+            infos: {
+                floorPlans: (cfpFloorPlans || []).map(cfpFloorPlan => ({
+                    label: cfpFloorPlan.name,
+                    pictureUrl: cfpFloorPlan.imageURL
+                })),
+                socialMedias: descriptor.infos.socialMedias || [],
+                sponsors: descriptor.infos.sponsors || []
+            },
         }
 
         const event: FullEvent = {
@@ -124,7 +152,7 @@ export const DEVOXX_CRAWLER: CrawlerKind<typeof DEVOXX_DESCRIPTOR_PARSER> = {
 
 
 const crawlDevoxxDay = async (cfpBaseUrl: string, day: string) => {
-    const res = await axios.get(`${cfpBaseUrl+(cfpBaseUrl.endsWith("/")?"":"/")}api/public/schedules/${day}`)
+    const res = await axios.get(`${cfpBaseUrl}api/public/schedules/${day}`)
 
     const schedules:DevoxxScheduleItem[] = res.data;
 

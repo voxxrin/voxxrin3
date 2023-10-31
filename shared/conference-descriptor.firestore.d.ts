@@ -1,5 +1,5 @@
 import {ListableEvent} from "./event-list.firestore";
-import {HexColor} from "./type-utils";
+import {HexColor, SocialMediaType} from "./type-utils";
 import {ThemedTalkFormat, ThemedTrack} from "./daily-schedule.firestore";
 
 export type ConferenceDescriptor = ListableEvent & {
@@ -8,6 +8,7 @@ export type ConferenceDescriptor = ListableEvent & {
         roomsDisplayed: boolean,
         favoritesEnabled: boolean,
         remindMeOnceVideosAreAvailableEnabled: boolean,
+        showInfosTab?: boolean,
         // for multi-lang conferences, where we want to hide "default" (implicit) conference lang (ex: in devoxxfr, we'd hide FR)
         hideLanguages: string[],
         ratings: {
@@ -51,7 +52,17 @@ export type ConferenceDescriptor = ListableEvent & {
     supportedTalkLanguages: Array<{ id: string, label: string, themeColor: HexColor }>,
     rooms: Array<{ id: string, title: string }>,
     infos: {
-        venuePicture: string,
-        eventDescription: string
-    }
+        floorPlans?: Array<{
+            label: string, pictureUrl: string
+        }>|undefined,
+        socialMedias?: Array<{
+            type: SocialMediaType, href: string
+        }>|undefined,
+        sponsors?: Array<{
+            type: string, typeColor: string, typeFontColor?: string,
+            sponsorships: Array<{
+                name: string, logoUrl: string, href: string
+            }>
+        }>|undefined,
+    },
 }

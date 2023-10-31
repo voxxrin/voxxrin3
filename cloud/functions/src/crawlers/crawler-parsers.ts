@@ -1,5 +1,5 @@
 import {z, ZodLiteral} from "zod";
-import {ISODatetime, ISOLocalDate} from "../../../../shared/type-utils";
+import {ISODatetime, ISOLocalDate, SocialMediaType} from "../../../../shared/type-utils";
 import {ConferenceDescriptor} from "../../../../shared/conference-descriptor.firestore";
 import {ScheduleTimeSlot} from "../../../../shared/daily-schedule.firestore";
 
@@ -56,6 +56,19 @@ export const EVENT_THEME_PARSER = z.object({
     })
 })
 
+export const SOCIAL_MEDIA_TYPE = z.union([
+    z.literal('website'),
+    z.literal('twitter'),
+    z.literal('linkedin'),
+    z.literal('mastodon'),
+    z.literal('instagram'),
+    z.literal('youtube'),
+    z.literal('twitch'),
+    z.literal('github'),
+    z.literal('facebook'),
+    z.literal('flickr'),
+])
+
 export const LISTABLE_EVENT_PARSER = z.object({
     id: z.string(),
     title: z.string(),
@@ -74,12 +87,29 @@ export const LISTABLE_EVENT_PARSER = z.object({
     theming: EVENT_THEME_PARSER,
 })
 
+export const INFOS_PARSER = z.object({
+    floorPlans: z.array(z.object({
+        label: z.string(), pictureUrl: z.string()
+    })).optional(),
+    socialMedias: z.array(z.object({
+        type: SOCIAL_MEDIA_TYPE,
+        href: z.string()
+    })).optional(),
+    sponsors: z.array(z.object({
+        type: z.string(), typeColor: z.string(), typeFontColor: z.string().optional(),
+        sponsorships: z.array(z.object({
+            name: z.string(), logoUrl: z.string(), href: z.string()
+        }))
+    })).optional()
+});
+
 export const EVENT_DESCRIPTOR_PARSER = LISTABLE_EVENT_PARSER.extend({
     headingTitle: z.string(),
     features: z.object({
         roomsDisplayed: z.boolean(),
         favoritesEnabled: z.boolean(),
         remindMeOnceVideosAreAvailableEnabled: z.boolean(),
+        showInfosTab: z.boolean().optional(),
         // for multi-lang conferences, where we want to hide "default" (implicit) conference lang (ex: in devoxxfr, we'd hide FR)
         hideLanguages: z.array(z.string()),
         ratings: z.object({
@@ -124,10 +154,7 @@ export const EVENT_DESCRIPTOR_PARSER = LISTABLE_EVENT_PARSER.extend({
     talkTracks: z.array(THEMABLE_TALK_TRACK_PARSER),
     supportedTalkLanguages: z.array(THEMABLE_LANGUAGE_PARSER),
     rooms: z.array(ROOM_PARSER),
-    infos: z.object({
-        venuePicture: z.string(),
-        eventDescription: z.string()
-    })
+    infos: INFOS_PARSER,
 })
 
 export const DAILY_TALKS_STATS_PARSER = z.object({
@@ -145,15 +172,7 @@ export const SPEAKER_PARSER = z.object({
     id: z.string(),
     bio: z.string().nullish(),
     social: z.array(z.object({
-        type: z.union([
-            z.literal('twitter'),
-            z.literal('linkedin'),
-            z.literal('mastodon'),
-            z.literal('instagram'),
-            z.literal('youtube'),
-            z.literal('twitch'),
-            z.literal('github'),
-        ]),
+        type: SOCIAL_MEDIA_TYPE,
         url: z.string()
     }))
 })

@@ -278,10 +278,6 @@ const theme = computed(() => {
     &-description {
       padding: var(--app-gutters);
 
-      ion-text {
-        line-height: 1.6;
-      }
-
       /**
       Enforcing color for talk description, in case HTML coming from CFP overrides some colors, with
       bad contrast to our UI

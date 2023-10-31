@@ -139,7 +139,7 @@ const theme = {
   flex: 1;
   margin: 8px;
   border-left: 6px solid v-bind('theme.track.color');
-  border-radius: 8px 12px 12px 8px;
+  border-radius: var(--app-card-radius);
   border : {
     top: 1px solid var(--app-grey-line);
     right: 1px solid var(--app-grey-line);
