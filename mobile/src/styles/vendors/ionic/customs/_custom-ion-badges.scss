@@ -30,10 +30,16 @@ ion-badge {
     align-items: center;
     border-radius: 8px;
     max-width: 188px;
-    padding-right: 10px;
+    padding: {
+        top: 0;
+        bottom: 0;
+        right: 8px;
+        left: 6px;
+    };
     font-weight: 600;
     font-style: normal;
     font-size: 11px;
+    line-height: 2;
 
     &-content {
         display: inline-block;
@@ -41,6 +47,8 @@ ion-badge {
         text-overflow: ellipsis;
 
         ion-icon {
+            position: relative;
+            top: -1px;
             display: inline-block;
             vertical-align: middle;
             margin-right: 4px;
