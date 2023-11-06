@@ -204,6 +204,7 @@ export const BDXIO_CRAWLER: CrawlerKind<typeof BDXIO_PARSER> = {
                     language: lang.id,
                     tags: Array.from<string>([])
                         .concat(levelLabel ? [levelLabel]:[])
+                        .concat(roomId === 'Amphi A' ? ['Sous-Titrage' /* 'Closed Captions' */]:[])
                 };
 
                 return detailedTalk;
