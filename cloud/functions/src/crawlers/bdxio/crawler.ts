@@ -88,9 +88,16 @@ export const BDXIO_CRAWLER: CrawlerKind<typeof BDXIO_PARSER> = {
             const rawStart = $schedulePage(slotLi).find("h4").text().trim();
             const startZDT = Temporal.ZonedDateTime.from(`${day.localDate}T${rawStart.replace("h", ":")}:00[${descriptor.timezone}]`)
 
-            const detailedTalks = await Promise.all($schedulePage(".talk", slotLi).map(async (_, talkLi) => {
-                const $talkLink = $schedulePage("a", talkLi);
-                const talkUrl = $talkLink.attr()!.href;
+            const talks = $schedulePage(".talk", slotLi).toArray();
+            const potentiallyUndefinedDetailedTalks = await Promise.all(talks.map(async (talkLi) => {
+                const $talkLinkAttrs = $schedulePage("a", talkLi).attr();
+
+                // No link on talk (for example: last keynote)
+                if(!$talkLinkAttrs) {
+                    return undefined;
+                }
+
+                const talkUrl = $talkLinkAttrs.href;
                 const $talkPage = cheerio.load((await axios.get(`${baseUrl}${talkUrl}`, {responseType: 'text'})).data);
 
                 const talkId = extractIdFromUrl(talkUrl);
@@ -187,6 +194,8 @@ export const BDXIO_CRAWLER: CrawlerKind<typeof BDXIO_PARSER> = {
 
                 return detailedTalk;
             }))
+
+            const detailedTalks = potentiallyUndefinedDetailedTalks.filter(t => !!t).map(t => t!);
 
             const additionalDetailedTalks = descriptor.additionalTalks.filter(additionnalTalk => {
                 const talkEpochStart = Temporal.ZonedDateTime.from(`${additionnalTalk.start}[${descriptor.timezone}]`).epochMilliseconds;
