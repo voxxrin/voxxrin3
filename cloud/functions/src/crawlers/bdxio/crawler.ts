@@ -102,7 +102,7 @@ export const BDXIO_CRAWLER: CrawlerKind<typeof BDXIO_PARSER> = {
 
                 const talkId = extractIdFromUrl(talkUrl);
 
-                const roomId = $schedulePage(".room", talkLi).text();
+                const roomId = $schedulePage(".uppercase", talkLi).text();
                 const room = roomId===''?UNALLOCATED_ROOM:descriptor.rooms.find(r => r.id === roomId)!;
                 if(!room) {
                     throw new Error(`[${talkUrl}] No room found matching [${roomId}] in descriptor.rooms (${descriptor.rooms.map(r => r.id).join(", ")}) for talk id ${talkId}`)
