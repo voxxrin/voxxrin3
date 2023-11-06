@@ -127,7 +127,9 @@ export const BDXIO_CRAWLER: CrawlerKind<typeof BDXIO_PARSER> = {
 
                 const title = $talkPage("h1").text().trim();
 
-                const $tagsDiv = $talkPage("main section").eq(1).find("div").first()
+                const hasTrack = $talkPage("main section.text-center").length !== 0;
+                const talkSummarySectionIndex = hasTrack ? 1 : 0
+                const $tagsDiv = $talkPage("main section").eq(talkSummarySectionIndex).find("div").first()
                 const formatLabel = $tagsDiv.find("span").eq(0).text().trim()
                 const format = descriptor.talkFormats.find(f => f.id === formatLabel)!
                 if(!format) {
@@ -137,16 +139,16 @@ export const BDXIO_CRAWLER: CrawlerKind<typeof BDXIO_PARSER> = {
                 const endZDT = startZDT.add(Temporal.Duration.from(format.duration));
 
                 const levelLabel = $tagsDiv.find("span").eq(1).text().trim()
-                const langLabel = $tagsDiv.find("span").eq(2).text().trim()
+                const langLabel = $tagsDiv.find("span").eq(2).text().trim() || "Français"
                 const lang = descriptor.supportedTalkLanguages.find(tl => tl.id === langLabel)!
                 if(!lang) {
                     throw new Error(`[${talkUrl}] No lang found matching [${langLabel}] in descriptor.supportedTalkLanguages (${descriptor.supportedTalkLanguages.map(tl => tl.id).join(", ")}) for talkId=${talkId}`)
                 }
 
-                const $summaryDiv = $talkPage("section").eq(1).find("div").eq(1)
+                const $summaryDiv = $talkPage("section").eq(talkSummarySectionIndex).find("div").eq(1)
                 const summaryHtml = $summaryDiv.html();
 
-                const speakers = $talkPage("main section:gt(1)").map((_, speakerSection) => {
+                const speakers = $talkPage(`main section:gt(${talkSummarySectionIndex})`).map((_, speakerSection) => {
                     const $idSection = $talkPage("div", speakerSection).eq(0);
                     const speakerId = $idSection.text().trim();
                     const speakerFullName = $idSection.text().trim()
