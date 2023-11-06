@@ -12,6 +12,7 @@ import {
 } from "../firestore/migrations/003-gettingRidOfUserPreferencesPastEvents";
 import {createOrganizerSpaceRatings} from "../firestore/migrations/006-createOrganizerSpaceRatings";
 import {
+    cleanComputedTalkFavoritesCollectionsDeletion,
     deleteComputedTalkFavoritesCollections
 } from "../firestore/migrations/007-deleteComputedTalkFavoritesCollection";
 import {
@@ -45,6 +46,7 @@ const MIGRATIONS: Migration[] = [
     { name: "introduceTalksStats_allInOneDocument", exec: introduceTalksStats_allInOneDocument },
     { name: "introduceOrganizerSpaceDailyRatings", exec: introduceOrganizerSpaceDailyRatings },
     { name: "introduceOrganizerSpaceDailyRatingsAgain", exec: introduceOrganizerSpaceDailyRatings },
+    { name: "cleanComputedTalkFavoritesCollectionsDeletion", exec: cleanComputedTalkFavoritesCollectionsDeletion },
 ];
 
 export type MigrationResult = "OK"|"Error";
