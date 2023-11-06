@@ -110,8 +110,7 @@ export const BDXIO_CRAWLER: CrawlerKind<typeof BDXIO_PARSER> = {
 
                 const trackImgSrc = $schedulePage("img", talkLi).attr()?.src;
                 const trackId = match(trackImgSrc)
-                    .with(undefined, () => "Backend")
-                    .when(trackImgSrc => trackImgSrc.endsWith("backend.webp"), () => "Hors-piste")
+                    .with(undefined, () => "Hors-piste")
                     .when(trackImgSrc => trackImgSrc.endsWith("backend.webp"), () => "Backend")
                     .when(trackImgSrc => trackImgSrc.endsWith("designux.webp"), () => "Design & UX")
                     .when(trackImgSrc => trackImgSrc.endsWith("cloudetdevsecops.webp"), () => "Cloud & DevSecOps")
