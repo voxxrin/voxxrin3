@@ -54,7 +54,7 @@
           </ion-text>
         </div>
 
-        <div class="sponsorsInfoConf" v-if="confDescriptorRef.infos.sponsors?.length > 0">
+        <div class="sponsorsInfoConf" v-if="!!confDescriptorRef.infos.sponsors?.length">
           <vox-divider>{{ LL.Sponsors() }}</vox-divider>
           <ul class="sponsorsInfoConf-list" v-for="(groupedSponsor) in confDescriptorRef.infos.sponsors" :key="groupedSponsor.type">
             <li v-for="(sponsor) in groupedSponsor.sponsorships" :key="sponsor.name">
@@ -119,7 +119,7 @@
 
     return (Object.keys(SUPPORTED_SOCIAL_MEDIAS) as Array<keyof typeof SUPPORTED_SOCIAL_MEDIAS>)
       .map((socialMediaType) => {
-        const confSocialMedia = confDescriptor.infos.socialMedias.find(sm => sm.type === socialMediaType)
+        const confSocialMedia = (confDescriptor.infos.socialMedias || []).find(sm => sm.type === socialMediaType)
         const maybeSocialMediaWithLink = confSocialMedia ? {...SUPPORTED_SOCIAL_MEDIAS[socialMediaType], ...confSocialMedia} : undefined;
         return maybeSocialMediaWithLink
       }).filter(v => !!v).map(v => v!);
