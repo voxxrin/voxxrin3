@@ -202,7 +202,8 @@ export const BDXIO_CRAWLER: CrawlerKind<typeof BDXIO_PARSER> = {
                     summary: summaryHtml || "",
                     description: summaryHtml || "",
                     language: lang.id,
-                    tags: [levelLabel]
+                    tags: Array.from<string>([])
+                        .concat(levelLabel ? [levelLabel]:[])
                 };
 
                 return detailedTalk;
