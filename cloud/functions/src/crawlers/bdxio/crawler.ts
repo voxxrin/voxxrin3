@@ -20,6 +20,13 @@ import {ISODatetime} from "../../../../../shared/type-utils";
 import {Temporal} from "@js-temporal/polyfill";
 import {match, P} from "ts-pattern";
 
+/**
+ * WARNING: THIS IS AN AWFUL CRAWLER IMPL
+ * based on a lot of DOM assumptions (that may change over time)
+ * Please consider replacing it by official conference-hall crawler once it will be implemented
+ * (see https://twitter.com/fcamblor/status/1719417132792820136)
+ */
+
 export const BDXIO_PARSER = EVENT_DESCRIPTOR_PARSER.omit({
     id: true
 }).extend({
@@ -73,8 +80,12 @@ export const BDXIO_CRAWLER: CrawlerKind<typeof BDXIO_PARSER> = {
             title: "Unallocated room"
         }
 
-        const detailedTalks = (await Promise.all($schedulePage(".schedule > ul > li").map(async(_, slotLi) => {
-            const rawStart = $schedulePage(".slots__slot__hour", slotLi).text().trim();
+        // Ugly workaround since removal of meaningful classes
+        // thanks to tailwing...
+        // https://github.com/bdxio/bdxio.site/commit/98253f39254bb03279be68f5d9409e2e5eb14a08#diff-15d9d91dd9f98a19c25881bd914271dc8ce2ae85879b0a9da408e07b8a6eda7bR227
+        const $slotItems = $schedulePage("ul").eq(2).children("li");
+        const detailedTalks = (await Promise.all($slotItems.map(async(_, slotLi) => {
+            const rawStart = $schedulePage(slotLi).find("h4").text().trim();
             const startZDT = Temporal.ZonedDateTime.from(`${day.localDate}T${rawStart.replace("h", ":")}:00[${descriptor.timezone}]`)
 
             const detailedTalks = await Promise.all($schedulePage(".talk", slotLi).map(async (_, talkLi) => {
