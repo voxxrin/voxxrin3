@@ -20,6 +20,13 @@ import {ISODatetime} from "../../../../../shared/type-utils";
 import {Temporal} from "@js-temporal/polyfill";
 import {match, P} from "ts-pattern";
 
+/**
+ * WARNING: THIS IS AN AWFUL CRAWLER IMPL
+ * based on a lot of DOM assumptions (that may change over time)
+ * Please consider replacing it by official conference-hall crawler once it will be implemented
+ * (see https://twitter.com/fcamblor/status/1719417132792820136)
+ */
+
 export const BDXIO_PARSER = EVENT_DESCRIPTOR_PARSER.omit({
     id: true
 }).extend({
@@ -73,51 +80,75 @@ export const BDXIO_CRAWLER: CrawlerKind<typeof BDXIO_PARSER> = {
             title: "Unallocated room"
         }
 
-        const detailedTalks = (await Promise.all($schedulePage(".schedule > ul > li").map(async(_, slotLi) => {
-            const rawStart = $schedulePage(".slots__slot__hour", slotLi).text().trim();
+        // Ugly workaround since removal of meaningful classes
+        // thanks to tailwing...
+        // https://github.com/bdxio/bdxio.site/commit/98253f39254bb03279be68f5d9409e2e5eb14a08#diff-15d9d91dd9f98a19c25881bd914271dc8ce2ae85879b0a9da408e07b8a6eda7bR227
+        const $slotItems = $schedulePage("ul").eq(2).children("li");
+        const detailedTalks = (await Promise.all($slotItems.map(async(_, slotLi) => {
+            const rawStart = $schedulePage(slotLi).find("h4").text().trim();
             const startZDT = Temporal.ZonedDateTime.from(`${day.localDate}T${rawStart.replace("h", ":")}:00[${descriptor.timezone}]`)
 
-            const detailedTalks = await Promise.all($schedulePage(".talk", slotLi).map(async (_, talkLi) => {
-                const $talkLink = $schedulePage("a", talkLi);
-                const talkUrl = $talkLink.attr()!.href;
+            const talks = $schedulePage(".talk", slotLi).toArray();
+            const potentiallyUndefinedDetailedTalks = await Promise.all(talks.map(async (talkLi) => {
+                const $talkLinkAttrs = $schedulePage("a", talkLi).attr();
+
+                // No link on talk (for example: last keynote)
+                if(!$talkLinkAttrs) {
+                    return undefined;
+                }
+
+                const talkUrl = $talkLinkAttrs.href;
                 const $talkPage = cheerio.load((await axios.get(`${baseUrl}${talkUrl}`, {responseType: 'text'})).data);
 
                 const talkId = extractIdFromUrl(talkUrl);
 
-                const roomId = $schedulePage(".room", talkLi).text();
+                const roomId = $schedulePage(".uppercase", talkLi).text();
                 const room = roomId===''?UNALLOCATED_ROOM:descriptor.rooms.find(r => r.id === roomId)!;
                 if(!room) {
-                    throw new Error(`No room found matching [${roomId}] in descriptor.rooms (${descriptor.rooms.map(r => r.id).join(", ")}) for talk id ${talkId}`)
+                    throw new Error(`[${talkUrl}] No room found matching [${roomId}] in descriptor.rooms (${descriptor.rooms.map(r => r.id).join(", ")}) for talk id ${talkId}`)
                 }
 
-                const trackId = $talkPage("main section").first().text()
+                const trackImgSrc = $schedulePage("img", talkLi).attr()?.src;
+                const trackId = match(trackImgSrc)
+                    .with(undefined, () => "Backend")
+                    .when(trackImgSrc => trackImgSrc.endsWith("backend.webp"), () => "Hors-piste")
+                    .when(trackImgSrc => trackImgSrc.endsWith("backend.webp"), () => "Backend")
+                    .when(trackImgSrc => trackImgSrc.endsWith("designux.webp"), () => "Design & UX")
+                    .when(trackImgSrc => trackImgSrc.endsWith("cloudetdevsecops.webp"), () => "Cloud & DevSecOps")
+                    .when(trackImgSrc => trackImgSrc.endsWith("bigdataia.webp"), () => "Big Data & I.A.")
+                    .when(trackImgSrc => trackImgSrc.endsWith("methodoarchitecture.webp"), () => "Méthodo & Architecture")
+                    .when(trackImgSrc => trackImgSrc.endsWith("horspiste.webp"), () => "Hors-piste")
+                    .when(trackImgSrc => trackImgSrc.endsWith("frontend.webp"), () => "Frontend")
+                    .run();
                 const track = descriptor.talkTracks.find(t => t.id === trackId)!;
                 if(!track) {
-                    throw new Error(`No track found matching ${trackId} in descriptor.talkTracks (${descriptor.talkTracks.map(t => t.id).join(", ")})`)
+                    throw new Error(`[${talkUrl}] No track found matching ${trackId} (${trackImgSrc}) in descriptor.talkTracks (${descriptor.talkTracks.map(t => t.id).join(", ")})`)
                 }
 
                 const title = $talkPage("h1").text().trim();
 
-                const $tagsDiv = $talkPage("main section").eq(1).find("div").first()
+                const hasTrack = $talkPage("main section.text-center").length !== 0;
+                const talkSummarySectionIndex = hasTrack ? 1 : 0
+                const $tagsDiv = $talkPage("main section").eq(talkSummarySectionIndex).find("div").first()
                 const formatLabel = $tagsDiv.find("span").eq(0).text().trim()
                 const format = descriptor.talkFormats.find(f => f.id === formatLabel)!
                 if(!format) {
-                    throw new Error(`No talk format found matching [${formatLabel}] in descriptor.talkFormats (${descriptor.talkFormats.map(f => f.id).join(", ")})`)
+                    throw new Error(`[${talkUrl}] No talk format found matching [${formatLabel}] in descriptor.talkFormats (${descriptor.talkFormats.map(f => f.id).join(", ")})`)
                 }
 
                 const endZDT = startZDT.add(Temporal.Duration.from(format.duration));
 
                 const levelLabel = $tagsDiv.find("span").eq(1).text().trim()
-                const langLabel = $tagsDiv.find("span").eq(2).text().trim()
+                const langLabel = $tagsDiv.find("span").eq(2).text().trim() || "Français"
                 const lang = descriptor.supportedTalkLanguages.find(tl => tl.id === langLabel)!
                 if(!lang) {
-                    throw new Error(`No lang found matching [${langLabel}] in descriptor.supportedTalkLanguages (${descriptor.supportedTalkLanguages.map(tl => tl.id).join(", ")}) for talkId=${talkId}`)
+                    throw new Error(`[${talkUrl}] No lang found matching [${langLabel}] in descriptor.supportedTalkLanguages (${descriptor.supportedTalkLanguages.map(tl => tl.id).join(", ")}) for talkId=${talkId}`)
                 }
 
-                const $summaryDiv = $talkPage("section").eq(1).find("div").eq(1)
+                const $summaryDiv = $talkPage("section").eq(talkSummarySectionIndex).find("div").eq(1)
                 const summaryHtml = $summaryDiv.html();
 
-                const speakers = $talkPage("main section:gt(1)").map((_, speakerSection) => {
+                const speakers = $talkPage(`main section:gt(${talkSummarySectionIndex})`).map((_, speakerSection) => {
                     const $idSection = $talkPage("div", speakerSection).eq(0);
                     const speakerId = $idSection.text().trim();
                     const speakerFullName = $idSection.text().trim()
@@ -132,7 +163,7 @@ export const BDXIO_CRAWLER: CrawlerKind<typeof BDXIO_PARSER> = {
                         if(socialUrl?.includes('github.com')) {
                             type = 'github';
                         } else if(socialUrl) {
-                            console.log(`No social link found for URL: ${socialUrl}`)
+                            console.log(`[${talkUrl}] No social link found for URL: ${socialUrl}`)
                         }
 
                         if(type && socialUrl) {
@@ -171,11 +202,15 @@ export const BDXIO_CRAWLER: CrawlerKind<typeof BDXIO_PARSER> = {
                     summary: summaryHtml || "",
                     description: summaryHtml || "",
                     language: lang.id,
-                    tags: [levelLabel]
+                    tags: Array.from<string>([])
+                        .concat(levelLabel ? [levelLabel]:[])
+                        .concat(roomId === 'Amphi A' ? ['Sous-Titrage' /* 'Closed Captions' */]:[])
                 };
 
                 return detailedTalk;
             }))
+
+            const detailedTalks = potentiallyUndefinedDetailedTalks.filter(t => !!t).map(t => t!);
 
             const additionalDetailedTalks = descriptor.additionalTalks.filter(additionnalTalk => {
                 const talkEpochStart = Temporal.ZonedDateTime.from(`${additionnalTalk.start}[${descriptor.timezone}]`).epochMilliseconds;
