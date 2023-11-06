@@ -108,10 +108,21 @@ export const BDXIO_CRAWLER: CrawlerKind<typeof BDXIO_PARSER> = {
                     throw new Error(`[${talkUrl}] No room found matching [${roomId}] in descriptor.rooms (${descriptor.rooms.map(r => r.id).join(", ")}) for talk id ${talkId}`)
                 }
 
-                const trackId = $talkPage("main section").first().text()
+                const trackImgSrc = $schedulePage("img", talkLi).attr()?.src;
+                const trackId = match(trackImgSrc)
+                    .with(undefined, () => "Backend")
+                    .when(trackImgSrc => trackImgSrc.endsWith("backend.webp"), () => "Hors-piste")
+                    .when(trackImgSrc => trackImgSrc.endsWith("backend.webp"), () => "Backend")
+                    .when(trackImgSrc => trackImgSrc.endsWith("designux.webp"), () => "Design & UX")
+                    .when(trackImgSrc => trackImgSrc.endsWith("cloudetdevsecops.webp"), () => "Cloud & DevSecOps")
+                    .when(trackImgSrc => trackImgSrc.endsWith("bigdataia.webp"), () => "Big Data & I.A.")
+                    .when(trackImgSrc => trackImgSrc.endsWith("methodoarchitecture.webp"), () => "Méthodo & Architecture")
+                    .when(trackImgSrc => trackImgSrc.endsWith("horspiste.webp"), () => "Hors-piste")
+                    .when(trackImgSrc => trackImgSrc.endsWith("frontend.webp"), () => "Frontend")
+                    .run();
                 const track = descriptor.talkTracks.find(t => t.id === trackId)!;
                 if(!track) {
-                    throw new Error(`[${talkUrl}] No track found matching ${trackId} in descriptor.talkTracks (${descriptor.talkTracks.map(t => t.id).join(", ")})`)
+                    throw new Error(`[${talkUrl}] No track found matching ${trackId} (${trackImgSrc}) in descriptor.talkTracks (${descriptor.talkTracks.map(t => t.id).join(", ")})`)
                 }
 
                 const title = $talkPage("h1").text().trim();
