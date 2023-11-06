@@ -105,13 +105,13 @@ export const BDXIO_CRAWLER: CrawlerKind<typeof BDXIO_PARSER> = {
                 const roomId = $schedulePage(".room", talkLi).text();
                 const room = roomId===''?UNALLOCATED_ROOM:descriptor.rooms.find(r => r.id === roomId)!;
                 if(!room) {
-                    throw new Error(`No room found matching [${roomId}] in descriptor.rooms (${descriptor.rooms.map(r => r.id).join(", ")}) for talk id ${talkId}`)
+                    throw new Error(`[${talkUrl}] No room found matching [${roomId}] in descriptor.rooms (${descriptor.rooms.map(r => r.id).join(", ")}) for talk id ${talkId}`)
                 }
 
                 const trackId = $talkPage("main section").first().text()
                 const track = descriptor.talkTracks.find(t => t.id === trackId)!;
                 if(!track) {
-                    throw new Error(`No track found matching ${trackId} in descriptor.talkTracks (${descriptor.talkTracks.map(t => t.id).join(", ")})`)
+                    throw new Error(`[${talkUrl}] No track found matching ${trackId} in descriptor.talkTracks (${descriptor.talkTracks.map(t => t.id).join(", ")})`)
                 }
 
                 const title = $talkPage("h1").text().trim();
@@ -120,7 +120,7 @@ export const BDXIO_CRAWLER: CrawlerKind<typeof BDXIO_PARSER> = {
                 const formatLabel = $tagsDiv.find("span").eq(0).text().trim()
                 const format = descriptor.talkFormats.find(f => f.id === formatLabel)!
                 if(!format) {
-                    throw new Error(`No talk format found matching [${formatLabel}] in descriptor.talkFormats (${descriptor.talkFormats.map(f => f.id).join(", ")})`)
+                    throw new Error(`[${talkUrl}] No talk format found matching [${formatLabel}] in descriptor.talkFormats (${descriptor.talkFormats.map(f => f.id).join(", ")})`)
                 }
 
                 const endZDT = startZDT.add(Temporal.Duration.from(format.duration));
@@ -129,7 +129,7 @@ export const BDXIO_CRAWLER: CrawlerKind<typeof BDXIO_PARSER> = {
                 const langLabel = $tagsDiv.find("span").eq(2).text().trim()
                 const lang = descriptor.supportedTalkLanguages.find(tl => tl.id === langLabel)!
                 if(!lang) {
-                    throw new Error(`No lang found matching [${langLabel}] in descriptor.supportedTalkLanguages (${descriptor.supportedTalkLanguages.map(tl => tl.id).join(", ")}) for talkId=${talkId}`)
+                    throw new Error(`[${talkUrl}] No lang found matching [${langLabel}] in descriptor.supportedTalkLanguages (${descriptor.supportedTalkLanguages.map(tl => tl.id).join(", ")}) for talkId=${talkId}`)
                 }
 
                 const $summaryDiv = $talkPage("section").eq(1).find("div").eq(1)
@@ -150,7 +150,7 @@ export const BDXIO_CRAWLER: CrawlerKind<typeof BDXIO_PARSER> = {
                         if(socialUrl?.includes('github.com')) {
                             type = 'github';
                         } else if(socialUrl) {
-                            console.log(`No social link found for URL: ${socialUrl}`)
+                            console.log(`[${talkUrl}] No social link found for URL: ${socialUrl}`)
                         }
 
                         if(type && socialUrl) {
