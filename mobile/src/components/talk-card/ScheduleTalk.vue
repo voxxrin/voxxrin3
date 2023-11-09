@@ -37,6 +37,11 @@
                    class="talkLang">
           {{talkLang.label}}
         </ion-badge>
+        <!-- TODO #57 - Add condition for badge closed caption caption -->
+        <ion-badge v-if="false"
+            class="talkLang _deaf">
+          <ion-icon src="/assets/icons/line/ear-deaf.svg"></ion-icon>CC
+        </ion-badge>
         {{talk.title}}
       </div>
       <div class="pictures">
@@ -239,11 +244,28 @@ const theme = {
       }
 
       .talkLang {
+        display: flex;
         float: left;
-        font-size: 12px;
         height: 19px;
-        width: 28px !important;
+        min-width: 28px;
+        margin-right: 4px;
+        padding-left: 8px;
+        font-size: 12px;
+        line-height: 1.1;
+        border-radius: 12px 12px 12px 0;
         text-indent: 0;
+
+        ion-icon {
+          color: white;
+          font-size: 14px;
+          width: 14px;
+          margin-right: -4px;
+          margin-left: -4px;
+        }
+
+        &._deaf {
+          background-color: var(--app-primary);
+        }
       }
     }
 
