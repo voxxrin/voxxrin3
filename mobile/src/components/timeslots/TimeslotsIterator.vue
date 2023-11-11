@@ -4,7 +4,7 @@
         :progress="progressesByTimeslotId.get(timeslot.id.value)"
   />
 
-  <no-results v-if="searchTerms && !timeslotsRef.length" illu-path="images/svg/illu-no-result-theming.svg">
+  <no-results v-if="searchTerms && !timeslotsRef.length" illu-path="images/svg/illu-no-results-talk.svg">
     <template #title>{{ LL.No_talks_matching_search_terms() }}</template>
   </no-results>
 </template>
