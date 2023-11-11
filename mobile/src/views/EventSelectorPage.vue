@@ -7,6 +7,9 @@
           <span class="welcome">{{ LL.Welcome_to() }} <strong>{{ appTitle }}</strong></span>
         </div>
         <global-user-actions-button />
+
+        <!-- TODO Btn test - deleted -->
+        <ion-button id="open-custom-dialog" expand="block">Demo</ion-button>
       </ion-header>
 
       <ion-header class="conferenceHeader stickyHeader" collapse="condense">
@@ -17,7 +20,6 @@
                    class="searchInput">
           <ion-icon aria-hidden="true" src="/assets/icons/line/search-line.svg"></ion-icon>
         </ion-input>
-
       </ion-header>
 
       <div class="conferenceContent">
@@ -44,15 +46,19 @@
         </available-events-list>
       </div>
     </ion-content>
+    
+    <ion-modal id="example-modal" ref="modal" trigger="open-custom-dialog">
+      <DemoAppModal></DemoAppModal>
+    </ion-modal>
   </ion-page>
 </template>
 
 <script setup lang="ts">
 import {
-    ActionSheetButton,
-    IonInput,
-    IonItemDivider,
-    useIonRouter
+  ActionSheetButton,
+  IonInput,
+  IonItemDivider, IonModal, modalController,
+  useIonRouter
 } from '@ionic/vue';
 import {EventFamily, EventId, ListableVoxxrinEvent, searchEvents} from "@/models/VoxxrinEvent";
 import {computed, onMounted, Ref, watch} from "vue";
@@ -65,6 +71,7 @@ import {useAvailableEvents} from "@/state/useAvailableEvents";
 import {useSharedUserPreferences} from "@/state/useUserPreferences";
 import GlobalUserActionsButton from "@/components/user/GlobalUserActionsButton.vue";
 import NoResults from "@/components/ui/NoResults.vue";
+import DemoAppModal from "@/views/demo/DemoAppModal.vue";
 
 const appTitle = import.meta.env.VITE_WHITE_LABEL_NAME;
 
@@ -156,6 +163,9 @@ onMounted(() => {
     // administration pages prior to loading these page in one batch of files
   }, 1000)
 })
+
+const modal = ref();
+const dismiss = () => modal.value.$el.dismiss();
 </script>
 
 <style lang="scss" scoped>
@@ -227,5 +237,36 @@ onMounted(() => {
         border-bottom: 1px solid var(--app-line-contrast);
       }
     }
+  }
+
+
+  /* TODO Review Position and class for style modal */
+  /* Custom Modal */
+  ion-modal#example-modal {
+    --width: fit-content;
+    --min-width: 250px;
+    --height: 100vh;
+    --border-radius: 0;
+    --background: var(--app-background);
+    --box-shadow: 0 28px 48px rgba(0, 0, 0, 0.4);
+  }
+
+  ion-modal#example-modal h1 {
+    margin: 20px 20px 10px 20px;
+  }
+
+  ion-modal#example-modal ion-icon {
+    margin-right: 6px;
+
+    width: 48px;
+    height: 48px;
+
+    padding: 4px 0;
+
+    color: #aaaaaa;
+  }
+
+  ion-modal#example-modal .wrapper {
+    margin-bottom: 10px;
   }
 </style>
