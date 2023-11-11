@@ -104,9 +104,10 @@ function backButtonClicked() {
       font-weight: bold;
 
       &-title {
+        flex: 1;
         color: var(--voxxrin-event-theme-colors-primary-contrast-hex);
         font-weight: bold;
-        font-size: calc(28px + 8 * (100vw - 320px) / 1024)
+        font-size: calc(22px + 8 * (100vw - 320px) / 1024)
       }
     }
   }
