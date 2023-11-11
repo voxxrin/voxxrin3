@@ -36,6 +36,38 @@
     </h1>
     <div class="talkDetails-infos">
       <div class="talkDetails-infos-listTrack">
+        <!-- TODO #57 - Add conditions level indicator and class _active -->
+        <ion-badge v-if="true" class="levelBadge">
+          <div class="levelIndicator">
+            <svg v-if="true"
+                 class="_lvl4"
+                 xmlns="http://www.w3.org/2000/svg"
+                 viewBox="0 0 24 8">
+              <path d="M18.9,7.8c-0.3,0-0.7-0.1-1-0.3l-5.7-3.8c-0.2-0.1-0.4-0.1-0.6,0L6.1,7.6C5.3,8.1,4.2,7.9,3.7,7.1C3.1,6.3,3.3,5.2,4.1,4.7l5.6-3.9c1.4-0.9,3.1-0.9,4.4,0l5.7,3.9c0.8,0.5,1,1.6,0.5,2.4C20,7.6,19.5,7.8,18.9,7.8z"/>
+            </svg>
+            <svg v-if="true"
+                 xmlns="http://www.w3.org/2000/svg"
+                 class="_lvl3"
+                 viewBox="0 0 24 8">
+              <path d="M18.9,7.8c-0.3,0-0.7-0.1-1-0.3l-5.7-3.8c-0.2-0.1-0.4-0.1-0.6,0L6.1,7.6C5.3,8.1,4.2,7.9,3.7,7.1C3.1,6.3,3.3,5.2,4.1,4.7l5.6-3.9c1.4-0.9,3.1-0.9,4.4,0l5.7,3.9c0.8,0.5,1,1.6,0.5,2.4C20,7.6,19.5,7.8,18.9,7.8z"/>
+            </svg>
+            <svg v-if="true"
+                 :class="'_isActive'"
+                 class="_lvl2"
+                 xmlns="http://www.w3.org/2000/svg"
+                 viewBox="0 0 24 8">
+              <path d="M18.9,7.8c-0.3,0-0.7-0.1-1-0.3l-5.7-3.8c-0.2-0.1-0.4-0.1-0.6,0L6.1,7.6C5.3,8.1,4.2,7.9,3.7,7.1C3.1,6.3,3.3,5.2,4.1,4.7l5.6-3.9c1.4-0.9,3.1-0.9,4.4,0l5.7,3.9c0.8,0.5,1,1.6,0.5,2.4C20,7.6,19.5,7.8,18.9,7.8z"/>
+            </svg>
+            <svg v-if="true"
+                 :class="'_isActive'"
+                 class="_lvl1"
+                 xmlns="http://www.w3.org/2000/svg"
+                 viewBox="0 0 24 8">
+              <path d="M18.9,7.8c-0.3,0-0.7-0.1-1-0.3l-5.7-3.8c-0.2-0.1-0.4-0.1-0.6,0L6.1,7.6C5.3,8.1,4.2,7.9,3.7,7.1C3.1,6.3,3.3,5.2,4.1,4.7l5.6-3.9c1.4-0.9,3.1-0.9,4.4,0l5.7,3.9c0.8,0.5,1,1.6,0.5,2.4C20,7.6,19.5,7.8,18.9,7.8z"/>
+            </svg>
+          </div>
+          <label>Difficulty</label>
+        </ion-badge>
         <ion-badge v-if="confDescriptor.talkTracks.length > 1" class="trackBadge" :style="{
                 '--background': talk.track.themeColor
             }">
@@ -155,17 +187,22 @@ const talkLang = computed(() => {
   &-infos {
     display: flex;
     flex-direction: row;
-    align-items: center;
+    align-items: top;
     justify-content: space-between;
     padding: 8px var(--app-gutters) var(--app-gutters) var(--app-gutters);
 
-    .listTrack {
-      display: inline-flex;
+    &-listTrack {
+      display: flex;
+      flex: 1;
       flex-direction: row;
-      row-gap: 12px;
+      flex-wrap: wrap;
+      row-gap: 8px;
+      column-gap: 8px;
     }
 
     ion-label {
+      flex: 0 0 auto;
+      padding-top: 4px;
       font-size: 14px;
       font-weight: 500;
     }

@@ -1,0 +1,51 @@
+.levelBadge {
+  position: relative;
+  display: flex;
+  align-items: center;
+  border-radius: 8px;
+  padding: 0 8px;
+  min-width: 34px;
+  background-color: white;
+  color: var(--app-primary);
+  font-weight: 500;
+  box-shadow: rgba(0, 0, 0, 0.02) 0 1px 3px 0, rgba(27, 31, 35, 0.15) 0 0 0 1px;
+
+  @media (prefers-color-scheme: dark) {
+    background: var(--app-medium-contrast);
+    color: var(--app-white);
+    box-shadow: rgba(256, 256, 256, 0.02) 0 1px 3px 0, rgba(256, 256, 256, 0.15) 0 0 0 1px;
+  }
+
+  .levelIndicator {
+    position: absolute;
+    left: 4px;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 28px;
+    width: 24px;
+    transform: rotate(45deg) scale(0.9);
+
+    svg {
+      enable-background:new 0 0 24 24;
+      fill: var(--app-beige-line);
+      stroke: var(--app-beige-line);
+      margin-bottom: -1px;
+
+      &._isActive {
+        fill: var(--voxxrin-event-theme-colors-primary-hex);
+        stroke: var(--voxxrin-event-theme-colors-primary-hex)
+      }
+
+      &._lvl4 { transform: scale(1)}
+      &._lvl3 {transform: scale(0.9);}
+      &._lvl2 { transform: scale(0.7);}
+      &._lvl1 { transform: scale(0.5); stroke-width: 2px;}
+    }
+  }
+
+  label {
+    padding-left: 26px;
+  }
+}

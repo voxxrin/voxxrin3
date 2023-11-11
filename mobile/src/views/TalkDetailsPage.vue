@@ -36,7 +36,7 @@
       <div class="talkDetails-tags" v-if="detailedTalk?.tags.length">
         <div class="talkDetails-tags-list">
           <ion-badge v-if="true" class="tagBadge" v-for="(tag) in detailedTalk?.tags" :key="tag">
-            <ion-icon aria-hidden="true" src="assets/icons/solid/tag.svg"></ion-icon>
+            <ion-icon aria-hidden="true" src="assets/icons/solid/hash.svg"></ion-icon>
             {{tag}}
           </ion-badge>
         </div>
@@ -260,13 +260,8 @@ const theme = computed(() => {
 
   .talkDetails {
     &-tags {
-      padding: 8px 16px;
+      margin: 8px 16px;
       border-radius: 16px;
-
-      @media (prefers-color-scheme: dark) {
-        --border-style: none;
-        background: var(--app-dark-contrast);
-      }
 
       &-list {
         display: flex;
@@ -276,8 +271,8 @@ const theme = computed(() => {
         row-gap: 8px;
 
         .tagBadge {
-          --padding-start: 16px;
-          --padding-end: 16px;
+          --padding-start: 8px;
+          --padding-end: 8px;
           font-weight: 500;
           --background: var(--app-white-90);
           border: 1px solid var(--app-grey-line);
@@ -286,8 +281,9 @@ const theme = computed(() => {
           ion-icon { color: var(--app-primary);}
 
           @media (prefers-color-scheme: dark) {
-            background: var(--app-light-contrast);
+            background: var(--app-medium-contrast);
             color: var(--app-white);
+            border-color: var(--app-beige-line);
 
             ion-icon { color: var(--app-white);}
           }
