@@ -11,7 +11,7 @@
   box-shadow: rgba(0, 0, 0, 0.02) 0 1px 3px 0, rgba(27, 31, 35, 0.15) 0 0 0 1px;
 
   @media (prefers-color-scheme: dark) {
-    background: var(--app-medium-contrast);
+    background: var(--app-light-contrast);
     color: var(--app-white);
     box-shadow: rgba(256, 256, 256, 0.02) 0 1px 3px 0, rgba(256, 256, 256, 0.15) 0 0 0 1px;
   }
@@ -33,9 +33,16 @@
       stroke: var(--app-beige-line);
       margin-bottom: -1px;
 
+      @media (prefers-color-scheme: dark) {
+        fill: var(--app-white);
+        stroke: var(--app-white);
+        opacity: 0.2;
+      }
+
       &._isActive {
         fill: var(--voxxrin-event-theme-colors-primary-hex);
-        stroke: var(--voxxrin-event-theme-colors-primary-hex)
+        stroke: var(--voxxrin-event-theme-colors-primary-hex);
+        opacity: 1;
       }
 
       &._lvl4 { transform: scale(1)}

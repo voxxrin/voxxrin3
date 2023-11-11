@@ -176,10 +176,19 @@ const talkLang = computed(() => {
         width: 14px;
         margin-right: -2px;
         margin-left: -2px;
+
+        @media (prefers-color-scheme: dark) {
+          color: var(--app-primary);
+        }
       }
 
       &._deaf {
         background-color: var(--app-primary);
+
+        @media (prefers-color-scheme: dark) {
+          background: var(--app-white);
+          color: var(--app-primary);
+        }
       }
     }
   }
