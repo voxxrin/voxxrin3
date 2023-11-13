@@ -4,6 +4,8 @@
     <div>
       <div class="pinnedEvent-card-head">
         <ion-card-title class="title">{{pinnedEvent.title}}</ion-card-title>
+        <!-- TODO 77 - Add key for infos edition year -->
+        <ion-text class="subTitle">8éme Éditon - 2023</ion-text>
       </div>
 
       <div class="pinnedEvent-card-content">
@@ -12,14 +14,14 @@
         </div>
         <ul class="details">
           <li>
-            <ion-icon aria-hidden="true" src="/assets/icons/solid/map-marker.svg" />
-            <ion-label>{{pinnedEvent.location.city}}{{pinnedEvent.location.country?` (${pinnedEvent.location.country})`:``}}</ion-label>
-          </li>
-          <li>
             <ion-icon aria-hidden="true" src="/assets/icons/solid/calendar.svg" />
             <ion-label>
               <month-day-date-range :range="{ start: pinnedEvent.start, end: pinnedEvent.end }" /> {{pinnedEvent.start.year}}
             </ion-label>
+          </li>
+          <li>
+            <ion-icon aria-hidden="true" src="/assets/icons/solid/map-marker.svg" />
+            <ion-label class="location">{{pinnedEvent.location.city}}{{pinnedEvent.location.country?` (${pinnedEvent.location.country})`:``}}</ion-label>
           </li>
           <li v-if="pinnedEvent.peopleDescription">
             <ion-icon aria-hidden="true" :icon="people" />
@@ -97,17 +99,25 @@ const props = defineProps({
 
   &-head {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     padding: 32px var(--app-gutters) 8px var(--app-gutters);
 
     .title {
       --color: var(--voxxrin-event-theme-colors-primary-contrast-hex);
-      font-size: 22px;
+      font-size: 20px;
       font-weight: 900;
       text-overflow: ellipsis;
       width: 100%;
       overflow: hidden;
       white-space: nowrap;
+    }
+
+    .subTitle {
+      display: block;
+      font-size: 16px;
+      --color: var(--app-white);
+      z-index: 1;
+      opacity: 0.8;
     }
   }
 
@@ -124,6 +134,10 @@ const props = defineProps({
       font-size: 13px;
       line-height: 1.4;
       z-index: 1;
+    }
+
+    .location {
+      font-weight: normal;
     }
 
     .details {
