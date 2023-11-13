@@ -15,21 +15,29 @@
         data-swiper-parallax="-43%"></div>
     <swiper-slide>
       <div class="swiper-slide-content" data-swiper-parallax-scale="0.7">
-        <ion-img :src="'assets/images/png/demo-pin.png'" data-swiper-parallax-y="-15%" data-swiper-parallax-x="-15%"/>
+        <div class="demoIllu">
+          <ion-img :src="'assets/images/png/demo-pin.png'" data-swiper-parallax-y="-15%" data-swiper-parallax-x="-15%"/>
+          <ion-img class="iconFeature _pin" :src="'assets/images/svg/illu-list-pinned.svg'"
+                   data-swiper-parallax-scale="0"/>
+        </div>
         <div class="description"
              data-swiper-parallax-y="8%"
              data-swiper-parallax-opacity="0">
           <ion-text class="title">Pin/Unpin events</ion-text>
           <ion-text>With this function, you have the power to highlight your favorite events and pin them to the
             top of your list. It's a simple and effective way to personalize your experience according to your
-            preferences. Try it now and bring your favorite events to life!
+            preferences.
           </ion-text>
         </div>
       </div>
     </swiper-slide>
     <swiper-slide>
       <div class="swiper-slide-content" data-swiper-parallax-scale="0.7">
-        <ion-img :src="'assets/images/png/demo-schedules.png'" data-swiper-parallax-y="-15%" data-swiper-parallax-x="-15%"/>
+        <div class="demoIllu">
+          <ion-img :src="'assets/images/png/demo-schedules.png'" data-swiper-parallax-y="-15%" data-swiper-parallax-x="-15%"/>
+          <ion-img class="iconFeature _agenda" :src="'assets/images/svg/illu-calendar.svg'"
+                   data-swiper-parallax-scale="0"/>
+        </div>
         <div class="description"
              data-swiper-parallax-y="8%"
              data-swiper-parallax-opacity="0">
@@ -43,7 +51,11 @@
     </swiper-slide>
     <swiper-slide>
       <div class="swiper-slide-content" data-swiper-parallax-scale="0.7">
-        <ion-img :src="'assets/images/png/demo-fav.png'" data-swiper-parallax-y="-15%" data-swiper-parallax-x="-15%"/>
+        <div class="demoIllu">
+          <ion-img :src="'assets/images/png/demo-fav.png'" data-swiper-parallax-y="-15%" data-swiper-parallax-x="-15%"/>
+          <ion-img class="iconFeature _fav" :src="'assets/images/svg/illu-favorite.svg'"
+                   data-swiper-parallax-scale="0"/>
+        </div>
         <div class="description"
              data-swiper-parallax-y="8%"
              data-swiper-parallax-opacity="0">
@@ -56,7 +68,11 @@
     </swiper-slide>
     <swiper-slide>
       <div class="swiper-slide-content" data-swiper-parallax-scale="0.7">
-        <ion-img :src="'assets/images/png/demo-feedbacks.png'" data-swiper-parallax-y="-15%" data-swiper-parallax-x="-15%"/>
+        <div class="demoIllu">
+          <ion-img :src="'assets/images/png/demo-feedbacks.png'" data-swiper-parallax-y="-15%" data-swiper-parallax-x="-15%"/>
+          <ion-img class="iconFeature _feedbacks" :src="'assets/images/svg/illu-stars.svg'"
+                   data-swiper-parallax-scale="0"/>
+        </div>
         <div class="description"
              data-swiper-parallax-y="8%"
              data-swiper-parallax-opacity="0">
@@ -69,7 +85,11 @@
     </swiper-slide>
     <swiper-slide>
       <div class="swiper-slide-content" data-swiper-parallax-scale="0.7">
-        <ion-img :src="'assets/images/png/demo-watch-later.png'" data-swiper-parallax-y="-15%" data-swiper-parallax-x="-15%"/>
+        <div class="demoIllu">
+          <ion-img :src="'assets/images/png/demo-watch-later.png'" data-swiper-parallax-y="-15%" data-swiper-parallax-x="-15%"/>
+          <ion-img class="iconFeature _watchLater" :src="'assets/images/svg/illu-replay.svg'"
+                   data-swiper-parallax-scale="0"/>
+        </div>
         <div class="description"
              data-swiper-parallax-y="8%"
              data-swiper-parallax-opacity="0">
@@ -84,7 +104,7 @@
       </div>
     </swiper-slide>
     <div class="swiper-footer">
-      <ion-button class="buttonPrev" @click="goToPrevSlide">
+      <ion-button class="buttonPrev" fill="outline" @click="goToPrevSlide">
         <ion-icon :icon="arrowBack" slot="start"></ion-icon>prev
       </ion-button>
       <ion-button class="buttonNext"  @click="goToNextSlide">
@@ -116,6 +136,10 @@
     overflow: hidden;
   }
 
+  .buttonFinish {
+    margin-top: 44px;
+  }
+
   .swiper {
     position: relative;
     height: 100%;
@@ -141,121 +165,149 @@
       content: '';
       pointer-events: none;
     }
-  }
 
-  .swiper-slide {
-    position: relative;
-    text-align: center;
-    font-size: 18px;
-    background: transparent;
-    height: 100%;
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-    backdrop-filter: blur(2px);
-
-    &-content {
-      flex: 1;
+    .swiper-slide {
+      position: relative;
+      text-align: center;
+      font-size: 18px;
+      background: transparent;
+      height: 100%;
+      align-items: center;
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      max-height: calc(100vh - 34px);
-      margin: 16px;
-      padding: 24px 24px 74px 24px;
-      background: rgb(255 255 255 / 50%);
-      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-      border-radius: 24px;
-      overflow-y: auto;
-      overflow-x: hidden;
+      backdrop-filter: blur(2px);
 
-      @media (prefers-color-scheme: dark) {
-        background: rgba(var(--app-medium-contrast-rgb), 0.7);
-        -webkit-backdrop-filter: blur(2em);
-        backdrop-filter: blur(2em);
-      }
-
-      .description {
+      &-content {
         flex: 1;
-      }
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        max-height: calc(100vh - 34px);
+        margin: 16px;
+        padding: 24px 24px 74px 24px;
+        background: rgb(255 255 255 / 50%);
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        border-radius: 24px;
+        overflow-y: auto;
+        overflow-x: hidden;
 
-      ion-img {
-        margin-top: 44px;
-        max-height: 450px;
-      }
+        @media (prefers-color-scheme: dark) {
+          background: rgba(var(--app-medium-contrast-rgb), 0.7);
+          -webkit-backdrop-filter: blur(2em);
+          backdrop-filter: blur(2em);
+        }
 
-      .title {
-        display: block;
-        max-width: inherit;
-        margin: 24px 0;
-        font-size: 24px;
-        font-weight: 900;
-        line-height: 1;
-      }
+        .description {
+          flex: 1;
+        }
 
-      ion-text {
-        display: block;
-        font-size: 16px;
-        max-width: 554px;
-        text-align: center;
+        .demoIllu {
+          position: relative;
+          max-height: 500px;
+          max-width: 370px;
+
+          .iconFeature {
+            position: absolute;
+            height: 84px;
+            width: 84px;
+
+            &._pin, &._feedbacks {
+              left: 24px;
+              bottom: 100px;
+            }
+
+            &._agenda {
+              left: 24px;
+              top: 20px;
+            }
+
+            &._fav {
+              left: 134px;
+              top: 4px;
+            }
+
+            &._watchLater {
+              right: 24px;
+              bottom: 100px;
+            }
+          }
+
+          ion-img {
+            margin-top: 34px;
+            max-height: 450px;
+          }
+        }
+
+        .title {
+          display: block;
+          max-width: inherit;
+          margin: 24px 0;
+          font-size: 24px;
+          font-weight: 900;
+          line-height: 1;
+        }
+
+        ion-text {
+          display: block;
+          font-size: 16px;
+          max-width: 554px;
+          text-align: center;
+        }
       }
     }
-  }
 
-  .swiper-footer {
-    position: absolute;
-    bottom: 0;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    width: 100%;
-    padding: 0 24px 28px 24px;
-    margin: 0 auto;
-    z-index: 1;
-
-    .swiper-button-disabled {
-     opacity: 0;
-    }
-  }
-
-  .parallax-bg {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 130%;
-    height: 100%;
-    -webkit-background-size: cover;
-    background-size: cover;
-    background-position: center;
-
-    &:before  {
+    .swiper-footer {
       position: absolute;
-      bottom: -200px;
-      right: -100px;
-      height: 400px;
-      width: 400px;
-      opacity: 0.2;
-      background-image: url('../../../assets/images/png/blur-circle-gradient.png');
-      z-index: -1;
-      content: '';
-      pointer-events: none;
+      bottom: 0;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      width: 100%;
+      padding: 0 40px 28px 40px;
+      margin: 0 auto;
+      z-index: 1;
+
+      .swiper-button-disabled {
+        opacity: 0;
+      }
     }
 
-    &:after  {
+    .parallax-bg {
       position: absolute;
-      top: -200px;
-      left: -100px;
-      height: 400px;
-      width: 400px;
-      opacity: 0.2;
-      background-image: url('../../../assets/images/png/blur-circle-gradient.png');
-      z-index: -1;
-      content: '';
-      pointer-events: none;
-    }
-  }
+      left: 0;
+      top: 0;
+      width: 130%;
+      height: 100%;
+      -webkit-background-size: cover;
+      background-size: cover;
+      background-position: center;
 
-  .buttonFinish {
-    margin-top: 44px;
+      &:before  {
+        position: absolute;
+        bottom: -200px;
+        right: -100px;
+        height: 400px;
+        width: 400px;
+        opacity: 0.2;
+        background-image: url('../../../assets/images/png/blur-circle-gradient.png');
+        z-index: -1;
+        content: '';
+        pointer-events: none;
+      }
+
+      &:after  {
+        position: absolute;
+        top: -200px;
+        left: -100px;
+        height: 400px;
+        width: 400px;
+        opacity: 0.2;
+        background-image: url('../../../assets/images/png/blur-circle-gradient.png');
+        z-index: -1;
+        content: '';
+        pointer-events: none;
+      }
+    }
   }
 </style>
