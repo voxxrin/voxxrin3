@@ -1,54 +1,107 @@
 <template>
   <swiper :style="{ '--swiper-navigation-color': '#fff', '--swiper-pagination-color': 'var(--app-voxxrin)', }"
-          :pagination="{ clickable: true, }"
-          :speed="600"
+          :pagination="{ clickable: true, dynamicBullets: true }"
+          :speed="800"
+          :navigation="{ nextEl: '.buttonNext',  prevEl: '.buttonPrev'}"
           :parallax="true"
-          :modules="[Pagination, Parallax]" class="swiper">
-
+          :modules="[Pagination, Parallax, Navigation]" class="swiper">
+    <!-- TODO - #45 Connect btn for close modal -->
+    <ion-button fill="outline" color="secondary" class="skipBtn" size="default">
+      Skip
+    </ion-button>
     <div
         slot="container-start"
         class="parallax-bg"
         data-swiper-parallax="-43%"></div>
     <swiper-slide>
-      <div class="swiper-slide-content">
-        <ion-img :src="'assets/images/svg/illu-list-pinned.svg'"/>
-        <ion-text class="title">Pin/Unpin events</ion-text>
-        <ion-text>With this function, you have the power to highlight your favorite events and pin them to the
-          top of your list. It's a simple and effective way to personalize your experience according to your
-          preferences. Try it now and bring your favorite events to life!
-        </ion-text>
+      <div class="swiper-slide-content" data-swiper-parallax-scale="0.7">
+        <ion-img :src="'assets/images/png/demo-pin.png'" data-swiper-parallax-y="-15%" data-swiper-parallax-x="-15%"/>
+        <div class="description"
+             data-swiper-parallax-y="8%"
+             data-swiper-parallax-opacity="0">
+          <ion-text class="title">Pin/Unpin events</ion-text>
+          <ion-text>With this function, you have the power to highlight your favorite events and pin them to the
+            top of your list. It's a simple and effective way to personalize your experience according to your
+            preferences. Try it now and bring your favorite events to life!
+          </ion-text>
+        </div>
       </div>
     </swiper-slide>
     <swiper-slide>
-      <div class="swiper-slide-content">
-        <ion-img :src="'assets/images/svg/illu-list-pinned.svg'"/>
-        <ion-text class="title">Event's daily schedules</ion-text>
-        <ion-text>Get ready for an organized and visually enhanced experience! Talks are grouped by timeslots and talk
-          formats, making it easy to plan your agenda. Plus, we've made sure to highlight overlapping timeslots with
-          a sleek UI marker, so you never miss a beat.
-        </ion-text>
+      <div class="swiper-slide-content" data-swiper-parallax-scale="0.7">
+        <ion-img :src="'assets/images/png/demo-schedules.png'" data-swiper-parallax-y="-15%" data-swiper-parallax-x="-15%"/>
+        <div class="description"
+             data-swiper-parallax-y="8%"
+             data-swiper-parallax-opacity="0">
+          <ion-text class="title">Event's daily schedules</ion-text>
+          <ion-text>Get ready for an organized and visually enhanced experience! Talks are grouped by timeslots and talk
+            formats, making it easy to plan your agenda. Plus, we've made sure to highlight overlapping timeslots with
+            a sleek UI marker, so you never miss a beat.
+          </ion-text>
+        </div>
       </div>
     </swiper-slide>
     <swiper-slide>
-      <div class="swiper-slide-content">
-        <ion-img :src="'assets/images/svg/illu-list-pinned.svg'"/>
-        <ion-text class="title">Fav/Unfav talks</ion-text>
-        <ion-text>Effortlessly plan your talk schedule and create a personalized program with our dedicated favorites
-          screen, designed with a user-friendly interface just for you.
-        </ion-text>
+      <div class="swiper-slide-content" data-swiper-parallax-scale="0.7">
+        <ion-img :src="'assets/images/png/demo-fav.png'" data-swiper-parallax-y="-15%" data-swiper-parallax-x="-15%"/>
+        <div class="description"
+             data-swiper-parallax-y="8%"
+             data-swiper-parallax-opacity="0">
+          <ion-text class="title">Fav/Unfav talks</ion-text>
+          <ion-text>Effortlessly plan your talk schedule and create a personalized program with our dedicated favorites
+            screen, designed with a user-friendly interface just for you.
+          </ion-text>
+        </div>
       </div>
     </swiper-slide>
+    <swiper-slide>
+      <div class="swiper-slide-content" data-swiper-parallax-scale="0.7">
+        <ion-img :src="'assets/images/png/demo-fav.png'" data-swiper-parallax-y="-15%" data-swiper-parallax-x="-15%"/>
+        <div class="description"
+             data-swiper-parallax-y="8%"
+             data-swiper-parallax-opacity="0">
+          <ion-text class="title">Fav/Unfav talks</ion-text>
+          <ion-text>Effortlessly plan your talk schedule and create a personalized program with our dedicated favorites
+            screen, designed with a user-friendly interface just for you.
+          </ion-text>
+          <!-- TODO - #45 Connect for close modal -->
+          <ion-button class="buttonFinish" color="secondary" expand="block">Let's go!</ion-button>
+        </div>
+      </div>
+    </swiper-slide>
+    <div class="swiper-footer">
+      <ion-button class="buttonPrev" @click="goToPrevSlide">
+        <ion-icon :icon="arrowBack" slot="start"></ion-icon>prev
+      </ion-button>
+      <ion-button class="buttonNext"  @click="goToNextSlide">
+        next<ion-icon :icon="arrowForward" slot="end"></ion-icon>
+      </ion-button>
+    </div>
   </swiper>
 </template>
 
 <script setup lang="ts">
-import {Pagination, Parallax} from 'swiper/modules';
+  import {Pagination, Parallax, Navigation} from 'swiper/modules';
   import {Swiper, SwiperSlide} from "swiper/vue";
   import 'swiper/css';
   import 'swiper/css/pagination';
+  import 'swiper/css/navigation';
+  import {arrowBack, arrowForward} from "ionicons/icons";
 </script>
 
 <style lang="scss" scoped>
+
+  .skipBtn {
+    position: absolute;
+    top: 24px;
+    right: 26px;
+    z-index: 999;
+    --border-width: 1px;
+    backdrop-filter: blur(4px);
+    border-radius: 44px;
+    overflow: hidden;
+  }
+
   .swiper {
     position: relative;
     height: 100%;
@@ -57,24 +110,9 @@ import {Pagination, Parallax} from 'swiper/modules';
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
-    --swiper-pagination-bottom: 74px;
+    --swiper-pagination-bottom: 54px;
     --swiper-pagination-bullet-size: 10px;
     --swiper-pagination-bullet-inactive-color: var(--app-beige-dark);
-  }
-
-  .swiper-pagination-bullets.swiper-pagination-horizontal {
-    width: inherit !important;
-  }
-
-  .swiper-slide {
-    position: relative;
-    text-align: center;
-    font-size: 18px;
-    background: transparent;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    backdrop-filter: blur(2px);
 
     &:before  {
       position: absolute;
@@ -89,6 +127,18 @@ import {Pagination, Parallax} from 'swiper/modules';
       content: '';
       pointer-events: none;
     }
+  }
+
+  .swiper-slide {
+    position: relative;
+    text-align: center;
+    font-size: 18px;
+    background: transparent;
+    height: 100%;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    backdrop-filter: blur(2px);
 
     &-content {
       flex: 1;
@@ -96,12 +146,14 @@ import {Pagination, Parallax} from 'swiper/modules';
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      max-width: 440px;
+      max-height: calc(100vh - 34px);
       margin: 16px;
-      padding: 24px;
+      padding: 24px 24px 74px 24px;
       background: rgb(255 255 255 / 50%);
       box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
       border-radius: 24px;
+      overflow-y: auto;
+      overflow-x: hidden;
 
       @media (prefers-color-scheme: dark) {
         background: rgba(var(--app-medium-contrast-rgb), 0.7);
@@ -109,22 +161,46 @@ import {Pagination, Parallax} from 'swiper/modules';
         backdrop-filter: blur(2em);
       }
 
+      .description {
+        flex: 1;
+      }
+
       ion-img {
-        width: 60%;
+        margin-top: 44px;
         max-height: 450px;
       }
 
       .title {
         display: block;
+        max-width: inherit;
         margin: 24px 0;
         font-size: 24px;
-        font-weight: bold;
+        font-weight: 900;
         line-height: 1;
       }
 
       ion-text {
+        display: block;
         font-size: 16px;
+        max-width: 554px;
+        text-align: center;
       }
+    }
+  }
+
+  .swiper-footer {
+    position: absolute;
+    bottom: 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0 24px 28px 24px;
+    margin: 0 auto;
+    z-index: 1;
+
+    .swiper-button-disabled {
+     opacity: 0;
     }
   }
 
@@ -144,7 +220,7 @@ import {Pagination, Parallax} from 'swiper/modules';
       right: -100px;
       height: 400px;
       width: 400px;
-      opacity: 0.5;
+      opacity: 0.2;
       background-image: url('../../../assets/images/png/blur-circle-gradient.png');
       z-index: -1;
       content: '';
@@ -157,11 +233,15 @@ import {Pagination, Parallax} from 'swiper/modules';
       left: -100px;
       height: 400px;
       width: 400px;
-      opacity: 0.5;
+      opacity: 0.2;
       background-image: url('../../../assets/images/png/blur-circle-gradient.png');
       z-index: -1;
       content: '';
       pointer-events: none;
     }
+  }
+
+  .buttonFinish {
+    margin-top: 44px;
   }
 </style>

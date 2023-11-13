@@ -9,7 +9,7 @@
         <global-user-actions-button />
 
         <!-- TODO Btn test - deleted -->
-        <ion-button id="open-custom-dialog" expand="block">Demo</ion-button>
+        <ion-button id="openDemo" expand="block">Demo</ion-button>
       </ion-header>
 
       <ion-header class="conferenceHeader stickyHeader" collapse="condense">
@@ -46,8 +46,9 @@
         </available-events-list>
       </div>
     </ion-content>
-    
-    <ion-modal id="example-modal" ref="modal" trigger="open-custom-dialog">
+
+    <!-- TODO - #45 See if we can play it as a component -->
+    <ion-modal id="modalDemo" ref="modal" trigger="openDemo">
       <DemoAppModal></DemoAppModal>
     </ion-modal>
   </ion-page>
@@ -242,7 +243,7 @@ const dismiss = () => modal.value.$el.dismiss();
 
   /* TODO Review Position and class for style modal */
   /* Custom Modal */
-  ion-modal#example-modal {
+  ion-modal#modalDemo {
     --width: fit-content;
     --min-width: 250px;
     --height: 100vh;
@@ -251,11 +252,11 @@ const dismiss = () => modal.value.$el.dismiss();
     --box-shadow: 0 28px 48px rgba(0, 0, 0, 0.4);
   }
 
-  ion-modal#example-modal h1 {
+  ion-modal#modalDemo h1 {
     margin: 20px 20px 10px 20px;
   }
 
-  ion-modal#example-modal ion-icon {
+  ion-modal#modalDemo ion-icon {
     margin-right: 6px;
 
     width: 48px;
@@ -266,7 +267,7 @@ const dismiss = () => modal.value.$el.dismiss();
     color: #aaaaaa;
   }
 
-  ion-modal#example-modal .wrapper {
+  ion-modal#modalDemo .wrapper {
     margin-bottom: 10px;
   }
 </style>
