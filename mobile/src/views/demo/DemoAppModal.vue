@@ -48,24 +48,38 @@
              data-swiper-parallax-y="8%"
              data-swiper-parallax-opacity="0">
           <ion-text class="title">Fav/Unfav talks</ion-text>
-          <ion-text>Effortlessly plan your talk schedule and create a personalized program with our dedicated favorites
-            screen, designed with a user-friendly interface just for you.
+          <ion-text>Unlock the power to rate talks (when enabled by the organizer). Ongoing and past talks are up
+            for evaluation, with various rating options. Plus, explore your conference feedback in a dedicated tab.
           </ion-text>
         </div>
       </div>
     </swiper-slide>
     <swiper-slide>
       <div class="swiper-slide-content" data-swiper-parallax-scale="0.7">
-        <ion-img :src="'assets/images/png/demo-fav.png'" data-swiper-parallax-y="-15%" data-swiper-parallax-x="-15%"/>
+        <ion-img :src="'assets/images/png/demo-feedbacks.png'" data-swiper-parallax-y="-15%" data-swiper-parallax-x="-15%"/>
         <div class="description"
              data-swiper-parallax-y="8%"
              data-swiper-parallax-opacity="0">
-          <ion-text class="title">Fav/Unfav talks</ion-text>
-          <ion-text>Effortlessly plan your talk schedule and create a personalized program with our dedicated favorites
-            screen, designed with a user-friendly interface just for you.
+          <ion-text class="title">Rate talks</ion-text>
+          <ion-text>Unlock the power to rate talks (when enabled by the organizer). Ongoing and past talks are up
+            for evaluation, with various rating options. Plus, explore your conference feedback in a dedicated tab.
+          </ion-text>
+        </div>
+      </div>
+    </swiper-slide>
+    <swiper-slide>
+      <div class="swiper-slide-content" data-swiper-parallax-scale="0.7">
+        <ion-img :src="'assets/images/png/demo-watch-later.png'" data-swiper-parallax-y="-15%" data-swiper-parallax-x="-15%"/>
+        <div class="description"
+             data-swiper-parallax-y="8%"
+             data-swiper-parallax-opacity="0">
+          <ion-text class="title">To watch later</ion-text>
+          <ion-text>Discover the 'Watch Later' feature, available when enabled by your conference organizer.
+            Mark talks for future viewing and get notified when they're ready. Ideal for those tough choices between
+            favorited talks during a time slot or for remote attendees planning their watchlist.
           </ion-text>
           <!-- TODO - #45 Connect for close modal -->
-          <ion-button class="buttonFinish" color="secondary" expand="block">Let's go!</ion-button>
+          <ion-button class="buttonFinish" color="secondary" expand="block">OK, let's go!</ion-button>
         </div>
       </div>
     </swiper-slide>
