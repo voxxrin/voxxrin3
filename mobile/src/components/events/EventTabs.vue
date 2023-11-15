@@ -4,6 +4,7 @@
     <ion-tab-bar slot="bottom" ref="$tabBarRef">
       <ion-tab-button v-for="(tab, index) in tabs" :key="index"
                       :tab="tab.id" :href="tab.url">
+        <!-- TODO Fix switch icon -->
         <ion-icon aria-hidden="true" :src="$tabBarRef?.selectedTab === tab.id ? tab.selectedIcon : tab.icon"/>
         <ion-label>{{ tab.label }}</ion-label>
         <ion-ripple-effect type="unbounded"></ion-ripple-effect>
