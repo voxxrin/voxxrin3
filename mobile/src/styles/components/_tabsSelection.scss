@@ -48,12 +48,16 @@
     }
 
     .count {
+      position: relative;
+      top: -2px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      height: 24px;
-      min-width: 24px;
+      height: 28px;
+      min-width: 28px;
       margin-left: 8px;
+      padding: 0 6px;
+      font-size: 12px;
       background-color: var(--app-beige-medium);
       color: var(--app-beige-dark);
       border-radius: 34px;
@@ -72,7 +76,7 @@
       color: white;
 
       .count {
-        background-color: var(--app-voxxrin);
+        background-color: var(--app-primary);
         color: var(--app-white);
 
         @media (prefers-color-scheme: dark) {
