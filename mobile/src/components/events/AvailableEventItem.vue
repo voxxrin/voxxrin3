@@ -94,6 +94,10 @@ function navToEventOrganizerPage() {
   --inner-padding-end: 0;
   --background: var(--app-background);
 
+  &:last-child {
+    --inner-border-width: 0;
+  }
+
   @media (prefers-color-scheme: dark) {
     --border-color: var(--app-line-contrast);
   }
