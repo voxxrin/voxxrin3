@@ -72,6 +72,7 @@ ion-tab-bar {
     }
 
     ion-label {
+      letter-spacing: normal;
       color: var(--app-grey-medium);
     }
 
@@ -84,6 +85,7 @@ ion-tab-bar {
       }
 
       ion-label {
+        font-weight: bold;
         color: var(--voxxrin-event-theme-colors-primary-hex);
 
         @media (prefers-color-scheme: dark) {
