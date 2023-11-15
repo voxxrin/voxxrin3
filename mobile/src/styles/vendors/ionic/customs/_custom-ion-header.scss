@@ -35,7 +35,7 @@ ion-header  {
     &.stickyHeader {
         position: sticky;
         top: -1px;
-        border-bottom: 1px solid var(--app-beige-line);
+        box-shadow: rgb(0 0 0 / 5%) -1px 6px 6px 0px;
 
         &.header-ios ion-toolbar:last-of-type {
             --border-width: 0;

@@ -336,6 +336,7 @@ function findDayByLocalDate(localDate: string) {
     --padding-end: 0;
     --border-style: none;
     align-items: baseline;
+    backdrop-filter:  blur(30px) saturate(120%);
 
     @media (prefers-color-scheme: dark) {
       --background: rgba(var(--app-medium-contrast-rgb), 0.5);
