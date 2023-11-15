@@ -279,7 +279,7 @@ function toggleSearchField() {
     searchFieldDisplayed.value = !searchFieldDisplayed.value
     if(searchFieldDisplayed.value) {
         if(isRefDefined($searchInput)) {
-            setTimeout(() => $searchInput.value.$el.setFocus(), 500);
+            setTimeout(() => $searchInput.value.$el.setFocus(), 100);
         }
     } else {
         searchTermsRef.value = '';
