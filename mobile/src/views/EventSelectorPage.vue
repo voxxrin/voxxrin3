@@ -5,6 +5,9 @@
         <div class="conferenceWelcome-title">
           <span class="name">{{ LL.Hello_xxx({name:'World'}) }}</span>
           <span class="welcome">{{ LL.Welcome_to() }} <strong>{{ appTitle }}</strong></span>
+          <!-- <ion-text class="powered">powered by
+            <ion-icon :src="'./assets/images/svg/voxxrin-color-primary.svg'"></ion-icon>
+          </ion-text> -->
         </div>
         <global-user-actions-button />
       </ion-header>
@@ -169,6 +172,32 @@ onMounted(() => {
     padding: 24px var( --app-gutters-medium) 0 var( --app-gutters-medium);
     background: var(--app-background);
     z-index: 9999;
+
+    .powered {
+      display: flex;
+      margin-top: -4px;
+      padding: 4px 8px;
+      column-gap: 4px;
+      font-size: 11px;
+      width: 132px;
+      background-color: var(--app-beige-medium);
+      border-radius: 12px;
+
+      @media (prefers-color-scheme: dark) {
+        background-color: var(--app-dark-contrast);
+      }
+
+      ion-icon {
+        width: 48px;
+        height: 16px;
+
+        @media (prefers-color-scheme: dark) {
+          .letters {
+            fill: white !important;
+          }
+        }
+      }
+    }
 
     &:after {
       display: none;
