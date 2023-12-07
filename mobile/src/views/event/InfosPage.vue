@@ -66,6 +66,7 @@
           </ul>
         </div>
       </div>
+      <PoweredVoxxrin></PoweredVoxxrin>
     </ion-content>
   </ion-page>
 </template>
@@ -91,6 +92,7 @@
   import {computed, Ref, toValue} from "vue";
   import {SocialMediaType} from "../../../../shared/type-utils";
   import CarouselSwiper from "@/components/ui/CarouselSwiper.vue";
+  import PoweredVoxxrin from "@/components/ui/PoweredVoxxrin.vue";
 
   const { LL } = typesafeI18n()
 

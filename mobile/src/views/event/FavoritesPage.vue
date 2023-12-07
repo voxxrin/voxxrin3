@@ -52,7 +52,7 @@
           </template>
         </timeslots-iterator>
       </ion-accordion-group>
-
+      <PoweredVoxxrin></PoweredVoxxrin>
     </ion-content>
   </ion-page>
 </template>
@@ -87,6 +87,7 @@
   import {useEventTalkStats} from "@/state/useEventTalkStats";
   import NoResults from "@/components/ui/NoResults.vue";
   import ProvideFeedbackTalkButton from "@/components/talk-card/ProvideFeedbackTalkButton.vue";
+  import PoweredVoxxrin from "@/components/ui/PoweredVoxxrin.vue";
 
   const { LL } = typesafeI18n()
 

@@ -86,6 +86,7 @@
           </div>
         </ion-fab-list>
       </ion-fab>
+      <PoweredVoxxrin></PoweredVoxxrin>
     </ion-content>
   </ion-page>
 </template>
@@ -137,6 +138,7 @@ import {useEventTalkStats} from "@/state/useEventTalkStats";
 import TalkWatchLaterButton from "@/components/talk-card/TalkWatchLaterButton.vue";
 import {useUserEventTalkNotes} from "@/state/useUserTalkNotes";
 import ProvideFeedbackTalkButton from "@/components/talk-card/ProvideFeedbackTalkButton.vue";
+import PoweredVoxxrin from "@/components/ui/PoweredVoxxrin.vue";
 
 const LOGGER = Logger.named("SchedulePage");
 

@@ -8,9 +8,11 @@
       </ion-header>
 
       Notifications here !
+      <PoweredVoxxrin></PoweredVoxxrin>
     </ion-content>
   </ion-page>
 </template>
 
 <script setup lang="ts">
+import PoweredVoxxrin from "@/components/ui/PoweredVoxxrin.vue";
 </script>

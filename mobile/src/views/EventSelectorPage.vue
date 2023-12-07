@@ -43,6 +43,7 @@
           </template>
         </available-events-list>
       </div>
+      <PoweredVoxxrin></PoweredVoxxrin>
     </ion-content>
   </ion-page>
 </template>
@@ -65,6 +66,7 @@ import {useAvailableEvents} from "@/state/useAvailableEvents";
 import {useSharedUserPreferences} from "@/state/useUserPreferences";
 import GlobalUserActionsButton from "@/components/user/GlobalUserActionsButton.vue";
 import NoResults from "@/components/ui/NoResults.vue";
+import PoweredVoxxrin from "@/components/ui/PoweredVoxxrin.vue";
 
 const appTitle = import.meta.env.VITE_WHITE_LABEL_NAME;
 

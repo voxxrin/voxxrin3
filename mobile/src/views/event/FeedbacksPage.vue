@@ -64,6 +64,7 @@
           </timeslots-iterator>
         </ion-accordion-group>
       </div>
+      <PoweredVoxxrin></PoweredVoxxrin>
     </ion-content>
   </ion-page>
 </template>
@@ -92,6 +93,7 @@
   import {useUserEventTalkNotes} from "@/state/useUserTalkNotes";
   import {computed, toValue} from "vue";
   import NoResults from "@/components/ui/NoResults.vue";
+  import PoweredVoxxrin from "@/components/ui/PoweredVoxxrin.vue";
 
   const { LL } = typesafeI18n()
 
