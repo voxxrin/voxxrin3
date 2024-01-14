@@ -4,7 +4,7 @@ import {z} from "zod";
 import {FIREBASE_CRAWLER_DESCRIPTOR_PARSER} from "./crawler-parsers";
 import {HexColor} from "../../../../shared/type-utils";
 import {Temporal} from "@js-temporal/polyfill";
-import {match} from "ts-pattern";
+import {match, P} from "ts-pattern";
 import {v4 as uuidv4} from "uuid"
 import {ConferenceOrganizerSpace} from "../../../../shared/conference-organizer-space.firestore";
 import {eventLastUpdateRefreshed} from "../functions/firestore/firestore-utils";
@@ -114,8 +114,17 @@ const crawlAll = async function(criteria: CrawlCriteria) {
                 durationInSeconds: start.until(end).total('seconds')
             }
         }catch(e: any) {
-            console.error(`Error during crawler with id ${crawlerDescriptor.id}:`, e);
-            throw new Error(`Error during crawler with id ${crawlerDescriptor.id}: ${e?.toString()}`)
+          const baseMessage = `Error during crawler with id ${crawlerDescriptor.id}`;
+          // const err = Error("")
+          // err.
+          const errMessage = match(e).with(P.instanceOf(Error), (err) => {
+            return `${baseMessage}\nStack: ${err.stack}`;
+          }).otherwise(() => {
+            return baseMessage;
+          })
+
+          console.error(errMessage);
+          throw new Error(errMessage);
         }
     }))
 };
