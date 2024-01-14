@@ -1,4 +1,4 @@
-import {info} from "../../firebase";
+import {debug, info} from "../../firebase";
 import * as _ from "lodash";
 
 import {
@@ -156,6 +156,8 @@ const crawlDevoxxDay = async (cfpBaseUrl: string, day: string) => {
 
     const schedules:DevoxxScheduleItem[] = res.data;
 
+    debug(`Fetched daily schedule for day ${day}: ${JSON.stringify(schedules)}`)
+
     const daySchedule: DailySchedule = {
         day: day,
         timeSlots: []
@@ -169,6 +171,8 @@ const crawlDevoxxDay = async (cfpBaseUrl: string, day: string) => {
     const talkFormats: ConferenceDescriptor['talkFormats'] = [];
 
     const slots = _.groupBy(schedules, (s:DevoxxScheduleItem) => {return s.fromDate + "--" + s.toDate})
+
+    debug(`Devoxx slots for day ${day}: ${JSON.stringify(slots)}`)
 
     const toScheduleTalk = function(item: DevoxxScheduleItem, start: ISODatetime, end: ISODatetime) {
         if(!rooms.find(r => r.id === item.room.id.toString())) {
@@ -232,8 +236,11 @@ const crawlDevoxxDay = async (cfpBaseUrl: string, day: string) => {
     _.forIn(slots, (items: DevoxxScheduleItem[], key: string) => {
         const [start, end] = key.split("--")
 
-        info(key + "\n-------------------\n  - " + items.map((schedule:DevoxxScheduleItem) => {
-            let title = schedule.proposal?.title || schedule.sessionType.name
+        info(key + "\n-------------------\n  - " + items.map((schedule:DevoxxScheduleItem, itemIndex) => {
+            let title = schedule.proposal?.title || schedule.sessionType?.name
+            if(!title) {
+              throw Error(`Error while retrieving schedule item title for id ${schedule.id} (day=${day}, slot=${key}, itemIndex=${itemIndex})`);
+            }
             return `${schedule.id} - ${schedule.room.name} - ${title}`
         }).join("\n  -") + "\n------------------");
 
