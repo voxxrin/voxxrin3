@@ -151,7 +151,12 @@ export const DEVOXX_CRAWLER: CrawlerKind<typeof DEVOXX_DESCRIPTOR_PARSER> = {
 
 
 const crawlDevoxxDay = async (cfpBaseUrl: string, day: string) => {
-    const res = await axios.get(`${cfpBaseUrl}api/public/schedules/${day}`)
+    const res = await axios.get(`${cfpBaseUrl}api/public/schedules/${day}`, {
+      headers: {
+        Connection: 'keep-alive',
+        'Keep-Alive': 'timeout=1500, max=100'
+      }
+    })
 
     debug(`axios.get() result type: ${typeof res.data}`)
 
