@@ -153,7 +153,7 @@ export const DEVOXX_CRAWLER: CrawlerKind<typeof DEVOXX_DESCRIPTOR_PARSER> = {
 const crawlDevoxxDay = async (cfpBaseUrl: string, day: string) => {
     const res = await axios.get(`${cfpBaseUrl}api/public/schedules/${day}`)
 
-    const schedules:DevoxxScheduleItem[] = res.data;
+    const schedules:DevoxxScheduleItem[] = (typeof res.data === 'string') ? JSON.parse(res.data) : res.data;
 
     debug(`Fetched daily schedule for day ${day}: ${JSON.stringify(schedules)}`)
 
