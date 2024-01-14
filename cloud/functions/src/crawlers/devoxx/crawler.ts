@@ -155,6 +155,10 @@ const crawlDevoxxDay = async (cfpBaseUrl: string, day: string) => {
 
     debug(`axios.get() result type: ${typeof res.data}`)
 
+    if(typeof res.data !== 'object') {
+      throw Error(`Unexpected daily schedule result type (${typeof res.data}) for ${day} : ${res.data}`)
+    }
+
     const schedules:DevoxxScheduleItem[] = (typeof res.data === 'string') ? JSON.parse(res.data) : res.data;
 
     debug(`Fetched daily schedule for day ${day}: ${JSON.stringify(schedules)} (${typeof schedules})`)
