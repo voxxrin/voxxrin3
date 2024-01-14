@@ -1,7 +1,7 @@
 import {describe, it} from 'vitest'
-import axios from "axios";
 import {DEVOXX_CRAWLER, DEVOXX_DESCRIPTOR_PARSER} from "./crawler";
 import {FULL_EVENT_PARSER} from "../crawler-parsers";
+import {http} from "../utils";
 
 describe('devoxx crawlers', () => {
     it(`Full event type matches zod validations`, () => {
@@ -31,8 +31,8 @@ describe('devoxx crawlers', () => {
     }] as const;
     events.forEach(event => {
         it(`Loading ${event.confName} schedule`, async () => {
-            const descriptorResp = await axios.get(event.descriptorUrl);
-            const descriptor = DEVOXX_CRAWLER.descriptorParser.parse(descriptorResp.data)
+            const descriptorPayload = await http.get(event.descriptorUrl);
+            const descriptor = DEVOXX_CRAWLER.descriptorParser.parse(descriptorPayload)
             const result = await DEVOXX_CRAWLER.crawlerImpl(event.id, descriptor, {});
             FULL_EVENT_PARSER.parse(result);
         }, { timeout: 300000 })

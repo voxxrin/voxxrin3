@@ -1,7 +1,7 @@
 import {describe, it} from 'vitest'
-import axios from "axios";
 import {FULL_EVENT_PARSER} from "../crawler-parsers";
 import {DEVOXX_SCALA_CRAWLER} from "./crawler";
+import {http} from "../utils";
 
 describe('devoxx scala crawlers', () => {
     const events = [{
@@ -10,8 +10,8 @@ describe('devoxx scala crawlers', () => {
     }] as const;
     events.forEach(event => {
         it(`Loading ${event.confName} schedule`, async () => {
-            const descriptorResp = await axios.get(event.descriptorUrl);
-            const descriptor = DEVOXX_SCALA_CRAWLER.descriptorParser.parse(descriptorResp.data)
+            const descriptorPayload = await http.get(event.descriptorUrl);
+            const descriptor = DEVOXX_SCALA_CRAWLER.descriptorParser.parse(descriptorPayload)
             const result = await DEVOXX_SCALA_CRAWLER.crawlerImpl(event.id, descriptor, {});
             FULL_EVENT_PARSER.parse(result);
         }, { timeout: 30000 })

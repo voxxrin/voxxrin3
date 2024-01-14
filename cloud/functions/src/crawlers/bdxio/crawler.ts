@@ -8,7 +8,6 @@ import {
 import * as cheerio from 'cheerio';
 import {ConferenceDescriptor} from "../../../../../shared/conference-descriptor.firestore";
 import {Day} from "../../../../../shared/event-list.firestore";
-import axios from "axios";
 import {
     BREAK_PARSER,
     BREAK_TIME_SLOT_PARSER,
@@ -19,6 +18,7 @@ import {CrawlerKind} from "../crawl";
 import {ISODatetime} from "../../../../../shared/type-utils";
 import {Temporal} from "@js-temporal/polyfill";
 import {match, P} from "ts-pattern";
+import {http} from "../utils";
 
 /**
  * WARNING: THIS IS AN AWFUL CRAWLER IMPL
@@ -70,7 +70,7 @@ export const BDXIO_CRAWLER: CrawlerKind<typeof BDXIO_PARSER> = {
     descriptorParser: BDXIO_PARSER,
     crawlerImpl: async (eventId: string, descriptor: z.infer<typeof BDXIO_PARSER>, criteria: { dayIds?: string[]|undefined }): Promise<FullEvent> => {
         let baseUrl = `https://bdxio.fr`;
-        const $schedulePage = cheerio.load((await axios.get(`${baseUrl}/schedule`, {responseType: 'text'})).data);
+        const $schedulePage = cheerio.load(await http.getAsText(`${baseUrl}/schedule`));
 
         const days = descriptor.days;
         const day = days[0];
@@ -98,7 +98,7 @@ export const BDXIO_CRAWLER: CrawlerKind<typeof BDXIO_PARSER> = {
                 }
 
                 const talkUrl = $talkLinkAttrs.href;
-                const $talkPage = cheerio.load((await axios.get(`${baseUrl}${talkUrl}`, {responseType: 'text'})).data);
+                const $talkPage = cheerio.load(await http.getAsText(`${baseUrl}${talkUrl}`));
 
                 const talkId = extractIdFromUrl(talkUrl);
 

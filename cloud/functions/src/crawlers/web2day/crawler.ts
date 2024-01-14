@@ -8,7 +8,6 @@ import {
 import * as cheerio from 'cheerio';
 import {ConferenceDescriptor} from "../../../../../shared/conference-descriptor.firestore";
 import {Day} from "../../../../../shared/event-list.firestore";
-import axios from "axios";
 import {
     BREAK_PARSER,
     BREAK_TIME_SLOT_PARSER,
@@ -18,6 +17,7 @@ import {
 import {CrawlCriteria, CrawlerKind} from "../crawl";
 import {ISODatetime} from "../../../../../shared/type-utils";
 import {Temporal} from "@js-temporal/polyfill";
+import {http} from "../utils";
 
 const WEB2DAY_PARSER = EVENT_DESCRIPTOR_PARSER.omit({
     id: true
@@ -49,7 +49,7 @@ function extractRangeFromTimeslot(rawTimeslot: string, day: Day, timezone: strin
 export const WEB2DAY_CRAWLER: CrawlerKind<typeof WEB2DAY_PARSER> = {
     descriptorParser: WEB2DAY_PARSER,
     crawlerImpl: async (eventId: string, descriptor: z.infer<typeof WEB2DAY_PARSER>, criteria: { dayIds?: string[]|undefined }): Promise<FullEvent> => {
-        const $schedulePage = cheerio.load((await axios.get(`https://web2day.co/programme/`, {responseType: 'text'})).data);
+        const $schedulePage = cheerio.load(await http.getAsText(`https://web2day.co/programme/`));
 
         const days = criteria.dayIds?descriptor.days.filter(d => criteria.dayIds?.includes(d.id)):descriptor.days;
         const daySectionSelector = descriptor.days.find(d => criteria.dayIds?.includes(d.id))?.schedulePageElementId
@@ -65,7 +65,7 @@ export const WEB2DAY_CRAWLER: CrawlerKind<typeof WEB2DAY_PARSER> = {
                 }
 
                 const talkId = extractIdFromUrl(talkUrl);
-                const $talkPage = cheerio.load((await axios.get(`${talkUrl}`, {responseType: 'text'})).data);
+                const $talkPage = cheerio.load(await http.getAsText(`${talkUrl}`));
 
                 const flagUrl = $talkPage(`.eventSingle-flag`).attr()?.src;
                 const lang = flagUrl?(flagUrl.endsWith('france.svg')?'FR':'EN'):'FR';
@@ -99,7 +99,7 @@ export const WEB2DAY_CRAWLER: CrawlerKind<typeof WEB2DAY_PARSER> = {
                 let summary: string|null, title: string|null;
                 if(lang === 'EN') {
                     const enTalkUrl = talkUrl.replace("web2day.co/event", "web2day.co/en/event");
-                    const $enTalkPage = cheerio.load((await axios.get(`${enTalkUrl}`, {responseType: 'text'})).data);
+                    const $enTalkPage = cheerio.load(await http.getAsText(`${enTalkUrl}`));
 
                     summary = $enTalkPage(`.eventSingle-desc`).html()
                     title = $enTalkPage(`h1`).text().trim()
@@ -130,7 +130,7 @@ export const WEB2DAY_CRAWLER: CrawlerKind<typeof WEB2DAY_PARSER> = {
 
         const uniqueSpeakerUrls = Array.from(new Set(rawDetailedTalks.flatMap(t => t!.speakerUrls.map(sp => sp.speakerUrl))))
         const speakers = await Promise.all(uniqueSpeakerUrls.map(async spUrl => {
-            const $speakerPage = cheerio.load((await axios.get(`${spUrl}`, {responseType: 'text'})).data);
+            const $speakerPage = cheerio.load(await http.getAsText(`${spUrl}`));
 
             const speakerId = extractIdFromUrl(spUrl);
 

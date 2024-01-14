@@ -16,9 +16,9 @@ import * as cheerio from 'cheerio';
 import {match, P} from "ts-pattern";
 import {ConferenceDescriptor} from "../../../../../shared/conference-descriptor.firestore";
 import {Day} from "../../../../../shared/event-list.firestore";
-import axios from "axios";
 import {EVENT_DESCRIPTOR_PARSER} from "../crawler-parsers";
 import {CrawlerKind} from "../crawl";
+import {http} from "../utils";
 
 const LA_PRODUCT_CONF_DESCRIPTOR_PARSER = EVENT_DESCRIPTOR_PARSER.omit({
     id: true
@@ -30,13 +30,13 @@ const TIMEZONE_OFFSET = Temporal.Duration.from({hours: 2})
 export const LA_PRODUCT_CONF_CRAWLER: CrawlerKind<typeof LA_PRODUCT_CONF_DESCRIPTOR_PARSER> = {
     descriptorParser: LA_PRODUCT_CONF_DESCRIPTOR_PARSER,
     crawlerImpl: async (eventId: string, descriptor: z.infer<typeof LA_PRODUCT_CONF_DESCRIPTOR_PARSER>, criteria: { dayIds?: string[]|undefined }): Promise<FullEvent> => {
-        const $speakersPage = cheerio.load((await axios.get('https://www.laproductconf.com/paris/lpc', {responseType: 'text'})).data);
+        const $speakersPage = cheerio.load(await http.getAsText('https://www.laproductconf.com/paris/lpc'));
 
         const speakers = await Promise.all(
             $speakersPage(".speakers-container a.speaker-thumbnail").map(async (_, speakerThumb) => {
                 const $speakerLink = $speakersPage(speakerThumb);
 
-                const $speakerPage = cheerio.load((await axios.get(`https://www.laproductconf.com${$speakerLink.attr()?.href}`, {responseType: 'text'})).data);
+                const $speakerPage = cheerio.load(await http.getAsText(`https://www.laproductconf.com${$speakerLink.attr()?.href}`));
                 const $speakerPic = $speakerPage('.speaker-picture-bg')
                 const picture = $speakerPic.attr()?.style.replace(/.*background-image\s*:\s*url\("([^"]+)"\)/gi, "$1");
                 const speakerFullname = $speakerPage(".speaker-description-box h2").text().trim()
@@ -55,7 +55,7 @@ export const LA_PRODUCT_CONF_CRAWLER: CrawlerKind<typeof LA_PRODUCT_CONF_DESCRIP
             })
         )
 
-        const $schedulePage = cheerio.load((await axios.get(`https://www.laproductconf.com/paris/schedule`, {responseType: 'text'})).data);
+        const $schedulePage = cheerio.load(await http.getAsText(`https://www.laproductconf.com/paris/schedule`));
 
         const nonMergedTimeslots: ScheduleTimeSlot[] = [],
             talks: DetailedTalk[] = [];

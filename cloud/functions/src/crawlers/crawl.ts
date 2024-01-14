@@ -8,7 +8,7 @@ import {match, P} from "ts-pattern";
 import {v4 as uuidv4} from "uuid"
 import {ConferenceOrganizerSpace} from "../../../../shared/conference-organizer-space.firestore";
 import {eventLastUpdateRefreshed} from "../functions/firestore/firestore-utils";
-const axios = require('axios');
+import {http} from "./utils";
 
 export type CrawlerKind<ZOD_TYPE extends z.ZodType> = {
     crawlerImpl: (eventId: string, crawlerDescriptor: z.infer<ZOD_TYPE>, criteria: { dayIds?: string[]|undefined }) => Promise<FullEvent>,
@@ -100,7 +100,7 @@ const crawlAll = async function(criteria: CrawlCriteria) {
             }
 
             info(`crawling event ${crawlerDescriptor.id} of type [${crawlerDescriptor.kind}]...`)
-            const crawlerDescriptorContent = (await axios.get(crawlerDescriptor.descriptorUrl)).data
+            const crawlerDescriptorContent = await http.get(crawlerDescriptor.descriptorUrl)
             const crawlerKindDescriptor = crawler.descriptorParser.parse(crawlerDescriptorContent);
 
             const event = await crawler.crawlerImpl(crawlerDescriptor.id, crawlerKindDescriptor, { dayIds: criteria.dayIds });

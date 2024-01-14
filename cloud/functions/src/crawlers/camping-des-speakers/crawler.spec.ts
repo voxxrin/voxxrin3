@@ -1,7 +1,7 @@
 import {describe, it} from 'vitest'
 import {FULL_EVENT_PARSER} from "../crawler-parsers";
-import axios from "axios";
 import {CAMPING_DES_SPEAKERS_CRAWLER} from "./crawler";
+import {http} from "../utils";
 
 describe('camping-des-speakers crawler', () => {
     const events = [{
@@ -10,8 +10,8 @@ describe('camping-des-speakers crawler', () => {
     }] as const;
     events.forEach(event => {
         it(`Loading ${event.confName} schedule`, async () => {
-            const descriptorResp = await axios.get(event.descriptorUrl);
-            const descriptor = CAMPING_DES_SPEAKERS_CRAWLER.descriptorParser.parse(descriptorResp.data)
+            const descriptorPayload = await http.get(event.descriptorUrl);
+            const descriptor = CAMPING_DES_SPEAKERS_CRAWLER.descriptorParser.parse(descriptorPayload)
             const result = await CAMPING_DES_SPEAKERS_CRAWLER.crawlerImpl(event.id, descriptor, { dayIds: ['Jeudi'] });
             FULL_EVENT_PARSER.parse(result);
         }, { timeout: 30000 })

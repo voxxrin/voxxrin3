@@ -19,10 +19,10 @@ import { Day, ListableEvent } from "../../../../../shared/event-list.firestore";
 import { Temporal } from "@js-temporal/polyfill";
 import {z} from "zod";
 import {ConferenceDescriptor} from "../../../../../shared/conference-descriptor.firestore";
-import axios from "axios";
 import {EVENT_DESCRIPTOR_PARSER, INFOS_PARSER, TALK_FORMAT_PARSER} from "../crawler-parsers";
 import {CrawlerKind, TALK_FORMAT_FALLBACK_COLORS} from "../crawl";
 import {match} from "ts-pattern";
+import {http} from "../utils";
 
 const daysOfWeek = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
 
@@ -53,12 +53,10 @@ export const DEVOXX_CRAWLER: CrawlerKind<typeof DEVOXX_DESCRIPTOR_PARSER> = {
     crawlerImpl: async (eventId: string, descriptor: z.infer<typeof DEVOXX_DESCRIPTOR_PARSER>, criteria: { dayIds?: string[]|undefined }) => {
         const rawCfpBaseUrl = descriptor.cfpBaseUrl || `https://${descriptor.cfpId}.cfp.dev`;
         const cfpBaseUrl = rawCfpBaseUrl+(rawCfpBaseUrl.endsWith("/")?"":"/")
-        const [eventResp, floorPlansResp] = await Promise.all([
-            axios.get(`${cfpBaseUrl}api/public/event`),
-            axios.get(`${cfpBaseUrl}api/public/floorplans`),
+        const [cfpEvent, cfpFloorPlans] = await Promise.all([
+            http.get<CfpEvent>(`${cfpBaseUrl}api/public/event`),
+            http.maybeGet<DevoxxFloorPlan[]>(`${cfpBaseUrl}api/public/floorplans`),
         ])
-        const cfpEvent: CfpEvent = eventResp.data;
-        const cfpFloorPlans: DevoxxFloorPlan[]|undefined = floorPlansResp?.data;
 
         const start = cfpEvent.fromDate.substring(0, 10) as ISOLocalDate
         const end = cfpEvent.toDate.substring(0, 10) as ISOLocalDate
@@ -151,22 +149,7 @@ export const DEVOXX_CRAWLER: CrawlerKind<typeof DEVOXX_DESCRIPTOR_PARSER> = {
 
 
 const crawlDevoxxDay = async (cfpBaseUrl: string, day: string) => {
-    const res = await axios.get(`${cfpBaseUrl}api/public/schedules/${day}`, {
-      headers: {
-        Connection: 'keep-alive',
-        'Keep-Alive': 'timeout=1500, max=100'
-      }
-    })
-
-    debug(`axios.get() result type: ${typeof res.data}`)
-
-    if(typeof res.data !== 'object') {
-      throw Error(`Unexpected daily schedule result type (${typeof res.data}) for ${day} : ${res.data}`)
-    }
-
-    const schedules:DevoxxScheduleItem[] = (typeof res.data === 'string') ? JSON.parse(res.data) : res.data;
-
-    debug(`Fetched daily schedule for day ${day}: ${JSON.stringify(schedules)} (${typeof schedules})`)
+    const schedules = await http.get<DevoxxScheduleItem[]>(`${cfpBaseUrl}api/public/schedules/${day}`)
 
     const daySchedule: DailySchedule = {
         day: day,

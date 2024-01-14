@@ -1,7 +1,7 @@
 import {describe, it} from 'vitest'
 import {FULL_EVENT_PARSER} from "../crawler-parsers";
-import axios from "axios";
 import {CODEURS_EN_SEINE_CRAWLER} from "./crawler";
+import {http} from "../utils";
 
 describe('web2day crawler', () => {
     const events = [{
@@ -10,8 +10,8 @@ describe('web2day crawler', () => {
     }] as const;
     events.forEach(event => {
         it(`Loading ${event.confName} schedule`, async () => {
-            const descriptorResp = await axios.get(event.descriptorUrl);
-            const descriptor = CODEURS_EN_SEINE_CRAWLER.descriptorParser.parse(descriptorResp.data)
+            const descriptorPayload = await http.get(event.descriptorUrl);
+            const descriptor = CODEURS_EN_SEINE_CRAWLER.descriptorParser.parse(descriptorPayload)
             const result = await CODEURS_EN_SEINE_CRAWLER.crawlerImpl(event.id, descriptor, { dayIds: ['Vendredi'] });
             FULL_EVENT_PARSER.parse(result);
         }, { timeout: 30000 })
