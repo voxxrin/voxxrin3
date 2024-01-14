@@ -1,5 +1,4 @@
 import {debug, info} from "../../firebase";
-import * as _ from "lodash";
 
 import {
     CfpEvent,
@@ -170,7 +169,12 @@ const crawlDevoxxDay = async (cfpBaseUrl: string, day: string) => {
     const rooms: ConferenceDescriptor['rooms'] = [];
     const talkFormats: ConferenceDescriptor['talkFormats'] = [];
 
-    const slots = _.groupBy(schedules, (s:DevoxxScheduleItem) => {return s.fromDate + "--" + s.toDate})
+    const slots = schedules.reduce((slots, item) => {
+      const key = `${item.fromDate}--${item.toDate}`
+      slots[key] = slots[key] || [];
+      slots[key].push(item);
+      return slots;
+    }, {} as Record<string, DevoxxScheduleItem[]>)
 
     debug(`Devoxx slots for day ${day}: ${JSON.stringify(slots)}`)
 
@@ -233,7 +237,7 @@ const crawlDevoxxDay = async (cfpBaseUrl: string, day: string) => {
         return { talk, detailedTalk };
     }
 
-    _.forIn(slots, (items: DevoxxScheduleItem[], key: string) => {
+    for(const [key, items] of Object.entries(slots)) {
         const [start, end] = key.split("--")
 
         info(key + "\n-------------------\n  - " + items.map((schedule:DevoxxScheduleItem, itemIndex) => {
@@ -290,7 +294,7 @@ const crawlDevoxxDay = async (cfpBaseUrl: string, day: string) => {
                 talks
             })
         }
-    })
+    }
 
     info("devoxx day crawling done for " + day)
     return {daySchedule, talkStats, talks: detailedTalks, rooms, talkFormats }
