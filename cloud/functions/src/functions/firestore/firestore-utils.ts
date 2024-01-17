@@ -65,10 +65,13 @@ export async function ensureTalkFeedbackViewerTokenIsValidThenGetFeedbacks(event
     return feedbacks.filter(feedback => Date.parse(feedback.lastUpdatedOn) > updatedSince.getTime());
 }
 
-export async function eventTalkStatsFor(eventId: string) {
+export async function eventTalkStatsFor(eventId: string): Promise<TalkStats[]> {
     return logPerf(`eventTalkStatsFor(${eventId})`, async () => {
-        const eventTalkStatsPerTalkId = (await db.doc(`events/${eventId}/talksStats-allInOne/self`).get()).data() as Record<string, TalkStats>;
-        return Object.values(eventTalkStatsPerTalkId);
+        const eventTalkStatsPerTalkId = (await db.doc(`events/${eventId}/talksStats-allInOne/self`).get()).data() as Record<string, Omit<TalkStats, 'id'>>;
+        return Object.entries(eventTalkStatsPerTalkId).map(([id, talkStats]) => ({
+          id,
+          ...talkStats
+        }))
     })
 }
 
