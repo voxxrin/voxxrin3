@@ -27,6 +27,7 @@ import {
 import {
     introduceOrganizerSpaceDailyRatings
 } from "../firestore/migrations/011-introduceOrganizerSpaceDailyRatings";
+import {resetFavoritesLastUpdates} from "../firestore/migrations/012-resetFavoritesLastUpdates";
 
 /**
  * Like Flyway, but for firestore :-)
@@ -47,6 +48,7 @@ const MIGRATIONS: Migration[] = [
     { name: "introduceOrganizerSpaceDailyRatings", exec: introduceOrganizerSpaceDailyRatings },
     { name: "introduceOrganizerSpaceDailyRatingsAgain", exec: introduceOrganizerSpaceDailyRatings },
     { name: "cleanComputedTalkFavoritesCollectionsDeletion", exec: cleanComputedTalkFavoritesCollectionsDeletion },
+    { name: "resetFavoritesLastUpdates", exec: resetFavoritesLastUpdates },
 ];
 
 export type MigrationResult = "OK"|"Error";
