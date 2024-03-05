@@ -409,6 +409,10 @@ type RootTranslation = {
 	 * F​r​e​q​u​e​n​t​l​y​ ​a​s​k​e​d​ ​q​u​e​s​t​i​o​n​s
 	 */
 	Frequently_asked_questions: string
+	/**
+	 * O​n​ ​f​l​a​c​k​y​ ​c​o​n​n​e​c​t​i​o​n​s​,​ ​a​u​t​h​e​n​t​i​c​a​t​i​n​g​ ​t​h​e​ ​u​s​e​r​ ​c​a​n​ ​t​a​k​e​ ​t​i​m​e​,​ ​l​e​a​d​i​n​g​ ​t​o​ ​a​ ​l​o​n​g​ ​l​o​a​d​i​n​g​ ​s​p​i​n​n​e​r​.​ ​T​o​ ​w​o​r​k​a​r​o​u​n​d​ ​t​h​i​s​,​ ​y​o​u​ ​c​a​n​ ​e​i​t​h​e​r​ ​R​e​l​o​a​d​ ​t​h​e​ ​p​a​g​e​,​ ​o​r​ ​p​u​t​ ​y​o​u​r​ ​d​e​v​i​c​e​ ​c​o​m​p​l​e​t​e​l​y​ ​o​f​f​l​i​n​e​,​ ​s​o​ ​t​h​a​t​ ​F​i​r​e​b​a​s​e​ ​d​o​e​s​n​'​t​ ​e​v​e​n​ ​t​r​y​ ​t​o​ ​u​p​d​a​t​e​ ​a​u​t​h​e​n​t​i​c​a​t​e​d​ ​u​s​e​r​'​s​ ​i​n​f​o​s
+	 */
+	On_flacky_connections_it_is_difficult_to_authenticate_the_user: string
 }
 
 export type TranslationFunctions = {
@@ -804,6 +808,10 @@ export type TranslationFunctions = {
 	 * Frequently asked questions
 	 */
 	Frequently_asked_questions: () => LocalizedString
+	/**
+	 * On flacky connections, authenticating the user can take time, leading to a long loading spinner. To workaround this, you can either Reload the page, or put your device completely offline, so that Firebase doesn't even try to update authenticated user's infos
+	 */
+	On_flacky_connections_it_is_difficult_to_authenticate_the_user: () => LocalizedString
 }
 
 export type Formatters = {}

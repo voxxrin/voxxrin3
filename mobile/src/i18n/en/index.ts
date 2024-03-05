@@ -99,6 +99,7 @@ const en = {
     App_settings: "App settings",
     Configure_my_preferences_app: "Configure my preferences app",
     Frequently_asked_questions: "Frequently asked questions",
+  	On_flacky_connections_it_is_difficult_to_authenticate_the_user: "On flacky connections, authenticating the user can take time, leading to a long loading spinner. To workaround this, you can either Reload the page, or put your device completely offline, so that Firebase doesn't even try to update authenticated user's infos"
 } satisfies BaseTranslation
 
 export default en
