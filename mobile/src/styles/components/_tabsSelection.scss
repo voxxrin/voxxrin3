@@ -64,7 +64,8 @@
       border-radius: 34px;
 
       @media (prefers-color-scheme: dark) {
-        background-color: var(--app-background);
+        background-color: transparent;
+        border: 1px solid var(--app-white);
         color: var(--app-white);
       }
     }

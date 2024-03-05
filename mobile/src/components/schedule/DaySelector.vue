@@ -366,10 +366,13 @@ function findDayByLocalDate(localDate: string) {
         left: 16px;
         right: 8px;
       }
-
       font-size: 34px;
       font-weight: 900;
       color: var(--voxxrin-event-theme-colors-primary-hex);
+
+      @media (prefers-color-scheme: dark) {
+        color: var(--app-white);
+      }
     }
 
     .month {
