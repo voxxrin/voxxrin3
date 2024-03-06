@@ -19,7 +19,12 @@ import { Day, ListableEvent } from "../../../../../shared/event-list.firestore";
 import { Temporal } from "@js-temporal/polyfill";
 import {z} from "zod";
 import {ConferenceDescriptor} from "../../../../../shared/conference-descriptor.firestore";
-import {EVENT_DESCRIPTOR_PARSER, INFOS_PARSER, TALK_FORMAT_PARSER} from "../crawler-parsers";
+import {
+  EVENT_DESCRIPTOR_PARSER,
+  INFOS_PARSER,
+  TALK_FORMAT_PARSER,
+  THEMABLE_TALK_FORMAT_PARSER
+} from "../crawler-parsers";
 import {CrawlerKind, TALK_FORMAT_FALLBACK_COLORS} from "../crawl";
 import {match} from "ts-pattern";
 import {http} from "../utils";
@@ -32,14 +37,22 @@ export const DEVOXX_DESCRIPTOR_PARSER = EVENT_DESCRIPTOR_PARSER.omit({
     timezone: true, location: true,
     // We're not putting tracks here even though we can get them from devoxx API
     // because we need a theme color for them that are currently *not* provided by the API
-    talkFormats: true, rooms: true,
+    rooms: true,
+    // We also avoid basing our talkFormats colors on API's sessionType.cssColor because this
+    // color might be used for different purpose than for Voxxrin (for example, for the website, or
+    // for the backoffice scheduling app)
+    // ... and at the same time, for backward compat crawler json config reasons, we don't want to
+    // consider talkFormats field as being mandatory (that's why we're overriding talkFormat zod config:
+    // we make this field optional)
+    talkFormats: true,
 }).extend({
     cfpId: z.string().nullish(),
     cfpBaseUrl: z.string().nullish(),
     eventFamily: z.string(),
     infos: INFOS_PARSER.extend({
         address: z.string().nullish(),
-    }).omit({ floorPlans: true })
+    }).omit({ floorPlans: true }),
+    talkFormats: z.array(THEMABLE_TALK_FORMAT_PARSER).optional(),
 })
 
 type DevoxxFloorPlan = {
@@ -104,7 +117,7 @@ export const DEVOXX_CRAWLER: CrawlerKind<typeof DEVOXX_DESCRIPTOR_PARSER> = {
             eventRooms: ConferenceDescriptor['rooms'] = [],
             eventTalkFormats: ConferenceDescriptor['talkFormats'] = [];
         await Promise.all(daysMatchingCriteria.map(async day => {
-            const {daySchedule, talkStats, talks, rooms, talkFormats} = await crawlDevoxxDay(cfpBaseUrl, day.id)
+            const {daySchedule, talkStats, talks, rooms, talkFormats} = await crawlDevoxxDay(cfpBaseUrl, day.id, descriptor)
             daySchedules.push(daySchedule)
             for (const talk of talks) {
                 eventTalks.push(talk)
@@ -148,7 +161,7 @@ export const DEVOXX_CRAWLER: CrawlerKind<typeof DEVOXX_DESCRIPTOR_PARSER> = {
 };
 
 
-const crawlDevoxxDay = async (cfpBaseUrl: string, day: string) => {
+const crawlDevoxxDay = async (cfpBaseUrl: string, day: string, descriptor: z.infer<typeof DEVOXX_DESCRIPTOR_PARSER>) => {
     const schedules = await http.get<DevoxxScheduleItem[]>(`${cfpBaseUrl}api/public/schedules/${day}`)
 
     const daySchedule: DailySchedule = {
@@ -161,7 +174,7 @@ const crawlDevoxxDay = async (cfpBaseUrl: string, day: string) => {
     const detailedTalks: DetailedTalk[] = []
 
     const rooms: ConferenceDescriptor['rooms'] = [];
-    const talkFormats: ConferenceDescriptor['talkFormats'] = [];
+    const talkFormats = descriptor.talkFormats || [];
 
     const slots = schedules.reduce((slots, item) => {
       const key = `${item.fromDate}--${item.toDate}`
@@ -178,9 +191,10 @@ const crawlDevoxxDay = async (cfpBaseUrl: string, day: string) => {
         }
         if(!talkFormats.find(tf => tf.id === item.sessionType.id.toString())) {
             talkFormats.push({
-                id: item.sessionType.id.toString(), title: item.sessionType.name,
+                id: item.sessionType.id.toString(),
+                title: item.sessionType.name,
                 duration: `PT${item.sessionType.duration}m`,
-                themeColor: item.sessionType.cssColor || TALK_FORMAT_FALLBACK_COLORS[talkFormats.length % TALK_FORMAT_FALLBACK_COLORS.length]
+                themeColor: TALK_FORMAT_FALLBACK_COLORS[talkFormats.length % TALK_FORMAT_FALLBACK_COLORS.length]
             });
         }
 
