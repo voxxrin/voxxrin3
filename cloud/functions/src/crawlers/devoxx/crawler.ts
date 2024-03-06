@@ -280,13 +280,15 @@ const crawlDevoxxDay = async (cfpBaseUrl: string, day: string) => {
                 return talks;
             }, [] as Talk[]);
 
-            daySchedule.timeSlots.push({
+            if(talks.length) {
+              daySchedule.timeSlots.push({
                 id: key as any,
                 start: start as ISODatetime,
                 end: end as ISODatetime,
                 type: "talks",
                 talks
-            })
+              })
+            }
         }
     }
 
