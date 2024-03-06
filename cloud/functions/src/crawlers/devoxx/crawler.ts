@@ -215,7 +215,7 @@ const crawlDevoxxDay = async (cfpBaseUrl: string, day: string) => {
                 id: item.proposal.track.id.toString(),
                 title: item.proposal.track.name
             },
-            language: "EN"
+            language: item.proposal.language?.alpha2 || "en"
         };
 
         const upperFirstAudience = item.proposal.audienceLevel.charAt(0).toUpperCase() + item.proposal.audienceLevel.slice(1).toLowerCase();
