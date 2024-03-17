@@ -28,9 +28,9 @@ const tabs = computed(() => {
         icon: '/assets/icons/line/calendar-line.svg',
         selectedIcon: '/assets/icons/solid/calendar.svg',
     }].concat(confDescriptor?.features.favoritesEnabled?[{
-        id: 'favorites', url: `/events/${eventId.value.value}/favorites`, label: LL.value.Favorites(),
-        icon: '/assets/icons/line/bookmark-line-favorite.svg',
-        selectedIcon: '/assets/icons/solid/bookmark-favorite.svg',
+        id: 'speakers', url: `/events/${eventId.value.value}/speakers`, label: LL.value.Speakers(),
+        icon: '/assets/icons/line/megaphone-line.svg',
+        selectedIcon: '/assets/icons/solid/megaphone.svg',
     }]:[]).concat(confDescriptor && areFeedbacksEnabled(confDescriptor) ? [{
         id: 'feedbacks', url: `/events/${eventId.value.value}/feedbacks`, label: LL.value.Feedbacks(),
         icon: '/assets/icons/line/comments-2-line.svg',
