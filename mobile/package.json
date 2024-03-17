@@ -25,15 +25,15 @@
     "typesafe-i18n": "typesafe-i18n"
   },
   "dependencies": {
-    "@capacitor/android": "5.4.0",
-    "@capacitor/app": "5.0.6",
-    "@capacitor/browser": "5.1.0",
-    "@capacitor/core": "5.4.0",
-    "@capacitor/haptics": "5.0.6",
-    "@capacitor/ios": "5.4.0",
-    "@capacitor/keyboard": "5.0.6",
-    "@capacitor/splash-screen": "5.0.6",
-    "@capacitor/status-bar": "5.0.6",
+    "@capacitor/android": "5.7.3",
+    "@capacitor/app": "5.0.7",
+    "@capacitor/browser": "5.2.0",
+    "@capacitor/core": "5.7.3",
+    "@capacitor/haptics": "5.0.7",
+    "@capacitor/ios": "5.7.3",
+    "@capacitor/keyboard": "5.0.8",
+    "@capacitor/splash-screen": "5.0.7",
+    "@capacitor/status-bar": "5.0.7",
     "@ionic/vue": "7.0.8-dev.11684439870.1ade4229",
     "@ionic/vue-router": "7.0.8-dev.11684439870.1ade4229",
     "@vueuse/core": "^10.1.2",
@@ -48,7 +48,7 @@
     "vuefire": "3.1.0"
   },
   "devDependencies": {
-    "@capacitor/cli": "5.0.0",
+    "@capacitor/cli": "5.7.3",
     "@vitejs/plugin-vue": "4.2.3",
     "@vue/eslint-config-typescript": "11.0.3",
     "@vue/test-utils": "2.3.2",
