@@ -28,6 +28,7 @@ const routes: Array<RouteRecordRaw> = [
     { path: `${space.pathPrefix}/events/:eventId`, component: () => preloadedPage('_BaseEventPages'), children: [
         { path: '', redirect: (route: RouteLocation) => `${space.resolvedPathPrefix(route)}/events/${route.params.eventId}/schedule` },
         { path: 'schedule', component: () => preloadedPage('SchedulePage') },
+        { path: 'speakers', component: () => preloadedPage('SpeakersDirectoryPage') },
         { path: 'favorites', component: () => preloadedPage('FavoritesPage') },
         { path: 'feedbacks', component: () => preloadedPage('FeedbacksPage') },
         { path: 'notifications', component: () => preloadedPage('NotificationsPage') },
