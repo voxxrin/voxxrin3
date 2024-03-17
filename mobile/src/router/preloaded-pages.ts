@@ -1,5 +1,3 @@
-import Swiper from 'swiper';
-import { Navigation, Pagination, Zoom } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -22,11 +20,13 @@ import MyGlobalSettingsPage from '@/views/user/MyGlobalSettingsPage.vue';
 import MyPersonalDataPage from '@/views/user/MyPersonalDataPage.vue';
 import UserTokenRegistrationPage from '@/views/UserTokenRegistrationPage.vue';
 import FAQPage from '@/views/FAQPage.vue';
+import SpeakersDirectoryPage from "@/views/event/SpeakersDirectoryPage.vue";
 
 const modules = {
     _BaseEventPages,
     SchedulePage: _SchedulePage,
     FavoritesPage,
+    SpeakersDirectoryPage,
     FeedbacksPage,
     NotificationsPage,
     InfosPage,
