@@ -4,8 +4,7 @@
     <ion-tab-bar slot="bottom" ref="$tabBarRef">
       <ion-tab-button v-for="(tab, index) in tabs" :key="index"
                       :tab="tab.id" :href="tab.url">
-        <!-- TODO Fix switch icon -->
-        <ion-icon aria-hidden="true" :src="$tabBarRef?.selectedTab === tab.id ? tab.selectedIcon : tab.icon"/>
+        <ion-icon aria-hidden="true" :src="$tabBarRef?.tabState.activeTab === tab.id ? tab.selectedIcon : tab.icon" />
         <ion-label>{{ tab.label }}</ion-label>
         <ion-ripple-effect type="unbounded"></ion-ripple-effect>
       </ion-tab-button>
@@ -47,7 +46,7 @@ const {conferenceDescriptor: confDescriptor} = useSharedConferenceDescriptor(toR
 const { registerTabbedPageNavListeners } = useTabbedPageNav();
 registerTabbedPageNavListeners();
 
-const $tabBarRef = ref<ComponentPublicInstance<HTMLIonTabBarElement>|undefined>(undefined);
+const $tabBarRef = ref<ComponentPublicInstance<HTMLIonTabBarElement & {tabState:{activeTab:string}}>|undefined>(undefined);
 watch([$tabBarRef], ([$tabBar]) => {
     if($tabBar) {
         // Manually pre-selecting tab because, for whatever reason, it doesn't (always) work
