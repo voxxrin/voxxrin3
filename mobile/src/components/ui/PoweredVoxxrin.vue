@@ -5,6 +5,7 @@
 </template>
 
 <script setup lang="ts">
+import {IonText} from "@ionic/vue";
 
 </script>
 
