@@ -5,8 +5,6 @@ const en = {
 	Open_User_Dashboard: `Open user dashboard`,
 	Conference_Selector: `Conference Selector`,
 	Pinned_events: `Pinned events`,
-	Pin_the_event: `Pin the event`,
-	Unpin_the_event: `Unpin the event`,
 	Config_event: `Configuration event`,
 	Logo_event: `Logo`,
 	No_pinned_events_available_yet: `No pinned events available yet`,
