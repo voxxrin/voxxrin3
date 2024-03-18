@@ -14,7 +14,7 @@
 
       <ion-header class="conferenceHeader stickyHeader" collapse="condense">
         <ion-input :placeholder="`${LL.Search_a_conference()}`"
-                   aria-label="Custom input"
+                   :aria-label="LL.Search_a_conference()"
                    :debounce="300"
                    @ionInput="(ev) => searchTextUpdated(''+ev.target.value)"
                    class="searchInput">
