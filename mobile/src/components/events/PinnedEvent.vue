@@ -29,7 +29,7 @@
       </div>
     </div>
     <div class="logo">
-      <ion-img :src="pinnedEvent.logoUrl" />
+      <ion-img :src="pinnedEvent.logoUrl" :alt="LL.Logo_event() + ' ' + pinnedEvent.title"/>
     </div>
   </ion-card>
 </template>
@@ -41,6 +41,9 @@ import MonthDayDateRange from "@/components/MonthDayDateRange.vue";
 import {IonImg} from "@ionic/vue";
 import {PropType} from "vue";
 import {ListableVoxxrinEvent} from "@/models/VoxxrinEvent";
+import {typesafeI18n} from "@/i18n/i18n-vue";
+
+const { LL } = typesafeI18n()
 
 const props = defineProps({
     pinnedEvent: {

@@ -43,6 +43,10 @@ type RootTranslation = {
 	 */
 	Config_event: string
 	/**
+	 * L​o​g​o
+	 */
+	Logo_event: string
+	/**
 	 * N​o​ ​p​i​n​n​e​d​ ​e​v​e​n​t​s​ ​a​v​a​i​l​a​b​l​e​ ​y​e​t
 	 */
 	No_pinned_events_available_yet: string
@@ -457,6 +461,10 @@ export type TranslationFunctions = {
 	 * Configuration event
 	 */
 	Config_event: () => LocalizedString
+	/**
+	 * Logo
+	 */
+	Logo_event: () => LocalizedString
 	/**
 	 * No pinned events available yet
 	 */

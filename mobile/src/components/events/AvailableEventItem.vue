@@ -4,7 +4,7 @@
     <ion-ripple-effect type="bounded"></ion-ripple-effect>
     <div class="eventItem-logoContainer">
       <div class="logo">
-        <ion-img :src="event.logoUrl" />
+        <ion-img :src="event.logoUrl" :alt="LL.Logo_event() + ' ' + event.title"/>
       </div>
     </div>
     <div class="eventItem-infos">

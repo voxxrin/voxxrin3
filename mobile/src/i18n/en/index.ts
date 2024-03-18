@@ -8,6 +8,7 @@ const en = {
 	Pin_the_event: `Pin the event`,
 	Unpin_the_event: `Unpin the event`,
 	Config_event: `Configuration event`,
+	Logo_event: `Logo`,
 	No_pinned_events_available_yet: `No pinned events available yet`,
 	No_conference_registered_yet: `No conference registered yet`,
 	Search_a_conference: `Search a conference`,
