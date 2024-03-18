@@ -2,8 +2,12 @@ import type { BaseTranslation } from '../i18n-types.js'
 
 const en = {
 	HI: 'Hi {name:string}! Please leave a star if you like this project: https://github.com/ivanhofer/typesafe-i18n',
+	Open_User_Dashboard: `Open user dashboard`,
 	Conference_Selector: `Conference Selector`,
 	Pinned_events: `Pinned events`,
+	Pin_the_event: `Pin the event`,
+	Unpin_the_event: `Unpin the event`,
+	Config_event: `Configuration event`,
 	No_pinned_events_available_yet: `No pinned events available yet`,
 	No_conference_registered_yet: `No conference registered yet`,
 	Search_a_conference: `Search a conference`,
