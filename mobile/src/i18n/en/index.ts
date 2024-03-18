@@ -6,6 +6,7 @@ const en = {
 	Conference_Selector: `Conference Selector`,
 	Pinned_events: `Pinned events`,
 	Config_event: `Configuration event`,
+	Back_List_Events: `Back to events list`,
 	Logo_event: `Logo`,
 	No_pinned_events_available_yet: `No pinned events available yet`,
 	No_conference_registered_yet: `No conference registered yet`,

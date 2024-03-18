@@ -31,17 +31,13 @@ type RootTranslation = {
 	 */
 	Pinned_events: string
 	/**
-	 * P​i​n​ ​t​h​e​ ​e​v​e​n​t
-	 */
-	Pin_the_event: string
-	/**
-	 * U​n​p​i​n​ ​t​h​e​ ​e​v​e​n​t
-	 */
-	Unpin_the_event: string
-	/**
 	 * C​o​n​f​i​g​u​r​a​t​i​o​n​ ​e​v​e​n​t
 	 */
 	Config_event: string
+	/**
+	 * B​a​c​k​ ​t​o​ ​e​v​e​n​t​s​ ​l​i​s​t
+	 */
+	Back_List_Events: string
 	/**
 	 * L​o​g​o
 	 */
@@ -450,17 +446,13 @@ export type TranslationFunctions = {
 	 */
 	Pinned_events: () => LocalizedString
 	/**
-	 * Pin the event
-	 */
-	Pin_the_event: () => LocalizedString
-	/**
-	 * Unpin the event
-	 */
-	Unpin_the_event: () => LocalizedString
-	/**
 	 * Configuration event
 	 */
 	Config_event: () => LocalizedString
+	/**
+	 * Back to events list
+	 */
+	Back_List_Events: () => LocalizedString
 	/**
 	 * Logo
 	 */
