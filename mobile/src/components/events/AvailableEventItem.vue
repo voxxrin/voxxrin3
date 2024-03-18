@@ -20,10 +20,15 @@
     </div>
 
     <div class="eventItem-end" slot="end">
-      <ion-button class="configBtn" v-if="eventOrganizerToken" fill="clear" shape="round" @click.stop="navToEventOrganizerPage()">
+      <ion-button class="configBtn" v-if="eventOrganizerToken" fill="clear" shape="round"
+                  :aria-label="LL.Config_event()"
+                  @click.stop="navToEventOrganizerPage()">
         <ion-icon src="/assets/icons/line/settings-cog-line.svg"></ion-icon>
       </ion-button>
-      <ion-button class="btnPin" fill="clear" shape="round" @click.stop="$emit('event-pin-toggled', event, isPinnedRef?'pinned-to-unpinned':'unpinned-to-pinned')">
+      <!-- TODO Fix dynamic aria-label -->
+      <ion-button class="btnPin" fill="clear" shape="round"
+                  :aria-label="isPinnedRef ? LL.Unpin_the_event() : LL.Pin_the_event()"
+                  @click.stop="$emit('event-pin-toggled', event, isPinnedRef?'pinned-to-unpinned':'unpinned-to-pinned')">
         <ion-icon src="/assets/icons/line/pin-line.svg" v-if="!isPinnedRef"></ion-icon>
         <ion-icon class="_is-pined" src="/assets/icons/solid/pin.svg" v-if="isPinnedRef"></ion-icon>
       </ion-button>
@@ -45,6 +50,9 @@ import {
 import {EventId, ListableVoxxrinEvent} from "@/models/VoxxrinEvent";
 import MonthDayDateRange from "@/components/MonthDayDateRange.vue";
 import {useSharedUserTokensWallet} from "@/state/useUserTokensWallet";
+import {typesafeI18n} from "@/i18n/i18n-vue";
+
+const { LL } = typesafeI18n()
 
 const props = defineProps({
   event: {

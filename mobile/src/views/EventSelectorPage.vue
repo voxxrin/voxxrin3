@@ -20,7 +20,6 @@
                    class="searchInput">
           <ion-icon aria-hidden="true" src="/assets/icons/line/search-line.svg"></ion-icon>
         </ion-input>
-
       </ion-header>
 
       <div class="conferenceContent">

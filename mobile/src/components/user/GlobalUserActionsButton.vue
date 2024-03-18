@@ -1,5 +1,6 @@
 <template>
-  <ion-button class="btnUser" shape="round" size="large" @click="openUserDashboard()" v-if="viewableUserDashboard">
+  <ion-button class="btnUser" shape="round" size="large" @click="openUserDashboard()" v-if="viewableUserDashboard"
+              :aria-label="LL.Open_User_Dashboard()">
     <ion-icon src="/assets/icons/line/user-line.svg"></ion-icon>
     <ion-ripple-effect type="unbounded"></ion-ripple-effect>
   </ion-button>
@@ -8,7 +9,9 @@
 <script setup lang="ts">
 import {useIonRouter} from "@ionic/vue";
 import {goBackOrNavigateTo} from "@/router";
+import {typesafeI18n} from "@/i18n/i18n-vue";
 
+const { LL } = typesafeI18n()
 const viewableUserDashboard = import.meta.env.VITE_VIEWABLE_USER_DASHBOARD === "true"
 
 const ionRouter = useIonRouter();

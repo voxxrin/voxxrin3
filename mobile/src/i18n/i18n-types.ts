@@ -19,6 +19,10 @@ type RootTranslation = {
 	 */
 	HI: RequiredParams<'name'>
 	/**
+	 * O​p​e​n​ ​u​s​e​r​ ​d​a​s​h​b​o​a​r​d
+	 */
+	Open_User_Dashboard: string
+	/**
 	 * C​o​n​f​e​r​e​n​c​e​ ​S​e​l​e​c​t​o​r
 	 */
 	Conference_Selector: string
@@ -26,6 +30,18 @@ type RootTranslation = {
 	 * P​i​n​n​e​d​ ​e​v​e​n​t​s
 	 */
 	Pinned_events: string
+	/**
+	 * P​i​n​ ​t​h​e​ ​e​v​e​n​t
+	 */
+	Pin_the_event: string
+	/**
+	 * U​n​p​i​n​ ​t​h​e​ ​e​v​e​n​t
+	 */
+	Unpin_the_event: string
+	/**
+	 * C​o​n​f​i​g​u​r​a​t​i​o​n​ ​e​v​e​n​t
+	 */
+	Config_event: string
 	/**
 	 * N​o​ ​p​i​n​n​e​d​ ​e​v​e​n​t​s​ ​a​v​a​i​l​a​b​l​e​ ​y​e​t
 	 */
@@ -418,6 +434,10 @@ export type TranslationFunctions = {
 	 */
 	HI: (arg: { name: string }) => LocalizedString
 	/**
+	 * Open user dashboard
+	 */
+	Open_User_Dashboard: () => LocalizedString
+	/**
 	 * Conference Selector
 	 */
 	Conference_Selector: () => LocalizedString
@@ -425,6 +445,18 @@ export type TranslationFunctions = {
 	 * Pinned events
 	 */
 	Pinned_events: () => LocalizedString
+	/**
+	 * Pin the event
+	 */
+	Pin_the_event: () => LocalizedString
+	/**
+	 * Unpin the event
+	 */
+	Unpin_the_event: () => LocalizedString
+	/**
+	 * Configuration event
+	 */
+	Config_event: () => LocalizedString
 	/**
 	 * No pinned events available yet
 	 */
