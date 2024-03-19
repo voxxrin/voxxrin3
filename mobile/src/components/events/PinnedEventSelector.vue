@@ -1,21 +1,21 @@
 <template>
   <div v-if="pinnedEvents.length > 0" class="pinnedEventsContainer" tabindex="0">
-    <ion-list class="pinnedEvents" role="list">
-      <div v-if="ongoingEvents.length > 0" class="pinnedEventsDivider" role="separator">
+    <ion-list class="pinnedEvents">
+      <div v-if="ongoingEvents.length > 0" class="pinnedEventsDivider" role="presentation">
         <span v-html="LL.Ongoing_events_highlighted().replace(/(.*)\*(.*)\*(.*)/gi, `$1<strong>$2</strong>$3`)"></span>
       </div>
 
       <pinned-event :pinned-event="pinnedEvent" @click="$emit('event-selected', pinnedEvent)" role="listitem"
                     v-for="(pinnedEvent, index) in ongoingEvents" :key="pinnedEvent.id.value"></pinned-event>
 
-      <div v-if="futureEvents.length > 0" class="pinnedEventsDivider" role="separator">
+      <div v-if="futureEvents.length > 0" class="pinnedEventsDivider" role="presentation">
         <span v-html="LL.Future_events_highlighted().replace(/(.*)\*(.*)\*(.*)/gi, `$1<strong>$2</strong>$3`)"></span>
       </div>
 
       <pinned-event :pinned-event="pinnedEvent" @click="$emit('event-selected', pinnedEvent)" role="listitem"
                     v-for="(pinnedEvent, index) in futureEvents" :key="pinnedEvent.id.value"></pinned-event>
 
-      <div v-if="pastEvents.length > 0" class="pinnedEventsDivider" role="separator">
+      <div v-if="pastEvents.length > 0" class="pinnedEventsDivider" role="presentation">
         <span v-html="LL.Past_events_highlighted().replace(/(.*)\*(.*)\*(.*)/gi, `$1<strong>$2</strong>$3`)"></span>
       </div>
 
