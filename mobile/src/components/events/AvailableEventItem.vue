@@ -29,8 +29,8 @@
       <ion-button class="btnPin" fill="clear" shape="round"
                   :aria-label="isPinnedRef ? LL.Remove_from_pinned_events() : LL.Add_to_my_pinned_events()"
                   @click.stop="$emit('event-pin-toggled', event, isPinnedRef?'pinned-to-unpinned':'unpinned-to-pinned')">
-        <ion-icon src="/assets/icons/line/pin-line.svg" v-if="!isPinnedRef"></ion-icon>
-        <ion-icon class="_is-pined" src="/assets/icons/solid/pin.svg" v-if="isPinnedRef"></ion-icon>
+        <ion-icon src="/assets/icons/line/pin-line.svg" v-if="!isPinnedRef" aria-hidden="true"></ion-icon>
+        <ion-icon class="_is-pined" src="/assets/icons/solid/pin.svg" v-if="isPinnedRef" aria-hidden="true"></ion-icon>
       </ion-button>
     </div>
 

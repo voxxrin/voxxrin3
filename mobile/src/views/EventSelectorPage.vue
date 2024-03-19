@@ -209,7 +209,7 @@ onMounted(() => {
 
       .name {
         font-size: 14px;
-        color: var(--app-beige-dark);
+        color: var(--app-primary);
       }
 
       .welcome {
