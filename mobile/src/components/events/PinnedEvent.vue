@@ -1,9 +1,9 @@
 <template>
   <ion-card class="pinnedEvent-card" v-themed-event-styles="pinnedEvent">
     <current-event-status :conf-descriptor="pinnedEvent"/>
-    <div>
+    <div role="group">
       <div class="pinnedEvent-card-head">
-        <ion-card-title class="title">{{pinnedEvent.title}}</ion-card-title>
+        <ion-card-title class="title" role="heading">{{pinnedEvent.title}}</ion-card-title>
       </div>
 
       <div class="pinnedEvent-card-content">
