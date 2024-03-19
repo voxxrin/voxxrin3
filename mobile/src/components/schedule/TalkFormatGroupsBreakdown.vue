@@ -1,12 +1,14 @@
 <template>
-  <ion-list class="listTalks">
+  <ion-list class="listTalks" role="list">
     <ion-item-group v-for="(perFormatGroup) in perFormatGroups" :key="perFormatGroup.format.id.value">
-      <ion-item-divider class="listTalks-divider">
+      <ion-item-divider class="listTalks-divider" role="presentation">
         <talk-format :format="perFormatGroup.format" />
         <span class="listTalks-divider-separator"></span>
       </ion-item-divider>
 
-      <slot name="talk" v-for="(talk) in perFormatGroup.talks" :key="talk.id.value" :talk="talk" />
+      <div role="list">
+        <slot name="talk" v-for="(talk) in perFormatGroup.talks" :key="talk.id.value" :talk="talk" />
+      </div>
     </ion-item-group>
   </ion-list>
 </template>

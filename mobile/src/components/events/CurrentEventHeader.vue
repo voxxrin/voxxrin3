@@ -14,7 +14,7 @@
         <current-event-status :conf-descriptor="confDescriptor"></current-event-status>
       </div>
     </ion-toolbar>
-    <img :src="confDescriptor?.backgroundUrl">
+    <img :src="confDescriptor?.backgroundUrl" :alt="LL.Banner_Event()">
   </ion-header>
 </template>
 

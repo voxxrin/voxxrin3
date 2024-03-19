@@ -12,15 +12,18 @@
                        @ionInput="(ev) => searchTermsRef = ''+ev.target.value"
             />
             <ion-icon class="iconInput" src="/assets/icons/line/search-line.svg"></ion-icon>
-            <ion-button shape="round" size="small" fill="outline" @click="toggleSearchField()">
+            <ion-button shape="round" size="small" fill="outline" @click="toggleSearchField()"
+                        :aria-label="LL.Search_close()">
               <ion-icon src="/assets/icons/line/close-line.svg"></ion-icon>
             </ion-button>
           </div>
 
-          <ion-button class="ion-margin-end" slot="end" shape="round" size="small" fill="outline" @click="openSchedulePreferencesModal()" v-if="false">
+          <ion-button class="ion-margin-end" slot="end" shape="round" size="small" fill="outline" @click="openSchedulePreferencesModal()"
+                      v-if="false"   :aria-label="LL.Filters()">
             <ion-icon src="/assets/icons/solid/settings-cog.svg"></ion-icon>
           </ion-button>
-          <ion-button slot="end" shape="round" size="small" @click="toggleSearchField()">
+          <ion-button slot="end" shape="round" size="small" @click="toggleSearchField()"
+                      :aria-label="LL.Search()">
             <ion-icon src="/assets/icons/line/search-line.svg"></ion-icon>
           </ion-button>
         </ion-toolbar>
@@ -48,9 +51,10 @@
                 @click="() => toggleExpandedTimeslot(timeslot)">
               <template #accordion-content="{ timeslot, progressStatus, feedback }">
                 <schedule-break v-if="timeslot.type==='break'" :conf-descriptor="confDescriptor" :talk-break="timeslot.break"></schedule-break>
-                <talk-format-groups-breakdown :conf-descriptor="confDescriptor" v-if="timeslot.type==='talks'" :talks="timeslot.talks">
+                <talk-format-groups-breakdown :conf-descriptor="confDescriptor" v-if="timeslot.type==='talks'"
+                                              :talks="timeslot.talks">
                   <template #talk="{ talk }">
-                    <ion-item class="listTalks-item">
+                    <ion-item class="listTalks-item" role="listitem">
                       <schedule-talk :talk="talk" :talk-stats="talkStatsRefByTalkId.get(talk.id.value)" :talk-notes="userEventTalkNotesRef.get(talk.id.value)" @talkClicked="openTalkDetails($event)" :is-highlighted="(talk, talkNotes) => talkNotes.isFavorite" :conf-descriptor="confDescriptor">
                         <template #upper-right="{ talk }">
                           <talk-room :talk="talk" :conf-descriptor="confDescriptor" />

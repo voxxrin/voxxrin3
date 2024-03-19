@@ -95,6 +95,10 @@ type RootTranslation = {
 	 */
 	Schedule: string
 	/**
+	 * B​a​n​n​e​r​ ​e​v​e​n​t
+	 */
+	Banner_Event: string
+	/**
 	 * C​a​n​c​e​l​ ​a​n​d​ ​b​a​c​k​ ​t​o​ ​s​c​h​e​d​u​l​e​ ​p​a​g​e
 	 */
 	Cancel_Back_To_Schedule: string
@@ -102,6 +106,14 @@ type RootTranslation = {
 	 * S​e​a​r​c​h
 	 */
 	Search: string
+	/**
+	 * C​l​o​s​e​ ​s​e​a​r​c​h
+	 */
+	Search_close: string
+	/**
+	 * F​i​l​t​e​r​s
+	 */
+	Filters: string
 	/**
 	 * A​d​d​ ​t​o​ ​W​a​t​c​h​ ​l​a​t​e​r
 	 */
@@ -566,6 +578,10 @@ export type TranslationFunctions = {
 	 */
 	Schedule: () => LocalizedString
 	/**
+	 * Banner event
+	 */
+	Banner_Event: () => LocalizedString
+	/**
 	 * Cancel and back to schedule page
 	 */
 	Cancel_Back_To_Schedule: () => LocalizedString
@@ -573,6 +589,14 @@ export type TranslationFunctions = {
 	 * Search
 	 */
 	Search: () => LocalizedString
+	/**
+	 * Close search
+	 */
+	Search_close: () => LocalizedString
+	/**
+	 * Filters
+	 */
+	Filters: () => LocalizedString
 	/**
 	 * Add to Watch later
 	 */
