@@ -1,6 +1,6 @@
 <template>
   <div :class="['linearRating', { '_small': isSmall }]">
-    <ion-button v-for="(label, index) in config.labels" :key="index" @click="ratingSelected(index)">
+    <ion-button v-for="(label, index) in config.labels" :key="index" @click="ratingSelected(index)" :aria-label="LL.Linear_rating_level() + ' ' + (index + 1)" >
       <ion-icon class="linearRating-icon" :icon="ICONS[config.icon]" :class="{ '_active': selectedIndex !== null && index <= selectedIndex}"></ion-icon>
     </ion-button>
   </div>
@@ -13,7 +13,9 @@ import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor"
 import {star, thumbsUp} from "ionicons/icons";
 import {VoxxrinUserFeedback} from "@/models/VoxxrinFeedback";
 import {Logger} from "@/services/Logger";
+import {typesafeI18n} from "@/i18n/i18n-vue";
 
+const { LL } = typesafeI18n()
 const LOGGER = Logger.named("LinearRating");
 
 const ICONS: Record<VoxxrinConferenceDescriptor['features']['ratings']['scale']['icon'], string> = {

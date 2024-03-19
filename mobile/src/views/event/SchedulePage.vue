@@ -74,11 +74,15 @@
       </ion-accordion-group>
 
       <ion-fab vertical="bottom" horizontal="end" slot="fixed" v-if="(areFeedbacksEnabled(confDescriptor) && missingFeedbacksPastTimeslots.length>0)">
-        <ion-fab-button @click="(ev) => fixAnimationOnFabClosing(ev.target)">
+        <ion-fab-button @click="(ev) => fixAnimationOnFabClosing(ev.target)"
+                        :aria-label="LL.Open_List_Slot_Feedback()">
           <ion-icon src="/assets/icons/line/comment-line-add.svg"></ion-icon>
         </ion-fab-button>
         <ion-fab-list side="top" class="listFeedbackSlot">
-          <div class="listFeedbackSlot-item" v-for="(missingFeedbacksPastTimeslot, index) in missingFeedbacksPastTimeslots" :key="missingFeedbacksPastTimeslot.timeslot.id.value"
+          <div class="listFeedbackSlot-item"
+               :aria-label="LL.Add_Feedback_On_Slot()"
+               v-for="(missingFeedbacksPastTimeslot, index) in missingFeedbacksPastTimeslots"
+               :key="missingFeedbacksPastTimeslot.timeslot.id.value"
                @click="() => navigateToTimeslotFeedbackCreation(missingFeedbacksPastTimeslot.timeslot)">
             <ion-label>{{ missingFeedbacksPastTimeslot.start }} <ion-icon aria-hidden="true" src="assets/icons/line/chevron-right-line.svg"></ion-icon>
               {{ missingFeedbacksPastTimeslot.end }}</ion-label>

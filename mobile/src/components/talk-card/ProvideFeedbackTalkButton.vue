@@ -1,9 +1,9 @@
 <template>
   <div class="talkAction" v-if="provideFeedbackButtonShown">
     <ion-button class="btnTalk btn-feedback">
-    <span class="btn-favorite-group">
-      <ion-icon class="btn-feedback-group-icon" aria-hidden="true" src="/assets/icons/line/comment-line-add.svg"></ion-icon>
-    </span>
+      <span class="btn-favorite-group">
+        <ion-icon class="btn-feedback-group-icon" aria-hidden="true" src="/assets/icons/line/comment-line-add.svg"></ion-icon>
+      </span>
     </ion-button>
   </div>
 </template>

@@ -16,7 +16,8 @@
   }">
     <ion-header class="stickyHeader">
       <ion-toolbar>
-      <ion-button class="stickyHeader-close" shape="round" slot="start" size="small" fill="outline" @click="backButtonClicked">
+      <ion-button class="stickyHeader-close" shape="round" slot="start" size="small" fill="outline"
+                  @click="backButtonClicked"  :aria-label="LL.Nav_Back()">
         <ion-icon src="/assets/icons/line/arrow-left-line.svg"></ion-icon>
       </ion-button>
       <ion-title class="stickyHeader-title" slot="start">{{LL.Add_Feedback()}}</ion-title>
