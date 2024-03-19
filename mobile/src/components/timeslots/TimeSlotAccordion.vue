@@ -294,7 +294,8 @@ const hasMissingFeedback = computed(() => {
           display: flex;
           align-items: center;
           height: 100%;
-          width: 44px !important;
+          width: fit-content;
+          max-width: 44px !important;
           padding: 0;
         }
       }
