@@ -89,9 +89,17 @@ function ratingSelected(index: number) {
     color: var(--app-beige-dark);
     opacity: 0.5;
 
+    @media (prefers-color-scheme: dark) {
+      color: var(--app-grey-contrast);
+    }
+
     &._active {
       opacity: 1;
       color: var(--voxxrin-event-theme-colors-primary-hex);
+
+      @media (prefers-color-scheme: dark) {
+        color: var(--app-white);
+      }
     }
   }
 

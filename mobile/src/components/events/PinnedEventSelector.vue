@@ -71,6 +71,7 @@ const futureEvents = computed(() =>
 
 .pinnedEventsContainer {
   overflow-y: auto;
+  padding-right: var(--app-gutters);
 }
 
 .pinnedEvents {

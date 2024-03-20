@@ -92,15 +92,21 @@ ion-checkbox {
   --checkbox-background-checked: var(--voxxrin-event-theme-colors-primary-hex);
   --border-color-checked: var(--voxxrin-event-theme-colors-primary-hex);
   --size: 24px;
-  color: var(--app-grey-dark);
+  color: var(--app-primary);
   font-weight: 400;
 
   @media (prefers-color-scheme: dark) {
     --border-color: var(--app-line-contrast);
-    color: var(--app-grey-medium);
+    --border-color-checked: var(--app-white);
+    --checkbox-background-checked: transparent;
+    color: var(--app-grey-contrast);
   }
 
   &.checkbox-checked {
     color: var(--voxxrin-event-theme-colors-primary-hex);
+
+    @media (prefers-color-scheme: dark) {
+      color: var(--app-white);
+    }
   }
 }

@@ -52,6 +52,10 @@ function ratingSelected(result: null|{score:number, selectedLabel: string}) {
     width: 124px;
     font-size: 18px;
     color: var(--voxxrin-event-theme-colors-primary-hex);
+
+    @media (prefers-color-scheme: dark) {
+      color: var(--app-white);
+    }
   }
 
   &-list {

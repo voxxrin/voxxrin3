@@ -210,6 +210,10 @@ onMounted(() => {
       .name {
         font-size: 14px;
         color: var(--app-primary);
+
+        @media (prefers-color-scheme: dark) {
+          color: var(--app-white-70);
+        }
       }
 
       .welcome {

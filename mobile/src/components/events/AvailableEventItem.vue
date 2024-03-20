@@ -368,7 +368,7 @@ function navToEventOrganizerPage() {
       color: var(--app-grey-dark);
 
       @media (prefers-color-scheme: dark) {
-        color: var(--app-beige-dark);
+        color: var(--app-white-70);
       }
 
       ion-icon {
@@ -376,7 +376,7 @@ function navToEventOrganizerPage() {
         color: var(--app-beige-dark);
 
         @media (prefers-color-scheme: dark) {
-          color: var(--app-grey-dark);
+          color: var(--app-white-70);
         }
       }
     }
@@ -390,9 +390,17 @@ function navToEventOrganizerPage() {
       text-align: left;
       word-break: break-word;
 
+      @media (prefers-color-scheme: dark) {
+        color: var(--app-white-70);
+      }
+
       ion-icon {
         font-size: 16px;
         color: var(--app-beige-dark);
+
+        @media (prefers-color-scheme: dark) {
+          color: var(--app-white-70);
+        }
       }
     }
   }
