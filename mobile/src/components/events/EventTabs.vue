@@ -76,6 +76,15 @@ ion-tab-bar {
       color: var(--app-grey-medium);
     }
 
+    ion-icon {
+      margin-top: 4px;
+      font-size: 26px;
+
+      @media (prefers-color-scheme: dark) {
+        color: var(--app-grey-medium);
+      }
+    }
+
     &.tab-selected {
       color: var(--voxxrin-event-theme-colors-primary-hex);
 
@@ -92,11 +101,12 @@ ion-tab-bar {
           color: var(--app-white);
         }
       }
-    }
 
-    ion-icon {
-      margin-top: 4px;
-      font-size: 26px;
+      ion-icon {
+        @media (prefers-color-scheme: dark) {
+          color: var(--app-white);
+        }
+      }
     }
   }
 }

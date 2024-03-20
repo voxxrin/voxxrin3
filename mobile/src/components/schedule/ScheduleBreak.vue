@@ -89,27 +89,6 @@ const props = defineProps({
           color: var(--app-white);
         }
       }
-
-      .room {
-        display: flex;
-        align-items: center;
-        column-gap: 2px;
-        font-weight: 500;
-        color: var(--app-grey-dark);
-
-        @media (prefers-color-scheme: dark) {
-          color: rgba(white, 0.8);
-        }
-
-        ion-icon {
-          font-size: 16px;
-          color: var(--app-primary-shade);
-
-          @media (prefers-color-scheme: dark) {
-            color: var(--app-white);
-          }
-        }
-      }
     }
 
     .breakIcon {

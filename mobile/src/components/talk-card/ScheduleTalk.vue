@@ -211,27 +211,6 @@ const theme = {
         --color: var(--app-white);
       }
     }
-
-    .room {
-      display: flex;
-      align-items: center;
-      column-gap: 2px;
-      font-weight: 500;
-      color: var(--app-grey-dark);
-
-      @media (prefers-color-scheme: dark) {
-        color: rgba(white, 0.8);
-      }
-
-      ion-icon {
-        font-size: 16px;
-        color: var(--app-primary-shade);
-
-        @media (prefers-color-scheme: dark) {
-          color: var(--app-white);
-        }
-      }
-    }
   }
 
   &-content {
@@ -315,11 +294,11 @@ const theme = {
       font-size: 12px;
       line-height: 1.1;
       letter-spacing: -0.4px;
-      color: var(--app-grey-dark);
+      color: var(--app-primary);
       font-weight: 500;
 
       @media (prefers-color-scheme: dark) {
-        color: rgba(white, 0.7);
+        color: var(--app-white-70);
 
       }
 
