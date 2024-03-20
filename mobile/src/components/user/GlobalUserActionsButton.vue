@@ -1,7 +1,7 @@
 <template>
   <ion-button class="btnUser" shape="round" size="large" @click="openUserDashboard()" v-if="viewableUserDashboard"
               :aria-label="LL.Open_User_Dashboard()">
-    <ion-icon src="/assets/icons/line/user-line.svg"></ion-icon>
+    <ion-icon src="/assets/icons/line/user-line.svg" aria-hidden="true"></ion-icon>
     <ion-ripple-effect type="unbounded"></ion-ripple-effect>
   </ion-button>
 </template>
