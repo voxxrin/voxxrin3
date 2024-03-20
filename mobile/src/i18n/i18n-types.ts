@@ -23,6 +23,14 @@ type RootTranslation = {
 	 */
 	Open_User_Dashboard: string
 	/**
+	 * C​l​o​s​e
+	 */
+	Close: string
+	/**
+	 * P​r​e​v​i​o​u​s​ ​s​c​r​e​e​n
+	 */
+	Previous_screen: string
+	/**
 	 * B​a​c​k​ ​d​a​s​h​b​o​a​r​d
 	 */
 	Back_User_Dashboard: string
@@ -505,6 +513,14 @@ export type TranslationFunctions = {
 	 * Open user dashboard
 	 */
 	Open_User_Dashboard: () => LocalizedString
+	/**
+	 * Close
+	 */
+	Close: () => LocalizedString
+	/**
+	 * Previous screen
+	 */
+	Previous_screen: () => LocalizedString
 	/**
 	 * Back dashboard
 	 */

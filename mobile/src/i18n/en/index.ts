@@ -3,6 +3,8 @@ import type { BaseTranslation } from '../i18n-types.js'
 const en = {
 	HI: 'Hi {name:string}! Please leave a star if you like this project: https://github.com/ivanhofer/typesafe-i18n',
 	Open_User_Dashboard: `Open user dashboard`,
+	Close: `Close`,
+	Previous_screen: `Previous screen`,
 	Back_User_Dashboard: `Back dashboard`,
 	Avatar_Speaker: `Avatar speaker`,
 	Nav_Back: `Back`,

@@ -4,7 +4,8 @@
       <ion-header class="stickyHeader">
         <ion-toolbar>
           <ion-button class="stickyHeader-close" shape="round" slot="start" size="small" fill="outline"
-                      @click="goBackOrNavigateTo(ionRouter, `/event-selector`)">
+                      @click="goBackOrNavigateTo(ionRouter, `/event-selector`)"
+                      :aria-label="LL.Previous_screen()">
             <ion-icon src="/assets/icons/line/arrow-left-line.svg"></ion-icon>
           </ion-button>
           <ion-title class="stickyHeader-title" slot="start">Event Talk Feedbacks</ion-title>
