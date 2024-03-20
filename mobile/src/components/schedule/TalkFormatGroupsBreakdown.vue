@@ -1,6 +1,6 @@
 <template>
-  <ion-list class="listTalks" role="list">
-    <ion-item-group v-for="(perFormatGroup) in perFormatGroups" :key="perFormatGroup.format.id.value">
+  <ion-list class="listTalks">
+    <div class="listTalks-group" v-for="(perFormatGroup) in perFormatGroups" :key="perFormatGroup.format.id.value" role="listitem">
       <ion-item-divider class="listTalks-divider" role="presentation">
         <talk-format :format="perFormatGroup.format" />
         <span class="listTalks-divider-separator"></span>
@@ -9,7 +9,7 @@
       <div role="list">
         <slot name="talk" v-for="(talk) in perFormatGroup.talks" :key="talk.id.value" :talk="talk" />
       </div>
-    </ion-item-group>
+    </div>
   </ion-list>
 </template>
 
@@ -43,6 +43,11 @@ const perFormatGroups = computed(() => sortThenGroupByFormat(props.talks!, props
   background: var(--app-background);
   padding: 0 4px;
   overflow: visible;
+
+  &-group {
+    display: flex;
+    flex-direction: column;
+  }
 
   &-divider {
     --padding-start: 8px;

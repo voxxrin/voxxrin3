@@ -246,6 +246,12 @@ function findDayByLocalDate(localDate: string) {
       --border-style: solid;
       transition: 140ms ease-in-out;
       overflow: visible !important;
+      background: var(--app-white);
+
+      @media (prefers-color-scheme: dark) {
+        background: var(--app-dark-contrast);
+      }
+
 
       &-content {
         display: flex;
