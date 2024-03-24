@@ -5,6 +5,7 @@ export const initFormatters: FormattersInitializer<Locales, Formatters> = (local
 
 	const formatters: Formatters = {
 		// add your formatter functions here
+    'typedef-only': (...args: any[]) => ""
 	}
 
 	return formatters
