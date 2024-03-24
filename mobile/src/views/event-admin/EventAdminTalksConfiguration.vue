@@ -44,6 +44,9 @@ import {managedRef as ref} from "@/views/vue-utils";
 import {EventId} from "@/models/VoxxrinEvent";
 import {getRouteParamsValue} from "@/views/vue-utils";
 import {useTabbedPageNav} from "@/state/useTabbedPageNav";
+import {typesafeI18n} from "@/i18n/i18n-vue";
+
+const { LL } = typesafeI18n()
 
 const ionRouter = useIonRouter();
 const route = useRoute()

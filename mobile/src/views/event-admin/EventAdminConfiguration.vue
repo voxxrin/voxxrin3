@@ -26,6 +26,9 @@
 
 import {useIonRouter} from "@ionic/vue";
 import {useTabbedPageNav} from "@/state/useTabbedPageNav";
+import {typesafeI18n} from "@/i18n/i18n-vue";
+
+const { LL } = typesafeI18n()
 
 const {triggerTabbedPageExitOrNavigate} = useTabbedPageNav();
 

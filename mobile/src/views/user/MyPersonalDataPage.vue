@@ -19,6 +19,9 @@
 
 import {goBackOrNavigateTo} from "@/router";
 import {useIonRouter} from "@ionic/vue";
+import {typesafeI18n} from "@/i18n/i18n-vue";
+
+const { LL } = typesafeI18n()
 
 const ionRouter = useIonRouter();
 </script>
