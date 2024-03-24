@@ -20,8 +20,10 @@
       </template>
     </talk-format-groups-breakdown>
     <div class="showTalksContainer" v-if="!showUnfavoritedTalksRef && nonFavoritedTalksCount>0">
-      <ion-button fill="outline" shape="round" @click="() => showUnfavoritedTalksRef = true">
-        {{LL.Show_non_favorited_talks({ nrOfNonFavoritedTalks: nonFavoritedTalksCount })}} <strong>({{nonFavoritedTalksCount}})</strong>
+      <ion-button fill="outline" shape="round" @click="() => showUnfavoritedTalksRef = true"
+      :aria-label="LL.Show_non_favorited_talks({ nrOfNonFavoritedTalks: nonFavoritedTalksCount })">
+        {{LL.Show_non_favorited_talks({ nrOfNonFavoritedTalks: nonFavoritedTalksCount })}}
+        <strong>({{nonFavoritedTalksCount}})</strong>
       </ion-button>
     </div>
   </div>
@@ -149,6 +151,10 @@ function updateTalkWatchLaterRefTo(talkId: TalkId, talkWatchLaterBtn: any) {
     background-color: var(--app-background);
     padding: var(--app-gutters);
     text-align: center;
+
+    strong {
+      margin-left: 4px;
+    }
   }
 
   :deep(.listTalks-item) {

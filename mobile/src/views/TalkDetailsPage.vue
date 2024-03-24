@@ -3,16 +3,23 @@
     <ion-content v-themed-event-styles="confDescriptor" :fullscreen="true" v-if="confDescriptor && detailedTalk">
       <ion-header class="stickyHeader" v-if="talkNotes" :class="{ 'is-favorited': talkNotes.isFavorite, 'to-watch-later': talkNotes.watchLater }">
         <ion-toolbar>
-          <ion-button class="stickyHeader-close" shape="round" slot="start" size="small" fill="outline" @click="closeAndNavigateBack()">
+          <ion-button class="stickyHeader-close" shape="round" slot="start" size="small" fill="outline" @click="closeAndNavigateBack()"
+          :aria-label="LL.Close_talk_details()">
             <ion-icon src="/assets/icons/solid/close.svg"></ion-icon>
           </ion-button>
           <ion-title class="stickyHeader-title" slot="start" >{{ LL.Talk_details() }}</ion-title>
-          <ion-button class="btnTalkAction _watchLater" slot="end" shape="round" fill="outline"  @click.stop="() => toggleWatchLater()" v-if="confDescriptor?.features.remindMeOnceVideosAreAvailableEnabled">
+          <!-- TODO Fix dynamic aria-label -->
+          <ion-button class="btnTalkAction _watchLater" slot="end" shape="round" fill="outline"
+                      @click.stop="() => toggleWatchLater()" v-if="confDescriptor?.features.remindMeOnceVideosAreAvailableEnabled"
+                      :aria-label="talkNotes?.watchLater ? LL.Remove_Watch_later() : LL.Add_Watch_later()">
             <ion-icon v-if="!talkNotes.watchLater" aria-hidden="true" src="/assets/icons/line/video-line.svg"></ion-icon>
             <ion-icon v-if="talkNotes.watchLater" aria-hidden="true" src="/assets/icons/solid/video.svg"></ion-icon>
           </ion-button>
           <div class="favoriteGroup" slot="end">
-            <ion-button class="btnTalkAction _favorite" shape="round" fill="outline" @click.stop="() => toggleFavorite()" v-if="confDescriptor?.features.favoritesEnabled">
+            <!-- TODO Fix dynamic aria-label -->
+            <ion-button class="btnTalkAction _favorite" shape="round" fill="outline" @click.stop="() => toggleFavorite()"
+                        v-if="confDescriptor?.features.favoritesEnabled"
+                        :aria-label="talkNotes?.isFavorite ? LL.Remove_Favorites() : LL.Add_Favorites()">
               <ion-icon class="favorite-btn-icon" v-if="!talkNotes.isFavorite" aria-hidden="true" src="/assets/icons/line/bookmark-line-favorite.svg"></ion-icon>
               <ion-icon class="favorite-btn-icon" v-if="talkNotes.isFavorite" aria-hidden="true" src="/assets/icons/solid/bookmark-favorite.svg"></ion-icon>
             </ion-button>
@@ -48,8 +55,8 @@
         <ion-list class="talkDetails-speakers-list">
           <ion-item v-for="(speaker, index) in detailedTalk?.speakers" :key="speaker.id.value">
             <ion-avatar>
-              <img :src="speaker.photoUrl" v-if="speaker.photoUrl"/>
-              <img src="/assets/images/svg/avatar-shadow.svg" v-if="!speaker.photoUrl"/>
+              <img :src="speaker.photoUrl" v-if="speaker.photoUrl" :alt="LL.Avatar_Speaker() + ' ' + speaker.fullName"/>
+              <img src="/assets/images/svg/avatar-shadow.svg" v-if="!speaker.photoUrl" aria-hidden="true"/>
             </ion-avatar>
             <div class="speakerInfo">
               <div class="speakerInfo-name">

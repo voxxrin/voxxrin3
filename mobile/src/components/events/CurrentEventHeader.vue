@@ -2,7 +2,7 @@
   <ion-header class="ion-no-border">
     <ion-toolbar>
       <div class="viewsHeader">
-        <ion-button class="viewsHeader-back" @click="backButtonClicked" shape="round">
+        <ion-button class="viewsHeader-back" @click="backButtonClicked" shape="round" :aria-label="LL.Back_List_Events()">
           <ion-icon src="/assets/icons/solid/checkbox-list.svg"></ion-icon>
         </ion-button>
 <!-- TODO: Fix router navigation from preferences/schedule prior to re-enabling this one -->
@@ -14,7 +14,7 @@
         <current-event-status :conf-descriptor="confDescriptor"></current-event-status>
       </div>
     </ion-toolbar>
-    <img :src="confDescriptor?.backgroundUrl">
+    <img :src="confDescriptor?.backgroundUrl" :alt="LL.Banner_Event()">
   </ion-header>
 </template>
 
@@ -25,7 +25,9 @@ import {PropType} from "vue";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {useTabbedPageNav} from "@/state/useTabbedPageNav";
 import GlobalUserActionsButton from "@/components/user/GlobalUserActionsButton.vue";
+import {typesafeI18n} from "@/i18n/i18n-vue";
 
+const { LL } = typesafeI18n()
 const router = useIonRouter();
 const props = defineProps({
     confDescriptor: {

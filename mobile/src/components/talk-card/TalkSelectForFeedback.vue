@@ -1,11 +1,15 @@
 <template>
-  <ion-button :class="{ 'btnTalk': true, 'btn-feedbackSelect': true, '_is-active': isActive }">
+  <ion-button :class="{ 'btnTalk': true, 'btn-feedbackSelect': true, '_is-active': isActive }"
+              :aria-label="LL.Select_for_feedback()">
     <ion-icon class="active" aria-hidden="true" src="assets/icons/solid/comment-feedback-select.svg"/>
     <ion-icon class="inactive" aria-hidden="true"  src="assets/icons/line/comment-line-add.svg"/>
   </ion-button>
 </template>
 
 <script setup lang="ts">
+import {typesafeI18n} from "@/i18n/i18n-vue";
+
+const { LL } = typesafeI18n()
 const props = defineProps({
     isActive: {
         required: true,

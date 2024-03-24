@@ -18,8 +18,10 @@
             <slot-overlaps v-if="timeslot.type === 'talks'" :overlappingTimeslots="timeslot.overlappingTimeSlots"></slot-overlaps>
           </ion-col>
           <ion-col class="slot-actions" size="auto">
-            <ion-icon class="_provided-feedback" aria-hidden="true" src="/assets/icons/solid/comment-check.svg" v-if="areFeedbacksEnabled(confDescriptor)"></ion-icon>
+            <ion-icon class="_provided-feedback" aria-hidden="true" src="/assets/icons/solid/comment-check.svg"
+                      v-if="areFeedbacksEnabled(confDescriptor)"></ion-icon>
             <ion-button class="_missing-feedback" v-if="elementsShown.includes('add-feedback-btn') && areFeedbacksEnabled(confDescriptor)"
+                        :aria-label="LL.Add_Feedback()"
                         @click.stop="$emit('add-timeslot-feedback-clicked', timeslot)">
               <ion-icon src="/assets/icons/line/comment-line-add.svg"></ion-icon>
             </ion-button>

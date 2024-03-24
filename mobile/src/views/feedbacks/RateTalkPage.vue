@@ -53,11 +53,13 @@
       </slot>
     </base-feedback-step>
     <feedback-footer>
-      <ion-button size="small" fill="solid" color="medium" shape="round" expand="block" @click="backToSchedulePage">
+      <ion-button size="small" fill="solid" color="medium" shape="round" expand="block" @click="backToSchedulePage"
+                  :aria-label="LL.Cancel()">
         {{ LL.Cancel() }}
       </ion-button>
       <ion-button size="small" shape="round" color="tertiary" expand="block"
                   @click="submitFeedback()"
+                  :aria-label="LL.Submit_Feedback()"
                   :disabled="!feedbackCanBeSubmitted">
         {{ LL.Submit_Feedback() }}
       </ion-button>

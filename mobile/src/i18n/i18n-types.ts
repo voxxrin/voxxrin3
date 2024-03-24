@@ -19,6 +19,30 @@ type RootTranslation = {
 	 */
 	HI: RequiredParams<'name'>
 	/**
+	 * O​p​e​n​ ​u​s​e​r​ ​d​a​s​h​b​o​a​r​d
+	 */
+	Open_User_Dashboard: string
+	/**
+	 * C​l​o​s​e
+	 */
+	Close: string
+	/**
+	 * P​r​e​v​i​o​u​s​ ​s​c​r​e​e​n
+	 */
+	Previous_screen: string
+	/**
+	 * B​a​c​k​ ​d​a​s​h​b​o​a​r​d
+	 */
+	Back_User_Dashboard: string
+	/**
+	 * A​v​a​t​a​r​ ​s​p​e​a​k​e​r
+	 */
+	Avatar_Speaker: string
+	/**
+	 * B​a​c​k
+	 */
+	Nav_Back: string
+	/**
 	 * C​o​n​f​e​r​e​n​c​e​ ​S​e​l​e​c​t​o​r
 	 */
 	Conference_Selector: string
@@ -26,6 +50,18 @@ type RootTranslation = {
 	 * P​i​n​n​e​d​ ​e​v​e​n​t​s
 	 */
 	Pinned_events: string
+	/**
+	 * C​o​n​f​i​g​u​r​a​t​i​o​n​ ​e​v​e​n​t
+	 */
+	Config_event: string
+	/**
+	 * B​a​c​k​ ​t​o​ ​e​v​e​n​t​s​ ​l​i​s​t
+	 */
+	Back_List_Events: string
+	/**
+	 * L​o​g​o
+	 */
+	Logo_event: string
 	/**
 	 * N​o​ ​p​i​n​n​e​d​ ​e​v​e​n​t​s​ ​a​v​a​i​l​a​b​l​e​ ​y​e​t
 	 */
@@ -67,9 +103,41 @@ type RootTranslation = {
 	 */
 	Schedule: string
 	/**
+	 * B​a​n​n​e​r​ ​e​v​e​n​t
+	 */
+	Banner_Event: string
+	/**
+	 * C​a​n​c​e​l​ ​a​n​d​ ​b​a​c​k​ ​t​o​ ​s​c​h​e​d​u​l​e​ ​p​a​g​e
+	 */
+	Cancel_Back_To_Schedule: string
+	/**
 	 * S​e​a​r​c​h
 	 */
 	Search: string
+	/**
+	 * C​l​o​s​e​ ​s​e​a​r​c​h
+	 */
+	Search_close: string
+	/**
+	 * F​i​l​t​e​r​s
+	 */
+	Filters: string
+	/**
+	 * A​d​d​ ​t​o​ ​W​a​t​c​h​ ​l​a​t​e​r
+	 */
+	Add_Watch_later: string
+	/**
+	 * R​e​m​o​v​e​d​ ​f​r​o​m​ ​w​a​t​c​h​ ​l​a​t​e​r
+	 */
+	Remove_Watch_later: string
+	/**
+	 * A​d​d​ ​t​o​ ​f​a​v​o​r​i​t​e​s
+	 */
+	Add_Favorites: string
+	/**
+	 * R​e​m​o​v​e​d​ ​f​r​o​m​ ​f​a​v​o​r​i​t​e​s
+	 */
+	Remove_Favorites: string
 	/**
 	 * F​a​v​o​r​i​t​e​s
 	 */
@@ -120,6 +188,10 @@ type RootTranslation = {
 	 */
 	Talk_details: string
 	/**
+	 * C​l​o​s​e​ ​t​a​l​k​ ​d​e​t​a​i​l​s
+	 */
+	Close_talk_details: string
+	/**
 	 * S​p​e​a​k​e​r​s
 	 */
 	Speakers: string
@@ -136,6 +208,10 @@ type RootTranslation = {
 	 * A​d​d​ ​f​r​o​m​ ​t​h​e​ ​l​i​s​t​ ​b​e​l​o​w
 	 */
 	Add_from_the_list_below: string
+	/**
+	 * V​i​e​w​ ​d​a​y
+	 */
+	View_day: string
 	/**
 	 * T​o​d​a​y
 	 */
@@ -156,6 +232,14 @@ type RootTranslation = {
 	 * A​d​d​ ​F​e​e​d​b​a​c​k
 	 */
 	Add_Feedback: string
+	/**
+	 * A​d​d​ ​F​e​e​d​b​a​c​k​ ​o​n​ ​s​l​o​t
+	 */
+	Add_Feedback_On_Slot: string
+	/**
+	 * O​p​e​n​ ​l​i​s​t​ ​o​f​ ​f​e​e​d​b​a​c​k​ ​s​l​o​t​s
+	 */
+	Open_List_Slot_Feedback: string
 	/**
 	 * P​i​c​k​ ​t​h​e​ ​t​a​l​k​ ​y​o​u​ ​a​t​t​e​n​d​e​d
 	 */
@@ -206,6 +290,10 @@ type RootTranslation = {
 	 * S​h​a​r​e​ ​y​o​u​r​ ​f​e​e​d​b​a​c​k
 	 */
 	Share_your_feedback: string
+	/**
+	 * S​e​l​e​c​t​ ​f​o​r​ ​f​e​e​d​b​a​c​k
+	 */
+	Select_for_feedback: string
 	/**
 	 * R​a​t​e​ ​i​t
 	 */
@@ -286,6 +374,10 @@ type RootTranslation = {
 	 * L​i​n​e​a​r​ ​r​a​t​i​n​g
 	 */
 	Linear_rating: string
+	/**
+	 * L​e​v​e​l
+	 */
+	Linear_rating_level: string
 	/**
 	 * B​i​n​g​o
 	 */
@@ -418,6 +510,30 @@ export type TranslationFunctions = {
 	 */
 	HI: (arg: { name: string }) => LocalizedString
 	/**
+	 * Open user dashboard
+	 */
+	Open_User_Dashboard: () => LocalizedString
+	/**
+	 * Close
+	 */
+	Close: () => LocalizedString
+	/**
+	 * Previous screen
+	 */
+	Previous_screen: () => LocalizedString
+	/**
+	 * Back dashboard
+	 */
+	Back_User_Dashboard: () => LocalizedString
+	/**
+	 * Avatar speaker
+	 */
+	Avatar_Speaker: () => LocalizedString
+	/**
+	 * Back
+	 */
+	Nav_Back: () => LocalizedString
+	/**
 	 * Conference Selector
 	 */
 	Conference_Selector: () => LocalizedString
@@ -425,6 +541,18 @@ export type TranslationFunctions = {
 	 * Pinned events
 	 */
 	Pinned_events: () => LocalizedString
+	/**
+	 * Configuration event
+	 */
+	Config_event: () => LocalizedString
+	/**
+	 * Back to events list
+	 */
+	Back_List_Events: () => LocalizedString
+	/**
+	 * Logo
+	 */
+	Logo_event: () => LocalizedString
 	/**
 	 * No pinned events available yet
 	 */
@@ -466,9 +594,41 @@ export type TranslationFunctions = {
 	 */
 	Schedule: () => LocalizedString
 	/**
+	 * Banner event
+	 */
+	Banner_Event: () => LocalizedString
+	/**
+	 * Cancel and back to schedule page
+	 */
+	Cancel_Back_To_Schedule: () => LocalizedString
+	/**
 	 * Search
 	 */
 	Search: () => LocalizedString
+	/**
+	 * Close search
+	 */
+	Search_close: () => LocalizedString
+	/**
+	 * Filters
+	 */
+	Filters: () => LocalizedString
+	/**
+	 * Add to Watch later
+	 */
+	Add_Watch_later: () => LocalizedString
+	/**
+	 * Removed from watch later
+	 */
+	Remove_Watch_later: () => LocalizedString
+	/**
+	 * Add to favorites
+	 */
+	Add_Favorites: () => LocalizedString
+	/**
+	 * Removed from favorites
+	 */
+	Remove_Favorites: () => LocalizedString
 	/**
 	 * Favorites
 	 */
@@ -518,6 +678,10 @@ export type TranslationFunctions = {
 	 */
 	Talk_details: () => LocalizedString
 	/**
+	 * Close talk details
+	 */
+	Close_talk_details: () => LocalizedString
+	/**
 	 * Speakers
 	 */
 	Speakers: () => LocalizedString
@@ -533,6 +697,10 @@ export type TranslationFunctions = {
 	 * Add from the list below
 	 */
 	Add_from_the_list_below: () => LocalizedString
+	/**
+	 * View day
+	 */
+	View_day: () => LocalizedString
 	/**
 	 * Today
 	 */
@@ -553,6 +721,14 @@ export type TranslationFunctions = {
 	 * Add Feedback
 	 */
 	Add_Feedback: () => LocalizedString
+	/**
+	 * Add Feedback on slot
+	 */
+	Add_Feedback_On_Slot: () => LocalizedString
+	/**
+	 * Open list of feedback slots
+	 */
+	Open_List_Slot_Feedback: () => LocalizedString
 	/**
 	 * Pick the talk you attended
 	 */
@@ -601,6 +777,10 @@ export type TranslationFunctions = {
 	 * Share your feedback
 	 */
 	Share_your_feedback: () => LocalizedString
+	/**
+	 * Select for feedback
+	 */
+	Select_for_feedback: () => LocalizedString
 	/**
 	 * Rate it
 	 */
@@ -681,6 +861,10 @@ export type TranslationFunctions = {
 	 * Linear rating
 	 */
 	Linear_rating: () => LocalizedString
+	/**
+	 * Level
+	 */
+	Linear_rating_level: () => LocalizedString
 	/**
 	 * Bingo
 	 */

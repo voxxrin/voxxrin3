@@ -53,6 +53,10 @@ const icon = computed(() => match([props.type])
   border-radius: 12px;
   overflow: hidden;
 
+  @media (prefers-color-scheme: dark) {
+    background-color: var(--app-medium-contrast);
+  }
+
   &:before {
     position: absolute;
     width: 20%;

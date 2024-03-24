@@ -1,6 +1,6 @@
 <template>
   <ion-text class="powered">powered by
-    <ion-icon :src="'/assets/images/svg/voxxrin-color-primary.svg'"></ion-icon>
+    <ion-icon :src="'/assets/images/svg/voxxrin-color-primary.svg'" aria-hidden="true"></ion-icon>
   </ion-text>
 </template>
 

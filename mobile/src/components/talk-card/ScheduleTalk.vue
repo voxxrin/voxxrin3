@@ -42,8 +42,9 @@
       <div class="pictures">
         <div class="picturesItem" v-for="(speaker, index) in talk.speakers" :key="speaker.id.value">
           <ion-thumbnail>
-            <img v-if="speaker.photoUrl" :src="speaker.photoUrl" @error="handle404OnSpeakerThumbnail($event.target as HTMLImageElement)" />
-            <img v-if="!speaker.photoUrl" :src="baseUrl+'assets/images/svg/avatar-shadow.svg'" />
+            <img v-if="speaker.photoUrl" :src="speaker.photoUrl" @error="handle404OnSpeakerThumbnail($event.target as HTMLImageElement)"
+                 :alt="LL.Avatar_Speaker() + ' ' + speaker.fullName"/>
+            <img v-if="!speaker.photoUrl" :src="baseUrl+'assets/images/svg/avatar-shadow.svg'" aria-hidden="true" />
           </ion-thumbnail>
         </div>
       </div>
@@ -74,7 +75,9 @@ import {EventId} from "@/models/VoxxrinEvent";
 import {getRouteParamsValue} from "@/views/vue-utils";
 import {TalkNote, TalkStats} from "../../../../shared/feedbacks.firestore";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
+import {typesafeI18n} from "@/i18n/i18n-vue";
 
+const { LL } = typesafeI18n()
 const baseUrl = import.meta.env.BASE_URL;
 function handle404OnSpeakerThumbnail(img: HTMLImageElement|null) {
     if(img && img.src !== baseUrl+'assets/images/svg/avatar-shadow.svg') {
@@ -208,27 +211,6 @@ const theme = {
         --color: var(--app-white);
       }
     }
-
-    .room {
-      display: flex;
-      align-items: center;
-      column-gap: 2px;
-      font-weight: 500;
-      color: var(--app-grey-dark);
-
-      @media (prefers-color-scheme: dark) {
-        color: rgba(white, 0.8);
-      }
-
-      ion-icon {
-        font-size: 16px;
-        color: var(--app-primary-shade);
-
-        @media (prefers-color-scheme: dark) {
-          color: var(--app-white);
-        }
-      }
-    }
   }
 
   &-content {
@@ -312,11 +294,11 @@ const theme = {
       font-size: 12px;
       line-height: 1.1;
       letter-spacing: -0.4px;
-      color: var(--app-grey-dark);
+      color: var(--app-primary);
       font-weight: 500;
 
       @media (prefers-color-scheme: dark) {
-        color: rgba(white, 0.7);
+        color: var(--app-white-70);
 
       }
 

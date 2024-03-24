@@ -4,7 +4,7 @@
     <ion-ripple-effect type="bounded"></ion-ripple-effect>
     <div class="eventItem-logoContainer">
       <div class="logo">
-        <ion-img :src="event.logoUrl" />
+        <ion-img :src="event.logoUrl" :alt="LL.Logo_event() + ' ' + event.title"/>
       </div>
     </div>
     <div class="eventItem-infos">
@@ -20,12 +20,17 @@
     </div>
 
     <div class="eventItem-end" slot="end">
-      <ion-button class="configBtn" v-if="eventOrganizerToken" fill="clear" shape="round" @click.stop="navToEventOrganizerPage()">
+      <ion-button class="configBtn" v-if="eventOrganizerToken" fill="clear" shape="round"
+                  :aria-label="LL.Config_event()"
+                  @click.stop="navToEventOrganizerPage()">
         <ion-icon src="/assets/icons/line/settings-cog-line.svg"></ion-icon>
       </ion-button>
-      <ion-button class="btnPin" fill="clear" shape="round" @click.stop="$emit('event-pin-toggled', event, isPinnedRef?'pinned-to-unpinned':'unpinned-to-pinned')">
-        <ion-icon src="/assets/icons/line/pin-line.svg" v-if="!isPinnedRef"></ion-icon>
-        <ion-icon class="_is-pined" src="/assets/icons/solid/pin.svg" v-if="isPinnedRef"></ion-icon>
+      <!-- TODO Fix dynamic aria-label -->
+      <ion-button class="btnPin" fill="clear" shape="round"
+                  :aria-label="isPinnedRef ? LL.Remove_from_pinned_events() : LL.Add_to_my_pinned_events()"
+                  @click.stop="$emit('event-pin-toggled', event, isPinnedRef?'pinned-to-unpinned':'unpinned-to-pinned')">
+        <ion-icon src="/assets/icons/line/pin-line.svg" v-if="!isPinnedRef" aria-hidden="true"></ion-icon>
+        <ion-icon class="_is-pined" src="/assets/icons/solid/pin.svg" v-if="isPinnedRef" aria-hidden="true"></ion-icon>
       </ion-button>
     </div>
 
@@ -45,6 +50,9 @@ import {
 import {EventId, ListableVoxxrinEvent} from "@/models/VoxxrinEvent";
 import MonthDayDateRange from "@/components/MonthDayDateRange.vue";
 import {useSharedUserTokensWallet} from "@/state/useUserTokensWallet";
+import {typesafeI18n} from "@/i18n/i18n-vue";
+
+const { LL } = typesafeI18n()
 
 const props = defineProps({
   event: {
@@ -360,7 +368,7 @@ function navToEventOrganizerPage() {
       color: var(--app-grey-dark);
 
       @media (prefers-color-scheme: dark) {
-        color: var(--app-beige-dark);
+        color: var(--app-white-70);
       }
 
       ion-icon {
@@ -368,7 +376,7 @@ function navToEventOrganizerPage() {
         color: var(--app-beige-dark);
 
         @media (prefers-color-scheme: dark) {
-          color: var(--app-grey-dark);
+          color: var(--app-white-70);
         }
       }
     }
@@ -382,9 +390,17 @@ function navToEventOrganizerPage() {
       text-align: left;
       word-break: break-word;
 
+      @media (prefers-color-scheme: dark) {
+        color: var(--app-white-70);
+      }
+
       ion-icon {
         font-size: 16px;
         color: var(--app-beige-dark);
+
+        @media (prefers-color-scheme: dark) {
+          color: var(--app-white-70);
+        }
       }
     }
   }

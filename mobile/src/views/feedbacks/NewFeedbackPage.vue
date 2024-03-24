@@ -73,22 +73,26 @@
       <template #details>
         <ion-button v-if="confDescriptorRef?.features.remindMeOnceVideosAreAvailableEnabled"
                     @click.stop="watchLaterAllFavoritedTalks()"
+                    :aria-label="LL.Watch_later_all_favorited_talks()"
                     size="small" fill="outline" shape="round" expand="block">
           <ion-icon slot="start" src="assets/icons/solid/video.svg" aria-hidden="true"></ion-icon>
           {{LL.Watch_later_all_favorited_talks()}}
         </ion-button>
       </template>
       <template #default>
-        <ion-button class="cancel" size="small" fill="solid" color="medium" shape="round" expand="block" @click="backToSchedulePage">
+        <ion-button class="cancel" size="small" fill="solid" color="medium" shape="round" expand="block" @click="backToSchedulePage"
+                    :aria-label="LL.Cancel_Back_To_Schedule()">
           {{ LL.Cancel() }}
         </ion-button>
-        <ion-button size="small" fill="outline" shape="round" expand="block" v-if="selectedTalk === undefined" @click="submitSkippedFeedback()">
+        <ion-button size="small" fill="outline" shape="round" expand="block" v-if="selectedTalk === undefined" @click="submitSkippedFeedback()"
+                    :aria-label="LL.I_didnt_attend_any_talk()">
             <span class="contentDidntAttendTalk">
               {{LL.I_didnt_attend_any_talk()}}
                 <small>({{ LL.During_this_time_slot() }})</small>
             </span>
         </ion-button>
-        <ion-button size="small" fill="solid" shape="round" expand="block" v-if="selectedTalk !== undefined" @click="rateSelectedTalk()">
+        <ion-button size="small" fill="solid" shape="round" expand="block" v-if="selectedTalk !== undefined" @click="rateSelectedTalk()"
+                    :aria-label="LL.Add_Feedback()">
             <span class="contentDidntAttendTalk">
               {{LL.Add_Feedback()}}
             </span>

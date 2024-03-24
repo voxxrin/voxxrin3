@@ -4,7 +4,8 @@
       <ion-header class="stickyHeader">
         <ion-toolbar>
           <ion-button class="stickyHeader-close" shape="round" slot="start" size="small" fill="outline"
-                      @click="goBackOrNavigateTo(ionRouter, `/user/talks`)">
+                      @click="goBackOrNavigateTo(ionRouter, `/user/talks`)"
+                      :aria-label="LL.Close()">
             <ion-icon src="/assets/icons/solid/close.svg"></ion-icon>
           </ion-button>
           <ion-title class="stickyHeader-title" slot="start">{{LL.Talk_Feedbacks()}}</ion-title>
