@@ -108,7 +108,7 @@ type RootTranslation = {
 	Overlaps_x_slot_label: string
 	/**
 	 * {​n​r​O​f​O​v​e​r​l​a​p​p​i​n​g​S​l​o​t​s​}​ ​s​l​o​t​{​{​s​}​}
-	 * @param {string | number | boolean} nrOfOverlappingSlots
+	 * @param {number} nrOfOverlappingSlots
 	 */
 	Overlaps_x_slot_value: RequiredParams<'nrOfOverlappingSlots'>
 	/**
@@ -178,7 +178,7 @@ type RootTranslation = {
 	Currently_selected_timeslot: string
 	/**
 	 * {​n​r​O​f​O​v​e​r​l​a​p​p​i​n​g​S​l​o​t​s​}​ ​O​v​e​r​l​a​p​p​i​n​g​ ​t​i​m​e​ ​s​l​o​t​{​{​s​}​}
-	 * @param {string | number | boolean} nrOfOverlappingSlots
+	 * @param {number} nrOfOverlappingSlots
 	 */
 	Overlapping_timeslots: RequiredParams<'nrOfOverlappingSlots'>
 	/**
@@ -186,9 +186,10 @@ type RootTranslation = {
 	 */
 	In_favorites: string
 	/**
-	 * S​h​o​w​ ​n​o​n​-​f​a​v​o​r​i​t​e​d​ ​t​a​l​k​{​{​s​}​}
+	 * S​h​o​w​ ​{​n​r​O​f​N​o​n​F​a​v​o​r​i​t​e​d​T​a​l​k​s​}​ ​n​o​n​-​f​a​v​o​r​i​t​e​d​ ​t​a​l​k​{​{​s​}​}
+	 * @param {number} nrOfNonFavoritedTalks
 	 */
-	Show_non_favorited_talks: string
+	Show_non_favorited_talks: RequiredParams<'nrOfNonFavoritedTalks'>
 	/**
 	 * W​a​t​c​h​ ​l​a​t​e​r​ ​a​l​l​ ​f​a​v​o​r​i​t​e​d​ ​t​a​l​k​s
 	 */
@@ -507,7 +508,7 @@ export type TranslationFunctions = {
 	/**
 	 * {nrOfOverlappingSlots} slot{{s}}
 	 */
-	Overlaps_x_slot_value: (arg: { nrOfOverlappingSlots: string | number | boolean }) => LocalizedString
+	Overlaps_x_slot_value: (arg: { nrOfOverlappingSlots: number }) => LocalizedString
 	/**
 	 * Talk summary
 	 */
@@ -575,15 +576,15 @@ export type TranslationFunctions = {
 	/**
 	 * {nrOfOverlappingSlots} Overlapping time slot{{s}}
 	 */
-	Overlapping_timeslots: (arg: { nrOfOverlappingSlots: string | number | boolean }) => LocalizedString
+	Overlapping_timeslots: (arg: { nrOfOverlappingSlots: number }) => LocalizedString
 	/**
 	 * In favorites
 	 */
 	In_favorites: () => LocalizedString
 	/**
-	 * Show non-favorited talk{{s}}
+	 * Show {nrOfNonFavoritedTalks} non-favorited talk{{s}}
 	 */
-	Show_non_favorited_talks: (arg: { nrOfNonFavoritedTalks: number | string | boolean }) => LocalizedString
+	Show_non_favorited_talks: (arg: { nrOfNonFavoritedTalks: number }) => LocalizedString
 	/**
 	 * Watch later all favorited talks
 	 */
