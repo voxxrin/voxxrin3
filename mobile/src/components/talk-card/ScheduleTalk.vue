@@ -31,22 +31,22 @@
         </div>
       </div>
 
-      <div class="talkCard-content">
-        <div class="title"
-             :class="{'_hasTalkLang' : talkLang && confDescriptor.features.hideLanguages.indexOf(talkLang.id.value)===-1}">
-          <ion-badge v-if="talkLang && confDescriptor.features.hideLanguages.indexOf(talkLang.id.value)===-1"
-                     :style="{ '--background':  talkLang.themeColor}"
-                     class="talkLang">
-            {{talkLang.label}}
-          </ion-badge>
-          {{talk.title}}
-        </div>
-        <div class="pictures">
-          <div class="picturesItem" v-for="(speaker, index) in talk.speakers" :key="speaker.id.value">
-            <speaker-thumbnail size="48px" :is-highlighted="isHighlighted(talk, talkNotes) || talkNotes.isFavorite" :speaker="speaker" />
-          </div>
+    <div class="talkCard-content">
+      <div class="title"
+           :class="{'_hasTalkLang' : talkLang && confDescriptor.features.hideLanguages.indexOf(talkLang.id.value)===-1}">
+        <ion-badge v-if="talkLang && confDescriptor.features.hideLanguages.indexOf(talkLang.id.value)===-1"
+                   :style="{ '--background':  talkLang.themeColor}"
+                   class="talkLang">
+          {{talkLang.label}}
+        </ion-badge>
+        {{talk.title}}
+      </div>
+      <div class="avatarGroup">
+        <div class="avatarItem" v-for="(speaker, index) in talk.speakers" :key="speaker.id.value">
+          <speaker-thumbnail size="48px" :is-highlighted="isHighlighted(talk, talkNotes) || talkNotes.isFavorite" :speaker="speaker" />
         </div>
       </div>
+    </div>
 
       <div class="talkCard-footer">
         <div class="speakersContainer">
@@ -258,18 +258,8 @@ const theme = {
       }
     }
 
-    .pictures {
-      display: flex;
-      flex-direction: row;
-      flex: 0 0 auto;
-
-      .picturesItem {
-        width: 24px;
-
-        &:last-child {
-          margin-right: 24px;
-        }
-      }
+    .avatarItem:last-child {
+      margin-right: 24px;
     }
   }
 
@@ -305,7 +295,6 @@ const theme = {
 
       @media (prefers-color-scheme: dark) {
         color: var(--app-white-70);
-
       }
 
       .speakers {
@@ -361,7 +350,7 @@ const theme = {
 
 
       /* TODO RLZ: move it to a proper place in talk actions components */
-      :deep(.btnTalk) {
+      :deep(.btnActionCard) {
         border-width: 2px;
         border-color: var(--app-primary);
 
@@ -393,7 +382,7 @@ const theme = {
         border-color: var(--app-primary-shade);
 
         /* TODO RLZ: move it to a proper place in talk actions components */
-        :deep(.btnTalk) { border-color: var(--app-primary-shade);}
+        :deep(.btnActionCard) { border-color: var(--app-primary-shade);}
       }
     }
 
