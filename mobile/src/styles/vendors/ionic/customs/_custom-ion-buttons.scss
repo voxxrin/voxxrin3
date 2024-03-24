@@ -105,7 +105,7 @@ ion-button {
     }
 
     /* TODO RLZ: move it to a proper place in talk actions components */
-    &.btnTalk {
+    &.btnActionCard {
         height: 100% !important;
         min-height: 55px !important;
         width: 58px !important;
@@ -114,7 +114,7 @@ ion-button {
         --background: rgba(white, 0.5);
         --color: var(--app-primary);
         border-left: 1px solid var(--app-grey-line);
-        font-size: 20px;
+        font-size: 22px;
         --padding-start: 0;
         --padding-end: 0;
         --background-activated-opacity: 0.1;
