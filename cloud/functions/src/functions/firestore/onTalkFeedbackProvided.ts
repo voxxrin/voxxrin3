@@ -126,7 +126,7 @@ async function updateTalkFeedbacksFromUserFeedbacks(userId: string, eventId: str
                     .update(`${feedback.talkId}.${userTokensWallet.publicUserToken}`, enforcedRatings),
                 eventLastUpdateRefreshed(eventId, [ "allFeedbacks" ]),
                 eventLastUpdateRefreshed(eventId, [ feedback.talkId ], rootNode => {
-                    const feedbacks = {} as EventLastUpdates['feedbacks'];
+                    const feedbacks = {} as NonNullable<EventLastUpdates['feedbacks']>;
                     rootNode.feedbacks = feedbacks;
                     return { pathPrefix: "feedbacks.", parentNode: feedbacks };
                 }),

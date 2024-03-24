@@ -47,7 +47,7 @@ const attendeesFeedbacks = functions.https.onRequest(async (request, response) =
         root => root.allFeedbacks,
         root => root.talkListUpdated,
         ...talkIds.map(talkId => {
-            return (root: EventLastUpdates) => root.feedbacks[talkId]
+            return (root: EventLastUpdates) => root.feedbacks?.[talkId]
         })
     ], request, response)
     // if(!updatesDetected) {

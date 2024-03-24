@@ -29,7 +29,7 @@ export async function introducingPerTalkFeedbacksLastUpdates(): Promise<"OK"|"Er
             const newFeedbacksNode = talks.reduce((newFeedbacksNode, talk) => {
                 newFeedbacksNode[talk.id] = nullableAllFeedbacks;
                 return newFeedbacksNode;
-            }, {} as Partial<EventLastUpdates['feedbacks']>) as EventLastUpdates['feedbacks'];
+            }, {} as Partial<NonNullable<EventLastUpdates['feedbacks']>>) as NonNullable<EventLastUpdates['feedbacks']>;
 
             const migratedLastUpdates: EventLastUpdates = {
                 ...otherFields,
