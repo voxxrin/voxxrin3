@@ -39,9 +39,9 @@
         </ion-badge>
         {{talk.title}}
       </div>
-      <div class="pictures">
-        <div class="picturesItem" v-for="(speaker, index) in talk.speakers" :key="speaker.id.value">
-          <ion-thumbnail>
+      <div class="avatarGroup">
+        <div class="avatarItem" v-for="(speaker, index) in talk.speakers" :key="speaker.id.value">
+          <ion-thumbnail class="avatar">
             <img v-if="speaker.photoUrl" :src="speaker.photoUrl" @error="handle404OnSpeakerThumbnail($event.target as HTMLImageElement)"
                  :alt="LL.Avatar_Speaker() + ' ' + speaker.fullName"/>
             <img v-if="!speaker.photoUrl" :src="baseUrl+'assets/images/svg/avatar-shadow.svg'" aria-hidden="true" />
@@ -241,29 +241,8 @@ const theme = {
       }
     }
 
-    .pictures {
-      display: flex;
-      flex-direction: row;
-      flex: 0 0 auto;
-
-      .picturesItem {
-        width: 24px;
-
-        &:last-child {
-          margin-right: 24px;
-        }
-
-        ion-thumbnail {
-          --size: 48px;
-          --border-radius: 40px;
-          filter: drop-shadow(-4px 0px 4px rgba(0, 0, 0, 0.15));
-          background-color: var(--app-background);
-
-          @media (prefers-color-scheme: dark) {
-            background-color: var(--app-medium-contrast);
-          }
-        }
-      }
+    .avatarItem:last-child {
+      margin-right: 24px;
     }
   }
 
@@ -299,7 +278,6 @@ const theme = {
 
       @media (prefers-color-scheme: dark) {
         color: var(--app-white-70);
-
       }
 
       &-list {
@@ -356,7 +334,7 @@ const theme = {
 
 
       /* TODO RLZ: move it to a proper place in talk actions components */
-      :deep(.btnTalk) {
+      :deep(.btnActionCard) {
         border-width: 2px;
         border-color: var(--app-primary);
 
@@ -390,7 +368,7 @@ const theme = {
         border-color: var(--app-primary-shade);
 
         /* TODO RLZ: move it to a proper place in talk actions components */
-        :deep(.btnTalk) { border-color: var(--app-primary-shade);}
+        :deep(.btnActionCard) { border-color: var(--app-primary-shade);}
       }
     }
 

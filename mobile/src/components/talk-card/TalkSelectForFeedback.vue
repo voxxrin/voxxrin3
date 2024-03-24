@@ -1,5 +1,5 @@
 <template>
-  <ion-button :class="{ 'btnTalk': true, 'btn-feedbackSelect': true, '_is-active': isActive }"
+  <ion-button :class="{ 'btnActionCard': true, 'btn-feedbackSelect': true, '_is-active': isActive }"
               :aria-label="LL.Select_for_feedback()">
     <ion-icon class="active" aria-hidden="true" src="assets/icons/solid/comment-feedback-select.svg"/>
     <ion-icon class="inactive" aria-hidden="true"  src="assets/icons/line/comment-line-add.svg"/>
