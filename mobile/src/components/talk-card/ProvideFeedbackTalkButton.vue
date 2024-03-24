@@ -1,6 +1,6 @@
 <template>
   <div class="talkAction" v-if="provideFeedbackButtonShown">
-    <ion-button class="btnTalk btn-feedback" aria-label="LL.Add_Feedback()">
+    <ion-button class="btnActionCard btn-feedback" aria-label="LL.Add_Feedback()">
       <span class="btn-favorite-group">
         <ion-icon class="btn-feedback-group-icon" aria-hidden="true" src="/assets/icons/line/comment-line-add.svg"></ion-icon>
       </span>

@@ -1,7 +1,7 @@
 <template>
   <div class="talkAction">
     <!-- TODO Fix dynamic aria-label -->
-    <ion-button :class="{ 'btnTalk': true, 'btn-watchLater': true, '_is-active': !!talkNotes?.watchLater }" @click.stop="() => toggleWatchLater()"
+    <ion-button :class="{ 'btnActionCard': true, 'btn-watchLater': true, '_is-active': !!talkNotes?.watchLater }" @click.stop="() => toggleWatchLater()"
                 v-if="confDescriptor?.features.remindMeOnceVideosAreAvailableEnabled"
                 :aria-label="talkNotes?.watchLater ? LL.Remove_Watch_later() : LL.Add_Watch_later()">
       <ion-icon v-if="!talkNotes?.watchLater" aria-hidden="true" src="/assets/icons/line/video-line.svg"></ion-icon>
