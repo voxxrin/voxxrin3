@@ -56,6 +56,10 @@
       color: var(--app-primary);
       font-size: 16px;
       line-height: 1.2;
+
+      @media (prefers-color-scheme: dark) {
+        color: var(--app-white);
+      }
     }
 
     &-subTitle {
@@ -64,6 +68,10 @@
       align-items: center;
       gap: var(--app-gutters-tiny);
       font-weight: 500;
+
+      @media (prefers-color-scheme: dark) {
+        color: var(--app-whit-90);
+      }
     }
   }
 }
