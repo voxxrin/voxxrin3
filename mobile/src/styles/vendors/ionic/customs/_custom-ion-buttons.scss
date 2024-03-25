@@ -103,28 +103,46 @@ ion-button {
             }
         }
     }
+}
 
-    /* TODO RLZ: move it to a proper place in talk actions components */
-    &.btnActionCard {
-        height: 100% !important;
-        min-height: 55px !important;
-        width: 58px !important;
-        margin: 0;
-        --border-radius: 0;
-        --background: rgba(white, 0.5);
-        --color: var(--app-primary);
-        border-left: 1px solid var(--app-grey-line);
-        font-size: 22px;
-        --padding-start: 0;
-        --padding-end: 0;
-        --background-activated-opacity: 0.1;
-        --background-hover-opacity: 0.1;
-        --box-shadow: none;
+.btnActionCard {
+    height: 100% !important;
+    min-height: 55px !important;
+    width: 58px !important;
+    margin: 0;
+    --border-radius: 0;
+    --background: rgba(white, 0.5);
+    --color: var(--app-primary);
+    border-left: 1px solid var(--app-grey-line);
+    font-size: 22px;
+    --padding-start: 0;
+    --padding-end: 0;
+    --background-activated-opacity: 0.1;
+    --background-hover-opacity: 0.1;
+    --box-shadow: none;
 
+    &.button-solid {
         @media (prefers-color-scheme: dark) {
-            --background: rgba(white, 0.2);
-            --color: var(--app-white);
-            border-left: 1px solid var(--app-line-contrast);
+            border-color: var(--app-line-contrast);
+            --background: transparent;
+            color: var(--app-white);
+        }
+    }
+
+    .btnActionCard-group {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        row-gap: 2px;
+
+        &-icon {
+            position: relative;
+            font-size: 26px;
+        }
+
+        &-nb {
+            font-size: 14px !important;
+            font-weight: 700;
         }
     }
 }

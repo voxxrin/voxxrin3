@@ -8,7 +8,9 @@
         </ion-toolbar>
       </ion-header>
 
-      <ion-card class="speakerCard">
+      <!-- TODO Dev Card Speaker List -->
+      <ion-card class="speakerCard"
+                :class="{ '_is-highlighted': true, '_has-liked': true}">
         <div class="speakerCard-head">
           <div class="avatarContainer">
             <ion-thumbnail class="avatar _large">
@@ -26,82 +28,15 @@
         </div>
         <div class="speakerCard-content">
           <ion-list class="talkResumeList">
-            <ion-item class="talkResumeCard">
-              <span class="talkResumeCard-line"></span>
-              <div class="talkResumeCard-content">
-                <ion-text class="talkResumeCard-content-description">
-                  C'est pas Versailles ici ! Eteignez vos envs projets K8S la nuit pour sauver la planète.
-                </ion-text>
-                <div class="talkResumeCard-footer">
-                  <ion-badge class="trackBadge">
-                    <div class="trackBadge-content">
-                      <ion-icon src="/assets/icons/solid/tag.svg"></ion-icon>JAVA
-                    </div>
-                  </ion-badge>
-                  <div class="avatarContainer">
-                    <div class="avatarGroup" v-if="true">
-                      <div class="avatarItem">
-                        <ion-thumbnail class="avatar _small">
-                          <img v-if="false" :src="speaker.photoUrl" @error="handle404OnSpeakerThumbnail($event.target as HTMLImageElement)" />
-                          <img v-if="true" :src="baseUrl+'assets/images/svg/avatar-shadow.svg'" />
-                        </ion-thumbnail>
-                      </div>
-                    </div>
-                    <div class="avatarInfos _small">
-                      <ion-text class="avatarInfos-title">Conference</ion-text>
-                      <ion-text class="avatarInfos-subTitle" v-if="true">
-                        (+X Speaker(s))
-                      </ion-text>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </ion-item>
-            <ion-item class="talkResumeCard">
-              <span class="talkResumeCard-line"></span>
-              <div class="talkResumeCard-content">
-                <ion-text class="talkResumeCard-content-description">
-                  Unlocking the Secrets of the Devoxx Mobile App: A Deep Dive into Open Source PWA with Vue and Firebase
-                </ion-text>
-                <div class="talkResumeCard-footer">
-                  <ion-badge class="trackBadge">
-                    <div class="trackBadge-content">
-                      <ion-icon src="/assets/icons/solid/tag.svg"></ion-icon>JAVA
-                    </div>
-                  </ion-badge>
-                  <div class="avatarContainer">
-                    <div class="avatarGroup" v-if="false">
-                      <div class="avatarItem">
-                        <ion-thumbnail class="avatar _small">
-                          <img v-if="false" :src="speaker.photoUrl" @error="handle404OnSpeakerThumbnail($event.target as HTMLImageElement)" />
-                          <img v-if="true" :src="baseUrl+'assets/images/svg/avatar-shadow.svg'" />
-                        </ion-thumbnail>
-                      </div>
-                    </div>
-                    <div class="avatarInfos _small">
-                      <ion-text class="avatarInfos-title">Conference</ion-text>
-                      <ion-text class="avatarInfos-subTitle" v-if="false">
-                        (+X Speaker(s))
-                      </ion-text>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </ion-item>
+           <SpeakerResumeTalk></SpeakerResumeTalk>
           </ion-list>
         </div>
         <div class="speakerCard-footer">
           <div class="speakerActions">
-            <ion-button class="btnActionCard btn-info">
-              <span class="btn-favorite-group">
-               <ion-icon name="heart-outline"></ion-icon>
-              </span>
+            <ion-button class="btnActionCard">
+              <ion-icon :icon="informationCircleSharp"></ion-icon>
             </ion-button>
-            <ion-button class="btnActionCard btn-follow">
-                <span class="btn-favorite-group">
-                  <ion-icon :icon="heartOutline"></ion-icon>
-                </span>
-            </ion-button>
+            <SpeakerLikeButton></SpeakerLikeButton>
           </div>
         </div>
       </ion-card>
@@ -120,7 +55,9 @@
   import {managedRef as ref} from "@/views/vue-utils";
   import PoweredVoxxrin from "@/components/ui/PoweredVoxxrin.vue";
   import {IonBadge, IonInput, IonThumbnail} from "@ionic/vue";
-  import {business, businessSharp, heartOutline} from "ionicons/icons";
+  import {businessSharp, informationCircleSharp} from "ionicons/icons";
+  import SpeakerLikeButton from "@/components/speaker-card/SpeakerLikeButton.vue";
+  import SpeakerResumeTalk from "@/components/speaker-card/SpeakerResumeTalk.vue";
 
   const { LL } = typesafeI18n()
 
@@ -130,7 +67,7 @@
   const baseUrl = import.meta.env.BASE_URL;
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
   .speakerCard {
     display: flex;
     flex-direction: column;
@@ -152,10 +89,120 @@
       }
     }
 
+    //* States card talk *//
     &:active {
       transition: 80ms ease-in-out;
       transform: scale(0.99);
       box-shadow: rgba(99, 99, 99, 0.2) 0 2px 8px 0;
+    }
+
+    &:before, &:after {
+      position: absolute;
+      content: '';
+      z-index: -1;
+    }
+
+    &._is-highlighted {
+      border : {
+        top: 2px solid var(--app-primary);
+        bottom: 2px solid var(--app-primary);
+        right: 2px solid var(--app-primary);
+        left: 2px solid var(--app-primary);
+      }
+
+      @media (prefers-color-scheme: dark) {
+        border : {
+          top: 2px solid var(--app-white) !important;
+          bottom: 2px solid var(--app-white) !important;
+          right: 2px solid var(--app-white) !important;
+          left: 2px solid var(--app-white) !important;
+        }
+      }
+
+      ion-thumbnail {
+        background-color: var(--app-background);
+        border: 2px solid var(--app-primary);
+
+        @media (prefers-color-scheme: dark) {
+          border: 2px solid var(--app-white) !important;
+        }
+      }
+
+      .speakerCard-footer {
+        border-width: 2px;
+        border-color: var(--app-primary);
+        border-bottom: none;
+
+        @media (prefers-color-scheme: dark) {
+          border-color: var(--app-white) !important;
+        }
+      }
+
+      &._has-liked {
+        border : {
+          top: 2px solid var(--app-primary-shade);
+          bottom: 2px solid var(--app-primary-shade);
+          right: 2px solid var(--app-primary-shade);
+        }
+
+        @media (prefers-color-scheme: dark) {
+          --border : {
+            top: 2px solid var(--app-white);
+            bottom: 2px solid var(--app-white);
+            right: 2px solid var(--app-white);
+          }
+        }
+
+        .btnActionCard {
+          border-color: var(--app-primary-shade);
+          border-width: 2px;
+
+          @media (prefers-color-scheme: dark) {
+            border-color: var(--app-white);
+          }
+        }
+
+        &:before { background: rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.6);}
+
+        ion-thumbnail { border: 2px solid var(--app-primary-shade);}
+
+        .talkCard-footer {
+          border-color: var(--app-primary-shade);
+        }
+      }
+    }
+
+    &._has-liked {
+      &:before {
+        width: 40%;
+        height: 70%;
+        right: 0;
+        bottom: 0;
+        transform: scale(1);
+        background: linear-gradient(331deg, rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.6) 30%, rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.6) 80%);
+        opacity: 1;
+        filter: blur(32px);
+        animation: scale-in-center 0.1s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+      }
+
+      &:after {
+        width: 50%;
+        height: 100%;
+        right: 0;
+        bottom: 0;
+        background-image: url('/assets/images/png/texture-favorited.png');
+        background-repeat: no-repeat;
+        background-position: right;
+        background-size: cover;
+        transform: scale(1);
+        opacity: 0.5;
+        mix-blend-mode: overlay;
+        animation: scale-in-center 0.1s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+
+        @media (prefers-color-scheme: dark) {
+          mix-blend-mode: difference;
+        }
+      }
     }
 
     &-head {
@@ -171,13 +218,23 @@
       justify-content: space-between;
       padding: 0 var(--app-gutters) var(--app-gutters-small) var(--app-gutters);
 
+
+      .talkResumeList {
+        background: transparent;
+        width: 100%;
+      }
+
       .talkResumeCard {
         --padding-start: 0;
         --inner-padding-top: var(--app-gutters-medium);
         --inner-padding-bottom: var(--app-gutters-medium);
+        --background: transparent;
         padding: 0;
 
-        &:last-child { --border-style: none;}
+        &:last-child {
+          --border-style: none;
+          --inner-padding-bottom: 0;
+        }
 
         &-line {
           height: 100%;
@@ -185,18 +242,28 @@
           margin-right: var(--app-gutters-medium);
           border-radius: 4px;
           background: var(--app-primary);
+
+          @media (prefers-color-scheme: dark) {
+            background: var(--app-white-90);
+          }
         }
 
         &-content {
+          flex: 1;
           display: flex;
           flex-direction: column;
           align-items: center;
           gap: var(--app-gutters-medium);
 
           &-description {
+            width: 100%;
             font-size: 14px;
             line-height: 1.2;
             color: var(--app-primary);
+
+            @media (prefers-color-scheme: dark) {
+              color: var(--app-white);
+            }
           }
         }
 
@@ -205,7 +272,6 @@
           align-items: center;
           justify-content: space-between;
           width: 100%;
-
 
           .avatarContainer {
             gap: var(--app-gutters);
@@ -228,6 +294,14 @@
         bottom: 1px solid var(--app-grey-line);
       }
       background-color: rgba(white, 0.6);
+
+      @media (prefers-color-scheme: dark) {
+        background-color: rgba(white, 0.05);
+        border : {
+          top: 1px solid var(--app-line-contrast);
+          bottom: 1px solid var(--app-line-contrast);
+        }
+      }
 
       .speakerActions {
         display: flex;

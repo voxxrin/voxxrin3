@@ -321,7 +321,6 @@ const theme = {
   }
 
   //* States card talk *//
-
   &._is-highlighted {
     border : {
       top: 2px solid var(--app-primary);
@@ -383,27 +382,7 @@ const theme = {
 
       .talkCard-footer {
         border-color: var(--app-primary-shade);
-
-        /* TODO RLZ: move it to a proper place in talk actions components */
-        :deep(.btnActionCard) { border-color: var(--app-primary-shade);}
       }
-    }
-
-    //* TODO - Start - Delete when btn is component *//
-    //* Change style type actions *//
-    ion-button {
-      &.btn-watchLater {
-        --background: var(--voxxrin-event-theme-colors-tertiary-hex);
-        --color: var(--voxxrin-event-theme-colors-tertiary-contrast-hex);
-        border-left: 1px solid var(--voxxrin-event-theme-colors-tertiary-hex);
-      }
-
-      &.btn-feedbackSelect {
-        --background: var(--voxxrin-event-theme-colors-primary-hex);
-        --color: var(--voxxrin-event-theme-colors-primary-contrast-hex);
-        border-left: 1px solid var(--voxxrin-event-theme-colors-primary-hex);
-      }
-      //* END - Delete when btn is component *//
     }
   }
 
