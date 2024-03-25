@@ -61,6 +61,11 @@ watch([$tabBarRef], ([$tabBar]) => {
 <style lang="scss" scoped>
 ion-tab-bar {
   box-shadow: 0px -6px 28px rgba(0, 0, 0, 0.24);
+  border-top: 1px solid var(--app-grey-line);
+
+  @media (prefers-color-scheme: dark) {
+    border-color: var(--app-line-contrast);
+  }
 
   ion-tab-button {
     --ripple-color: var(--voxxrin-event-theme-colors-primary-hex);
