@@ -2,7 +2,6 @@
 
 ion-button {
     --border-radius: 54px;
-
     text-transform: inherit;
     letter-spacing: inherit;
 
@@ -45,10 +44,25 @@ ion-button {
         }
     }
 
+    &.button-clear {
+        --color: var(--app-primary);
+
+        @media (prefers-color-scheme: dark) {
+            --color: var(--app-white);
+        }
+    }
+
     &.button-outline {
         --border-width: 2px;
-        --background-activated: var(--app-beige-light);
+        --border-color: var(--app-primary);
+        --color: var(--app-primary);
+        --background-activated: var(--app-grey-line);
         --color-activated: var(--app-primary);
+
+        @media (prefers-color-scheme: dark) {
+            --border-color: var(--app-white);
+            --color: var(--app-white);
+        }
 
         &.md {
             --background-activated-opacity: 1;
@@ -81,6 +95,14 @@ ion-button {
            min-width: 44px !important;
            font-size: 16px;
        }
+
+        &.button-outline {
+            --background-activated: var(--app-grey-line);
+
+            @media (prefers-color-scheme: dark) {
+                --background-activated: var(--app-dark-contrast);
+            }
+        }
    }
 
     //* Add Specific Styles Voxxrin Button *//
