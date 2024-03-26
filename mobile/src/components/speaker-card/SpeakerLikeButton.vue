@@ -4,7 +4,7 @@
         <span class="btnActionCard-group">
            <ion-icon class="btnActionCard-group-icon" v-if="true" aria-hidden="true" src="/assets/icons/line/heart-line.svg"></ion-icon>
            <ion-icon class="btnActionCard-group-icon" v-if="false" aria-hidden="true" src="/assets/icons/solid/heart.svg"></ion-icon>
-           <ion-label class="btnActionCard-group-nb" v-if="true">-</ion-label>
+           <ion-label class="btnActionCard-group-nb" v-if="true">0</ion-label>
         </span>
   </ion-button>
 </template>

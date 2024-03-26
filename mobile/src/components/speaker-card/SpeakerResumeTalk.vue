@@ -16,8 +16,9 @@
           <div class="avatarGroup" v-if="true">
             <div class="avatarItem">
               <ion-thumbnail class="avatar _small">
-                <img v-if="false" :src="speaker.photoUrl" @error="handle404OnSpeakerThumbnail($event.target as HTMLImageElement)" />
-                <img v-if="true" :src="baseUrl+'assets/images/svg/avatar-shadow.svg'" />
+                <img v-if="false" :src="speaker.photoUrl" @error="handle404OnSpeakerThumbnail($event.target as HTMLImageElement)"
+                     :alt="LL.Avatar_Speaker() + ' ' + speaker.fullName"/>
+                <img v-if="true" aria-hidden="true" :src="baseUrl+'assets/images/svg/avatar-shadow.svg'" />
               </ion-thumbnail>
             </div>
           </div>

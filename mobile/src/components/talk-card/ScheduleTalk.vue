@@ -164,7 +164,7 @@ const theme = {
     top: 1px solid var(--app-grey-line);
     right: 1px solid var(--app-grey-line);
   }
-  box-shadow: rgba(100, 100, 111, 0.2) 0 7px 29px 0;
+  box-shadow: var(--app-shadow-default);
   transition: 80ms ease-in-out;
 
   @media (prefers-color-scheme: dark) {

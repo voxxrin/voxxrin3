@@ -48,6 +48,8 @@ const en = {
 	Talk_details: `Talk details`,
 	Close_talk_details: `Close talk details`,
 	Speakers: `Speakers`,
+	Like_Speaker: `Like speaker`,
+	View_Profil_Speaker: `See the speaker's page`,
 	Welcome_to: `Welcome to`,
 	Hello_xxx: `Hello, {name:string}`,
 	Add_from_the_list_below: `Add from the list below`,
