@@ -1,4 +1,5 @@
 <template>
+  <!-- TODO #74 Dev btn and custom option / icons depending on context -->
   <ion-segment value="buttons" class="listModesSwitch">
     <ion-segment-button class="listModesSwitch-button" value="default" :aria-label="LL.Big_list_mode()">
       <ion-icon :icon="albums" aria-hidden="true"></ion-icon>

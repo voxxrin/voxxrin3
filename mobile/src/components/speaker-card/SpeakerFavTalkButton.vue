@@ -1,5 +1,5 @@
 <template>
-  <!-- TODO Dev Btn -->
+  <!-- TODO #74 Dev Btn -->
   <ion-button class="btn-talkFavorite" :class="{'_is-active': false}" fill="clear" :aria-label="LL.Add_Favorites">
            <span class="btn-talkFavorite-group">
               <ion-icon class="btn-talkFavorite-group-icon" v-if="true" aria-hidden="true"
