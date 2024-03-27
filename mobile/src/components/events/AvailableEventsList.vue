@@ -111,7 +111,7 @@ watch([currentCategoryRef, perCategoryEventsRef], ([currentCategory, perCategory
     top: 120px;
     background-color: var(--app-beige-medium);
     border-bottom: 1px solid  var(--app-beige-line);
-    padding: var(--app-gutters);
+    padding: var(--app-gutters-medium) var(--app-gutters);
     font-weight: 900;
     z-index: 5;
 

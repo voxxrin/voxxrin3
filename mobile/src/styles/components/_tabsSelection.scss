@@ -8,6 +8,14 @@
   border-bottom: 1px solid var(--app-beige-line);
   background: var(--app-white);
 
+  ::part(native) {
+    border-radius: 16px 16px 0 0;
+  }
+
+  ::part(indicator-background) {
+    border-radius: 16px 16px 0 0;
+  }
+
   &.md {
     .in-segment {
       text-transform: none;
@@ -91,9 +99,7 @@
 }
 
 .tabsSelection ion-segment-button.md {
-  --border-radius: 16px 16px 0 0;
-  --indicator-transition: none;
-  overflow: hidden;
+
 
   .segment-button-indicator {
     bottom: 2px;
