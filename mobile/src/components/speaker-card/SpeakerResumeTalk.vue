@@ -1,5 +1,5 @@
 <template>
-  <!-- TODO Dev Resume Card -->
+  <!-- TODO #74 Dev Resume Card -->
   <ion-item class="talkResumeCard" :class="{'_has-favorited': false}">
     <span class="talkResumeCard-line"></span>
     <div class="talkResumeCard-content">
