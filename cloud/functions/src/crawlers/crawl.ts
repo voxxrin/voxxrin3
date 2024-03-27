@@ -142,6 +142,7 @@ function sanityCheckEvent(event: FullEvent): string[] {
   const descriptorFormatIds = event.conferenceDescriptor.talkFormats.map(f => f.id);
   const descriptorRoomIds = event.conferenceDescriptor.rooms.map(r => r.id);
 
+  const talkLangs = new Set<string>()
   const unknownValues = event.talks.reduce((unknownValues, talk) => {
     if(!descriptorTrackIds.includes(talk.track.id)) {
       unknownValues.unknownTracks.set(talk.track.id, talk.track);
@@ -152,6 +153,7 @@ function sanityCheckEvent(event: FullEvent): string[] {
     if(!descriptorRoomIds.includes(talk.room.id)) {
       unknownValues.unknownRooms.set(talk.room.id, talk.room);
     }
+    talkLangs.add(talk.language);
 
     return unknownValues
   }, { unknownTracks: new Map<string, Track>(), unknownFormats: new Map<string, TalkFormat>, unknownRooms: new Map<string, Room>() });
@@ -182,6 +184,10 @@ function sanityCheckEvent(event: FullEvent): string[] {
         id: room.id, title: room.title,
       }
     }))
+  }
+
+  if(talkLangs.size === 1 && !event.conferenceDescriptor.features.hideLanguages.includes(Array.from(talkLangs)[0])) {
+    event.conferenceDescriptor.features.hideLanguages.push(Array.from(talkLangs)[0]);
   }
 
   return crawlingMessages;
