@@ -196,6 +196,10 @@ type RootTranslation = {
 	 */
 	Speakers: string
 	/**
+	 * G​o​ ​t​o​ ​t​i​c​k​e​t​i​n​g
+	 */
+	Go_To_Ticketing: string
+	/**
 	 * L​i​k​e​ ​s​p​e​a​k​e​r
 	 */
 	Like_Speaker: string
@@ -701,6 +705,10 @@ export type TranslationFunctions = {
 	 * Speakers
 	 */
 	Speakers: () => LocalizedString
+	/**
+	 * Go to ticketing
+	 */
+	Go_To_Ticketing: () => LocalizedString
 	/**
 	 * Like speaker
 	 */

@@ -16,6 +16,11 @@
       </ion-header>
 
       <SpeakerCard></SpeakerCard>
+      <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+        <ion-fab-button class="btnGoToTicketing" :aria-label="LL.Go_To_Ticketing()">
+          <ion-icon :icon="ticket" aria-hidden="true"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
       <PoweredVoxxrin></PoweredVoxxrin>
     </ion-content>
   </ion-page>
@@ -29,6 +34,8 @@
   import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
   import {typesafeI18n} from "@/i18n/i18n-vue";
   import {managedRef as ref} from "@/views/vue-utils";
+  import {IonFab, IonFabButton} from "@ionic/vue";
+  import {ticket} from "ionicons/icons";
   import PoweredVoxxrin from "@/components/ui/PoweredVoxxrin.vue";
   import SpeakerCard from "@/components/speaker-card/SpeakerCard.vue";
   import ListModeSwitch from "@/components/ui/ListModeSwitch.vue";
@@ -47,5 +54,10 @@
       align-items: center;
       gap: var(--app-gutters);
     }
+  }
+
+  .btnGoToTicketing {
+    --background: var(--voxxrin-event-theme-colors-secondary-hex);
+    --background-activated: var(--voxxrin-event-theme-colors-secondary-hex);
   }
 </style>
