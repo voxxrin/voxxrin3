@@ -8,24 +8,31 @@
     width: 38px;
     margin: 0;
     --background: transparent;
+    --background-activated: var(--app-grey-line);
     --color: var(--app-primary);
     --padding-start: 0;
     --padding-end: 0;
+    --box-shadow: none;
 
     @media (prefers-color-scheme: dark) {
       &.button-solid {
         --background: transparent;
+        --background-activated: var(--app-light-contrast);
         --color: var(--app-white);
+        --ion-toolbar-background: var(--app-white);
       }
     }
 
     &._active {
       --background: var(--app-primary);
+      --background-activated: var(--app-primary);
       --color: var(--app-white);
 
       @media (prefers-color-scheme: dark) {
         --background: var(--app-white);
+        --background-activated: var(--app-white);
         --color: var(--app-primary);
+        --ion-toolbar-background: var(--app-primary);
       }
     }
   }
