@@ -4,7 +4,7 @@
            <span class="btn-talkFavorite-group">
               <ion-icon class="btn-talkFavorite-group-icon" v-if="true" aria-hidden="true"
                         src="/assets/icons/line/bookmark-line-favorite.svg"></ion-icon>
-              <ion-icon class="btn-talkFavorite-group-icon" v-if="true" aria-hidden="true"
+              <ion-icon class="btn-talkFavorite-group-icon" v-if="false" aria-hidden="true"
                         src="/assets/icons/solid/bookmark-favorite.svg"></ion-icon>
               <ion-label class="btn-talkFavorite-group-nb" v-if="true">-</ion-label>
            </span>
