@@ -35,13 +35,14 @@
     justify-content: center;
     height: 20px;
     min-width: 20px;
+    margin-right: var(--app-gutters-tiny);
     padding: 0 4px;
     border-radius: 22px;
     background-color: var(--app-primary-shade);
     color: var(--app-white);
 
     @media (prefers-color-scheme: dark) {
-      border-right: 1px solid var(--app-white);
+      border-right: 2px solid var(--app-white);
       background-color: var(--app-medium--contrast);
     }
   }
