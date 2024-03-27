@@ -1,5 +1,5 @@
 <template>
-  <!-- TODO Dev Card Speaker List -->
+  <!-- TODO #74 Dev Card Speaker List -->
   <ion-card class="speakerCard">
     <div class="speakerCard-head">
       <div class="avatarContainer">
@@ -18,12 +18,12 @@
       </div>
     </div>
     <div class="speakerCard-content">
-      <!-- TODO Display only mode full / hide mode compact -->
+      <!-- TODO #74 Display only mode full / hide mode compact -->
       <ion-list class="talkResumeList" v-if="true">
         <SpeakerResumeTalk></SpeakerResumeTalk>
         <SpeakerResumeTalk></SpeakerResumeTalk>
       </ion-list>
-      <!-- TODO Display only mode compact / hide mode full -->
+      <!-- TODO #74 Display only mode compact / hide mode full -->
       <div class="bulletTagList" role="list" v-if="true">
         <div class="bulletTag" role="listitem">
           <span class="bulletTag-nb">2</span>Conf.
