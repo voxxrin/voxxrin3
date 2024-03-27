@@ -6,15 +6,14 @@
         <ion-toolbar>
           <ion-title slot="start">{{ LL.Speakers() }}</ion-title>
           <div class="toolbarHeader-options" slot="end">
-            <div class="listModesSwitch">
-              <ion-button class="listModesSwitch-button _active" :aria-label="LL.Big_list_mode()">
+            <ion-segment value="buttons" class="listModesSwitch">
+              <ion-segment-button class="listModesSwitch-button" value="default" :aria-label="LL.Big_list_mode()">
                 <ion-icon :icon="albums" aria-hidden="true"></ion-icon>
-              </ion-button>
-              <ion-button class="listModesSwitch-button" :aria-label="LL.Compact_list_mode()">
+              </ion-segment-button>
+              <ion-segment-button class="listModesSwitch-button" value="segment" :aria-label="LL.Compact_list_mode()">
                 <ion-icon :icon="list" aria-hidden="true"></ion-icon>
-              </ion-button>
-            </div>
-
+              </ion-segment-button>
+            </ion-segment>
             <ion-button slot="end" shape="round" size="small" @click="toggleSearchField()"
                         :aria-label="LL.Search()">
               <ion-icon src="/assets/icons/line/search-line.svg"></ion-icon>
