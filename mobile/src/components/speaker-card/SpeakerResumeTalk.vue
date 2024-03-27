@@ -44,7 +44,7 @@
 
 <script setup lang="ts">
 import {typesafeI18n} from "@/i18n/i18n-vue";
-import {IonBadge, IonThumbnail} from "@ionic/vue";
+import {IonBadge, IonThumbnail, IonText} from "@ionic/vue";
 import SpeakerFavTalkButton from "@/components/speaker-card/SpeakerFavTalkButton.vue";
 
 const {LL} = typesafeI18n()

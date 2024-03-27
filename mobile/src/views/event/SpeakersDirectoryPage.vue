@@ -39,7 +39,7 @@
   import PoweredVoxxrin from "@/components/ui/PoweredVoxxrin.vue";
   import SpeakerCard from "@/components/speaker-card/SpeakerCard.vue";
   import {albums, list} from "ionicons/icons";
-  import {IonInput} from "@ionic/vue";
+  import {IonSegmentButton, IonSegment} from "@ionic/vue";
 
   const { LL } = typesafeI18n()
 
