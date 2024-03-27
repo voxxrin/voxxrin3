@@ -204,6 +204,22 @@ type RootTranslation = {
 	 */
 	Speakers: string
 	/**
+	 * L​i​k​e​ ​s​p​e​a​k​e​r
+	 */
+	Like_Speaker: string
+	/**
+	 * B​i​g​ ​l​i​s​t​ ​m​o​d​e
+	 */
+	Big_list_mode: string
+	/**
+	 * C​o​m​p​a​c​t​ ​l​i​s​t​ ​m​o​d​e
+	 */
+	Compact_list_mode: string
+	/**
+	 * S​e​e​ ​t​h​e​ ​s​p​e​a​k​e​r​'​s​ ​p​a​g​e
+	 */
+	View_Profil_Speaker: string
+	/**
 	 * W​e​l​c​o​m​e​ ​t​o
 	 */
 	Welcome_to: string
@@ -770,6 +786,22 @@ export type TranslationFunctions = {
 	 * Speakers
 	 */
 	Speakers: () => LocalizedString
+	/**
+	 * Like speaker
+	 */
+	Like_Speaker: () => LocalizedString
+	/**
+	 * Big list mode
+	 */
+	Big_list_mode: () => LocalizedString
+	/**
+	 * Compact list mode
+	 */
+	Compact_list_mode: () => LocalizedString
+	/**
+	 * See the speaker's page
+	 */
+	View_Profil_Speaker: () => LocalizedString
 	/**
 	 * Welcome to
 	 */

@@ -49,6 +49,8 @@ const en = {
 	Close_talk_details: `Close talk details`,
 	Speakers: `Speakers`,
 	Like_Speaker: `Like speaker`,
+	Big_list_mode: `Big list mode`,
+	Compact_list_mode: `Compact list mode`,
 	View_Profil_Speaker: `See the speaker's page`,
 	Welcome_to: `Welcome to`,
 	Hello_xxx: `Hello, {name:string}`,
