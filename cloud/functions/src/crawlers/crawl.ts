@@ -9,6 +9,11 @@ import {v4 as uuidv4} from "uuid"
 import {ConferenceOrganizerSpace} from "../../../../shared/conference-organizer-space.firestore";
 import {eventLastUpdateRefreshed} from "../functions/firestore/firestore-utils";
 import {http} from "./utils";
+import {
+  Room,
+  TalkFormat,
+  Track
+} from "../../../../shared/daily-schedule.firestore";
 
 export type CrawlerKind<ZOD_TYPE extends z.ZodType> = {
     crawlerImpl: (eventId: string, crawlerDescriptor: z.infer<ZOD_TYPE>, criteria: { dayIds?: string[]|undefined }) => Promise<FullEvent>,
@@ -104,6 +109,7 @@ const crawlAll = async function(criteria: CrawlCriteria) {
             const crawlerKindDescriptor = crawler.descriptorParser.parse(crawlerDescriptorContent);
 
             const event = await crawler.crawlerImpl(crawlerDescriptor.id, crawlerKindDescriptor, { dayIds: criteria.dayIds });
+            const messages = sanityCheckEvent(event);
             await saveEvent(event)
 
             const end = Temporal.Now.instant()
@@ -111,7 +117,8 @@ const crawlAll = async function(criteria: CrawlCriteria) {
                 eventId: crawlerDescriptor.id,
                 days: event.daySchedules.map(ds => ds.day),
                 descriptorUrlUsed: crawlerDescriptor.descriptorUrl,
-                durationInSeconds: start.until(end).total('seconds')
+                durationInSeconds: start.until(end).total('seconds'),
+                messages
             }
         }catch(e: any) {
           const baseMessage = `Error during crawler with id ${crawlerDescriptor.id}`;
@@ -128,6 +135,57 @@ const crawlAll = async function(criteria: CrawlCriteria) {
         }
     }))
 };
+
+function sanityCheckEvent(event: FullEvent): string[] {
+
+  const descriptorTrackIds = event.conferenceDescriptor.talkTracks.map(t => t.id);
+  const descriptorFormatIds = event.conferenceDescriptor.talkFormats.map(f => f.id);
+  const descriptorRoomIds = event.conferenceDescriptor.rooms.map(r => r.id);
+
+  const unknownValues = event.talks.reduce((unknownValues, talk) => {
+    if(!descriptorTrackIds.includes(talk.track.id)) {
+      unknownValues.unknownTracks.set(talk.track.id, talk.track);
+    }
+    if(!descriptorFormatIds.includes(talk.format.id)) {
+      unknownValues.unknownFormats.set(talk.format.id, talk.format);
+    }
+    if(!descriptorRoomIds.includes(talk.room.id)) {
+      unknownValues.unknownRooms.set(talk.room.id, talk.room);
+    }
+
+    return unknownValues
+  }, { unknownTracks: new Map<string, Track>(), unknownFormats: new Map<string, TalkFormat>, unknownRooms: new Map<string, Room>() });
+
+  const crawlingMessages: string[] = [];
+  if(unknownValues.unknownTracks.size) {
+    crawlingMessages.push(`WARNING: Some tracks have not been declared in crawler configuration: ${Array.from(unknownValues.unknownTracks.keys()).join(", ")}. Those tracks' title/color will be auto-guessed.`)
+    event.conferenceDescriptor.talkTracks.push(...Array.from(unknownValues.unknownTracks.values()).map((track, index) => {
+      return {
+        id: track.id, title: track.title,
+        themeColor: TALK_TRACK_FALLBACK_COLORS[index % TALK_TRACK_FALLBACK_COLORS.length]
+      }
+    }))
+  }
+  if(unknownValues.unknownFormats.size) {
+    crawlingMessages.push(`WARNING: Some talk formats have not been declared in crawler configuration: ${Array.from(unknownValues.unknownFormats.keys()).join(", ")}. Those formats' title/color/duration will be auto-guessed.`)
+    event.conferenceDescriptor.talkFormats.push(...Array.from(unknownValues.unknownFormats.values()).map((format, index) => {
+      return {
+        id: format.id, title: format.title, duration: format.duration,
+        themeColor: TALK_FORMAT_FALLBACK_COLORS[index % TALK_FORMAT_FALLBACK_COLORS.length]
+      }
+    }))
+  }
+  if(unknownValues.unknownRooms.size) {
+    crawlingMessages.push(`WARNING: Some rooms have not been declared in crawler configuration: ${Array.from(unknownValues.unknownRooms.keys()).join(", ")}. Those rooms' title will be auto-guessed.`)
+    event.conferenceDescriptor.rooms.push(...Array.from(unknownValues.unknownRooms.values()).map((room, index) => {
+      return {
+        id: room.id, title: room.title,
+      }
+    }))
+  }
+
+  return crawlingMessages;
+}
 
 const saveEvent = async function(event: FullEvent) {
     info("saving event " + event.id)

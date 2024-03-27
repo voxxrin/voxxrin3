@@ -22,7 +22,6 @@ import {ConferenceDescriptor} from "../../../../../shared/conference-descriptor.
 import {
   EVENT_DESCRIPTOR_PARSER,
   INFOS_PARSER,
-  TALK_FORMAT_PARSER,
   THEMABLE_TALK_FORMAT_PARSER
 } from "../crawler-parsers";
 import {CrawlerKind, TALK_FORMAT_FALLBACK_COLORS} from "../crawl";
