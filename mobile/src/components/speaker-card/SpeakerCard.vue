@@ -18,11 +18,13 @@
       </div>
     </div>
     <div class="speakerCard-content">
-      <ion-list class="talkResumeList">
+      <!-- TODO Display only mode full / hide mode compact -->
+      <ion-list class="talkResumeList" v-if="true">
         <SpeakerResumeTalk></SpeakerResumeTalk>
         <SpeakerResumeTalk></SpeakerResumeTalk>
       </ion-list>
-      <div class="bulletTagList" role="list">
+      <!-- TODO Display only mode compact / hide mode full -->
+      <div class="bulletTagList" role="list" v-if="true">
         <div class="bulletTag" role="listitem">
           <span class="bulletTag-nb">2</span>Conf.
         </div>
@@ -208,7 +210,7 @@
       }
 
       .bulletTagList {
-        padding-left: 54px;
+        padding-left: 72px;
       }
     }
   }
