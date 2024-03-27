@@ -257,6 +257,12 @@
   border: 1px solid var(--app-primary);
   background-color: var(--app-background);
 
+  @media (prefers-color-scheme: dark) {
+    color: var(--app-white);
+    border: 1px solid var(--app-white);
+    background-color: transparent;
+  }
+
   &-nb {
     display: flex;
     align-items: center;
@@ -267,6 +273,11 @@
     border-radius: 22px;
     background-color: var(--app-primary-shade);
     color: var(--app-white);
+
+    @media (prefers-color-scheme: dark) {
+      border-right: 1px solid var(--app-white);
+      background-color: var(--app-medium--contrast);
+    }
   }
 }
 </style>

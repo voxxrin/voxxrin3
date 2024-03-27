@@ -5,6 +5,14 @@
       <ion-header class="toolbarHeader">
         <ion-toolbar>
           <ion-title slot="start">{{ LL.Speakers() }}</ion-title>
+          <div slot="end" class="listModesSwitch">
+            <ion-button class="listModesSwitch-button _active">
+              <ion-icon :icon="albums"></ion-icon>
+            </ion-button>
+            <ion-button class="listModesSwitch-button">
+              <ion-icon :icon="list"></ion-icon>
+            </ion-button>
+          </div>
         </ion-toolbar>
       </ion-header>
 
@@ -26,6 +34,7 @@
   import PoweredVoxxrin from "@/components/ui/PoweredVoxxrin.vue";
   import SpeakerCard from "@/components/speaker-card/SpeakerCard.vue";
   import SpeakerCompactCard from "@/components/speaker-card/SpeakerCompactCard.vue";
+  import {albums, list} from "ionicons/icons";
 
   const { LL } = typesafeI18n()
 

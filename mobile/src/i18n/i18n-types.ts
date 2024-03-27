@@ -196,14 +196,6 @@ type RootTranslation = {
 	 */
 	Speakers: string
 	/**
-	 * L​i​k​e​ ​s​p​e​a​k​e​r
-	 */
-	Like_Speaker: string
-	/**
-	 * S​e​e​ ​t​h​e​ ​s​p​e​a​k​e​r​'​s​ ​p​a​g​e
-	 */
-	View_Profil_Speaker: string
-	/**
 	 * W​e​l​c​o​m​e​ ​t​o
 	 */
 	Welcome_to: string
@@ -693,14 +685,6 @@ export type TranslationFunctions = {
 	 * Speakers
 	 */
 	Speakers: () => LocalizedString
-	/**
-	 * Like speaker
-	 */
-	Like_Speaker: () => LocalizedString
-	/**
-	 * See the speaker's page
-	 */
-	View_Profil_Speaker: () => LocalizedString
 	/**
 	 * Welcome to
 	 */
