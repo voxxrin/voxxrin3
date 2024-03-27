@@ -17,7 +17,7 @@
               JAVA
             </div>
           </ion-badge>
-          <div class="bulletTag _labelOnly" role="listitem">Conf.</div>
+          <div class="bulletTag _labelOnly">Conf.</div>
         </div>
 
         <div class="avatarContainer">
@@ -58,6 +58,10 @@ const baseUrl = import.meta.env.BASE_URL;
   --inner-padding-top: var(--app-gutters-medium);
   --inner-padding-bottom: var(--app-gutters-medium);
   overflow: visible;
+
+  @media (prefers-color-scheme: dark) {
+    --border-color: var(--app-dark-contrast);
+  }
 
   &:last-child {
     --border-style: none;
@@ -111,6 +115,10 @@ const baseUrl = import.meta.env.BASE_URL;
     margin-right: var(--app-gutters-medium);
     border-radius: 4px;
     background: var(--app-primary);
+
+    @media (prefers-color-scheme: dark) {
+      background: var(--app-white-50);
+    }
   }
 
   &-content {
