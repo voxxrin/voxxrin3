@@ -6,13 +6,10 @@
   &-button {
     height: 38px;
     width: 52px;
+    min-width: 48px;
     margin: 0;
-    --background: transparent;
-    --background-activated: var(--app-grey-line);
-    --color: var(--app-primary);
-    --padding-start: 0;
-    --padding-end: 0;
-    --box-shadow: none;
+    --border-radius: 44px;
+    --background-checked: var(--app-primary);
 
     @media (prefers-color-scheme: dark) {
       &.button-solid {
