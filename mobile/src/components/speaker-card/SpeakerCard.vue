@@ -42,7 +42,7 @@
   import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
   import {typesafeI18n} from "@/i18n/i18n-vue";
   import {managedRef as ref} from "@/views/vue-utils";
-  import {IonThumbnail} from "@ionic/vue";
+  import {IonThumbnail, IonText} from "@ionic/vue";
   import {businessSharp} from "ionicons/icons";
   import SpeakerLikeButton from "@/components/speaker-card/SpeakerLikeButton.vue";
   import SpeakerResumeTalk from "@/components/speaker-card/SpeakerResumeTalk.vue";
