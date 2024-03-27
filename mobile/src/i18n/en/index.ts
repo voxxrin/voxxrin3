@@ -48,6 +48,7 @@ const en = {
 	Talk_details: `Talk details`,
 	Close_talk_details: `Close talk details`,
 	Speakers: `Speakers`,
+	Go_To_Ticketing: `Go to ticketing`,
 	Like_Speaker: `Like speaker`,
 	Big_list_mode: `Big list mode`,
 	Compact_list_mode: `Compact list mode`,
