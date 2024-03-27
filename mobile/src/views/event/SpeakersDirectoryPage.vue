@@ -24,7 +24,6 @@
       </ion-header>
 
       <SpeakerCard></SpeakerCard>
-      <SpeakerCompactCard></SpeakerCompactCard>
       <PoweredVoxxrin></PoweredVoxxrin>
     </ion-content>
   </ion-page>
@@ -40,7 +39,6 @@
   import {managedRef as ref} from "@/views/vue-utils";
   import PoweredVoxxrin from "@/components/ui/PoweredVoxxrin.vue";
   import SpeakerCard from "@/components/speaker-card/SpeakerCard.vue";
-  import SpeakerCompactCard from "@/components/speaker-card/SpeakerCompactCard.vue";
   import {albums, list} from "ionicons/icons";
   import {IonInput} from "@ionic/vue";
 
