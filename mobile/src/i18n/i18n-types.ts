@@ -200,6 +200,14 @@ type RootTranslation = {
 	 */
 	Like_Speaker: string
 	/**
+	 * B​i​g​ ​l​i​s​t​ ​m​o​d​e
+	 */
+	Big_list_mode: string
+	/**
+	 * C​o​m​p​a​c​t​ ​l​i​s​t​ ​m​o​d​e
+	 */
+	Compact_list_mode: string
+	/**
 	 * S​e​e​ ​t​h​e​ ​s​p​e​a​k​e​r​'​s​ ​p​a​g​e
 	 */
 	View_Profil_Speaker: string
@@ -697,6 +705,14 @@ export type TranslationFunctions = {
 	 * Like speaker
 	 */
 	Like_Speaker: () => LocalizedString
+	/**
+	 * Big list mode
+	 */
+	Big_list_mode: () => LocalizedString
+	/**
+	 * Compact list mode
+	 */
+	Compact_list_mode: () => LocalizedString
 	/**
 	 * See the speaker's page
 	 */
