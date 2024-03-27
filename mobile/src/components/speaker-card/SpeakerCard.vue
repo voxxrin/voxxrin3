@@ -163,11 +163,11 @@
   &._has-liked {
     &:before {
       width: 40%;
-      height: 70%;
+      height: 50%;
       right: 0;
       bottom: 0;
       transform: scale(1);
-      background: linear-gradient(331deg, rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.6) 30%, rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.6) 80%);
+      background: linear-gradient(331deg, rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.4) 30%, rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.4) 80%);
       opacity: 1;
       filter: blur(32px);
       animation: scale-in-center 0.1s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
@@ -183,7 +183,7 @@
       background-position: right;
       background-size: cover;
       transform: scale(1);
-      opacity: 0.5;
+      opacity: 1;
       mix-blend-mode: overlay;
       animation: scale-in-center 0.1s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
 
