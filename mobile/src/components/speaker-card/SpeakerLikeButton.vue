@@ -1,6 +1,6 @@
 <template>
   <!-- TODO Dev Btn -->
-  <ion-button class="btnActionCard" :class="{ 'btnActionCard': true, '_is-active': true }" :aria-label="LL.Like_Speaker()">
+  <ion-button class="btnActionCard" :class="{'_is-active': true }" :aria-label="LL.Like_Speaker()">
         <span class="btnActionCard-group">
            <ion-icon class="btnActionCard-group-icon" v-if="true" aria-hidden="true" src="/assets/icons/line/heart-line.svg"></ion-icon>
            <ion-icon class="btnActionCard-group-icon" v-if="false" aria-hidden="true" src="/assets/icons/solid/heart.svg"></ion-icon>
@@ -16,6 +16,11 @@
 
 <style scoped lang="scss">
 .btnActionCard {
+  min-height: 38px !important;
+  font-size: 18px;
+
+  .btnActionCard-group-icon { font-size: 18px;}
+  .btnActionCard-group-nb { font-size: 12px !important;}
 
   &._is-active {
     --background: var(--voxxrin-event-theme-colors-primary-hex);
