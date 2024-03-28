@@ -12,13 +12,14 @@ import {
     BREAK_PARSER,
     BREAK_TIME_SLOT_PARSER,
     DAY_PARSER,
-    EVENT_DESCRIPTOR_PARSER, ISO_DATETIME_PARSER, SPEAKER_PARSER
+    EVENT_DESCRIPTOR_PARSER, SPEAKER_PARSER
 } from "../crawler-parsers";
 import {CrawlerKind} from "../crawl";
 import {ISODatetime} from "../../../../../shared/type-utils";
 import {Temporal} from "@js-temporal/polyfill";
 import {match, P} from "ts-pattern";
 import {http} from "../utils";
+import {ISO_DATETIME_PARSER} from "../../utils/zod-parsers";
 
 /**
  * WARNING: THIS IS AN AWFUL CRAWLER IMPL
