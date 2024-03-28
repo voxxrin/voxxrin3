@@ -6,12 +6,19 @@ export type TalkStats = {
 }
 
 export type RoomStats = {
-  id: string;
-  capacityFillingRatio: number,
+  roomId: string;
   recordedAt: ISODatetime,
   persistedAt: ISODatetime,
+} & ({
+  capacityFillingRatio: 'unknown'
+} | {
+  capacityFillingRatio: number,
   valid: {
     forTalkId: string,
     until: ISODatetime
   }
+})
+
+export type RoomsStats = {
+  [encodedRoomId: string]: RoomStats
 }

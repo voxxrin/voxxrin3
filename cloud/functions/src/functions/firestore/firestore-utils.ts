@@ -10,6 +10,10 @@ import DocumentReference = firestore.DocumentReference;
 import {logPerf} from "../http/utils";
 import {TalkStats} from "../../../../../shared/event-stats";
 
+export function toValidFirebaseKey(value: string) {
+  return encodeURIComponent(value).replace(".", "%2E");
+}
+
 export type EventFamilyToken = {
     families: string[],
     token: string;
