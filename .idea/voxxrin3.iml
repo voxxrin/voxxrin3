@@ -2,7 +2,16 @@
 <module type="JAVA_MODULE" version="4">
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
-    <content url="file://$MODULE_DIR$" />
+    <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/cloud/functions/lib" />
+      <excludeFolder url="file://$MODULE_DIR$/cloud/hosting/public" />
+      <excludeFolder url="file://$MODULE_DIR$/mobile/android/app/build" />
+      <excludeFolder url="file://$MODULE_DIR$/mobile/android/app/src/main/assets/public" />
+      <excludeFolder url="file://$MODULE_DIR$/mobile/dist" />
+      <excludeFolder url="file://$MODULE_DIR$/mobile/ios/App/App/public" />
+      <excludeFolder url="file://$MODULE_DIR$/mobile/ios/DerivedData" />
+      <excludeFolder url="file://$MODULE_DIR$/mobile/ios/capacitor-cordova-ios-plugins" />
+    </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>

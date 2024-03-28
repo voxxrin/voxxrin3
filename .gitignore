@@ -1,2 +1,5 @@
 node_modules/
+.idea/compiler.xml
+.idea/vcs.xml
+.idea/modules.xml
 
