@@ -12,7 +12,6 @@ import {
     Speaker,
     Talk
 } from "../../../../../shared/daily-schedule.firestore"
-import {TalkStats} from "../../../../../shared/feedbacks.firestore";
 import { FullEvent } from "../../models/Event";
 import { ISODatetime, ISOLocalDate } from "../../../../../shared/type-utils";
 import { Day, ListableEvent } from "../../../../../shared/event-list.firestore";
@@ -27,6 +26,7 @@ import {
 import {CrawlerKind, TALK_FORMAT_FALLBACK_COLORS} from "../crawl";
 import {match} from "ts-pattern";
 import {http} from "../utils";
+import {TalkStats} from "../../../../../shared/event-stats";
 
 const daysOfWeek = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
 

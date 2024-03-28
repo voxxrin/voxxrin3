@@ -5,8 +5,8 @@ import {
     getOrganizerSpaceByToken,
     eventTalkStatsFor
 } from "../../firestore/firestore-utils";
-import {TalkStats} from "../../../../../../shared/feedbacks.firestore";
 import {match, P} from "ts-pattern";
+import {TalkStats} from "../../../../../../shared/event-stats";
 
 const deprecatedEventStats = functions.https.onRequest(async (request, response) => {
 

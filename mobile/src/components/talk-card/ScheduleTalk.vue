@@ -73,9 +73,10 @@ import { VoxxrinTalk} from "@/models/VoxxrinTalk";
 import {useRoute} from "vue-router";
 import {EventId} from "@/models/VoxxrinEvent";
 import {getRouteParamsValue} from "@/views/vue-utils";
-import {TalkNote, TalkStats} from "../../../../shared/feedbacks.firestore";
+import {TalkNote} from "../../../../shared/feedbacks.firestore";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {typesafeI18n} from "@/i18n/i18n-vue";
+import {TalkStats} from "../../../../shared/event-stats";
 
 const { LL } = typesafeI18n()
 const baseUrl = import.meta.env.BASE_URL;

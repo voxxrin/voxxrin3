@@ -2,13 +2,13 @@ import * as functions from "firebase-functions";
 import {db} from "../../firebase";
 import {ConferenceOrganizerSpace} from "../../../../../shared/conference-organizer-space.firestore";
 import {TalkAttendeeFeedback} from "../../../../../shared/talk-feedbacks.firestore";
-import {TalkStats} from "../../../../../shared/feedbacks.firestore";
 import {EventLastUpdates, ListableEvent} from "../../../../../shared/event-list.firestore";
 import {ISODatetime} from "../../../../../shared/type-utils";
 import {sortBy} from "lodash";
 import {firestore} from "firebase-admin";
 import DocumentReference = firestore.DocumentReference;
 import {logPerf} from "../http/utils";
+import {TalkStats} from "../../../../../shared/event-stats";
 
 export type EventFamilyToken = {
     families: string[],

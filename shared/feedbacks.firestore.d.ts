@@ -1,10 +1,5 @@
 import {ISODatetime} from "./type-utils";
 
-export type TalkStats = {
-    id: string,
-    totalFavoritesCount: number
-}
-
 export type TalkNote = {
     talkId: string,
     isFavorite: boolean,

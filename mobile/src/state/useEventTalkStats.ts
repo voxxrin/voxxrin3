@@ -17,13 +17,13 @@ import {
     where,
 } from "firebase/firestore";
 import {db} from "@/state/firebase";
-import {TalkStats} from "../../../shared/feedbacks.firestore";
 import {createVoxxrinTalkStatsFromFirestore} from "@/models/VoxxrinTalkStats";
 import {PERF_LOGGER} from "@/services/Logger";
 import {checkCache} from "@/services/Cachings";
 import {Temporal} from "temporal-polyfill";
 import {partitionArray, toValueObjectValues} from "@/models/utils";
 import {match} from "ts-pattern";
+import {TalkStats} from "../../../shared/event-stats";
 
 function getTalksStatsRef(eventId: EventId|undefined, talkId: TalkId|undefined) {
     if(!eventId || !eventId.value || !talkId || !talkId.value) {
