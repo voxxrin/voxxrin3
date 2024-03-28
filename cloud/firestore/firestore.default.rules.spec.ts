@@ -1,15 +1,13 @@
 import {
     assertFails,
     assertSucceeds,
-    initializeTestEnvironment, RulesTestContext,
-    RulesTestEnvironment,
+    initializeTestEnvironment,
+    type RulesTestEnvironment,
 } from "@firebase/rules-unit-testing"
 import {initializeApp as initializeAppAsAdmin} from "firebase-admin/app";
 import {getFirestore as getFirestoreAsAdmin} from "firebase-admin/firestore";
-import {User} from '../../shared/user.firestore'
 import * as fs from "fs";
 import { setDoc, doc, collection, getDocs, getDoc, updateDoc, deleteDoc } from "firebase/firestore";
-import {ISODatetime} from "../../shared/type-utils";
 import {match} from "ts-pattern";
 
 
@@ -452,7 +450,7 @@ const COLLECTIONS: CollectionDescriptor[] = [{
     }
 }, {
     name: "/event-family-tokens",
-    aroundTests: (userContext: UserContext) => ({
+    aroundTests: (_: UserContext) => ({
         beforeEach: [],
         afterEach: [],
     }),
@@ -475,7 +473,7 @@ const COLLECTIONS: CollectionDescriptor[] = [{
     }
 }, {
     name: "/public-tokens",
-    aroundTests: (userContext: UserContext) => ({
+    aroundTests: (_: UserContext) => ({
         beforeEach: [],
         afterEach: [],
     }),
@@ -498,7 +496,7 @@ const COLLECTIONS: CollectionDescriptor[] = [{
     }
 }, {
     name: "/crawlers",
-    aroundTests: (userContext: UserContext) => ({
+    aroundTests: (_: UserContext) => ({
         beforeEach: [],
         afterEach: [],
     }),
@@ -521,7 +519,7 @@ const COLLECTIONS: CollectionDescriptor[] = [{
     }
 }, {
     name: "/schema-migrations",
-    aroundTests: (userContext: UserContext) => ({
+    aroundTests: (_: UserContext) => ({
         beforeEach: [],
         afterEach: [],
     }),
@@ -544,7 +542,7 @@ const COLLECTIONS: CollectionDescriptor[] = [{
     }
 }, {
     name: "/events",
-    aroundTests: (userContext: UserContext) => ({
+    aroundTests: (_: UserContext) => ({
         beforeEach: [],
         afterEach: [],
     }),
@@ -567,7 +565,7 @@ const COLLECTIONS: CollectionDescriptor[] = [{
     }
 }, {
     name: "/events/{eventId}/days",
-    aroundTests: (userContext: UserContext) => ({
+    aroundTests: (_: UserContext) => ({
         beforeEach: [],
         afterEach: [],
     }),
@@ -590,7 +588,7 @@ const COLLECTIONS: CollectionDescriptor[] = [{
     }
 }, {
     name: "/events/{eventId}/event-descriptor",
-    aroundTests: (userContext: UserContext) => ({
+    aroundTests: (_: UserContext) => ({
         beforeEach: [],
         afterEach: [],
     }),
@@ -613,7 +611,7 @@ const COLLECTIONS: CollectionDescriptor[] = [{
     }
 }, {
     name: "/events/{eventId}/talksStats",
-    aroundTests: (userContext: UserContext) => ({
+    aroundTests: (_: UserContext) => ({
         beforeEach: [],
         afterEach: [],
     }),
@@ -636,7 +634,7 @@ const COLLECTIONS: CollectionDescriptor[] = [{
     }
 }, {
     name: "/events/{eventId}/talksStats-allInOne",
-    aroundTests: (userContext: UserContext) => ({
+    aroundTests: (_: UserContext) => ({
         beforeEach: [],
         afterEach: [],
     }),
@@ -659,7 +657,7 @@ const COLLECTIONS: CollectionDescriptor[] = [{
     }
 }, {
     name: "/events/{eventId}/roomsStats-allInOne",
-    aroundTests: (userContext: UserContext) => ({
+    aroundTests: (_: UserContext) => ({
         beforeEach: [],
         afterEach: [],
     }),
@@ -682,7 +680,7 @@ const COLLECTIONS: CollectionDescriptor[] = [{
     }
 }, {
     name: "/events/{eventId}/organizer-space",
-    aroundTests: (userContext: UserContext) => ({
+    aroundTests: (_: UserContext) => ({
         beforeEach: [],
         afterEach: [],
     }),
@@ -705,7 +703,7 @@ const COLLECTIONS: CollectionDescriptor[] = [{
     }
 }, {
     name: "/events/{eventId}/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472/ratings",
-    aroundTests: (userContext: UserContext) => ({
+    aroundTests: (_: UserContext) => ({
         beforeEach: [],
         afterEach: [],
     }),
@@ -728,7 +726,7 @@ const COLLECTIONS: CollectionDescriptor[] = [{
     }
 }, {
     name: "/events/{eventId}/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472/daily-ratings",
-    aroundTests: (userContext: UserContext) => ({
+    aroundTests: (_: UserContext) => ({
         beforeEach: [],
         afterEach: [],
     }),
@@ -751,7 +749,7 @@ const COLLECTIONS: CollectionDescriptor[] = [{
     }
 }, {
     name: "/events/{eventId}/last-updates",
-    aroundTests: (userContext: UserContext) => ({
+    aroundTests: (_: UserContext) => ({
         beforeEach: [],
         afterEach: [],
     }),
@@ -774,7 +772,7 @@ const COLLECTIONS: CollectionDescriptor[] = [{
     }
 }, {
     name: "/events/{eventId}/talks",
-    aroundTests: (userContext: UserContext) => ({
+    aroundTests: (_: UserContext) => ({
         beforeEach: [],
         afterEach: [],
     }),
@@ -797,7 +795,7 @@ const COLLECTIONS: CollectionDescriptor[] = [{
     }
 }, {
     name: "/events/{eventId}/talks/{talkId}/feedbacks-access",
-    aroundTests: (userContext: UserContext) => ({
+    aroundTests: (_: UserContext) => ({
         beforeEach: [],
         afterEach: [],
     }),
@@ -820,7 +818,7 @@ const COLLECTIONS: CollectionDescriptor[] = [{
     }
 }, {
     name: "/events/{eventId}/talks/{talkId}/feedbacks-access/{secretFeedbackViewerToken}/feedbacks",
-    aroundTests: (userContext: UserContext) => ({
+    aroundTests: (_: UserContext) => ({
         beforeEach: [],
         afterEach: [],
     }),
