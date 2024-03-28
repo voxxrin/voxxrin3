@@ -11,7 +11,6 @@ import {
     BREAK_TIME_SLOT_PARSER,
     DAY_PARSER,
     EVENT_DESCRIPTOR_PARSER,
-    ISO_DATETIME_PARSER,
     SPEAKER_PARSER,
     TALK_FORMAT_PARSER,
     THEMABLE_TALK_FORMAT_PARSER
@@ -21,6 +20,7 @@ import {ISODatetime, ISOLocalDate, Replace} from "../../../../../shared/type-uti
 import {Temporal} from "@js-temporal/polyfill";
 import {match, P} from "ts-pattern";
 import {GithubMDXCrawler} from "../github/GithubMDXCrawler";
+import {ISO_DATETIME_PARSER} from "../../utils/zod-parsers";
 
 export const CODEURS_EN_SEINE_PARSER = EVENT_DESCRIPTOR_PARSER.omit({
     id: true,
