@@ -1,5 +1,4 @@
 import crawl from "./functions/http/crawl"
-import hello from "./functions/http/hello"
 import {migrateFirestoreSchema} from "./functions/http/migrateFirestoreSchema";
 import {onUserTalksNoteCreate, onUserTalksNoteUpdate} from "./functions/firestore/onUserTalkNotes"
 import {onUserCreated} from "./functions/firestore/onUserCreated";
@@ -12,9 +11,14 @@ import deprecatedEventStats from "./functions/http/event/deprecatedEventStats";
 import talkFeedbacksViewers from "./functions/http/event/talkFeedbacksViewers";
 import publicEventStats from "./functions/http/event/publicEventStats";
 import {globalStats} from "./functions/http/event/globalStatistics";
+import * as express from 'express';
+import * as functions from 'firebase-functions';
+import {declareExpressHttpRoutes} from "./functions/http/routes";
 
-// For testing purposes only
-exports.helloWorld = hello
+const app = express()
+app.use(express.json());
+
+// Legacy HTTP Endpoints declaration... please use declareRoutes() instead !
 
 // For organizers
 exports.crawl = crawl
@@ -30,6 +34,11 @@ exports.eventStats = deprecatedEventStats
 exports.migrateFirestoreSchema = migrateFirestoreSchema
 exports.globalStats = globalStats
 
+// Express handler
+declareExpressHttpRoutes(app)
+exports.api = functions.https.onRequest(app);
+
+// Firebase handlers
 exports.onUserTalksNoteCreate = onUserTalksNoteCreate
 exports.onUserTalksNoteUpdate = onUserTalksNoteUpdate
 exports.onUserCreated = onUserCreated
