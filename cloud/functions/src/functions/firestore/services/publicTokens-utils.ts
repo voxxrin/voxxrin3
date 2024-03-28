@@ -1,19 +1,10 @@
 import {db} from "../../../firebase";
 import {
-    FamilyOrganizerToken,
-    FamilyEventsStatsAccessToken,
     PublicToken
 } from "../../../../../../shared/public-tokens";
 import {match, P} from "ts-pattern";
 import {logPerf} from "../../http/utils";
 
-
-export function isFamilyEventsStatsToken(publicToken: PublicToken): publicToken is FamilyEventsStatsAccessToken {
-    return publicToken.type === 'FamilyEventsStatsAccess';
-}
-export function isFamilyOrganizerToken(publicToken: PublicToken): publicToken is FamilyOrganizerToken {
-    return publicToken.type === 'FamilyOrganizerToken';
-}
 
 async function getPublicTokenBySecret<T>(secretToken: string, transformer: (publicToken: PublicToken) => T|undefined, expectedTokenName: string) {
     const publicTokenDoc = await db.doc(`/public-tokens/${secretToken}`).get();
@@ -33,7 +24,10 @@ async function getPublicTokenBySecret<T>(secretToken: string, transformer: (publ
 export async function getFamilyEventsStatsToken(secretToken: string) {
     return logPerf("getFamilyEventsStatsToken()", async () => {
         return getPublicTokenBySecret(secretToken,
-            publicToken => isFamilyEventsStatsToken(publicToken) || isFamilyOrganizerToken(publicToken)?publicToken:undefined,
+          publicToken =>
+            match(publicToken)
+              .with({type: "FamilyEventsStatsAccess"}, t => t)
+              .otherwise(() => undefined),
             "family events stats token")
     })
 }
@@ -41,7 +35,21 @@ export async function getFamilyEventsStatsToken(secretToken: string) {
 export async function getFamilyOrganizerToken(secretToken: string) {
     return logPerf("getFamilyOrganizerToken()", async () => {
         return getPublicTokenBySecret(secretToken,
-            publicToken => isFamilyOrganizerToken(publicToken) ? publicToken : undefined,
+          publicToken =>
+            match(publicToken)
+              .with({type: "FamilyOrganizerToken"}, t => t)
+              .otherwise(() => undefined),
             "family organizer token")
+    })
+}
+
+export async function getFamilyRoomStatsContributorToken(secretToken: string) {
+    return logPerf("getFamilyRoomStatsContributorToken()", async () => {
+        return getPublicTokenBySecret(secretToken,
+            publicToken =>
+              match(publicToken)
+                .with({type: "FamilyRoomStatsContributorToken"}, t => t)
+                .otherwise(() => undefined),
+            "family room stats contributor token")
     })
 }
