@@ -5,6 +5,7 @@ import {RouteParameters} from "express-serve-static-core";
 import * as express from "express";
 import {AnyZodObject} from "zod";
 import { type Express, NextFunction} from "express";
+import {debug, exposeLogContext} from "../../firebase";
 
 export function extractSingleQueryParam(request: functions.https.Request, paramName: string) {
     const value  = request.query[paramName];
@@ -85,7 +86,10 @@ export const Routes = {
     PATH_PARAMS = Omit< RouteParameters<ROUTE>, keyof z.infer<VALIDATION_SCHEMA>['path']> & z.infer<VALIDATION_SCHEMA>['path']
   >(app: Express, route: ROUTE, schema: VALIDATION_SCHEMA, callback: (res: express.Response, pathParams: PATH_PARAMS, queryParams: QUERY_PARAMS, body: BODY) => void) {
     app.post(route, validateRouteWith(schema), (req, res) => {
-      callback(res, req.params as PATH_PARAMS, req.query as QUERY_PARAMS, req.body as BODY)
+      exposeLogContext({ method: 'POST', route }, async () => {
+        debug(`POST ${route} [${stringifyPathParams(req.params)}]`)
+        await callback(res, req.params as PATH_PARAMS, req.query as QUERY_PARAMS, req.body as BODY)
+      })
     })
   },
   put: function<
@@ -96,7 +100,10 @@ export const Routes = {
     PATH_PARAMS = Omit< RouteParameters<ROUTE>, keyof z.infer<VALIDATION_SCHEMA>['path']> & z.infer<VALIDATION_SCHEMA>['path']
   >(app: Express, route: ROUTE, schema: VALIDATION_SCHEMA, callback: (res: express.Response, pathParams: PATH_PARAMS, queryParams: QUERY_PARAMS, body: BODY) => void) {
     app.put(route, validateRouteWith(schema), (req, res) => {
-      callback(res, req.params as PATH_PARAMS, req.query as QUERY_PARAMS, req.body as BODY)
+      exposeLogContext({ method: 'PUT', route }, async () => {
+        debug(`PUT ${route} [${stringifyPathParams(req.params)}]`)
+        await callback(res, req.params as PATH_PARAMS, req.query as QUERY_PARAMS, req.body as BODY);
+      })
     })
   },
   get: function<
@@ -106,7 +113,10 @@ export const Routes = {
     PATH_PARAMS = Omit< RouteParameters<ROUTE>, keyof z.infer<VALIDATION_SCHEMA>['path']> & z.infer<VALIDATION_SCHEMA>['path']
   >(app: Express, route: ROUTE, schema: VALIDATION_SCHEMA, callback: (res: express.Response, pathParams: PATH_PARAMS, queryParams: QUERY_PARAMS) => void) {
     app.get(route, validateRouteWith(schema), (req, res) => {
-      callback(res, req.params as PATH_PARAMS, req.query as QUERY_PARAMS)
+      exposeLogContext({ method: 'GET', route }, async () => {
+        debug(`GET ${route} [${stringifyPathParams(req.params)}]`)
+        await callback(res, req.params as PATH_PARAMS, req.query as QUERY_PARAMS);
+      })
     })
   },
   delete: function<
@@ -116,8 +126,14 @@ export const Routes = {
     PATH_PARAMS = Omit< RouteParameters<ROUTE>, keyof z.infer<VALIDATION_SCHEMA>['path']> & z.infer<VALIDATION_SCHEMA>['path']
   >(app: Express, route: ROUTE, schema: VALIDATION_SCHEMA, callback: (res: express.Response, pathParams: PATH_PARAMS, queryParams: QUERY_PARAMS) => void) {
     app.delete(route, validateRouteWith(schema), (req, res) => {
-      callback(res, req.params as PATH_PARAMS, req.query as QUERY_PARAMS)
+      exposeLogContext({ method: 'DELETE', route }, async () => {
+        debug(`DELETE ${route} [${stringifyPathParams(req.params)}]`)
+        await callback(res, req.params as PATH_PARAMS, req.query as QUERY_PARAMS)
+      })
     })
   }
 }
 
+function stringifyPathParams(pathParams: Record<string, string>) {
+  return Object.entries(pathParams).map(([key,value]) => `${key}=${value}`).join(", ")
+}
