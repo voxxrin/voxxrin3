@@ -86,8 +86,10 @@ export const Routes = {
     PATH_PARAMS = Omit< RouteParameters<ROUTE>, keyof z.infer<VALIDATION_SCHEMA>['path']> & z.infer<VALIDATION_SCHEMA>['path']
   >(app: Express, route: ROUTE, schema: VALIDATION_SCHEMA, callback: (res: express.Response, pathParams: PATH_PARAMS, queryParams: QUERY_PARAMS, body: BODY) => void) {
     app.post(route, validateRouteWith(schema), (req, res) => {
-      exposeLogContext({ method: 'POST', route }, async () => {
-        debug(`POST ${route} [${stringifyPathParams(req.params)}]`)
+      const stringifiedPathParams = stringifyParams(req.params)
+      const stringifiedQueryParams = stringifyParams(req.query as Record<string, string>)
+      exposeLogContext({ method: 'POST', route, pathParams: stringifiedPathParams, queryParams: stringifiedQueryParams }, async () => {
+        debug(`POST ${route} [${stringifiedPathParams}]`)
         await callback(res, req.params as PATH_PARAMS, req.query as QUERY_PARAMS, req.body as BODY)
       })
     })
@@ -100,8 +102,10 @@ export const Routes = {
     PATH_PARAMS = Omit< RouteParameters<ROUTE>, keyof z.infer<VALIDATION_SCHEMA>['path']> & z.infer<VALIDATION_SCHEMA>['path']
   >(app: Express, route: ROUTE, schema: VALIDATION_SCHEMA, callback: (res: express.Response, pathParams: PATH_PARAMS, queryParams: QUERY_PARAMS, body: BODY) => void) {
     app.put(route, validateRouteWith(schema), (req, res) => {
-      exposeLogContext({ method: 'PUT', route }, async () => {
-        debug(`PUT ${route} [${stringifyPathParams(req.params)}]`)
+      const stringifiedPathParams = stringifyParams(req.params)
+      const stringifiedQueryParams = stringifyParams(req.query as Record<string, string>)
+      exposeLogContext({ method: 'PUT', route, pathParams: stringifiedPathParams, queryParams: stringifiedQueryParams }, async () => {
+        debug(`PUT ${route} [${stringifiedPathParams}]`)
         await callback(res, req.params as PATH_PARAMS, req.query as QUERY_PARAMS, req.body as BODY);
       })
     })
@@ -113,8 +117,10 @@ export const Routes = {
     PATH_PARAMS = Omit< RouteParameters<ROUTE>, keyof z.infer<VALIDATION_SCHEMA>['path']> & z.infer<VALIDATION_SCHEMA>['path']
   >(app: Express, route: ROUTE, schema: VALIDATION_SCHEMA, callback: (res: express.Response, pathParams: PATH_PARAMS, queryParams: QUERY_PARAMS) => void) {
     app.get(route, validateRouteWith(schema), (req, res) => {
-      exposeLogContext({ method: 'GET', route }, async () => {
-        debug(`GET ${route} [${stringifyPathParams(req.params)}]`)
+      const stringifiedPathParams = stringifyParams(req.params)
+      const stringifiedQueryParams = stringifyParams(req.query as Record<string, string>)
+      exposeLogContext({ method: 'GET', route, pathParams: stringifiedPathParams, queryParams: stringifiedQueryParams }, async () => {
+        debug(`GET ${route} [${stringifiedPathParams}]`)
         await callback(res, req.params as PATH_PARAMS, req.query as QUERY_PARAMS);
       })
     })
@@ -126,14 +132,16 @@ export const Routes = {
     PATH_PARAMS = Omit< RouteParameters<ROUTE>, keyof z.infer<VALIDATION_SCHEMA>['path']> & z.infer<VALIDATION_SCHEMA>['path']
   >(app: Express, route: ROUTE, schema: VALIDATION_SCHEMA, callback: (res: express.Response, pathParams: PATH_PARAMS, queryParams: QUERY_PARAMS) => void) {
     app.delete(route, validateRouteWith(schema), (req, res) => {
-      exposeLogContext({ method: 'DELETE', route }, async () => {
-        debug(`DELETE ${route} [${stringifyPathParams(req.params)}]`)
+      const stringifiedPathParams = stringifyParams(req.params)
+      const stringifiedQueryParams = stringifyParams(req.query as Record<string, string>)
+      exposeLogContext({ method: 'DELETE', route, pathParams: stringifiedPathParams, queryParams: stringifiedQueryParams }, async () => {
+        debug(`DELETE ${route} [${stringifiedPathParams}]`)
         await callback(res, req.params as PATH_PARAMS, req.query as QUERY_PARAMS)
       })
     })
   }
 }
 
-function stringifyPathParams(pathParams: Record<string, string>) {
-  return Object.entries(pathParams).map(([key,value]) => `${key}=${value}`).join(", ")
+function stringifyParams(params: Record<string, string>) {
+  return Object.entries(params).map(([key,value]) => `${key}=${value}`).join(", ")
 }
