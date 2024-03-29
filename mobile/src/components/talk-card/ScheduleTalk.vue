@@ -31,7 +31,7 @@
 
     <div class="talkCard-content">
       <div class="title"
-           :class="{'_hasTalkLand' : talkLang && confDescriptor.features.hideLanguages.indexOf(talkLang.id.value)===-1}">
+           :class="{'_hasTalkLang' : talkLang && confDescriptor.features.hideLanguages.indexOf(talkLang.id.value)===-1}">
         <ion-badge v-if="talkLang && confDescriptor.features.hideLanguages.indexOf(talkLang.id.value)===-1"
                    :style="{ '--background':  talkLang.themeColor}"
                    class="talkLang">
@@ -227,7 +227,7 @@ const theme = {
       font-size: 16px;
       line-height: 1.2;
 
-      &._hasTalkLand { text-indent: 4px;}
+      &._hasTalkLang { text-indent: 4px;}
 
       @media (prefers-color-scheme: dark) {
         color: var(--app-white);
