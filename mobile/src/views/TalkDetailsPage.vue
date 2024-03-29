@@ -15,15 +15,18 @@
             <ion-icon v-if="!talkNotes.watchLater" aria-hidden="true" src="/assets/icons/line/video-line.svg"></ion-icon>
             <ion-icon v-if="talkNotes.watchLater" aria-hidden="true" src="/assets/icons/solid/video.svg"></ion-icon>
           </ion-button>
-          <div class="favoriteGroup" slot="end">
+          <div class="favoriteGroup" slot="end" :class="{'_animationIn': talkNotes.isFavorite}" >
             <!-- TODO Fix dynamic aria-label -->
-            <ion-button class="btnTalkAction _favorite" shape="round" fill="outline" @click.stop="() => toggleFavorite()"
+            <ion-button class="btnTalkAction _favorite"
+                        shape="round" fill="outline" @click.stop="() => toggleFavorite()"
                         v-if="confDescriptor?.features.favoritesEnabled"
                         :aria-label="talkNotes?.isFavorite ? LL.Remove_Favorites() : LL.Add_Favorites()">
               <ion-icon class="favorite-btn-icon" v-if="!talkNotes.isFavorite" aria-hidden="true" src="/assets/icons/line/bookmark-line-favorite.svg"></ion-icon>
               <ion-icon class="favorite-btn-icon" v-if="talkNotes.isFavorite" aria-hidden="true" src="/assets/icons/solid/bookmark-favorite.svg"></ion-icon>
             </ion-button>
-            <ion-label class="favorite-btn-nb" v-if="eventTalkStats !== undefined">{{ eventTalkStats.totalFavoritesCount }}</ion-label>
+            <ion-label class="favorite-btn-nb" v-if="eventTalkStats !== undefined">
+              <span>{{ eventTalkStats.totalFavoritesCount }}</span>
+            </ion-label>
           </div>
         </ion-toolbar>
       </ion-header>
@@ -219,6 +222,16 @@ const theme = computed(() => {
           @media (prefers-color-scheme: dark) {
             mix-blend-mode: difference;
           }
+        }
+      }
+    }
+
+    .favoriteGroup {
+      &._animationIn {
+        .favorite-btn-icon { animation: jello-vertical 800ms both;}
+        .favorite-btn-nb > span {
+          display: block;
+          animation: pulsate-fwd 400ms ease-in-out both;
         }
       }
     }
