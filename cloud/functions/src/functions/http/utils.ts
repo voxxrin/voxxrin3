@@ -44,9 +44,9 @@ export function roundedAverage(values: number[]) {
 export async function logPerf<T>(message: string, callback: () => Promise<T>) {
     const start = Date.now();
 
-    console.log(`START: ${message}`)
+    debug(`START: ${message}`)
     const results = await callback()
-    console.log(`END: ${message} -- Elapsed: ${Date.now()-start}ms`)
+    debug(`END: ${message} -- Elapsed: ${Date.now()-start}ms`)
 
     return results;
 }
