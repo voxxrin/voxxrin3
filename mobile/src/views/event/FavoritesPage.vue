@@ -29,6 +29,7 @@
                     <template #talk="{ talk }">
                       <schedule-talk :talk="talk" :talk-stats="talkStatsRefByTalkId.get(talk.id.value)" :talk-notes="userEventTalkNotesRef.get(talk.id.value)"
                                      :is-highlighted="(talk, talkNotes) => talkNotes.isFavorite" :conf-descriptor="confDescriptor"
+                                     :room-stats="roomsStatsRefByRoomId?.[talk.room.id.value]"
                                      @talkClicked="openTalkDetails($event)" >
                         <template #upper-right="{ talk }">
                           <div class="room" v-if="confDescriptor?.features.roomsDisplayed">
@@ -91,6 +92,7 @@
   import NoResults from "@/components/ui/NoResults.vue";
   import ProvideFeedbackTalkButton from "@/components/talk-card/ProvideFeedbackTalkButton.vue";
   import PoweredVoxxrin from "@/components/ui/PoweredVoxxrin.vue";
+  import {useRoomsStats} from "@/state/useRoomsStats";
 
   const { LL } = typesafeI18n()
 
@@ -109,6 +111,7 @@
 
   const {firestoreEventTalkStatsRef: talkStatsRefByTalkId} = useEventTalkStats(eventId, talkIdsRef)
   const {userEventTalkNotesRef } = useUserEventTalkNotes(eventId, talkIdsRef)
+  const {firestoreRoomsStatsRef: roomsStatsRefByRoomId } = useRoomsStats(eventId)
 
   const favoritedTalkIdsRef = computed(() => {
       const userEventTalkNotes = toValue(userEventTalkNotesRef)
