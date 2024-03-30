@@ -502,6 +502,31 @@ type RootTranslation = {
 	 * F​r​e​q​u​e​n​t​l​y​ ​a​s​k​e​d​ ​q​u​e​s​t​i​o​n​s
 	 */
 	Frequently_asked_questions: string
+	/**
+	 * S​t​i​l​l​ ​p​l​e​n​t​y​ ​o​f​ ​s​e​a​t​s​ ​a​v​a​i​l​a​b​l​e
+	 */
+	Still_plenty_of_seats_available: string
+	/**
+	 * R​o​o​m​ ​i​s​ ​b​e​c​o​m​i​n​g​ ​c​r​o​w​d​e​d
+	 */
+	Room_is_becoming_crowded: string
+	/**
+	 * O​n​l​y​ ​f​e​w​ ​s​e​a​t​s​ ​l​e​f​t
+	 */
+	Only_few_seats_left: string
+	/**
+	 * N​o​ ​s​e​a​t​s​ ​a​v​a​i​l​a​b​l​e
+	 */
+	No_seats_available: string
+	/**
+	 * {​m​i​n​u​t​e​s​}​ ​m​i​n​u​t​e​{​{​s​}​}​ ​a​g​o
+	 * @param {number} minutes
+	 */
+	xx_minutes_ago: RequiredParams<'minutes'>
+	/**
+	 * F​e​w​ ​s​e​c​o​n​d​s​ ​a​g​o
+	 */
+	few_seconds_ago: string
 }
 
 export type TranslationFunctions = {
@@ -989,6 +1014,30 @@ export type TranslationFunctions = {
 	 * Frequently asked questions
 	 */
 	Frequently_asked_questions: () => LocalizedString
+	/**
+	 * Still plenty of seats available
+	 */
+	Still_plenty_of_seats_available: () => LocalizedString
+	/**
+	 * Room is becoming crowded
+	 */
+	Room_is_becoming_crowded: () => LocalizedString
+	/**
+	 * Only few seats left
+	 */
+	Only_few_seats_left: () => LocalizedString
+	/**
+	 * No seats available
+	 */
+	No_seats_available: () => LocalizedString
+	/**
+	 * {minutes} minute{{s}} ago
+	 */
+	xx_minutes_ago: (arg: { minutes: number }) => LocalizedString
+	/**
+	 * Few seconds ago
+	 */
+	few_seconds_ago: () => LocalizedString
 }
 
 export type Formatters = {

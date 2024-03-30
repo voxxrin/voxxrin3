@@ -1,4 +1,23 @@
 <template>
+  <div v-if="enabledRoomStats" class="above-talkCard"
+       :style="{
+          '--room-stats-bgcolor':
+            enabledRoomStats.capacityFillingRatio < 0.60 ? 'green'
+            : enabledRoomStats.capacityFillingRatio < 0.80 ? 'orange'
+            : enabledRoomStats.capacityFillingRatio < 0.99 ? 'red' : 'black',
+          '--room-stats-color':
+            enabledRoomStats.capacityFillingRatio < 0.60 ? 'white'
+            : enabledRoomStats.capacityFillingRatio < 0.80 ? 'black'
+            : enabledRoomStats.capacityFillingRatio < 0.99 ? 'white' : 'white'
+       }"
+  >
+    <span v-if="enabledRoomStats.capacityFillingRatio < 0.60">{{ LL.Still_plenty_of_seats_available() }}</span>
+    <span v-if="enabledRoomStats.capacityFillingRatio >= 0.60 && enabledRoomStats.capacityFillingRatio < 0.80">{{ LL.Room_is_becoming_crowded() }}</span>
+    <span v-if="enabledRoomStats.capacityFillingRatio >= 0.80 && enabledRoomStats.capacityFillingRatio < 0.99">{{ LL.Only_few_seats_left() }}</span>
+    <span v-if="enabledRoomStats.capacityFillingRatio >= 0.99">{{ LL.No_seats_available() }}</span>
+    <span v-if="enabledRoomStats.since === 0">{{LL.few_seconds_ago()}}</span>
+    <span v-if="enabledRoomStats.since !== 0">{{LL.xx_minutes_ago({ minutes: enabledRoomStats.since })}}</span>
+  </div>
   <ion-card class="talkCard"
             v-if="talkNotes"
             :class="{ container: true, '_is-highlighted': isHighlighted(talk, talkNotes), '_has-favorited': talkNotes.isFavorite, '_has-to-watch-later': talkNotes.watchLater }"
@@ -66,8 +85,8 @@
 </template>
 
 <script setup lang="ts">
-import {computed, PropType} from "vue";
-import {managedRef as ref, toManagedRef as toRef} from "@/views/vue-utils";
+import {computed, onMounted, PropType} from "vue";
+import {managedRef as ref, toManagedRef as toRef, useInterval} from "@/views/vue-utils";
 import {
   IonBadge,
   IonThumbnail,
@@ -80,6 +99,9 @@ import {TalkNote} from "../../../../shared/feedbacks.firestore";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {TalkStats} from "../../../../shared/event-stats";
+import {VoxxrinRoomStats} from "@/models/VoxxrinRoomStats";
+import {useCurrentClock} from "@/state/useCurrentClock";
+import {Temporal} from "temporal-polyfill";
 import {people, person} from "ionicons/icons";
 
 const { LL } = typesafeI18n()
@@ -107,6 +129,10 @@ const props = defineProps({
       required: false,
       type: Object as PropType<TalkStats|undefined>
   },
+  roomStats: {
+      required: false,
+      type: Object as PropType<VoxxrinRoomStats|undefined>
+  },
   talkNotes: {
       required: false,
       type: Object as PropType<TalkNote|undefined>
@@ -116,6 +142,15 @@ const props = defineProps({
 defineEmits<{
     (e: 'talk-clicked', talk: VoxxrinTalk): void,
 }>()
+
+const nowRef = ref<Temporal.ZonedDateTime|undefined>(undefined)
+onMounted(async () => {
+  if(props.roomStats) {
+    useInterval(() => {
+      nowRef.value = useCurrentClock().zonedDateTimeISO()
+    }, {freq:"high-frequency"}, {immediate: true})
+  }
+})
 
 const talkLang = computed(() => {
     return props.confDescriptor!.supportedTalkLanguages.find(lang => lang.id.isSameThan(props.talk!.language))
@@ -132,6 +167,27 @@ const speakerCount = props.talk!.speakers.length;
 
 const hasTrack = (props.confDescriptor?.talkTracks.length || 0) > 1;
 
+const enabledRoomStats = computed(() => {
+  const talkRoomId = props.talk?.room.id;
+  const talkId = props.talk?.id;
+  const roomStats = props.roomStats;
+  const now = nowRef.value
+
+  if(roomStats && now
+    && roomStats.capacityFillingRatio !== 'unknown'
+    && roomStats.roomId.isSameThan(talkRoomId)
+    && roomStats.valid.forTalkId.isSameThan(talkId)
+    && Date.parse(roomStats.valid.until) >= now.epochMilliseconds
+  ){
+    return {
+      ...roomStats,
+      since: Math.max(Math.round(now.toInstant().since(roomStats.persistedAt).total('minutes')), 0)
+    };
+  } else {
+    return undefined;
+  }
+})
+
 const theme = {
   track: {
     color: props.talk!.track.themeColor
@@ -140,6 +196,11 @@ const theme = {
 </script>
 
 <style lang="scss" scoped>
+
+.above-talkCard {
+  background-color: var(--room-stats-bgcolor);
+  color: var(--room-stats-color);
+}
 
 //* Base styles card talk *//
 .talkCard {

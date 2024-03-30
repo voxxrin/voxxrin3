@@ -1,9 +1,7 @@
-import {Ref} from "vue";
-import {managedRef as ref} from "@/views/vue-utils";
 import {Temporal} from "temporal-polyfill";
 import {ISODatetime} from "../../../shared/type-utils";
 import {match, P} from "ts-pattern";
-import {Logger, PERF_LOGGER} from "@/services/Logger";
+import {Logger} from "@/services/Logger";
 
 const LOGGER = Logger.named("useCurrentClock");
 
