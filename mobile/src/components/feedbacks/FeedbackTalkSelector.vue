@@ -10,10 +10,13 @@
               <talk-is-favorited :talk-notes="talkNotes" />
             </template>
             <template #footer-actions="{ talk, talkNotes, talkStats }">
-              <talk-watch-later-button :user-talk-notes="talkNotes" :conf-descriptor="confDescriptor"
+              <talk-watch-later-button v-if="!talk.isOverflow"
+                   :user-talk-notes="talkNotes" :conf-descriptor="confDescriptor"
                    @talk-note-updated="updatedTalkNote => userTalkNotesRefByTalkIdRef.set(talk.id.value, updatedTalkNote)"
                    :ref="talkWatchLaterBtn => updateTalkWatchLaterRefTo(talk.id, talkWatchLaterBtn)"/>
-              <talk-select-for-feedback :is-active="talk.id.isSameThan(selectedTalkId)" @click.stop="() => updateSelected(talk)"></talk-select-for-feedback>
+              <talk-select-for-feedback v-if="!talk.isOverflow"
+                :is-active="talk.id.isSameThan(selectedTalkId)"
+                @click.stop="() => updateSelected(talk)" />
             </template>
           </schedule-talk>
         </ion-item>
@@ -72,7 +75,7 @@ const emits = defineEmits<{
 }>()
 
 const eventId = toRef(() => props.confDescriptor?.id);
-const feedbackableTalksRef = computed(() => props.talks || [])
+const feedbackableTalksRef = computed(() => props.talks?.filter(t => !t.isOverflow) || [])
 const talkIdsRef = computed(() => feedbackableTalksRef.value.map(talk => talk.id));
 
 const {firestoreEventTalkStatsRef: talkStatsRefByTalkId} = useEventTalkStats(eventId, talkIdsRef)

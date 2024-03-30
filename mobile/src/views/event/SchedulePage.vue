@@ -60,12 +60,15 @@
                           <talk-room :talk="talk" :conf-descriptor="confDescriptor" />
                         </template>
                         <template #footer-actions="{ talk, talkStats, talkNotes }">
-                          <provide-feedback-talk-button :conf-descriptor="confDescriptor" :timeslot-progress-status="progressStatus"
-                                :timeslot-feedback="feedback" @click.stop="navigateToTalkRatingScreenFor(talk)" />
-                          <talk-watch-later-button v-if="confDescriptor && !hideWatchLater" :conf-descriptor="confDescriptor" :user-talk-notes="talkNotes"
-                                                @talk-note-updated="updatedTalkNote => userEventTalkNotesRef.set(talk.id.value, updatedTalkNote) " />
-                          <talk-favorite-button v-if="confDescriptor" :conf-descriptor="confDescriptor" :user-talk-notes="talkNotes" :talk-stats="talkStats"
-                                                @talk-note-updated="updatedTalkNote => userEventTalkNotesRef.set(talk.id.value, updatedTalkNote) " />
+                          <provide-feedback-talk-button v-if="!talk.isOverflow"
+                            :conf-descriptor="confDescriptor" :timeslot-progress-status="progressStatus"
+                            :timeslot-feedback="feedback" @click.stop="navigateToTalkRatingScreenFor(talk)" />
+                          <talk-watch-later-button v-if="confDescriptor && !hideWatchLater && !talk.isOverflow"
+                            :conf-descriptor="confDescriptor" :user-talk-notes="talkNotes"
+                            @talk-note-updated="updatedTalkNote => userEventTalkNotesRef.set(talk.id.value, updatedTalkNote) " />
+                          <talk-favorite-button v-if="confDescriptor && !talk.isOverflow"
+                            :conf-descriptor="confDescriptor" :user-talk-notes="talkNotes" :talk-stats="talkStats"
+                            @talk-note-updated="updatedTalkNote => userEventTalkNotesRef.set(talk.id.value, updatedTalkNote) " />
                         </template>
                       </schedule-talk>
                     </ion-item>
