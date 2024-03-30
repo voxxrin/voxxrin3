@@ -1,8 +1,8 @@
-import {toValidFirebaseKey} from "../firestore-utils";
 import {ISODatetime} from "../../../../../../shared/type-utils";
 import {RoomsStats} from "../../../../../../shared/event-stats";
 import {db, error} from "../../../firebase";
 import {getTimeslottedTalks} from "./schedule-utils";
+import {toValidFirebaseKey} from "../../../../../../shared/utilities/firebase.utils";
 
 
 export async function ensureRoomsStatsFilledFor(eventId: string) {

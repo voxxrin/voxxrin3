@@ -8,7 +8,8 @@ import {
 import {getTimeslottedTalks, TimeslottedTalk} from "../../firestore/services/schedule-utils";
 import {RoomsStats, RoomStats} from "../../../../../../shared/event-stats";
 import {db} from "../../../firebase";
-import {toValidFirebaseKey} from "../../firestore/firestore-utils";
+
+import {toValidFirebaseKey} from "../../../../../../shared/utilities/firebase.utils";
 
 
 export async function provideRoomsStats(response: Response, pathParams: {eventId: string}, queryParams: {token: string}, body: {
