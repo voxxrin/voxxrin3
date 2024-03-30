@@ -90,7 +90,11 @@ export const Routes = {
       const stringifiedQueryParams = stringifyParams(req.query as Record<string, string>)
       exposeLogContext({ method: 'POST', route, pathParams: stringifiedPathParams, queryParams: stringifiedQueryParams }, async () => {
         debug(`POST ${route} [${stringifiedPathParams}]`)
-        await callback(res, req.params as PATH_PARAMS, req.query as QUERY_PARAMS, req.body as BODY)
+         try {
+          await callback(res, req.params as PATH_PARAMS, req.query as QUERY_PARAMS, req.body as BODY)
+        } catch(e) {
+          return sendResponseMessage(res, 500, `Unexpected Error: ${e?.toString()}`)
+        }
       })
     })
   },
@@ -106,7 +110,11 @@ export const Routes = {
       const stringifiedQueryParams = stringifyParams(req.query as Record<string, string>)
       exposeLogContext({ method: 'PUT', route, pathParams: stringifiedPathParams, queryParams: stringifiedQueryParams }, async () => {
         debug(`PUT ${route} [${stringifiedPathParams}]`)
-        await callback(res, req.params as PATH_PARAMS, req.query as QUERY_PARAMS, req.body as BODY);
+        try {
+          await callback(res, req.params as PATH_PARAMS, req.query as QUERY_PARAMS, req.body as BODY)
+        } catch(e) {
+          return sendResponseMessage(res, 500, `Unexpected Error: ${e?.toString()}`)
+        }
       })
     })
   },
@@ -121,7 +129,11 @@ export const Routes = {
       const stringifiedQueryParams = stringifyParams(req.query as Record<string, string>)
       exposeLogContext({ method: 'GET', route, pathParams: stringifiedPathParams, queryParams: stringifiedQueryParams }, async () => {
         debug(`GET ${route} [${stringifiedPathParams}]`)
-        await callback(res, req.params as PATH_PARAMS, req.query as QUERY_PARAMS);
+        try {
+          await callback(res, req.params as PATH_PARAMS, req.query as QUERY_PARAMS);
+        } catch(e) {
+          return sendResponseMessage(res, 500, `Unexpected Error: ${e?.toString()}`)
+        }
       })
     })
   },
@@ -136,7 +148,11 @@ export const Routes = {
       const stringifiedQueryParams = stringifyParams(req.query as Record<string, string>)
       exposeLogContext({ method: 'DELETE', route, pathParams: stringifiedPathParams, queryParams: stringifiedQueryParams }, async () => {
         debug(`DELETE ${route} [${stringifiedPathParams}]`)
-        await callback(res, req.params as PATH_PARAMS, req.query as QUERY_PARAMS)
+        try {
+          await callback(res, req.params as PATH_PARAMS, req.query as QUERY_PARAMS);
+        } catch(e) {
+          return sendResponseMessage(res, 500, `Unexpected Error: ${e?.toString()}`)
+        }
       })
     })
   }
