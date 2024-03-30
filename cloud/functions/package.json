@@ -22,7 +22,7 @@
     "cheerio": "1.0.0-rc.12",
     "express": "4.19.2",
     "firebase-admin": "^11.5.0",
-    "firebase-functions": "4.8.1",
+    "firebase-functions": "4.8.2",
     "lodash": "^4.17.21",
     "ts-pattern": "4.3.0",
     "uuid": "9.0.0",
