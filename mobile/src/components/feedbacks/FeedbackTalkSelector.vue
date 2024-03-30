@@ -1,6 +1,6 @@
 <template>
   <div>
-    <talk-format-groups-breakdown :conf-descriptor="confDescriptor" :talks="displayedTalks">
+    <talk-format-groups-breakdown :conf-descriptor="confDescriptor" :talks="displayedTalksRef">
       <template #talk="{ talk }">
         <ion-item class="listTalks-item">
           <schedule-talk :talk="talk" :talk-stats="talkStatsRefByTalkId.get(talk.id.value)" :talk-notes="userTalkNotesRefByTalkIdRef.get(talk.id.value)"
@@ -72,7 +72,8 @@ const emits = defineEmits<{
 }>()
 
 const eventId = toRef(() => props.confDescriptor?.id);
-const talkIdsRef = toRef(() => props.talks?.map(talk => talk.id));
+const feedbackableTalksRef = computed(() => props.talks || [])
+const talkIdsRef = computed(() => feedbackableTalksRef.value.map(talk => talk.id));
 
 const {firestoreEventTalkStatsRef: talkStatsRefByTalkId} = useEventTalkStats(eventId, talkIdsRef)
 const {userEventTalkNotesRef: userTalkNotesRefByTalkIdRef} = useUserEventTalkNotes(eventId, talkIdsRef)
@@ -87,23 +88,26 @@ function updateSelected(talk: VoxxrinTalk) {
 
 const showUnfavoritedTalksRef = ref<boolean>(false);
 
-const displayedTalks: Ref<VoxxrinTalk[]> = computed(() => {
+const displayedTalksRef: Ref<VoxxrinTalk[]> = computed(() => {
     const showUnfavoritedTalks = toValue(showUnfavoritedTalksRef),
-        allUserFavoritedTalkIds = toValue(props.allUserFavoritedTalkIds);
+        allUserFavoritedTalkIds = toValue(props.allUserFavoritedTalkIds),
+        feedbackableTalks = toValue(feedbackableTalksRef);
 
-    if(!props.talks || !allUserFavoritedTalkIds) {
+    if(!feedbackableTalks || !allUserFavoritedTalkIds) {
         return []
     }
 
-    return props.talks.filter(talk => showUnfavoritedTalks || talk.id.isIncludedIntoArray(allUserFavoritedTalkIds));
+    return feedbackableTalks.filter(talk => showUnfavoritedTalks || talk.id.isIncludedIntoArray(allUserFavoritedTalkIds))
 })
 
 const nonFavoritedTalksCount = computed(() => {
-    if(!props.talks) {
+    const feedbackableTalks = toValue(feedbackableTalksRef),
+          displayedTalks = toValue(displayedTalksRef);
+    if(!feedbackableTalks) {
         return 0;
     }
 
-    return props.talks.length - displayedTalks.value.length;
+    return feedbackableTalks.length - displayedTalks.length;
 })
 
 const talkWatchLaterButtonPerTalkIdRef = ref(new Map<string, InstanceType<typeof TalkWatchLaterButton>>())
