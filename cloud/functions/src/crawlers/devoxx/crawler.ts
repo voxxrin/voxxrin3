@@ -6,11 +6,11 @@ import {
     DevoxxScheduleSpeakerInfo
 } from "./types"
 import {
-    Break,
-    DailySchedule,
-    DetailedTalk,
-    Speaker,
-    Talk
+  Break,
+  DailySchedule,
+  DetailedTalk, Room,
+  Speaker,
+  Talk
 } from "../../../../../shared/daily-schedule.firestore"
 import {TalkStats} from "../../../../../shared/feedbacks.firestore";
 import { FullEvent } from "../../models/Event";
@@ -159,6 +159,67 @@ export const DEVOXX_CRAWLER: CrawlerKind<typeof DEVOXX_DESCRIPTOR_PARSER> = {
     }
 };
 
+function toScheduleTalk(item: DevoxxScheduleItem, start: ISODatetime, end: ISODatetime, rooms: ConferenceDescriptor['rooms'], talkFormats: ConferenceDescriptor['talkFormats']) {
+  if(!rooms.find(r => r.id === item.room.id.toString())) {
+    rooms.push({ id: item.room.id.toString(), title: item.room.name });
+  }
+  if(!talkFormats.find(tf => tf.id === item.sessionType.id.toString())) {
+    talkFormats.push({
+      id: item.sessionType.id.toString(),
+      title: item.sessionType.name,
+      duration: `PT${item.sessionType.duration}m`,
+      themeColor: TALK_FORMAT_FALLBACK_COLORS[talkFormats.length % TALK_FORMAT_FALLBACK_COLORS.length]
+    });
+  }
+
+  const room: Room = {
+    id: item.room.id.toString(),
+    title: item.room.name
+  }
+
+  if(!item.proposal) {
+    return { talk:undefined, detailedTalk: undefined};
+  }
+
+  const talk: Talk = {
+    id: item.proposal.id.toString(),
+    title: item.proposal.title,
+    speakers: item.proposal.speakers.map((s:DevoxxScheduleSpeakerInfo) => {
+      const speaker: Speaker = {
+        id: s.id.toString(),
+        fullName: s.fullName,
+        companyName: s.company,
+        photoUrl: s.imageUrl,
+        bio: s.bio,
+        social: s.twitterHandle?[{type: "twitter", url: `https://twitter.com/${s.twitterHandle}`}]:[]
+      }
+      return speaker;
+    }),
+    room,
+    format: {
+      id: item.sessionType.id.toString(),
+      title: item.sessionType.name,
+      duration: `PT${item.sessionType.duration}m`
+    },
+    track: {
+      id: item.proposal.track.id.toString(),
+      title: item.proposal.track.name
+    },
+    language: item.proposal.language?.alpha2 || "en",
+  };
+
+  const upperFirstAudience = item.proposal.audienceLevel.charAt(0).toUpperCase() + item.proposal.audienceLevel.slice(1).toLowerCase();
+  const detailedTalk: DetailedTalk = {
+    ...talk,
+    start: start as ISODatetime,
+    end: end as ISODatetime,
+    summary: item.proposal.summary || "",
+    description: item.proposal.description || "",
+    tags: [`Audience:${upperFirstAudience}`].concat(item.proposal.tags.map(t => t.name))
+  };
+
+  return { talk, detailedTalk };
+}
 
 const crawlDevoxxDay = async (cfpBaseUrl: string, day: string, descriptor: z.infer<typeof DEVOXX_DESCRIPTOR_PARSER>) => {
     const schedules = await http.get<DevoxxScheduleItem[]>(`${cfpBaseUrl}api/public/schedules/${day}`)
@@ -183,66 +244,6 @@ const crawlDevoxxDay = async (cfpBaseUrl: string, day: string, descriptor: z.inf
     }, {} as Record<string, DevoxxScheduleItem[]>)
 
     debug(`Devoxx slots for day ${day}: ${JSON.stringify(slots)}`)
-
-    const toScheduleTalk = function(item: DevoxxScheduleItem, start: ISODatetime, end: ISODatetime) {
-        if(!rooms.find(r => r.id === item.room.id.toString())) {
-            rooms.push({ id: item.room.id.toString(), title: item.room.name });
-        }
-        if(!talkFormats.find(tf => tf.id === item.sessionType.id.toString())) {
-            talkFormats.push({
-                id: item.sessionType.id.toString(),
-                title: item.sessionType.name,
-                duration: `PT${item.sessionType.duration}m`,
-                themeColor: TALK_FORMAT_FALLBACK_COLORS[talkFormats.length % TALK_FORMAT_FALLBACK_COLORS.length]
-            });
-        }
-
-        if(!item.proposal) {
-            return { talk:undefined, detailedTalk: undefined};
-        }
-
-        const talk: Talk = {
-            id: item.proposal.id.toString(),
-            title: item.proposal.title,
-            speakers: item.proposal.speakers.map((s:DevoxxScheduleSpeakerInfo) => {
-                const speaker: Speaker = {
-                    id: s.id.toString(),
-                    fullName: s.fullName,
-                    companyName: s.company,
-                    photoUrl: s.imageUrl,
-                    bio: s.bio,
-                    social: s.twitterHandle?[{type: "twitter", url: `https://twitter.com/${s.twitterHandle}`}]:[]
-                }
-                return speaker;
-            }),
-            room: {
-                id: item.room.id.toString(),
-                title: item.room.name
-            },
-            format: {
-                id: item.sessionType.id.toString(),
-                title: item.sessionType.name,
-                duration: `PT${item.sessionType.duration}m`
-            },
-            track: {
-                id: item.proposal.track.id.toString(),
-                title: item.proposal.track.name
-            },
-            language: item.proposal.language?.alpha2 || "en"
-        };
-
-        const upperFirstAudience = item.proposal.audienceLevel.charAt(0).toUpperCase() + item.proposal.audienceLevel.slice(1).toLowerCase();
-        const detailedTalk: DetailedTalk = {
-            ...talk,
-            start: start as ISODatetime,
-            end: end as ISODatetime,
-            summary: item.proposal.summary || "",
-            description: item.proposal.description || "",
-            tags: [`Audience:${upperFirstAudience}`].concat(item.proposal.tags.map(t => t.name))
-        };
-
-        return { talk, detailedTalk };
-    }
 
     for(const [key, items] of Object.entries(slots)) {
         const [start, end] = key.split("--")
@@ -280,18 +281,18 @@ const crawlDevoxxDay = async (cfpBaseUrl: string, day: string, descriptor: z.inf
             }
             )
         } else {
-            const talks = items.reduce((talks, item) => {
-                const {talk, detailedTalk} = toScheduleTalk(item, start as ISODatetime, end as ISODatetime);
-                if(talk && detailedTalk) {
-                    if (item.totalFavourites !== undefined) {
-                        talkStats.push({id: talk.id, totalFavoritesCount: item.totalFavourites})
-                    }
+          const talks = items.reduce((talks, item) => {
+            const {talk, detailedTalk} = toScheduleTalk(item, start as ISODatetime, end as ISODatetime, rooms, talkFormats);
+            if(talk && detailedTalk) {
+              if (item.totalFavourites !== undefined) {
+                talkStats.push({id: talk.id, totalFavoritesCount: item.totalFavourites})
+              }
 
-                    talks.push(talk);
-                    detailedTalks.push(detailedTalk);
-                }
-                return talks;
-            }, [] as Talk[]);
+              talks.push(talk);
+              detailedTalks.push(detailedTalk);
+            }
+            return talks;
+          }, [] as Talk[]);
 
             if(talks.length) {
               daySchedule.timeSlots.push({
