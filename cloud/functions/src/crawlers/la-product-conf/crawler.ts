@@ -179,7 +179,8 @@ export const LA_PRODUCT_CONF_CRAWLER: CrawlerKind<typeof LA_PRODUCT_CONF_DESCRIP
                         room: descriptor.rooms[tabIdx],
                         summary: '',
                         description: '',
-                        tags: []
+                        tags: [],
+                        isOverflow: false
                     };
 
                     talks.push(detailedTalk);
@@ -198,6 +199,7 @@ export const LA_PRODUCT_CONF_CRAWLER: CrawlerKind<typeof LA_PRODUCT_CONF_DESCRIP
                             title: detailedTalk.title,
                             track: detailedTalk.track,
                             room: detailedTalk.room,
+                            isOverflow: false
                         }],
                     }
                     return talksTimeslot;

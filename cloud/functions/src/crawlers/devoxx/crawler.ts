@@ -159,7 +159,11 @@ export const DEVOXX_CRAWLER: CrawlerKind<typeof DEVOXX_DESCRIPTOR_PARSER> = {
     }
 };
 
-function toScheduleTalk(item: DevoxxScheduleItem, start: ISODatetime, end: ISODatetime, rooms: ConferenceDescriptor['rooms'], talkFormats: ConferenceDescriptor['talkFormats']) {
+type ScheduleTalkResult =
+  { type: 'no-proposal', talk: undefined, detailedTalk: undefined, totalFavourites: undefined }
+  | { type: 'overflow', start: ISODatetime, end: ISODatetime, room: Room }
+  | { type: 'proposal', talk: Talk, detailedTalk: DetailedTalk, totalFavourites: number|undefined };
+function toScheduleTalk(item: DevoxxScheduleItem, start: ISODatetime, end: ISODatetime, rooms: ConferenceDescriptor['rooms'], talkFormats: ConferenceDescriptor['talkFormats']): ScheduleTalkResult {
   if(!rooms.find(r => r.id === item.room.id.toString())) {
     rooms.push({ id: item.room.id.toString(), title: item.room.name });
   }
@@ -177,8 +181,17 @@ function toScheduleTalk(item: DevoxxScheduleItem, start: ISODatetime, end: ISODa
     title: item.room.name
   }
 
+  if(item.overflow) {
+    return {
+      type: 'overflow',
+      start: start as ISODatetime,
+      end: end as ISODatetime,
+      room
+    }
+  }
+
   if(!item.proposal) {
-    return { talk:undefined, detailedTalk: undefined};
+    return { type: 'no-proposal', talk:undefined, detailedTalk: undefined, totalFavourites: undefined };
   }
 
   const talk: Talk = {
@@ -206,6 +219,7 @@ function toScheduleTalk(item: DevoxxScheduleItem, start: ISODatetime, end: ISODa
       title: item.proposal.track.name
     },
     language: item.proposal.language?.alpha2 || "en",
+    isOverflow: false
   };
 
   const upperFirstAudience = item.proposal.audienceLevel.charAt(0).toUpperCase() + item.proposal.audienceLevel.slice(1).toLowerCase();
@@ -218,7 +232,7 @@ function toScheduleTalk(item: DevoxxScheduleItem, start: ISODatetime, end: ISODa
     tags: [`Audience:${upperFirstAudience}`].concat(item.proposal.tags.map(t => t.name))
   };
 
-  return { talk, detailedTalk };
+  return { type: 'proposal', talk, detailedTalk, totalFavourites: item.totalFavourites };
 }
 
 const crawlDevoxxDay = async (cfpBaseUrl: string, day: string, descriptor: z.infer<typeof DEVOXX_DESCRIPTOR_PARSER>) => {
@@ -281,18 +295,45 @@ const crawlDevoxxDay = async (cfpBaseUrl: string, day: string, descriptor: z.inf
             }
             )
         } else {
-          const talks = items.reduce((talks, item) => {
-            const {talk, detailedTalk} = toScheduleTalk(item, start as ISODatetime, end as ISODatetime, rooms, talkFormats);
-            if(talk && detailedTalk) {
-              if (item.totalFavourites !== undefined) {
-                talkStats.push({id: talk.id, totalFavoritesCount: item.totalFavourites})
-              }
+            const scheduleTalkResults = items.map(item => toScheduleTalk(item, start as ISODatetime, end as ISODatetime, rooms, talkFormats))
+            const talks = scheduleTalkResults.reduce((talks, result, index, scheduleTalkResults) => {
+              const { talkToAdd, talkDetailToAdd } = match(result)
+                .with({ type: 'proposal' }, ({talk, detailedTalk, totalFavourites}) => {
+                  if (totalFavourites !== undefined) {
+                    talkStats.push({id: talk.id, totalFavoritesCount: totalFavourites})
+                  }
 
-              talks.push(talk);
-              detailedTalks.push(detailedTalk);
-            }
-            return talks;
-          }, [] as Talk[]);
+                  return { talkToAdd: talk, talkDetailToAdd: detailedTalk }
+                })
+                .with({ type: 'overflow'}, ({ room }) => {
+                  // Looking for non-overflow result to copy (most of) its properties
+                  const nonOverflowTalks = scheduleTalkResults
+                    .filter(r => r.type === 'proposal')
+                    .map(r => match(r)
+                      .with({ type: 'proposal'}, p => p)
+                      .otherwise(() => { throw new Error(`This should never happen`); })
+                    )
+                  if(nonOverflowTalks.length !== 1) {
+                    console.warn(`WARNING: found ${nonOverflowTalks.length} non-overflow talks on ${start}--${end} timeslot for an overflow talk`)
+                    return { talkToAdd: undefined, talkDetailToAdd: undefined };
+                  } else {
+                    const {talk, detailedTalk} = nonOverflowTalks[0]
+
+                    const title = `[OVERFLOW] ${talk.title}`;
+                    const talkToAdd: Talk = { ...talk, title, room, isOverflow: true }
+                    const talkDetailToAdd: DetailedTalk = { ...detailedTalk, title, room, isOverflow: true }
+
+                    return { talkToAdd, talkDetailToAdd };
+                  }
+                }).with({type: "no-proposal"}, () => {
+                  return { talkToAdd: undefined, talkDetailToAdd: undefined };
+                }).exhaustive();
+
+              if(talkToAdd){ talks.push(talkToAdd); }
+              if(talkDetailToAdd){ detailedTalks.push(talkDetailToAdd); }
+
+              return talks;
+            }, [] as Talk[]);
 
             if(talks.length) {
               daySchedule.timeSlots.push({

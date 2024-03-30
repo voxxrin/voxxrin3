@@ -33,7 +33,8 @@ export type Talk = {
     id: string,
     title: string,
     track: Track,
-    room: Room
+    room: Room,
+    isOverflow: boolean
 }
 export type DetailedTalk = Talk & {
     start: ISODatetime,
