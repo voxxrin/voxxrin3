@@ -160,7 +160,8 @@ export const CODEURS_EN_SEINE_CRAWLER: CrawlerKind<typeof CODEURS_EN_SEINE_PARSE
                             title: fileMetadata.title,
                             track: NO_TRACK,
                             language: FR_LANG.id,
-                            room, format
+                            room, format,
+                            isOverflow: false
                         }
 
                         return { type: 'talks', start, end, talkDetails } as const;
@@ -204,7 +205,8 @@ export const CODEURS_EN_SEINE_CRAWLER: CrawlerKind<typeof CODEURS_EN_SEINE_PARSE
                     track: talkSlot.talkDetails.track,
                     format: talkSlot.talkDetails.format,
                     language: talkSlot.talkDetails.language,
-                    speakers: talkSlot.talkDetails.speakers
+                    speakers: talkSlot.talkDetails.speakers,
+                    isOverflow: false
                 }
                 if(existingTimeslot) {
                     existingTimeslot.talks.push(simpleTalk);

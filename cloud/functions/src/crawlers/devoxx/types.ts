@@ -23,7 +23,8 @@ export interface DevoxxScheduleItem {
         },
         proposal?: DevoxxScheduleProposal,
         timezone: string,
-        totalFavourites?: number
+        totalFavourites?: number,
+        overflow: boolean,
 }
 
 export interface DevoxxScheduleSpeakerInfo {

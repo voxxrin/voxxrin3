@@ -216,7 +216,8 @@ export const WEB2DAY_CRAWLER: CrawlerKind<typeof WEB2DAY_PARSER> = {
                 language: descriptor.supportedTalkLanguages.find(lang => lang.id === rawTalk!.lang)!.id,
                 start: rawTalk!.start,
                 end: rawTalk!.end,
-                tags: []
+                tags: [],
+                isOverflow: false
             };
             return detailedTalk;
         });
@@ -251,6 +252,7 @@ export const WEB2DAY_CRAWLER: CrawlerKind<typeof WEB2DAY_PARSER> = {
                     track: detailedTalk.track,
                     format: detailedTalk.format,
                     language: detailedTalk.language,
+                    isOverflow: false
                 })
 
                 return talkTimeSlots;

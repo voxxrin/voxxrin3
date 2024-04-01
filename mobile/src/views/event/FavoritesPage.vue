@@ -36,12 +36,15 @@
                           </div>
                         </template>
                         <template #footer-actions="{ talk, talkNotes, talkStats }">
-                          <provide-feedback-talk-button :conf-descriptor="confDescriptor" :timeslot-progress-status="progress?.status"
-                                                        :timeslot-feedback="timeslot.feedback" @click.stop="navigateToTalkRatingScreenFor(talk)" />
-                          <talk-watch-later-button v-if="confDescriptor" :conf-descriptor="confDescriptor" :user-talk-notes="talkNotes"
-                                                   @talk-note-updated="updatedTalkNote => userEventTalkNotesRef.set(talk.id.value, updatedTalkNote) " />
+                          <provide-feedback-talk-button v-if="!talk.isOverflow"
+                            :conf-descriptor="confDescriptor" :timeslot-progress-status="progress?.status"
+                            :timeslot-feedback="timeslot.feedback" @click.stop="navigateToTalkRatingScreenFor(talk)" />
+                          <talk-watch-later-button v-if="confDescriptor && !talk.isOverflow"
+                             :conf-descriptor="confDescriptor" :user-talk-notes="talkNotes"
+                             @talk-note-updated="updatedTalkNote => userEventTalkNotesRef.set(talk.id.value, updatedTalkNote) " />
 
-                          <talk-favorite-button v-if="confDescriptor" :conf-descriptor="confDescriptor" :user-talk-notes="talkNotes" :talk-stats="talkStats" />
+                          <talk-favorite-button v-if="confDescriptor && !talk.isOverflow"
+                              :conf-descriptor="confDescriptor" :user-talk-notes="talkNotes" :talk-stats="talkStats" />
                         </template>
                       </schedule-talk>
                     </template>

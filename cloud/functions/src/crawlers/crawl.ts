@@ -257,6 +257,10 @@ const saveEvent = async function(event: FullEvent) {
     const talkIdsHashBeforeUpdate = talksCollectionRefBeforeUpdate.map(talk => talk.id).sort().join(",")
 
     await Promise.all(event.talks.map(async talk => {
+        // Skip storing overflow talk details as this is pointless...
+        if(talk.isOverflow) {
+          return;
+        }
         try {
             info("saving talk " + talk.id + " " + talk.title);
             await firestoreEvent
