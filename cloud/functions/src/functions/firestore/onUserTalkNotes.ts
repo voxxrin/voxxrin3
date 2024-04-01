@@ -3,10 +3,10 @@ import { db, info } from "../../firebase"
 
 import { FieldValue } from "firebase-admin/firestore";
 import {
-    TalkStats,
     UserTalkNote
 } from "../../../../../shared/feedbacks.firestore";
 import {eventLastUpdateRefreshed} from "./firestore-utils";
+import {TalkStats} from "../../../../../shared/event-stats";
 
 async function upsertTalkStats(eventId: string, talkId: string, isFavorite: boolean) {
     const existingTalksStatsEntryRef = db

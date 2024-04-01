@@ -1,4 +1,4 @@
-import {db} from "../../../firebase";
+import {db, info} from "../../../firebase";
 import {firestore} from "firebase-admin";
 import DocumentReference = firestore.DocumentReference;
 import {DailySchedule, Talk} from "../../../../../../shared/daily-schedule.firestore";
@@ -14,7 +14,7 @@ export async function introduceOrganizerSpaceDailyRatings(): Promise<"OK"|"Error
     await Promise.all(events.map(async event => {
         const orgaSpaces = await db.collection(`events/${event.id}/organizer-space`).listDocuments()
         if(!orgaSpaces?.length) {
-            console.log(`No organizer space found for event ${event.id} => skipping !`)
+            info(`No organizer space found for event ${event.id} => skipping !`)
             return;
         }
 

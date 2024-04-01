@@ -14,6 +14,7 @@ import {
   TalkFormat,
   Track
 } from "../../../../shared/daily-schedule.firestore";
+import {ensureRoomsStatsFilledFor} from "../functions/firestore/services/stats-utils";
 
 export type CrawlerKind<ZOD_TYPE extends z.ZodType> = {
     crawlerImpl: (eventId: string, crawlerDescriptor: z.infer<ZOD_TYPE>, criteria: { dayIds?: string[]|undefined }) => Promise<FullEvent>,
@@ -314,6 +315,8 @@ const saveEvent = async function(event: FullEvent) {
     }catch(e) {
         error(`Error while storing event's organizer-space content`)
     }
+
+    await ensureRoomsStatsFilledFor(event.id)
 }
 
 export default crawlAll;

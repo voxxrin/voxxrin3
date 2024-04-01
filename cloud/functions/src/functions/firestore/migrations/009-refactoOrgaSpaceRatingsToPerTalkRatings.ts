@@ -1,4 +1,4 @@
-import {db} from "../../../firebase";
+import {db, info} from "../../../firebase";
 import {
     PerPublicUserIdFeedbackRatings
 } from "../../../../../../shared/conference-organizer-space.firestore";
@@ -14,7 +14,7 @@ export async function refactoOrgaSpaceRatingsToPerTalkRatings(): Promise<"OK"|"E
     await Promise.all(events.map(async event => {
         const orgaSpaces = await db.collection(`events/${event.id}/organizer-space`).listDocuments()
         if(!orgaSpaces?.length) {
-            console.log(`No organizer space found for event ${event.id} => skipping !`)
+            info(`No organizer space found for event ${event.id} => skipping !`)
             return;
         }
 
@@ -25,7 +25,7 @@ export async function refactoOrgaSpaceRatingsToPerTalkRatings(): Promise<"OK"|"E
             const ratings = (await everyTalksRatings.get()).data() as OldConferenceOrganizerAllRatings|undefined
 
             if(!ratings) {
-                console.log(`ratings already migrated for event ${event.id} => skipping !`)
+                info(`ratings already migrated for event ${event.id} => skipping !`)
                 return;
             }
 

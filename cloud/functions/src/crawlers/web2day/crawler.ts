@@ -263,7 +263,7 @@ export const WEB2DAY_CRAWLER: CrawlerKind<typeof WEB2DAY_PARSER> = {
                 .filter(b => b.dayId === day.id)
                 .map(breakDescriptor => {
                     const breakTimeSlot: BreakTimeSlot = {
-                        id: `${breakDescriptor.breakTimeslot.start}--${breakDescriptor.breakTimeslot.end}`,
+                        id: `${breakDescriptor.breakTimeslot.start}--${breakDescriptor.breakTimeslot.end}` as BreakTimeSlot['id'],
                         start: breakDescriptor.breakTimeslot.start,
                         end: breakDescriptor.breakTimeslot.end,
                         break: {

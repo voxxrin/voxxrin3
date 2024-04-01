@@ -1,6 +1,6 @@
-import {TalkStats} from "../../../shared/feedbacks.firestore";
 import {TalkId} from "@/models/VoxxrinTalk";
 import {Replace} from "../../../shared/type-utils";
+import {TalkStats} from "../../../shared/event-stats";
 
 export type VoxxrinTalkStats = Replace<TalkStats, {
     id: TalkId
