@@ -116,27 +116,33 @@ export function useOfflineSchedulePreparation(
           // stopping watcher as soon as possible
           watchCleaner();
 
-          const otherDayIds = availableDays.filter(availableDay => !availableDay.id.isSameThan(currentSchedule.day)).map(d => d.id);
-          LOGGER.info(() => `Preparing schedule data for other days than currently selected one (${otherDayIds.map(id => id.value).join(", ")})`)
+          await checkCache(`useOfflineSchedulePreparation(eventId=${confDescriptor.id.value})`, Temporal.Duration.from({ hours: 6 }), async () => {
+            return new Promise(schedulePreparationResolved => {
+              const otherDayIds = availableDays.filter(availableDay => !availableDay.id.isSameThan(currentSchedule.day)).map(d => d.id);
+              LOGGER.info(() => `Preparing schedule data for other days than currently selected one (${otherDayIds.map(id => id.value).join(", ")})`)
 
-          const promisesQueue = new CompletablePromiseQueue({ concurrency: 20 })
+              const promisesQueue = new CompletablePromiseQueue({ concurrency: 20 })
 
-          const progressInterval = setInterval(() => {
-            preparingOfflineScheduleToastMessageRef.value = `Preloading event assets for offline usage <u>${promisesQueue.completed} / ${promisesQueue.total}</u>...<br/><em>This can slow down the app a little bit during pre-loading...</em>`
-          }, 500)
+              const progressInterval = setInterval(() => {
+                preparingOfflineScheduleToastMessageRef.value = `Preloading event assets for offline usage <u>${promisesQueue.completed} / ${promisesQueue.total}</u>...<br/><em>This can slow down the app a little bit during pre-loading...</em>`
+              }, 500)
 
-          preparingOfflineScheduleToastIsOpenRef.value = true
-          promisesQueue.on('idle', () => {
-            const duration = Math.round((Date.now() - promisesQueue.creationDate.getTime())/10)/100;
-            LOGGER.info(`Total offline promises loaded: ${promisesQueue.total} (duration: ${duration}s)`)
-            preparingOfflineScheduleToastIsOpenRef.value = false
-            clearInterval(progressInterval)
-            resolve(null);
-          })
+              preparingOfflineScheduleToastIsOpenRef.value = true
+              promisesQueue.on('idle', () => {
+                const duration = Math.round((Date.now() - promisesQueue.creationDate.getTime())/10)/100;
+                LOGGER.info(`Total offline promises loaded: ${promisesQueue.total} (duration: ${duration}s)`)
+                preparingOfflineScheduleToastIsOpenRef.value = false
+                clearInterval(progressInterval)
+                schedulePreparationResolved();
+              })
 
-          promisesQueue.add(async () => {
-            await prepareSchedules(user, confDescriptor, currentSchedule.day, extractTalksFromSchedule(currentSchedule), otherDayIds, promisesQueue);
-          }, { priority: 1000 })
+              promisesQueue.add(async () => {
+                await prepareSchedules(user, confDescriptor, currentSchedule.day, extractTalksFromSchedule(currentSchedule), otherDayIds, promisesQueue);
+              }, { priority: 1000 })
+            })
+          });
+
+          resolve(null);
         }
       })
     })
