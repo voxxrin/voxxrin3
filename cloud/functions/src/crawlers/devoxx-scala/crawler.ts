@@ -205,7 +205,8 @@ export const DEVOXX_SCALA_CRAWLER: CrawlerKind<typeof DEVOXX_SCALA_DESCRIPTOR_PA
                             room,
                             summary: talk.summaryAsHtml,
                             description: talk.summaryAsHtml,
-                            tags: []
+                            tags: [],
+                            isOverflow: false
                         }
 
                         talks.push(detailedTalk);

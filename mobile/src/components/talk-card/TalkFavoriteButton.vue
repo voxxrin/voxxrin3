@@ -3,7 +3,7 @@
     <ion-button :class="{ 'btnTalk': true, 'btn-favorite': true, '_is-active': !!talkNotes?.isFavorite }"
                 @click.stop="() => toggleFavorite()" v-if="confDescriptor?.features.favoritesEnabled"
                 :aria-label="talkNotes?.isFavorite ? LL.Remove_Favorites() : LL.Add_Favorites()">
-      <span class="btn-favorite-group">
+      <span class="btn-favorite-group" :class="{'_animationIn': !!talkNotes?.isFavorite}">
         <ion-icon class="btn-favorite-group-icon" v-if="!talkNotes?.isFavorite" aria-hidden="true" src="/assets/icons/line/bookmark-line-favorite.svg"></ion-icon>
         <ion-icon class="btn-favorite-group-icon" v-if="!!talkNotes?.isFavorite" aria-hidden="true" src="/assets/icons/solid/bookmark-favorite.svg"></ion-icon>
         <ion-label class="btn-favorite-group-nb" v-if="eventTalkStats !== undefined">{{ eventTalkStats.totalFavoritesCount }}</ion-label>
@@ -69,6 +69,11 @@ const {toggleFavorite} = useUserTalkNoteActions(
     flex-direction: column;
     align-items: center;
     row-gap: 2px;
+
+    &._animationIn {
+      .btn-favorite-group-icon { animation: jello-vertical 800ms both;}
+      .btn-favorite-group-nb { animation: pulsate-fwd 400ms ease-in-out both;}
+    }
 
     &-icon {
       position: relative;

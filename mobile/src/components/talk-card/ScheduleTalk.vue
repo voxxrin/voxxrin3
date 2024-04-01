@@ -51,9 +51,12 @@
     </div>
 
     <div class="talkCard-footer">
-      <div class="speakers">
-        <ion-icon src="/assets/icons/solid/megaphone.svg"></ion-icon>
-        <span class="speakers-list">{{displayedSpeakers}}</span>
+      <div class="speakersContainer">
+        <div class="speakers">
+          <ion-icon v-if="speakerCount > 1" :icon="people"></ion-icon>
+          <ion-icon v-else :icon="person"></ion-icon>
+          <span class="speakers-list">{{displayedSpeakers}}</span>
+        </div>
       </div>
       <div class="talkActions">
         <slot name="footer-actions" :talk="talk" :talkNotes="talkNotes" :talkStats="talkStats" />
@@ -77,6 +80,7 @@ import {TalkNote} from "../../../../shared/feedbacks.firestore";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {TalkStats} from "../../../../shared/event-stats";
+import {people, person} from "ionicons/icons";
 
 const { LL } = typesafeI18n()
 const baseUrl = import.meta.env.BASE_URL;
@@ -123,6 +127,8 @@ const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')));
 const displayedSpeakers = props.talk!.speakers
     .map(s => `${s.fullName}${s.companyName?` (${s.companyName})`:``}`)
     .join(", ") || "???";
+
+const speakerCount = props.talk!.speakers.length;
 
 const hasTrack = (props.confDescriptor?.talkTracks.length || 0) > 1;
 
@@ -287,7 +293,7 @@ const theme = {
       }
     }
 
-    .speakers {
+    .speakersContainer {
       display: flex;
       align-items: center;
       column-gap: 4px;
@@ -303,14 +309,22 @@ const theme = {
 
       }
 
+      .speakers {
+        display: flex;
+        align-items: start;
+        gap: 4px;
+      }
+
       &-list {
         flex: 1;
       }
 
       ion-icon {
+        position: relative;
+        top: -2px;
+        flex: 0 0 auto;
         max-width: 24px;
         font-size: 16px;
-        transform: rotate(-16deg);
       }
     }
   }

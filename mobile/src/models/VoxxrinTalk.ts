@@ -46,7 +46,8 @@ export function createVoxxrinTalkFromFirestore(event: VoxxrinConferenceDescripto
         format,
         track,
         room,
-        id: new TalkId(firestoreTalk.id)
+        id: new TalkId(firestoreTalk.id),
+        isOverflow: firestoreTalk.isOverflow
     }
     return talk;
 }

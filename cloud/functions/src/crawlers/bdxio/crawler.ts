@@ -204,7 +204,8 @@ export const BDXIO_CRAWLER: CrawlerKind<typeof BDXIO_PARSER> = {
                     language: lang.id,
                     tags: Array.from<string>([])
                         .concat(levelLabel ? [levelLabel]:[])
-                        .concat(roomId === 'Amphi A' ? ['Sous-Titrage' /* 'Closed Captions' */]:[])
+                        .concat(roomId === 'Amphi A' ? ['Sous-Titrage' /* 'Closed Captions' */]:[]),
+                    isOverflow: false
                 };
 
                 return detailedTalk;
@@ -250,7 +251,8 @@ export const BDXIO_CRAWLER: CrawlerKind<typeof BDXIO_PARSER> = {
                     speakers: additionnalTalk.speakers,
                     description: additionnalTalk.description,
                     summary: additionnalTalk.summary,
-                    tags: []
+                    tags: [],
+                    isOverflow: false
                 };
 
                 return detailedTalk;
@@ -308,7 +310,8 @@ export const BDXIO_CRAWLER: CrawlerKind<typeof BDXIO_PARSER> = {
                 track: detailedTalk.track,
                 format: detailedTalk.format,
                 language: detailedTalk.language,
-                speakers: detailedTalk.speakers
+                speakers: detailedTalk.speakers,
+                isOverflow: false
             }
 
             const timeslotId: TalksTimeSlot['id'] = `${detailedTalk.start}--${detailedTalk.end}`;

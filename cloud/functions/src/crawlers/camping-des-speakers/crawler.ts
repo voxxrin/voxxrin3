@@ -13,7 +13,7 @@ import {
     DAY_PARSER,
     EVENT_DESCRIPTOR_PARSER
 } from "../crawler-parsers";
-import {CrawlCriteria, CrawlerKind} from "../crawl";
+import {CrawlerKind} from "../crawl";
 import {ISODatetime} from "../../../../../shared/type-utils";
 import {Temporal} from "@js-temporal/polyfill";
 import {http} from "../utils";
@@ -178,7 +178,8 @@ export const CAMPING_DES_SPEAKERS_CRAWLER: CrawlerKind<typeof CAMPING_DES_SPEAKE
                 language: descriptor.supportedTalkLanguages.find(lang => lang.id === rawTalk!.lang)!.id,
                 start: rawTalk!.start,
                 end: rawTalk!.end,
-                tags: []
+                tags: [],
+                isOverflow: false
             };
             return detailedTalk;
         });
@@ -213,6 +214,7 @@ export const CAMPING_DES_SPEAKERS_CRAWLER: CrawlerKind<typeof CAMPING_DES_SPEAKE
                     track: detailedTalk.track,
                     format: detailedTalk.format,
                     language: detailedTalk.language,
+                    isOverflow: false
                 })
 
                 return talkTimeSlots;
