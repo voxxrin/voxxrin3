@@ -16,6 +16,7 @@ import {PERF_LOGGER} from "@/services/Logger";
 import {DayId} from "@/models/VoxxrinDay";
 import {Temporal} from "temporal-polyfill";
 import {checkCache} from "@/services/Cachings";
+import {CompletablePromiseQueue} from "@/models/utils";
 
 
 function getTalkDetailsRef(eventId: EventId|undefined, talkId: TalkId|undefined) {
@@ -59,17 +60,21 @@ export function useEventTalk(
 export async function prepareEventTalks(
     conferenceDescriptor: VoxxrinConferenceDescriptor,
     dayId: DayId,
-    talkIds: Array<TalkId>
+    talkIds: Array<TalkId>,
+    promisesQueue: CompletablePromiseQueue
 ) {
     return checkCache(`eventTalksPreparation(eventId=${conferenceDescriptor.id.value}, dayId=${dayId.value})`, Temporal.Duration.from({ hours: 6 }), async () => {
         PERF_LOGGER.debug(`prepareEventTalks(eventId=${conferenceDescriptor.id.value}, talkIds=${JSON.stringify(talkIds.map(id => id.value))})`)
-        await Promise.all(talkIds.map(async talkId => {
+
+        promisesQueue.addAll(talkIds.map(talkId => {
+          return async () => {
             const talkDetailsRef = getTalkDetailsRef(conferenceDescriptor.id, talkId);
             if(talkDetailsRef) {
-                await getDoc(talkDetailsRef);
-                PERF_LOGGER.debug(`getDoc(${talkDetailsRef.path})`)
+              await getDoc(talkDetailsRef);
+              PERF_LOGGER.debug(`getDoc(${talkDetailsRef.path})`)
             }
-        }))
+          }
+        }), { priority: 100 })
     });
 }
 
