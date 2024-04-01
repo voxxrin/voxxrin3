@@ -62,6 +62,7 @@ export function dailyScheduleDocument(eventDescriptor: VoxxrinConferenceDescript
     return doc(collection(doc(collection(db, 'events'), eventDescriptor.id.value), 'days'), dayId.value) as DocumentReference<DailySchedule>;
 }
 
+const IN_MEMORY_SPEAKER_URL_PRELOADINGS = new Set<string>();
 async function loadTalkSpeakerUrls(
   talk: { speakers: Array<{ photoUrl?: VoxxrinTalk['speakers'][number]['photoUrl'] }> },
   promisesQueue: CompletablePromiseQueue
@@ -71,10 +72,17 @@ async function loadTalkSpeakerUrls(
     promisesQueue.addAll(talk.speakers.map(speaker => {
       return async () => new Promise(resolve => {
         if (speaker.photoUrl) {
-          const avatarImage = new Image();
-          avatarImage.src = speaker.photoUrl;
+          if(IN_MEMORY_SPEAKER_URL_PRELOADINGS.has(speaker.photoUrl)) {
+            LOGGER.debug(`Speaker url already preloaded, skipping: ${speaker.photoUrl}`)
+            resolve(null);
+          } else {
+            IN_MEMORY_SPEAKER_URL_PRELOADINGS.add(speaker.photoUrl);
 
-          avatarImage.onload = resolve;
+            const avatarImage = new Image();
+            avatarImage.src = speaker.photoUrl;
+
+            avatarImage.onload = resolve;
+          }
         } else {
           resolve(null);
         }
