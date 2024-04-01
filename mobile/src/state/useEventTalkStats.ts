@@ -21,7 +21,7 @@ import {createVoxxrinTalkStatsFromFirestore} from "@/models/VoxxrinTalkStats";
 import {PERF_LOGGER} from "@/services/Logger";
 import {checkCache} from "@/services/Cachings";
 import {Temporal} from "temporal-polyfill";
-import {partitionArray, toValueObjectValues} from "@/models/utils";
+import {CompletablePromiseQueue, partitionArray, toValueObjectValues} from "@/models/utils";
 import {match} from "ts-pattern";
 import {TalkStats} from "../../../shared/event-stats";
 
@@ -152,16 +152,20 @@ export function useEventTalkStats(eventIdRef: Ref<EventId|undefined>, talkIdsRef
 export async function prepareTalkStats(
     eventId: EventId,
     dayId: DayId,
-    talkIds: Array<TalkId>
+    talkIds: Array<TalkId>,
+    promisesQueue: CompletablePromiseQueue
 ) {
     return checkCache(`talkStatsPreparation(eventId=${eventId.value}, dayId=${dayId.value})`, Temporal.Duration.from({ hours: 2 }), async () => {
         PERF_LOGGER.debug(`prepareTalkStats(eventId=${eventId.value}, talkIds=${JSON.stringify(talkIds.map(talkId => talkId.value))})`)
-        await Promise.all(talkIds.map(async talkId => {
+
+        promisesQueue.addAll(talkIds.map(talkId => {
+          return async () => {
             const talksStatsRef = getTalksStatsRef(eventId, talkId);
             if(talksStatsRef) {
-                await getDoc(talksStatsRef)
-                PERF_LOGGER.debug(`getDoc(${talksStatsRef.path})`)
+              await getDoc(talksStatsRef)
+              PERF_LOGGER.debug(`getDoc(${talksStatsRef.path})`)
             }
+          }
         }))
     });
 }
