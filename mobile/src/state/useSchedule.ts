@@ -179,12 +179,17 @@ prepareSchedules(
             })
 
           if(navigator.onLine && talkIds) {
+            // Removing talk ids duplicates (for instance, on overflows)
+            const uniqueTalkIds = Array.from(
+              new Set(talkIds.map(t => t.value))
+            ).map(rawTalkId => new TalkId(rawTalkId));
+
             if(dayId !== currentDayId) {
-              promisesQueue.add(() => prepareTalkStats(conferenceDescriptor.id, dayId, talkIds, promisesQueue), { priority: 100 })
-              promisesQueue.add(() => prepareUserTalkNotes(user, conferenceDescriptor.id, dayId, talkIds, promisesQueue), { priority: 100 });
+              promisesQueue.add(() => prepareTalkStats(conferenceDescriptor.id, dayId, uniqueTalkIds, promisesQueue), { priority: 100 })
+              promisesQueue.add(() => prepareUserTalkNotes(user, conferenceDescriptor.id, dayId, uniqueTalkIds, promisesQueue), { priority: 100 });
             }
 
-            promisesQueue.add(() => prepareEventTalks(conferenceDescriptor, dayId, talkIds, promisesQueue), { priority: 100 });
+            promisesQueue.add(() => prepareEventTalks(conferenceDescriptor, dayId, uniqueTalkIds, promisesQueue), { priority: 100 });
           }
         }
     }), { priority: 1000 });
