@@ -79,7 +79,7 @@ async function loadTalkSpeakerUrls(
           resolve(null);
         }
       });
-    }));
+    }), { priority: 1 }); // Low priority because if we're not getting speaker image, that's not dramatic
 }
 
 
@@ -128,7 +128,7 @@ export function useOfflineSchedulePreparation(
 
           promisesQueue.add(async () => {
             await prepareSchedules(user, confDescriptor, currentSchedule.day, extractTalksFromSchedule(currentSchedule), otherDayIds, promisesQueue);
-          })
+          }, { priority: 1000 })
         }
       })
     })
@@ -180,14 +180,14 @@ prepareSchedules(
 
           if(navigator.onLine && talkIds) {
             if(dayId !== currentDayId) {
-              promisesQueue.add(() => prepareTalkStats(conferenceDescriptor.id, dayId, talkIds, promisesQueue))
-              promisesQueue.add(() => prepareUserTalkNotes(user, conferenceDescriptor.id, dayId, talkIds, promisesQueue));
+              promisesQueue.add(() => prepareTalkStats(conferenceDescriptor.id, dayId, talkIds, promisesQueue), { priority: 100 })
+              promisesQueue.add(() => prepareUserTalkNotes(user, conferenceDescriptor.id, dayId, talkIds, promisesQueue), { priority: 100 });
             }
 
-            promisesQueue.add(() => prepareEventTalks(conferenceDescriptor, dayId, talkIds, promisesQueue));
+            promisesQueue.add(() => prepareEventTalks(conferenceDescriptor, dayId, talkIds, promisesQueue), { priority: 100 });
           }
         }
-    }));
+    }), { priority: 1000 });
 }
 
 export type LabelledTimeslotWithFeedback = VoxxrinScheduleTimeSlot & {

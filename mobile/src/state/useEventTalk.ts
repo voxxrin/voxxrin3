@@ -74,7 +74,7 @@ export async function prepareEventTalks(
               PERF_LOGGER.debug(`getDoc(${talkDetailsRef.path})`)
             }
           }
-        }))
+        }), { priority: 100 })
     });
 }
 

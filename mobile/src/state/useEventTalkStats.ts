@@ -166,7 +166,7 @@ export async function prepareTalkStats(
               PERF_LOGGER.debug(`getDoc(${talksStatsRef.path})`)
             }
           }
-        }))
+        }), { priority: 10 })
     });
 }
 

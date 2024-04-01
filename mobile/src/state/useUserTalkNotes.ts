@@ -294,6 +294,6 @@ export async function prepareUserTalkNotes(
               PERF_LOGGER.debug(`getDoc(${talkNotesRef.path})`)
             }
           }
-        }))
+        }), { priority: 10 })
     })
 }
