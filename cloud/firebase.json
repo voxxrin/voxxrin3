@@ -16,8 +16,14 @@
   ],
   "firestore": [{
     "database": "default",
-    "rules": "firestore/firestore.default.rules"
+    "rules": "config/firestore.default.rules"
   }],
+  "storage": {
+    "rules": "config/storage.default.rules"
+  },
+  "extensions": {
+    "storage-resize-images": "firebase/storage-resize-images@0.2.3"
+  },
   "emulators": {
     "auth": {
       "port": 9099
