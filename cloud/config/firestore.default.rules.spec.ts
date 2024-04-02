@@ -148,6 +148,26 @@ const FIREBASE_MANAGED_COLLECTIONS = [
       updatedData: () => ({dayId: 'tuesday', feedbacks: []})
     }]
   }, {
+    name: '/speakers-pictures',
+    docInitializations: [{
+      name: 'default',
+      collection: '/speakers-pictures',
+      path: '/speakers-pictures/domain_com_a-speaker-url_png',
+      newDocPath: '/speakers-pictures/domain_com_a-speaker-updated-url_png',
+      data: () => ({ originUrl: '//domain.com/a-speaker-url.png' }),
+      updatedData: () => ({ originUrl: '//domain.com/a-speaker-updated-url.png' })
+    }]
+  }, {
+    name: '/speakers-pictures/{pictureUrl}',
+    docInitializations: [{
+      name: 'default',
+      collection: '/speakers-pictures',
+      path: '/speakers-pictures/domain_com_a-speaker-url_png',
+      newDocPath: '/speakers-pictures/domain_com_another-speaker-url_png',
+      data: () => ({ originUrl: '//domain.com/a-speaker-url.png' }),
+      updatedData: () => ({ originUrl: '//domain.com/a-speaker-updated-url.png' })
+    }]
+  }, {
     name: '/public-tokens/{tokenId}',
     docInitializations: [{
       name: 'default',
@@ -681,6 +701,30 @@ const COLLECTIONS: CollectionDescriptor[] = [{
           delete: false, list: false, createNew: false,
           get: false, update: false, createDoc: false,
         }, 'alice')
+    }
+}, {
+    name: "/speakers-pictures",
+    aroundTests: (_: UserContext) => ({
+        beforeEach: [],
+        afterEach: [],
+    }),
+    tests: (userContext: UserContext) => {
+      ensureCollectionFollowAccessPermissions('/speakers-pictures', userContext,
+        {
+          read: false, write: false
+        })
+    }
+}, {
+    name: "/speakers-pictures",
+    aroundTests: (_: UserContext) => ({
+        beforeEach: [],
+        afterEach: [],
+    }),
+    tests: (userContext: UserContext) => {
+      ensureCollectionFollowAccessPermissions('/speakers-pictures/{pictureUrl}', userContext,
+        {
+          read: false, write: false
+        })
     }
 }, {
     name: "/public-tokens",
