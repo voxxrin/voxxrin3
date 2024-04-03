@@ -527,6 +527,14 @@ type RootTranslation = {
 	 * F​e​w​ ​s​e​c​o​n​d​s​ ​a​g​o
 	 */
 	few_seconds_ago: string
+	/**
+	 * H​o​w​ ​i​s​ ​R​o​o​m​ ​C​a​p​a​c​i​t​y​ ​i​n​d​i​c​a​t​o​r​ ​c​a​l​c​u​l​a​t​e​d​ ​?
+	 */
+	How_is_room_capacity_indicator_calculated: string
+	/**
+	 * O​r​g​a​n​i​z​e​r​s​ ​a​r​e​ ​r​e​g​u​l​a​r​l​y​ ​s​e​n​d​i​n​g​ ​r​e​p​o​r​t​s​ ​o​n​ ​h​o​w​ ​f​u​l​l​ ​t​h​e​ ​r​o​o​m​ ​i​s
+	 */
+	Organizers_are_regularly_sending_room_capacity_ratio: string
 }
 
 export type TranslationFunctions = {
@@ -1038,6 +1046,14 @@ export type TranslationFunctions = {
 	 * Few seconds ago
 	 */
 	few_seconds_ago: () => LocalizedString
+	/**
+	 * How is Room Capacity indicator calculated ?
+	 */
+	How_is_room_capacity_indicator_calculated: () => LocalizedString
+	/**
+	 * Organizers are regularly sending reports on how full the room is
+	 */
+	Organizers_are_regularly_sending_room_capacity_ratio: () => LocalizedString
 }
 
 export type Formatters = {

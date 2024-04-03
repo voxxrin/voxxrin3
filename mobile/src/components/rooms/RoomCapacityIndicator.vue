@@ -1,14 +1,34 @@
 <template>
     <div v-if="enabledRoomStats" class="above-talkCard"
          :style="{
+          '--lt60-color': '#73a027',
+          '--gt60-lt80-color': '#ff6a00',
+          '--gt80-lt99-color': '#cc0f0f',
+          '--gt99-color': 'black',
           '--border-radius': bottomRounded ? '12px 12px 12px 12px' : '12px 12px 0px 0px',
           '--room-stats-lightColor':
-            enabledRoomStats.capacityFillingRatio < 0.60 ? '#73a027'
-            : enabledRoomStats.capacityFillingRatio < 0.80 ? '#ff6a00'
-            : enabledRoomStats.capacityFillingRatio < 0.99 ? '#cc0f0f' : 'black',
+            enabledRoomStats.capacityFillingRatio < 0.60 ? 'var(--lt60-color)'
+            : enabledRoomStats.capacityFillingRatio < 0.80 ? 'var(--gt60-lt80-color)'
+            : enabledRoomStats.capacityFillingRatio < 0.99 ? 'var(--gt80-lt99-color)' : 'var(--gt99-color)',
        }"  :class="{ 'level1': enabledRoomStats.capacityFillingRatio < 0.60,
                 'level2':enabledRoomStats.capacityFillingRatio >= 0.60 && enabledRoomStats.capacityFillingRatio < 0.80,
                 'level3': enabledRoomStats.capacityFillingRatio >= 0.80 && enabledRoomStats.capacityFillingRatio < 0.99}">
+
+      <ion-alert
+        :is-open="indicatorExplanationPopupOpened"
+        @didDismiss="setIndicatorExplanationPopupOpened(false)"
+        :header="LL.How_is_room_capacity_indicator_calculated()"
+        :buttons="[]"
+        :cssClass="'indicator-alert'"
+        :message="`
+        ${LL.Organizers_are_regularly_sending_room_capacity_ratio()}:
+    <ul>
+      <li><span class='range lt60'>&lt; 60%</span>: ${LL.Still_plenty_of_seats_available()}</li>
+      <li><span class='range gt60_lt80'>60% -&gt; 80%</span>: ${LL.Room_is_becoming_crowded()}</li>
+      <li><span class='range gt80_lt99'>80% -&gt; 99% </span>: ${LL.Only_few_seats_left()}</li>
+      <li><span class='range gt99'>&gt;= 99%</span>: ${LL.No_seats_available()}</li>
+    </ul>`"
+      ></ion-alert>
       <span class="above-talkCard-state">
         <svg xmlns="http://www.w3.org/2000/svg"
              viewBox="0 0 40 40">
@@ -25,8 +45,7 @@
         <span class="since" v-if="enabledRoomStats.since === 0">{{LL.few_seconds_ago()}}</span>
         <span class="since" v-if="enabledRoomStats.since !== 0">{{LL.xx_minutes_ago({ minutes: enabledRoomStats.since })}}</span>
       </div>
-      <!-- TODO Add click for appear tooltips popin info context -->
-      <ion-button aria-label="Infos" class="above-talkCard-info">
+      <ion-button :aria-label="LL.Infos()" class="above-talkCard-info" @click="setIndicatorExplanationPopupOpened(true)">
         <ion-icon :src="'/assets/icons/line/info-circle-line.svg'"></ion-icon>
       </ion-button>
       <span class="above-talkCard-bg"></span>
@@ -36,6 +55,7 @@
 <script setup lang="ts">
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {computed, onMounted, PropType} from "vue";
+import {IonAlert} from "@ionic/vue";
 import {VoxxrinTalk} from "@/models/VoxxrinTalk";
 import {VoxxrinRoomStats} from "@/models/VoxxrinRoomStats";
 import {managedRef as ref, useInterval} from "@/views/vue-utils";
@@ -88,9 +108,23 @@ const enabledRoomStats = computed(() => {
   }
 })
 
+const indicatorExplanationPopupOpened = ref(false);
+function setIndicatorExplanationPopupOpened(opened: boolean) {
+  indicatorExplanationPopupOpened.value = opened;
+}
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" >
+.indicator-alert .alert-wrapper {
+  max-width: 450px;
+  li .range {
+    font-weight: bold;
+    &.lt60 { color: #73a027 }
+    &.gt60_lt80 { color: #ff6a00 }
+    &.gt80_lt99 { color: #cc0f0f }
+    &.gt99 { color: black }
+  }
+}
 .above-talkCard {
   position: relative;
   display: flex;

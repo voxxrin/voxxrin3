@@ -128,6 +128,8 @@ const en = {
   No_seats_available: "No seats available",
   xx_minutes_ago: "{minutes:number} minute{{minutes:s}} ago",
   few_seconds_ago: "Few seconds ago",
+  How_is_room_capacity_indicator_calculated: "How is Room Capacity indicator calculated ?",
+  Organizers_are_regularly_sending_room_capacity_ratio: "Organizers are regularly sending reports on how full the room is",
 } satisfies BaseTranslation
 
 export default en
