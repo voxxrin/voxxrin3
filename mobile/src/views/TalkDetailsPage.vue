@@ -31,7 +31,9 @@
         </ion-toolbar>
       </ion-header>
 
-      <talk-details-header :conf-descriptor="confDescriptor" :talk="detailedTalk"></talk-details-header>
+      <talk-details-header :conf-descriptor="confDescriptor" :talk="detailedTalk">
+        <room-capacity-indicator :talk="detailedTalk" :room-stats="firestoreRoomStatsRef" :bottom-rounded="true" />
+      </talk-details-header>
 
       <div class="talkDetails-tags" v-if="detailedTalk?.tags.length">
         <div class="talkDetails-tags-list">
@@ -100,6 +102,8 @@ import {goBackOrNavigateTo} from "@/router";
 import TalkDetailsHeader from "@/components/talk-details/TalkDetailsHeader.vue";
 import {useEventTalkStats} from "@/state/useEventTalkStats";
 import {Logger} from "@/services/Logger";
+import RoomCapacityIndicator from "@/components/rooms/RoomCapacityIndicator.vue";
+import {useRoomStats} from "@/state/useRoomsStats";
 
 const LOGGER = Logger.named("TalkDetailsPage");
 
@@ -142,6 +146,8 @@ const theme = computed(() => {
         return undefined;
     }
 });
+
+const {firestoreRoomStatsRef } = useRoomStats(eventId, toRef(() => detailedTalk.value?.room.id))
 
 </script>
 

@@ -20,6 +20,8 @@
       </div>
     </ion-header>
 
+    <slot />
+
     <h1 class="talkDetails-title"
         :class="{'_hasTalkLand' : talkLang && confDescriptor.features.hideLanguages.indexOf(talkLang.id.value)===-1}">
       <ion-badge v-if="talkLang && confDescriptor.features.hideLanguages.indexOf(talkLang.id.value)===-1"

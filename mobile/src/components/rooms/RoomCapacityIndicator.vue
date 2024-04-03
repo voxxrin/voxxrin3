@@ -1,6 +1,7 @@
 <template>
     <div v-if="enabledRoomStats" class="above-talkCard"
          :style="{
+          '--border-radius': bottomRounded ? '12px 12px 12px 12px' : '12px 12px 0px 0px',
           '--room-stats-lightColor':
             enabledRoomStats.capacityFillingRatio < 0.60 ? '#73a027'
             : enabledRoomStats.capacityFillingRatio < 0.80 ? '#ff6a00'
@@ -52,6 +53,10 @@ const props = defineProps({
     required: false,
     type: Object as PropType<VoxxrinRoomStats|undefined>
   },
+  bottomRounded: {
+    required: false,
+    type: Boolean
+  }
 })
 
 const nowRef = ref<Temporal.ZonedDateTime|undefined>(undefined)
@@ -100,7 +105,7 @@ const enabledRoomStats = computed(() => {
   flex-direction: row;
   align-items: center;
   padding: 4px 8px 8px 12px;
-  border-radius: 12px 12px 0 0;
+  border-radius: var(--border-radius);
   background: var(--app-primary);
   overflow: hidden;
   z-index: 0;
