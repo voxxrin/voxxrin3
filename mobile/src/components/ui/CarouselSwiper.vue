@@ -7,11 +7,6 @@
         <img :src="item.pictureUrl" :alt="item.label" />
       </div>
     </swiper-slide>
-    <swiper-slide v-for="(item) in items" :key="item.pictureUrl">
-      <div class="swiper-zoom-container">
-        <img :src="item.pictureUrl" :alt="item.label" />
-      </div>
-    </swiper-slide>
   </swiper>
 </template>
 
