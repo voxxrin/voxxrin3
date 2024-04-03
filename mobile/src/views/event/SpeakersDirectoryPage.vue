@@ -15,7 +15,7 @@
         </ion-toolbar>
       </ion-header>
 
-      <SpeakerCard></SpeakerCard>
+      <speaker-card @speaker-clicked="openSpeakerDetails($event)"></speaker-card>
       <ion-fab vertical="bottom" horizontal="end" slot="fixed">
         <ion-fab-button class="btnGoToTicketing" :aria-label="LL.Go_To_Ticketing()">
           <ion-icon :icon="ticket" aria-hidden="true"></ion-icon>
@@ -39,12 +39,32 @@
   import PoweredVoxxrin from "@/components/ui/PoweredVoxxrin.vue";
   import SpeakerCard from "@/components/speaker-card/SpeakerCard.vue";
   import ListModeSwitch from "@/components/ui/ListModeSwitch.vue";
+  import {useTabbedPageNav} from "@/state/useTabbedPageNav";
+  import {VoxxrinSimpleSpeaker} from "@/models/VoxxrinSpeaker";
 
   const { LL } = typesafeI18n()
   const route = useRoute();
   const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')));
   const {conferenceDescriptor: confDescriptor} = useSharedConferenceDescriptor(eventId);
+  const { triggerTabbedPageNavigate } = useTabbedPageNav();
+
   const baseUrl = import.meta.env.BASE_URL;
+
+  async function openSpeakerDetails(speaker: VoxxrinSimpleSpeaker) {
+    if(speaker) {
+      // TODO: Re-enable this once *tabbed* talk details as feedback viewer routing has been fixed
+      // const talkFeedbackViewerToken = toValue(talkFeedbackViewerTokensRef)?.find(t => t.talkId.isSameThan(talk.id));
+      // const url = talkFeedbackViewerToken
+      //   ?`/events/${eventId.value.value}/talks/${talk.id.value}/asFeedbackViewer/${talkFeedbackViewerToken.secretToken}/details`
+      //   :`/events/${eventId.value.value}/talks/${talk.id.value}/details`
+      const url = `/events/${eventId.value.value}/speakers/${speaker.id.value}/details`
+
+      triggerTabbedPageNavigate(url, "forward", "push");
+    }
+  }
+
+  function toggleSearchField() {
+  }
 </script>
 
 <style lang="scss" scoped>
