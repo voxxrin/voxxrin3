@@ -1,5 +1,7 @@
 import {HexColor} from "../../../shared/type-utils";
 import {CollectionReference} from "firebase/firestore";
+import pQueue, {type Options, type QueueAddOptions} from 'p-queue'
+import type PriorityQueue from "p-queue/dist/priority-queue";
 
 export class ValueObject<T> {
     constructor(readonly value: T) {}
@@ -120,4 +122,22 @@ export function partitionArray<T>(array: T[], partitionSize: number) {
 
 export function toCollectionReferenceArray<T>(collection: CollectionReference<T>|undefined): Array<CollectionReference<T>> {
     return collection?[collection]:[];
+}
+
+export class CompletablePromiseQueue extends pQueue {
+  private _completed = 0;
+  private _creationDate = Date.now();
+
+  constructor(opts: Options<PriorityQueue, QueueAddOptions>) {
+    super(opts);
+
+    this.on('completed', () => {
+      this._completed++;
+    })
+  }
+
+  get completed() { return this._completed; }
+  get uncompleted() { return this.pending + this.size; }
+  get total() { return this.completed + this.uncompleted; }
+  get creationDate() { return new Date(this._creationDate); }
 }

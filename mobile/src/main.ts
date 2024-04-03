@@ -37,8 +37,9 @@ import {collection, doc, updateDoc} from "firebase/firestore";
 
 const app = createApp(App);
 app
-  .use(IonicVue)
-  .use(VueFire, {
+  .use(IonicVue, {
+    innerHTMLTemplatesEnabled: true
+  }).use(VueFire, {
     firebaseApp,
     modules: [
         VueFireAuth()
