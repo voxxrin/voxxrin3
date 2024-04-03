@@ -31,6 +31,7 @@ const routes: Array<RouteRecordRaw> = [
   { path: '/events/:eventId/embedded-schedule', component: () => import('@/views/event/EmbeddedSchedulePage.vue') },
   { path: '/events/:eventId/new-feedback-for-timeslot/:timeslotId', component: () => preloadedPage('NewFeedbackPage') },
   { path: '/events/:eventId/rate-talk/:talkId', component: () => preloadedPage('RateTalkPage') },
+  { path: '/events/:eventId/speakers/:speakerId/details', component: () => preloadedPage('SpeakerDetailsPage') },
   { path: '/events/:eventId/talks/:talkId/details', component: () => preloadedPage('TalkDetailsPage') },
   { path: '/events/:eventId/talks/:talkId/asFeedbackViewer/:secretFeedbacksViewerToken', component: () => preloadedPage('_BaseEventDetailsPages'), children: [
       { path: '', redirect: (route) => `/events/${route.params.eventId}/talks/${route.params.talkId}/asFeedbackViewer/${route.params.secretFeedbacksViewerToken}/details` },

@@ -522,6 +522,14 @@ type RootTranslation = {
 	 * F​r​e​q​u​e​n​t​l​y​ ​a​s​k​e​d​ ​q​u​e​s​t​i​o​n​s
 	 */
 	Frequently_asked_questions: string
+	/**
+	 * S​p​e​a​k​e​r​ ​d​e​t​a​i​l​s
+	 */
+	Speaker_details: string
+	/**
+	 * C​l​o​s​e​ ​s​p​e​a​k​e​r​ ​d​e​t​a​i​l​s
+	 */
+	Close_speaker_details: string
 }
 
 export type TranslationFunctions = {
@@ -1029,6 +1037,14 @@ export type TranslationFunctions = {
 	 * Frequently asked questions
 	 */
 	Frequently_asked_questions: () => LocalizedString
+	/**
+	 * Speaker details
+	 */
+	Speaker_details: () => LocalizedString
+	/**
+	 * Close speaker details
+	 */
+	Close_speaker_details: () => LocalizedString
 }
 
 export type Formatters = {

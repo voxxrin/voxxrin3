@@ -1,6 +1,6 @@
 <template>
   <!-- TODO #74 Dev Card Speaker List -->
-  <ion-card class="speakerCard">
+  <ion-card class="speakerCard" @click="$emit('speaker-clicked', speaker)">
     <div class="speakerCard-head">
       <div class="avatarContainer">
         <ion-thumbnail class="avatar _large">
@@ -49,13 +49,27 @@
   import SpeakerLikeButton from "@/components/speaker-card/SpeakerLikeButton.vue";
   import SpeakerResumeTalk from "@/components/speaker-card/SpeakerResumeTalk.vue";
   import SpeakerInfoButton from "@/components/speaker-card/SpeakerInfoButton.vue";
+  import {VoxxrinTalk} from "@/models/VoxxrinTalk";
+  import {SpeakerId, VoxxrinSimpleSpeaker} from "@/models/VoxxrinSpeaker";
 
   const { LL } = typesafeI18n()
+
+  defineEmits<{
+    (e: 'speaker-clicked', speaker: VoxxrinSimpleSpeaker): void,
+  }>()
+
 
   const route = useRoute();
   const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')));
   const {conferenceDescriptor: confDescriptor} = useSharedConferenceDescriptor(eventId);
   const baseUrl = import.meta.env.BASE_URL;
+
+  const speaker: VoxxrinSimpleSpeaker = {
+    id: new SpeakerId('42'),
+    fullName: "Frédéric Camblor",
+    companyName: "4SH",
+    photoUrl: "https://lh3.googleusercontent.com/a/AAcHTtdsbTGnaxXmrzSi178m_qpxj9c-z12qoL7SLB6cjUSfZhaQ=s96-c",
+  }
 </script>
 
 <style lang="scss">

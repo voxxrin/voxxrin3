@@ -127,6 +127,8 @@ const en = {
     App_settings: "App settings",
     Configure_my_preferences_app: "Configure my preferences app",
     Frequently_asked_questions: "Frequently asked questions",
+  Speaker_details: "Speaker details",
+  Close_speaker_details: "Close speaker details"
 } satisfies BaseTranslation
 
 export default en
