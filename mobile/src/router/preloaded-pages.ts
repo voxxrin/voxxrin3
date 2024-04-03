@@ -12,6 +12,7 @@ import InfosPage from "@/views/event/InfosPage.vue";
 import NewFeedbackPage from '@/views/feedbacks/NewFeedbackPage.vue';
 import RateTalkPage from '@/views/feedbacks/RateTalkPage.vue';
 import TalkDetailsPage from '@/views/TalkDetailsPage.vue';
+import SpeakerDetailsPage from '@/views/SpeakerDetailsPage.vue';
 import _BaseEventDetailsPages from '@/views/event/details/_BaseEventDetailsPages.vue';
 import TalkFeedbacksPage from '@/views/user/TalkFeedbacksPage.vue';
 import UserDashboardPage from '@/views/user/UserDashboardPage.vue';
@@ -41,6 +42,7 @@ const modules = {
     MyPersonalDataPage,
     UserTokenRegistrationPage,
     FAQPage,
+    SpeakerDetailsPage
 } as const;
 
 export type PreloadedModules = typeof modules;
