@@ -101,6 +101,18 @@ export function declareEventHttpRoutes(app: Express) {
     ensureHasFamilyOrEventOrganizerToken(),
     async (res, path, query, eventDescriptor, req) =>
       (await import("../event/talkFeedbacks")).eventTalkFeedbacks(res, path, query, req, eventDescriptor));
+  Routes.post(app, '/events/:eventId/cacheSpeakersPictures',
+    z.object({
+      body: z.object({}),
+      query: z.object({
+        token: z.string().min(10)
+      }),
+      path: z.object({
+        eventId: z.string().min(3),
+      })
+    }), ensureHasFamilyOrEventOrganizerToken(),
+    async (res, path, query, body) =>
+      (await import("../event/cacheSpeakersPictures")).cacheSpeakersPictures(res, path, query, body));
   Routes.get(app, '/events/:eventId/topTalks',
     z.object({
       query: z.object({

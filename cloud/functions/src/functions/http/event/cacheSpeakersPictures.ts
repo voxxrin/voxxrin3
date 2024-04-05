@@ -1,0 +1,139 @@
+import {Response} from "express";
+import {db} from "../../../firebase";
+import {DailySchedule, DetailedTalk, Speaker} from "../../../../../../shared/daily-schedule.firestore";
+import { Storage } from '@google-cloud/storage';
+import * as crypto from "crypto"
+import {match, P} from "ts-pattern";
+import {wait} from "../../../utils/async-utils";
+import {Temporal} from "@js-temporal/polyfill";
+import {toValidFirebaseKey, unescapeFirebaseKey} from "../../../../../../shared/utilities/firebase.utils";
+import {sendResponseMessage} from "../utils";
+import {getEventDescriptor} from "../../firestore/services/eventDescriptor-utils";
+import {getFamilyOrganizerToken} from "../../firestore/services/publicTokens-utils";
+
+type CachedUrl = {
+  originalUrl: string,
+  type: "speaker-picture",
+  resizedUrl: string,
+}
+
+async function contentChecksum(content: ArrayBuffer) {
+  const uint8Array = new Uint8Array(await content);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', uint8Array);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+
+  return hashArray.map((h) => h.toString(16).padStart(2, '0')).join('');
+}
+
+function urlToFilename(url: string, checksum: string) {
+  const filenameChunks = url
+    .replace(/https?:\/\/(.+)/, "$1")
+    .replace("/", ":")
+    .split(".")
+
+  return match(filenameChunks)
+    .with([ P.string ], ([filename]) => ({ filename, extension: undefined }))
+    .otherwise((filenameChunks) => ({
+      filename: filenameChunks.slice(0, -1).concat(checksum).join("."),
+      extension: "."+filenameChunks[filenameChunks.length-1]
+    }))
+}
+
+export async function cacheSpeakersPictures(response: Response, pathParams: {eventId: string}, queryParams: {token: string}, body: {}) {
+  if(!process.env.ASSETS_BUCKET_NAME) {
+    return sendResponseMessage(response, 500, `Missing ASSETS_BUCKET_NAME env variable !`)
+  }
+  if(!process.env.STORAGE_CONFIG) {
+    return sendResponseMessage(response, 500, `Missing STORAGE_CONFIG env variable !`)
+  }
+
+  const [eventDescriptor, familyOrganizerToken] = await Promise.all([
+    getEventDescriptor(pathParams.eventId),
+    getFamilyOrganizerToken(queryParams.token),
+  ]);
+
+  if(!eventDescriptor.eventFamily || !familyOrganizerToken.eventFamilies.includes(eventDescriptor.eventFamily)) {
+    return sendResponseMessage(response, 400, `Provided family organizer token doesn't match with event ${pathParams.eventId} family: [${eventDescriptor.eventFamily}]`)
+  }
+
+  const BUCKET_NAME = process.env.ASSETS_BUCKET_NAME;
+  const STORAGE_CONFIG = JSON.parse(process.env.STORAGE_CONFIG)
+
+  const storage = new Storage(STORAGE_CONFIG);
+
+  const dailySchedules = (await db.collection(`events/${pathParams.eventId}/days`).get()).docs.map(d => d.data() as DailySchedule)
+  const speakerRefsById = new Map<string, Speaker[]>()
+  for(const dailySchedule of dailySchedules) {
+    for(const timeslot of dailySchedule.timeSlots) {
+      if(timeslot.type === 'talks') {
+        for(const talk of timeslot.talks) {
+          for(const speaker of talk.speakers) {
+            speakerRefsById.set(speaker.id, (speakerRefsById.get(speaker.id) || []).concat(speaker))
+          }
+        }
+      }
+    }
+  }
+
+  const eventTalks = (await db.collection(`events/${pathParams.eventId}/talks`).get()).docs.map(d => d.data() as DetailedTalk)
+
+  await Promise.all(eventTalks.map(async talk => {
+    await Promise.all(talk.speakers.map(async speaker => {
+      if(speaker.photoUrl && !decodeURIComponent(speaker.photoUrl).includes(`/${BUCKET_NAME}/speaker-pictures/`)) {
+        const pictureContent = await fetch(speaker.photoUrl).then(resp => resp.arrayBuffer());
+        const { filename, extension } = urlToFilename(speaker.photoUrl, await contentChecksum(pictureContent))
+
+        const bucketFile = storage.bucket(BUCKET_NAME).file(`speaker-pictures/${filename}${extension || ""}`);
+        const originalBucketUrl = bucketFile.publicUrl();
+        const resizedFilenameUrl = storage.bucket(BUCKET_NAME).file(`speaker-pictures/resized/${filename}_64x64${extension || ""}`).publicUrl()
+
+        const [fileExists] = await bucketFile.exists()
+        const updatedSpeakerUrl = await match({ fileExists })
+          .with({ fileExists: true }, async () => resizedFilenameUrl)
+          .otherwise(async () => {
+            try {
+              await bucketFile.save(Buffer.from(pictureContent));
+
+              const escapedFilename = toValidFirebaseKey(filename+extension)
+              const firebaseCachedUrlEntry: CachedUrl = {
+                originalUrl: speaker.photoUrl!,
+                resizedUrl: resizedFilenameUrl,
+                type: 'speaker-picture'
+              }
+              const cachedUrlDoc = db.doc(`events/${pathParams.eventId}/resized-speaker-urls/${escapedFilename}`)
+              try {
+                if((await cachedUrlDoc.get()).exists) {
+                  await cachedUrlDoc.update(firebaseCachedUrlEntry)
+                } else {
+                  await cachedUrlDoc.set(firebaseCachedUrlEntry)
+                }
+              }catch(e: any) {
+                console.error(`Error while persisting cached url for speaker-picture [${filename}]: ${e.toString()}`)
+              }
+
+              // waiting few seconds so that resized pictures get generated
+              await wait(Temporal.Duration.from({ milliseconds: 2000 }))
+
+              return resizedFilenameUrl;
+            } catch(e: any) {
+              console.error(`Error while uploading file ${filename}: ${e.toString()}`)
+              return originalBucketUrl
+            }
+          })
+
+        speaker.photoUrl = updatedSpeakerUrl;
+        for(const speakerInDailySchedules of (speakerRefsById.get(speaker.id) || [])) {
+          speakerInDailySchedules.photoUrl = updatedSpeakerUrl;
+        }
+      }
+    }))
+
+    await db.doc(`events/${pathParams.eventId}/talks/${talk.id}`).update(talk);
+  }))
+
+  await Promise.all(dailySchedules.map(async dailySchedule => {
+    await db.doc(`events/${pathParams.eventId}/days/${dailySchedule.day}`).update(dailySchedule);
+  }))
+
+  sendResponseMessage(response, 200);
+}
