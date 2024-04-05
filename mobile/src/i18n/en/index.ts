@@ -51,6 +51,7 @@ const en = {
 	Go_To_Ticketing: `Go to ticketing`,
 	Like_Speaker: `Like speaker`,
 	Big_list_mode: `Big list mode`,
+	Speaker_bio: `Biography`,
 	Compact_list_mode: `Compact list mode`,
 	View_Profil_Speaker: `See the speaker's page`,
 	Welcome_to: `Welcome to`,
