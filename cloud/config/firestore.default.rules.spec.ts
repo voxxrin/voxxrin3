@@ -346,6 +346,16 @@ const FIREBASE_MANAGED_COLLECTIONS = [
       updatedData: () => ({id: '4321', title: 'A super talk'})
     }]
   }, {
+    name: '/events/{eventId}/speaker-pictures/{pictureUrl}',
+    docInitializations: [{
+      name: 'default',
+      collection: '/events/an-event/speaker-pictures',
+      path: '/events/an-event/speaker-pictures/acme.org:avatar.70935122dc120b4bbda08f010357a2d05809c93a406d0118e09abca3022d7763_64x64.png',
+      newDocPath: '/events/an-event/speaker-pictures/acme.org:avatar-new.70935122dc120b4bbda08f010357a2d05809c93a406d0118e09abca3022d7763_64x64.png',
+      data: () => ({ originalUrl: 'https://acme.org/avatar.70935122dc120b4bbda08f010357a2d05809c93a406d0118e09abca3022d7763_64x64.png' }),
+      updatedData: () => ({ originalUrl: 'https://acme.org/avatar-updated.70935122dc120b4bbda08f010357a2d05809c93a406d0118e09abca3022d7763_64x64.png' })
+    }]
+  }, {
     name: '/events/{eventId}/talks/{talkId}/feedbacks-access/{secretFeedbackAccessToken}',
     docInitializations: [{
       name: 'default',
@@ -922,6 +932,18 @@ const COLLECTIONS: CollectionDescriptor[] = [{
       ensureCollectionFollowAccessPermissions('/events/{eventId}/talks/{talkId}', userContext,
         {
           read: true, write: false
+        })
+    }
+}, {
+    name: "/events/{eventId}/speaker-pictures",
+    aroundTests: (_: UserContext) => ({
+        beforeEach: [],
+        afterEach: [],
+    }),
+    tests: (userContext: UserContext) => {
+      ensureCollectionFollowAccessPermissions('/events/{eventId}/speaker-pictures/{pictureUrl}', userContext,
+        {
+          read: false, write: false
         })
     }
 }, {

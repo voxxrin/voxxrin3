@@ -68,6 +68,10 @@ service cloud.firestore {
         allow get: if true;
         allow list, write: if false;
       }
+      match /speaker-pictures/{originalEncodedUrl} {
+        allow read: if false;
+        allow write: if false;
+      }
 
       match /organizer-space/{secretOrganizerToken} {
         allow get: if true;
