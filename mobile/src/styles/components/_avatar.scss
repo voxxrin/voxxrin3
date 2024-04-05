@@ -66,10 +66,11 @@
       flex-direction: row;
       align-items: center;
       gap: var(--app-gutters-tiny);
+      color: var(--app-beige-dark);
       font-weight: 500;
 
       @media (prefers-color-scheme: dark) {
-        color: var(--app-whit-90);
+        color: var(--app-white-90);
       }
     }
   }
