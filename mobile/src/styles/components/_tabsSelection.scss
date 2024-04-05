@@ -7,6 +7,29 @@
   border-bottom: 1px solid var(--app-beige-line);
   background: var(--app-white);
 
+  &._clearMode {
+    border: none;
+
+    ::part(native) {border-radius: 24px;}
+    ::part(indicator-background) { border-radius: 24px;}
+
+    ion-segment-button {
+      top: 0;
+      --color: var(--app-primary);
+      --indicator-color: var(--app-primary);
+      --indicator-box-shadow: none;
+
+      &.segment-button-checked:hover .button-native {
+      --color-hover: var(--app-white) !important;
+    }
+
+      @media (prefers-color-scheme: dark) {
+        --color: var(--app-primary);
+        --indicator-color: var(--app-beige-line);
+      }
+    }
+  }
+
   ::part(native) {
     border-radius: 16px 16px 0 0;
   }
@@ -43,6 +66,8 @@
     min-height: 46px;
     letter-spacing: normal;
     color: var(--app-primary);
+    --color-checked: var(--app-white);
+    --color-hover: var(--app-white);
     --indicator-color: var(--app-voxxrin);
     --indicator-box-shadow: none;
 
