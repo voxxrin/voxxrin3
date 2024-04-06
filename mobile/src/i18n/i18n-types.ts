@@ -443,6 +443,10 @@ type RootTranslation = {
 	 */
 	No_talks_matching_search_terms: string
 	/**
+	 * E​v​e​n​t​ ​m​a​p
+	 */
+	Map_Event: string
+	/**
 	 * S​o​c​i​a​l​ ​m​e​d​i​a
 	 */
 	Social_media: string
@@ -450,6 +454,10 @@ type RootTranslation = {
 	 * E​v​e​n​t​ ​p​l​a​n​s
 	 */
 	Event_plans: string
+	/**
+	 * A​d​d​r​e​s​s​ ​l​i​n​k
+	 */
+	Event_location_link: string
 	/**
 	 * E​v​e​n​t​ ​s​u​m​m​a​r​y
 	 */
@@ -930,6 +938,10 @@ export type TranslationFunctions = {
 	 */
 	No_talks_matching_search_terms: () => LocalizedString
 	/**
+	 * Event map
+	 */
+	Map_Event: () => LocalizedString
+	/**
 	 * Social media
 	 */
 	Social_media: () => LocalizedString
@@ -937,6 +949,10 @@ export type TranslationFunctions = {
 	 * Event plans
 	 */
 	Event_plans: () => LocalizedString
+	/**
+	 * Address link
+	 */
+	Event_location_link: () => LocalizedString
 	/**
 	 * Event summary
 	 */

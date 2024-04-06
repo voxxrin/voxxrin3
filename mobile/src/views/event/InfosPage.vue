@@ -6,7 +6,7 @@
       <div class="contentInfoConf contentView">
         <div class="headInfoConf">
           <div class="headInfoConf-logo">
-            <img :src="confDescriptorRef.logoUrl">
+            <img :src="confDescriptorRef.logoUrl" :alt="LL.Logo_event()">
           </div>
         </div>
 
@@ -14,7 +14,9 @@
           <div class="utilsInfoConf-item">
             <ion-icon aria-hidden="true" :icon="location"></ion-icon>
             <div class="utilsInfoConf-item-infos">
-              <a v-if="confDescriptorRef.location.coords" :href="`geo:${confDescriptorRef.location.coords.latitude},${confDescriptorRef.location.coords.longitude}`" target="_blank">
+              <a v-if="confDescriptorRef.location.coords"
+                 :href="`geo:${confDescriptorRef.location.coords.latitude},${confDescriptorRef.location.coords.longitude}`"
+                 target="_blank" :aria-label="LL.Event_location_link()">
                 <div><span class="title">{{ confDescriptorRef.location.city }}, {{ confDescriptorRef.location.country }}</span></div>
                 <div v-if="confDescriptorRef.location.address"><span class="subTitle">{{ confDescriptorRef.location.address }}</span></div>
               </a>
@@ -34,13 +36,18 @@
           </div>
         </div>
 
-        <carousel-swiper v-if="confDescriptorRef.infos.floorPlans?.length" :items="confDescriptorRef.infos.floorPlans || []"></carousel-swiper>
+        <div class="sectionBloc">
+          <vox-divider>{{ LL.Map_Event() }}</vox-divider>
+          <tips :txt="'Double-tap on the map to zoom in / out'"></tips>
+          <carousel-swiper v-if="confDescriptorRef.infos.floorPlans?.length" :items="confDescriptorRef.infos.floorPlans || []"></carousel-swiper>
+        </div>
 
         <div class="linksInfoConf" v-if="socialMedias.length">
           <vox-divider>{{ LL.Social_media() }}</vox-divider>
           <ul class="linksInfoConf-list">
             <li v-for="(socialMedia) in socialMedias" :key="socialMedia.type">
-              <ion-button color="theming" slot="end" shape="round" size="small" :href="socialMedia.href">
+              <ion-button color="theming" slot="end" shape="round" size="small" :href="socialMedia.href"
+                          :aria-label="socialMedia.label">
                 <ion-icon :icon="socialMedia.icon" :alt="socialMedia.label"></ion-icon>
               </ion-button>
             </li>
@@ -93,6 +100,7 @@
   import {SocialMediaType} from "../../../../shared/type-utils";
   import CarouselSwiper from "@/components/ui/CarouselSwiper.vue";
   import PoweredVoxxrin from "@/components/ui/PoweredVoxxrin.vue";
+  import Tips from "@/components/ui/Tips.vue";
 
   const { LL } = typesafeI18n()
 
@@ -144,9 +152,13 @@
   }
 
   .utilsInfoConf {
-    background: var(--app-white);
+    background: var(--app-light-contrast);
     border-radius: var(--app-bloc-radius);
     border: 1px solid var(--app-beige-line);
+
+    @media (prefers-color-scheme: dark) {
+      background: var(--app-dark);
+    }
 
     &-item {
       position: relative;
@@ -178,10 +190,13 @@
         justify-content: center;
         row-gap: 4px;
 
-
         .title {
           font-weight: bold;
           color: var(--app-primary);
+
+          @media (prefers-color-scheme: dark) {
+            color: var(--app-white);
+          }
         }
 
         .subTitle {
