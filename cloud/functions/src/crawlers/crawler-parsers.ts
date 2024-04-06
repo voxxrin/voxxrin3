@@ -112,6 +112,7 @@ export const EVENT_DESCRIPTOR_PARSER = LISTABLE_EVENT_PARSER.extend({
         showInfosTab: z.boolean().optional(),
         // for multi-lang conferences, where we want to hide "default" (implicit) conference lang (ex: in devoxxfr, we'd hide FR)
         hideLanguages: z.array(z.string()),
+        showRoomCapacityIndicator: z.boolean().optional(),
         ratings: z.object({
             bingo: z.object({
                 enabled: z.boolean(),

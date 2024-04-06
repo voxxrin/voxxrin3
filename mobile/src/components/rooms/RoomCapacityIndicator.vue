@@ -1,6 +1,6 @@
 <template>
   <transition>
-  <div v-if="capacityStatusRef && roomCapacityIndicatorShownRef" class="above-talkCard"
+  <div v-if="!!confDescriptorRef?.features.showRoomCapacityIndicator && capacityStatusRef && roomCapacityIndicatorShownRef" class="above-talkCard"
        :style="{
           '--status-level1-color': '#73a027',
           '--status-level2-color': '#ff6a00',
