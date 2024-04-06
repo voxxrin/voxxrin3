@@ -74,6 +74,7 @@ import {managedRef as ref, useInterval} from "@/views/vue-utils";
 import {Temporal} from "temporal-polyfill";
 import {useCurrentClock} from "@/state/useCurrentClock";
 import {sad} from "ionicons/icons";
+import {watchClock} from "@/state/useCurrentClock";
 
 const { LL } = typesafeI18n()
 
@@ -92,19 +93,14 @@ const props = defineProps({
   }
 })
 
-const nowRef = ref<Temporal.ZonedDateTime|undefined>(undefined)
-useInterval(() => {
-  if(props.roomStats) {
-    nowRef.value = useCurrentClock().zonedDateTimeISO()
-  }
-}, {freq:"high-frequency"}, {immediate: true})
-
+// Updating clockRef only if some roomStats have been made available
+const clockRef = watchClock({freq: 'high-frequency'}, () => null, () => !!props.roomStats);
 
 const enabledRoomStats = computed(() => {
   const talkRoomId = props.talk.room.id;
   const talkId = props.talk.id;
   const roomStats = props.roomStats;
-  const now = nowRef.value
+  const now = clockRef.value
 
   if(roomStats && now
       && roomStats.capacityFillingRatio !== 'unknown'

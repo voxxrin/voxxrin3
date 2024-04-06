@@ -58,10 +58,9 @@ import {managedRef as ref, toManagedRef as toRef} from "@/views/vue-utils";
 import {DayId, VoxxrinDay} from "@/models/VoxxrinDay";
 import {localDateToReadableParts, toISOLocalDate} from "@/models/DatesAndTime";
 import {useCurrentUserLocale} from "@/state/useCurrentUser";
-import {useInterval} from "@/views/vue-utils";
 import {ISOLocalDate} from "../../../../shared/type-utils";
-import {useCurrentClock} from "@/state/useCurrentClock";
-import {IonGrid, IonSpinner} from "@ionic/vue";
+import {useCurrentClock, watchClock} from "@/state/useCurrentClock";
+import {IonSpinner} from "@ionic/vue";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {useSharedEventSelectedDay} from "@/state/useEventSelectedDay";
@@ -126,11 +125,10 @@ function findBestAutoselectableConferenceDay(days: VoxxrinDay[]): VoxxrinDay {
 
 const today = ref<ISOLocalDate>("0000-00-00")
 const tomorrow = ref<ISOLocalDate>("0000-00-00")
-useInterval(() => {
-    let todayZDT = useCurrentClock().zonedDateTimeISO();
-    today.value = toISOLocalDate(todayZDT)
-    tomorrow.value = toISOLocalDate(todayZDT.add({days:1}))
-}, {freq:"low-frequency"}, { immediate: true })
+watchClock({freq: 'low-frequency'}, (now) => {
+  today.value = toISOLocalDate(now)
+  tomorrow.value = toISOLocalDate(now.add({days:1}))
+})
 
 const formattedDays = computed(() => {
     return (confDescriptorRef.value.days || []).map(d => ({
