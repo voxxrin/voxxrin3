@@ -1,4 +1,5 @@
 <template>
+  <transition>
   <div v-if="capacityStatusRef && roomCapacityIndicatorShownRef" class="above-talkCard"
        :style="{
           '--status-level1-color': '#73a027',
@@ -56,6 +57,7 @@
     </ion-button>
     <span class="above-talkCard-bg"></span>
   </div>
+  </transition>
 </template>
 
 <script setup lang="ts">
@@ -403,4 +405,15 @@ function setIndicatorExplanationPopupOpened(opened: boolean) {
     background-repeat: no-repeat !important;
   }
 }
+
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 1.5s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
+
 </style>
