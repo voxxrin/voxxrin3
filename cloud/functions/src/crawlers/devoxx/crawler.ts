@@ -50,7 +50,7 @@ export const DEVOXX_DESCRIPTOR_PARSER = EVENT_DESCRIPTOR_PARSER.omit({
     eventFamily: z.string(),
     infos: INFOS_PARSER.extend({
         address: z.string().nullish(),
-    }).omit({ floorPlans: true }),
+    }).omit({ floorPlans: true }).optional(),
     talkFormats: z.array(THEMABLE_TALK_FORMAT_PARSER).optional(),
 })
 
@@ -105,7 +105,7 @@ export const DEVOXX_CRAWLER: CrawlerKind<typeof DEVOXX_DESCRIPTOR_PARSER> = {
                     latitude: cfpEvent.venueLatitude,
                     longitude: cfpEvent.venueLongitude
                 },
-                ...(descriptor.infos.address ? {address: descriptor.infos.address} : {}),
+                ...(descriptor.infos?.address ? {address: descriptor.infos.address} : {}),
             },
             theming: descriptor.theming,
             keywords: descriptor.keywords
@@ -146,8 +146,8 @@ export const DEVOXX_CRAWLER: CrawlerKind<typeof DEVOXX_DESCRIPTOR_PARSER> = {
                     label: cfpFloorPlan.name,
                     pictureUrl: cfpFloorPlan.imageURL
                 })),
-                socialMedias: descriptor.infos.socialMedias || [],
-                sponsors: descriptor.infos.sponsors || []
+                socialMedias: descriptor.infos?.socialMedias || [],
+                sponsors: descriptor.infos?.sponsors || []
             },
         }
 

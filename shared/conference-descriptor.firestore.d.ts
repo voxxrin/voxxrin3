@@ -51,7 +51,7 @@ export type ConferenceDescriptor = ListableEvent & {
     talkTracks: Array<ThemedTrack>,
     supportedTalkLanguages: Array<{ id: string, label: string, themeColor: HexColor }>,
     rooms: Array<{ id: string, title: string }>,
-    infos: {
+    infos?: {
         floorPlans?: Array<{
             label: string, pictureUrl: string
         }>|undefined,

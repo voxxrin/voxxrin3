@@ -154,7 +154,7 @@ export const EVENT_DESCRIPTOR_PARSER = LISTABLE_EVENT_PARSER.extend({
     talkTracks: z.array(THEMABLE_TALK_TRACK_PARSER),
     supportedTalkLanguages: z.array(THEMABLE_LANGUAGE_PARSER),
     rooms: z.array(ROOM_PARSER),
-    infos: INFOS_PARSER,
+    infos: INFOS_PARSER.optional(),
 })
 
 export const DAILY_TALKS_STATS_PARSER = z.object({
