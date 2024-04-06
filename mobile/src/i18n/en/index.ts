@@ -126,6 +126,7 @@ const en = {
   Room_is_becoming_crowded: "Room is becoming crowded",
   Only_few_seats_left: "Only few seats left",
   No_seats_available: "No seats available",
+  Unknown_room_capacity: "No room capacity provided yet",
   xx_minutes_ago: "{minutes:number} minute{{minutes:s}} ago",
   few_seconds_ago: "Few seconds ago",
   How_is_room_capacity_indicator_calculated: "How is Room Capacity indicator calculated ?",

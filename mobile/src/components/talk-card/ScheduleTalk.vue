@@ -1,6 +1,6 @@
 <template>
   <div class="talkItemContainer">
-    <room-capacity-indicator v-if="!!roomStats" :talk="talk" :room-stats="roomStats" />
+    <room-capacity-indicator v-if="!!roomStats" :event-id="eventId" :talk="talk" :room-stats="roomStats" :show-unknown-capacity="isUpcomingTalk" />
     <ion-card class="talkCard"
               v-if="talkNotes"
               :class="{ container: true, '_is-highlighted': isHighlighted(talk, talkNotes), '_has-favorited': talkNotes.isFavorite, '_has-to-watch-later': talkNotes.watchLater }"
@@ -117,6 +117,11 @@ const props = defineProps({
   roomStats: {
       required: false,
       type: Object as PropType<VoxxrinRoomStats|undefined>
+  },
+  isUpcomingTalk: {
+      required: false,
+      type: Boolean,
+      default: undefined
   },
   talkNotes: {
       required: false,

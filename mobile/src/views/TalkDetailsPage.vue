@@ -32,7 +32,7 @@
       </ion-header>
 
       <talk-details-header :conf-descriptor="confDescriptor" :talk="detailedTalk">
-        <room-capacity-indicator :talk="detailedTalk" :room-stats="firestoreRoomStatsRef" :bottom-rounded="true" />
+        <room-capacity-indicator :event-id="eventId" :talk="detailedTalk" :room-stats="firestoreRoomStatsRef" :bottom-rounded="true" :show-unknown-capacity="false" />
       </talk-details-header>
 
       <div class="talkDetails-tags" v-if="detailedTalk?.tags.length">

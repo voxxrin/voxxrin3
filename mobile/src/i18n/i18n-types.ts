@@ -519,6 +519,10 @@ type RootTranslation = {
 	 */
 	No_seats_available: string
 	/**
+	 * N​o​ ​r​o​o​m​ ​c​a​p​a​c​i​t​y​ ​p​r​o​v​i​d​e​d​ ​y​e​t
+	 */
+	Unknown_room_capacity: string
+	/**
 	 * {​m​i​n​u​t​e​s​}​ ​m​i​n​u​t​e​{​{​s​}​}​ ​a​g​o
 	 * @param {number} minutes
 	 */
@@ -1038,6 +1042,10 @@ export type TranslationFunctions = {
 	 * No seats available
 	 */
 	No_seats_available: () => LocalizedString
+	/**
+	 * No room capacity provided yet
+	 */
+	Unknown_room_capacity: () => LocalizedString
 	/**
 	 * {minutes} minute{{s}} ago
 	 */

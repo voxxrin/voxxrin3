@@ -2,6 +2,7 @@
   <slot name="iterator" :timeslot="timeslot" :index="index"
         v-for="(timeslot, index) in timeslotsRef" :key="timeslot.id.value"
         :progress="progressesByTimeslotId.get(timeslot.id.value)"
+        :upcomingRawTalkIds="upcomingRawTalkIdsRef"
   />
 
   <no-results v-if="searchTerms && !timeslotsRef.length" illu-path="images/svg/illu-no-results-talk.svg">
@@ -16,17 +17,20 @@ import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor"
 import {DayId} from "@/models/VoxxrinDay";
 import {LabelledTimeslotWithFeedback, useLabelledTimeslotWithFeedbacks} from "@/state/useSchedule";
 import {
-    getTimeslotLabel,
-    getTimeslotTimingProgress, TimeslotTimingProgress, toFilteredLabelledTimeslotWithFeedback,
-    VoxxrinDailySchedule,
-    VoxxrinScheduleTimeSlot
+  getTemporallyUpcomingTalkIds,
+  getTimeslotLabel,
+  getTimeslotTimingProgress, TimeslotTimingProgress, toFilteredLabelledTimeslotWithFeedback,
+  VoxxrinDailySchedule,
+  VoxxrinScheduleTimeSlot
 } from "@/models/VoxxrinSchedule";
 import {useUserFeedbacks} from "@/state/useUserFeedbacks";
-import {useCurrentClock} from "@/state/useCurrentClock";
+import {useCurrentClock, watchClock} from "@/state/useCurrentClock";
 import {useInterval} from "@/views/vue-utils";
 import {PERF_LOGGER, Logger} from "@/services/Logger";
 import NoResults from "@/components/ui/NoResults.vue";
 import {typesafeI18n} from "@/i18n/i18n-vue";
+import {Temporal} from "temporal-polyfill";
+import {TALK_COMPLETION_THRESHOLD} from "../../../../shared/constants/shared-constants.utils";
 
 const LOGGER = Logger.named("TimeslotIterator");
 
@@ -112,17 +116,24 @@ function recomputeMissingFeedbacksList() {
     });
 }
 
+const upcomingRawTalkIdsRef = ref([] as string[])
 const progressesByTimeslotId = ref(new Map<string, TimeslotTimingProgress>())
-function refreshTimeslotProgresses() {
-    const timeslots = toValue(timeslotsRef);
-    const now = useCurrentClock().zonedDateTimeISO()
+function refreshTimeslotProgresses(timeslots: LabelledTimeslotWithFeedback[], now: Temporal.ZonedDateTime) {
     timeslots.forEach(timeslot => {
         progressesByTimeslotId.value.set(timeslot.id.value, getTimeslotTimingProgress(timeslot, now))
     })
+
+    const upcomingTalkIds = getTemporallyUpcomingTalkIds(timeslots, now, TALK_COMPLETION_THRESHOLD);
+    const upcomingRawTalkIds = Array.from(new Set(upcomingTalkIds.map(id => id.value))).sort()
+    if(upcomingRawTalkIds.join(",") !== upcomingRawTalkIdsRef.value.join(",")) {
+      upcomingRawTalkIdsRef.value = upcomingRawTalkIds;
+    }
 }
-useInterval(() => refreshTimeslotProgresses(), {freq:"high-frequency"}, { immediate: true });
-watch([timeslotsRef], ([timeslots]) => {
-    refreshTimeslotProgresses();
+const nowRef = watchClock({ freq: "high-frequency" })
+watch([timeslotsRef, nowRef], ([timeslots, now]) => {
+  if(now) {
+    refreshTimeslotProgresses(timeslots, now);
+  }
 })
 
 </script>

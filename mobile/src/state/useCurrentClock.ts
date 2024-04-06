@@ -3,7 +3,7 @@ import {ISODatetime} from "../../../shared/type-utils";
 import {match, P} from "ts-pattern";
 import {Logger} from "@/services/Logger";
 import {useInterval, UseIntervalDurationOpts} from "@/views/vue-utils";
-import {ref} from "vue";
+import {computed, ref, toValue} from "vue";
 
 const LOGGER = Logger.named("useCurrentClock");
 
@@ -30,7 +30,7 @@ export function watchClock(
   frequency: UseIntervalDurationOpts,
   callback: (datetime: Temporal.ZonedDateTime) => void = () => null,
   updatePredicate: () => boolean = () => true
-): Readonly<typeof highFrequencyNowRef> {
+) {
   const clockRef = ref<Temporal.ZonedDateTime|undefined>(undefined)
   useInterval(() => {
     if(updatePredicate()) {
@@ -39,7 +39,8 @@ export function watchClock(
     }
   }, frequency, { immediate: true })
 
-  return clockRef;
+  // returning a readonly ref
+  return computed(() => toValue(clockRef));
 }
 
 export async function overrideCurrentClock(clock: Clock, callback: (() => Promise<void>)|undefined) {

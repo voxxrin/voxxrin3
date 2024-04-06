@@ -1,20 +1,15 @@
 <template>
-  <div v-if="enabledRoomStats" class="above-talkCard"
+  <div v-if="capacityStatusRef && roomCapacityIndicatorShownRef" class="above-talkCard"
        :style="{
-          '--lt60-color': '#73a027',
-          '--gt60-lt80-color': '#ff6a00',
-          '--gt80-lt99-color': '#cc0f0f',
-          '--gt99-color': '#cc0f0f',
+          '--status-level1-color': '#73a027',
+          '--status-level2-color': '#ff6a00',
+          '--status-level3-color': '#cc0f0f',
+          '--status-full-color': '#cc0f0f',
+          '--status-unknown-color': 'transparent',
           '--border-radius': bottomRounded ? '12px 12px 12px 12px' : '12px 12px 0px 0px',
-          '--room-stats-lightColor':
-            enabledRoomStats.capacityFillingRatio < 0.60 ? 'var(--lt60-color)'
-            : enabledRoomStats.capacityFillingRatio < 0.80 ? 'var(--gt60-lt80-color)'
-            : enabledRoomStats.capacityFillingRatio < 0.99 ? 'var(--gt80-lt99-color)' : 'var(--gt99-color)',
-       }"  :class="{ 'level1': enabledRoomStats.capacityFillingRatio < 0.60,
-                'level2':enabledRoomStats.capacityFillingRatio >= 0.60 && enabledRoomStats.capacityFillingRatio < 0.80,
-                'level3': enabledRoomStats.capacityFillingRatio >= 0.80 && enabledRoomStats.capacityFillingRatio < 0.99,
-                'full': enabledRoomStats.capacityFillingRatio >= 0.99}">
-
+          '--room-stats-lightColor': `var(--status-${capacityStatusRef.id}-color)`,
+       }"
+       :class="`status-${capacityStatusRef.id}`">
     <ion-alert
         :is-open="indicatorExplanationPopupOpened"
         @didDismiss="setIndicatorExplanationPopupOpened(false)"
@@ -26,17 +21,17 @@
       <ul class='roomCapacityLegend'>
         <li>
            <ion-icon src='./assets/images/svg/room-gauge-indicator-1.svg' aria-hidden='true'></ion-icon>
-            <div><span class='range lt60'>&lt; 60%</span> ${LL.Still_plenty_of_seats_available()}</div>
+            <div><span class='range level1'>${LEVELS.level1.rangeLabel}</span> ${LL.Still_plenty_of_seats_available()}</div>
         </li>
         <li>
           <ion-icon src='/assets/images/svg/room-gauge-indicator-2.svg' aria-hidden='true'></ion-icon>
-           <div><span class='range gt60_lt80'>60% -&gt; 80%</span> ${LL.Room_is_becoming_crowded()}</li></div>
+           <div><span class='range level2'>${LEVELS.level2.rangeLabel}</span> ${LL.Room_is_becoming_crowded()}</li></div>
         <li>
           <ion-icon src='./assets/images/svg/room-gauge-indicator-3.svg' aria-hidden='true'></ion-icon>
-           <div><span class='range gt80_lt99'>80% -&gt; 99% </span> ${LL.Only_few_seats_left()}</li></div>
+           <div><span class='range level3'>${LEVELS.level3.rangeLabel}</span> ${LL.Only_few_seats_left()}</li></div>
         <li>
           <ion-icon class='full-indicator-legend' src='./assets/images/svg/room-gauge-indicator-full.svg' aria-hidden='true'></ion-icon>
-          <div><span class='range gt99'>&gt;= 99%</span> ${LL.No_seats_available()}</div>
+          <div><span class='range full'>${LEVELS.full.rangeLabel}</span> ${LL.No_seats_available()}</div>
         </li>
       </ul>`"
     ></ion-alert>
@@ -47,17 +42,16 @@
               <path class="level2-segment" d="m17.47,13.43l-6.86-7.44c-.2.2-.4.39-.58.59-2.12,2.28-3.66,4.99-4.53,7.94-.62,2.11-.86,4.3-.75,6.47h7.82c.77-3,2.5-5.69,4.91-7.57Z"/>
               <path class="level3-segment" d="m26.93.07c-3.14-.25-6.3.21-9.23,1.34-.8.31-1.57.67-2.32,1.06l7.78,8.44c3.71-.64,8.09.3,12.66,3.62V2.84C33.11,1.26,30.07.31,26.93.07Z"/>
         </svg>
-        <ion-icon class="full-indicator" :icon="sad" aria-hidden="true"></ion-icon>
+        <ion-icon class="indicator full" :icon="sad" aria-hidden="true"></ion-icon>
+        <ion-icon class="indicator unknown" :icon="help" aria-hidden="true"></ion-icon>
       </span>
     <div class="above-talkCard-txt">
-      <span v-if="enabledRoomStats.capacityFillingRatio < 0.60">{{ LL.Still_plenty_of_seats_available() }}</span>
-      <span v-if="enabledRoomStats.capacityFillingRatio >= 0.60 && enabledRoomStats.capacityFillingRatio < 0.80">{{ LL.Room_is_becoming_crowded() }}</span>
-      <span v-if="enabledRoomStats.capacityFillingRatio >= 0.80 && enabledRoomStats.capacityFillingRatio < 0.99">{{ LL.Only_few_seats_left() }}</span>
-      <span v-if="enabledRoomStats.capacityFillingRatio >= 0.99">{{ LL.No_seats_available() }}</span>
-      <span class="since" v-if="enabledRoomStats.since === 0">{{LL.few_seconds_ago()}}</span>
-      <span class="since" v-if="enabledRoomStats.since !== 0">{{LL.xx_minutes_ago({ minutes: enabledRoomStats.since })}}</span>
+      <span :style="{
+        fontStyle: capacityStatusRef.id === 'unknown' ? 'italic':'normal'
+      }">{{capacityStatusRef.label}}</span>
+      <span v-if="sinceLabelRef.shown" class="since">{{sinceLabelRef.label}}</span>
     </div>
-    <ion-button :aria-label="LL.Infos()" class="above-talkCard-info" @click="setIndicatorExplanationPopupOpened(true)">
+    <ion-button v-if="capacityStatusRef.id !== 'unknown'" :aria-label="LL.Infos()" class="above-talkCard-info" @click="setIndicatorExplanationPopupOpened(true)">
       <ion-icon :src="'/assets/icons/line/info-circle-line.svg'"></ion-icon>
     </ion-button>
     <span class="above-talkCard-bg"></span>
@@ -66,22 +60,41 @@
 
 <script setup lang="ts">
 import {typesafeI18n} from "@/i18n/i18n-vue";
-import {computed, onMounted, PropType} from "vue";
+import {computed, PropType, toRef, toValue} from "vue";
 import {IonAlert, IonIcon} from "@ionic/vue";
 import {VoxxrinTalk} from "@/models/VoxxrinTalk";
-import {VoxxrinRoomStats} from "@/models/VoxxrinRoomStats";
+import {VoxxrinRoomStats, VoxxrinUnknownRoomStats} from "@/models/VoxxrinRoomStats";
 import {managedRef as ref, useInterval} from "@/views/vue-utils";
-import {Temporal} from "temporal-polyfill";
-import {useCurrentClock} from "@/state/useCurrentClock";
-import {sad} from "ionicons/icons";
 import {watchClock} from "@/state/useCurrentClock";
+import {sad, help} from "ionicons/icons";
+import {match, P} from "ts-pattern";
+import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
+import {EventId} from "@/models/VoxxrinEvent";
+import {Temporal} from "temporal-polyfill";
 
 const { LL } = typesafeI18n()
 
+const LEVELS = {
+  unknown: { id: 'unknown', rangeLabel: `Unknown`, label: LL.value.Unknown_room_capacity() },
+  level1: { id: 'level1', upperBoundExcluded: 0.60, rangeLabel: `&lt; 60%`, label: LL.value.Still_plenty_of_seats_available() },
+  level2: { id: 'level2', upperBoundExcluded: 0.80, rangeLabel: `60% -&gt; 80%`, label: LL.value.Room_is_becoming_crowded() },
+  level3: { id: 'level3', upperBoundExcluded: 0.99, rangeLabel: `80% -&gt; 99% `, label: LL.value.Only_few_seats_left() },
+  full: { id: 'full', upperBoundIncluded: 1, rangeLabel: `&gt;= 99%`, label: LL.value.No_seats_available() },
+} as const;
+
 const props = defineProps({
+  eventId: {
+    required: true,
+    type: Object as PropType<EventId>
+  },
   talk: {
     required: true,
     type: Object as PropType<VoxxrinTalk>
+  },
+  showUnknownCapacity: {
+    required: false,
+    type: Boolean,
+    default: undefined
   },
   roomStats: {
     required: false,
@@ -96,25 +109,82 @@ const props = defineProps({
 // Updating clockRef only if some roomStats have been made available
 const clockRef = watchClock({freq: 'high-frequency'}, () => null, () => !!props.roomStats);
 
-const enabledRoomStats = computed(() => {
-  const talkRoomId = props.talk.room.id;
-  const talkId = props.talk.id;
-  const roomStats = props.roomStats;
-  const now = clockRef.value
+const capacityStatusRef = computed(() => {
+  const maybeRoomStats = props.roomStats,
+    now = toValue(clockRef)
 
-  if(roomStats && now
-      && roomStats.capacityFillingRatio !== 'unknown'
-      && roomStats.roomId.isSameThan(talkRoomId)
-      && roomStats.valid.forTalkId.isSameThan(talkId)
-      && Date.parse(roomStats.valid.until) >= now.epochMilliseconds
-  ){
-    return {
-      ...roomStats,
-      since: Math.max(Math.round(now.toInstant().since(roomStats.persistedAt).total('minutes')), 0)
-    };
-  } else {
+  if(!maybeRoomStats) {
     return undefined;
   }
+
+  const unknownRoomStats: VoxxrinUnknownRoomStats = {
+    ...maybeRoomStats,
+    capacityFillingRatio: "unknown",
+  }
+  const unknownCapacityStatus = { ...unknownRoomStats, ...LEVELS.unknown } as const;
+
+  if(!now || maybeRoomStats.capacityFillingRatio === 'unknown'
+    || Date.parse(maybeRoomStats.valid.until) < now.epochMilliseconds
+  ) {
+
+    return unknownCapacityStatus;
+  }
+
+  const capacityStatus = match(maybeRoomStats)
+    .with({ capacityFillingRatio: P.number.lt(LEVELS.level1.upperBoundExcluded) }, (roomStats) => ({ ...roomStats, ...LEVELS.level1 } as const))
+    .with({ capacityFillingRatio: P.number.lt(LEVELS.level2.upperBoundExcluded) }, (roomStats) => ({ ...roomStats, ...LEVELS.level2 } as const))
+    .with({ capacityFillingRatio: P.number.lt(LEVELS.level3.upperBoundExcluded) }, (roomStats) => ({ ...roomStats, ...LEVELS.level3 } as const))
+    .with({ capacityFillingRatio: P.number.lte(LEVELS.full.upperBoundIncluded) }, (roomStats) => ({ ...roomStats, ...LEVELS.full } as const))
+    .otherwise((roomStats) => unknownCapacityStatus);
+
+  return capacityStatus;
+})
+
+const sinceLabelRef = computed(() => {
+  const capacityStatus = toValue(capacityStatusRef),
+     now = toValue(clockRef)
+
+  if(!capacityStatus || !now || capacityStatus.id === 'unknown') {
+    return { shown: false } as const;
+  }
+
+  const sinceMinutes = Math.max(Math.round(now.toInstant().since(capacityStatus.persistedAt).total('minutes')), 0)
+
+  return {
+    shown: true,
+    label: sinceMinutes === 0
+      ? LL.value.few_seconds_ago()
+      : LL.value.xx_minutes_ago({minutes: sinceMinutes})
+  } as const;
+})
+
+const { conferenceDescriptor: confDescriptorRef } = useSharedConferenceDescriptor(toRef(() => props.eventId))
+const roomCapacityIndicatorShownRef = computed(() => {
+  const capacityStatus = toValue(capacityStatusRef),
+    showUnknownCapacity = toValue(() => props.showUnknownCapacity),
+    confDescriptor = toValue(confDescriptorRef),
+    now = toValue(clockRef),
+    roomStats = props.roomStats,
+    talkRoomId = props.talk.room.id,
+    talkId = props.talk.id;
+
+  if(!capacityStatus || !confDescriptor || !now || !roomStats
+    || !roomStats.roomId.isSameThan(talkRoomId)
+  ) {
+    return false;
+  }
+
+  if(Temporal.ZonedDateTime.compare(confDescriptor.start, now) !== -1) {
+    // No need to show indicator before the conference starts
+    return false;
+  }
+
+  return match(capacityStatus)
+      .with({ capacityFillingRatio: 'unknown' }, (unknownCapacityStatus) => showUnknownCapacity)
+      .otherwise(knownCapacityStatus =>
+        knownCapacityStatus.valid.forTalkId.isSameThan(talkId)
+        // && now.epochMilliseconds <= Date.parse(knownCapacityStatus.valid.until)
+      )
 })
 
 const indicatorExplanationPopupOpened = ref(false);
@@ -168,10 +238,10 @@ function setIndicatorExplanationPopupOpened(opened: boolean) {
       display: block;
       font-weight: 900;
 
-      &.lt60 { color: #73a027}
-      &.gt60_lt80 {color: #ff6a00}
-      &.gt80_lt99 { color: #cc0f0f}
-      &.gt99 {
+      &.level1 { color: #73a027}
+      &.level2 {color: #ff6a00}
+      &.level3 { color: #cc0f0f}
+      &.full {
         color: var(--app-black);
 
         @media (prefers-color-scheme: dark) {
@@ -234,30 +304,29 @@ function setIndicatorExplanationPopupOpened(opened: boolean) {
     }
   }
 
-  &.full {
+  &.status-full, &.status-unknown {
     svg {
       display: none;
     }
-
-    .full-indicator {
-      display: block;
-    }
   }
-  &.level3 {
+  &.status-full .full.indicator, &.status-unknown .unknown.indicator {
+    display: block;
+  }
+  &.status-level3 {
     .level3-segment, .level2-segment, .level1-segment {
       fill: var(--app-red);
       fill-opacity: 1;
     }
     .above-talkCard-bg { background: url('/assets/images/jpg/room-capacity-3.jpg');}
   }
-  &.level2 {
+  &.status-level2 {
     .level2-segment, .level1-segment {
       fill: var(--app-yellow);
       fill-opacity: 1;
     }
     .above-talkCard-bg { background: url('/assets/images/jpg/room-capacity-2.jpg');}
   }
-  &.level1 {
+  &.status-level1 {
     .level1-segment {
       fill: var(--app-green);
       fill-opacity: 1;
@@ -270,7 +339,7 @@ function setIndicatorExplanationPopupOpened(opened: boolean) {
     display: flex;
     z-index: 1;
 
-    .full-indicator {
+    .indicator {
       display: none;
       color: var(--app-white);
       font-size: 28px;

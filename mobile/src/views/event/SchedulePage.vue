@@ -45,7 +45,7 @@
                             :daily-schedule="currentSchedule" :search-terms="searchTermsRef"
                             @timeslots-list-updated="(displayedTimeslots) => displayedTimeslotsRef = displayedTimeslots"
                             @missing-feedback-past-timeslots-updated="updatedMissingTimeslots => missingFeedbacksPastTimeslots = updatedMissingTimeslots">
-          <template #iterator="{ timeslot, index: timeslotIndex, progress }">
+          <template #iterator="{ timeslot, index: timeslotIndex, progress, upcomingRawTalkIds }">
             <time-slot-accordion
                 :animation-delay="timeslotIndex*TimeslotAnimations.ANIMATION_BASE_DELAY.total('milliseconds')"
                 :timeslot-feedback="timeslot.feedback" :timeslot="timeslot" :conf-descriptor="confDescriptor"
@@ -59,7 +59,9 @@
                                               :talks="timeslot.talks">
                   <template #talk="{ talk }">
                     <ion-item class="listTalks-item" role="listitem">
-                      <schedule-talk :talk="talk" :talk-stats="talkStatsRefByTalkId.get(talk.id.value)" :room-stats="roomsStatsRefByRoomId?.[talk.room.id.value]" :talk-notes="userEventTalkNotesRef.get(talk.id.value)" @talkClicked="openTalkDetails($event)" :is-highlighted="(talk, talkNotes) => talkNotes.isFavorite" :conf-descriptor="confDescriptor">
+                      <schedule-talk :talk="talk" :talk-stats="talkStatsRefByTalkId.get(talk.id.value)"
+                                     :room-stats="roomsStatsRefByRoomId?.[talk.room.id.value]" :is-upcoming-talk="upcomingRawTalkIds.includes(talk.id.value)"
+                                     :talk-notes="userEventTalkNotesRef.get(talk.id.value)" @talkClicked="openTalkDetails($event)" :is-highlighted="(talk, talkNotes) => talkNotes.isFavorite" :conf-descriptor="confDescriptor">
                         <template #upper-right="{ talk }">
                           <talk-room :talk="talk" :conf-descriptor="confDescriptor" />
                         </template>

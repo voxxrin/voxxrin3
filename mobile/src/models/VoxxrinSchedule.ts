@@ -1,8 +1,8 @@
 import {
-    BreakTimeSlot,
-    DailySchedule,
-    TalksTimeSlot,
-    TimeSlotBase
+  BreakTimeSlot,
+  DailySchedule,
+  TalksTimeSlot,
+  TimeSlotBase
 } from "../../../shared/daily-schedule.firestore";
 import {
     createVoxxrinTalkFromFirestore, filterTalksMatching, TalkId,
@@ -74,6 +74,42 @@ export function getTimeslotTimingProgress(timeslot: VoxxrinScheduleTimeSlot, now
                 )
             };
         })
+}
+
+export function getRoomsTalksSchedule(timeslots: VoxxrinScheduleTimeSlot[]) {
+  const perRoomIdTalks = new Map<string, Array<{ talk: VoxxrinTalk, timeslot: VoxxrinScheduleTalksTimeSlot }>>()
+
+  // Important note: we consider timeslots are sorted (in chronological order)
+  // and thus are considering that talks per room will (implicitely) use this same chronological ordering
+  for(const timeslot of timeslots) {
+    if(timeslot.type === 'talks') {
+      for(const talk of timeslot.talks) {
+        perRoomIdTalks.set(talk.room.id.value, (perRoomIdTalks.get(talk.room.id.value) || []).concat({ talk, timeslot }))
+      }
+    }
+  }
+
+  return perRoomIdTalks;
+}
+
+export function getTemporallyUpcomingTalkIds(timeslots: VoxxrinScheduleTimeSlot[], now: Temporal.ZonedDateTime, talkCompletionThreshold: number = 1.0): TalkId[] {
+  const perRoomIdTalksSchedule = getRoomsTalksSchedule(timeslots)
+
+  const roomIds = Array.from(
+      perRoomIdTalksSchedule.keys()
+    ).sort() // Being deterministic on room ordering is important (for caching purposes)
+
+  return roomIds.reduce((upcomingTalkIds, roomId) => {
+    const ongoingOrUpcomingTalks = perRoomIdTalksSchedule.get(roomId)!.filter(talkAndTimeslot => {
+      const talkDuration = talkAndTimeslot.timeslot.end.epochMilliseconds - talkAndTimeslot.timeslot.start.epochMilliseconds
+      return now.epochMilliseconds < talkAndTimeslot.timeslot.start.epochMilliseconds + talkDuration*talkCompletionThreshold
+    })
+
+    if(ongoingOrUpcomingTalks.length) {
+      upcomingTalkIds.push(ongoingOrUpcomingTalks[0].talk.id);
+    }
+    return upcomingTalkIds;
+  }, [] as TalkId[])
 }
 
 export function getTimeslotLabel(timeslot: VoxxrinScheduleTimeSlot) {
