@@ -59,10 +59,7 @@
         </vox-divider>
         <ion-list class="talkDetails-speakers-list">
           <ion-item v-for="(speaker, index) in detailedTalk?.speakers" :key="speaker.id.value">
-            <ion-avatar>
-              <img :src="speaker.photoUrl" v-if="speaker.photoUrl" :alt="LL.Avatar_Speaker() + ' ' + speaker.fullName"/>
-              <img src="/assets/images/svg/avatar-shadow.svg" v-if="!speaker.photoUrl" aria-hidden="true"/>
-            </ion-avatar>
+            <speaker-thumbnail size="64px" :is-highlighted="false" :speaker="speaker" />
             <div class="speakerInfo">
               <div class="speakerInfo-name">
                 {{speaker.fullName}}
@@ -104,6 +101,7 @@ import {useEventTalkStats} from "@/state/useEventTalkStats";
 import {Logger} from "@/services/Logger";
 import RoomCapacityIndicator from "@/components/rooms/RoomCapacityIndicator.vue";
 import {useRoomStats} from "@/state/useRoomsStats";
+import SpeakerThumbnail from "@/components/speaker/SpeakerThumbnail.vue";
 
 const LOGGER = Logger.named("TalkDetailsPage");
 
@@ -350,16 +348,6 @@ const {firestoreRoomStatsRef } = useRoomStats(eventId, toRef(() => detailedTalk.
 
           &:last-child {
             --border-style: none;
-          }
-
-          ion-avatar {
-            max-height: 64px;
-            min-height: 64px;
-            min-width: 64px;
-            max-width: 64px;
-            margin-top: 0;
-            margin-right: var(--app-gutters);
-            border: 2px solid var(--app-primary);
           }
 
           .speakerInfo {
