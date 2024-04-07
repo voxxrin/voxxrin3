@@ -2,9 +2,12 @@
   <ion-page>
     <ion-content :fullscreen="true" v-if="confDescriptor">
       <current-event-header v-if="!hideHeader" :conf-descriptor="confDescriptor"/>
-      <ion-toast position="top" style="--max-width: 70%"
+      <ion-toast position="top" style="--max-width: 70%; --button-color: var(--color)"
            :message="preparingOfflineScheduleToastMessageRef"
            :is-open="preparingOfflineScheduleToastIsOpenRef"
+           :buttons="[{text: 'Dismiss', role: LL.Cancel() }]"
+           layout="stacked"
+           @didDismiss="preparingOfflineScheduleToastIsOpenRef = false"
       ></ion-toast>
       <ion-header class="toolbarHeader">
         <ion-toolbar>

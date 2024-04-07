@@ -99,6 +99,10 @@ type RootTranslation = {
 	 */
 	Cancel: string
 	/**
+	 * D​i​s​m​i​s​s
+	 */
+	Dismiss: string
+	/**
 	 * S​c​h​e​d​u​l​e
 	 */
 	Schedule: string
@@ -483,6 +487,14 @@ type RootTranslation = {
 	 */
 	Logout: string
 	/**
+	 * P​r​e​l​o​a​d​i​n​g​ ​e​v​e​n​t​ ​a​s​s​e​t​s​ ​f​o​r​ ​o​f​f​l​i​n​e​ ​u​s​a​g​e
+	 */
+	Preloading_event_assets_for_offline_usage: string
+	/**
+	 * T​h​i​s​ ​c​a​n​ ​s​l​o​w​ ​d​o​w​n​ ​t​h​e​ ​a​p​p​ ​a​ ​l​i​t​t​l​e​ ​b​i​t​ ​d​u​r​i​n​g​ ​p​r​e​-​l​o​a​d​i​n​g
+	 */
+	This_can_slow_down_the_app_a_little_bit_during_pre_loading: string
+	/**
 	 * A​n​o​n​y​m​o​u​s​ ​(​p​r​i​v​a​t​e​)​ ​u​s​e​r​ ​t​o​k​e​n
 	 */
 	Anonymous_private_user_id: string
@@ -634,6 +646,10 @@ export type TranslationFunctions = {
 	 * Cancel
 	 */
 	Cancel: () => LocalizedString
+	/**
+	 * Dismiss
+	 */
+	Dismiss: () => LocalizedString
 	/**
 	 * Schedule
 	 */
@@ -1014,6 +1030,14 @@ export type TranslationFunctions = {
 	 * Logout
 	 */
 	Logout: () => LocalizedString
+	/**
+	 * Preloading event assets for offline usage
+	 */
+	Preloading_event_assets_for_offline_usage: () => LocalizedString
+	/**
+	 * This can slow down the app a little bit during pre-loading
+	 */
+	This_can_slow_down_the_app_a_little_bit_during_pre_loading: () => LocalizedString
 	/**
 	 * Anonymous (private) user token
 	 */

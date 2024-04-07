@@ -19,6 +19,7 @@ import {checkCache, preloadPicture} from "@/services/Cachings";
 import {Temporal} from "temporal-polyfill";
 import {CompletablePromiseQueue} from "@/models/utils";
 import {prepareSchedules} from "@/state/useSchedule";
+import {typesafeI18n} from "@/i18n/i18n-vue";
 
 function getConferenceDescriptorDoc(eventId: EventId|undefined) {
     if(!eventId || !eventId.value) {
@@ -103,6 +104,7 @@ export function useOfflineEventPreparation(
   preparingOfflineScheduleToastIsOpenRef: Ref<boolean>,
 ) {
 
+  const {LL} = typesafeI18n()
   return new Promise(resolve => {
     const LOGGER = Logger.named("useOfflineEventPreparation");
 
@@ -127,7 +129,7 @@ export function useOfflineEventPreparation(
               const promisesQueue = new CompletablePromiseQueue({ concurrency: 20 })
 
               const progressInterval = setInterval(() => {
-                preparingOfflineScheduleToastMessageRef.value = `Preloading event assets for offline usage <u>${promisesQueue.completed} / ${promisesQueue.total}</u>...<br/><em>This can slow down the app a little bit during pre-loading...</em>`
+                preparingOfflineScheduleToastMessageRef.value = `${LL.value.Preloading_event_assets_for_offline_usage()}: <u>${promisesQueue.completed} / ${promisesQueue.total}</u>...<br/><em>${LL.value.This_can_slow_down_the_app_a_little_bit_during_pre_loading()}...</em>`
               }, 500)
 
               preparingOfflineScheduleToastIsOpenRef.value = true
