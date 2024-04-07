@@ -15,7 +15,7 @@ import {useOverridenEventDescriptorProperties} from "@/state/useDevUtilities";
 import {User} from "firebase/auth";
 import {extractTalksFromSchedule, VoxxrinDailySchedule} from "@/models/VoxxrinSchedule";
 import {VoxxrinDay} from "@/models/VoxxrinDay";
-import {checkCache} from "@/services/Cachings";
+import {checkCache, preloadPicture} from "@/services/Cachings";
 import {Temporal} from "temporal-polyfill";
 import {CompletablePromiseQueue} from "@/models/utils";
 import {prepareSchedules} from "@/state/useSchedule";
@@ -69,6 +69,31 @@ export function useConferenceDescriptor(
 export const useSharedConferenceDescriptor = createSharedComposable(useConferenceDescriptor);
 
 
+async function prepareEventInfos(user: User, confDescriptor: VoxxrinConferenceDescriptor, promisesQueue: CompletablePromiseQueue) {
+  PERF_LOGGER.debug(() => `prepareEventInfos(userId=${user.uid}, eventId=${confDescriptor.id.value})`);
+
+  await checkCache(`offlineEventInfos(eventId=${confDescriptor.id.value})(floorPlans)`, Temporal.Duration.from({ hours: 6 }), async () => {
+    PERF_LOGGER.debug(() => `offlineEventInfos(eventId=${confDescriptor.id.value})(floorPlans)`)
+    promisesQueue.addAll(
+      (confDescriptor.infos?.floorPlans || [])
+        .map(floorPlan => () => preloadPicture(floorPlan.pictureUrl)
+        ),{ priority: 1000 })
+  });
+
+  await checkCache(`offlineEventInfos(eventId=${confDescriptor.id.value})(sponsorships)`, Temporal.Duration.from({ hours: 24 }), async () => {
+    PERF_LOGGER.debug(() => `offlineEventInfos(eventId=${confDescriptor.id.value})(sponsorships)`)
+    const sponsorships = (confDescriptor.infos?.sponsors || [])
+      .reduce(
+        (sponsorships, sponsorType) => sponsorships.concat(...sponsorType.sponsorships),
+        [] as Array<{logoUrl: string}>
+      );
+
+    promisesQueue.addAll(
+      sponsorships.map(sponsorship => () => preloadPicture(sponsorship.logoUrl)
+      ),{ priority: 1000 })
+  });
+}
+
 export function useOfflineEventPreparation(
   userRef: Ref<User|null|undefined>,
   confDescriptorRef: Ref<VoxxrinConferenceDescriptor | undefined>,
@@ -95,7 +120,7 @@ export function useOfflineEventPreparation(
           watchCleaner();
 
           await checkCache(`useOfflineEventPreparation(eventId=${confDescriptor.id.value})`, Temporal.Duration.from({ hours: 6 }), async () => {
-            return new Promise(schedulePreparationResolved => {
+            return new Promise(async schedulePreparationResolved => {
               const otherDayIds = availableDays.filter(availableDay => !availableDay.id.isSameThan(currentSchedule.day)).map(d => d.id);
               LOGGER.info(() => `Preparing schedule data for other days than currently selected one (${otherDayIds.map(id => id.value).join(", ")})`)
 
@@ -114,9 +139,8 @@ export function useOfflineEventPreparation(
                 schedulePreparationResolved();
               })
 
-              promisesQueue.add(async () => {
-                await prepareSchedules(user, confDescriptor, currentSchedule.day, extractTalksFromSchedule(currentSchedule), otherDayIds, promisesQueue);
-              }, { priority: 1000 })
+              await prepareEventInfos(user, confDescriptor, promisesQueue)
+              await prepareSchedules(user, confDescriptor, currentSchedule.day, extractTalksFromSchedule(currentSchedule), otherDayIds, promisesQueue);
             })
           });
 
