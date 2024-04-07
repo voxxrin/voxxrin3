@@ -143,6 +143,10 @@ export function useOfflineEventPreparation(
 
               await prepareEventInfos(user, confDescriptor, promisesQueue)
               await prepareSchedules(user, confDescriptor, currentSchedule.day, extractTalksFromSchedule(currentSchedule), otherDayIds, promisesQueue);
+
+              // adding a "fake" promise queue task so that we trigger the 'idle' event above if no task is added to the queue
+              // during prepare* functions above...
+              promisesQueue.add(() => new Promise(resolve => setTimeout(resolve, 500)))
             })
           });
 
