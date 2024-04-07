@@ -102,7 +102,7 @@ function backButtonClicked() {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 18px 0;
+      padding: 12px 0 18px 0;
       font-weight: bold;
 
       &-title {
