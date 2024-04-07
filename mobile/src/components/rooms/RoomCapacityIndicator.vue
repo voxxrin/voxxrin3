@@ -45,7 +45,7 @@
               <path class="level3-segment" d="m26.93.07c-3.14-.25-6.3.21-9.23,1.34-.8.31-1.57.67-2.32,1.06l7.78,8.44c3.71-.64,8.09.3,12.66,3.62V2.84C33.11,1.26,30.07.31,26.93.07Z"/>
         </svg>
         <ion-icon class="indicator full" :icon="sad" aria-hidden="true"></ion-icon>
-        <ion-icon class="indicator unknown" :icon="help" aria-hidden="true"></ion-icon>
+        <ion-icon class="indicator unknown" :icon="helpCircleOutline" aria-hidden="true"></ion-icon>
       </span>
     <div class="above-talkCard-txt">
       <span :style="{
@@ -69,7 +69,7 @@ import {VoxxrinTalk} from "@/models/VoxxrinTalk";
 import {VoxxrinRoomStats, VoxxrinUnknownRoomStats} from "@/models/VoxxrinRoomStats";
 import {managedRef as ref, useInterval} from "@/views/vue-utils";
 import {watchClock} from "@/state/useCurrentClock";
-import {sad, help} from "ionicons/icons";
+import {sad, helpCircleOutline} from "ionicons/icons";
 import {match, P} from "ts-pattern";
 import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
 import {EventId} from "@/models/VoxxrinEvent";
@@ -254,6 +254,7 @@ function setIndicatorExplanationPopupOpened(opened: boolean) {
     }
   }
 }
+
 .above-talkCard {
   position: relative;
   display: flex;
@@ -318,6 +319,22 @@ function setIndicatorExplanationPopupOpened(opened: boolean) {
     }
   }
 
+
+  &.status-unknown {
+    background: rgba(var(--app-primary-rgb), 0.15);
+    border: 1px solid rgba(var(--app-primary-rgb), 0.1);
+
+    ion-icon {
+      color: var(--app-primary);
+    }
+    .above-talkCard-txt {
+      color: var(--app-primary);
+    }
+
+    &:after {
+      display: none;
+    }
+  }
   &.status-full, &.status-unknown {
     svg {
       display: none;
