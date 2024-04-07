@@ -8,6 +8,13 @@
   }
 }
 
+
+/* Fix color icon for specific stat accordion */
+._chronological_status_is_ongoing, ._chronological_status_is_future {
+  .ion-accordion-toggle-icon {
+    color: var(--app-white);
+  }
+}
 /*
  TODO: would be nice to move this into time-slot-accordion
  But beware as this class is also used in new-feedback-page (it would be nice to refacto this usage

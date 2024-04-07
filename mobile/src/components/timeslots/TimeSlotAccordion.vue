@@ -212,10 +212,6 @@ const hasMissingFeedback = computed(() => {
       ._ongoing-progress { display: block; }
       ._accordion-icon { color: var(--app-white) !important;}
 
-      .ion-accordion-toggle-icon {
-        color: var(--app-white) !important;
-      }
-
       &._missing-feedback:not(._is-break) ._missing-feedback { display: inline-block;}
       &._feedback-provided:not(._is-break) ._provided-feedback {display: inline-block;}
     }
@@ -236,14 +232,6 @@ const hasMissingFeedback = computed(() => {
 
       ._accordion-icon._future-icon { display: inline-block; }
       ._accordion-icon { color: var(--app-white) !important;}
-
-      .ion-accordion-toggle-icon {
-        color: var(--app-white) !important;
-
-        @media (prefers-color-scheme: dark) {
-          color: var(--app-medium-contrast);
-        }
-      }
     }
 
     ion-item {
