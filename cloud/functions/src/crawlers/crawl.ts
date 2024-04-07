@@ -1,37 +1,44 @@
 import {db, info, error} from "../firebase"
-import {DEVOXX_CRAWLER} from "./devoxx/crawler"
 import { FullEvent } from "../models/Event";
 import {z} from "zod";
-import {LA_PRODUCT_CONF_CRAWLER} from "./la-product-conf/crawler";
 import {FIREBASE_CRAWLER_DESCRIPTOR_PARSER} from "./crawler-parsers";
 import {HexColor} from "../../../../shared/type-utils";
-import {WEB2DAY_CRAWLER} from "./web2day/crawler";
 import {Temporal} from "@js-temporal/polyfill";
-import {CAMPING_DES_SPEAKERS_CRAWLER} from "./camping-des-speakers/crawler";
-import {DEVOXX_SCALA_CRAWLER} from "./devoxx-scala/crawler";
-import {match} from "ts-pattern";
+import {match, P} from "ts-pattern";
 import {v4 as uuidv4} from "uuid"
 import {ConferenceOrganizerSpace} from "../../../../shared/conference-organizer-space.firestore";
-import {JUG_SUMMERCAMP_CRAWLER} from "./jugsummercamp/crawler";
 import {eventLastUpdateRefreshed} from "../functions/firestore/firestore-utils";
-import {BDXIO_CRAWLER} from "./bdxio/crawler";
-const axios = require('axios');
+import {http} from "./utils";
+import {
+  Room,
+  TalkFormat,
+  Track
+} from "../../../../shared/daily-schedule.firestore";
+import {ensureRoomsStatsFilledFor} from "../functions/firestore/services/stats-utils";
 
 export type CrawlerKind<ZOD_TYPE extends z.ZodType> = {
-    kind: string,
     crawlerImpl: (eventId: string, crawlerDescriptor: z.infer<ZOD_TYPE>, criteria: { dayIds?: string[]|undefined }) => Promise<FullEvent>,
     descriptorParser: ZOD_TYPE
 }
 
-const CRAWLERS: CrawlerKind<any>[] = [
-    DEVOXX_CRAWLER,
-    DEVOXX_SCALA_CRAWLER,
-    LA_PRODUCT_CONF_CRAWLER,
-    WEB2DAY_CRAWLER,
-    CAMPING_DES_SPEAKERS_CRAWLER,
-    JUG_SUMMERCAMP_CRAWLER,
-    BDXIO_CRAWLER
-]
+async function resolveCrawler(kind: string): Promise<CrawlerKind<any>|undefined> {
+    const crawler = await match(kind)
+        .with("devoxx", async () => import("./devoxx/crawler"))
+        .with("devoxx-scala", async () => import("./devoxx-scala/crawler"))
+        .with("la-product-conf", async () => import("./la-product-conf/crawler"))
+        .with("web2day", async () => import("./web2day/crawler"))
+        .with("camping-des-speakers", async () => import("./camping-des-speakers/crawler"))
+        .with("jugsummercamp", async () => import("./jugsummercamp/crawler"))
+        .with("bdxio", async () => import("./bdxio/crawler"))
+        .with("codeurs-en-seine", async () => import("./codeurs-en-seine/crawler"))
+        .run()
+
+    if(!crawler) {
+        return undefined;
+    }
+
+    return crawler.default;
+}
 
 export const TALK_FORMAT_FALLBACK_COLORS: HexColor[] = [
     "#165CE3", "#EA7872", "#935A59", "#3EDDEF",
@@ -92,36 +99,110 @@ const crawlAll = async function(criteria: CrawlCriteria) {
         try {
             const start = Temporal.Now.instant()
 
-            const crawler = CRAWLERS.find(c => c.kind === crawlerDescriptor.kind);
+            const crawler = await resolveCrawler(crawlerDescriptor.kind);
             if(!crawler) {
                 throw new Error(`Error: no crawler found for kind: ${crawlerDescriptor.kind} (with id=${crawlerDescriptor.id})`)
                 return;
             }
 
             info(`crawling event ${crawlerDescriptor.id} of type [${crawlerDescriptor.kind}]...`)
-            const crawlerDescriptorContent = (await axios.get(crawlerDescriptor.descriptorUrl)).data
+            const crawlerDescriptorContent = await http.get(crawlerDescriptor.descriptorUrl)
             const crawlerKindDescriptor = crawler.descriptorParser.parse(crawlerDescriptorContent);
 
             const event = await crawler.crawlerImpl(crawlerDescriptor.id, crawlerKindDescriptor, { dayIds: criteria.dayIds });
+            const messages = sanityCheckEvent(event);
             await saveEvent(event)
 
             const end = Temporal.Now.instant()
             return {
                 eventId: crawlerDescriptor.id,
                 days: event.daySchedules.map(ds => ds.day),
-                durationInSeconds: start.until(end).total('seconds')
+                descriptorUrlUsed: crawlerDescriptor.descriptorUrl,
+                durationInSeconds: start.until(end).total('seconds'),
+                messages
             }
         }catch(e: any) {
-            console.error(`Error during crawler with id ${crawlerDescriptor.id}:`, e);
-            throw new Error(`Error during crawler with id ${crawlerDescriptor.id}: ${e?.toString()}`)
+          const baseMessage = `Error during crawler with id ${crawlerDescriptor.id}`;
+          // const err = Error("")
+          // err.
+          const errMessage = match(e).with(P.instanceOf(Error), (err) => {
+            return `${baseMessage}\nStack: ${err.stack}`;
+          }).otherwise(() => {
+            return baseMessage;
+          })
+
+          console.error(errMessage);
+          throw new Error(errMessage);
         }
     }))
 };
+
+function sanityCheckEvent(event: FullEvent): string[] {
+
+  const descriptorTrackIds = event.conferenceDescriptor.talkTracks.map(t => t.id);
+  const descriptorFormatIds = event.conferenceDescriptor.talkFormats.map(f => f.id);
+  const descriptorRoomIds = event.conferenceDescriptor.rooms.map(r => r.id);
+
+  const talkLangs = new Set<string>()
+  const unknownValues = event.talks.reduce((unknownValues, talk) => {
+    if(!descriptorTrackIds.includes(talk.track.id)) {
+      unknownValues.unknownTracks.set(talk.track.id, talk.track);
+    }
+    if(!descriptorFormatIds.includes(talk.format.id)) {
+      unknownValues.unknownFormats.set(talk.format.id, talk.format);
+    }
+    if(!descriptorRoomIds.includes(talk.room.id)) {
+      unknownValues.unknownRooms.set(talk.room.id, talk.room);
+    }
+    talkLangs.add(talk.language);
+
+    return unknownValues
+  }, { unknownTracks: new Map<string, Track>(), unknownFormats: new Map<string, TalkFormat>, unknownRooms: new Map<string, Room>() });
+
+  const crawlingMessages: string[] = [];
+  if(unknownValues.unknownTracks.size) {
+    crawlingMessages.push(`WARNING: Some tracks have not been declared in crawler configuration: ${Array.from(unknownValues.unknownTracks.keys()).join(", ")}. Those tracks' title/color will be auto-guessed.`)
+    event.conferenceDescriptor.talkTracks.push(...Array.from(unknownValues.unknownTracks.values()).map((track, index) => {
+      return {
+        id: track.id, title: track.title,
+        themeColor: TALK_TRACK_FALLBACK_COLORS[index % TALK_TRACK_FALLBACK_COLORS.length]
+      }
+    }))
+  }
+  if(unknownValues.unknownFormats.size) {
+    crawlingMessages.push(`WARNING: Some talk formats have not been declared in crawler configuration: ${Array.from(unknownValues.unknownFormats.keys()).join(", ")}. Those formats' title/color/duration will be auto-guessed.`)
+    event.conferenceDescriptor.talkFormats.push(...Array.from(unknownValues.unknownFormats.values()).map((format, index) => {
+      return {
+        id: format.id, title: format.title, duration: format.duration,
+        themeColor: TALK_FORMAT_FALLBACK_COLORS[index % TALK_FORMAT_FALLBACK_COLORS.length]
+      }
+    }))
+  }
+  if(unknownValues.unknownRooms.size) {
+    crawlingMessages.push(`WARNING: Some rooms have not been declared in crawler configuration: ${Array.from(unknownValues.unknownRooms.keys()).join(", ")}. Those rooms' title will be auto-guessed.`)
+    event.conferenceDescriptor.rooms.push(...Array.from(unknownValues.unknownRooms.values()).map((room, index) => {
+      return {
+        id: room.id, title: room.title,
+      }
+    }))
+  }
+
+  if(talkLangs.size === 1 && !event.conferenceDescriptor.features.hideLanguages.includes(Array.from(talkLangs)[0])) {
+    event.conferenceDescriptor.features.hideLanguages.push(Array.from(talkLangs)[0]);
+  }
+
+  return crawlingMessages;
+}
 
 const saveEvent = async function(event: FullEvent) {
     info("saving event " + event.id)
 
     await db.collection("events").doc(event.id).set(event.info)
+
+    const talksStatsAllInOneDoc = await db.doc(`events/${event.id}/talksStats-allInOne/self`).get()
+    if(!talksStatsAllInOneDoc.exists) {
+        await db.doc(`events/${event.id}/talksStats-allInOne/self`).set({})
+    }
 
     const firestoreEvent = db.collection("events").doc(event.id);
     const organizerSpaceEntries = await firestoreEvent
@@ -136,8 +217,16 @@ const saveEvent = async function(event: FullEvent) {
                 talkFeedbackViewerTokens: []
             }
 
+            await firestoreEvent.collection('organizer-space').doc(organizerSecretToken).set(organizerSpaceContent)
+
+            await Promise.all(event.daySchedules.map(async daySchedule => {
+                const dailyRating = await db.doc(`events/${event.id}/organizer-space/${organizerSecretToken}/daily-ratings/${daySchedule.day}`).get()
+                if(!dailyRating.exists) {
+                    await db.doc(`events/${event.id}/organizer-space/${organizerSecretToken}/daily-ratings/${daySchedule.day}`).set({});
+                }
+            }))
+
             await Promise.all([
-                firestoreEvent.collection('organizer-space').doc(organizerSecretToken).set(organizerSpaceContent),
                 ...event.talks.map(async talk => {
                     const talkFeedbacksDoc = db.doc(`events/${event.id}/organizer-space/${organizerSecretToken}/ratings/${talk.id}`)
                     const talkFeedbacks = await talkFeedbacksDoc.get();
@@ -169,6 +258,10 @@ const saveEvent = async function(event: FullEvent) {
     const talkIdsHashBeforeUpdate = talksCollectionRefBeforeUpdate.map(talk => talk.id).sort().join(",")
 
     await Promise.all(event.talks.map(async talk => {
+        // Skip storing overflow talk details as this is pointless...
+        if(talk.isOverflow) {
+          return;
+        }
         try {
             info("saving talk " + talk.id + " " + talk.title);
             await firestoreEvent
@@ -222,6 +315,8 @@ const saveEvent = async function(event: FullEvent) {
     }catch(e) {
         error(`Error while storing event's organizer-space content`)
     }
+
+    await ensureRoomsStatsFilledFor(event.id)
 }
 
 export default crawlAll;

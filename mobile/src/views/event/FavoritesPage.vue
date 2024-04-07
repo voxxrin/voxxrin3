@@ -17,9 +17,9 @@
         <timeslots-iterator :conf-descriptor="confDescriptor" :day-id="selectedDayId"
                             :daily-schedule="currentSchedule"
                             @timeslots-list-updated="timeslots => expandedTimeslotIds = timeslots.map(t => t.id.value)">
-          <template #iterator="{ timeslot }">
+          <template #iterator="{ timeslot, progress, upcomingRawTalkIds }">
             <time-slot-section :timeslot="timeslot" :conf-descriptor="confDescriptor">
-              <template #section-content="{ timeslot }">
+              <template #section-content>
                 <schedule-break v-if="timeslot.type==='break'" :conf-descriptor="confDescriptor" :talk-break="timeslot.break"></schedule-break>
                 <div v-if="timeslot.type === 'talks'">
                   <no-results illu-path="images/svg/illu-no-favorites.svg" v-if="timeslot.talks.filter(t => t.id.isIncludedIntoArray(favoritedTalkIdsRef)).length === 0">
@@ -29,6 +29,7 @@
                     <template #talk="{ talk }">
                       <schedule-talk :talk="talk" :talk-stats="talkStatsRefByTalkId.get(talk.id.value)" :talk-notes="userEventTalkNotesRef.get(talk.id.value)"
                                      :is-highlighted="(talk, talkNotes) => talkNotes.isFavorite" :conf-descriptor="confDescriptor"
+                                     :room-stats="roomsStatsRefByRoomId?.[talk.room.id.value]" :is-upcoming-talk="upcomingRawTalkIds.includes(talk.id.value)"
                                      @talkClicked="openTalkDetails($event)" >
                         <template #upper-right="{ talk }">
                           <div class="room" v-if="confDescriptor?.features.roomsDisplayed">
@@ -36,8 +37,15 @@
                           </div>
                         </template>
                         <template #footer-actions="{ talk, talkNotes, talkStats }">
-                          <talk-watch-later-button v-if="confDescriptor" :conf-descriptor="confDescriptor" :user-talk-notes="talkNotes" />
-                          <talk-favorite-button v-if="confDescriptor" :conf-descriptor="confDescriptor" :user-talk-notes="talkNotes" :talk-stats="talkStats" />
+                          <provide-feedback-talk-button v-if="!talk.isOverflow"
+                            :conf-descriptor="confDescriptor" :timeslot-progress-status="progress?.status"
+                            :timeslot-feedback="timeslot.feedback" @click.stop="navigateToTalkRatingScreenFor(talk)" />
+                          <talk-watch-later-button v-if="confDescriptor && !talk.isOverflow"
+                             :conf-descriptor="confDescriptor" :user-talk-notes="talkNotes"
+                             @talk-note-updated="updatedTalkNote => userEventTalkNotesRef.set(talk.id.value, updatedTalkNote) " />
+
+                          <talk-favorite-button v-if="confDescriptor && !talk.isOverflow"
+                              :conf-descriptor="confDescriptor" :user-talk-notes="talkNotes" :talk-stats="talkStats" />
                         </template>
                       </schedule-talk>
                     </template>
@@ -48,7 +56,7 @@
           </template>
         </timeslots-iterator>
       </ion-accordion-group>
-
+      <PoweredVoxxrin></PoweredVoxxrin>
     </ion-content>
   </ion-page>
 </template>
@@ -82,6 +90,9 @@
   import {computed, toValue} from "vue";
   import {useEventTalkStats} from "@/state/useEventTalkStats";
   import NoResults from "@/components/ui/NoResults.vue";
+  import ProvideFeedbackTalkButton from "@/components/talk-card/ProvideFeedbackTalkButton.vue";
+  import PoweredVoxxrin from "@/components/ui/PoweredVoxxrin.vue";
+  import {useRoomsStats} from "@/state/useRoomsStats";
 
   const { LL } = typesafeI18n()
 
@@ -100,6 +111,7 @@
 
   const {firestoreEventTalkStatsRef: talkStatsRefByTalkId} = useEventTalkStats(eventId, talkIdsRef)
   const {userEventTalkNotesRef } = useUserEventTalkNotes(eventId, talkIdsRef)
+  const {firestoreRoomsStatsRef: roomsStatsRefByRoomId } = useRoomsStats(eventId)
 
   const favoritedTalkIdsRef = computed(() => {
       const userEventTalkNotes = toValue(userEventTalkNotesRef)
@@ -119,6 +131,9 @@
       if(talk) {
           triggerTabbedPageNavigate(`/events/${eventId.value.value}/talks/${talk.id.value}/details`, "forward", "push");
       }
+  }
+  async function navigateToTalkRatingScreenFor(talk: VoxxrinTalk) {
+      triggerTabbedPageNavigate(`/events/${eventId.value.value}/rate-talk/${talk.id.value}`, "forward", "push");
   }
 </script>
 

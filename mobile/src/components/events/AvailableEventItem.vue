@@ -1,68 +1,73 @@
 <template>
-    <ion-item @click.stop="$emit('event-clicked', event)" class="eventItem" :class="{'_is-pined' : isPinnedRef}" v-if="event"
-              v-themed-event-styles="event">
-      <ion-ripple-effect type="bounded"></ion-ripple-effect>
-      <div class="eventItem-logoContainer">
-        <div class="logo">
-          <ion-img :src="event.logoUrl" />
-        </div>
+  <ion-item @click.stop="$emit('event-clicked', event)" class="eventItem" :class="{'_is-pined' : isPinnedRef}" v-if="event"
+            v-themed-event-styles="event">
+    <ion-ripple-effect type="bounded"></ion-ripple-effect>
+    <div class="eventItem-logoContainer">
+      <div class="logo">
+        <ion-img :src="event.logoUrl" :alt="LL.Logo_event() + ' ' + event.title"/>
       </div>
-      <div class="eventItem-infos">
-        <div class="title">{{event.title}}</div>
-        <div class="timeInfos">
-          <ion-icon aria-hidden="true" src="/assets/icons/solid/calendar.svg"></ion-icon>
-          <month-day-date-range :format="{separator: '>'}" :range="{start: event.start, end: event.end}" />
-          {{event.start.year}}
-        </div>
-        <div class="location">
-          <ion-icon aria-hidden="true" src="/assets/icons/solid/map-marker.svg"></ion-icon> {{event.location.city}}, {{event.location.country}}
-        </div>
+    </div>
+    <div class="eventItem-infos">
+      <div class="title">{{event.title}}</div>
+      <div class="timeInfos">
+        <ion-icon aria-hidden="true" src="/assets/icons/solid/calendar.svg"></ion-icon>
+        <month-day-date-range :format="{separator: '>'}" :range="{start: event.start, end: event.end}" />
+        {{event.start.year}}
       </div>
+      <div class="location">
+        <ion-icon aria-hidden="true" src="/assets/icons/solid/map-marker.svg"></ion-icon> {{event.location.city}}, {{event.location.country}}
+      </div>
+    </div>
 
-      <div class="eventItem-config" slot="end" v-if="eventOrganizerToken">
-        <ion-button fill="clear" shape="round" @click.stop="navToEventOrganizerPage()">
-          <ion-icon src="/assets/icons/line/settings-cog-line.svg"></ion-icon>
-        </ion-button>
-      </div>
+    <div class="eventItem-end" slot="end">
+      <ion-button class="configBtn" v-if="eventOrganizerToken" fill="clear" shape="round"
+                  :aria-label="LL.Config_event()"
+                  @click.stop="navToEventOrganizerPage()">
+        <ion-icon src="/assets/icons/line/settings-cog-line.svg"></ion-icon>
+      </ion-button>
+      <!-- TODO Fix dynamic aria-label -->
+      <ion-button class="btnPin" fill="clear" shape="round"
+                  :aria-label="isPinnedRef ? LL.Remove_from_pinned_events() : LL.Add_to_my_pinned_events()"
+                  @click.stop="$emit('event-pin-toggled', event, isPinnedRef?'pinned-to-unpinned':'unpinned-to-pinned')">
+        <ion-icon src="/assets/icons/line/pin-line.svg" v-if="!isPinnedRef" aria-hidden="true"></ion-icon>
+        <ion-icon class="_is-pined" src="/assets/icons/solid/pin.svg" v-if="isPinnedRef" aria-hidden="true"></ion-icon>
+      </ion-button>
+    </div>
 
-      <div class="eventItem-end" slot="end">
-        <ion-button class="btnPin" fill="clear" shape="round" @click.stop="$emit('event-pin-toggled', event, isPinnedRef?'pinned-to-unpinned':'unpinned-to-pinned')">
-          <ion-icon src="/assets/icons/line/pin-line.svg" v-if="!isPinnedRef"></ion-icon>
-          <ion-icon class="_is-pined" src="/assets/icons/solid/pin.svg" v-if="isPinnedRef"></ion-icon>
-        </ion-button>
-      </div>
-
-<!--      <div class="eventItem-dot" slot="end" @click="$emit('event-clicked', event)">-->
-<!--        <span class="eventItem-dot-click">-->
-<!--          <ion-icon src="/assets/icons/solid/more-menu-vertical.svg"></ion-icon>-->
-<!--        </span>-->
-<!--      </div>-->
-    </ion-item>
+    <!--      <div class="eventItem-dot" slot="end" @click="$emit('event-clicked', event)">-->
+    <!--        <span class="eventItem-dot-click">-->
+    <!--          <ion-icon src="/assets/icons/solid/more-menu-vertical.svg"></ion-icon>-->
+    <!--        </span>-->
+    <!--      </div>-->
+  </ion-item>
 </template>
 
 <script setup lang="ts">
 import {computed, PropType, toRef, unref} from "vue";
 import {
-    IonImg, useIonRouter,
+  IonImg, useIonRouter,
 } from '@ionic/vue';
 import {EventId, ListableVoxxrinEvent} from "@/models/VoxxrinEvent";
 import MonthDayDateRange from "@/components/MonthDayDateRange.vue";
 import {useSharedUserTokensWallet} from "@/state/useUserTokensWallet";
+import {typesafeI18n} from "@/i18n/i18n-vue";
+
+const { LL } = typesafeI18n()
 
 const props = defineProps({
-    event: {
-        required: true,
-        type: Object as PropType<ListableVoxxrinEvent>
-    },
-    pinnedEvents: {
-        required: true,
-        type: Object as PropType<Array<EventId>>
-    },
+  event: {
+    required: true,
+    type: Object as PropType<ListableVoxxrinEvent>
+  },
+  pinnedEvents: {
+    required: true,
+    type: Object as PropType<Array<EventId>>
+  },
 })
 
 defineEmits<{
-    (e: 'event-clicked', event: ListableVoxxrinEvent): void,
-    (e: 'event-pin-toggled', event: ListableVoxxrinEvent, transitionType: 'unpinned-to-pinned'|'pinned-to-unpinned'): void,
+  (e: 'event-clicked', event: ListableVoxxrinEvent): void,
+  (e: 'event-pin-toggled', event: ListableVoxxrinEvent, transitionType: 'unpinned-to-pinned'|'pinned-to-unpinned'): void,
 }>()
 
 const ionRouter = useIonRouter();
@@ -72,17 +77,17 @@ const eventRef = toRef(props, 'event');
 const eventIdRef = computed<EventId|undefined>(() => { const event = unref(eventRef); return event?.id; })
 
 const isPinnedRef = computed(() => {
-    if(props.pinnedEvents && props.event) {
-        return !!props.pinnedEvents?.find(eventId => props.event?.id.isSameThan(eventId))
-    } else {
-        return false;
-    }
+  if(props.pinnedEvents && props.event) {
+    return !!props.pinnedEvents?.find(eventId => props.event?.id.isSameThan(eventId))
+  } else {
+    return false;
+  }
 })
 
 const eventOrganizerToken = organizerTokenRefForEvent(eventIdRef)
 
 function navToEventOrganizerPage() {
-    ionRouter.push(`/events/${eventRef.value.id.value}/asOrganizer/${eventOrganizerToken.value}`)
+  ionRouter.push(`/events/${eventRef.value.id.value}/asOrganizer/${eventOrganizerToken.value}`)
 }
 
 </script>
@@ -93,6 +98,10 @@ function navToEventOrganizerPage() {
   --padding-start: 0;
   --inner-padding-end: 0;
   --background: var(--app-background);
+
+  &:last-child {
+    --inner-border-width: 0;
+  }
 
   @media (prefers-color-scheme: dark) {
     --border-color: var(--app-line-contrast);
@@ -359,7 +368,7 @@ function navToEventOrganizerPage() {
       color: var(--app-grey-dark);
 
       @media (prefers-color-scheme: dark) {
-        color: var(--app-beige-dark);
+        color: var(--app-white-70);
       }
 
       ion-icon {
@@ -367,7 +376,7 @@ function navToEventOrganizerPage() {
         color: var(--app-beige-dark);
 
         @media (prefers-color-scheme: dark) {
-          color: var(--app-grey-dark);
+          color: var(--app-white-70);
         }
       }
     }
@@ -381,20 +390,22 @@ function navToEventOrganizerPage() {
       text-align: left;
       word-break: break-word;
 
+      @media (prefers-color-scheme: dark) {
+        color: var(--app-white-70);
+      }
+
       ion-icon {
         font-size: 16px;
         color: var(--app-beige-dark);
+
+        @media (prefers-color-scheme: dark) {
+          color: var(--app-white-70);
+        }
       }
     }
   }
 
-  &-config {
-    padding-inline-start: 8px;
-    padding-inline-end: 12px;
-
-    ion-button {
-      height: 100% !important;
-    }
+  .configBtn {
 
     ion-icon {
       width: 34px;

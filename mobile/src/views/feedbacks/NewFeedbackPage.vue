@@ -25,6 +25,7 @@
           </ion-header>
           <div>
             <feedback-talk-selector
+                :ref="(feedbackSelector) => updateFeedbackSelectorRefTo(labelledTimeslotWithOverlappingsRef?.labelledTimeslot?.id, feedbackSelector)"
                 :conf-descriptor="confDescriptorRef"
                 :talks="labelledTimeslotWithOverlappingsRef.labelledTimeslot.talks || []"
                 :all-user-favorited-talk-ids="favoritedTalkIdsRef"
@@ -42,8 +43,9 @@
               </div>
             </ion-header>
 
-            <ion-accordion-group>
-              <ion-accordion class="slot-accordion" v-for="(overlappingTimeslot) in labelledTimeslotWithOverlappingsRef.overlappingLabelledTimeslots" :key="overlappingTimeslot.id.value">
+            <ion-accordion-group :multiple="true" :value="overlappingTimeslotsAutoExpandIdsRef">
+              <ion-accordion v-for="(overlappingTimeslot) in labelledTimeslotWithOverlappingsRef.overlappingLabelledTimeslots" :key="overlappingTimeslot.id.value"
+                             class="slot-accordion" :value="overlappingTimeslot.id.value">
                 <ion-item slot="header" color="light">
                   <ion-label>
                     <ion-icon aria-hidden="true" src="assets/icons/solid/slot-overlay.svg" />
@@ -52,6 +54,7 @@
                 </ion-item>
                 <div slot="content">
                   <feedback-talk-selector
+                      :ref="(feedbackSelector) => updateFeedbackSelectorRefTo(overlappingTimeslot.id, feedbackSelector)"
                       :conf-descriptor="confDescriptorRef"
                       :talks="overlappingTimeslot.talks"
                       :all-user-favorited-talk-ids="favoritedTalkIdsRef"
@@ -69,23 +72,27 @@
     <feedback-footer>
       <template #details>
         <ion-button v-if="confDescriptorRef?.features.remindMeOnceVideosAreAvailableEnabled"
-                    @click="watchLaterAllFavoritedTalks()"
+                    @click.stop="watchLaterAllFavoritedTalks()"
+                    :aria-label="LL.Watch_later_all_favorited_talks()"
                     size="small" fill="outline" shape="round" expand="block">
           <ion-icon slot="start" src="assets/icons/solid/video.svg" aria-hidden="true"></ion-icon>
           {{LL.Watch_later_all_favorited_talks()}}
         </ion-button>
       </template>
       <template #default>
-        <ion-button class="cancel" size="small" fill="solid" color="medium" shape="round" expand="block" @click="backToSchedulePage">
+        <ion-button class="cancel" size="small" fill="solid" color="medium" shape="round" expand="block" @click="backToSchedulePage"
+                    :aria-label="LL.Cancel_Back_To_Schedule()">
           {{ LL.Cancel() }}
         </ion-button>
-        <ion-button size="small" fill="outline" shape="round" expand="block" v-if="selectedTalk === undefined" @click="submitSkippedFeedback()">
+        <ion-button size="small" fill="outline" shape="round" expand="block" v-if="selectedTalk === undefined" @click="submitSkippedFeedback()"
+                    :aria-label="LL.I_didnt_attend_any_talk()">
             <span class="contentDidntAttendTalk">
               {{LL.I_didnt_attend_any_talk()}}
                 <small>({{ LL.During_this_time_slot() }})</small>
             </span>
         </ion-button>
-        <ion-button size="small" fill="solid" shape="round" expand="block" v-if="selectedTalk !== undefined" @click="rateSelectedTalk()">
+        <ion-button size="small" fill="solid" shape="round" expand="block" v-if="selectedTalk !== undefined" @click="rateSelectedTalk()"
+                    :aria-label="LL.Add_Feedback()">
             <span class="contentDidntAttendTalk">
               {{LL.Add_Feedback()}}
             </span>
@@ -100,7 +107,7 @@ import {EventId} from "@/models/VoxxrinEvent";
 import {getRouteParamsValue, isRefDefined, isRefUndefined} from "@/views/vue-utils";
 import {useRoute} from "vue-router";
 import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
-import {computed, Ref, toValue, unref, watch} from "vue";
+import {ComponentPublicInstance, computed, Ref, toValue, watch} from "vue";
 import {managedRef as ref, toManagedRef as toRef} from "@/views/vue-utils";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {
@@ -132,6 +139,8 @@ const route = useRoute();
 const eventIdRef = computed(() => new EventId(getRouteParamsValue(route, 'eventId')));
 const timeslotIdRef = computed(() => new ScheduleTimeSlotId(getRouteParamsValue(route, 'timeslotId')));
 const {conferenceDescriptor: confDescriptorRef } = useSharedConferenceDescriptor(eventIdRef);
+
+const perTimeslotIdFeedbackTalkSelectorsRef = ref(new Map<string, InstanceType<typeof FeedbackTalkSelector>>())
 
 const labelledTimeslotWithOverlappingsRef = ref<undefined | LabelledTimeslotWithOverlappings>(undefined)
 
@@ -165,7 +174,7 @@ function rateSelectedTalk() {
 }
 
 const everyCandidateTalksRef = computed(() => {
-    const labelledTimeslotWithOverlappings = unref(labelledTimeslotWithOverlappingsRef);
+    const labelledTimeslotWithOverlappings = toValue(labelledTimeslotWithOverlappingsRef);
 
     const overlappingTimeslots: LabelledTimeslot[] = (labelledTimeslotWithOverlappings?.overlappingLabelledTimeslots || []);
     const overlappingTalks: VoxxrinTalk[] = overlappingTimeslots.flatMap(ts => ts.talks);
@@ -174,8 +183,8 @@ const everyCandidateTalksRef = computed(() => {
 })
 
 const talkIdsRef = computed(() => {
-    const labelledTimeslotWithOverlappings = toValue(labelledTimeslotWithOverlappingsRef)
-    return labelledTimeslotWithOverlappings?.labelledTimeslot?.talks?.map(talk => talk.id) || [];
+    const everyCandidateTalks = toValue(everyCandidateTalksRef);
+    return everyCandidateTalks.map(talk => talk.id);
 })
 const {userEventTalkNotesRef } = useUserEventTalkNotes(eventIdRef, talkIdsRef);
 
@@ -186,40 +195,21 @@ const favoritedTalkIdsRef = computed(() => {
         .map(talkNotes => new TalkId(talkNotes.talkId))
 })
 
+const overlappingTimeslotsAutoExpandIdsRef = ref<string[]>([]);
+watch([favoritedTalkIdsRef, labelledTimeslotWithOverlappingsRef], ([favoritedTalkIds, labelledTimeslotWithOverlappings]) => {
+    if(!favoritedTalkIds || !labelledTimeslotWithOverlappings) {
+        return;
+    }
+
+    overlappingTimeslotsAutoExpandIdsRef.value = labelledTimeslotWithOverlappings.overlappingLabelledTimeslots
+        .filter(overlappingTimeslot => overlappingTimeslot.talks.filter(talk => talk.id.isIncludedIntoArray(favoritedTalkIds)).length > 0)
+        .map(overlappingTimeslot => overlappingTimeslot.id.value);
+})
+
 async function watchLaterAllFavoritedTalks() {
-    const favoritedTalks = everyCandidateTalksRef.value.filter(talk => talk.id.isIncludedIntoArray(favoritedTalkIdsRef.value))
-    const userEventTalkNotesById = toValue(userEventTalkNotesRef);
-
-    await Promise.all(
-        // Enabling watch later on every *favorited* talks...
-        favoritedTalks.map(async favoritedTalk => {
-            const talkNotes = userEventTalkNotesById.get(favoritedTalk.id.value);
-            const { toggleWatchLater } = useUserTalkNoteActions(
-                eventIdRef, toRef(() => favoritedTalk.id),
-                toRef(() => userEventTalkNotesRef.value.get(favoritedTalk.id.value)),
-            )
-            if(!talkNotes?.watchLater && !favoritedTalk.id.isSameThan(selectedTalk.value?.id)) {
-                LOGGER.debug(() => `toggling (enabling) watch later on talk: ${favoritedTalk.title}`)
-                await toggleWatchLater() // enable watch later on favorited (but not selected) talks
-            }
-        }).concat(
-            // ... and Disabling watch later on every selected talk (regardless if it is favorited or not)
-            everyCandidateTalksRef.value
-              .filter(talk => talk.id.isSameThan(selectedTalk.value?.id))
-              .map(async talk => {
-                const talkNotes = userEventTalkNotesById.get(talk.id.value);
-                const { toggleWatchLater } = useUserTalkNoteActions(
-                    eventIdRef, toRef(() => talk.id),
-                    toRef(() => userEventTalkNotesRef.value.get(talk.id.value)),
-                )
-
-                if(talkNotes?.watchLater) {
-                    LOGGER.debug(() => `toggling (disabling) watch later on talk: ${talk.title}`)
-                    await toggleWatchLater(); // disable watch later on selected talk
-                }
-              })
-        )
-    )
+    perTimeslotIdFeedbackTalkSelectorsRef.value.forEach((overlappingTimeslotsFeedbackTalkSelector, timeslotId) => {
+        overlappingTimeslotsFeedbackTalkSelector.watchLaterAllFavoritedTalks()
+    })
 }
 
 function backToSchedulePage() {
@@ -237,6 +227,11 @@ async function submitSkippedFeedback() {
     goBackOrNavigateTo(ionRouter, `/events/${eventIdRef.value.value}`)
 }
 
+function updateFeedbackSelectorRefTo(timeslotId: ScheduleTimeSlotId|undefined, feedbackSelector: any) {
+    if(timeslotId && feedbackSelector) {
+        perTimeslotIdFeedbackTalkSelectorsRef.value.set(timeslotId.value, feedbackSelector)
+    }
+}
 </script>
 
 <style scoped lang="scss">

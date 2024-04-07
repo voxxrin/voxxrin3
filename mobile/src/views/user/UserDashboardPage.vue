@@ -4,8 +4,9 @@
       <ion-header class="stickyHeader">
         <ion-toolbar>
           <ion-button class="stickyHeader-close" shape="round" slot="start" size="small" fill="outline"
-                      @click="goBackOrNavigateTo(ionRouter, `/event-selector`)">
-            <ion-icon src="/assets/icons/line/arrow-left-line.svg"></ion-icon>
+                      @click="goBackOrNavigateTo(ionRouter, `/event-selector`)"
+                      :aria-label="LL.Close()">
+            <ion-icon src="/assets/icons/solid/close.svg"></ion-icon>
           </ion-button>
           <ion-title class="stickyHeader-title" slot="start">{{ LL.Profile() }}</ion-title>
         </ion-toolbar>
@@ -71,7 +72,7 @@
 <!--          </ion-button>-->
           <ion-button class="listCardButton-item" @click="ionRouter.push(`/faq`)">
             <div class="listCardButton-item-icon">
-              <ion-icon src="/assets/icons/solid/puzzle.svg"></ion-icon>
+              <ion-icon :icon="helpCircle"></ion-icon>
             </div>
             <div class="listCardButton-item-text">
               <span class="titleItem">{{ LL.Frequently_asked_questions() }}</span>
@@ -102,6 +103,7 @@ import {typesafeI18n} from "@/i18n/i18n-vue";
 import {computed, toValue} from "vue";
 import {useUserTokensWallet} from "@/state/useUserTokensWallet";
 import {goBackOrNavigateTo} from "@/router";
+import {helpCircle} from "ionicons/icons";
 
 const ionRouter = useIonRouter();
 

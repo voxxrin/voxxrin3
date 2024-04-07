@@ -1,6 +1,9 @@
 <template>
   <div class="talkAction">
-    <ion-button :class="{ 'btnTalk': true, 'btn-watchLater': true, '_is-active': !!talkNotes?.watchLater }" @click.stop="() => toggleWatchLater()" v-if="confDescriptor?.features.remindMeOnceVideosAreAvailableEnabled">
+    <!-- TODO Fix dynamic aria-label -->
+    <ion-button :class="{ 'btnTalk': true, 'btn-watchLater': true, '_is-active': !!talkNotes?.watchLater }" @click.stop="() => toggleWatchLater()"
+                v-if="confDescriptor?.features.remindMeOnceVideosAreAvailableEnabled"
+                :aria-label="talkNotes?.watchLater ? LL.Remove_Watch_later() : LL.Add_Watch_later()">
       <ion-icon v-if="!talkNotes?.watchLater" aria-hidden="true" src="/assets/icons/line/video-line.svg"></ion-icon>
       <ion-icon v-if="!!talkNotes?.watchLater" aria-hidden="true" src="/assets/icons/solid/video.svg"></ion-icon>
     </ion-button>
@@ -16,7 +19,9 @@ import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor"
 import {toManagedRef as toRef} from "@/views/vue-utils";
 import {TalkId} from "@/models/VoxxrinTalk";
 import {TalkNote} from "../../../../shared/feedbacks.firestore";
+import {typesafeI18n} from "@/i18n/i18n-vue";
 
+const { LL } = typesafeI18n()
 const props = defineProps({
     confDescriptor: {
         required: true,
@@ -40,6 +45,10 @@ const {toggleWatchLater} = useUserTalkNoteActions(
     talkNotes,
     updatedTalkNote => emits("talkNoteUpdated", updatedTalkNote)
 )
+
+defineExpose({
+    toggleWatchLater
+})
 </script>
 
 <style scoped lang="scss">

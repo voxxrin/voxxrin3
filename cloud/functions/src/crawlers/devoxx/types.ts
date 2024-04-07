@@ -23,7 +23,8 @@ export interface DevoxxScheduleItem {
         },
         proposal?: DevoxxScheduleProposal,
         timezone: string,
-        totalFavourites?: number
+        totalFavourites?: number,
+        overflow: boolean,
 }
 
 export interface DevoxxScheduleSpeakerInfo {
@@ -39,19 +40,25 @@ export interface DevoxxScheduleSpeakerInfo {
 
 export interface DevoxxScheduleProposal {
     id: number,
-      title: string,
+    title: string,
+    description: string,
+    summary: string,
+    afterVideoURL: string,
+    audienceLevel: "BEGINNER"|"INTERMEDIATE"|"ADVANCED",
+    track: {
+      id: number,
+      name: string,
       description: string,
-      summary: string,
-      afterVideoURL: string,
-      audienceLevel: "BEGINNER"|"INTERMEDIATE"|"ADVANCED",
-      track: {
-        id: number,
-        name: string,
-        description: string,
-        imageURL: string
-      },
-      speakers: DevoxxScheduleSpeakerInfo[],
-      tags: DevoxxScheduleItemTag[],
+      imageURL: string
+    },
+    speakers: DevoxxScheduleSpeakerInfo[],
+    tags: DevoxxScheduleItemTag[],
+    language: {
+      id: number,
+      alpha2: string,
+      name: string,
+      flag32: string
+    }|undefined
 }
 
 export interface DevoxxScheduleItemTag {

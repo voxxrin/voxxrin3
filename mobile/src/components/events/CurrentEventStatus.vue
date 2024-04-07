@@ -58,6 +58,8 @@ function refreshStatus() {
 <style scoped lang="scss">
   ion-badge {
     text-transform: capitalize;
+    --padding-end: 8px;
+    line-height: 2;
 
     &._past {
       border: none;

@@ -20,7 +20,14 @@ export async function usePromiseDebouncer<T>(executionName: string, executionHas
     if(lastExecContextMatchingName) {
         match(lastExecContextMatchingName)
             .with(
-                { status: 'created'}, { status: 'resolved' },
+                { status: 'created'},
+                (context) => {
+                    if(context.hash !== executionHash) {
+                        LAST_EXECUTION_CONTEXTS.delete(executionName);
+                    }
+                }
+            ).with(
+                { status: 'resolved' },
                 (context) => {
                     if(context.hash !== executionHash) {
                         LAST_EXECUTION_CONTEXTS.delete(executionName);
@@ -66,8 +73,10 @@ export async function usePromiseDebouncer<T>(executionName: string, executionHas
             }).with({ status: 'rejected' }, () => {
                 throw new Error(`rejected status detected: it is not supposed to happen as
                     it should have been troubleshooting in usePromiseDebouncer() pre-cleaning steps`)
-            }).with({ status: 'ongoing' }, { status: 'resolved' }, (lastExecContextMatchingName) => {
-                return lastExecContextMatchingName.promise;
+            }).with({ status: 'ongoing' }, (lastExecContextMatchingName) => {
+              return lastExecContextMatchingName.promise;
+            }).with({ status: 'resolved' }, (lastExecContextMatchingName) => {
+              return lastExecContextMatchingName.promise;
             }).exhaustive();
     } else {
         LAST_EXECUTION_CONTEXTS.set(executionName, {

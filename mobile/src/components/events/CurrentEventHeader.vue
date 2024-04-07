@@ -2,7 +2,7 @@
   <ion-header class="ion-no-border">
     <ion-toolbar>
       <div class="viewsHeader">
-        <ion-button class="viewsHeader-back" @click="backButtonClicked" shape="round">
+        <ion-button class="viewsHeader-back" @click="backButtonClicked" shape="round" :aria-label="LL.Back_List_Events()">
           <ion-icon src="/assets/icons/solid/checkbox-list.svg"></ion-icon>
         </ion-button>
 <!-- TODO: Fix router navigation from preferences/schedule prior to re-enabling this one -->
@@ -14,7 +14,7 @@
         <current-event-status :conf-descriptor="confDescriptor"></current-event-status>
       </div>
     </ion-toolbar>
-    <img :src="confDescriptor?.backgroundUrl">
+    <img :src="confDescriptor?.backgroundUrl" :alt="LL.Banner_Event()">
   </ion-header>
 </template>
 
@@ -25,7 +25,9 @@ import {PropType} from "vue";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {useTabbedPageNav} from "@/state/useTabbedPageNav";
 import GlobalUserActionsButton from "@/components/user/GlobalUserActionsButton.vue";
+import {typesafeI18n} from "@/i18n/i18n-vue";
 
+const { LL } = typesafeI18n()
 const router = useIonRouter();
 const props = defineProps({
     confDescriptor: {
@@ -71,7 +73,9 @@ function backButtonClicked() {
       }
     }
   }
+
   ion-toolbar {
+    padding-top: 0 !important;
     position: relative;
     --background: linear-gradient(0deg, rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.4802) 0%, rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.98) 52.84%);
     z-index: 1;
@@ -98,13 +102,14 @@ function backButtonClicked() {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 18px 0;
+      padding: 12px 0 18px 0;
       font-weight: bold;
 
       &-title {
+        flex: 1;
         color: var(--voxxrin-event-theme-colors-primary-contrast-hex);
         font-weight: bold;
-        font-size: calc(28px + 8 * (100vw - 320px) / 1024)
+        font-size: calc(22px + 8 * (100vw - 320px) / 1024)
       }
     }
   }

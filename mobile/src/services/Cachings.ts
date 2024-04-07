@@ -59,3 +59,13 @@ export async function checkCache(cacheKey: string, newCacheValidityDuration: Tem
 
     return {outcome};
 }
+
+export function preloadPicture(pictureUrl: string) {
+  return new Promise((resolve, reject) => {
+    const picture = new Image();
+    picture.src = pictureUrl;
+
+    picture.onload = resolve;
+    picture.onerror = reject;
+  });
+}

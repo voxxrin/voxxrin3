@@ -1,12 +1,15 @@
 import {z, ZodLiteral} from "zod";
-import {ISODatetime, ISOLocalDate} from "../../../../shared/type-utils";
+import {ISOLocalDate} from "../../../../shared/type-utils";
 import {ConferenceDescriptor} from "../../../../shared/conference-descriptor.firestore";
+import {ScheduleTimeSlot} from "../../../../shared/daily-schedule.firestore";
+import {ISO_DATETIME_PARSER} from "../utils/zod-parsers";
 
 
 export const HEX_COLOR_PARSER = z.string().regex(/#[0-9a-fA-F]{6}/gi) as unknown as ZodLiteral<`#${string}`>
 export const DURATION_PARSER = z.string().regex(/PT\d+m/gi) as unknown as ZodLiteral<`PT${number}m`>
 export const ISO_LOCAL_DATE_PARSER = z.string().regex(/\d{4}-\d{2}-\d{2}/gi) as unknown as ZodLiteral<ISOLocalDate>
-export const ISO_DATETIME_PARSER = z.string().regex(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?(?:Z|(?:[+-]\d{2}:\d{2}))/gi) as unknown as ZodLiteral<ISODatetime>
+export const TIMESLOT_ID_PARSER = z.string()
+    .regex(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?(?:Z|(?:[+-]\d{2}:\d{2}))--\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?(?:Z|(?:[+-]\d{2}:\d{2}))/gi) as unknown as ZodLiteral<ScheduleTimeSlot['id']>
 
 export const DAY_PARSER = z.object({
     id: z.string(),
@@ -53,6 +56,19 @@ export const EVENT_THEME_PARSER = z.object({
     })
 })
 
+export const SOCIAL_MEDIA_TYPE = z.union([
+    z.literal('website'),
+    z.literal('twitter'),
+    z.literal('linkedin'),
+    z.literal('mastodon'),
+    z.literal('instagram'),
+    z.literal('youtube'),
+    z.literal('twitch'),
+    z.literal('github'),
+    z.literal('facebook'),
+    z.literal('flickr'),
+])
+
 export const LISTABLE_EVENT_PARSER = z.object({
     id: z.string(),
     title: z.string(),
@@ -71,14 +87,32 @@ export const LISTABLE_EVENT_PARSER = z.object({
     theming: EVENT_THEME_PARSER,
 })
 
+export const INFOS_PARSER = z.object({
+    floorPlans: z.array(z.object({
+        label: z.string(), pictureUrl: z.string()
+    })).optional(),
+    socialMedias: z.array(z.object({
+        type: SOCIAL_MEDIA_TYPE,
+        href: z.string()
+    })).optional(),
+    sponsors: z.array(z.object({
+        type: z.string(), typeColor: z.string(), typeFontColor: z.string().optional(),
+        sponsorships: z.array(z.object({
+            name: z.string(), logoUrl: z.string(), href: z.string()
+        }))
+    })).optional()
+});
+
 export const EVENT_DESCRIPTOR_PARSER = LISTABLE_EVENT_PARSER.extend({
     headingTitle: z.string(),
     features: z.object({
         roomsDisplayed: z.boolean(),
         favoritesEnabled: z.boolean(),
         remindMeOnceVideosAreAvailableEnabled: z.boolean(),
+        showInfosTab: z.boolean().optional(),
         // for multi-lang conferences, where we want to hide "default" (implicit) conference lang (ex: in devoxxfr, we'd hide FR)
         hideLanguages: z.array(z.string()),
+        showRoomCapacityIndicator: z.boolean().optional(),
         ratings: z.object({
             bingo: z.object({
                 enabled: z.boolean(),
@@ -121,10 +155,7 @@ export const EVENT_DESCRIPTOR_PARSER = LISTABLE_EVENT_PARSER.extend({
     talkTracks: z.array(THEMABLE_TALK_TRACK_PARSER),
     supportedTalkLanguages: z.array(THEMABLE_LANGUAGE_PARSER),
     rooms: z.array(ROOM_PARSER),
-    infos: z.object({
-        venuePicture: z.string(),
-        eventDescription: z.string()
-    })
+    infos: INFOS_PARSER.optional(),
 })
 
 export const DAILY_TALKS_STATS_PARSER = z.object({
@@ -142,14 +173,7 @@ export const SPEAKER_PARSER = z.object({
     id: z.string(),
     bio: z.string().nullish(),
     social: z.array(z.object({
-        type: z.union([
-            z.literal('twitter'),
-            z.literal('linkedin'),
-            z.literal('mastodon'),
-            z.literal('instagram'),
-            z.literal('youtube'),
-            z.literal('twitch'),
-        ]),
+        type: SOCIAL_MEDIA_TYPE,
         url: z.string()
     }))
 })
@@ -175,7 +199,7 @@ export const DETAILED_TALK_PARSER =  TALK_PARSER.extend({
 export const TIME_SLOT_BASE_PARSER = z.object({
     start: ISO_DATETIME_PARSER,
     end: ISO_DATETIME_PARSER,
-    id: z.string()
+    id: TIMESLOT_ID_PARSER
 })
 
 export const BREAK_PARSER = z.object({

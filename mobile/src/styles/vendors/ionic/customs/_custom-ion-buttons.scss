@@ -31,6 +31,12 @@ ion-button {
         }
     }
 
+    &.ion-color-theming {
+        --ion-color-base: var(--voxxrin-event-theme-colors-primary-hex) !important;
+        --ion-color-contrast: var(--app-white) !important;
+        --background-activated: var(--voxxrin-event-theme-colors-primary-hex) !important;
+    }
+
     //* Adjust Ionic Btn Type
     &.button-solid {
         @media (prefers-color-scheme: dark) {

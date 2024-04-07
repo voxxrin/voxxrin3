@@ -78,6 +78,7 @@ export function useUserTokensWallet() {
             return;
         }
 
+        // Important note: array union prevents duplicates, which is perfect 👌
         await updateDoc(firestoreUserTokensWalletDoc, "secretTokens.eventOrganizerTokens", arrayUnion(eventOrganizerSecretToken));
     }
 
@@ -90,6 +91,7 @@ export function useUserTokensWallet() {
             return;
         }
 
+        // Important note: array union prevents duplicates, which is perfect 👌
         await updateDoc(firestoreUserTokensWalletDoc, "secretTokens.talkFeedbacksViewerTokens", arrayUnion(talkFeedbacksViewerSecretToken));
     }
 

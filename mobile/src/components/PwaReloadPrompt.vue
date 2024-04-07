@@ -34,19 +34,20 @@ const {
 
 watch([needRefresh], async ([_needRefresh]) => {
     if(_needRefresh) {
-        const toast = await toastController.create({
-            message: LL.value.New_content_available_click_on_reload_button_to_update(),
-            duration: undefined,
-            position: 'top',
-            buttons: [{
-                text: LL.value.Reload(),
-                side: 'bottom',
-                role: 'reload',
-                handler: () => updateServiceWorker(true),
-            }],
-            cssClass: 'majNotification',
-        })
-        await toast.present()
+        updateServiceWorker(true);
+        // const toast = await toastController.create({
+        //     message: LL.value.New_content_available_click_on_reload_button_to_update(),
+        //     duration: undefined,
+        //     position: 'top',
+        //     buttons: [{
+        //         text: LL.value.Reload(),
+        //         side: 'end',
+        //         role: 'reload',
+        //         handler: () => updateServiceWorker(true),
+        //     }],
+        //     cssClass: 'majNotification',
+        // })
+        // await toast.present()
     }
 })
 

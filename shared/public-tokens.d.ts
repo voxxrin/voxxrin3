@@ -1,5 +1,5 @@
 
-export type PublicToken = FamilyEventsStatsAccessToken | FamilyOrganizerToken
+export type PublicToken = FamilyEventsStatsAccessToken | FamilyOrganizerToken | FamilyRoomStatsContributorToken
 
 export type FamilyEventsStatsAccessToken = {
     type: "FamilyEventsStatsAccess",
@@ -11,3 +11,7 @@ export type FamilyOrganizerToken = {
     eventFamilies: string[]
 }
 
+export type FamilyRoomStatsContributorToken = {
+    type: "FamilyRoomStatsContributorToken",
+    eventFamilies: string[]
+}

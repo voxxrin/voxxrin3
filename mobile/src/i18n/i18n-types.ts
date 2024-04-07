@@ -19,6 +19,30 @@ type RootTranslation = {
 	 */
 	HI: RequiredParams<'name'>
 	/**
+	 * O​p​e​n​ ​u​s​e​r​ ​d​a​s​h​b​o​a​r​d
+	 */
+	Open_User_Dashboard: string
+	/**
+	 * C​l​o​s​e
+	 */
+	Close: string
+	/**
+	 * P​r​e​v​i​o​u​s​ ​s​c​r​e​e​n
+	 */
+	Previous_screen: string
+	/**
+	 * B​a​c​k​ ​d​a​s​h​b​o​a​r​d
+	 */
+	Back_User_Dashboard: string
+	/**
+	 * A​v​a​t​a​r​ ​s​p​e​a​k​e​r
+	 */
+	Avatar_Speaker: string
+	/**
+	 * B​a​c​k
+	 */
+	Nav_Back: string
+	/**
 	 * C​o​n​f​e​r​e​n​c​e​ ​S​e​l​e​c​t​o​r
 	 */
 	Conference_Selector: string
@@ -26,6 +50,18 @@ type RootTranslation = {
 	 * P​i​n​n​e​d​ ​e​v​e​n​t​s
 	 */
 	Pinned_events: string
+	/**
+	 * C​o​n​f​i​g​u​r​a​t​i​o​n​ ​e​v​e​n​t
+	 */
+	Config_event: string
+	/**
+	 * B​a​c​k​ ​t​o​ ​e​v​e​n​t​s​ ​l​i​s​t
+	 */
+	Back_List_Events: string
+	/**
+	 * L​o​g​o
+	 */
+	Logo_event: string
 	/**
 	 * N​o​ ​p​i​n​n​e​d​ ​e​v​e​n​t​s​ ​a​v​a​i​l​a​b​l​e​ ​y​e​t
 	 */
@@ -63,13 +99,49 @@ type RootTranslation = {
 	 */
 	Cancel: string
 	/**
+	 * D​i​s​m​i​s​s
+	 */
+	Dismiss: string
+	/**
 	 * S​c​h​e​d​u​l​e
 	 */
 	Schedule: string
 	/**
+	 * B​a​n​n​e​r​ ​e​v​e​n​t
+	 */
+	Banner_Event: string
+	/**
+	 * C​a​n​c​e​l​ ​a​n​d​ ​b​a​c​k​ ​t​o​ ​s​c​h​e​d​u​l​e​ ​p​a​g​e
+	 */
+	Cancel_Back_To_Schedule: string
+	/**
 	 * S​e​a​r​c​h
 	 */
 	Search: string
+	/**
+	 * C​l​o​s​e​ ​s​e​a​r​c​h
+	 */
+	Search_close: string
+	/**
+	 * F​i​l​t​e​r​s
+	 */
+	Filters: string
+	/**
+	 * A​d​d​ ​t​o​ ​W​a​t​c​h​ ​l​a​t​e​r
+	 */
+	Add_Watch_later: string
+	/**
+	 * R​e​m​o​v​e​d​ ​f​r​o​m​ ​w​a​t​c​h​ ​l​a​t​e​r
+	 */
+	Remove_Watch_later: string
+	/**
+	 * A​d​d​ ​t​o​ ​f​a​v​o​r​i​t​e​s
+	 */
+	Add_Favorites: string
+	/**
+	 * R​e​m​o​v​e​d​ ​f​r​o​m​ ​f​a​v​o​r​i​t​e​s
+	 */
+	Remove_Favorites: string
 	/**
 	 * F​a​v​o​r​i​t​e​s
 	 */
@@ -108,7 +180,7 @@ type RootTranslation = {
 	Overlaps_x_slot_label: string
 	/**
 	 * {​n​r​O​f​O​v​e​r​l​a​p​p​i​n​g​S​l​o​t​s​}​ ​s​l​o​t​{​{​s​}​}
-	 * @param {string | number | boolean} nrOfOverlappingSlots
+	 * @param {number} nrOfOverlappingSlots
 	 */
 	Overlaps_x_slot_value: RequiredParams<'nrOfOverlappingSlots'>
 	/**
@@ -119,6 +191,10 @@ type RootTranslation = {
 	 * T​a​l​k​ ​d​e​t​a​i​l​s
 	 */
 	Talk_details: string
+	/**
+	 * C​l​o​s​e​ ​t​a​l​k​ ​d​e​t​a​i​l​s
+	 */
+	Close_talk_details: string
 	/**
 	 * S​p​e​a​k​e​r​s
 	 */
@@ -136,6 +212,10 @@ type RootTranslation = {
 	 * A​d​d​ ​f​r​o​m​ ​t​h​e​ ​l​i​s​t​ ​b​e​l​o​w
 	 */
 	Add_from_the_list_below: string
+	/**
+	 * V​i​e​w​ ​d​a​y
+	 */
+	View_day: string
 	/**
 	 * T​o​d​a​y
 	 */
@@ -156,6 +236,14 @@ type RootTranslation = {
 	 * A​d​d​ ​F​e​e​d​b​a​c​k
 	 */
 	Add_Feedback: string
+	/**
+	 * A​d​d​ ​F​e​e​d​b​a​c​k​ ​o​n​ ​s​l​o​t
+	 */
+	Add_Feedback_On_Slot: string
+	/**
+	 * O​p​e​n​ ​l​i​s​t​ ​o​f​ ​f​e​e​d​b​a​c​k​ ​s​l​o​t​s
+	 */
+	Open_List_Slot_Feedback: string
 	/**
 	 * P​i​c​k​ ​t​h​e​ ​t​a​l​k​ ​y​o​u​ ​a​t​t​e​n​d​e​d
 	 */
@@ -178,7 +266,7 @@ type RootTranslation = {
 	Currently_selected_timeslot: string
 	/**
 	 * {​n​r​O​f​O​v​e​r​l​a​p​p​i​n​g​S​l​o​t​s​}​ ​O​v​e​r​l​a​p​p​i​n​g​ ​t​i​m​e​ ​s​l​o​t​{​{​s​}​}
-	 * @param {string | number | boolean} nrOfOverlappingSlots
+	 * @param {number} nrOfOverlappingSlots
 	 */
 	Overlapping_timeslots: RequiredParams<'nrOfOverlappingSlots'>
 	/**
@@ -186,9 +274,10 @@ type RootTranslation = {
 	 */
 	In_favorites: string
 	/**
-	 * S​h​o​w​ ​n​o​n​-​f​a​v​o​r​i​t​e​d​ ​t​a​l​k​{​{​s​}​}
+	 * {​n​r​O​f​N​o​n​F​a​v​o​r​i​t​e​d​T​a​l​k​s​|​t​y​p​e​d​e​f​-​o​n​l​y​}​S​h​o​w​ ​n​o​n​-​f​a​v​o​r​i​t​e​d​ ​t​a​l​k​{​{​s​}​}
+	 * @param {number} nrOfNonFavoritedTalks
 	 */
-	Show_non_favorited_talks: string
+	Show_non_favorited_talks: RequiredParams<'nrOfNonFavoritedTalks|typedef-only'>
 	/**
 	 * W​a​t​c​h​ ​l​a​t​e​r​ ​a​l​l​ ​f​a​v​o​r​i​t​e​d​ ​t​a​l​k​s
 	 */
@@ -205,6 +294,10 @@ type RootTranslation = {
 	 * S​h​a​r​e​ ​y​o​u​r​ ​f​e​e​d​b​a​c​k
 	 */
 	Share_your_feedback: string
+	/**
+	 * S​e​l​e​c​t​ ​f​o​r​ ​f​e​e​d​b​a​c​k
+	 */
+	Select_for_feedback: string
 	/**
 	 * R​a​t​e​ ​i​t
 	 */
@@ -286,6 +379,10 @@ type RootTranslation = {
 	 */
 	Linear_rating: string
 	/**
+	 * L​e​v​e​l
+	 */
+	Linear_rating_level: string
+	/**
 	 * B​i​n​g​o
 	 */
 	Bingo: string
@@ -350,6 +447,30 @@ type RootTranslation = {
 	 */
 	No_talks_matching_search_terms: string
 	/**
+	 * E​v​e​n​t​ ​m​a​p
+	 */
+	Map_Event: string
+	/**
+	 * S​o​c​i​a​l​ ​m​e​d​i​a
+	 */
+	Social_media: string
+	/**
+	 * E​v​e​n​t​ ​p​l​a​n​s
+	 */
+	Event_plans: string
+	/**
+	 * A​d​d​r​e​s​s​ ​l​i​n​k
+	 */
+	Event_location_link: string
+	/**
+	 * E​v​e​n​t​ ​s​u​m​m​a​r​y
+	 */
+	Event_summary: string
+	/**
+	 * S​p​o​n​s​o​r​s
+	 */
+	Sponsors: string
+	/**
 	 * P​l​e​a​s​e​ ​k​e​e​p​ ​t​h​i​s​ ​t​o​k​e​n​ ​p​r​i​v​a​t​e
 	 */
 	Please_keep_this_token_private: string
@@ -365,6 +486,14 @@ type RootTranslation = {
 	 * L​o​g​o​u​t
 	 */
 	Logout: string
+	/**
+	 * P​r​e​l​o​a​d​i​n​g​ ​e​v​e​n​t​ ​a​s​s​e​t​s​ ​f​o​r​ ​o​f​f​l​i​n​e​ ​u​s​a​g​e
+	 */
+	Preloading_event_assets_for_offline_usage: string
+	/**
+	 * T​h​i​s​ ​c​a​n​ ​s​l​o​w​ ​d​o​w​n​ ​t​h​e​ ​a​p​p​ ​a​ ​l​i​t​t​l​e​ ​b​i​t​ ​d​u​r​i​n​g​ ​p​r​e​-​l​o​a​d​i​n​g
+	 */
+	This_can_slow_down_the_app_a_little_bit_during_pre_loading: string
 	/**
 	 * A​n​o​n​y​m​o​u​s​ ​(​p​r​i​v​a​t​e​)​ ​u​s​e​r​ ​t​o​k​e​n
 	 */
@@ -393,6 +522,43 @@ type RootTranslation = {
 	 * F​r​e​q​u​e​n​t​l​y​ ​a​s​k​e​d​ ​q​u​e​s​t​i​o​n​s
 	 */
 	Frequently_asked_questions: string
+	/**
+	 * S​t​i​l​l​ ​p​l​e​n​t​y​ ​o​f​ ​s​e​a​t​s​ ​a​v​a​i​l​a​b​l​e
+	 */
+	Still_plenty_of_seats_available: string
+	/**
+	 * R​o​o​m​ ​i​s​ ​b​e​c​o​m​i​n​g​ ​c​r​o​w​d​e​d
+	 */
+	Room_is_becoming_crowded: string
+	/**
+	 * O​n​l​y​ ​f​e​w​ ​s​e​a​t​s​ ​l​e​f​t
+	 */
+	Only_few_seats_left: string
+	/**
+	 * N​o​ ​s​e​a​t​s​ ​a​v​a​i​l​a​b​l​e
+	 */
+	No_seats_available: string
+	/**
+	 * N​o​ ​r​o​o​m​ ​c​a​p​a​c​i​t​y​ ​p​r​o​v​i​d​e​d​ ​y​e​t
+	 */
+	Unknown_room_capacity: string
+	/**
+	 * {​m​i​n​u​t​e​s​}​ ​m​i​n​u​t​e​{​{​s​}​}​ ​a​g​o
+	 * @param {number} minutes
+	 */
+	xx_minutes_ago: RequiredParams<'minutes'>
+	/**
+	 * F​e​w​ ​s​e​c​o​n​d​s​ ​a​g​o
+	 */
+	few_seconds_ago: string
+	/**
+	 * H​o​w​ ​i​s​ ​R​o​o​m​ ​C​a​p​a​c​i​t​y​ ​i​n​d​i​c​a​t​o​r​ ​c​a​l​c​u​l​a​t​e​d​ ​?
+	 */
+	How_is_room_capacity_indicator_calculated: string
+	/**
+	 * O​r​g​a​n​i​z​e​r​s​ ​a​r​e​ ​r​e​g​u​l​a​r​l​y​ ​s​e​n​d​i​n​g​ ​r​e​p​o​r​t​s​ ​o​n​ ​h​o​w​ ​f​u​l​l​ ​t​h​e​ ​r​o​o​m​ ​i​s
+	 */
+	Organizers_are_regularly_sending_room_capacity_ratio: string
 }
 
 export type TranslationFunctions = {
@@ -401,6 +567,30 @@ export type TranslationFunctions = {
 	 */
 	HI: (arg: { name: string }) => LocalizedString
 	/**
+	 * Open user dashboard
+	 */
+	Open_User_Dashboard: () => LocalizedString
+	/**
+	 * Close
+	 */
+	Close: () => LocalizedString
+	/**
+	 * Previous screen
+	 */
+	Previous_screen: () => LocalizedString
+	/**
+	 * Back dashboard
+	 */
+	Back_User_Dashboard: () => LocalizedString
+	/**
+	 * Avatar speaker
+	 */
+	Avatar_Speaker: () => LocalizedString
+	/**
+	 * Back
+	 */
+	Nav_Back: () => LocalizedString
+	/**
 	 * Conference Selector
 	 */
 	Conference_Selector: () => LocalizedString
@@ -408,6 +598,18 @@ export type TranslationFunctions = {
 	 * Pinned events
 	 */
 	Pinned_events: () => LocalizedString
+	/**
+	 * Configuration event
+	 */
+	Config_event: () => LocalizedString
+	/**
+	 * Back to events list
+	 */
+	Back_List_Events: () => LocalizedString
+	/**
+	 * Logo
+	 */
+	Logo_event: () => LocalizedString
 	/**
 	 * No pinned events available yet
 	 */
@@ -445,13 +647,49 @@ export type TranslationFunctions = {
 	 */
 	Cancel: () => LocalizedString
 	/**
+	 * Dismiss
+	 */
+	Dismiss: () => LocalizedString
+	/**
 	 * Schedule
 	 */
 	Schedule: () => LocalizedString
 	/**
+	 * Banner event
+	 */
+	Banner_Event: () => LocalizedString
+	/**
+	 * Cancel and back to schedule page
+	 */
+	Cancel_Back_To_Schedule: () => LocalizedString
+	/**
 	 * Search
 	 */
 	Search: () => LocalizedString
+	/**
+	 * Close search
+	 */
+	Search_close: () => LocalizedString
+	/**
+	 * Filters
+	 */
+	Filters: () => LocalizedString
+	/**
+	 * Add to Watch later
+	 */
+	Add_Watch_later: () => LocalizedString
+	/**
+	 * Removed from watch later
+	 */
+	Remove_Watch_later: () => LocalizedString
+	/**
+	 * Add to favorites
+	 */
+	Add_Favorites: () => LocalizedString
+	/**
+	 * Removed from favorites
+	 */
+	Remove_Favorites: () => LocalizedString
 	/**
 	 * Favorites
 	 */
@@ -491,7 +729,7 @@ export type TranslationFunctions = {
 	/**
 	 * {nrOfOverlappingSlots} slot{{s}}
 	 */
-	Overlaps_x_slot_value: (arg: { nrOfOverlappingSlots: string | number | boolean }) => LocalizedString
+	Overlaps_x_slot_value: (arg: { nrOfOverlappingSlots: number }) => LocalizedString
 	/**
 	 * Talk summary
 	 */
@@ -500,6 +738,10 @@ export type TranslationFunctions = {
 	 * Talk details
 	 */
 	Talk_details: () => LocalizedString
+	/**
+	 * Close talk details
+	 */
+	Close_talk_details: () => LocalizedString
 	/**
 	 * Speakers
 	 */
@@ -516,6 +758,10 @@ export type TranslationFunctions = {
 	 * Add from the list below
 	 */
 	Add_from_the_list_below: () => LocalizedString
+	/**
+	 * View day
+	 */
+	View_day: () => LocalizedString
 	/**
 	 * Today
 	 */
@@ -536,6 +782,14 @@ export type TranslationFunctions = {
 	 * Add Feedback
 	 */
 	Add_Feedback: () => LocalizedString
+	/**
+	 * Add Feedback on slot
+	 */
+	Add_Feedback_On_Slot: () => LocalizedString
+	/**
+	 * Open list of feedback slots
+	 */
+	Open_List_Slot_Feedback: () => LocalizedString
 	/**
 	 * Pick the talk you attended
 	 */
@@ -559,15 +813,15 @@ export type TranslationFunctions = {
 	/**
 	 * {nrOfOverlappingSlots} Overlapping time slot{{s}}
 	 */
-	Overlapping_timeslots: (arg: { nrOfOverlappingSlots: string | number | boolean }) => LocalizedString
+	Overlapping_timeslots: (arg: { nrOfOverlappingSlots: number }) => LocalizedString
 	/**
 	 * In favorites
 	 */
 	In_favorites: () => LocalizedString
 	/**
-	 * Show non-favorited talk{{s}}
+	 * {nrOfNonFavoritedTalks|typedef-only}Show non-favorited talk{{s}}
 	 */
-	Show_non_favorited_talks: (arg: { nrOfNonFavoritedTalks: number | string | boolean }) => LocalizedString
+	Show_non_favorited_talks: (arg: { nrOfNonFavoritedTalks: number }) => LocalizedString
 	/**
 	 * Watch later all favorited talks
 	 */
@@ -584,6 +838,10 @@ export type TranslationFunctions = {
 	 * Share your feedback
 	 */
 	Share_your_feedback: () => LocalizedString
+	/**
+	 * Select for feedback
+	 */
+	Select_for_feedback: () => LocalizedString
 	/**
 	 * Rate it
 	 */
@@ -665,6 +923,10 @@ export type TranslationFunctions = {
 	 */
 	Linear_rating: () => LocalizedString
 	/**
+	 * Level
+	 */
+	Linear_rating_level: () => LocalizedString
+	/**
 	 * Bingo
 	 */
 	Bingo: () => LocalizedString
@@ -729,6 +991,30 @@ export type TranslationFunctions = {
 	 */
 	No_talks_matching_search_terms: () => LocalizedString
 	/**
+	 * Event map
+	 */
+	Map_Event: () => LocalizedString
+	/**
+	 * Social media
+	 */
+	Social_media: () => LocalizedString
+	/**
+	 * Event plans
+	 */
+	Event_plans: () => LocalizedString
+	/**
+	 * Address link
+	 */
+	Event_location_link: () => LocalizedString
+	/**
+	 * Event summary
+	 */
+	Event_summary: () => LocalizedString
+	/**
+	 * Sponsors
+	 */
+	Sponsors: () => LocalizedString
+	/**
 	 * Please keep this token private
 	 */
 	Please_keep_this_token_private: () => LocalizedString
@@ -744,6 +1030,14 @@ export type TranslationFunctions = {
 	 * Logout
 	 */
 	Logout: () => LocalizedString
+	/**
+	 * Preloading event assets for offline usage
+	 */
+	Preloading_event_assets_for_offline_usage: () => LocalizedString
+	/**
+	 * This can slow down the app a little bit during pre-loading
+	 */
+	This_can_slow_down_the_app_a_little_bit_during_pre_loading: () => LocalizedString
 	/**
 	 * Anonymous (private) user token
 	 */
@@ -772,6 +1066,44 @@ export type TranslationFunctions = {
 	 * Frequently asked questions
 	 */
 	Frequently_asked_questions: () => LocalizedString
+	/**
+	 * Still plenty of seats available
+	 */
+	Still_plenty_of_seats_available: () => LocalizedString
+	/**
+	 * Room is becoming crowded
+	 */
+	Room_is_becoming_crowded: () => LocalizedString
+	/**
+	 * Only few seats left
+	 */
+	Only_few_seats_left: () => LocalizedString
+	/**
+	 * No seats available
+	 */
+	No_seats_available: () => LocalizedString
+	/**
+	 * No room capacity provided yet
+	 */
+	Unknown_room_capacity: () => LocalizedString
+	/**
+	 * {minutes} minute{{s}} ago
+	 */
+	xx_minutes_ago: (arg: { minutes: number }) => LocalizedString
+	/**
+	 * Few seconds ago
+	 */
+	few_seconds_ago: () => LocalizedString
+	/**
+	 * How is Room Capacity indicator calculated ?
+	 */
+	How_is_room_capacity_indicator_calculated: () => LocalizedString
+	/**
+	 * Organizers are regularly sending reports on how full the room is
+	 */
+	Organizers_are_regularly_sending_room_capacity_ratio: () => LocalizedString
 }
 
-export type Formatters = {}
+export type Formatters = {
+	'typedef-only': (value: number) => unknown
+}

@@ -5,19 +5,21 @@
         <div class="conferenceWelcome-title">
           <span class="name">{{ LL.Hello_xxx({name:'World'}) }}</span>
           <span class="welcome">{{ LL.Welcome_to() }} <strong>{{ appTitle }}</strong></span>
+          <!-- <ion-text class="powered">powered by
+            <ion-icon :src="'./assets/images/svg/voxxrin-color-primary.svg'"></ion-icon>
+          </ion-text> -->
         </div>
         <global-user-actions-button />
       </ion-header>
 
       <ion-header class="conferenceHeader stickyHeader" collapse="condense">
         <ion-input :placeholder="`${LL.Search_a_conference()}`"
-                   aria-label="Custom input"
+                   :aria-label="LL.Search_a_conference()"
                    :debounce="300"
                    @ionInput="(ev) => searchTextUpdated(''+ev.target.value)"
                    class="searchInput">
           <ion-icon aria-hidden="true" src="/assets/icons/line/search-line.svg"></ion-icon>
         </ion-input>
-
       </ion-header>
 
       <div class="conferenceContent">
@@ -43,6 +45,7 @@
           </template>
         </available-events-list>
       </div>
+      <PoweredVoxxrin></PoweredVoxxrin>
     </ion-content>
   </ion-page>
 </template>
@@ -65,6 +68,7 @@ import {useAvailableEvents} from "@/state/useAvailableEvents";
 import {useSharedUserPreferences} from "@/state/useUserPreferences";
 import GlobalUserActionsButton from "@/components/user/GlobalUserActionsButton.vue";
 import NoResults from "@/components/ui/NoResults.vue";
+import PoweredVoxxrin from "@/components/ui/PoweredVoxxrin.vue";
 
 const appTitle = import.meta.env.VITE_WHITE_LABEL_NAME;
 
@@ -168,6 +172,32 @@ onMounted(() => {
     background: var(--app-background);
     z-index: 9999;
 
+    .powered {
+      display: flex;
+      margin-top: -4px;
+      padding: 4px 8px;
+      column-gap: 4px;
+      font-size: 11px;
+      width: 132px;
+      background-color: var(--app-beige-medium);
+      border-radius: 12px;
+
+      @media (prefers-color-scheme: dark) {
+        background-color: var(--app-dark-contrast);
+      }
+
+      ion-icon {
+        width: 48px;
+        height: 16px;
+
+        @media (prefers-color-scheme: dark) {
+          .letters {
+            fill: white !important;
+          }
+        }
+      }
+    }
+
     &:after {
       display: none;
     }
@@ -179,7 +209,11 @@ onMounted(() => {
 
       .name {
         font-size: 14px;
-        color: var(--app-beige-dark);
+        color: var(--app-primary);
+
+        @media (prefers-color-scheme: dark) {
+          color: var(--app-white-70);
+        }
       }
 
       .welcome {

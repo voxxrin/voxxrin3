@@ -2,6 +2,13 @@
   <ion-page>
     <ion-content :fullscreen="true" v-if="confDescriptor">
       <current-event-header v-if="!hideHeader" :conf-descriptor="confDescriptor"/>
+      <ion-toast position="top" style="--max-width: 70%; --button-color: var(--color)"
+           :message="preparingOfflineScheduleToastMessageRef"
+           :is-open="preparingOfflineScheduleToastIsOpenRef"
+           :buttons="[{text: 'Dismiss', role: LL.Cancel() }]"
+           layout="stacked"
+           @didDismiss="preparingOfflineScheduleToastIsOpenRef = false"
+      ></ion-toast>
       <ion-header class="toolbarHeader">
         <ion-toolbar>
           <ion-title slot="start">{{ LL.Schedule() }}</ion-title>
@@ -12,15 +19,18 @@
                        @ionInput="(ev) => searchTermsRef = ''+ev.target.value"
             />
             <ion-icon class="iconInput" src="/assets/icons/line/search-line.svg"></ion-icon>
-            <ion-button shape="round" size="small" fill="outline" @click="toggleSearchField()">
+            <ion-button shape="round" size="small" fill="outline" @click="toggleSearchField()"
+                        :aria-label="LL.Search_close()">
               <ion-icon src="/assets/icons/line/close-line.svg"></ion-icon>
             </ion-button>
           </div>
 
-          <ion-button class="ion-margin-end" slot="end" shape="round" size="small" fill="outline" @click="openSchedulePreferencesModal()" v-if="false">
+          <ion-button class="ion-margin-end" slot="end" shape="round" size="small" fill="outline" @click="openSchedulePreferencesModal()"
+                      v-if="false"   :aria-label="LL.Filters()">
             <ion-icon src="/assets/icons/solid/settings-cog.svg"></ion-icon>
           </ion-button>
-          <ion-button slot="end" shape="round" size="small" @click="toggleSearchField()">
+          <ion-button slot="end" shape="round" size="small" @click="toggleSearchField()"
+                      :aria-label="LL.Search()">
             <ion-icon src="/assets/icons/line/search-line.svg"></ion-icon>
           </ion-button>
         </ion-toolbar>
@@ -38,29 +48,36 @@
                             :daily-schedule="currentSchedule" :search-terms="searchTermsRef"
                             @timeslots-list-updated="(displayedTimeslots) => displayedTimeslotsRef = displayedTimeslots"
                             @missing-feedback-past-timeslots-updated="updatedMissingTimeslots => missingFeedbacksPastTimeslots = updatedMissingTimeslots">
-          <template #iterator="{ timeslot, index: timeslotIndex }">
+          <template #iterator="{ timeslot, index: timeslotIndex, progress, upcomingRawTalkIds }">
             <time-slot-accordion
                 :animation-delay="timeslotIndex*TimeslotAnimations.ANIMATION_BASE_DELAY.total('milliseconds')"
                 :timeslot-feedback="timeslot.feedback" :timeslot="timeslot" :conf-descriptor="confDescriptor"
                 :elements-shown="['add-feedback-btn']"
+                :progress="progress"
                 @add-timeslot-feedback-clicked="(ts) => navigateToTimeslotFeedbackCreation(ts)"
                 @click="() => toggleExpandedTimeslot(timeslot)">
               <template #accordion-content="{ timeslot, progressStatus, feedback }">
                 <schedule-break v-if="timeslot.type==='break'" :conf-descriptor="confDescriptor" :talk-break="timeslot.break"></schedule-break>
-                <talk-format-groups-breakdown :conf-descriptor="confDescriptor" v-if="timeslot.type==='talks'" :talks="timeslot.talks">
+                <talk-format-groups-breakdown :conf-descriptor="confDescriptor" v-if="timeslot.type==='talks'"
+                                              :talks="timeslot.talks">
                   <template #talk="{ talk }">
-                    <ion-item class="listTalks-item">
-                      <schedule-talk :talk="talk" :talk-stats="talkStatsRefByTalkId.get(talk.id.value)" :talk-notes="userEventTalkNotesRef.get(talk.id.value)" @talkClicked="openTalkDetails($event)" :is-highlighted="(talk, talkNotes) => talkNotes.isFavorite" :conf-descriptor="confDescriptor">
+                    <ion-item class="listTalks-item" role="listitem">
+                      <schedule-talk :talk="talk" :talk-stats="talkStatsRefByTalkId.get(talk.id.value)"
+                                     :room-stats="roomsStatsRefByRoomId?.[talk.room.id.value]" :is-upcoming-talk="upcomingRawTalkIds.includes(talk.id.value)"
+                                     :talk-notes="userEventTalkNotesRef.get(talk.id.value)" @talkClicked="openTalkDetails($event)" :is-highlighted="(talk, talkNotes) => talkNotes.isFavorite" :conf-descriptor="confDescriptor">
                         <template #upper-right="{ talk }">
                           <talk-room :talk="talk" :conf-descriptor="confDescriptor" />
                         </template>
                         <template #footer-actions="{ talk, talkStats, talkNotes }">
-                          <provide-feedback-talk-button :conf-descriptor="confDescriptor" :timeslot-progress-status="progressStatus"
-                                :timeslot-feedback="feedback" @click.stop="navigateToTalkRatingScreenFor(talk)" />
-                          <talk-watch-later-button v-if="confDescriptor && !hideWatchLater" :conf-descriptor="confDescriptor" :user-talk-notes="talkNotes"
-                                                @talk-note-updated="updatedTalkNote => userEventTalkNotesRef.set(talk.id.value, updatedTalkNote) " />
-                          <talk-favorite-button v-if="confDescriptor" :conf-descriptor="confDescriptor" :user-talk-notes="talkNotes" :talk-stats="talkStats"
-                                                @talk-note-updated="updatedTalkNote => userEventTalkNotesRef.set(talk.id.value, updatedTalkNote) " />
+                          <provide-feedback-talk-button v-if="!talk.isOverflow"
+                            :conf-descriptor="confDescriptor" :timeslot-progress-status="progressStatus"
+                            :timeslot-feedback="feedback" @click.stop="navigateToTalkRatingScreenFor(talk)" />
+                          <talk-watch-later-button v-if="confDescriptor && !hideWatchLater && !talk.isOverflow"
+                            :conf-descriptor="confDescriptor" :user-talk-notes="talkNotes"
+                            @talk-note-updated="updatedTalkNote => userEventTalkNotesRef.set(talk.id.value, updatedTalkNote) " />
+                          <talk-favorite-button v-if="confDescriptor && !talk.isOverflow"
+                            :conf-descriptor="confDescriptor" :user-talk-notes="talkNotes" :talk-stats="talkStats"
+                            @talk-note-updated="updatedTalkNote => userEventTalkNotesRef.set(talk.id.value, updatedTalkNote) " />
                         </template>
                       </schedule-talk>
                     </ion-item>
@@ -73,11 +90,15 @@
       </ion-accordion-group>
 
       <ion-fab vertical="bottom" horizontal="end" slot="fixed" v-if="(areFeedbacksEnabled(confDescriptor) && missingFeedbacksPastTimeslots.length>0)">
-        <ion-fab-button @click="(ev) => fixAnimationOnFabClosing(ev.target)">
+        <ion-fab-button @click="(ev) => fixAnimationOnFabClosing(ev.target)"
+                        :aria-label="LL.Open_List_Slot_Feedback()">
           <ion-icon src="/assets/icons/line/comment-line-add.svg"></ion-icon>
         </ion-fab-button>
         <ion-fab-list side="top" class="listFeedbackSlot">
-          <div class="listFeedbackSlot-item" v-for="(missingFeedbacksPastTimeslot, index) in missingFeedbacksPastTimeslots" :key="missingFeedbacksPastTimeslot.timeslot.id.value"
+          <div class="listFeedbackSlot-item"
+               :aria-label="LL.Add_Feedback_On_Slot()"
+               v-for="(missingFeedbacksPastTimeslot, index) in missingFeedbacksPastTimeslots"
+               :key="missingFeedbacksPastTimeslot.timeslot.id.value"
                @click="() => navigateToTimeslotFeedbackCreation(missingFeedbacksPastTimeslot.timeslot)">
             <ion-label>{{ missingFeedbacksPastTimeslot.start }} <ion-icon aria-hidden="true" src="assets/icons/line/chevron-right-line.svg"></ion-icon>
               {{ missingFeedbacksPastTimeslot.end }}</ion-label>
@@ -85,22 +106,27 @@
           </div>
         </ion-fab-list>
       </ion-fab>
+      <PoweredVoxxrin></PoweredVoxxrin>
     </ion-content>
   </ion-page>
 </template>
 
 <script setup lang="ts">
 import {
-    IonFabButton,
-    IonFab,
-    IonFabList,
-    IonAccordionGroup,
-    IonInput, modalController,
+  IonFabButton,
+  IonFab,
+  IonFabList,
+  IonAccordionGroup,
+  IonInput, modalController,
+  IonToast
 } from '@ionic/vue';
 import {useRoute} from "vue-router";
 import {computed, onMounted, Ref, toValue, watch} from "vue";
 import {managedRef as ref} from "@/views/vue-utils";
-import {LabelledTimeslotWithFeedback, prepareSchedules, useSchedule} from "@/state/useSchedule";
+import {
+  LabelledTimeslotWithFeedback,
+  useSchedule
+} from "@/state/useSchedule";
 import CurrentEventHeader from "@/components/events/CurrentEventHeader.vue";
 import {getRouteParamsValue, isRefDefined} from "@/views/vue-utils";
 import {EventId} from "@/models/VoxxrinEvent";
@@ -117,7 +143,7 @@ import {
 import TimeSlotAccordion from "@/components/timeslots/TimeSlotAccordion.vue";
 import {useCurrentClock} from "@/state/useCurrentClock";
 import {typesafeI18n} from "@/i18n/i18n-vue";
-import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
+import {useOfflineEventPreparation, useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
 import SchedulePreferencesModal from '@/components/modals/SchedulePreferencesModal.vue'
 import {useTabbedPageNav} from "@/state/useTabbedPageNav";
 import TimeslotsIterator, {MissingFeedbackPastTimeslot} from "@/components/timeslots/TimeslotsIterator.vue";
@@ -136,6 +162,8 @@ import {useEventTalkStats} from "@/state/useEventTalkStats";
 import TalkWatchLaterButton from "@/components/talk-card/TalkWatchLaterButton.vue";
 import {useUserEventTalkNotes} from "@/state/useUserTalkNotes";
 import ProvideFeedbackTalkButton from "@/components/talk-card/ProvideFeedbackTalkButton.vue";
+import PoweredVoxxrin from "@/components/ui/PoweredVoxxrin.vue";
+import {useRoomsStats} from "@/state/useRoomsStats";
 
 const LOGGER = Logger.named("SchedulePage");
 
@@ -162,27 +190,16 @@ const {selectedDayId} = useSharedEventSelectedDay(eventId);
 
 const user = useCurrentUser()
 
-onMounted(() => {
-  const watchCleaner = watch([confDescriptor, user, currentSchedule, availableDaysRef], ([confDescriptor, user, currentSchedule, availableDays]) => {
-    // Pre-loading other days data in the background, for 2 main reasons :
-    // - navigation to other days will be quickier
-    // - if user switches to offline without navigating to these days, information will be in his cache anyway
-    if(confDescriptor && user && currentSchedule && availableDays) {
-      const otherDayIds = availableDays.filter(availableDay => !availableDay.id.isSameThan(currentSchedule.day)).map(d => d.id);
-      LOGGER.info(() => `Preparing schedule data for other days than currently selected one (${otherDayIds.map(id => id.value).join(", ")})`)
-      prepareSchedules(user, confDescriptor, currentSchedule.day, extractTalksFromSchedule(currentSchedule), otherDayIds);
-
-      watchCleaner();
-    }
-  })
-})
-
 const availableDaysRef = ref<VoxxrinDay[]|undefined>(undefined);
 function onceDayInitializedTo(day: VoxxrinDay, availableDays: VoxxrinDay[]) {
   availableDaysRef.value = availableDays;
 }
 
 const { schedule: currentSchedule } = useSchedule(confDescriptor, selectedDayId)
+
+const preparingOfflineScheduleToastMessageRef = ref<string | undefined>(undefined);
+const preparingOfflineScheduleToastIsOpenRef = ref<boolean>(false);
+useOfflineEventPreparation(user, confDescriptor, currentSchedule, availableDaysRef, preparingOfflineScheduleToastMessageRef, preparingOfflineScheduleToastIsOpenRef);
 
 const talkIdsRef = computed(() => {
     const schedule = toValue(currentSchedule);
@@ -191,6 +208,7 @@ const talkIdsRef = computed(() => {
 
 const {firestoreEventTalkStatsRef: talkStatsRefByTalkId} = useEventTalkStats(eventId, talkIdsRef)
 const {userEventTalkNotesRef} = useUserEventTalkNotes(eventId, talkIdsRef)
+const {firestoreRoomsStatsRef: roomsStatsRefByRoomId } = useRoomsStats(eventId)
 
 const displayedTimeslotsRef = ref<LabelledTimeslotWithFeedback[]>([]) as Ref<LabelledTimeslotWithFeedback[]>;
 
@@ -278,7 +296,7 @@ function toggleSearchField() {
     searchFieldDisplayed.value = !searchFieldDisplayed.value
     if(searchFieldDisplayed.value) {
         if(isRefDefined($searchInput)) {
-            setTimeout(() => $searchInput.value.$el.setFocus(), 500);
+            setTimeout(() => $searchInput.value.$el.setFocus(), 100);
         }
     } else {
         searchTermsRef.value = '';

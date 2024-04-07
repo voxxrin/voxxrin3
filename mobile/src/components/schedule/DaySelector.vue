@@ -13,11 +13,11 @@
           past: today.localeCompare(day.localDate) === 1,
           today: today.localeCompare(day.localDate) === 0,
           future: today.localeCompare(day.localDate) === -1,
-        }">
+        }" :aria-label="LL.View_day() + ' ' + day.formatted.day + ' ' + day.formatted.month">
           <ion-spinner v-if="today.localeCompare(day.localDate) === 0"
                        class="todayIndicator"
                        name="lines-sharp"
-                      duration="2500">
+                       :duration="2500">
           </ion-spinner>
           <div class="dayList-button-content">
             <strong class="day">{{day.formatted.day}}</strong>
@@ -58,10 +58,9 @@ import {managedRef as ref, toManagedRef as toRef} from "@/views/vue-utils";
 import {DayId, VoxxrinDay} from "@/models/VoxxrinDay";
 import {localDateToReadableParts, toISOLocalDate} from "@/models/DatesAndTime";
 import {useCurrentUserLocale} from "@/state/useCurrentUser";
-import {useInterval} from "@/views/vue-utils";
 import {ISOLocalDate} from "../../../../shared/type-utils";
-import {useCurrentClock} from "@/state/useCurrentClock";
-import {IonGrid} from "@ionic/vue";
+import {useCurrentClock, watchClock} from "@/state/useCurrentClock";
+import {IonSpinner} from "@ionic/vue";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {useSharedEventSelectedDay} from "@/state/useEventSelectedDay";
@@ -126,11 +125,10 @@ function findBestAutoselectableConferenceDay(days: VoxxrinDay[]): VoxxrinDay {
 
 const today = ref<ISOLocalDate>("0000-00-00")
 const tomorrow = ref<ISOLocalDate>("0000-00-00")
-useInterval(() => {
-    let todayZDT = useCurrentClock().zonedDateTimeISO();
-    today.value = toISOLocalDate(todayZDT)
-    tomorrow.value = toISOLocalDate(todayZDT.add({days:1}))
-}, {freq:"low-frequency"}, { immediate: true })
+watchClock({freq: 'low-frequency'}, (now) => {
+  today.value = toISOLocalDate(now)
+  tomorrow.value = toISOLocalDate(now.add({days:1}))
+})
 
 const formattedDays = computed(() => {
     return (confDescriptorRef.value.days || []).map(d => ({
@@ -178,7 +176,8 @@ function findDayByLocalDate(localDate: string) {
       margin-right: -24px;
       padding: 0;
       background: rgba(white, 0.6);
-      backdrop-filter: blur(30px) saturate(120%);
+      -webkit-backdrop-filter:  blur(30px) saturate(120%);
+      backdrop-filter:  blur(30px) saturate(120%);
       box-shadow: rgba(99, 99, 99, 0.2) 0 2px 8px 0;
 
       @media (prefers-color-scheme: dark) {
@@ -245,6 +244,12 @@ function findDayByLocalDate(localDate: string) {
       --border-style: solid;
       transition: 140ms ease-in-out;
       overflow: visible !important;
+      background: var(--app-white);
+
+      @media (prefers-color-scheme: dark) {
+        background: var(--app-dark-contrast);
+      }
+
 
       &-content {
         display: flex;
@@ -335,6 +340,7 @@ function findDayByLocalDate(localDate: string) {
     --padding-end: 0;
     --border-style: none;
     align-items: baseline;
+    backdrop-filter:  blur(30px) saturate(120%);
 
     @media (prefers-color-scheme: dark) {
       --background: rgba(var(--app-medium-contrast-rgb), 0.5);
@@ -364,10 +370,13 @@ function findDayByLocalDate(localDate: string) {
         left: 16px;
         right: 8px;
       }
-
       font-size: 34px;
       font-weight: 900;
       color: var(--voxxrin-event-theme-colors-primary-hex);
+
+      @media (prefers-color-scheme: dark) {
+        color: var(--app-white);
+      }
     }
 
     .month {

@@ -2,13 +2,13 @@ import * as functions from "firebase-functions";
 import {db} from "../../firebase";
 import {ConferenceOrganizerSpace} from "../../../../../shared/conference-organizer-space.firestore";
 import {TalkAttendeeFeedback} from "../../../../../shared/talk-feedbacks.firestore";
-import {TalkStats} from "../../../../../shared/feedbacks.firestore";
 import {EventLastUpdates, ListableEvent} from "../../../../../shared/event-list.firestore";
 import {ISODatetime} from "../../../../../shared/type-utils";
 import {sortBy} from "lodash";
 import {firestore} from "firebase-admin";
 import DocumentReference = firestore.DocumentReference;
 import {logPerf} from "../http/utils";
+import {TalkStats} from "../../../../../shared/event-stats";
 
 export type EventFamilyToken = {
     families: string[],
@@ -65,10 +65,13 @@ export async function ensureTalkFeedbackViewerTokenIsValidThenGetFeedbacks(event
     return feedbacks.filter(feedback => Date.parse(feedback.lastUpdatedOn) > updatedSince.getTime());
 }
 
-export async function eventTalkStatsFor(eventId: string) {
+export async function eventTalkStatsFor(eventId: string): Promise<TalkStats[]> {
     return logPerf(`eventTalkStatsFor(${eventId})`, async () => {
-        const eventTalkStatsPerTalkId = (await db.doc(`events/${eventId}/talksStats-allInOne/self`).get()).data() as Record<string, TalkStats>;
-        return Object.values(eventTalkStatsPerTalkId);
+        const eventTalkStatsPerTalkId = (await db.doc(`events/${eventId}/talksStats-allInOne/self`).get()).data() as Record<string, Omit<TalkStats, 'id'>>;
+        return Object.entries(eventTalkStatsPerTalkId).map(([id, talkStats]) => ({
+          id,
+          ...talkStats
+        }))
     })
 }
 

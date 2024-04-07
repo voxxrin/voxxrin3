@@ -8,6 +8,14 @@
   border-bottom: 1px solid var(--app-beige-line);
   background: var(--app-white);
 
+  ::part(native) {
+    border-radius: 16px 16px 0 0;
+  }
+
+  ::part(indicator-background) {
+    border-radius: 16px 16px 0 0;
+  }
+
   &.md {
     .in-segment {
       text-transform: none;
@@ -34,6 +42,7 @@
     font-size: 16px;
     height: 40px;
     min-height: 46px;
+    letter-spacing: normal;
     color: var(--app-primary);
     --indicator-color: var(--app-voxxrin);
     --indicator-box-shadow: none;
@@ -48,18 +57,23 @@
     }
 
     .count {
+      position: relative;
+      top: -2px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      height: 24px;
-      min-width: 24px;
+      height: 28px;
+      min-width: 28px;
       margin-left: 8px;
+      padding: 0 6px;
+      font-size: 12px;
       background-color: var(--app-beige-medium);
-      color: var(--app-beige-dark);
+      color: var(--app-primary);
       border-radius: 34px;
 
       @media (prefers-color-scheme: dark) {
-        background-color: var(--app-background);
+        background-color: transparent;
+        border: 1px solid var(--app-white);
         color: var(--app-white);
       }
     }
@@ -72,7 +86,7 @@
       color: white;
 
       .count {
-        background-color: var(--app-voxxrin);
+        background-color: var(--app-primary);
         color: var(--app-white);
 
         @media (prefers-color-scheme: dark) {
@@ -85,9 +99,7 @@
 }
 
 .tabsSelection ion-segment-button.md {
-  --border-radius: 16px 16px 0 0;
-  --indicator-transition: none;
-  overflow: hidden;
+
 
   .segment-button-indicator {
     bottom: 2px;

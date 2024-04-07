@@ -3,7 +3,8 @@
     <ion-icon :class="{ 'infoMessage-iconIllu': true, absolute: position === 'absolute' }" :src="`/assets/${illuPath}`"></ion-icon>
     <span class="infoMessage-title"><slot name="title"></slot></span>
     <span class="infoMessage-subTitle" v-if="hasSubtitleSlot"><slot name="subTitle"></slot></span>
-    <ion-button v-if="!!buttonLabel" @click="$emit('button-clicked')" size="default" fill="outline" expand="block">
+    <ion-button v-if="!!buttonLabel" @click="$emit('button-clicked')" size="default" fill="outline" expand="block"
+                :aria-label="buttonLabel">
       {{buttonLabel}}
     </ion-button>
   </div>

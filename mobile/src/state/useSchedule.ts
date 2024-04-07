@@ -2,23 +2,31 @@ import {computed, Ref, unref, watch} from "vue";
 import {deferredVuefireUseDocument, managedRef as ref} from "@/views/vue-utils";
 import {DailySchedule} from "../../../shared/daily-schedule.firestore";
 import {
-    createVoxxrinDailyScheduleFromFirestore,
-    getTimeslotLabel, toFilteredLabelledTimeslotWithFeedback,
-    VoxxrinDailySchedule,
-    VoxxrinScheduleTimeSlot,
+  createVoxxrinDailyScheduleFromFirestore, extractTalksFromSchedule,
+  getTimeslotLabel, toFilteredLabelledTimeslotWithFeedback,
+  VoxxrinDailySchedule,
+  VoxxrinScheduleTimeSlot,
 } from "@/models/VoxxrinSchedule";
 import {DayId} from "@/models/VoxxrinDay";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {DocumentReference, doc, collection, getDoc} from "firebase/firestore";
 import {db} from "@/state/firebase";
-import {prepareEventTalks} from "@/state/useEventTalk";
+import {prepareEventTalk} from "@/state/useEventTalk";
 import {prepareTalkStats} from "@/state/useEventTalkStats";
 import {prepareUserTalkNotes} from "@/state/useUserTalkNotes";
-import {filterTalksMatching, TalkId, VoxxrinTalk} from "@/models/VoxxrinTalk";
-import {findTimeslotFeedback, VoxxrinTimeslotFeedback} from "@/models/VoxxrinFeedback";
+import {
+  createVoxxrinTalkFromFirestore,
+  removeTalkOverflowsAndDuplicates,
+  VoxxrinTalk
+} from "@/models/VoxxrinTalk";
+import {VoxxrinTimeslotFeedback} from "@/models/VoxxrinFeedback";
 import {UserDailyFeedbacks} from "../../../shared/feedbacks.firestore";
 import {PERF_LOGGER} from "@/services/Logger";
 import { User } from 'firebase/auth';
+import {CompletablePromiseQueue} from "@/models/utils";
+import {match, P} from "ts-pattern";
+import {checkCache} from "@/services/Cachings";
+import {Temporal} from "temporal-polyfill";
 
 export function useSchedule(
             conferenceDescriptorRef: Ref<VoxxrinConferenceDescriptor | undefined>,
@@ -58,71 +66,68 @@ export function dailyScheduleDocument(eventDescriptor: VoxxrinConferenceDescript
     return doc(collection(doc(collection(db, 'events'), eventDescriptor.id.value), 'days'), dayId.value) as DocumentReference<DailySchedule>;
 }
 
-async function loadTalkSpeakerUrls(talk: { speakers: Array<{ photoUrl?: VoxxrinTalk['speakers'][number]['photoUrl'] }> }) {
-    return Promise.all(talk.speakers.map(async speaker => {
-        return new Promise(resolve => {
-            if (speaker.photoUrl) {
-                const avatarImage = new Image();
-                avatarImage.src = speaker.photoUrl;
+export async function prepareDailySchedule(conferenceDescriptor: VoxxrinConferenceDescriptor, day: DayId, dailyTalks: VoxxrinTalk[], promisesQueue: CompletablePromiseQueue, queuePriority: number) {
+  // Removing talk duplicates (for instance, overflows)
+  const dedupedDailyTalks = removeTalkOverflowsAndDuplicates(dailyTalks);
 
-                avatarImage.onload = resolve;
-            } else {
-                resolve(null);
-            }
-        })
-    }));
+  promisesQueue.addAll(dedupedDailyTalks.map(talk => () => prepareEventTalk(conferenceDescriptor, day, talk, promisesQueue, queuePriority)))
 }
 
-export function prepareSchedules(
+export async function
+prepareSchedules(
     user: User,
     conferenceDescriptor: VoxxrinConferenceDescriptor,
     currentDayId: DayId,
     currentTalks: Array<VoxxrinTalk>,
-    otherDayIds: Array<DayId>
+    otherDayIds: Array<DayId>,
+    promisesQueue: CompletablePromiseQueue
 ) {
-    PERF_LOGGER.debug(() => `prepareSchedules(userId=${user.uid}, eventId=${conferenceDescriptor.id.value}, currentDayId=${currentDayId.value}, currentTalkIds=${JSON.stringify(currentTalks.map(talk => talk.id.value))}, otherDayIds=${JSON.stringify(otherDayIds.map(id => id.value))})`);
+    promisesQueue.add(() =>
+      checkCache(`offlineSchedulePrep(eventId=${conferenceDescriptor.id.value})(currentDay (${currentDayId.value}))`,
+        Temporal.Duration.from({ hours: 6 }), // Cache should be lower for current day than for other days
+        async () => {
+          PERF_LOGGER.debug(() => `offlineSchedulePrep(eventId=${conferenceDescriptor.id.value})(currentDay (${currentDayId.value}))`)
+          await prepareDailySchedule(conferenceDescriptor, currentDayId, currentTalks, promisesQueue, 1000);
+      }),
+      {priority: 1000}
+    );
 
-    [currentDayId, ...otherDayIds].reduce(async (previousDayPromise, dayId) => {
-        await previousDayPromise;
+    promisesQueue.addAll(otherDayIds.map(otherDayId => () =>
+      checkCache(`offlineSchedulePrep(eventId=${conferenceDescriptor.id.value})(otherDay=${currentDayId.value})`,
+        Temporal.Duration.from({ hours: 24 }), // Cache should be higher for other days than for current day
+        async () => {
+          PERF_LOGGER.debug(() => `offlineSchedulePrep(eventId=${conferenceDescriptor.id.value})(otherDay=${currentDayId.value})`)
 
-        let talkIds: TalkId[]|undefined = undefined;
-        if(dayId === currentDayId) {
-            currentTalks.map(loadTalkSpeakerUrls)
+          const maybeDailyScheduleDoc = dailyScheduleDocument(conferenceDescriptor, otherDayId)
 
-            talkIds = currentTalks.map(talk => talk.id);
-        } else {
-            const dailyScheduleDoc = dailyScheduleDocument(conferenceDescriptor, dayId)
+          const otherDayTalks = await match([navigator.onLine, maybeDailyScheduleDoc])
+            .with([true, P.nonNullable], async ([_, dailyScheduleDoc ]) => {
+              const dailyScheduleSnapshot = await getDoc(dailyScheduleDoc);
+              PERF_LOGGER.debug(`getDoc(${dailyScheduleDoc.path})`)
 
-            if(navigator.onLine && dailyScheduleDoc) {
-                const dailyScheduleSnapshot = await getDoc(dailyScheduleDoc);
-                PERF_LOGGER.debug(`getDoc(${dailyScheduleDoc.path})`)
+              return dailyScheduleSnapshot.data()?.timeSlots.reduce((talks, timeslot) => {
+                if (timeslot.type === 'talks') {
+                  timeslot.talks.forEach(talk => {
+                    const voxxrinTalk = createVoxxrinTalkFromFirestore(conferenceDescriptor, talk)
+                    talks.push(voxxrinTalk);
+                  })
+                }
 
-                talkIds = dailyScheduleSnapshot.data()?.timeSlots.reduce((talkIds, timeslot) => {
-                    if (timeslot.type === 'talks') {
-                        timeslot.talks.forEach(talk => {
-                            loadTalkSpeakerUrls(talk);
+                return talks;
+              }, [] as Array<VoxxrinTalk>) || [];
+            }).otherwise(async () => [] as VoxxrinTalk[]);
 
-                            talkIds.push(new TalkId(talk.id))
-                        })
-                    }
+          const dedupedOtherDayTalks = removeTalkOverflowsAndDuplicates(otherDayTalks)
 
-                    return talkIds;
-                }, [] as Array<TalkId>) || [];
-            }
-        }
+          // For other days, we also need to prepare talks stats & notes given that it won't have been de-facto
+          // pre-loaded by user navigation
+          promisesQueue.add(() => prepareTalkStats(conferenceDescriptor.id, otherDayId, dedupedOtherDayTalks, promisesQueue), { priority: 100 })
+          promisesQueue.add(() => prepareUserTalkNotes(user, conferenceDescriptor.id, otherDayId, dedupedOtherDayTalks, promisesQueue), { priority: 100 });
 
-        if(navigator.onLine && talkIds) {
-            const preparations: Array<Promise<any>> = [];
-            if(dayId !== currentDayId) {
-                preparations.push(prepareTalkStats(conferenceDescriptor.id, dayId, talkIds));
-                preparations.push(prepareUserTalkNotes(user, conferenceDescriptor.id, dayId, talkIds));
-            }
-
-            preparations.push(prepareEventTalks(conferenceDescriptor, dayId, talkIds));
-
-            await Promise.all(preparations);
-        }
-    }, Promise.resolve());
+          await prepareDailySchedule(conferenceDescriptor, otherDayId, otherDayTalks, promisesQueue, 100);
+      })),
+      {priority: 100}
+    );
 }
 
 export type LabelledTimeslotWithFeedback = VoxxrinScheduleTimeSlot & {

@@ -29,6 +29,17 @@ export type VoxxrinDetailedTalk = Replace<VoxxrinTalk, {
 }> & Replace<Omit<DetailedTalk, (keyof Talk) | "summary">, {
 }>
 
+export function removeTalkOverflowsAndDuplicates(talks: VoxxrinTalk[]) {
+  const talksById = talks.reduce((talksById, talk) => {
+    if(!talk.isOverflow) {
+      talksById.set(talk.id.value, talk);
+    }
+    return talksById;
+  }, new Map<string, VoxxrinTalk>())
+
+  return Array.from(talksById.values());
+}
+
 export function createVoxxrinTalkFromFirestore(event: VoxxrinConferenceDescriptor, firestoreTalk: Talk) {
     const format = findTalkFormat(event, new TalkFormatId(firestoreTalk.format.id));
     const track = findTrack(event, new TrackId(firestoreTalk.track.id));
@@ -46,7 +57,8 @@ export function createVoxxrinTalkFromFirestore(event: VoxxrinConferenceDescripto
         format,
         track,
         room,
-        id: new TalkId(firestoreTalk.id)
+        id: new TalkId(firestoreTalk.id),
+        isOverflow: firestoreTalk.isOverflow
     }
     return talk;
 }
@@ -69,7 +81,7 @@ export function createVoxxrinDetailedTalkFromFirestore(event: VoxxrinConferenceD
 
 
 export function sortThenGroupByFormat(talks: VoxxrinTalk[], confDescriptor: VoxxrinConferenceDescriptor) {
-    return sortBy(talks, t => findTalkFormatIndex(confDescriptor, t.format.id))
+    const talksPerFormat = sortBy(talks, t => findTalkFormatIndex(confDescriptor, t.format.id))
         .reduce((talksGroupedByFormat, talk) => {
             const talks = match(talksGroupedByFormat.findIndex(formatGroup => formatGroup.format.id.isSameThan(talk.format.id)))
                 .with(-1, () => {
@@ -82,6 +94,14 @@ export function sortThenGroupByFormat(talks: VoxxrinTalk[], confDescriptor: Voxx
 
             return talksGroupedByFormat;
         }, [] as Array<{format: VoxxrinTalkFormat, talks: VoxxrinTalk[]}>)
+
+    talksPerFormat.forEach(format => {
+        // Ensuring all talks for a given format are always sorted by rooms declaration order
+        // in conf descriptor
+        format.talks = sortBy(format.talks, talk => confDescriptor.rooms.findIndex(room => room.id.isSameThan(talk.room.id)))
+    })
+
+    return talksPerFormat
 }
 
 export function filterTalksMatching(talks: VoxxrinTalk[], searchTerms: string|undefined) {

@@ -7,6 +7,6 @@ export interface FullEvent {
     conferenceDescriptor: ConferenceDescriptor,
     info: ListableEvent,
     daySchedules: DailySchedule[],
-    talks: DetailedTalk[]
+    talks: DetailedTalk[],
 }
 

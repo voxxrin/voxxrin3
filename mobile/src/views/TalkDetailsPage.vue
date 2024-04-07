@@ -3,25 +3,37 @@
     <ion-content v-themed-event-styles="confDescriptor" :fullscreen="true" v-if="confDescriptor && detailedTalk">
       <ion-header class="stickyHeader" v-if="talkNotes" :class="{ 'is-favorited': talkNotes.isFavorite, 'to-watch-later': talkNotes.watchLater }">
         <ion-toolbar>
-          <ion-button class="stickyHeader-close" shape="round" slot="start" size="small" fill="outline" @click="closeAndNavigateBack()">
+          <ion-button class="stickyHeader-close" shape="round" slot="start" size="small" fill="outline" @click="closeAndNavigateBack()"
+          :aria-label="LL.Close_talk_details()">
             <ion-icon src="/assets/icons/solid/close.svg"></ion-icon>
           </ion-button>
           <ion-title class="stickyHeader-title" slot="start" >{{ LL.Talk_details() }}</ion-title>
-          <ion-button class="btnTalkAction _watchLater" slot="end" shape="round" fill="outline"  @click.stop="() => toggleWatchLater()" v-if="confDescriptor?.features.remindMeOnceVideosAreAvailableEnabled">
+          <!-- TODO Fix dynamic aria-label -->
+          <ion-button class="btnTalkAction _watchLater" slot="end" shape="round" fill="outline"
+                      @click.stop="() => toggleWatchLater()" v-if="confDescriptor?.features.remindMeOnceVideosAreAvailableEnabled"
+                      :aria-label="talkNotes?.watchLater ? LL.Remove_Watch_later() : LL.Add_Watch_later()">
             <ion-icon v-if="!talkNotes.watchLater" aria-hidden="true" src="/assets/icons/line/video-line.svg"></ion-icon>
             <ion-icon v-if="talkNotes.watchLater" aria-hidden="true" src="/assets/icons/solid/video.svg"></ion-icon>
           </ion-button>
-          <div class="favoriteGroup" slot="end">
-            <ion-button class="btnTalkAction _favorite" shape="round" fill="outline" @click.stop="() => toggleFavorite()" v-if="confDescriptor?.features.favoritesEnabled">
+          <div class="favoriteGroup" slot="end" :class="{'_animationIn': talkNotes.isFavorite}" >
+            <!-- TODO Fix dynamic aria-label -->
+            <ion-button class="btnTalkAction _favorite"
+                        shape="round" fill="outline" @click.stop="() => toggleFavorite()"
+                        v-if="confDescriptor?.features.favoritesEnabled"
+                        :aria-label="talkNotes?.isFavorite ? LL.Remove_Favorites() : LL.Add_Favorites()">
               <ion-icon class="favorite-btn-icon" v-if="!talkNotes.isFavorite" aria-hidden="true" src="/assets/icons/line/bookmark-line-favorite.svg"></ion-icon>
               <ion-icon class="favorite-btn-icon" v-if="talkNotes.isFavorite" aria-hidden="true" src="/assets/icons/solid/bookmark-favorite.svg"></ion-icon>
             </ion-button>
-            <ion-label class="favorite-btn-nb" v-if="eventTalkStats !== undefined">{{ eventTalkStats.totalFavoritesCount }}</ion-label>
+            <ion-label class="favorite-btn-nb" v-if="eventTalkStats !== undefined">
+              <span>{{ eventTalkStats.totalFavoritesCount }}</span>
+            </ion-label>
           </div>
         </ion-toolbar>
       </ion-header>
 
-      <talk-details-header :conf-descriptor="confDescriptor" :talk="detailedTalk"></talk-details-header>
+      <talk-details-header :conf-descriptor="confDescriptor" :talk="detailedTalk">
+        <room-capacity-indicator :event-id="eventId" :talk="detailedTalk" :room-stats="firestoreRoomStatsRef" :bottom-rounded="true" :show-unknown-capacity="false" />
+      </talk-details-header>
 
       <div class="talkDetails-tags" v-if="detailedTalk?.tags.length">
         <div class="talkDetails-tags-list">
@@ -48,8 +60,8 @@
         <ion-list class="talkDetails-speakers-list">
           <ion-item v-for="(speaker, index) in detailedTalk?.speakers" :key="speaker.id.value">
             <ion-avatar>
-              <img :src="speaker.photoUrl" v-if="speaker.photoUrl"/>
-              <img src="/assets/images/svg/avatar-shadow.svg" v-if="!speaker.photoUrl"/>
+              <img :src="speaker.photoUrl" v-if="speaker.photoUrl" :alt="LL.Avatar_Speaker() + ' ' + speaker.fullName"/>
+              <img src="/assets/images/svg/avatar-shadow.svg" v-if="!speaker.photoUrl" aria-hidden="true"/>
             </ion-avatar>
             <div class="speakerInfo">
               <div class="speakerInfo-name">
@@ -90,6 +102,8 @@ import {goBackOrNavigateTo} from "@/router";
 import TalkDetailsHeader from "@/components/talk-details/TalkDetailsHeader.vue";
 import {useEventTalkStats} from "@/state/useEventTalkStats";
 import {Logger} from "@/services/Logger";
+import RoomCapacityIndicator from "@/components/rooms/RoomCapacityIndicator.vue";
+import {useRoomStats} from "@/state/useRoomsStats";
 
 const LOGGER = Logger.named("TalkDetailsPage");
 
@@ -133,11 +147,15 @@ const theme = computed(() => {
     }
 });
 
+const {firestoreRoomStatsRef } = useRoomStats(eventId, toRef(() => detailedTalk.value?.room.id))
+
 </script>
 
 <style lang="scss" scoped>
   ion-header {
     ion-toolbar {
+      padding-top: 0;
+
       &:before, &:after {
         position: absolute;
         content: '';
@@ -214,6 +232,16 @@ const theme = computed(() => {
       }
     }
 
+    .favoriteGroup {
+      &._animationIn {
+        .favorite-btn-icon { animation: jello-vertical 800ms both;}
+        .favorite-btn-nb > span {
+          display: block;
+          animation: pulsate-fwd 400ms ease-in-out both;
+        }
+      }
+    }
+
     .btnTalkAction {
       height: 48px;
       width: 48px;
@@ -275,10 +303,6 @@ const theme = computed(() => {
 
     &-description {
       padding: var(--app-gutters);
-
-      ion-text {
-        line-height: 1.6;
-      }
 
       /**
       Enforcing color for talk description, in case HTML coming from CFP overrides some colors, with

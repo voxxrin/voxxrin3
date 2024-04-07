@@ -47,7 +47,7 @@ const props = defineProps({
   row-gap: 8px;
   padding: 8px;
   margin: 0;
-  border-radius: 8px 12px 12px 8px;
+  border-radius: var(--app-card-radius);
   border : {
     top: 1px solid var(--app-grey-line);
     right: 1px solid var(--app-grey-line);
@@ -87,27 +87,6 @@ const props = defineProps({
 
         @media (prefers-color-scheme: dark) {
           color: var(--app-white);
-        }
-      }
-
-      .room {
-        display: flex;
-        align-items: center;
-        column-gap: 2px;
-        font-weight: 500;
-        color: var(--app-grey-dark);
-
-        @media (prefers-color-scheme: dark) {
-          color: rgba(white, 0.8);
-        }
-
-        ion-icon {
-          font-size: 16px;
-          color: var(--app-primary-shade);
-
-          @media (prefers-color-scheme: dark) {
-            color: var(--app-white);
-          }
         }
       }
     }

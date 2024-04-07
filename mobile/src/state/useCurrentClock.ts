@@ -1,9 +1,9 @@
-import {Ref} from "vue";
-import {managedRef as ref} from "@/views/vue-utils";
 import {Temporal} from "temporal-polyfill";
 import {ISODatetime} from "../../../shared/type-utils";
 import {match, P} from "ts-pattern";
-import {Logger, PERF_LOGGER} from "@/services/Logger";
+import {Logger} from "@/services/Logger";
+import {useInterval, UseIntervalDurationOpts} from "@/views/vue-utils";
+import {computed, ref, toValue} from "vue";
 
 const LOGGER = Logger.named("useCurrentClock");
 
@@ -16,6 +16,32 @@ const CLOCK_WRAPPER: { value: Clock } = { value: Temporal.Now }
 // Module intended to provide time-based facilities, in order to facilitate mocking time
 // everywhere in the app
 export function useCurrentClock(): Clock { return CLOCK_WRAPPER.value; }
+
+
+const highFrequencyNowRef = ref<Temporal.ZonedDateTime|undefined>(undefined)
+useInterval(() => {
+  highFrequencyNowRef.value = useCurrentClock().zonedDateTimeISO()
+}, {freq:"high-frequency"}, {immediate: true})
+
+export function useHighFrequencyNowRef(): Readonly<typeof highFrequencyNowRef> {
+  return highFrequencyNowRef;
+}
+export function watchClock(
+  frequency: UseIntervalDurationOpts,
+  callback: (datetime: Temporal.ZonedDateTime) => void = () => null,
+  updatePredicate: () => boolean = () => true
+) {
+  const clockRef = ref<Temporal.ZonedDateTime|undefined>(undefined)
+  useInterval(() => {
+    if(updatePredicate()) {
+      clockRef.value = useCurrentClock().zonedDateTimeISO();
+      callback(clockRef.value);
+    }
+  }, frequency, { immediate: true })
+
+  // returning a readonly ref
+  return computed(() => toValue(clockRef));
+}
 
 export async function overrideCurrentClock(clock: Clock, callback: (() => Promise<void>)|undefined) {
     const initialClock = CLOCK_WRAPPER.value;

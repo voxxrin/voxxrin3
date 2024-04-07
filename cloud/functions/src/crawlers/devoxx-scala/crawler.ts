@@ -20,12 +20,12 @@ import { ListableEvent } from "../../../../../shared/event-list.firestore";
 import { Temporal } from "@js-temporal/polyfill";
 import {z} from "zod";
 import {ConferenceDescriptor} from "../../../../../shared/conference-descriptor.firestore";
-import axios from "axios";
 import {
     EVENT_DESCRIPTOR_PARSER, THEMABLE_TALK_FORMAT_PARSER, THEMABLE_TALK_TRACK_PARSER,
 } from "../crawler-parsers";
 import {CrawlerKind} from "../crawl";
 import {match, P} from "ts-pattern";
+import {http} from "../utils";
 
 const DEVOXX_SCALA_DESCRIPTOR_PARSER = EVENT_DESCRIPTOR_PARSER.omit({
     talkFormats: true,
@@ -54,7 +54,7 @@ async function loadResources<T, R = T>(
     callback: (rawData: T[]) => Promise<R[]>): Promise<R[]> {
 
     const link = findLink(links, relName, descriptor);
-    const resources: T[] = (await axios.get(`${link.href}`)).data
+    const resources: T[] = await http.get(`${link.href}`)
     return await callback(resources);
 }
 
@@ -63,15 +63,14 @@ async function loadResource<T>(
     descriptor: z.infer<typeof DEVOXX_SCALA_DESCRIPTOR_PARSER>): Promise<{url: string, resource: T}> {
 
     const link = findLink(links, relName, descriptor);
-    const resource: T = (await axios.get(`${link.href}`)).data
+    const resource: T = await http.get(`${link.href}`)
     return {url: link.href, resource };
 }
 
 export const DEVOXX_SCALA_CRAWLER: CrawlerKind<typeof DEVOXX_SCALA_DESCRIPTOR_PARSER> = {
-    kind: 'devoxx-scala',
     descriptorParser: DEVOXX_SCALA_DESCRIPTOR_PARSER,
     crawlerImpl: async (eventId: string, descriptor: z.infer<typeof DEVOXX_SCALA_DESCRIPTOR_PARSER>, criteria: { dayIds?: string[]|undefined }) => {
-        const conferences: DevoxxScalaConferences = (await axios.get(`https://${descriptor.cfpHostname}/api/conferences`)).data
+        const conferences: DevoxxScalaConferences = await http.get(`https://${descriptor.cfpHostname}/api/conferences`)
 
         const conferenceResourceUrl = await loadResource<DevoxxScalaConference>(conferences.links, 'conference', descriptor)
 
@@ -113,7 +112,7 @@ export const DEVOXX_SCALA_CRAWLER: CrawlerKind<typeof DEVOXX_SCALA_DESCRIPTOR_PA
                 throw new Error(`No link found with href ending with dayId=${day.id}`)
             }
 
-            const schedule: DevoxxScalaSchedule = (await axios.get(`${link.href}`)).data
+            const schedule: DevoxxScalaSchedule = await http.get(`${link.href}`)
 
             const rawSlots = schedule.slots.filter(timeslot => {
                 if(timeslot.notAllocated && (timeslot.break || timeslot.talk)) {
@@ -206,7 +205,8 @@ export const DEVOXX_SCALA_CRAWLER: CrawlerKind<typeof DEVOXX_SCALA_DESCRIPTOR_PA
                             room,
                             summary: talk.summaryAsHtml,
                             description: talk.summaryAsHtml,
-                            tags: []
+                            tags: [],
+                            isOverflow: false
                         }
 
                         talks.push(detailedTalk);
@@ -303,3 +303,5 @@ export const DEVOXX_SCALA_CRAWLER: CrawlerKind<typeof DEVOXX_SCALA_DESCRIPTOR_PA
         return event
     }
 };
+
+export default DEVOXX_SCALA_CRAWLER;

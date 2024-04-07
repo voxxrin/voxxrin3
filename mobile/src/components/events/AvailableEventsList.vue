@@ -1,5 +1,8 @@
 <template>
-  <ion-segment :value="currentCategoryRef" class="tabsSelection _sticky" @ion-change="(event) => categoryUpdated(event.detail.value)">
+  <ion-segment :value="currentCategoryRef"
+               class="tabsSelection _sticky"
+               scrollable
+               @ion-change="(event) => categoryUpdated(event.detail.value)">
     <ion-segment-button v-for="(categorizedEvents, index) in perCategoryEventsRef" :key="index"
                         :value="categorizedEvents.category">
       <ion-label>{{ categorizedEvents.label }} <span class="count">{{categorizedEvents.eventsCount}}</span></ion-label>
@@ -111,7 +114,7 @@ watch([currentCategoryRef, perCategoryEventsRef], ([currentCategory, perCategory
     top: 120px;
     background-color: var(--app-beige-medium);
     border-bottom: 1px solid  var(--app-beige-line);
-    padding: var(--app-gutters);
+    padding: var(--app-gutters-medium) var(--app-gutters);
     font-weight: 900;
     z-index: 5;
 

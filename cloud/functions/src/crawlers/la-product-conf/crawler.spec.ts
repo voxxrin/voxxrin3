@@ -1,7 +1,7 @@
 import {describe, it} from 'vitest'
 import {FULL_EVENT_PARSER} from "../crawler-parsers";
-import axios from "axios";
 import {LA_PRODUCT_CONF_CRAWLER} from "./crawler";
+import {http} from "../utils";
 
 describe('la-product-conf crawler', () => {
     const events = [{
@@ -10,8 +10,8 @@ describe('la-product-conf crawler', () => {
     }] as const;
     events.forEach(event => {
         it(`Loading ${event.confName} schedule`, async () => {
-            const descriptorResp = await axios.get(event.descriptorUrl);
-            const descriptor = LA_PRODUCT_CONF_CRAWLER.descriptorParser.parse(descriptorResp.data)
+            const descriptorPayload = await http.get(event.descriptorUrl);
+            const descriptor = LA_PRODUCT_CONF_CRAWLER.descriptorParser.parse(descriptorPayload)
             const result = await LA_PRODUCT_CONF_CRAWLER.crawlerImpl(event.id, descriptor, {});
             FULL_EVENT_PARSER.parse(result);
         })

@@ -56,6 +56,10 @@ service cloud.firestore {
         allow read: if true;
         allow write: if false;
       }
+      match /roomsStats-allInOne/self {
+        allow read: if true;
+        allow write: if false;
+      }
 
       match /organizer-space/{secretOrganizerToken} {
         allow get: if true;

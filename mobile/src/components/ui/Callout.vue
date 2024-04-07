@@ -3,7 +3,7 @@
     <div class="callout" :class="{ ['_'+type]: true }">
       <ion-icon class="callout-illu" aria-hidden="true" :icon="icon" />
       <div class="callout-content">
-        <span class="callout-content-title">{{title}}</span>
+        <span class="callout-content-title" v-if="title">{{title}}</span>
         <ion-text class="callout-content-description">
           <slot></slot>
         </ion-text>
@@ -52,6 +52,10 @@ const icon = computed(() => match([props.type])
   padding: 16px;
   border-radius: 12px;
   overflow: hidden;
+
+  @media (prefers-color-scheme: dark) {
+    background-color: var(--app-medium-contrast);
+  }
 
   &:before {
     position: absolute;

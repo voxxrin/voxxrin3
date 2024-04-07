@@ -20,6 +20,8 @@
       </div>
     </ion-header>
 
+    <slot />
+
     <h1 class="talkDetails-title"
         :class="{'_hasTalkLand' : talkLang && confDescriptor.features.hideLanguages.indexOf(talkLang.id.value)===-1}">
       <ion-badge v-if="talkLang && confDescriptor.features.hideLanguages.indexOf(talkLang.id.value)===-1"
@@ -33,7 +35,11 @@
       <div class="talkDetails-infos-listTrack">
         <ion-badge v-if="confDescriptor.talkTracks.length > 1" class="trackBadge" :style="{
                 '--background': talk.track.themeColor
-            }">{{talk.track.title}}</ion-badge>
+            }">
+          <div class="trackBadge-content">
+            <ion-icon src="/assets/icons/solid/tag.svg"></ion-icon> {{talk.track.title}}
+          </div>
+        </ion-badge>
       </div>
       <ion-label :style="{ 'color': talk.format.themeColor }">
         {{talk.format.title}} ({{talk.format.hmmDuration}})

@@ -1,13 +1,20 @@
 .ion-accordion-toggle-icon {
   font-size: 24px;
   color: var(--app-beige-dark);
-  margin-inline-start: 12px;
+  margin-inline-start: 0;
 
   @media (prefers-color-scheme: dark) {
-    color: var(--app-line-contrast);
+    color: var(--app-white);
   }
 }
 
+
+/* Fix color icon for specific stat accordion */
+._chronological_status_is_ongoing, ._chronological_status_is_future {
+  .ion-accordion-toggle-icon {
+    color: var(--app-white);
+  }
+}
 /*
  TODO: would be nice to move this into time-slot-accordion
  But beware as this class is also used in new-feedback-page (it would be nice to refacto this usage
@@ -23,8 +30,10 @@
   ion-label {
     display: flex !important;
     align-items: center;
-    column-gap: 8px;
+    column-gap: 0;
+    flex-wrap: wrap;
     font-weight: bold;
+    overflow: visible !important;
   }
 
   .ion-color-light {
@@ -42,5 +51,13 @@
         color: var(--app-white);
       }
     }
+  }
+}
+
+/* Basic Accordion - For (FAQ,...) */
+
+.basicAccordion {
+  ion-accordion {
+    --background: transparent;
   }
 }

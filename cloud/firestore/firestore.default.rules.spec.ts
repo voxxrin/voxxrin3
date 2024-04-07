@@ -1,15 +1,13 @@
 import {
     assertFails,
     assertSucceeds,
-    initializeTestEnvironment, RulesTestContext,
-    RulesTestEnvironment,
+    initializeTestEnvironment,
+    type RulesTestEnvironment,
 } from "@firebase/rules-unit-testing"
 import {initializeApp as initializeAppAsAdmin} from "firebase-admin/app";
 import {getFirestore as getFirestoreAsAdmin} from "firebase-admin/firestore";
-import {User} from '../../shared/user.firestore'
 import * as fs from "fs";
 import { setDoc, doc, collection, getDocs, getDoc, updateDoc, deleteDoc } from "firebase/firestore";
-import {ISODatetime} from "../../shared/type-utils";
 import {match} from "ts-pattern";
 
 
@@ -60,6 +58,7 @@ beforeAll(async () => {
         adminFirestore.doc('/events/an-event/event-descriptor/self').set({ title: `A super event` }),
         adminFirestore.doc('/events/an-event/talksStats-allInOne/self').set({ "12345": { id: `12345`, totalFavoritesCount: 0 } }),
         adminFirestore.doc('/events/an-event/talksStats/12345').set({ id: `12345`, totalFavoritesCount: 0 }),
+        adminFirestore.doc('/events/an-event/roomsStats-allInOne/self').set({ "12345": { roomId: `12345`, capacityFillingRatio: 0, recordedAt: "2024-03-28T11:58:10Z", persistedAt: "2024-03-28T12:00:00Z" } }),
         adminFirestore.doc('/events/an-event/last-updates/self').set({ favorites: '2023-09-01T00:00:00Z' }),
         adminFirestore.doc('/events/an-event/talks/1234').set({ id: '1234', title: 'A super talk' }),
         adminFirestore.doc('/events/an-event/talks/1234/feedbacks-access/1f0b405a-c3ba-46df-8d02-cce03bc34e5d').set({ }),
@@ -96,6 +95,7 @@ afterAll(async () => {
         adminFirestore.doc(`/events/an-event/last-updates/self`).delete(),
         adminFirestore.doc(`/events/an-event/talksStats-allInOne/self`).delete(),
         adminFirestore.doc(`/events/an-event/talksStats/12345`).delete(),
+        adminFirestore.doc(`/events/an-event/roomsStats-allInOne/self`).delete(),
         adminFirestore.doc(`/events/an-event/event-descriptor/self`).delete(),
         adminFirestore.doc(`/events/an-event/days/monday`).delete(),
         adminFirestore.doc(`/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472/daily-ratings/monday`).delete(),
@@ -450,7 +450,7 @@ const COLLECTIONS: CollectionDescriptor[] = [{
     }
 }, {
     name: "/event-family-tokens",
-    aroundTests: (userContext: UserContext) => ({
+    aroundTests: (_: UserContext) => ({
         beforeEach: [],
         afterEach: [],
     }),
@@ -473,7 +473,7 @@ const COLLECTIONS: CollectionDescriptor[] = [{
     }
 }, {
     name: "/public-tokens",
-    aroundTests: (userContext: UserContext) => ({
+    aroundTests: (_: UserContext) => ({
         beforeEach: [],
         afterEach: [],
     }),
@@ -496,7 +496,7 @@ const COLLECTIONS: CollectionDescriptor[] = [{
     }
 }, {
     name: "/crawlers",
-    aroundTests: (userContext: UserContext) => ({
+    aroundTests: (_: UserContext) => ({
         beforeEach: [],
         afterEach: [],
     }),
@@ -519,7 +519,7 @@ const COLLECTIONS: CollectionDescriptor[] = [{
     }
 }, {
     name: "/schema-migrations",
-    aroundTests: (userContext: UserContext) => ({
+    aroundTests: (_: UserContext) => ({
         beforeEach: [],
         afterEach: [],
     }),
@@ -542,7 +542,7 @@ const COLLECTIONS: CollectionDescriptor[] = [{
     }
 }, {
     name: "/events",
-    aroundTests: (userContext: UserContext) => ({
+    aroundTests: (_: UserContext) => ({
         beforeEach: [],
         afterEach: [],
     }),
@@ -565,7 +565,7 @@ const COLLECTIONS: CollectionDescriptor[] = [{
     }
 }, {
     name: "/events/{eventId}/days",
-    aroundTests: (userContext: UserContext) => ({
+    aroundTests: (_: UserContext) => ({
         beforeEach: [],
         afterEach: [],
     }),
@@ -588,7 +588,7 @@ const COLLECTIONS: CollectionDescriptor[] = [{
     }
 }, {
     name: "/events/{eventId}/event-descriptor",
-    aroundTests: (userContext: UserContext) => ({
+    aroundTests: (_: UserContext) => ({
         beforeEach: [],
         afterEach: [],
     }),
@@ -611,7 +611,7 @@ const COLLECTIONS: CollectionDescriptor[] = [{
     }
 }, {
     name: "/events/{eventId}/talksStats",
-    aroundTests: (userContext: UserContext) => ({
+    aroundTests: (_: UserContext) => ({
         beforeEach: [],
         afterEach: [],
     }),
@@ -634,7 +634,7 @@ const COLLECTIONS: CollectionDescriptor[] = [{
     }
 }, {
     name: "/events/{eventId}/talksStats-allInOne",
-    aroundTests: (userContext: UserContext) => ({
+    aroundTests: (_: UserContext) => ({
         beforeEach: [],
         afterEach: [],
     }),
@@ -656,8 +656,31 @@ const COLLECTIONS: CollectionDescriptor[] = [{
         })
     }
 }, {
+    name: "/events/{eventId}/roomsStats-allInOne",
+    aroundTests: (_: UserContext) => ({
+        beforeEach: [],
+        afterEach: [],
+    }),
+    tests: (userContext: UserContext) => {
+        it(`As ${userContext.name}, I should be able to LIST events' all-in-one rooms stats`, async () => {
+            await assertFails(getDocs(collection(userContext.context().firestore(), '/events/an-event/roomsStats-allInOne')));
+        })
+        it(`As ${userContext.name}, I should be able to GET events' all-in-one rooms stats`, async () => {
+            await assertSucceeds(getDoc(doc(userContext.context().firestore(), '/events/an-event/roomsStats-allInOne/self')));
+        })
+        it(`As ${userContext.name}, I should not be able to CREATE events' all-in-one rooms stats`, async () => {
+            await assertFails(setDoc(doc(userContext.context().firestore(), '/events/another-event/roomsStats-allInOne/self'), { "12345": { roomId: `12345`, capacityFillingRatio: 0.5, recordedAt: "2024-03-28T11:58:10Z", persistedAt: "2024-03-28T12:00:00Z" } }));
+        })
+        it(`As ${userContext.name}, I should not be able to UPDATE events' all-in-one rooms stats`, async () => {
+            await assertFails(updateDoc(doc(userContext.context().firestore(), '/events/an-event/roomsStats-allInOne/self'), { "12345": { roomId: `12345`, capacityFillingRatio: 1, recordedAt: "2024-03-28T11:58:10Z", persistedAt: "2024-03-28T12:00:00Z" } }));
+        })
+        it(`As ${userContext.name}, I should not be able to DELETE events' all-in-one rooms stats`, async () => {
+            await assertFails(deleteDoc(doc(userContext.context().firestore(), '/events/an-event/roomsStats-allInOne/self')));
+        })
+    }
+}, {
     name: "/events/{eventId}/organizer-space",
-    aroundTests: (userContext: UserContext) => ({
+    aroundTests: (_: UserContext) => ({
         beforeEach: [],
         afterEach: [],
     }),
@@ -680,7 +703,7 @@ const COLLECTIONS: CollectionDescriptor[] = [{
     }
 }, {
     name: "/events/{eventId}/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472/ratings",
-    aroundTests: (userContext: UserContext) => ({
+    aroundTests: (_: UserContext) => ({
         beforeEach: [],
         afterEach: [],
     }),
@@ -703,7 +726,7 @@ const COLLECTIONS: CollectionDescriptor[] = [{
     }
 }, {
     name: "/events/{eventId}/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472/daily-ratings",
-    aroundTests: (userContext: UserContext) => ({
+    aroundTests: (_: UserContext) => ({
         beforeEach: [],
         afterEach: [],
     }),
@@ -726,7 +749,7 @@ const COLLECTIONS: CollectionDescriptor[] = [{
     }
 }, {
     name: "/events/{eventId}/last-updates",
-    aroundTests: (userContext: UserContext) => ({
+    aroundTests: (_: UserContext) => ({
         beforeEach: [],
         afterEach: [],
     }),
@@ -749,7 +772,7 @@ const COLLECTIONS: CollectionDescriptor[] = [{
     }
 }, {
     name: "/events/{eventId}/talks",
-    aroundTests: (userContext: UserContext) => ({
+    aroundTests: (_: UserContext) => ({
         beforeEach: [],
         afterEach: [],
     }),
@@ -772,7 +795,7 @@ const COLLECTIONS: CollectionDescriptor[] = [{
     }
 }, {
     name: "/events/{eventId}/talks/{talkId}/feedbacks-access",
-    aroundTests: (userContext: UserContext) => ({
+    aroundTests: (_: UserContext) => ({
         beforeEach: [],
         afterEach: [],
     }),
@@ -795,7 +818,7 @@ const COLLECTIONS: CollectionDescriptor[] = [{
     }
 }, {
     name: "/events/{eventId}/talks/{talkId}/feedbacks-access/{secretFeedbackViewerToken}/feedbacks",
-    aroundTests: (userContext: UserContext) => ({
+    aroundTests: (_: UserContext) => ({
         beforeEach: [],
         afterEach: [],
     }),

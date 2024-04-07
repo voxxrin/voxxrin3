@@ -1,6 +1,6 @@
 import {EventId} from "@/models/VoxxrinEvent";
 import {DayId} from "@/models/VoxxrinDay";
-import {TalkId} from "@/models/VoxxrinTalk";
+import {TalkId, VoxxrinTalk} from "@/models/VoxxrinTalk";
 import {Ref, toValue, unref} from "vue";
 import {useCurrentUser} from "@/state/useCurrentUser";
 import {
@@ -20,7 +20,7 @@ import {Logger, PERF_LOGGER} from "@/services/Logger";
 import { User } from 'firebase/auth';
 import {Temporal} from "temporal-polyfill";
 import {checkCache} from "@/services/Cachings";
-import {partitionArray, toValueObjectValues} from "@/models/utils";
+import {CompletablePromiseQueue, partitionArray, toValueObjectValues} from "@/models/utils";
 import {match, P} from "ts-pattern";
 import {ISODatetime} from "../../../shared/type-utils";
 
@@ -192,7 +192,7 @@ export function useUserTalkNoteActions(
     const toggleWatchLater = async () => {
         await updateTalkNotesDocument(
             'toggleWatchLater',
-            talkNoteBeforeUpdate => talkNoteBeforeUpdate.isFavorite ? 'unmark-watch-later' : 'mark-watch-later',
+            talkNoteBeforeUpdate => talkNoteBeforeUpdate.watchLater ? 'unmark-watch-later' : 'mark-watch-later',
             talkNotes => ({ watchLater: !talkNotes.watchLater }),
         );
     }
@@ -281,16 +281,19 @@ export async function prepareUserTalkNotes(
     user: User,
     eventId: EventId,
     dayId: DayId,
-    talkIds: Array<TalkId>
+    talks: Array<VoxxrinTalk>,
+    promisesQueue: CompletablePromiseQueue
 ) {
     return checkCache(`prepareUserTalkNotes(eventId=${eventId.value}, dayId=${dayId.value})`, Temporal.Duration.from({ hours: 24 }), async () => {
-        PERF_LOGGER.debug(`prepareUserTalkNotes(user=${user.uid}, eventId=${eventId.value}, talkIds=${JSON.stringify(talkIds.map(talkId => talkId.value))})`)
-        await Promise.all(talkIds.map(async (talkId) => {
-            const talkNotesRef = getTalkNotesRef(user, eventId, talkId);
+        PERF_LOGGER.debug(`prepareUserTalkNotes(user=${user.uid}, eventId=${eventId.value}, talkIds=${JSON.stringify(talks.map(talk => talk.id.value))})`)
+        promisesQueue.addAll(talks.map(talk => {
+          return async () => {
+            const talkNotesRef = getTalkNotesRef(user, eventId, talk.id);
             if(talkNotesRef) {
-                await getDoc(talkNotesRef)
-                PERF_LOGGER.debug(`getDoc(${talkNotesRef.path})`)
+              await getDoc(talkNotesRef)
+              PERF_LOGGER.debug(`getDoc(${talkNotesRef.path})`)
             }
-        }))
+          }
+        }), { priority: 10 })
     })
 }

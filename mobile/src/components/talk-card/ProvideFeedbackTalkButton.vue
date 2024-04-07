@@ -1,9 +1,9 @@
 <template>
   <div class="talkAction" v-if="provideFeedbackButtonShown">
-    <ion-button class="btnTalk btn-feedback">
-    <span class="btn-favorite-group">
-      <ion-icon class="btn-feedback-group-icon" aria-hidden="true" src="/assets/icons/line/comment-line-add.svg"></ion-icon>
-    </span>
+    <ion-button class="btnTalk btn-feedback" aria-label="LL.Add_Feedback()">
+      <span class="btn-favorite-group">
+        <ion-icon class="btn-feedback-group-icon" aria-hidden="true" src="/assets/icons/line/comment-line-add.svg"></ion-icon>
+      </span>
     </ion-button>
   </div>
 </template>
@@ -17,6 +17,8 @@ import {
 import {VoxxrinTalk} from "@/models/VoxxrinTalk";
 import {TimeslotTimingProgress} from "@/models/VoxxrinSchedule";
 import {VoxxrinTimeslotFeedback} from "@/models/VoxxrinFeedback";
+import {typesafeI18n} from "@/i18n/i18n-vue";
+const { LL } = typesafeI18n()
 
 const props = defineProps({
     confDescriptor: {

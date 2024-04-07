@@ -7,16 +7,16 @@ import {
 } from "../../../../../shared/daily-schedule.firestore";
 import * as cheerio from 'cheerio';
 import {ConferenceDescriptor} from "../../../../../shared/conference-descriptor.firestore";
-import axios from "axios";
 import {
     BREAK_PARSER,
     BREAK_TIME_SLOT_PARSER,
     DAY_PARSER,
     EVENT_DESCRIPTOR_PARSER
 } from "../crawler-parsers";
-import {CrawlCriteria, CrawlerKind} from "../crawl";
+import {CrawlerKind} from "../crawl";
 import {ISODatetime} from "../../../../../shared/type-utils";
 import {Temporal} from "@js-temporal/polyfill";
+import {http} from "../utils";
 
 const CAMPING_DES_SPEAKERS_PARSER = EVENT_DESCRIPTOR_PARSER.omit({
     id: true
@@ -54,10 +54,9 @@ function extractRawTimeCoordinatesFrom(rawTimeCoords: string, confDescriptor: z.
 }
 
 export const CAMPING_DES_SPEAKERS_CRAWLER: CrawlerKind<typeof CAMPING_DES_SPEAKERS_PARSER> = {
-    kind: 'camping-des-speakers',
     descriptorParser: CAMPING_DES_SPEAKERS_PARSER,
     crawlerImpl: async (eventId: string, descriptor: z.infer<typeof CAMPING_DES_SPEAKERS_PARSER>, criteria: { dayIds?: string[]|undefined }): Promise<FullEvent> => {
-        const $schedulePage = cheerio.load((await axios.get(`https://camping-speakers.fr/sessions/`, {responseType: 'text'})).data);
+        const $schedulePage = cheerio.load(await http.getAsText(`https://camping-speakers.fr/sessions/`));
 
         const days = descriptor.days;
 
@@ -72,7 +71,7 @@ export const CAMPING_DES_SPEAKERS_CRAWLER: CrawlerKind<typeof CAMPING_DES_SPEAKE
                 }
 
                 const talkId = extractIdFromUrl(talkUrl);
-                const $talkPage = cheerio.load((await axios.get(`https://camping-speakers.fr/sessions/${talkUrl}`, {responseType: 'text'})).data);
+                const $talkPage = cheerio.load(await http.getAsText(`https://camping-speakers.fr/sessions/${talkUrl}`));
 
                 // const eventType = $talkPage(`.eventSingle-type`).text().trim()
                 // const dayId = $talkPage(`.eventSingle-day`).text().trim()
@@ -120,7 +119,7 @@ export const CAMPING_DES_SPEAKERS_CRAWLER: CrawlerKind<typeof CAMPING_DES_SPEAKE
 
         const uniqueSpeakerUrls = Array.from(new Set(rawDetailedTalks.flatMap(t => t!.speakerUrls.map(sp => sp.speakerUrl))))
         const speakers = await Promise.all(uniqueSpeakerUrls.map(async spUrl => {
-            const $speakerPage = cheerio.load((await axios.get(`${spUrl}`, {responseType: 'text'})).data);
+            const $speakerPage = cheerio.load(await http.getAsText(`${spUrl}`));
 
             const speakerId = extractIdFromUrl(spUrl);
 
@@ -179,7 +178,8 @@ export const CAMPING_DES_SPEAKERS_CRAWLER: CrawlerKind<typeof CAMPING_DES_SPEAKE
                 language: descriptor.supportedTalkLanguages.find(lang => lang.id === rawTalk!.lang)!.id,
                 start: rawTalk!.start,
                 end: rawTalk!.end,
-                tags: []
+                tags: [],
+                isOverflow: false
             };
             return detailedTalk;
         });
@@ -214,6 +214,7 @@ export const CAMPING_DES_SPEAKERS_CRAWLER: CrawlerKind<typeof CAMPING_DES_SPEAKE
                     track: detailedTalk.track,
                     format: detailedTalk.format,
                     language: detailedTalk.language,
+                    isOverflow: false
                 })
 
                 return talkTimeSlots;
@@ -271,3 +272,5 @@ export const CAMPING_DES_SPEAKERS_CRAWLER: CrawlerKind<typeof CAMPING_DES_SPEAKE
         return fullEvent;
     }
 } as const;
+
+export default CAMPING_DES_SPEAKERS_CRAWLER;

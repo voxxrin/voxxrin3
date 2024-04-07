@@ -7,7 +7,6 @@ import {
 } from "../../../../../shared/daily-schedule.firestore";
 import * as cheerio from 'cheerio';
 import {ConferenceDescriptor} from "../../../../../shared/conference-descriptor.firestore";
-import axios from "axios";
 import {
     BREAK_PARSER,
     BREAK_TIME_SLOT_PARSER,
@@ -16,6 +15,7 @@ import {
 import {CrawlerKind} from "../crawl";
 import {ISODatetime} from "../../../../../shared/type-utils";
 import {Temporal} from "@js-temporal/polyfill";
+import {http} from "../utils";
 
 const JUG_SUMMERCAMP_PARSER = EVENT_DESCRIPTOR_PARSER.omit({
     id: true
@@ -35,10 +35,9 @@ function extractIdFromUrl(url: string) {
 }
 
 export const JUG_SUMMERCAMP_CRAWLER: CrawlerKind<typeof JUG_SUMMERCAMP_PARSER> = {
-    kind: 'jugsummercamp',
     descriptorParser: JUG_SUMMERCAMP_PARSER,
     crawlerImpl: async (eventId: string, descriptor: z.infer<typeof JUG_SUMMERCAMP_PARSER>, criteria: { dayIds?: string[]|undefined }): Promise<FullEvent> => {
-        const $schedulePage = cheerio.load((await axios.get(descriptor.startUrl, {responseType: 'text'})).data);
+        const $schedulePage = cheerio.load(await http.getAsText(descriptor.startUrl));
 
         const day = descriptor.days[0];
 
@@ -53,7 +52,7 @@ export const JUG_SUMMERCAMP_CRAWLER: CrawlerKind<typeof JUG_SUMMERCAMP_PARSER> =
                 }
 
                 const talkId = extractIdFromUrl(talkUrl);
-                const $talkPage = cheerio.load((await axios.get(`https://www.jugsummercamp.org${talkUrl}`, {responseType: 'text'})).data);
+                const $talkPage = cheerio.load(await http.getAsText(`https://www.jugsummercamp.org${talkUrl}`));
 
                 const roomId = $talkPage(`small a`).text().trim();
                 const room = descriptor.rooms.find(r => r.id === roomId);
@@ -111,7 +110,7 @@ export const JUG_SUMMERCAMP_CRAWLER: CrawlerKind<typeof JUG_SUMMERCAMP_PARSER> =
 
         const uniqueSpeakerUrls = Array.from(new Set(rawDetailedTalks.flatMap(t => t.speakerUrls.map(sp => sp.speakerUrl))))
         const speakers = await Promise.all(uniqueSpeakerUrls.map(async spUrl => {
-            const $speakerPage = cheerio.load((await axios.get(`https://www.jugsummercamp.org${spUrl}`, {responseType: 'text'})).data);
+            const $speakerPage = cheerio.load(await http.getAsText(`https://www.jugsummercamp.org${spUrl}`));
 
             const speakerId = extractIdFromUrl(spUrl);
 
@@ -169,7 +168,8 @@ export const JUG_SUMMERCAMP_CRAWLER: CrawlerKind<typeof JUG_SUMMERCAMP_PARSER> =
                 language: descriptor.supportedTalkLanguages.find(lang => lang.id === rawTalk!.lang)!.id,
                 start: rawTalk!.start,
                 end: rawTalk!.end,
-                tags: rawTalk!.tags
+                tags: rawTalk!.tags,
+                isOverflow: false
             };
             return detailedTalk;
         });
@@ -204,6 +204,7 @@ export const JUG_SUMMERCAMP_CRAWLER: CrawlerKind<typeof JUG_SUMMERCAMP_PARSER> =
                     track: detailedTalk.track,
                     format: detailedTalk.format,
                     language: detailedTalk.language,
+                    isOverflow: false
                 })
 
                 return talkTimeSlots;
@@ -261,3 +262,5 @@ export const JUG_SUMMERCAMP_CRAWLER: CrawlerKind<typeof JUG_SUMMERCAMP_PARSER> =
         return fullEvent;
     }
 } as const;
+
+export default JUG_SUMMERCAMP_CRAWLER

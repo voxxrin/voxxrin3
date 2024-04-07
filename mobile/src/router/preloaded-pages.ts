@@ -1,3 +1,10 @@
+import Swiper from 'swiper';
+import { Navigation, Pagination, Zoom } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import 'swiper/css/zoom';
+
 import _BaseEventPages from "@/views/event/_BaseEventPages.vue";
 import _SchedulePage from "@/views/event/SchedulePage.vue";
 import FavoritesPage from "@/views/event/FavoritesPage.vue";

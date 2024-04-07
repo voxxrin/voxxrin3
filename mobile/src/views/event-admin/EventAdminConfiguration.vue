@@ -4,7 +4,8 @@
       <ion-header class="stickyHeader">
         <ion-toolbar>
           <ion-button class="stickyHeader-close" shape="round" slot="start" size="small" fill="outline"
-                      @click="triggerTabbedPageExitOrNavigate(`/event-selector`)">
+                      @click="triggerTabbedPageExitOrNavigate(`/event-selector`)"
+                      :aria-label="LL.Previous_screen()">
             <ion-icon src="/assets/icons/line/arrow-left-line.svg"></ion-icon>
           </ion-button>
           <ion-title class="stickyHeader-title" slot="start">Event Configuration</ion-title>
@@ -25,6 +26,9 @@
 
 import {useIonRouter} from "@ionic/vue";
 import {useTabbedPageNav} from "@/state/useTabbedPageNav";
+import {typesafeI18n} from "@/i18n/i18n-vue";
+
+const { LL } = typesafeI18n()
 
 const {triggerTabbedPageExitOrNavigate} = useTabbedPageNav();
 

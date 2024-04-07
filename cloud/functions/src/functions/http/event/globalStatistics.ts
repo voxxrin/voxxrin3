@@ -1,8 +1,8 @@
 import {https} from "firebase-functions";
 import {extractSingleQueryParam, sendResponseMessage} from "../utils";
 import {db} from "../../../firebase";
-import {TalkStats} from "../../../../../../shared/feedbacks.firestore";
 import {FeedbackRatings} from "../../../../../../shared/talk-feedbacks.firestore";
+import {TalkStats} from "../../../../../../shared/event-stats";
 
 
 export const globalStats = https.onRequest(async (request, response) => {

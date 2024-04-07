@@ -1,5 +1,5 @@
 import type {ISODatetime} from "./type-utils";
-import {HexColor} from "./type-utils";
+import {HexColor, SocialMediaType} from "./type-utils";
 
 export type Room = {id: string, title: string}
 
@@ -17,13 +17,14 @@ export type TalkFormat = {
     title: string
 }
 export type ThemedTalkFormat = TalkFormat & { themeColor: HexColor }
+export type SocialLink = {type: SocialMediaType, url: string}
 export type Speaker = {
     photoUrl?: string|null,
     companyName?: string|null,
     fullName: string,
     id: string,
     bio?: string|null,
-    social: Array<{type: "twitter"|"linkedin"|"mastodon"|"instagram"|"youtube"|"twitch"|"github", url: string}>
+    social: SocialLink[]
 }
 export type Talk = {
     speakers: Speaker[],
@@ -32,7 +33,8 @@ export type Talk = {
     id: string,
     title: string,
     track: Track,
-    room: Room
+    room: Room,
+    isOverflow: boolean
 }
 export type DetailedTalk = Talk & {
     start: ISODatetime,

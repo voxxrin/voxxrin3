@@ -1,4 +1,4 @@
-import {db} from "../../../firebase";
+import {db, info} from "../../../firebase";
 import {EventLastUpdates} from "../../../../../../shared/event-list.firestore";
 import {ISODatetime, Replace} from "../../../../../../shared/type-utils";
 
@@ -14,14 +14,14 @@ export async function introducingPerTalkFeedbacksLastUpdates(): Promise<"OK"|"Er
             const lastUpdatesVal = (await transaction.get(lastUpdatesDoc)).data() as Replace<EventLastUpdates, {feedbacks: ISODatetime}>
 
             if(!lastUpdatesVal) {
-                console.log(`Event ${event.id} doesn't have any value for last-updates node => skipping !`)
+                info(`Event ${event.id} doesn't have any value for last-updates node => skipping !`)
                 return;
             }
 
             const { feedbacks: allFeedbacks, ...otherFields } = lastUpdatesVal;
 
             if(otherFields.allFeedbacks) {
-                console.log(`Event ${event.id} already migrated => skipping !`)
+                info(`Event ${event.id} already migrated => skipping !`)
                 return;
             }
 
@@ -29,7 +29,7 @@ export async function introducingPerTalkFeedbacksLastUpdates(): Promise<"OK"|"Er
             const newFeedbacksNode = talks.reduce((newFeedbacksNode, talk) => {
                 newFeedbacksNode[talk.id] = nullableAllFeedbacks;
                 return newFeedbacksNode;
-            }, {} as Partial<EventLastUpdates['feedbacks']>) as EventLastUpdates['feedbacks'];
+            }, {} as Partial<NonNullable<EventLastUpdates['feedbacks']>>) as NonNullable<EventLastUpdates['feedbacks']>;
 
             const migratedLastUpdates: EventLastUpdates = {
                 ...otherFields,

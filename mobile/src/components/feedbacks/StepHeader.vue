@@ -22,7 +22,7 @@ const props = defineProps({
 <style lang="scss" scoped>
 .stepHeader {
   position: sticky;
-  top: 68px;
+  top: 67px;
   display: flex;
   align-items: center;
   column-gap: 8px;

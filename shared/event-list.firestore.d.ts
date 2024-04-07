@@ -26,7 +26,9 @@ export type ListableEvent = {
     keywords: string[],
     location: {
         country: string,
-        city: string
+        city: string,
+        address?: string|undefined,
+        coords?: { latitude: number, longitude: number }|undefined,
     },
     peopleDescription?: string|undefined|null,
     backgroundUrl: string,
@@ -38,6 +40,6 @@ export type ListableEvent = {
 export type EventLastUpdates = {
     favorites: ISODatetime|undefined,
     allFeedbacks: ISODatetime|undefined|null,
-    feedbacks: { [talkId: string]: ISODatetime|null },
+    feedbacks: { [talkId: string]: ISODatetime|null }|undefined,
     talkListUpdated: ISODatetime|undefined,
 }

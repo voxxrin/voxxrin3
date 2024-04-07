@@ -18,8 +18,10 @@
             <slot-overlaps v-if="timeslot.type === 'talks'" :overlappingTimeslots="timeslot.overlappingTimeSlots"></slot-overlaps>
           </ion-col>
           <ion-col class="slot-actions" size="auto">
-            <ion-icon class="_provided-feedback" aria-hidden="true" src="/assets/icons/solid/comment-check.svg" v-if="areFeedbacksEnabled(confDescriptor)"></ion-icon>
+            <ion-icon class="_provided-feedback" aria-hidden="true" src="/assets/icons/solid/comment-check.svg"
+                      v-if="areFeedbacksEnabled(confDescriptor)"></ion-icon>
             <ion-button class="_missing-feedback" v-if="elementsShown.includes('add-feedback-btn') && areFeedbacksEnabled(confDescriptor)"
+                        :aria-label="LL.Add_Feedback()"
                         @click.stop="$emit('add-timeslot-feedback-clicked', timeslot)">
               <ion-icon src="/assets/icons/line/comment-line-add.svg"></ion-icon>
             </ion-button>
@@ -77,6 +79,10 @@ const props = defineProps({
     required: true,
     type: Object as PropType<VoxxrinConferenceDescriptor>
   },
+  progress: {
+    required: false,
+    type: Object as PropType<TimeslotTimingProgress|undefined>
+  },
   elementsShown: {
       required: false,
       type: Object as PropType<Array<"add-feedback-btn">>,
@@ -96,13 +102,6 @@ defineEmits<{
 const { LL } = typesafeI18n()
 
 const { conferenceDescriptor } = useSharedConferenceDescriptor(toRef(() => props.confDescriptor?.id));
-
-const progress = ref<TimeslotTimingProgress>()
-useInterval(() => {
-  if(props.timeslot) {
-    progress.value = getTimeslotTimingProgress(props.timeslot, useCurrentClock().zonedDateTimeISO())
-  }
-}, {freq:"high-frequency"}, { immediate: true });
 
 const timeslotLabel = getTimeslotLabel(props.timeslot!);
 
@@ -213,10 +212,6 @@ const hasMissingFeedback = computed(() => {
       ._ongoing-progress { display: block; }
       ._accordion-icon { color: var(--app-white) !important;}
 
-      .ion-accordion-toggle-icon {
-        color: var(--app-white) !important;
-      }
-
       &._missing-feedback:not(._is-break) ._missing-feedback { display: inline-block;}
       &._feedback-provided:not(._is-break) ._provided-feedback {display: inline-block;}
     }
@@ -237,14 +232,6 @@ const hasMissingFeedback = computed(() => {
 
       ._accordion-icon._future-icon { display: inline-block; }
       ._accordion-icon { color: var(--app-white) !important;}
-
-      .ion-accordion-toggle-icon {
-        color: var(--app-white) !important;
-
-        @media (prefers-color-scheme: dark) {
-          color: var(--app-medium-contrast);
-        }
-      }
     }
 
     ion-item {
@@ -297,7 +284,8 @@ const hasMissingFeedback = computed(() => {
           display: flex;
           align-items: center;
           height: 100%;
-          width: 44px !important;
+          width: fit-content;
+          max-width: 44px !important;
           padding: 0;
         }
       }

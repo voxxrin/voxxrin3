@@ -1,67 +1,76 @@
 <template>
-  <ion-card class="talkCard"
-            v-if="talkNotes"
-            :class="{ container: true, '_is-highlighted': isHighlighted(talk, talkNotes), '_has-favorited': talkNotes.isFavorite, '_has-to-watch-later': talkNotes.watchLater }"
-            @click="$emit('talk-clicked', talk)">
-    <div class="talkCard-head">
-      <div class="start">
-        <div class="item">
-          <div class="track">
-            <ion-badge class="trackBadge" v-if="hasTrack">
-              <ion-icon src="/assets/icons/solid/tag.svg"></ion-icon>{{talk.track.title}}
-            </ion-badge>
+  <div class="talkItemContainer">
+    <room-capacity-indicator v-if="!!roomStats" :event-id="eventId" :talk="talk" :room-stats="roomStats" :show-unknown-capacity="isUpcomingTalk" />
+    <ion-card class="talkCard"
+              v-if="talkNotes"
+              :class="{ container: true, '_is-highlighted': isHighlighted(talk, talkNotes), '_has-favorited': talkNotes.isFavorite, '_has-to-watch-later': talkNotes.watchLater }"
+              @click="$emit('talk-clicked', talk)">
+      <div class="talkCard-head">
+        <div class="start">
+          <div class="item">
+            <div class="track">
+              <ion-badge class="trackBadge" v-if="hasTrack">
+                <div class="trackBadge-content">
+                  <ion-icon src="/assets/icons/solid/tag.svg"></ion-icon>{{talk.track.title}}
+                </div>
+              </ion-badge>
+            </div>
+          </div>
+        </div>
+
+        <div class="middle">
+          <div class="item">
+            <slot name="upper-middle" :talk="talk" :talkNotes="talkNotes" :talkStats="talkStats"></slot>
+          </div>
+        </div>
+
+        <div class="end">
+          <div class="item">
+            <slot name="upper-right" :talk="talk" :talkNotes="talkNotes" :talkStats="talkStats"></slot>
           </div>
         </div>
       </div>
 
-      <div class="middle">
-        <div class="item">
-          <slot name="upper-middle" :talk="talk" :talkNotes="talkNotes" :talkStats="talkStats"></slot>
+      <div class="talkCard-content">
+        <div class="title"
+             :class="{'_hasTalkLang' : talkLang && confDescriptor.features.hideLanguages.indexOf(talkLang.id.value)===-1}">
+          <ion-badge v-if="talkLang && confDescriptor.features.hideLanguages.indexOf(talkLang.id.value)===-1"
+                     :style="{ '--background':  talkLang.themeColor}"
+                     class="talkLang">
+            {{talkLang.label}}
+          </ion-badge>
+          {{talk.title}}
+        </div>
+        <div class="pictures">
+          <div class="picturesItem" v-for="(speaker, index) in talk.speakers" :key="speaker.id.value">
+            <ion-thumbnail>
+              <img v-if="speaker.photoUrl" :src="speaker.photoUrl" @error="handle404OnSpeakerThumbnail($event.target as HTMLImageElement)"
+                   :alt="LL.Avatar_Speaker() + ' ' + speaker.fullName"/>
+              <img v-if="!speaker.photoUrl" :src="baseUrl+'assets/images/svg/avatar-shadow.svg'" aria-hidden="true" />
+            </ion-thumbnail>
+          </div>
         </div>
       </div>
 
-      <div class="end">
-        <div class="item">
-          <slot name="upper-right" :talk="talk" :talkNotes="talkNotes" :talkStats="talkStats"></slot>
+      <div class="talkCard-footer">
+        <div class="speakersContainer">
+          <div class="speakers">
+            <ion-icon v-if="speakerCount > 1" :icon="people"></ion-icon>
+            <ion-icon v-else :icon="person"></ion-icon>
+            <span class="speakers-list">{{displayedSpeakers}}</span>
+          </div>
+        </div>
+        <div class="talkActions">
+          <slot name="footer-actions" :talk="talk" :talkNotes="talkNotes" :talkStats="talkStats" />
         </div>
       </div>
-    </div>
-
-    <div class="talkCard-content">
-      <div class="title"
-           :class="{'_hasTalkLand' : talkLang && confDescriptor.features.hideLanguages.indexOf(talkLang.id.value)===-1}">
-        <ion-badge v-if="talkLang && confDescriptor.features.hideLanguages.indexOf(talkLang.id.value)===-1"
-                   :style="{ '--background':  talkLang.themeColor}"
-                   class="talkLang">
-          {{talkLang.label}}
-        </ion-badge>
-        {{talk.title}}
-      </div>
-      <div class="pictures">
-        <div class="picturesItem" v-for="(speaker, index) in talk.speakers" :key="speaker.id.value">
-          <ion-thumbnail>
-            <img v-if="speaker.photoUrl" :src="speaker.photoUrl" @error="handle404OnSpeakerThumbnail($event.target as HTMLImageElement)" />
-            <img v-if="!speaker.photoUrl" :src="baseUrl+'assets/images/svg/avatar-shadow.svg'" />
-          </ion-thumbnail>
-        </div>
-      </div>
-    </div>
-
-    <div class="talkCard-footer">
-      <div class="speakers">
-        <ion-icon src="/assets/icons/solid/megaphone.svg"></ion-icon>
-        <span class="speakers-list">{{displayedSpeakers}}</span>
-      </div>
-      <div class="talkActions">
-        <slot name="footer-actions" :talk="talk" :talkNotes="talkNotes" :talkStats="talkStats" />
-      </div>
-    </div>
-  </ion-card>
+    </ion-card>
+  </div>
 </template>
 
 <script setup lang="ts">
-import {computed, PropType} from "vue";
-import {managedRef as ref, toManagedRef as toRef} from "@/views/vue-utils";
+import {computed, onMounted, PropType} from "vue";
+import {managedRef as ref, toManagedRef as toRef, useInterval} from "@/views/vue-utils";
 import {
   IonBadge,
   IonThumbnail,
@@ -70,9 +79,17 @@ import { VoxxrinTalk} from "@/models/VoxxrinTalk";
 import {useRoute} from "vue-router";
 import {EventId} from "@/models/VoxxrinEvent";
 import {getRouteParamsValue} from "@/views/vue-utils";
-import {TalkNote, TalkStats} from "../../../../shared/feedbacks.firestore";
+import {TalkNote} from "../../../../shared/feedbacks.firestore";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
+import {typesafeI18n} from "@/i18n/i18n-vue";
+import {TalkStats} from "../../../../shared/event-stats";
+import {VoxxrinRoomStats} from "@/models/VoxxrinRoomStats";
+import {useCurrentClock} from "@/state/useCurrentClock";
+import {Temporal} from "temporal-polyfill";
+import {people, person} from "ionicons/icons";
+import RoomCapacityIndicator from "@/components/rooms/RoomCapacityIndicator.vue";
 
+const { LL } = typesafeI18n()
 const baseUrl = import.meta.env.BASE_URL;
 function handle404OnSpeakerThumbnail(img: HTMLImageElement|null) {
     if(img && img.src !== baseUrl+'assets/images/svg/avatar-shadow.svg') {
@@ -97,6 +114,15 @@ const props = defineProps({
       required: false,
       type: Object as PropType<TalkStats|undefined>
   },
+  roomStats: {
+      required: false,
+      type: Object as PropType<VoxxrinRoomStats|undefined>
+  },
+  isUpcomingTalk: {
+      required: false,
+      type: Boolean,
+      default: undefined
+  },
   talkNotes: {
       required: false,
       type: Object as PropType<TalkNote|undefined>
@@ -118,6 +144,8 @@ const displayedSpeakers = props.talk!.speakers
     .map(s => `${s.fullName}${s.companyName?` (${s.companyName})`:``}`)
     .join(", ") || "???";
 
+const speakerCount = props.talk!.speakers.length;
+
 const hasTrack = (props.confDescriptor?.talkTracks.length || 0) > 1;
 
 const theme = {
@@ -129,6 +157,12 @@ const theme = {
 
 <style lang="scss" scoped>
 
+.talkItemContainer {
+  display: flex;
+  flex-direction: column;
+  min-width: 100%;
+}
+
 //* Base styles card talk *//
 .talkCard {
   display: flex;
@@ -137,7 +171,7 @@ const theme = {
   flex: 1;
   margin: 8px;
   border-left: 6px solid v-bind('theme.track.color');
-  border-radius: 8px 12px 12px 8px;
+  border-radius: var(--app-card-radius);
   border : {
     top: 1px solid var(--app-grey-line);
     right: 1px solid var(--app-grey-line);
@@ -206,27 +240,6 @@ const theme = {
         --color: var(--app-white);
       }
     }
-
-    .room {
-      display: flex;
-      align-items: center;
-      column-gap: 2px;
-      font-weight: 500;
-      color: var(--app-grey-dark);
-
-      @media (prefers-color-scheme: dark) {
-        color: rgba(white, 0.8);
-      }
-
-      ion-icon {
-        font-size: 16px;
-        color: var(--app-primary-shade);
-
-        @media (prefers-color-scheme: dark) {
-          color: var(--app-white);
-        }
-      }
-    }
   }
 
   &-content {
@@ -242,7 +255,7 @@ const theme = {
       font-size: 16px;
       line-height: 1.2;
 
-      &._hasTalkLand { text-indent: 4px;}
+      &._hasTalkLang { text-indent: 4px;}
 
       @media (prefers-color-scheme: dark) {
         color: var(--app-white);
@@ -302,7 +315,7 @@ const theme = {
       }
     }
 
-    .speakers {
+    .speakersContainer {
       display: flex;
       align-items: center;
       column-gap: 4px;
@@ -310,12 +323,18 @@ const theme = {
       font-size: 12px;
       line-height: 1.1;
       letter-spacing: -0.4px;
-      color: var(--app-grey-dark);
+      color: var(--app-primary);
       font-weight: 500;
 
       @media (prefers-color-scheme: dark) {
-        color: rgba(white, 0.7);
+        color: var(--app-white-70);
 
+      }
+
+      .speakers {
+        display: flex;
+        align-items: start;
+        gap: 4px;
       }
 
       &-list {
@@ -323,9 +342,11 @@ const theme = {
       }
 
       ion-icon {
+        position: relative;
+        top: -2px;
+        flex: 0 0 auto;
         max-width: 24px;
         font-size: 16px;
-        transform: rotate(-16deg);
       }
     }
   }

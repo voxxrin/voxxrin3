@@ -14,19 +14,21 @@
     --app-beige-medium: #EDE7E1;
     --app-beige-light: #F5F3F0;
     --app-beige-line: #DDD6CE;
-    --app-beige-line-rgb: 221,214,206;
+    --app-beige-line-rgb: 239,238,238;
 
     --app-grey-dark: #807C76;
     --app-grey-medium: #B1B1B1;
     --app-grey-light: #EEEEEE;
-    --app-grey-line: #DCDCDC;
+    --app-grey-line: #efeeee;
 
     --app-white-transparent: 255, 255, 255, 0.3;
     --app-white: #FFFFFF;
-    --app-white-90: #FFFFFF;
+    --app-white-90: rgba(255, 255, 255, 0.9);
+    --app-white-80: rgba(255, 255, 255, 0.8);
+    --app-white-70: rgba(255, 255, 255, 0.7);
 
     --app-primary: #0F0F0F;
-    --app-primary-rgb: 15, 15, 15, 1;
+    --app-primary-rgb: 15, 15, 15;
     --app-primary-contrast: #ffffff;
     --app-primary-contrast-rgb: 255, 255, 255;
     --app-primary-shade: #404040;
@@ -34,8 +36,8 @@
 
     --app-green: #73a027;
     --app-green-rgb: 115, 160, 39;
-    --app-yellow: #D78816FF;
-    --app-yellow-rgb: 215, 136, 22;
+    --app-yellow: #ff6a00;
+    --app-yellow-rgb: 255, 106, 0;
     --app-red: #cc0f0f;
     --app-red-rgb: 204, 15, 15;
 
@@ -50,6 +52,8 @@
     --app-gutters-medium: 12px;
 
     --app-radius-form: 8px;
+    --app-bloc-radius: 16px;
+    --app-card-radius: 8px 12px 12px 8px;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -69,6 +73,8 @@
         --app-light-contrast-rgb: 58, 61, 81;
         --app-line-contrast: #353a4d;
         --app-line-contrast-rgb: 74, 80, 106;
+        --app-grey-contrast: #6c7087;
+        --app-grey-contrast-rgb: 108, 112, 135;
     }
 }
 
