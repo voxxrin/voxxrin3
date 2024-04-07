@@ -21,6 +21,7 @@ import {Logger, PERF_LOGGER} from "@/services/Logger";
 import { User } from 'firebase/auth';
 import {CompletablePromiseQueue} from "@/models/utils";
 import {match} from "ts-pattern";
+import {preloadPicture} from "@/services/Cachings";
 
 export function useSchedule(
             conferenceDescriptorRef: Ref<VoxxrinConferenceDescriptor | undefined>,
@@ -68,7 +69,7 @@ async function loadTalkSpeakerUrls(
     const LOGGER = Logger.named("loadTalkSpeakerUrls");
 
     promisesQueue.addAll(talk.speakers.map(speaker => {
-      return async () => new Promise(resolve => {
+      return async () => new Promise(async resolve => {
         if (speaker.photoUrl) {
           if(IN_MEMORY_SPEAKER_URL_PRELOADINGS.has(speaker.photoUrl)) {
             LOGGER.debug(`Speaker url already preloaded, skipping: ${speaker.photoUrl}`)
@@ -76,10 +77,9 @@ async function loadTalkSpeakerUrls(
           } else {
             IN_MEMORY_SPEAKER_URL_PRELOADINGS.add(speaker.photoUrl);
 
-            const avatarImage = new Image();
-            avatarImage.src = speaker.photoUrl;
-
-            avatarImage.onload = resolve;
+            // TODO: handle picture loading error here maybe ??
+            await preloadPicture(speaker.photoUrl)
+            resolve(null);
           }
         } else {
           resolve(null);
