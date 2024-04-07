@@ -1,5 +1,8 @@
 <template>
-  <ion-segment :value="currentCategoryRef" class="tabsSelection _sticky" @ion-change="(event) => categoryUpdated(event.detail.value)">
+  <ion-segment :value="currentCategoryRef"
+               class="tabsSelection _sticky"
+               scrollable
+               @ion-change="(event) => categoryUpdated(event.detail.value)">
     <ion-segment-button v-for="(categorizedEvents, index) in perCategoryEventsRef" :key="index"
                         :value="categorizedEvents.category">
       <ion-label>{{ categorizedEvents.label }} <span class="count">{{categorizedEvents.eventsCount}}</span></ion-label>
