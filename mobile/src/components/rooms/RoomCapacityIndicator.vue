@@ -151,7 +151,7 @@ const sinceLabelRef = computed(() => {
     return { shown: false } as const;
   }
 
-  const sinceMinutes = Math.max(Math.round(now.toInstant().since(capacityStatus.persistedAt).total('minutes')), 0)
+  const sinceMinutes = Math.max(Math.round(now.toInstant().since(capacityStatus.recordedAt).total('minutes')), 0)
 
   return {
     shown: true,
