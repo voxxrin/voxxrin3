@@ -1,6 +1,6 @@
 import {EventId} from "@/models/VoxxrinEvent";
 import {DayId} from "@/models/VoxxrinDay";
-import {TalkId} from "@/models/VoxxrinTalk";
+import {TalkId, VoxxrinTalk} from "@/models/VoxxrinTalk";
 import {Ref, toValue, unref} from "vue";
 import {useCurrentUser} from "@/state/useCurrentUser";
 import {
@@ -281,14 +281,14 @@ export async function prepareUserTalkNotes(
     user: User,
     eventId: EventId,
     dayId: DayId,
-    talkIds: Array<TalkId>,
+    talks: Array<VoxxrinTalk>,
     promisesQueue: CompletablePromiseQueue
 ) {
     return checkCache(`prepareUserTalkNotes(eventId=${eventId.value}, dayId=${dayId.value})`, Temporal.Duration.from({ hours: 24 }), async () => {
-        PERF_LOGGER.debug(`prepareUserTalkNotes(user=${user.uid}, eventId=${eventId.value}, talkIds=${JSON.stringify(talkIds.map(talkId => talkId.value))})`)
-        promisesQueue.addAll(talkIds.map(talkId => {
+        PERF_LOGGER.debug(`prepareUserTalkNotes(user=${user.uid}, eventId=${eventId.value}, talkIds=${JSON.stringify(talks.map(talk => talk.id.value))})`)
+        promisesQueue.addAll(talks.map(talk => {
           return async () => {
-            const talkNotesRef = getTalkNotesRef(user, eventId, talkId);
+            const talkNotesRef = getTalkNotesRef(user, eventId, talk.id);
             if(talkNotesRef) {
               await getDoc(talkNotesRef)
               PERF_LOGGER.debug(`getDoc(${talkNotesRef.path})`)

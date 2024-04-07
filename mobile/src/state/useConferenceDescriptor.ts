@@ -121,7 +121,7 @@ export function useOfflineEventPreparation(
           // stopping watcher as soon as possible
           watchCleaner();
 
-          await checkCache(`useOfflineEventPreparation(eventId=${confDescriptor.id.value})`, Temporal.Duration.from({ hours: 6 }), async () => {
+          await checkCache(`useOfflineEventPreparation(eventId=${confDescriptor.id.value})`, Temporal.Duration.from({ hours: 1 }), async () => {
             return new Promise(async schedulePreparationResolved => {
               const otherDayIds = availableDays.filter(availableDay => !availableDay.id.isSameThan(currentSchedule.day)).map(d => d.id);
               LOGGER.info(() => `Preparing schedule data for other days than currently selected one (${otherDayIds.map(id => id.value).join(", ")})`)

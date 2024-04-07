@@ -1,6 +1,6 @@
 import {
-    createVoxxrinDetailedTalkFromFirestore,
-    TalkId,
+  createVoxxrinDetailedTalkFromFirestore,
+  TalkId, VoxxrinTalk,
 } from "@/models/VoxxrinTalk";
 import {computed, Ref, unref, watch} from "vue";
 import {DetailedTalk} from "../../../shared/daily-schedule.firestore";
@@ -12,10 +12,10 @@ import {
 } from "@/views/vue-utils";
 import {createSharedComposable} from "@vueuse/core";
 import {EventId} from "@/models/VoxxrinEvent";
-import {PERF_LOGGER} from "@/services/Logger";
+import {Logger, PERF_LOGGER} from "@/services/Logger";
 import {DayId} from "@/models/VoxxrinDay";
 import {Temporal} from "temporal-polyfill";
-import {checkCache} from "@/services/Cachings";
+import {checkCache, preloadPicture} from "@/services/Cachings";
 import {CompletablePromiseQueue} from "@/models/utils";
 
 
@@ -57,25 +57,49 @@ export function useEventTalk(
     };
 }
 
-export async function prepareEventTalks(
+export async function prepareEventTalk(
     conferenceDescriptor: VoxxrinConferenceDescriptor,
     dayId: DayId,
-    talkIds: Array<TalkId>,
-    promisesQueue: CompletablePromiseQueue
+    talk: VoxxrinTalk,
+    promisesQueue: CompletablePromiseQueue,
+    queuePriority: number
 ) {
-    return checkCache(`eventTalksPreparation(eventId=${conferenceDescriptor.id.value}, dayId=${dayId.value})`, Temporal.Duration.from({ hours: 6 }), async () => {
-        PERF_LOGGER.debug(`prepareEventTalks(eventId=${conferenceDescriptor.id.value}, talkIds=${JSON.stringify(talkIds.map(id => id.value))})`)
 
-        promisesQueue.addAll(talkIds.map(talkId => {
-          return async () => {
-            const talkDetailsRef = getTalkDetailsRef(conferenceDescriptor.id, talkId);
-            if(talkDetailsRef) {
-              await getDoc(talkDetailsRef);
-              PERF_LOGGER.debug(`getDoc(${talkDetailsRef.path})`)
-            }
+  const talkDetailsRef = getTalkDetailsRef(conferenceDescriptor.id, talk.id);
+  if(talkDetailsRef) {
+    await getDoc(talkDetailsRef);
+    PERF_LOGGER.debug(`getDoc(${talkDetailsRef.path})`)
+  }
+
+  await checkCache(`eventTalkPreparation(eventId=${conferenceDescriptor.id.value}, dayId=${dayId.value}, talkId=${talk.id.value})(speaker pictures)`,
+    Temporal.Duration.from({ hours: 24 }), // No need to have frequent refreshes for speaker urls...
+    async () => {
+        PERF_LOGGER.debug(`eventTalkPreparation(eventId=${conferenceDescriptor.id.value}, dayId=${dayId.value}, talkId=${talk.id.value})(speaker pictures)`)
+
+        promisesQueue.addAll(talk.speakers.map(speaker => () => {
+          if(speaker.photoUrl) {
+            return loadSpeakerUrl(talk, speaker.photoUrl);
           }
-        }), { priority: 100 })
+        }), {priority: queuePriority });
     });
+}
+
+const IN_MEMORY_SPEAKER_URL_PRELOADINGS = new Set<string>();
+async function loadSpeakerUrl(talk: VoxxrinTalk, speakerUrl: string) {
+  const LOGGER = Logger.named(`loadTalkSpeakerUrl(${talk.id.value}): ${speakerUrl}`);
+
+  return new Promise(async resolve => {
+    if(IN_MEMORY_SPEAKER_URL_PRELOADINGS.has(speakerUrl)) {
+      LOGGER.debug(`Speaker url already preloaded, skipping: ${speakerUrl}`)
+      resolve(null);
+    } else {
+      IN_MEMORY_SPEAKER_URL_PRELOADINGS.add(speakerUrl);
+
+      // TODO: handle picture loading error here maybe ??
+      await preloadPicture(speakerUrl)
+      resolve(null);
+    }
+  })
 }
 
 export const useSharedEventTalk = createSharedComposable(useEventTalk);

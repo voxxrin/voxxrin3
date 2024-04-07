@@ -1,6 +1,6 @@
 import {EventId} from "@/models/VoxxrinEvent";
 import {DayId} from "@/models/VoxxrinDay";
-import {TalkId} from "@/models/VoxxrinTalk";
+import {TalkId, VoxxrinTalk} from "@/models/VoxxrinTalk";
 import {computed, Ref, toValue, unref, watch, watchEffect} from "vue";
 import {
     deferredVuefireUseCollection,
@@ -152,15 +152,15 @@ export function useEventTalkStats(eventIdRef: Ref<EventId|undefined>, talkIdsRef
 export async function prepareTalkStats(
     eventId: EventId,
     dayId: DayId,
-    talkIds: Array<TalkId>,
+    talks: Array<VoxxrinTalk>,
     promisesQueue: CompletablePromiseQueue
 ) {
     return checkCache(`talkStatsPreparation(eventId=${eventId.value}, dayId=${dayId.value})`, Temporal.Duration.from({ hours: 2 }), async () => {
-        PERF_LOGGER.debug(`prepareTalkStats(eventId=${eventId.value}, talkIds=${JSON.stringify(talkIds.map(talkId => talkId.value))})`)
+        PERF_LOGGER.debug(`prepareTalkStats(eventId=${eventId.value}, talkIds=${JSON.stringify(talks.map(talk => talk.id.value))})`)
 
-        promisesQueue.addAll(talkIds.map(talkId => {
+        promisesQueue.addAll(talks.map(talk => {
           return async () => {
-            const talksStatsRef = getTalksStatsRef(eventId, talkId);
+            const talksStatsRef = getTalksStatsRef(eventId, talk.id);
             if(talksStatsRef) {
               await getDoc(talksStatsRef)
               PERF_LOGGER.debug(`getDoc(${talksStatsRef.path})`)

@@ -29,6 +29,17 @@ export type VoxxrinDetailedTalk = Replace<VoxxrinTalk, {
 }> & Replace<Omit<DetailedTalk, (keyof Talk) | "summary">, {
 }>
 
+export function removeTalkOverflowsAndDuplicates(talks: VoxxrinTalk[]) {
+  const talksById = talks.reduce((talksById, talk) => {
+    if(!talk.isOverflow) {
+      talksById.set(talk.id.value, talk);
+    }
+    return talksById;
+  }, new Map<string, VoxxrinTalk>())
+
+  return Array.from(talksById.values());
+}
+
 export function createVoxxrinTalkFromFirestore(event: VoxxrinConferenceDescriptor, firestoreTalk: Talk) {
     const format = findTalkFormat(event, new TalkFormatId(firestoreTalk.format.id));
     const track = findTrack(event, new TrackId(firestoreTalk.track.id));
