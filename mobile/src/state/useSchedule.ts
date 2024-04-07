@@ -1,4 +1,4 @@
-import {computed, onMounted, Ref, unref, watch} from "vue";
+import {computed, Ref, unref, watch} from "vue";
 import {deferredVuefireUseDocument, managedRef as ref} from "@/views/vue-utils";
 import {DailySchedule} from "../../../shared/daily-schedule.firestore";
 import {
@@ -7,7 +7,7 @@ import {
   VoxxrinDailySchedule,
   VoxxrinScheduleTimeSlot,
 } from "@/models/VoxxrinSchedule";
-import {DayId, VoxxrinDay} from "@/models/VoxxrinDay";
+import {DayId} from "@/models/VoxxrinDay";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {DocumentReference, doc, collection, getDoc} from "firebase/firestore";
 import {db} from "@/state/firebase";
@@ -21,8 +21,6 @@ import {Logger, PERF_LOGGER} from "@/services/Logger";
 import { User } from 'firebase/auth';
 import {CompletablePromiseQueue} from "@/models/utils";
 import {match} from "ts-pattern";
-import {checkCache} from "@/services/Cachings";
-import {Temporal} from "temporal-polyfill";
 
 export function useSchedule(
             conferenceDescriptorRef: Ref<VoxxrinConferenceDescriptor | undefined>,
@@ -90,64 +88,6 @@ async function loadTalkSpeakerUrls(
     }), { priority: 1 }); // Low priority because if we're not getting speaker image, that's not dramatic
 }
 
-
-export function useOfflineSchedulePreparation(
-  userRef: Ref<User|null|undefined>,
-  confDescriptorRef: Ref<VoxxrinConferenceDescriptor | undefined>,
-  currentScheduleRef: Ref<VoxxrinDailySchedule | undefined>,
-  availableDaysRef: Ref<VoxxrinDay[]|undefined>,
-  preparingOfflineScheduleToastMessageRef: Ref<string | undefined>,
-  preparingOfflineScheduleToastIsOpenRef: Ref<boolean>,
-) {
-
-  return new Promise(resolve => {
-    const LOGGER = Logger.named("useOfflineSchedulePreparation");
-
-    onMounted(() => {
-      const watchCleaner = watch([
-        confDescriptorRef, userRef, currentScheduleRef, availableDaysRef,
-      ], async ([
-        confDescriptor, user, currentSchedule, availableDays,
-      ]) => {
-        // Pre-loading other days data in the background, for 2 main reasons :
-        // - navigation to other days will be quickier
-        // - if user switches to offline without navigating to these days, information will be in his cache anyway
-        if(confDescriptor && user && currentSchedule && availableDays) {
-          // stopping watcher as soon as possible
-          watchCleaner();
-
-          await checkCache(`useOfflineSchedulePreparation(eventId=${confDescriptor.id.value})`, Temporal.Duration.from({ hours: 6 }), async () => {
-            return new Promise(schedulePreparationResolved => {
-              const otherDayIds = availableDays.filter(availableDay => !availableDay.id.isSameThan(currentSchedule.day)).map(d => d.id);
-              LOGGER.info(() => `Preparing schedule data for other days than currently selected one (${otherDayIds.map(id => id.value).join(", ")})`)
-
-              const promisesQueue = new CompletablePromiseQueue({ concurrency: 20 })
-
-              const progressInterval = setInterval(() => {
-                preparingOfflineScheduleToastMessageRef.value = `Preloading event assets for offline usage <u>${promisesQueue.completed} / ${promisesQueue.total}</u>...<br/><em>This can slow down the app a little bit during pre-loading...</em>`
-              }, 500)
-
-              preparingOfflineScheduleToastIsOpenRef.value = true
-              promisesQueue.on('idle', () => {
-                const duration = Math.round((Date.now() - promisesQueue.creationDate.getTime())/10)/100;
-                LOGGER.info(`Total offline promises loaded: ${promisesQueue.total} (duration: ${duration}s)`)
-                preparingOfflineScheduleToastIsOpenRef.value = false
-                clearInterval(progressInterval)
-                schedulePreparationResolved();
-              })
-
-              promisesQueue.add(async () => {
-                await prepareSchedules(user, confDescriptor, currentSchedule.day, extractTalksFromSchedule(currentSchedule), otherDayIds, promisesQueue);
-              }, { priority: 1000 })
-            })
-          });
-
-          resolve(null);
-        }
-      })
-    })
-  })
-}
 
 export async function
 prepareSchedules(

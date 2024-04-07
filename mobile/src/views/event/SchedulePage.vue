@@ -122,7 +122,6 @@ import {computed, onMounted, Ref, toValue, watch} from "vue";
 import {managedRef as ref} from "@/views/vue-utils";
 import {
   LabelledTimeslotWithFeedback,
-  useOfflineSchedulePreparation,
   useSchedule
 } from "@/state/useSchedule";
 import CurrentEventHeader from "@/components/events/CurrentEventHeader.vue";
@@ -141,7 +140,7 @@ import {
 import TimeSlotAccordion from "@/components/timeslots/TimeSlotAccordion.vue";
 import {useCurrentClock} from "@/state/useCurrentClock";
 import {typesafeI18n} from "@/i18n/i18n-vue";
-import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
+import {useOfflineEventPreparation, useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
 import SchedulePreferencesModal from '@/components/modals/SchedulePreferencesModal.vue'
 import {useTabbedPageNav} from "@/state/useTabbedPageNav";
 import TimeslotsIterator, {MissingFeedbackPastTimeslot} from "@/components/timeslots/TimeslotsIterator.vue";
@@ -197,7 +196,7 @@ const { schedule: currentSchedule } = useSchedule(confDescriptor, selectedDayId)
 
 const preparingOfflineScheduleToastMessageRef = ref<string | undefined>(undefined);
 const preparingOfflineScheduleToastIsOpenRef = ref<boolean>(false);
-useOfflineSchedulePreparation(user, confDescriptor, currentSchedule, availableDaysRef, preparingOfflineScheduleToastMessageRef, preparingOfflineScheduleToastIsOpenRef);
+useOfflineEventPreparation(user, confDescriptor, currentSchedule, availableDaysRef, preparingOfflineScheduleToastMessageRef, preparingOfflineScheduleToastIsOpenRef);
 
 const talkIdsRef = computed(() => {
     const schedule = toValue(currentSchedule);
