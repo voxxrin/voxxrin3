@@ -1,6 +1,7 @@
 <template>
-  <transition>
-  <div v-if="!!confDescriptorRef?.features.showRoomCapacityIndicator && capacityStatusRef && roomCapacityIndicatorShownRef" class="above-talkCard"
+  <transition enter-active-class="_enterBanner" leave-active-class="_leaverBanner">
+  <div v-if="!!confDescriptorRef?.features.showRoomCapacityIndicator && capacityStatusRef && roomCapacityIndicatorShownRef"
+       class="above-talkCard"
        :style="{
           '--status-level1-color': '#73a027',
           '--status-level2-color': '#ff6a00',
@@ -270,7 +271,18 @@ function setIndicatorExplanationPopupOpened(opened: boolean) {
   border-radius: var(--border-radius);
   background: var(--app-primary);
   overflow: hidden;
+  transition: margin-bottom 340ms ease-in-out;
+  animation-duration: 340ms;
+  animation-fill-mode: both;
   z-index: 0;
+
+  &._enterBanner { animation: slideInRoomCapacityBanner 340ms ease-in-out both;}
+  &._leaverBanner { animation: slideInRoomCapacityBanner 340ms reverse both;}
+
+  @keyframes slideInRoomCapacityBanner {
+    0% {margin-bottom: -64px;}
+    100% {margin-bottom: -12px;}
+  }
 
   @media (prefers-color-scheme: dark) {
     border: 1px solid var(--app-line-contrast);
@@ -405,15 +417,4 @@ function setIndicatorExplanationPopupOpened(opened: boolean) {
     background-repeat: no-repeat !important;
   }
 }
-
-.v-enter-active,
-.v-leave-active {
-  transition: opacity 1.5s ease;
-}
-
-.v-enter-from,
-.v-leave-to {
-  opacity: 0;
-}
-
 </style>
