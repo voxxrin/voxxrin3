@@ -11,6 +11,7 @@ export type ConferenceDescriptor = ListableEvent & {
         showInfosTab?: boolean,
         // for multi-lang conferences, where we want to hide "default" (implicit) conference lang (ex: in devoxxfr, we'd hide FR)
         hideLanguages: string[],
+        showRoomCapacityIndicator?: boolean,
         ratings: {
             bingo: {
                 enabled: boolean,

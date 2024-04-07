@@ -1,73 +1,76 @@
 <template>
-  <ion-card class="talkCard"
-            v-if="talkNotes"
-            :class="{ container: true, '_is-highlighted': isHighlighted(talk, talkNotes), '_has-favorited': talkNotes.isFavorite, '_has-to-watch-later': talkNotes.watchLater }"
-            @click="$emit('talk-clicked', talk)">
-    <div class="talkCard-head">
-      <div class="start">
-        <div class="item">
-          <div class="track">
-            <ion-badge class="trackBadge" v-if="hasTrack">
-              <div class="trackBadge-content">
-                <ion-icon src="/assets/icons/solid/tag.svg"></ion-icon>{{talk.track.title}}
-              </div>
-            </ion-badge>
+  <div class="talkItemContainer">
+    <room-capacity-indicator v-if="!!roomStats" :event-id="eventId" :talk="talk" :room-stats="roomStats" :show-unknown-capacity="isUpcomingTalk" />
+    <ion-card class="talkCard"
+              v-if="talkNotes"
+              :class="{ container: true, '_is-highlighted': isHighlighted(talk, talkNotes), '_has-favorited': talkNotes.isFavorite, '_has-to-watch-later': talkNotes.watchLater }"
+              @click="$emit('talk-clicked', talk)">
+      <div class="talkCard-head">
+        <div class="start">
+          <div class="item">
+            <div class="track">
+              <ion-badge class="trackBadge" v-if="hasTrack">
+                <div class="trackBadge-content">
+                  <ion-icon src="/assets/icons/solid/tag.svg"></ion-icon>{{talk.track.title}}
+                </div>
+              </ion-badge>
+            </div>
+          </div>
+        </div>
+
+        <div class="middle">
+          <div class="item">
+            <slot name="upper-middle" :talk="talk" :talkNotes="talkNotes" :talkStats="talkStats"></slot>
+          </div>
+        </div>
+
+        <div class="end">
+          <div class="item">
+            <slot name="upper-right" :talk="talk" :talkNotes="talkNotes" :talkStats="talkStats"></slot>
           </div>
         </div>
       </div>
 
-      <div class="middle">
-        <div class="item">
-          <slot name="upper-middle" :talk="talk" :talkNotes="talkNotes" :talkStats="talkStats"></slot>
+      <div class="talkCard-content">
+        <div class="title"
+             :class="{'_hasTalkLang' : talkLang && confDescriptor.features.hideLanguages.indexOf(talkLang.id.value)===-1}">
+          <ion-badge v-if="talkLang && confDescriptor.features.hideLanguages.indexOf(talkLang.id.value)===-1"
+                     :style="{ '--background':  talkLang.themeColor}"
+                     class="talkLang">
+            {{talkLang.label}}
+          </ion-badge>
+          {{talk.title}}
+        </div>
+        <div class="pictures">
+          <div class="picturesItem" v-for="(speaker, index) in talk.speakers" :key="speaker.id.value">
+            <ion-thumbnail>
+              <img v-if="speaker.photoUrl" :src="speaker.photoUrl" @error="handle404OnSpeakerThumbnail($event.target as HTMLImageElement)"
+                   :alt="LL.Avatar_Speaker() + ' ' + speaker.fullName"/>
+              <img v-if="!speaker.photoUrl" :src="baseUrl+'assets/images/svg/avatar-shadow.svg'" aria-hidden="true" />
+            </ion-thumbnail>
+          </div>
         </div>
       </div>
 
-      <div class="end">
-        <div class="item">
-          <slot name="upper-right" :talk="talk" :talkNotes="talkNotes" :talkStats="talkStats"></slot>
+      <div class="talkCard-footer">
+        <div class="speakersContainer">
+          <div class="speakers">
+            <ion-icon v-if="speakerCount > 1" :icon="people"></ion-icon>
+            <ion-icon v-else :icon="person"></ion-icon>
+            <span class="speakers-list">{{displayedSpeakers}}</span>
+          </div>
+        </div>
+        <div class="talkActions">
+          <slot name="footer-actions" :talk="talk" :talkNotes="talkNotes" :talkStats="talkStats" />
         </div>
       </div>
-    </div>
-
-    <div class="talkCard-content">
-      <div class="title"
-           :class="{'_hasTalkLang' : talkLang && confDescriptor.features.hideLanguages.indexOf(talkLang.id.value)===-1}">
-        <ion-badge v-if="talkLang && confDescriptor.features.hideLanguages.indexOf(talkLang.id.value)===-1"
-                   :style="{ '--background':  talkLang.themeColor}"
-                   class="talkLang">
-          {{talkLang.label}}
-        </ion-badge>
-        {{talk.title}}
-      </div>
-      <div class="pictures">
-        <div class="picturesItem" v-for="(speaker, index) in talk.speakers" :key="speaker.id.value">
-          <ion-thumbnail>
-            <img v-if="speaker.photoUrl" :src="speaker.photoUrl" @error="handle404OnSpeakerThumbnail($event.target as HTMLImageElement)"
-                 :alt="LL.Avatar_Speaker() + ' ' + speaker.fullName"/>
-            <img v-if="!speaker.photoUrl" :src="baseUrl+'assets/images/svg/avatar-shadow.svg'" aria-hidden="true" />
-          </ion-thumbnail>
-        </div>
-      </div>
-    </div>
-
-    <div class="talkCard-footer">
-      <div class="speakersContainer">
-        <div class="speakers">
-          <ion-icon v-if="speakerCount > 1" :icon="people"></ion-icon>
-          <ion-icon v-else :icon="person"></ion-icon>
-          <span class="speakers-list">{{displayedSpeakers}}</span>
-        </div>
-      </div>
-      <div class="talkActions">
-        <slot name="footer-actions" :talk="talk" :talkNotes="talkNotes" :talkStats="talkStats" />
-      </div>
-    </div>
-  </ion-card>
+    </ion-card>
+  </div>
 </template>
 
 <script setup lang="ts">
-import {computed, PropType} from "vue";
-import {managedRef as ref, toManagedRef as toRef} from "@/views/vue-utils";
+import {computed, onMounted, PropType} from "vue";
+import {managedRef as ref, toManagedRef as toRef, useInterval} from "@/views/vue-utils";
 import {
   IonBadge,
   IonThumbnail,
@@ -80,7 +83,11 @@ import {TalkNote} from "../../../../shared/feedbacks.firestore";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {TalkStats} from "../../../../shared/event-stats";
+import {VoxxrinRoomStats} from "@/models/VoxxrinRoomStats";
+import {useCurrentClock} from "@/state/useCurrentClock";
+import {Temporal} from "temporal-polyfill";
 import {people, person} from "ionicons/icons";
+import RoomCapacityIndicator from "@/components/rooms/RoomCapacityIndicator.vue";
 
 const { LL } = typesafeI18n()
 const baseUrl = import.meta.env.BASE_URL;
@@ -106,6 +113,15 @@ const props = defineProps({
   talkStats: {
       required: false,
       type: Object as PropType<TalkStats|undefined>
+  },
+  roomStats: {
+      required: false,
+      type: Object as PropType<VoxxrinRoomStats|undefined>
+  },
+  isUpcomingTalk: {
+      required: false,
+      type: Boolean,
+      default: undefined
   },
   talkNotes: {
       required: false,
@@ -140,6 +156,12 @@ const theme = {
 </script>
 
 <style lang="scss" scoped>
+
+.talkItemContainer {
+  display: flex;
+  flex-direction: column;
+  min-width: 100%;
+}
 
 //* Base styles card talk *//
 .talkCard {

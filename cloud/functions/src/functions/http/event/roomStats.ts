@@ -10,6 +10,7 @@ import {RoomsStats, RoomStats} from "../../../../../../shared/event-stats";
 import {db} from "../../../firebase";
 
 import {toValidFirebaseKey} from "../../../../../../shared/utilities/firebase.utils";
+ import {TALK_COMPLETION_THRESHOLD} from "../../../../../../shared/constants/shared-constants.utils";
 
 
 export async function provideRoomsStats(response: Response, pathParams: {eventId: string}, queryParams: {token: string}, body: {
@@ -114,10 +115,6 @@ async function updateRoomStatsFor(params: { eventId: string, timeslottedTalks: T
 }
 
 function maxTalkCompletionTimestampToBeConsideredACandidateForCapacityFillingRatio(talk: TimeslottedTalk) {
-  // If room capacity is provided after 85% of current talk duration, it means it should
-  // be linked to next talk (this can happen when talk ending is earlier than expected)
-  const TALK_COMPLETION_THRESHOLD = 0.85
-
   const startTimestamp = Date.parse(talk.start)
   const talkDuration = Date.parse(talk.end) - startTimestamp
   return (startTimestamp + (TALK_COMPLETION_THRESHOLD * talkDuration))

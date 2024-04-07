@@ -21,8 +21,7 @@ import {
   TimeslotTimingProgress,
   VoxxrinScheduleTimeSlot
 } from "@/models/VoxxrinSchedule";
-import {useInterval} from "@/views/vue-utils";
-import {useCurrentClock} from "@/state/useCurrentClock";
+import {watchClock} from "@/state/useCurrentClock";
 import {
     VoxxrinConferenceDescriptor
 } from "@/models/VoxxrinConferenceDescriptor";
@@ -51,11 +50,9 @@ const { LL } = typesafeI18n()
 const { conferenceDescriptor } = useSharedConferenceDescriptor(toRef(() => props.confDescriptor?.id));
 
 const progress = ref<TimeslotTimingProgress>()
-useInterval(() => {
-  if(props.timeslot) {
-    progress.value = getTimeslotTimingProgress(props.timeslot, useCurrentClock().zonedDateTimeISO())
-  }
-}, {freq:"high-frequency"}, { immediate: true });
+watchClock({ freq: "high-frequency" }, (now) => {
+  progress.value = getTimeslotTimingProgress(props.timeslot, now)
+}, () => !!props.timeslot)
 
 const timeslotLabel = getTimeslotLabel(props.timeslot!);
 </script>

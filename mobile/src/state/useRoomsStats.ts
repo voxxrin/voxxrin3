@@ -5,8 +5,9 @@ import {deferredVuefireUseDocument} from "@/views/vue-utils";
 import {collection, doc, DocumentReference} from "firebase/firestore";
 import {db} from "@/state/firebase";
 import {RoomsStats} from "../../../shared/event-stats";
-import {unescapeFirebaseKey} from "../../../shared/utilities/firebase.utils";
+import {toValidFirebaseKey, unescapeFirebaseKey} from "../../../shared/utilities/firebase.utils";
 import {createVoxxrinRoomStatsFromFirestore} from "@/models/VoxxrinRoomStats";
+import {RoomId} from "@/models/VoxxrinRoom";
 
 
 
@@ -27,6 +28,31 @@ export function useRoomsStats(eventIdRef: Ref<EventId|undefined>) {
       return Object.fromEntries(Object.entries(firestoreRoomsStats).map(([escapedRoomId, roomStats]) => {
         return [ unescapeFirebaseKey(escapedRoomId), createVoxxrinRoomStatsFromFirestore(roomStats) ]
       }))
+    })
+  }
+}
+
+export function useRoomStats(eventIdRef: Ref<EventId|undefined>, roomIdRef: Ref<RoomId|undefined>) {
+  PERF_LOGGER.debug(() => `useRoomStats(eventId=${toValue(eventIdRef)?.value}. roomId=${toValue(roomIdRef)?.value})`)
+
+  const firestoreRoomsStatsRef = deferredVuefireUseDocument([eventIdRef],
+    ([eventId]) => getEventRoomsStatsDoc(eventId));
+
+  return {
+    firestoreRoomStatsRef: computed(() => {
+      const firestoreRoomsStats = unref(firestoreRoomsStatsRef)
+      const roomId = unref(roomIdRef)
+
+      if(!firestoreRoomsStats || !roomId) {
+        return undefined;
+      }
+
+      const firestoreRoomStats = firestoreRoomsStats[toValidFirebaseKey(roomId.value)]
+      if(!firestoreRoomsStats) {
+        return undefined;
+      }
+
+      return createVoxxrinRoomStatsFromFirestore(firestoreRoomStats);
     })
   }
 }

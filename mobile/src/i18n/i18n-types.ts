@@ -510,6 +510,43 @@ type RootTranslation = {
 	 * F​r​e​q​u​e​n​t​l​y​ ​a​s​k​e​d​ ​q​u​e​s​t​i​o​n​s
 	 */
 	Frequently_asked_questions: string
+	/**
+	 * S​t​i​l​l​ ​p​l​e​n​t​y​ ​o​f​ ​s​e​a​t​s​ ​a​v​a​i​l​a​b​l​e
+	 */
+	Still_plenty_of_seats_available: string
+	/**
+	 * R​o​o​m​ ​i​s​ ​b​e​c​o​m​i​n​g​ ​c​r​o​w​d​e​d
+	 */
+	Room_is_becoming_crowded: string
+	/**
+	 * O​n​l​y​ ​f​e​w​ ​s​e​a​t​s​ ​l​e​f​t
+	 */
+	Only_few_seats_left: string
+	/**
+	 * N​o​ ​s​e​a​t​s​ ​a​v​a​i​l​a​b​l​e
+	 */
+	No_seats_available: string
+	/**
+	 * N​o​ ​r​o​o​m​ ​c​a​p​a​c​i​t​y​ ​p​r​o​v​i​d​e​d​ ​y​e​t
+	 */
+	Unknown_room_capacity: string
+	/**
+	 * {​m​i​n​u​t​e​s​}​ ​m​i​n​u​t​e​{​{​s​}​}​ ​a​g​o
+	 * @param {number} minutes
+	 */
+	xx_minutes_ago: RequiredParams<'minutes'>
+	/**
+	 * F​e​w​ ​s​e​c​o​n​d​s​ ​a​g​o
+	 */
+	few_seconds_ago: string
+	/**
+	 * H​o​w​ ​i​s​ ​R​o​o​m​ ​C​a​p​a​c​i​t​y​ ​i​n​d​i​c​a​t​o​r​ ​c​a​l​c​u​l​a​t​e​d​ ​?
+	 */
+	How_is_room_capacity_indicator_calculated: string
+	/**
+	 * O​r​g​a​n​i​z​e​r​s​ ​a​r​e​ ​r​e​g​u​l​a​r​l​y​ ​s​e​n​d​i​n​g​ ​r​e​p​o​r​t​s​ ​o​n​ ​h​o​w​ ​f​u​l​l​ ​t​h​e​ ​r​o​o​m​ ​i​s
+	 */
+	Organizers_are_regularly_sending_room_capacity_ratio: string
 }
 
 export type TranslationFunctions = {
@@ -1005,6 +1042,42 @@ export type TranslationFunctions = {
 	 * Frequently asked questions
 	 */
 	Frequently_asked_questions: () => LocalizedString
+	/**
+	 * Still plenty of seats available
+	 */
+	Still_plenty_of_seats_available: () => LocalizedString
+	/**
+	 * Room is becoming crowded
+	 */
+	Room_is_becoming_crowded: () => LocalizedString
+	/**
+	 * Only few seats left
+	 */
+	Only_few_seats_left: () => LocalizedString
+	/**
+	 * No seats available
+	 */
+	No_seats_available: () => LocalizedString
+	/**
+	 * No room capacity provided yet
+	 */
+	Unknown_room_capacity: () => LocalizedString
+	/**
+	 * {minutes} minute{{s}} ago
+	 */
+	xx_minutes_ago: (arg: { minutes: number }) => LocalizedString
+	/**
+	 * Few seconds ago
+	 */
+	few_seconds_ago: () => LocalizedString
+	/**
+	 * How is Room Capacity indicator calculated ?
+	 */
+	How_is_room_capacity_indicator_calculated: () => LocalizedString
+	/**
+	 * Organizers are regularly sending reports on how full the room is
+	 */
+	Organizers_are_regularly_sending_room_capacity_ratio: () => LocalizedString
 }
 
 export type Formatters = {
