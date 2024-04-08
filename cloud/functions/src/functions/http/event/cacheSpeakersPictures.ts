@@ -85,14 +85,17 @@ export async function cacheSpeakersPictures(response: Response, pathParams: {eve
 
   await Promise.all(eventTalks.map(async talk => {
     await Promise.all(talk.speakers.map(async speaker => {
+      const alreadyCachedUrl = speaker.photoUrl && decodeURIComponent(speaker.photoUrl).includes(`/${BUCKET_NAME}/speaker-pictures/`);
       if(speaker.photoUrl
-        && (
-          !decodeURIComponent(speaker.photoUrl).includes(`/${BUCKET_NAME}/speaker-pictures/`)
-          || queryParams.force === 'true'
-        )
+        && (!alreadyCachedUrl || queryParams.force === 'true')
       ) {
         const photoUrl = speaker.photoUrl;
         const maybeAlreadyCachedUrl = alreadyExistingResizedSpeakerUrls.find(cache => cache.originalUrl === speaker.photoUrl);
+
+        if(alreadyCachedUrl && queryParams.force === 'true' && maybeAlreadyCachedUrl) {
+          speaker.photoUrl = maybeAlreadyCachedUrl.originalUrl
+          // TODO: we should consider to consider maybeAlreadyCachedUrl is undefined so that we enter the first part of the match() below
+        }
 
         const updatedSpeakerUrl = await match(maybeAlreadyCachedUrl)
           .with(P.nullish, async () => {
@@ -106,7 +109,10 @@ export async function cacheSpeakersPictures(response: Response, pathParams: {eve
             const [fileExists] = await bucketFile.exists()
 
             return match({ fileExists })
-              .with({ fileExists: true }, async () => resizedFilenameUrl)
+              .with({ fileExists: true }, async () => {
+                // TODO: update cachedUrlDoc !
+                return resizedFilenameUrl
+              })
               .otherwise(async () => {
                 try {
                   await bucketFile.save(Buffer.from(pictureContent));

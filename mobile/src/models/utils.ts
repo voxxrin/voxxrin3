@@ -136,6 +136,10 @@ export class CompletablePromiseQueue extends pQueue {
     })
   }
 
+  // TODO: would be nice to "hide" add/addAll methods and provide new methods allowing to
+  // pass cacheable promises (with name + cache duration) so we ask ourselves which cache to use
+  // every time we append something in the queue
+
   get completed() { return this._completed; }
   get uncompleted() { return this.pending + this.size; }
   get total() { return this.completed + this.uncompleted; }

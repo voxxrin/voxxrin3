@@ -41,7 +41,7 @@
     "eslint-config-google": "^0.14.0",
     "eslint-plugin-import": "^2.25.4",
     "firebase-functions-test": "^3.0.0",
-    "firebase-tools": "13.6.0",
+    "firebase-tools": "13.7.1",
     "ts-essentials": "9.4.1",
     "typescript": "5.4.5",
     "vitest": "0.31.1"
