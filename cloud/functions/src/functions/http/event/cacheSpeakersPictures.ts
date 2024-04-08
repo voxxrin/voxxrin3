@@ -26,17 +26,20 @@ async function contentChecksum(content: ArrayBuffer) {
 }
 
 function urlToFilename(url: string, checksum: string) {
-  const filenameChunks = url
-    .replace(/https?:\/\/(.+)/, "$1")
-    .replace("/", ":")
-    .split(".")
+  const pathChunks = url.split("/");
+  const filename = pathChunks[pathChunks.length-1]
+  const filenameChunks = filename.split(".");
 
-  return match(filenameChunks)
-    .with([ P.string ], ([filename]) => ({ filename, extension: undefined }))
-    .otherwise((filenameChunks) => ({
-      filename: filenameChunks.slice(0, -1).concat(checksum).join("."),
-      extension: "."+filenameChunks[filenameChunks.length-1]
-    }))
+  const extension = filenameChunks.length > 1 ? "."+filenameChunks[filenameChunks.length-1] : undefined;
+  const checksumedFilenameWithoutExtension = filenameChunks.slice(0, -1).concat(checksum).join(".")
+
+  const escapedPath = pathChunks.slice(0, -1)
+    .concat(checksumedFilenameWithoutExtension)
+    .join("/")
+    .replace(/https?:\/\/(.+)/, "$1") // Removing [https|http]:// prefix
+    .replace(/\//gi, ":") // Replacing / by :
+
+  return { escapedPath, extension };
 }
 
 export async function cacheSpeakersPictures(response: Response, pathParams: {eventId: string}, queryParams: {token: string}, body: {}) {
@@ -81,11 +84,11 @@ export async function cacheSpeakersPictures(response: Response, pathParams: {eve
     await Promise.all(talk.speakers.map(async speaker => {
       if(speaker.photoUrl && !decodeURIComponent(speaker.photoUrl).includes(`/${BUCKET_NAME}/speaker-pictures/`)) {
         const pictureContent = await fetch(speaker.photoUrl).then(resp => resp.arrayBuffer());
-        const { filename, extension } = urlToFilename(speaker.photoUrl, await contentChecksum(pictureContent))
+        const { escapedPath, extension } = urlToFilename(speaker.photoUrl, await contentChecksum(pictureContent))
 
-        const bucketFile = storage.bucket(BUCKET_NAME).file(`speaker-pictures/${filename}${extension || ""}`);
+        const bucketFile = storage.bucket(BUCKET_NAME).file(`speaker-pictures/${escapedPath}${extension || ""}`);
         const originalBucketUrl = bucketFile.publicUrl();
-        const resizedFilenameUrl = storage.bucket(BUCKET_NAME).file(`speaker-pictures/resized/${filename}_64x64${extension || ""}`).publicUrl()
+        const resizedFilenameUrl = storage.bucket(BUCKET_NAME).file(`speaker-pictures/resized/${escapedPath}_64x64${extension || ""}`).publicUrl()
 
         const [fileExists] = await bucketFile.exists()
         const updatedSpeakerUrl = await match({ fileExists })
@@ -94,7 +97,7 @@ export async function cacheSpeakersPictures(response: Response, pathParams: {eve
             try {
               await bucketFile.save(Buffer.from(pictureContent));
 
-              const escapedFilename = toValidFirebaseKey(filename+extension)
+              const escapedFilename = toValidFirebaseKey(escapedPath+(extension || ""))
               const firebaseCachedUrlEntry: CachedUrl = {
                 originalUrl: speaker.photoUrl!,
                 resizedUrl: resizedFilenameUrl,
@@ -108,7 +111,7 @@ export async function cacheSpeakersPictures(response: Response, pathParams: {eve
                   await cachedUrlDoc.set(firebaseCachedUrlEntry)
                 }
               }catch(e: any) {
-                console.error(`Error while persisting cached url for speaker-picture [${filename}]: ${e.toString()}`)
+                console.error(`Error while persisting cached url for speaker-picture [${escapedPath}]: ${e.toString()}`)
               }
 
               // waiting few seconds so that resized pictures get generated
@@ -116,7 +119,7 @@ export async function cacheSpeakersPictures(response: Response, pathParams: {eve
 
               return resizedFilenameUrl;
             } catch(e: any) {
-              console.error(`Error while uploading file ${filename}: ${e.toString()}`)
+              console.error(`Error while uploading file ${escapedPath}: ${e.toString()}`)
               return originalBucketUrl
             }
           })
