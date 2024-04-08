@@ -78,6 +78,9 @@ export async function cacheSpeakersPictures(response: Response, pathParams: {eve
     }
   }
 
+  const alreadyExistingResizedSpeakerUrlsCollection = await db.collection(`events/${pathParams.eventId}/resized-speaker-urls`).get()
+  const alreadyExistingResizedSpeakerUrls = alreadyExistingResizedSpeakerUrlsCollection.docs.map(d => d.data() as CachedUrl)
+
   const eventTalks = (await db.collection(`events/${pathParams.eventId}/talks`).get()).docs.map(d => d.data() as DetailedTalk)
 
   await Promise.all(eventTalks.map(async talk => {
@@ -96,42 +99,47 @@ export async function cacheSpeakersPictures(response: Response, pathParams: {eve
             const pictureContent = await fetch(photoUrl).then(resp => resp.arrayBuffer());
             const { escapedPath, extension } = urlToFilename(photoUrl, await contentChecksum(pictureContent))
 
-        const bucketFile = storage.bucket(BUCKET_NAME).file(`speaker-pictures/${escapedPath}${extension || ""}`);
-        const originalBucketUrl = bucketFile.publicUrl();
-        const resizedFilenameUrl = storage.bucket(BUCKET_NAME).file(`speaker-pictures/resized/${escapedPath}_64x64${extension || ""}`).publicUrl()
+            const bucketFile = storage.bucket(BUCKET_NAME).file(`speaker-pictures/${escapedPath}${extension || ""}`);
+            const originalBucketUrl = bucketFile.publicUrl();
+            const resizedFilenameUrl = storage.bucket(BUCKET_NAME).file(`speaker-pictures/resized/${escapedPath}_64x64${extension || ""}`).publicUrl()
 
-        const [fileExists] = await bucketFile.exists()
-        const updatedSpeakerUrl = await match({ fileExists })
-          .with({ fileExists: true }, async () => resizedFilenameUrl)
-          .otherwise(async () => {
-            try {
-              await bucketFile.save(Buffer.from(pictureContent));
+            const [fileExists] = await bucketFile.exists()
 
-              const escapedFilename = toValidFirebaseKey(escapedPath+(extension || ""))
-              const firebaseCachedUrlEntry: CachedUrl = {
-                originalUrl: speaker.photoUrl!,
-                resizedUrl: resizedFilenameUrl,
-                type: 'speaker-picture'
-              }
-              const cachedUrlDoc = db.doc(`events/${pathParams.eventId}/resized-speaker-urls/${escapedFilename}`)
-              try {
-                if((await cachedUrlDoc.get()).exists) {
-                  await cachedUrlDoc.update(firebaseCachedUrlEntry)
-                } else {
-                  await cachedUrlDoc.set(firebaseCachedUrlEntry)
+            return match({ fileExists })
+              .with({ fileExists: true }, async () => resizedFilenameUrl)
+              .otherwise(async () => {
+                try {
+                  await bucketFile.save(Buffer.from(pictureContent));
+
+                  const escapedFilename = toValidFirebaseKey(escapedPath+(extension || ""))
+                  const firebaseCachedUrlEntry: CachedUrl = {
+                    originalUrl: photoUrl!,
+                    resizedUrl: resizedFilenameUrl,
+                    type: 'speaker-picture'
+                  }
+                  const cachedUrlDoc = db.doc(`events/${pathParams.eventId}/resized-speaker-urls/${escapedFilename}`)
+                  try {
+                    if((await cachedUrlDoc.get()).exists) {
+                      await cachedUrlDoc.update(firebaseCachedUrlEntry)
+                    } else {
+                      await cachedUrlDoc.set(firebaseCachedUrlEntry)
+                    }
+                  }catch(e: any) {
+                    console.error(`Error while persisting cached url for speaker-picture [${escapedPath}]: ${e.toString()}`)
+                  }
+
+                  // waiting few seconds so that resized pictures get generated
+                  await wait(Temporal.Duration.from({ milliseconds: 2000 }))
+
+                  return resizedFilenameUrl;
+                } catch(e: any) {
+                  console.error(`Error while uploading file ${escapedPath}: ${e.toString()}`)
+                  return originalBucketUrl
                 }
-              }catch(e: any) {
-                console.error(`Error while persisting cached url for speaker-picture [${escapedPath}]: ${e.toString()}`)
-              }
-
-              // waiting few seconds so that resized pictures get generated
-              await wait(Temporal.Duration.from({ milliseconds: 2000 }))
-
-              return resizedFilenameUrl;
-            } catch(e: any) {
-              console.error(`Error while uploading file ${escapedPath}: ${e.toString()}`)
-              return originalBucketUrl
-            }
+              });
+          }).otherwise(async alreadyCachedUrl => {
+            console.info(`Avoiding to cache [${photoUrl}] as this was already cached on: ${alreadyCachedUrl.resizedUrl}`)
+            return alreadyCachedUrl.resizedUrl;
           })
 
         speaker.photoUrl = updatedSpeakerUrl;
