@@ -105,7 +105,8 @@ export function declareEventHttpRoutes(app: Express) {
     z.object({
       body: z.object({}),
       query: z.object({
-        token: z.string().min(10)
+        token: z.string().min(10),
+        force: z.union([z.literal('true'), z.literal('false')]).optional().default('false'),
       }),
       path: z.object({
         eventId: z.string().min(3),

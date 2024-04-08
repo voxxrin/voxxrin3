@@ -42,7 +42,7 @@ function urlToFilename(url: string, checksum: string) {
   return { escapedPath, extension };
 }
 
-export async function cacheSpeakersPictures(response: Response, pathParams: {eventId: string}, queryParams: {token: string}, body: {}) {
+export async function cacheSpeakersPictures(response: Response, pathParams: {eventId: string}, queryParams: {token: string, force: "true"|"false"}, body: {}) {
   if(!process.env.ASSETS_BUCKET_NAME) {
     return sendResponseMessage(response, 500, `Missing ASSETS_BUCKET_NAME env variable !`)
   }
@@ -82,9 +82,19 @@ export async function cacheSpeakersPictures(response: Response, pathParams: {eve
 
   await Promise.all(eventTalks.map(async talk => {
     await Promise.all(talk.speakers.map(async speaker => {
-      if(speaker.photoUrl && !decodeURIComponent(speaker.photoUrl).includes(`/${BUCKET_NAME}/speaker-pictures/`)) {
-        const pictureContent = await fetch(speaker.photoUrl).then(resp => resp.arrayBuffer());
-        const { escapedPath, extension } = urlToFilename(speaker.photoUrl, await contentChecksum(pictureContent))
+      if(speaker.photoUrl
+        && (
+          !decodeURIComponent(speaker.photoUrl).includes(`/${BUCKET_NAME}/speaker-pictures/`)
+          || queryParams.force === 'true'
+        )
+      ) {
+        const photoUrl = speaker.photoUrl;
+        const maybeAlreadyCachedUrl = alreadyExistingResizedSpeakerUrls.find(cache => cache.originalUrl === speaker.photoUrl);
+
+        const updatedSpeakerUrl = await match(maybeAlreadyCachedUrl)
+          .with(P.nullish, async () => {
+            const pictureContent = await fetch(photoUrl).then(resp => resp.arrayBuffer());
+            const { escapedPath, extension } = urlToFilename(photoUrl, await contentChecksum(pictureContent))
 
         const bucketFile = storage.bucket(BUCKET_NAME).file(`speaker-pictures/${escapedPath}${extension || ""}`);
         const originalBucketUrl = bucketFile.publicUrl();
