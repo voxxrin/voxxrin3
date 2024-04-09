@@ -121,7 +121,7 @@ import {
   IonToast
 } from '@ionic/vue';
 import {useRoute} from "vue-router";
-import {computed, onMounted, Ref, toValue, watch} from "vue";
+import {computed, onMounted, Ref, toValue, watch, nextTick} from "vue";
 import {managedRef as ref} from "@/views/vue-utils";
 import {
   LabelledTimeslotWithFeedback,
@@ -292,15 +292,16 @@ function toggleExpandedTimeslot(timeslot: VoxxrinScheduleTimeSlot) {
     }
 }
 
-function toggleSearchField() {
-    searchFieldDisplayed.value = !searchFieldDisplayed.value
-    if(searchFieldDisplayed.value) {
-        if(isRefDefined($searchInput)) {
-            setTimeout(() => $searchInput.value.$el.setFocus(), 100);
-        }
-    } else {
-        searchTermsRef.value = '';
+async function toggleSearchField() {
+  searchFieldDisplayed.value = !searchFieldDisplayed.value
+  if(searchFieldDisplayed.value) {
+    await nextTick(); // Attendre que Vue ait mis à jour le DOM
+    if(isRefDefined($searchInput)) {
+      setTimeout(() => $searchInput.value.$el.setFocus(), 100);
     }
+  } else {
+    searchTermsRef.value = '';
+  }
 }
 
 async function openSchedulePreferencesModal() {
