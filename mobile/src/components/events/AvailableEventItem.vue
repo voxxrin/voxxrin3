@@ -1,7 +1,6 @@
 <template>
-  <ion-item @click.stop="$emit('event-clicked', event)" class="eventItem" :class="{'_is-pined' : isPinnedRef}" v-if="event"
-            v-themed-event-styles="event">
-    <ion-ripple-effect type="bounded"></ion-ripple-effect>
+  <ion-item @click.stop="$emit('event-clicked', event)" class="eventItem"
+            :class="{'_is-pined' : isPinnedRef}" v-if="event" v-themed-event-styles="event">
     <div class="eventItem-logoContainer">
       <div class="logo">
         <ion-img :src="event.logoUrl" :alt="LL.Logo_event() + ' ' + event.title"/>
@@ -45,7 +44,7 @@
 <script setup lang="ts">
 import {computed, PropType, toRef, unref} from "vue";
 import {
-  IonImg, useIonRouter,
+  IonImg, useIonRouter
 } from '@ionic/vue';
 import {EventId, ListableVoxxrinEvent} from "@/models/VoxxrinEvent";
 import MonthDayDateRange from "@/components/MonthDayDateRange.vue";
@@ -94,10 +93,18 @@ function navToEventOrganizerPage() {
 
 <style lang="scss" scoped>
 .eventItem {
+  position: relative;
   display: flex;
   --padding-start: 0;
   --inner-padding-end: 0;
   --background: var(--app-background);
+  cursor: pointer;
+  overflow: hidden;
+
+  &:active {
+    transition: var(--transition-active-default);
+    --background: var(--app-beige-medium);
+  }
 
   &:last-child {
     --inner-border-width: 0;
