@@ -170,10 +170,8 @@ function findDayByLocalDate(localDate: string) {
 
     .dayList  {
       display: flex;
-      overflow-x: auto;
-      overflow-y: hidden;
-      margin-left: -27px;
-      margin-right: -24px;
+      min-width: 100%;
+      width: fit-content;
       padding: 0;
       background: rgba(white, 0.6);
       -webkit-backdrop-filter:  blur(30px) saturate(120%);

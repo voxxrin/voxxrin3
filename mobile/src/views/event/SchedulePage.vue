@@ -36,7 +36,7 @@
         </ion-toolbar>
       </ion-header>
 
-      <ion-header class="stickyHeader">
+      <ion-header class="stickyHeader daySelectorContainer">
         <day-selector
             :conf-descriptor="confDescriptor"
             @once-initialized-with-day="(day, days) => onceDayInitializedTo(day, days)">
@@ -315,6 +315,10 @@ async function openSchedulePreferencesModal() {
 </script>
 
 <style scoped lang="scss">
+
+  .daySelectorContainer {
+    overflow-y: auto;
+  }
 
   $ion-fab-button-height: 56px;
 
