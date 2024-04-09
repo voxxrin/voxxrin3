@@ -104,6 +104,10 @@ function navToEventOrganizerPage() {
   &:active {
     transition: var(--transition-active-default);
     --background: var(--app-beige-medium);
+
+    @media (prefers-color-scheme: dark) {
+      --background: var(--app-dark-contrast);
+    }
   }
 
   &:last-child {
