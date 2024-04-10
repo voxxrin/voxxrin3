@@ -27,81 +27,132 @@ beforeAll(async () => {
     });
 })
 
+const FIREBASE_BEFOREAFTER_ALL_MANAGED_COLLECTIONS = [
+  {
+    name: "/users/{userId}", baseTestPath: "/users/alice",
+    initTestData: () => ({username: 'alice'})
+  }, {
+    name: '/users/alice/tokens-wallet/self', baseTestPath: '/users/alice/tokens-wallet/self',
+    initTestData: () => ({publicUserToken: '00d8b3b4-ec51-4694-865c-5e9d0f542e41'})
+  }, {
+    name: '/users/alice/preferences/self', baseTestPath: '/users/alice/preferences/self',
+    initTestData: () => ({pinnedEventIds: []})
+  }, {
+    name: '/users/alice/events/an-event', baseTestPath: '/users/alice/events/an-event',
+    initTestData: () => ({})
+  }, {
+    name: '/users/alice/events/an-event/talksNotes/12345',
+    baseTestPath: '/users/alice/events/an-event/talksNotes/12345',
+    initTestData: () => ({note: {isFavorite: true}})
+  }, {
+    name: '/users/alice/events/an-event/days/monday', baseTestPath: '/users/alice/events/an-event/days/monday',
+    initTestData: () => ({})
+  }, {
+    name: '/users/alice/events/an-event/days/monday/feedbacks/self',
+    baseTestPath: '/users/alice/events/an-event/days/monday/feedbacks/self',
+    initTestData: () => ({dayId: 'monday', feedbacks: []})
+  }, {
+    name: '/users/fred', baseTestPath: '/users/fred',
+    initTestData: () => ({username: 'fred'})
+  }, {
+    name: '/users/fred/tokens-wallet/self', baseTestPath: '/users/fred/tokens-wallet/self',
+    initTestData: () => ({publicUserToken: 'c808ad21-af33-4e20-a6f8-89adc4d14d75'})
+  }, {
+    name: '/users/fred/preferences/self', baseTestPath: '/users/fred/preferences/self',
+    initTestData: () => ({pinnedEventIds: []})
+  }, {
+    name: '/users/fred/events/an-event', baseTestPath: '/users/fred/events/an-event',
+    initTestData: () => ({})
+  }, {
+    name: '/users/fred/events/an-event/talksNotes/12345', baseTestPath: '/users/fred/events/an-event/talksNotes/12345',
+    initTestData: () => ({note: {isFavorite: true}})
+  }, {
+    name: '/users/fred/events/an-event/days/monday', baseTestPath: '/users/fred/events/an-event/days/monday',
+    initTestData: () => ({})
+  }, {
+    name: '/users/fred/events/an-event/days/monday/feedbacks/self',
+    baseTestPath: '/users/fred/events/an-event/days/monday/feedbacks/self',
+    initTestData: () => ({dayId: 'monday', feedbacks: []})
+  }, {
+    name: '/event-family-tokens/a-family', baseTestPath: '/event-family-tokens/a-family',
+    initTestData: () => ({families: ['devoxx'], token: 'd54411a2-4ceb-4c3f-a014-41e9426235ed'})
+  }, {
+    name: '/public-tokens/eventStats:devoxx-voxxed:a6f5d82a-353d-4e98-b86b-cfc3e7ebb5f2',
+    baseTestPath: '/public-tokens/eventStats:devoxx-voxxed:a6f5d82a-353d-4e98-b86b-cfc3e7ebb5f2',
+    initTestData: () => ({type: "FamilyEventsStatsAccess", eventFamilies: ["voxxed", "devoxx"]})
+  }, {
+    name: '/crawlers/a-crawler', baseTestPath: '/crawlers/a-crawler',
+    initTestData: () => ({
+      crawlingKeys: ['8bb30ecd-24f0-402b-9ff1-15d9826262dd'],
+      descriptorUrl: 'https://path-to-descriptor.json',
+      kind: 'devoxx',
+      stopAutoCrawlingAfter: '2023-09-01T00:00:00Z'
+    })
+  }, {
+    name: '/schema-migrations/self', baseTestPath: '/schema-migrations/self',
+    initTestData: () => ({migrations: []})
+  }, {
+    name: '/events/an-event', baseTestPath: '/events/an-event',
+    initTestData: () => ({title: `A super event`})
+  }, {
+    name: '/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472',
+    baseTestPath: '/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472',
+    initTestData: () => ({organizerSecretToken: '6c902c52-9c6d-4d54-b6f2-20814d2f8472'})
+  }, {
+    name: '/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472/ratings/12345',
+    baseTestPath: '/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472/ratings/12345',
+    initTestData: () => ({})
+  }, {
+    name: '/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472/daily-ratings/monday',
+    baseTestPath: '/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472/daily-ratings/monday',
+    initTestData: () => ({})
+  }, {
+    name: '/events/an-event/days/monday', baseTestPath: '/events/an-event/days/monday',
+    initTestData: () => ({day: 'monday', timeSlots: []})
+  }, {
+    name: '/events/an-event/event-descriptor/self', baseTestPath: '/events/an-event/event-descriptor/self',
+    initTestData: () => ({title: `A super event`})
+  }, {
+    name: '/events/an-event/talksStats-allInOne/self', baseTestPath: '/events/an-event/talksStats-allInOne/self',
+    initTestData: () => ({"12345": {id: `12345`, totalFavoritesCount: 0}})
+  }, {
+    name: '/events/an-event/talksStats/12345', baseTestPath: '/events/an-event/talksStats/12345',
+    initTestData: () => ({id: `12345`, totalFavoritesCount: 0})
+  }, {
+    name: '/events/an-event/roomsStats-allInOne/self', baseTestPath: '/events/an-event/roomsStats-allInOne/self',
+    initTestData: () => ({
+      "12345": {
+        roomId: `12345`,
+        capacityFillingRatio: 0,
+        recordedAt: "2024-03-28T11:58:10Z",
+        persistedAt: "2024-03-28T12:00:00Z"
+      }
+    })
+  }, {
+    name: '/events/an-event/last-updates/self', baseTestPath: '/events/an-event/last-updates/self',
+    initTestData: () => ({favorites: '2023-09-01T00:00:00Z'})
+  }, {
+    name: '/events/an-event/talks/1234', baseTestPath: '/events/an-event/talks/1234',
+    initTestData: () => ({id: '1234', title: 'A super talk'})
+  }, {
+    name: '/events/an-event/talks/1234/feedbacks-access/1f0b405a-c3ba-46df-8d02-cce03bc34e5d',
+    baseTestPath: '/events/an-event/talks/1234/feedbacks-access/1f0b405a-c3ba-46df-8d02-cce03bc34e5d',
+    initTestData: () => ({})
+  }, {
+    name: '/events/an-event/talks/1234/feedbacks-access/1f0b405a-c3ba-46df-8d02-cce03bc34e5d/feedbacks/de25005c-de05-48bd-9ae4-4768933eeeb0',
+    baseTestPath: '/events/an-event/talks/1234/feedbacks-access/1f0b405a-c3ba-46df-8d02-cce03bc34e5d/feedbacks/de25005c-de05-48bd-9ae4-4768933eeeb0',
+    initTestData: () => ({attendeePublicToken: 'de25005c-de05-48bd-9ae4-4768933eeeb0', talkId: '1234'})
+  },
+] as const;
+
 beforeAll(async () => {
     await Promise.all([
-        adminFirestore.doc('/users/alice').set({ username: 'alice' }),
-        adminFirestore.doc('/users/alice/tokens-wallet/self').set({ publicUserToken: '00d8b3b4-ec51-4694-865c-5e9d0f542e41' }),
-        adminFirestore.doc('/users/alice/preferences/self').set({ pinnedEventIds: [] }),
-        adminFirestore.doc('/users/alice/events/an-event').set({}),
-        adminFirestore.doc('/users/alice/events/an-event/talksNotes/12345').set({ note: { isFavorite: true } }),
-        adminFirestore.doc('/users/alice/events/an-event/days/monday').set({ }),
-        adminFirestore.doc('/users/alice/events/an-event/days/monday/feedbacks/self').set({ dayId: 'monday', feedbacks: [] }),
-
-        adminFirestore.doc('/users/fred').set({ username: 'fred' }),
-        adminFirestore.doc('/users/fred/tokens-wallet/self').set({ publicUserToken: 'c808ad21-af33-4e20-a6f8-89adc4d14d75' }),
-        adminFirestore.doc('/users/fred/preferences/self').set({ pinnedEventIds: [] }),
-        adminFirestore.doc('/users/fred/events/an-event').set({}),
-        adminFirestore.doc('/users/fred/events/an-event/talksNotes/12345').set({ note: { isFavorite: true } }),
-        adminFirestore.doc('/users/fred/events/an-event/days/monday').set({ }),
-        adminFirestore.doc('/users/fred/events/an-event/days/monday/feedbacks/self').set({ dayId: 'monday', feedbacks: [] }),
-
-        adminFirestore.doc('/event-family-tokens/a-family').set({ families: ['devoxx'], token: 'd54411a2-4ceb-4c3f-a014-41e9426235ed' }),
-        adminFirestore.doc('/public-tokens/eventStats:devoxx-voxxed:a6f5d82a-353d-4e98-b86b-cfc3e7ebb5f2').set({ type: "FamilyEventsStatsAccess", eventFamilies: ["voxxed", "devoxx"] }),
-        adminFirestore.doc('/crawlers/a-crawler').set({ crawlingKeys: [ '8bb30ecd-24f0-402b-9ff1-15d9826262dd' ], descriptorUrl: 'https://path-to-descriptor.json', kind: 'devoxx', stopAutoCrawlingAfter: '2023-09-01T00:00:00Z' }),
-        adminFirestore.doc('/schema-migrations/self').set({ migrations: []}),
-
-        adminFirestore.doc('/events/an-event').set({ title: `A super event` }),
-        adminFirestore.doc('/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472').set({ organizerSecretToken: '6c902c52-9c6d-4d54-b6f2-20814d2f8472' }),
-        adminFirestore.doc('/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472/ratings/12345').set({ }),
-        adminFirestore.doc('/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472/daily-ratings/monday').set({ }),
-        adminFirestore.doc('/events/an-event/days/monday').set({ day: 'monday', timeSlots: [] }),
-        adminFirestore.doc('/events/an-event/event-descriptor/self').set({ title: `A super event` }),
-        adminFirestore.doc('/events/an-event/talksStats-allInOne/self').set({ "12345": { id: `12345`, totalFavoritesCount: 0 } }),
-        adminFirestore.doc('/events/an-event/talksStats/12345').set({ id: `12345`, totalFavoritesCount: 0 }),
-        adminFirestore.doc('/events/an-event/roomsStats-allInOne/self').set({ "12345": { roomId: `12345`, capacityFillingRatio: 0, recordedAt: "2024-03-28T11:58:10Z", persistedAt: "2024-03-28T12:00:00Z" } }),
-        adminFirestore.doc('/events/an-event/last-updates/self').set({ favorites: '2023-09-01T00:00:00Z' }),
-        adminFirestore.doc('/events/an-event/talks/1234').set({ id: '1234', title: 'A super talk' }),
-        adminFirestore.doc('/events/an-event/talks/1234/feedbacks-access/1f0b405a-c3ba-46df-8d02-cce03bc34e5d').set({ }),
-        adminFirestore.doc('/events/an-event/talks/1234/feedbacks-access/1f0b405a-c3ba-46df-8d02-cce03bc34e5d/feedbacks/de25005c-de05-48bd-9ae4-4768933eeeb0').set({ attendeePublicToken: 'de25005c-de05-48bd-9ae4-4768933eeeb0', talkId: '1234' }),
-
+        ...FIREBASE_BEFOREAFTER_ALL_MANAGED_COLLECTIONS.map(ruleDescriptor => adminFirestore.doc(ruleDescriptor.baseTestPath).set(ruleDescriptor.initTestData())),
     ])
 })
 afterAll(async () => {
     await Promise.all([
-        adminFirestore.doc(`/users/alice/events/an-event/days/monday/feedbacks/self`).delete(),
-        adminFirestore.doc(`/users/alice/events/an-event/days/monday`).delete(),
-        adminFirestore.doc(`/users/alice/events/an-event/talksNotes/12345`).delete(),
-        adminFirestore.doc(`/users/alice/events/an-event`).delete(),
-        adminFirestore.doc(`/users/alice/tokens-wallet/self`).delete(),
-        adminFirestore.doc(`/users/alice/preferences/self`).delete(),
-        adminFirestore.doc(`/users/alice`).delete(),
-
-        adminFirestore.doc(`/users/fred/events/an-event/days/monday/feedbacks/self`).delete(),
-        adminFirestore.doc(`/users/fred/events/an-event/days/monday`).delete(),
-        adminFirestore.doc(`/users/fred/events/an-event/talksNotes/12345`).delete(),
-        adminFirestore.doc(`/users/fred/events/an-event`).delete(),
-        adminFirestore.doc(`/users/fred/tokens-wallet/self`).delete(),
-        adminFirestore.doc(`/users/fred/preferences/self`).delete(),
-        adminFirestore.doc(`/users/fred`).delete(),
-
-        adminFirestore.doc('/public-tokens/eventStats:devoxx-voxxed:a6f5d82a-353d-4e98-b86b-cfc3e7ebb5f2').delete(),
-        adminFirestore.doc(`/event-family-tokens/a-family`).delete(),
-        adminFirestore.doc(`/crawlers/a-crawler`).delete(),
-        adminFirestore.doc(`/schema-migrations/self`).delete(),
-
-        adminFirestore.doc(`/events/an-event/talks/1234/feedbacks-access/1f0b405a-c3ba-46df-8d02-cce03bc34e5d/feedbacks/de25005c-de05-48bd-9ae4-4768933eeeb0`).delete(),
-        adminFirestore.doc(`/events/an-event/talks/1234/feedbacks-access/1f0b405a-c3ba-46df-8d02-cce03bc34e5d`).delete(),
-        adminFirestore.doc(`/events/an-event/talks/1234`).delete(),
-        adminFirestore.doc(`/events/an-event/last-updates/self`).delete(),
-        adminFirestore.doc(`/events/an-event/talksStats-allInOne/self`).delete(),
-        adminFirestore.doc(`/events/an-event/talksStats/12345`).delete(),
-        adminFirestore.doc(`/events/an-event/roomsStats-allInOne/self`).delete(),
-        adminFirestore.doc(`/events/an-event/event-descriptor/self`).delete(),
-        adminFirestore.doc(`/events/an-event/days/monday`).delete(),
-        adminFirestore.doc(`/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472/daily-ratings/monday`).delete(),
-        adminFirestore.doc(`/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472/ratings/12345`).delete(),
-        adminFirestore.doc(`/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472`).delete(),
-        adminFirestore.doc(`/events/an-event`).delete(),
+      ...[...FIREBASE_BEFOREAFTER_ALL_MANAGED_COLLECTIONS].reverse().map(ruleDescriptor => adminFirestore.doc(ruleDescriptor.baseTestPath).delete()),
     ]);
 })
 
