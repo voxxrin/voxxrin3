@@ -299,6 +299,16 @@ const FIREBASE_MANAGED_COLLECTIONS = [
       updatedData: () => ({id: `54321`, totalFavoritesCount: 0})
     }]
   }, {
+    name: '/events/{eventId}/talksStats-slowPaced/{talkId}',
+    docInitializations: [{
+      name: 'default',
+      collection: '/events/an-event/talksStats-slowPaced',
+      path: '/events/an-event/talksStats-slowPaced/12345',
+      newDocPath: '/events/an-event/talksStats-slowPaced/54321',
+      data: () => ({id: `12345`, totalFavoritesCount: 0}),
+      updatedData: () => ({id: `54321`, totalFavoritesCount: 0})
+    }]
+  }, {
     name: '/events/{eventId}/roomsStats-allInOne/self',
     docInitializations: [{
       name: 'default',
@@ -829,6 +839,18 @@ const COLLECTIONS: CollectionDescriptor[] = [{
     }),
     tests: (userContext: UserContext) => {
       ensureCollectionFollowAccessPermissions('/events/{eventId}/talks/{talkId}', userContext,
+        {
+          read: true, write: false
+        })
+    }
+}, {
+    name: "/events/{eventId}/talksStats-slowPaced",
+    aroundTests: (_: UserContext) => ({
+        beforeEach: [],
+        afterEach: [],
+    }),
+    tests: (userContext: UserContext) => {
+      ensureCollectionFollowAccessPermissions('/events/{eventId}/talksStats-slowPaced/{talkId}', userContext,
         {
           read: true, write: false
         })

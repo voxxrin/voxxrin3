@@ -56,6 +56,10 @@ service cloud.firestore {
         allow read: if true;
         allow write: if false;
       }
+      match /talksStats-slowPaced/{talkId} {
+        allow read: if true;
+        allow write: if false;
+      }
       match /talksStats-allInOne/self {
         allow get: if true;
         allow list, write: if false;
