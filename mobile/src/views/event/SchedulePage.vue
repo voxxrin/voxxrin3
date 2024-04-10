@@ -297,7 +297,7 @@ function toggleExpandedTimeslot(timeslot: VoxxrinScheduleTimeSlot) {
 async function toggleSearchField() {
   searchFieldDisplayed.value = !searchFieldDisplayed.value
   if(searchFieldDisplayed.value) {
-    await nextTick(); // Attendre que Vue ait mis à jour le DOM
+    await nextTick(); // Wait for Vue to update the DOM
     if(isRefDefined($searchInput)) {
       setTimeout(() => $searchInput.value.$el.setFocus(), 100);
     }
