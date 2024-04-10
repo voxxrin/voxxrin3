@@ -1,9 +1,10 @@
-import {Routes} from "./utils";
+import {Routes, sendResponseMessage} from "./utils";
 import {ISO_DATETIME_PARSER} from "../../utils/zod-parsers";
 import * as z from "zod";
 import type {Express} from 'express';
 import {provideRoomsStats, provideRoomStats} from "./event/roomStats";
 import helloWorld from "./hello";
+import {refreshSlowPacedTalkStatsForOngoingEvents} from "../../cron/slowPacedTalkStatsRefresh";
 
 export function declareExpressHttpRoutes(app: Express) {
 // For testing purposes only
@@ -42,4 +43,19 @@ export function declareExpressHttpRoutes(app: Express) {
       })
     }), (res, path, query, body) => provideRoomsStats(res, path, query, body)); // ???
 
+  // refreshSlowPacedTalkStatsForOngoingEvents
+  Routes.post(app, `/cron/refreshSlowPacedTalkStatsForOngoingEvents`,
+    z.object({
+      query: z.object({ token: z.string() })
+    }), async (res, path, query, body) => {
+      if(process.env.MIGRATION_TOKEN !== query.token) {
+        return sendResponseMessage(res, 403, `Forbidden: invalid migrationToken !`)
+      }
+
+      const results = await refreshSlowPacedTalkStatsForOngoingEvents();
+      return sendResponseMessage(res, 200, {
+        message: `slow-paced talkStats have been properly refreshed !`,
+        results
+      })
+    })
 }

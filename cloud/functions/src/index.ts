@@ -14,6 +14,7 @@ import {globalStats} from "./functions/http/event/globalStatistics";
 import * as express from 'express';
 import * as functions from 'firebase-functions';
 import {declareExpressHttpRoutes} from "./functions/http/routes";
+import {refreshSlowPacedTalkStatsForOngoingEvents} from "./cron/slowPacedTalkStatsRefresh";
 
 const app = express()
 app.use(express.json());
@@ -44,3 +45,11 @@ exports.onUserTalksNoteUpdate = onUserTalksNoteUpdate
 exports.onUserCreated = onUserCreated
 exports.onTalkFeedbackUpdated = onTalkFeedbackUpdated
 exports.onTalkFeedbackCreated = onTalkFeedbackCreated
+
+// Schedulers
+exports.refreshSlowPacedTalkStatsCron = functions.pubsub
+  .schedule("*/10 6-20 * * *").timeZone("Europe/Paris")
+  .onRun(async (event) => {
+
+    refreshSlowPacedTalkStatsForOngoingEvents();
+});

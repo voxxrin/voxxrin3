@@ -1,8 +1,10 @@
 import {ISODatetime} from "../../../../../../shared/type-utils";
-import {RoomsStats} from "../../../../../../shared/event-stats";
+import {RoomsStats, TalkStats} from "../../../../../../shared/event-stats";
 import {db, error} from "../../../firebase";
 import {getTimeslottedTalks} from "./schedule-utils";
 import {toValidFirebaseKey} from "../../../../../../shared/utilities/firebase.utils";
+import {firestore} from "firebase-admin";
+import QuerySnapshot = firestore.QuerySnapshot;
 
 
 export async function ensureRoomsStatsFilledFor(eventId: string) {
@@ -34,4 +36,14 @@ export async function ensureRoomsStatsFilledFor(eventId: string) {
       error(`Error while storing event's roomsStats-allInOne entry`)
     }
   }
+}
+
+export async function getEventTalkStats(eventId: string, type: 'standard'|'slowPaced' = 'standard') {
+  return await db.collection(`events/${eventId}/talksStats${type==='standard'?'':'-slowPaced'}`).get() as QuerySnapshot<TalkStats>;
+}
+
+export async function storeEventTalkStats(eventId: string, talkStats: TalkStats[], type: 'standard'|'slowPaced' = 'standard') {
+  return Promise.all(talkStats.map(talkStat =>
+    db.doc(`events/${eventId}/talksStats${type==='standard'?'':'-slowPaced'}/${talkStat.id}`).set(talkStat)
+  ))
 }
