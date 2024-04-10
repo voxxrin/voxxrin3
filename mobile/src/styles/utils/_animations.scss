@@ -24,3 +24,18 @@
   75% { transform: scale3d(0.95, 1.05, 1);}
   100% { transform: scale3d(1, 1, 1);}
 }
+
+/* ===== Vue Animation Library ====  */
+
+/* Scale Up */
+.scaleUp-enter-active, .scaleUp-leave-active {
+  transition: transform 240ms cubic-bezier(0.250, 0.460, 0.450, 0.940);
+}
+
+.scaleUp-enter-from, .scaleUp-leave-to {
+  transform: scale(0) translateY(100%);
+}
+
+.scaleUp-enter-to, .scaleUp-leave-from {
+  transform: scale(1) translateY(0);
+}

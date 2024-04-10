@@ -106,6 +106,8 @@
           </div>
         </ion-fab-list>
       </ion-fab>
+      <!-- TODO #84 connect the back button to the top of the page -->
+      <ButtonBackTop v-if="true"></ButtonBackTop>
       <PoweredVoxxrin></PoweredVoxxrin>
     </ion-content>
   </ion-page>
@@ -164,6 +166,7 @@ import {useUserEventTalkNotes} from "@/state/useUserTalkNotes";
 import ProvideFeedbackTalkButton from "@/components/talk-card/ProvideFeedbackTalkButton.vue";
 import PoweredVoxxrin from "@/components/ui/PoweredVoxxrin.vue";
 import {useRoomsStats} from "@/state/useRoomsStats";
+import ButtonBackTop from "@/components/ui/ButtonBackTop.vue";
 
 const LOGGER = Logger.named("SchedulePage");
 
