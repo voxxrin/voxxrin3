@@ -12,18 +12,20 @@
       <ion-header class="toolbarHeader">
         <ion-toolbar>
           <ion-title slot="start">{{ LL.Schedule() }}</ion-title>
-          <div v-if="searchFieldDisplayed" class="search-input">
-            <ion-input :size="10" ref="$searchInput"
-                       :debounce="300"
-                       :placeholder="`${LL.Search()}...`"
-                       @ionInput="(ev) => searchTermsRef = ''+ev.target.value"
-            />
-            <ion-icon class="iconInput" src="/assets/icons/line/search-line.svg"></ion-icon>
-            <ion-button shape="round" size="small" fill="outline" @click="toggleSearchField()"
-                        :aria-label="LL.Search_close()">
-              <ion-icon src="/assets/icons/line/close-line.svg"></ion-icon>
-            </ion-button>
-          </div>
+          <transition name="searchBar">
+            <div v-if="searchFieldDisplayed" class="search-input">
+              <ion-input :size="10" ref="$searchInput"
+                         :debounce="300"
+                         :placeholder="`${LL.Search()}...`"
+                         @ionInput="(ev) => searchTermsRef = ''+ev.target.value"
+              />
+              <ion-icon class="iconInput" src="/assets/icons/line/search-line.svg"></ion-icon>
+              <ion-button shape="round" size="small" fill="outline" @click="toggleSearchField()"
+                          :aria-label="LL.Search_close()">
+                <ion-icon src="/assets/icons/line/close-line.svg"></ion-icon>
+              </ion-button>
+            </div>
+          </transition>
 
           <ion-button class="ion-margin-end" slot="end" shape="round" size="small" fill="outline" @click="openSchedulePreferencesModal()"
                       v-if="false"   :aria-label="LL.Filters()">
@@ -316,6 +318,19 @@ async function openSchedulePreferencesModal() {
 </script>
 
 <style scoped lang="scss">
+
+  .searchBar-enter-active, .searchBar-leave-active {
+    transition: width 120ms cubic-bezier(0.250, 0.460, 0.450, 0.940);
+  }
+
+  .searchBar-enter-from, .searchBar-leave-to {
+    width: 0;
+  }
+
+  .searchBar-enter-to, .searchBar-leave-from {
+    width: 100%;
+  }
+
 
   .daySelectorContainer {
     overflow-y: auto;
