@@ -26,6 +26,10 @@ service cloud.firestore {
       allow list, write: if false;
     }
 
+    match /global-infos/self {
+      allow read, write: if false;
+    }
+
     match /crawlers/{crawlerId} {
       allow read, write: if false;
     }

@@ -185,6 +185,16 @@ const FIREBASE_MANAGED_COLLECTIONS = [
       updatedData: () => ({type: "FamilyEventsStatsAccess", eventFamilies: ["voxxed"]})
     }]
   }, {
+    name: '/global-infos/self',
+    docInitializations: [{
+      name: 'default',
+      collection: '/global-infos',
+      path: '/global-infos/self',
+      newDocPath: '/global-infos/other',
+      data: () => ({lastSlowPacedTalkStatsRefreshExecution: "1970-01-01T00:00:00Z"}),
+      updatedData: () => ({lastSlowPacedTalkStatsRefreshExecution: "1970-01-02T00:00:00Z"})
+    }]
+  }, {
     name: '/crawlers/{crawlerId}',
     docInitializations: [{
       name: 'default',
@@ -736,6 +746,18 @@ const COLLECTIONS: CollectionDescriptor[] = [{
         {
           get: true,
           list: false, write: false
+        })
+    }
+}, {
+    name: "/global-infos",
+    aroundTests: (_: UserContext) => ({
+        beforeEach: [],
+        afterEach: [],
+    }),
+    tests: (userContext: UserContext) => {
+      ensureCollectionFollowAccessPermissions('/global-infos/self', userContext,
+        {
+          read: false, write: false
         })
     }
 }, {
