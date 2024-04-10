@@ -32,7 +32,7 @@ function getTalksStatsRef(eventId: EventId|undefined, talkId: TalkId|undefined) 
 
     return doc(collection(doc(collection(db,
             'events'), eventId.value),
-        'talksStats'), talkId.value) as DocumentReference<TalkStats>;
+        'talksStats-slowPaced'), talkId.value) as DocumentReference<TalkStats>;
 }
 
 /**
@@ -109,7 +109,7 @@ function getEventTalkStatsSources(eventId: EventId|undefined, talkIds: TalkId[]|
     return partitionArray(talkIds, MAX_NUMBER_OF_PARAMS_IN_FIREBASE_IN_CLAUSES).map(partitionnedTalkIds =>
         query(collection(doc(collection(db,
                 'events'), eventId.value),
-            'talksStats'), where("id", 'in', toValueObjectValues(partitionnedTalkIds))
+            'talksStats-slowPaced'), where("id", 'in', toValueObjectValues(partitionnedTalkIds))
         ) as CollectionReference<TalkStats>
     );
 }
