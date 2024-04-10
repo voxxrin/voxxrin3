@@ -51,6 +51,10 @@ ion-header  {
 
         .stickyHeader-close {
             margin-right: var(--app-gutters) !important;
+
+            &.md.ion-activated {
+                --color: var(--app-white) !important;
+            }
         }
 
         ion-toolbar {
