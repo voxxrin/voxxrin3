@@ -160,7 +160,7 @@ ion-header  {
         right: 0;
         top: 0;
         height: 100%;
-        animation: appearSearchInput 120ms cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+        width: 100%;
         border-bottom: 1px solid var(--app-beige-line);
         z-index: 1;
 
@@ -198,10 +198,5 @@ ion-header  {
             margin: 0 2px 0 0;
             z-index: 2;
         }
-    }
-
-    @keyframes appearSearchInput {
-        0% { width: 0;}
-        100% {  width: 100%;}
     }
 }
