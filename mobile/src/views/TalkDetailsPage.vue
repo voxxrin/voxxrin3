@@ -25,7 +25,7 @@
               <ion-icon class="favorite-btn-icon" v-if="talkNotes.isFavorite" aria-hidden="true" src="/assets/icons/solid/bookmark-favorite.svg"></ion-icon>
             </ion-button>
             <ion-label class="favorite-btn-nb" v-if="eventTalkStats !== undefined">
-              <span>{{ eventTalkStats.totalFavoritesCount + (localFavorite || 0) }}{{localFavorite ? '*':''}}</span>
+              <span>{{ eventTalkStats.totalFavoritesCount + (localFavorite || 0) }}</span>
             </ion-label>
           </div>
         </ion-toolbar>
