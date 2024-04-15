@@ -16,6 +16,12 @@
             <ion-icon v-if="talkNotes.watchLater" aria-hidden="true" src="/assets/icons/solid/video.svg"></ion-icon>
           </ion-button>
           <div class="favoriteGroup" slot="end" :class="{'_animationIn': talkNotes.isFavorite}" >
+            <talk-favorite-button shape="rounded" v-if="confDescriptor && !detailedTalk.isOverflow"
+                :conf-descriptor="confDescriptor" :user-talk-notes="talkNotes" :talk-stats="eventTalkStats"
+                :local-favorite="localEventTalkNotesRef.get(detailedTalk.id.value)"
+                @talk-note-updated="updatedTalkNote => userEventTalkNotesRef.set(detailedTalk!.id.value, updatedTalkNote) " />
+
+            <!-- TODO Robin: 👇 remove dom elements below -->
             <!-- TODO Fix dynamic aria-label -->
             <ion-button class="btnTalkAction _favorite"
                         shape="round" fill="outline" @click.stop="() => toggleFavorite(!!talkNotes?.isFavorite)"
@@ -103,6 +109,7 @@ import {Logger} from "@/services/Logger";
 import RoomCapacityIndicator from "@/components/rooms/RoomCapacityIndicator.vue";
 import {useRoomStats} from "@/state/useRoomsStats";
 import SpeakerThumbnail from "@/components/speaker/SpeakerThumbnail.vue";
+import TalkFavoriteButton from "@/components/talk-card/TalkFavoriteButton.vue";
 
 const LOGGER = Logger.named("TalkDetailsPage");
 

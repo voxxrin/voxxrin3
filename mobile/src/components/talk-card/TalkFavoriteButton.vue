@@ -1,6 +1,6 @@
 <template>
   <div class="talkAction">
-    <ion-button :class="{ 'btnTalk': true, 'btn-favorite': true, '_is-active': !!talkNotes?.isFavorite }"
+    <ion-button :class="{ '_shape-is-rounded': shape==='rounded', 'btnTalk': true, 'btn-favorite': true, '_is-active': !!talkNotes?.isFavorite }"
                 @click.stop="() => toggleFavorite(!!talkNotes?.isFavorite)" v-if="confDescriptor?.features.favoritesEnabled"
                 :aria-label="talkNotes?.isFavorite ? LL.Remove_Favorites() : LL.Add_Favorites()">
       <span class="btn-favorite-group" :class="{'_animationIn': !!talkNotes?.isFavorite}">
@@ -40,6 +40,11 @@ const props = defineProps({
         required: false,
         type: Number as PropType<1 | -1 | undefined>,
         default: undefined
+    },
+    shape: {
+      required: false,
+      type: String as PropType<"rounded"|undefined>,
+      default: undefined
     }
 });
 
