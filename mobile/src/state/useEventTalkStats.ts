@@ -139,11 +139,17 @@ export function useEventTalkStats(eventIdRef: Ref<EventId>, talkIdsRef: Ref<Talk
         (change, docId, collectionRef) => {
             match(change)
                 .with({type:'created'}, change => collectionRef.value.set(docId, change.createdDoc))
-                .with({type:'updated'}, change => collectionRef.value.set(docId, change.updatedDoc))
+                .with({type:'updated'}, change => {
+                  collectionRef.value.set(docId, change.updatedDoc)
+
+                  // We should remove local favs only when snapshot is updated
+                  // and particularly *not* when it's created because otherwise, local fav would be resetted
+                  // whenever user navigates back to tab where he locally favorited talks
+                  localEventTalkFavsRef.value.delete(docId);
+                })
                 .with({type:'deleted'}, change => collectionRef.value.delete(docId))
                 .exhaustive()
 
-            localEventTalkFavsRef.value.delete(docId);
         }
 
     );
