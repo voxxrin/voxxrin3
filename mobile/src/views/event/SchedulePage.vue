@@ -77,6 +77,7 @@
                             @talk-note-updated="updatedTalkNote => userEventTalkNotesRef.set(talk.id.value, updatedTalkNote) " />
                           <talk-favorite-button v-if="confDescriptor && !talk.isOverflow"
                             :conf-descriptor="confDescriptor" :user-talk-notes="talkNotes" :talk-stats="talkStats"
+                            :local-favorite="localEventTalkNotesRef.get(talk.id.value)"
                             @talk-note-updated="updatedTalkNote => userEventTalkNotesRef.set(talk.id.value, updatedTalkNote) " />
                         </template>
                       </schedule-talk>
@@ -160,7 +161,10 @@ import {useCurrentUser} from "vuefire";
 import {TimeslotAnimations} from "@/services/Animations";
 import {useEventTalkStats} from "@/state/useEventTalkStats";
 import TalkWatchLaterButton from "@/components/talk-card/TalkWatchLaterButton.vue";
-import {useUserEventTalkNotes} from "@/state/useUserTalkNotes";
+import {
+  useLocalEventTalkFavsStorage,
+  useUserEventTalkNotes
+} from "@/state/useUserTalkNotes";
 import ProvideFeedbackTalkButton from "@/components/talk-card/ProvideFeedbackTalkButton.vue";
 import PoweredVoxxrin from "@/components/ui/PoweredVoxxrin.vue";
 import {useRoomsStats} from "@/state/useRoomsStats";
@@ -208,6 +212,7 @@ const talkIdsRef = computed(() => {
 
 const {firestoreEventTalkStatsRef: talkStatsRefByTalkId} = useEventTalkStats(eventId, talkIdsRef)
 const {userEventTalkNotesRef} = useUserEventTalkNotes(eventId, talkIdsRef)
+const localEventTalkNotesRef = useLocalEventTalkFavsStorage(eventId)
 const {firestoreRoomsStatsRef: roomsStatsRefByRoomId } = useRoomsStats(eventId)
 
 const displayedTimeslotsRef = ref<LabelledTimeslotWithFeedback[]>([]) as Ref<LabelledTimeslotWithFeedback[]>;

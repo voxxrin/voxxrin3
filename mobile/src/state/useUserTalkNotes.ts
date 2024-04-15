@@ -23,6 +23,7 @@ import {checkCache} from "@/services/Cachings";
 import {CompletablePromiseQueue, partitionArray, toValueObjectValues} from "@/models/utils";
 import {match, P} from "ts-pattern";
 import {ISODatetime} from "../../../shared/type-utils";
+import {useStorage} from "@vueuse/core";
 
 const LOGGER = Logger.named("useUserTalkNotes");
 
@@ -78,7 +79,7 @@ function getLastLocalTalkNotesUpdates(eventId: EventId, talkId: TalkId): LocalTa
 
 
 export function useUserTalkNoteActions(
-    eventIdRef: Ref<EventId | undefined>,
+    eventIdRef: Ref<EventId>,
     talkIdRef: Ref<TalkId | undefined>,
     maybeNoteRef: Ref<TalkNote|undefined> | undefined,
     onTalkNoteUpdated: (updatedTalkNote: TalkNote) => void = () => {}
@@ -87,6 +88,8 @@ export function useUserTalkNoteActions(
     PERF_LOGGER.debug(() => `useUserTalkNoteActions(${unref(eventIdRef)?.value}, ${unref(talkIdRef)?.value})`)
 
     const userRef = useCurrentUser()
+
+    const localEventTalkFavsRef = useLocalEventTalkFavsStorage(eventIdRef)
 
     const updateTalkNotesDocument = async (
         callContextName: string,
@@ -174,7 +177,16 @@ export function useUserTalkNoteActions(
         })
     }
 
-    const toggleFavorite = async () => {
+    const toggleFavorite = async (currentStatusIsFavorited: boolean) => {
+        const talkId = toValue(talkIdRef);
+        if(talkId) {
+          if(localEventTalkFavsRef.value.has(talkId.value)) {
+            localEventTalkFavsRef.value.delete(talkId.value)
+          } else {
+            localEventTalkFavsRef.value.set(talkId.value, currentStatusIsFavorited ? -1 : 1)
+          }
+        }
+
         await updateTalkNotesDocument(
             'toggleFavorite',
             talkNoteBeforeUpdate => talkNoteBeforeUpdate.isFavorite ? 'unmark-favorited' : 'mark-favorited',
@@ -217,7 +229,16 @@ function getUserEventTalkNotesSources(user: User|null|undefined, eventId: EventI
     );
 }
 
-export function useUserEventTalkNotes(eventIdRef: Ref<EventId|undefined>, talkIdsRef: Ref<TalkId[]|undefined>) {
+export function useLocalEventTalkFavsStorage(eventIdRef: Ref<EventId>) {
+  return useStorage(`event-${eventIdRef.value.value}-local-talk-favs`, new Map<string, 1|-1>(), undefined, {
+    serializer: {
+      read: (value: any) => new Map<string, 1|-1>(value ? Object.entries(JSON.parse(value)) : []),
+      write: (value: Map<string, 1|-1>) => JSON.stringify(Object.fromEntries(value.entries()))
+    }
+  })
+}
+
+export function useUserEventTalkNotes(eventIdRef: Ref<EventId>, talkIdsRef: Ref<TalkId[]|undefined>) {
     PERF_LOGGER.debug(() => `useUserEventTalkNotes(eventId=${toValue(eventIdRef)?.value}, talkIds=${toValueObjectValues(toValue(talkIdsRef))})`)
     const userRef = useCurrentUser()
 

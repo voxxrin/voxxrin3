@@ -125,7 +125,7 @@ import FeedbackFooter from "@/components/feedbacks/FeedbackFooter.vue";
 import SlotOverlaps from "@/components/schedule/SlotOverlaps.vue";
 import {goBackOrNavigateTo} from "@/router";
 import {
-    useUserEventTalkNotes, useUserTalkNoteActions,
+    useUserEventTalkNotes,
 } from "@/state/useUserTalkNotes";
 import {useUserFeedbacks} from "@/state/useUserFeedbacks";
 import {Logger} from "@/services/Logger";

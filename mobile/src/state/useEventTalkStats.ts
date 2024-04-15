@@ -24,6 +24,7 @@ import {Temporal} from "temporal-polyfill";
 import {CompletablePromiseQueue, partitionArray, toValueObjectValues} from "@/models/utils";
 import {match} from "ts-pattern";
 import {TalkStats} from "../../../shared/event-stats";
+import {useLocalEventTalkFavsStorage} from "@/state/useUserTalkNotes";
 
 function getTalksStatsRef(eventId: EventId|undefined, talkId: TalkId|undefined) {
     if(!eventId || !eventId.value || !talkId || !talkId.value) {
@@ -114,8 +115,10 @@ function getEventTalkStatsSources(eventId: EventId|undefined, talkIds: TalkId[]|
     );
 }
 
-export function useEventTalkStats(eventIdRef: Ref<EventId|undefined>, talkIdsRef: Ref<TalkId[]|undefined>) {
+export function useEventTalkStats(eventIdRef: Ref<EventId>, talkIdsRef: Ref<TalkId[]|undefined>) {
     PERF_LOGGER.debug(() => `useEventTalkStats(eventId=${toValue(eventIdRef)?.value}, talkIds=${toValueObjectValues(toValue(talkIdsRef))})`)
+
+    const localEventTalkFavsRef = useLocalEventTalkFavsStorage(eventIdRef)
 
     const firestoreEventTalkStatsRef = deferredVuefireUseCollection([eventIdRef, talkIdsRef],
         ([eventId, talkIds]) => getEventTalkStatsSources(eventId, talkIds),
@@ -139,6 +142,8 @@ export function useEventTalkStats(eventIdRef: Ref<EventId|undefined>, talkIdsRef
                 .with({type:'updated'}, change => collectionRef.value.set(docId, change.updatedDoc))
                 .with({type:'deleted'}, change => collectionRef.value.delete(docId))
                 .exhaustive()
+
+            localEventTalkFavsRef.value.delete(docId);
         }
 
     );

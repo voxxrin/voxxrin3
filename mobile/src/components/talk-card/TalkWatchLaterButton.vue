@@ -40,7 +40,7 @@ const emits = defineEmits<{
 const talkNotes = toRef(() => props.userTalkNotes)
 
 const {toggleWatchLater} = useUserTalkNoteActions(
-    toRef(() => props.confDescriptor?.id),
+    toRef(() => props.confDescriptor.id),
     toRef(() => props.userTalkNotes?.talkId ? new TalkId(props.userTalkNotes?.talkId) : undefined),
     talkNotes,
     updatedTalkNote => emits("talkNoteUpdated", updatedTalkNote)
