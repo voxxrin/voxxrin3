@@ -6,7 +6,7 @@
       <span class="btn-favorite-group" :class="{'_animationIn': !!talkNotes?.isFavorite}">
         <ion-icon class="btn-favorite-group-icon" v-if="!talkNotes?.isFavorite" aria-hidden="true" src="/assets/icons/line/bookmark-line-favorite.svg"></ion-icon>
         <ion-icon class="btn-favorite-group-icon" v-if="!!talkNotes?.isFavorite" aria-hidden="true" src="/assets/icons/solid/bookmark-favorite.svg"></ion-icon>
-        <ion-label class="btn-favorite-group-nb" v-if="eventTalkStats !== undefined">{{ eventTalkStats.totalFavoritesCount + (localFavorite || 0) }}{{localFavorite ? '*':''}}</ion-label>
+        <ion-label class="btn-favorite-group-nb" v-if="eventTalkStats !== undefined">{{ eventTalkStats.totalFavoritesCount + (localFavorite || 0) }}</ion-label>
       </span>
     </ion-button>
   </div>
