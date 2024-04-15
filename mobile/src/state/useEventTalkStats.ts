@@ -24,6 +24,7 @@ import {Temporal} from "temporal-polyfill";
 import {CompletablePromiseQueue, partitionArray, toValueObjectValues} from "@/models/utils";
 import {match} from "ts-pattern";
 import {TalkStats} from "../../../shared/event-stats";
+import {useLocalEventTalkFavsStorage} from "@/state/useUserTalkNotes";
 
 function getTalksStatsRef(eventId: EventId|undefined, talkId: TalkId|undefined) {
     if(!eventId || !eventId.value || !talkId || !talkId.value) {
@@ -32,7 +33,7 @@ function getTalksStatsRef(eventId: EventId|undefined, talkId: TalkId|undefined) 
 
     return doc(collection(doc(collection(db,
             'events'), eventId.value),
-        'talksStats'), talkId.value) as DocumentReference<TalkStats>;
+        'talksStats-slowPaced'), talkId.value) as DocumentReference<TalkStats>;
 }
 
 /**
@@ -109,13 +110,15 @@ function getEventTalkStatsSources(eventId: EventId|undefined, talkIds: TalkId[]|
     return partitionArray(talkIds, MAX_NUMBER_OF_PARAMS_IN_FIREBASE_IN_CLAUSES).map(partitionnedTalkIds =>
         query(collection(doc(collection(db,
                 'events'), eventId.value),
-            'talksStats'), where("id", 'in', toValueObjectValues(partitionnedTalkIds))
+            'talksStats-slowPaced'), where("id", 'in', toValueObjectValues(partitionnedTalkIds))
         ) as CollectionReference<TalkStats>
     );
 }
 
-export function useEventTalkStats(eventIdRef: Ref<EventId|undefined>, talkIdsRef: Ref<TalkId[]|undefined>) {
+export function useEventTalkStats(eventIdRef: Ref<EventId>, talkIdsRef: Ref<TalkId[]|undefined>) {
     PERF_LOGGER.debug(() => `useEventTalkStats(eventId=${toValue(eventIdRef)?.value}, talkIds=${toValueObjectValues(toValue(talkIdsRef))})`)
+
+    const localEventTalkFavsRef = useLocalEventTalkFavsStorage(eventIdRef)
 
     const firestoreEventTalkStatsRef = deferredVuefireUseCollection([eventIdRef, talkIdsRef],
         ([eventId, talkIds]) => getEventTalkStatsSources(eventId, talkIds),
@@ -136,9 +139,17 @@ export function useEventTalkStats(eventIdRef: Ref<EventId|undefined>, talkIdsRef
         (change, docId, collectionRef) => {
             match(change)
                 .with({type:'created'}, change => collectionRef.value.set(docId, change.createdDoc))
-                .with({type:'updated'}, change => collectionRef.value.set(docId, change.updatedDoc))
+                .with({type:'updated'}, change => {
+                  collectionRef.value.set(docId, change.updatedDoc)
+
+                  // We should remove local favs only when snapshot is updated
+                  // and particularly *not* when it's created because otherwise, local fav would be resetted
+                  // whenever user navigates back to tab where he locally favorited talks
+                  localEventTalkFavsRef.value.delete(docId);
+                })
                 .with({type:'deleted'}, change => collectionRef.value.delete(docId))
                 .exhaustive()
+
         }
 
     );

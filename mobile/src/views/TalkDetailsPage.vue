@@ -18,14 +18,14 @@
           <div class="favoriteGroup" slot="end" :class="{'_animationIn': talkNotes.isFavorite}" >
             <!-- TODO Fix dynamic aria-label -->
             <ion-button class="btnTalkAction _favorite"
-                        shape="round" fill="outline" @click.stop="() => toggleFavorite()"
+                        shape="round" fill="outline" @click.stop="() => toggleFavorite(!!talkNotes?.isFavorite)"
                         v-if="confDescriptor?.features.favoritesEnabled"
                         :aria-label="talkNotes?.isFavorite ? LL.Remove_Favorites() : LL.Add_Favorites()">
               <ion-icon class="favorite-btn-icon" v-if="!talkNotes.isFavorite" aria-hidden="true" src="/assets/icons/line/bookmark-line-favorite.svg"></ion-icon>
               <ion-icon class="favorite-btn-icon" v-if="talkNotes.isFavorite" aria-hidden="true" src="/assets/icons/solid/bookmark-favorite.svg"></ion-icon>
             </ion-button>
             <ion-label class="favorite-btn-nb" v-if="eventTalkStats !== undefined">
-              <span>{{ eventTalkStats.totalFavoritesCount }}</span>
+              <span>{{ eventTalkStats.totalFavoritesCount + (localFavorite || 0) }}{{localFavorite ? '*':''}}</span>
             </ion-label>
           </div>
         </ion-toolbar>
@@ -84,8 +84,9 @@ import {useRoute} from "vue-router";
 import {EventId} from "@/models/VoxxrinEvent";
 import {getRouteParamsValue, isRefDefined, toManagedRef as toRef, managedRef as ref} from "@/views/vue-utils";
 import {
-    useUserEventTalkNotes,
-    useUserTalkNoteActions,
+  useLocalEventTalkFavsStorage,
+  useUserEventTalkNotes,
+  useUserTalkNoteActions,
 } from "@/state/useUserTalkNotes";
 import {TalkId} from "@/models/VoxxrinTalk";
 import {useSharedEventTalk} from "@/state/useEventTalk";
@@ -132,6 +133,13 @@ const {toggleFavorite, toggleWatchLater} = useUserTalkNoteActions(
     eventId, talkId,
     talkNotes,
 );
+const localEventTalkNotesRef = useLocalEventTalkFavsStorage(eventId)
+const localFavorite = computed(() => {
+  const localEventTalkNotes = toValue(localEventTalkNotesRef),
+    _talkId = toValue(talkId);
+
+  return localEventTalkNotes.get(_talkId.value);
+})
 
 const theme = computed(() => {
     if(isRefDefined(detailedTalk)) {

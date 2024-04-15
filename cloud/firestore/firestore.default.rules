@@ -26,6 +26,10 @@ service cloud.firestore {
       allow list, write: if false;
     }
 
+    match /global-infos/self {
+      allow read, write: if false;
+    }
+
     match /crawlers/{crawlerId} {
       allow read, write: if false;
     }
@@ -52,13 +56,17 @@ service cloud.firestore {
         allow read: if true;
         allow write: if false;
       }
-      match /talksStats-allInOne/self {
+      match /talksStats-slowPaced/{talkId} {
         allow read: if true;
         allow write: if false;
       }
+      match /talksStats-allInOne/self {
+        allow get: if true;
+        allow list, write: if false;
+      }
       match /roomsStats-allInOne/self {
-        allow read: if true;
-        allow write: if false;
+        allow get: if true;
+        allow list, write: if false;
       }
 
       match /organizer-space/{secretOrganizerToken} {
@@ -113,7 +121,7 @@ service cloud.firestore {
 
         // TODO: Remove it once Devoxx BE is over
         match /__computed/self {
-          allow get: if true;
+          allow get: if iAm(userId);
           allow list, write: if false;
         }
         match /talksNotes/{talkId} {
