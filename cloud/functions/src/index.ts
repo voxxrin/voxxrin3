@@ -48,7 +48,7 @@ exports.onTalkFeedbackCreated = onTalkFeedbackCreated
 
 // Schedulers
 exports.refreshSlowPacedTalkStatsCron = functions.pubsub
-  .schedule("*/10 6-20 * * *").timeZone("Europe/Paris")
+  .schedule("*/10 5-20 * * *").timeZone("Europe/Paris")
   .onRun(async (event) => {
 
     refreshSlowPacedTalkStatsForOngoingEvents();
