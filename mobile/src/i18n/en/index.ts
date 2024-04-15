@@ -136,6 +136,7 @@ const en = {
   few_seconds_ago: "Few seconds ago",
   How_is_room_capacity_indicator_calculated: "How is Room Capacity indicator calculated ?",
   Organizers_are_regularly_sending_room_capacity_ratio: "Organizers are regularly sending reports on how full the room is",
+  On_flacky_connections_it_is_difficult_to_authenticate_the_user: "On flacky connections, authenticating the user can take time, leading to a long loading spinner. To workaround this, you can either Reload the page, or put your device completely offline, so that Firebase doesn't even try to update authenticated user's infos"
 } satisfies BaseTranslation
 
 export default en
