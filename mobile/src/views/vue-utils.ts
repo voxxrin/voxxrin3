@@ -99,11 +99,13 @@ export async function presentActionSheetController(
 export type Unreffable<T> = T | Ref<T>
 
 export async function toBeImplemented(message: string) {
-    const alert = await alertController.create({
-        header: 'Not implemented yet !',
-        message: message
-    });
-    alert.present();
+    LOGGER.info(`Not implemented yet: ${message}`)
+    return Promise.resolve();
+    // const alert = await alertController.create({
+    //     header: 'Not implemented yet !',
+    //     message: message
+    // });
+    // alert.present();
 }
 
 type BaseRegisteredManagedRefEntry = { name: string, refs: Array<Ref>, callStack: string }
