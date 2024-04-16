@@ -8,7 +8,6 @@
       </ion-header>
 
       Notifications here !
-      <PoweredVoxxrin></PoweredVoxxrin>
     </ion-content>
   </ion-page>
 </template>
