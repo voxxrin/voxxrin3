@@ -1,12 +1,13 @@
 <template>
-  <ion-text class="powered">powered by
-    <ion-icon :src="'/assets/images/svg/voxxrin-color-primary.svg'" aria-hidden="true"></ion-icon>
-  </ion-text>
+  <ion-button class="powered" href="https://www.voxxr.in/" target="_blank" :aria-label="LL.Open_Voxxrin_website()">powered by
+    <ion-icon :src="'/assets/images/svg/voxxrin-color-primary.svg'" alt="Voxxrin website" aria-hidden="true"></ion-icon>
+  </ion-button>
 </template>
 
 <script setup lang="ts">
-import {IonText} from "@ionic/vue";
-
+import {IonButton} from "@ionic/vue";
+import {typesafeI18n} from "@/i18n/i18n-vue";
+const { LL } = typesafeI18n()
 </script>
 
 <style lang="scss" scoped>
@@ -14,19 +15,23 @@ import {IonText} from "@ionic/vue";
   display: flex;
   flex-direction: row;
   justify-content: center;
-  column-gap: 8px;
-  padding: 8px 16px;
+  margin: 0;
+  --padding: 8px 16px;
   font-size: 12px;
-  background-color: var(--app-beige-medium);
-  border-radius: 12px 12px 0 0;
+  --background: var(--app-beige-medium);
+  --box-shadow: none;
+  --border-radius: 12px 12px 0 0;
+  --color: var(--app-primary);
 
   @media (prefers-color-scheme: dark) {
-    background-color: var(--app-dark-contrast);
+    --background: var(--app-dark-contrast);
+    --color: var(--app-white);
   }
 
   ion-icon {
     width: 74px;
     height: 16px;
+    margin-left: 4px;
 
     @media (prefers-color-scheme: dark) {
       .letters {

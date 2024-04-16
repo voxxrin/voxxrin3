@@ -27,6 +27,10 @@ type RootTranslation = {
 	 */
 	Close: string
 	/**
+	 * O​p​e​n​ ​V​o​x​x​r​i​n​ ​w​e​b​s​i​t​e
+	 */
+	Open_Voxxrin_website: string
+	/**
 	 * P​r​e​v​i​o​u​s​ ​s​c​r​e​e​n
 	 */
 	Previous_screen: string
@@ -578,6 +582,10 @@ export type TranslationFunctions = {
 	 * Close
 	 */
 	Close: () => LocalizedString
+	/**
+	 * Open Voxxrin website
+	 */
+	Open_Voxxrin_website: () => LocalizedString
 	/**
 	 * Previous screen
 	 */
