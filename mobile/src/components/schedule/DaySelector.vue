@@ -14,11 +14,9 @@
           today: today.localeCompare(day.localDate) === 0,
           future: today.localeCompare(day.localDate) === -1,
         }" :aria-label="LL.View_day() + ' ' + day.formatted.day + ' ' + day.formatted.month">
-          <ion-spinner v-if="today.localeCompare(day.localDate) === 0"
-                       class="todayIndicator"
-                       name="lines-sharp"
-                       :duration="2500">
-          </ion-spinner>
+          <span v-if="today.localeCompare(day.localDate) === 0"
+                class="todayIndicator">
+          </span>
           <div class="dayList-button-content">
             <strong class="day">{{day.formatted.day}}</strong>
             <span class="month">{{day.formatted.month}}</span>
@@ -304,9 +302,17 @@ function findDayByLocalDate(localDate: string) {
 
         .todayIndicator {
           position: absolute;
-          top: 50%;
+          bottom: -6px;
           left: 50%;
-          transform: translate(-50%, -50%) scale(2.7);
+          transform: translate(-50%, 0);
+          height: 11px;
+          width: 12px;
+          border-radius: 15px;
+          background: var(--app-primary);
+
+          @media (prefers-color-scheme: dark) {
+            background: var(--app-white);
+          }
         }
 
         &.selected { @extend %selected;}
