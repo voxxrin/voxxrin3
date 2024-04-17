@@ -116,10 +116,17 @@ const hasMissingFeedback = computed(() => {
 
   // * Base Style Accordion *//
   ion-accordion {
+    display: inherit;
     transition: var(--app-voxxrin-animations-timeslots-anim-duration);
     animation: scale-up-center var(--app-voxxrin-animations-timeslots-anim-duration) cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
-
     border-bottom: 1px solid var(--app-background);
+
+    &::part(header) {
+      position: sticky;
+      top: 59px;
+      margin-bottom: 1px;
+      z-index: 1;
+    }
 
     &.accordion-expanded {
       border-bottom: none;
