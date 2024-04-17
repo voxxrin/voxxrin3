@@ -29,7 +29,7 @@
                  class="talkLang">
         {{talkLang.label}}
       </ion-badge>
-      {{talk.title}}
+      <span class="talkDetails-title-value">{{talk.title}}</span>
     </h1>
     <div class="talkDetails-infos">
       <div class="talkDetails-infos-listTrack">
@@ -118,6 +118,10 @@ const talkLang = computed(() => {
   &-title {
     font-weight: 900;
     padding: 0 var(--app-gutters);
+
+    &-value {
+      user-select: all;
+    }
 
     &._hasTalkLand { text-indent: 4px;}
 

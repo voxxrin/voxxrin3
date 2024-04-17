@@ -367,6 +367,7 @@ const {firestoreRoomStatsRef } = useRoomStats(eventId, toRef(() => detailedTalk.
               flex-direction: column;
               margin-bottom: 8px;
               font-weight: bold;
+              user-select: all;
             }
 
             &-company {
