@@ -324,11 +324,24 @@ function setIndicatorExplanationPopupOpened(opened: boolean) {
     background: rgba(var(--app-primary-rgb), 0.15);
     border: 1px solid rgba(var(--app-primary-rgb), 0.1);
 
+    @media (prefers-color-scheme: dark) {
+      background: var(--app-medium-contrast);
+      border: 1px solid var(--app-line-contrast);
+    }
+
     ion-icon {
       color: var(--app-primary);
+
+      @media (prefers-color-scheme: dark) {
+        color: var(--app-white);
+      }
     }
     .above-talkCard-txt {
       color: var(--app-primary);
+
+      @media (prefers-color-scheme: dark) {
+        color: var(--app-white-70);
+      }
     }
 
     &:after {
