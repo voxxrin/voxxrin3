@@ -160,7 +160,7 @@ const hasMissingFeedback = computed(() => {
       transform: translate(0, -50%);
       height: 24px;
       border-radius: 8px;
-      width: 138px;
+      width: 118px;
       z-index: -1;
       --progress-background: rgba(var(--ion-color-light-rgb), 0.4);
       border: 1px solid rgba(var(--ion-color-light-rgb), 0.6);
