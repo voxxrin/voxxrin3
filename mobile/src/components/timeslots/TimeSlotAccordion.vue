@@ -124,6 +124,7 @@ const hasMissingFeedback = computed(() => {
     &::part(header) {
       position: sticky;
       top: 59px;
+      margin-bottom: 1px;
       z-index: 1;
     }
 
