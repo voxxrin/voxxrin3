@@ -1,6 +1,6 @@
 <template>
   <ion-badge v-bind:class="'_' + conferenceStatus">
-    <ion-spinner v-if="conferenceStatus === 'ongoing'" name="dots"></ion-spinner>
+    <ion-icon  v-if="conferenceStatus === 'ongoing'" aria-hidden="true" :icon="today"></ion-icon>
     <ion-icon v-if="conferenceStatus === 'past'" aria-hidden="true" :icon="playBackCircle"></ion-icon>
     <ion-icon v-if="conferenceStatus === 'future'" aria-hidden="true" :icon="calendar"></ion-icon>
     {{conferenceStatusLabels[conferenceStatus]}}
@@ -19,7 +19,7 @@ import {
     conferenceStatusOf, VoxxrinConferenceDescriptor,
 } from "@/models/VoxxrinConferenceDescriptor";
 import {useInterval, managedRef as ref} from "@/views/vue-utils";
-import {calendar, playBackCircle} from "ionicons/icons";
+import {calendar, playBackCircle, today} from "ionicons/icons";
 import {ListableVoxxrinEvent} from "@/models/VoxxrinEvent";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 
