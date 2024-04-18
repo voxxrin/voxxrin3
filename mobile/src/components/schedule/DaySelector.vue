@@ -181,6 +181,7 @@ function findDayByLocalDate(localDate: string) {
         background: rgba(var(--app-medium-contrast-rgb), 0.5);
       }
 
+
     &-content {
       display: flex;
       align-items: center;
@@ -200,6 +201,10 @@ function findDayByLocalDate(localDate: string) {
       --border-style: none;
       overflow: visible !important;
       flex: 1;
+
+      &:first-child {
+        --padding-start: 16px;
+      }
 
       &:last-child:after {
         display: none;
@@ -235,7 +240,7 @@ function findDayByLocalDate(localDate: string) {
       align-items: center;
       height: 44px !important;
       width: 44px !important;
-      --border-radius: 44px;
+      border-radius: 44px;
       --border-width: 1px;
       --border-style: solid;
       transition: 140ms ease-in-out;
