@@ -125,7 +125,7 @@ const hasMissingFeedback = computed(() => {
       position: sticky;
       top: 59px;
       margin-bottom: 1px;
-      z-index: 1;
+      z-index: 2;
     }
 
     &.accordion-expanded {
@@ -152,11 +152,12 @@ const hasMissingFeedback = computed(() => {
     ._provided-feedback {
       width: 48px;
       font-size: 30px;
-      color: var(--app-beige-dark);
+      color: var(--app-white);
+      opacity: 0.7;
 
       @media (prefers-color-scheme: dark) {
         color: var(--app-white);
-        opacity: 0.5;
+        opacity: 0.7;
       }
     }
 
