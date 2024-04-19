@@ -86,9 +86,11 @@ export async function getTalksDetailsWithRatings(eventId: string) {
             getEveryRatingsForEvent(eventId, organizerSpaceRef.id)
         ]);
 
-        return talks.map(talk => ({
+        return talks
+          .filter(talk => !talk.isOverflow)
+          .map(talk => ({
             talk,
             ratings: everyRatings.ratingsForTalk(talk.id)
-        }))
+          }))
     })
 }
