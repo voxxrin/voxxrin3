@@ -1,7 +1,7 @@
 import * as functions from "firebase-functions";
 import { db, info } from "../../firebase"
 
-import { FieldValue } from "firebase-admin/firestore";
+import { FieldValue, FieldPath } from "firebase-admin/firestore";
 import {
     UserTalkNote
 } from "../../../../../shared/feedbacks.firestore";
@@ -30,6 +30,14 @@ async function incrementAllInOneTalkStats(eventId: string, talkId: string, isFav
     await allInOneTalkStats.update(`${talkId}.totalFavoritesCount`, FieldValue.increment(isFavorite ? 1 : -1))
 }
 
+async function incrementUserTotalFavs(userId: string, eventId: string, talkId: string, isFavorite: boolean) {
+  const userDoc = db.doc(`users/${userId}`)
+  await userDoc.update(
+    new FieldPath("totalFavs", "total"), FieldValue.increment(isFavorite ? 1:-1),
+    new FieldPath("totalFavs", "perEventTotalFavs", eventId), FieldValue.increment(isFavorite ? 1:-1),
+  )
+}
+
 export const onUserTalksNoteUpdate = functions.firestore
     .document("users/{userId}/events/{eventId}/talksNotes/{talkId}")
     .onUpdate(async (change, context) => {
@@ -50,6 +58,7 @@ export const onUserTalksNoteUpdate = functions.firestore
                 eventLastUpdateRefreshed(eventId, [ "favorites" ]),
                 upsertTalkStats(eventId, talkId, isFavorite),
                 incrementAllInOneTalkStats(eventId, talkId, isFavorite),
+                incrementUserTotalFavs(userId, eventId, talkId, isFavorite),
             ])
         }
     });
@@ -71,6 +80,7 @@ export const onUserTalksNoteCreate = functions.firestore
                 eventLastUpdateRefreshed(eventId, [ "favorites" ]),
                 upsertTalkStats(eventId, talkId, isFavorite),
                 incrementAllInOneTalkStats(eventId, talkId, isFavorite),
+                incrementUserTotalFavs(userId, eventId, talkId, isFavorite),
             ])
         }
     });

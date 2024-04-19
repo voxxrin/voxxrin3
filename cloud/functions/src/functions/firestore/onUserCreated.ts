@@ -35,7 +35,12 @@ export async function createEmptyUserTokenWallet(userId: string) {
 export async function createUserInfos(userId: string) {
     const user: User = {
         userCreation: new Date().toISOString() as ISODatetime,
-        username: `Anonymous${generateRandom15DigitInteger()}`
+        username: `Anonymous${generateRandom15DigitInteger()}`,
+        totalFavs: {
+          total: 0,
+          perEventTotalFavs: {}
+        },
+        _version: 1
     }
 
     await db.collection('users').doc(userId).set(user);
