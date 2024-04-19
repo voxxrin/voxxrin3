@@ -5,7 +5,6 @@ import type {Express} from 'express';
 import {provideRoomsStats, provideRoomStats} from "./event/roomStats";
 import helloWorld from "./hello";
 import {refreshSlowPacedTalkStatsForOngoingEvents} from "../../cron/slowPacedTalkStatsRefresh";
-import {createUserTotalFavs} from "./users/createUserTotalFavs";
 
 export function declareExpressHttpRoutes(app: Express) {
 // For testing purposes only
@@ -56,27 +55,6 @@ export function declareExpressHttpRoutes(app: Express) {
       const results = await refreshSlowPacedTalkStatsForOngoingEvents();
       return sendResponseMessage(res, 200, {
         message: `slow-paced talkStats have been properly refreshed !`,
-        results
-      })
-    })
-
-  Routes.post(app, `/users/createUserTotalFavs`,
-    z.object({
-      query: z.object({ token: z.string(), startId: z.string().optional(), size: z.string() })
-    }), async (res, path, query, body) => {
-
-      if(process.env.MIGRATION_TOKEN !== query.token) {
-        return sendResponseMessage(res, 403, `Forbidden: invalid migrationToken !`)
-      }
-
-      const size = Number(query.size);
-      if(isNaN(size)) {
-        return sendResponseMessage(res, 412, `size should be number`)
-      }
-
-      const results = await createUserTotalFavs(size, query.startId);
-      return sendResponseMessage(res, 200, {
-        message: `${results.count} users have been updated ! Last user id: ${results.lastUserId}`,
         results
       })
     })
