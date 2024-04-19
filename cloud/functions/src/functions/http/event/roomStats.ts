@@ -29,7 +29,7 @@ export async function provideRoomsStats(response: Response, pathParams: {eventId
   })
 
   if (!eventDescriptor.eventFamily || !familyRoomStatsContributorToken.eventFamilies.includes(eventDescriptor.eventFamily)) {
-    return sendResponseMessage(response, 400, `Provided family events stats token doesn't match with event ${pathParams.eventId} family: [${eventDescriptor.eventFamily}]`)
+    return sendResponseMessage(response, 400, `Provided family room stats contribution token doesn't match with event ${pathParams.eventId} family: [${eventDescriptor.eventFamily}]`)
   }
 
   const timeslottedTalks = await getTimeslottedTalks(pathParams.eventId)

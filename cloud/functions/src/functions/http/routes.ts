@@ -5,6 +5,7 @@ import type {Express} from 'express';
 import {provideRoomsStats, provideRoomStats} from "./event/roomStats";
 import helloWorld from "./hello";
 import {refreshSlowPacedTalkStatsForOngoingEvents} from "../../cron/slowPacedTalkStatsRefresh";
+import {provideDailyRatingsStats} from "./event/dailyRatingsStats";
 
 export function declareExpressHttpRoutes(app: Express) {
 // For testing purposes only
@@ -42,6 +43,15 @@ export function declareExpressHttpRoutes(app: Express) {
         eventId: z.string().min(3),
       })
     }), (res, path, query, body) => provideRoomsStats(res, path, query, body)); // ???
+  Routes.get(app, '/events/:eventId/dailyRatings/stats',
+    z.object({
+      query: z.object({
+        token: z.string().min(10)
+      }),
+      path: z.object({
+        eventId: z.string().min(3),
+      })
+    }), (res, path, query) => provideDailyRatingsStats(res, path, query));
 
   // refreshSlowPacedTalkStatsForOngoingEvents
   Routes.post(app, `/cron/refreshSlowPacedTalkStatsForOngoingEvents`,
