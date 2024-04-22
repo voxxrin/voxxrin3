@@ -1,10 +1,10 @@
 <template>
-  <!-- TODO #84 connect the back button to the top of the page -->
+  <!-- TODO #84 connect the back current slot button -->
   <transition name="scaleUp">
-    <ion-fab vertical="bottom" horizontal="start" slot="fixed">
+    <ion-fab class="buttonBackCurrentSlot" vertical="bottom" horizontal="start" slot="fixed">
       <ion-fab-button class="buttonBackTop" @click=""
-                      :aria-label="LL.Go_Back_Screen()">
-        <ion-icon :icon="arrowUpSharp"></ion-icon>
+                      :aria-label="LL.Go_Back_Current_Slot()">
+        <ion-icon src="/assets/icons/solid/pick-current-slot.svg" :aria-hidden="true"></ion-icon>
       </ion-fab-button>
     </ion-fab>
   </transition>
@@ -13,17 +13,14 @@
 <script setup lang="ts">
 import { IonFab,IonFabButton } from '@ionic/vue';
 import { typesafeI18n } from "@/i18n/i18n-vue";
-import { arrowUpSharp } from "ionicons/icons";
 
 const { LL } = typesafeI18n()
 </script>
 
 
 <style lang="scss">
-  .buttonBackTop {
+  .buttonBackCurrentSlot {
     ion-fab-button {
-      height: 44px;
-      width: 44px;
       --background: var(--app-primary);
       --color: var(--app-white);
 

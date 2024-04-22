@@ -8,7 +8,7 @@ const en = {
 	Back_User_Dashboard: `Back dashboard`,
 	Avatar_Speaker: `Avatar speaker`,
 	Nav_Back: `Back`,
-	Go_Back_Top_Screen: 'Back to top of page',
+	Go_Back_Current_Slot: 'Back to current slot',
 	Conference_Selector: `Conference Selector`,
 	Pinned_events: `Pinned events`,
 	Config_event: `Configuration event`,

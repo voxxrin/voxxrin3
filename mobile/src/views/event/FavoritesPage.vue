@@ -95,7 +95,7 @@
   import ProvideFeedbackTalkButton from "@/components/talk-card/ProvideFeedbackTalkButton.vue";
   import PoweredVoxxrin from "@/components/ui/PoweredVoxxrin.vue";
   import {useRoomsStats} from "@/state/useRoomsStats";
-  import ButtonBackTop from "@/components/ui/ButtonBackTop.vue";
+  import ButtonBackTop from "@/components/ui/ButtonBackCurrentSlot.vue";
 
   const { LL } = typesafeI18n()
 
