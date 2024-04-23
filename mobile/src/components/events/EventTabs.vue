@@ -3,7 +3,8 @@
     <ion-router-outlet></ion-router-outlet>
     <ion-tab-bar slot="bottom" ref="$tabBarRef">
       <ion-tab-button v-for="(tab, index) in tabs" :key="index"
-                      :tab="tab.id" :href="tab.url">
+                      :tab="tab.id" :href="tab.url"
+                      @click="scrollToTop(tab.id)">
         <ion-icon aria-hidden="true" :src="$tabBarRef?.tabState.activeTab === tab.id ? tab.selectedIcon : tab.icon" />
         <ion-label>{{ tab.label }}</ion-label>
         <ion-ripple-effect type="unbounded"></ion-ripple-effect>
@@ -56,6 +57,12 @@ watch([$tabBarRef], ([$tabBar]) => {
         ($tabBar.$el.querySelectorAll(`ion-tab-button`) as HTMLIonTabButtonElement[])[selectedTabIndex].click();
     }
 })
+
+const scrollToTop = (tabId: string) => {
+  if ($tabBarRef?.value?.tabState?.activeTab === tabId) {
+    window.dispatchEvent(new Event('activeTabClicked'));
+  }
+};
 </script>
 
 <style lang="scss" scoped>

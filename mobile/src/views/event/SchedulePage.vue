@@ -1,6 +1,6 @@
-<template>
+<template v-if="confDescriptor">
   <ion-page>
-    <ion-content :fullscreen="true" v-if="confDescriptor">
+    <ion-content :fullscreen="true" ref="contentRef">
       <current-event-header v-if="!hideHeader" :conf-descriptor="confDescriptor"/>
       <ion-toast position="top" style="--max-width: 70%; --button-color: var(--color)"
            :message="preparingOfflineScheduleToastMessageRef"
@@ -106,8 +106,8 @@
           </div>
         </ion-fab-list>
       </ion-fab>
-      <!-- TODO #84 connect the back button to the top of the page -->
-      <ButtonBackTop v-if="true"></ButtonBackTop>
+      <!-- TODO #84 connect the back button to the current slot -->
+      <ButtonBackCurrentSlot v-if="true"></ButtonBackCurrentSlot>
       <PoweredVoxxrin></PoweredVoxxrin>
     </ion-content>
   </ion-page>
@@ -123,7 +123,7 @@ import {
   IonToast
 } from '@ionic/vue';
 import {useRoute} from "vue-router";
-import {computed, onMounted, Ref, toValue, watch} from "vue";
+import {computed, onMounted, onUnmounted, Ref, toValue, watch} from "vue";
 import {managedRef as ref} from "@/views/vue-utils";
 import {
   LabelledTimeslotWithFeedback,
@@ -167,6 +167,7 @@ import ProvideFeedbackTalkButton from "@/components/talk-card/ProvideFeedbackTal
 import PoweredVoxxrin from "@/components/ui/PoweredVoxxrin.vue";
 import {useRoomsStats} from "@/state/useRoomsStats";
 import ButtonBackTop from "@/components/ui/ButtonBackCurrentSlot.vue";
+import ButtonBackCurrentSlot from "@/components/ui/ButtonBackCurrentSlot.vue";
 
 const LOGGER = Logger.named("SchedulePage");
 
@@ -315,6 +316,19 @@ async function openSchedulePreferencesModal() {
     const { data, role } = await modal.onWillDismiss();
     LOGGER.debug(() => `TODO: Update schedule local preferences`)
 }
+
+const contentRef = ref(null);
+onMounted(() => {
+  const scrollToTop = () => {
+    contentRef.value.$el.scrollToPoint(0, 0, 500);
+  };
+
+  window.addEventListener('activeTabClicked', scrollToTop);
+
+  onUnmounted(() => {
+    window.removeEventListener('activeTabClicked', scrollToTop);
+  });
+});
 </script>
 
 <style scoped lang="scss">

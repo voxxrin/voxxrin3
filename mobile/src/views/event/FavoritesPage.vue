@@ -1,6 +1,6 @@
 <template>
   <ion-page>
-    <ion-content :fullscreen="true" v-if="confDescriptor">
+    <ion-content :fullscreen="true" v-if="confDescriptor" ref="contentRef">
       <current-event-header :conf-descriptor="confDescriptor" />
       <ion-header class="toolbarHeader">
         <ion-toolbar>
@@ -56,8 +56,8 @@
           </template>
         </timeslots-iterator>
       </ion-accordion-group>
-      <!-- TODO #84 connect the back button to the top of the page -->
-      <ButtonBackTop v-if="true"></ButtonBackTop>
+      <!-- TODO #84 connect the back button to the current slot -->
+      <ButtonBackCurrentSlot v-if="true"></ButtonBackCurrentSlot>
       <PoweredVoxxrin></PoweredVoxxrin>
     </ion-content>
   </ion-page>
@@ -89,13 +89,14 @@
   import {useUserEventTalkNotes} from "@/state/useUserTalkNotes";
   import TimeSlotSection from "@/components/timeslots/TimeSlotSection.vue";
   import {useSharedEventSelectedDay} from "@/state/useEventSelectedDay";
-  import {computed, toValue} from "vue";
+  import {computed, onMounted, onUnmounted, toValue} from "vue";
   import {useEventTalkStats} from "@/state/useEventTalkStats";
   import NoResults from "@/components/ui/NoResults.vue";
   import ProvideFeedbackTalkButton from "@/components/talk-card/ProvideFeedbackTalkButton.vue";
   import PoweredVoxxrin from "@/components/ui/PoweredVoxxrin.vue";
   import {useRoomsStats} from "@/state/useRoomsStats";
   import ButtonBackTop from "@/components/ui/ButtonBackCurrentSlot.vue";
+  import ButtonBackCurrentSlot from "@/components/ui/ButtonBackCurrentSlot.vue";
 
   const { LL } = typesafeI18n()
 
@@ -138,6 +139,19 @@
   async function navigateToTalkRatingScreenFor(talk: VoxxrinTalk) {
       triggerTabbedPageNavigate(`/events/${eventId.value.value}/rate-talk/${talk.id.value}`, "forward", "push");
   }
+
+  const contentRef = ref(null);
+  onMounted(() => {
+    const scrollToTop = () => {
+      contentRef.value.$el.scrollToPoint(0, 0, 500);
+    };
+
+    window.addEventListener('activeTabClicked', scrollToTop);
+
+    onUnmounted(() => {
+      window.removeEventListener('activeTabClicked', scrollToTop);
+    });
+  });
 </script>
 
 <style lang="scss" scoped>
