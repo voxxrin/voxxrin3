@@ -1,4 +1,4 @@
-import crawl from "./functions/http/crawl"
+import crawl from "./functions/http/deprecated_crawl"
 import {migrateFirestoreSchema} from "./functions/http/migrateFirestoreSchema";
 import {onUserTalksNoteCreate, onUserTalksNoteUpdate} from "./functions/firestore/onUserTalkNotes"
 import {onUserCreated} from "./functions/firestore/onUserCreated";
