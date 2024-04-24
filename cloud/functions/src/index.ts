@@ -13,7 +13,7 @@ import publicEventStats from "./functions/http/event/publicEventStats";
 import {globalStats} from "./functions/http/event/globalStatistics";
 import * as express from 'express';
 import * as functions from 'firebase-functions';
-import {declareExpressHttpRoutes} from "./functions/http/routes";
+import {declareExpressHttpRoutes} from "./functions/http/api/routes";
 import {refreshSlowPacedTalkStatsForOngoingEvents} from "./cron/slowPacedTalkStatsRefresh";
 
 const app = express()
