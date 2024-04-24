@@ -222,6 +222,11 @@ const talkFeedbacksStats = computed(() => {
   border-radius: 16px;
   overflow: hidden;
 
+  @media (prefers-color-scheme: dark) {
+    background-color: var(--app-medium-contrast);
+    border: 1px solid var(--app-line-contrast);
+  }
+
   img {
     position: absolute;
     left: 16px;
@@ -246,6 +251,10 @@ const talkFeedbacksStats = computed(() => {
     color: var(--app-white);
     font-weight: 900;
     background-color: var(--voxxrin-event-theme-colors-primary-hex);
+
+    @media (prefers-color-scheme: dark) {
+      color: var(--app-primary);
+    }
   }
 
   &-rate {
@@ -265,6 +274,10 @@ const talkFeedbacksStats = computed(() => {
     background-color: var(--voxxrin-event-theme-colors-primary-hex);
     color: var(--app-white);
 
+    @media (prefers-color-scheme: dark) {
+      color: var(--app-primary);
+    }
+
     &-label {
       font-weight: normal;
       opacity: 0.7;
@@ -277,6 +290,11 @@ const talkFeedbacksStats = computed(() => {
   padding: 16px;
   border-radius: 16px;
   background-color: var(--app-beige-medium);
+
+  @media (prefers-color-scheme: dark) {
+    background-color: var(--app-medium-contrast);
+    border: 1px solid var(--app-line-contrast);
+  }
 }
 
 .privateBingo {
@@ -309,6 +327,11 @@ const talkFeedbacksStats = computed(() => {
     border-right: 1px solid var(--app-beige-line);
     border-bottom: 1px solid var(--app-beige-line);
     background-color: transparent;
+
+    @media (prefers-color-scheme: dark) {
+      color: var(--app-white);
+      background: var(--app-grey-contrast);
+    }
   }
 
   ion-item {
@@ -318,6 +341,10 @@ const talkFeedbacksStats = computed(() => {
     --border-width: 1px;
     --border-color: var(--app-beige-line);
     --background: var(--app-white);
+
+    @media (prefers-color-scheme: dark) {
+      --background: var(--app-light-contrast);
+    }
 
     &:first-child, &:last-child {
       --border-radius: 12px;
@@ -381,6 +408,10 @@ const talkFeedbacksStats = computed(() => {
       padding: 4px 0;
       border-bottom: 1px solid var(--app-beige-line);
 
+      @media (prefers-color-scheme: dark) {
+        color: var(--app-white);
+      }
+
       &:last-child {
         border-bottom: none;
       }
@@ -403,6 +434,12 @@ const talkFeedbacksStats = computed(() => {
     row-gap: 4px;
     padding: 8px 12px 0 12px;
     background-color: var(--app-beige-line);
+
+
+    @media (prefers-color-scheme: dark) {
+      background-color: var(--app-light-contrast);
+      color: var(--app-white);
+    }
 
     ion-icon {
       font-size: 24px;
