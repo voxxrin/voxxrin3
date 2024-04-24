@@ -2,8 +2,8 @@ import {ValueObject} from "@/models/utils";
 import {UserPreferences} from "../../../shared/user-preferences.firestore";
 import {EventId} from "@/models/VoxxrinEvent";
 import {
-    EventOrganizerSecretToken,
-    UserTokensWallet
+  UserWalletEventOrganizerSecretToken,
+  UserTokensWallet, UserWallerTalkFeedbacksViewerSecretToken
 } from "../../../shared/user-tokens-wallet.firestore";
 import {TalkFeedbacksViewerSecretToken} from "../../../shared/conference-organizer-space.firestore";
 import {TalkId} from "@/models/VoxxrinTalk";
@@ -16,10 +16,10 @@ export type VoxxrinUserPreferences = Replace<UserPreferences, {
     pinnedEventIds: Array<EventId>
 }>
 
-export type EventOrganizerToken = Replace<EventOrganizerSecretToken, {
+export type EventOrganizerToken = Replace<UserWalletEventOrganizerSecretToken, {
     eventId: EventId
 }>
-export type TalkFeedbacksViewerToken = Replace<TalkFeedbacksViewerSecretToken, {
+export type TalkFeedbacksViewerToken = Replace<UserWallerTalkFeedbacksViewerSecretToken, {
     eventId: EventId,
     talkId: TalkId
 }>

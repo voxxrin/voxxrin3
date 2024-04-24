@@ -309,6 +309,7 @@ const saveEvent = async function (event: FullEvent, crawlerDescriptor: z.infer<t
                 organizerSpaceContent.talkFeedbackViewerTokens.push({
                     eventId: event.id,
                     talkId: talk.id,
+                    speakersFullNames: talk.speakers.map(sp => sp.fullName),
                     secretToken: talkFeedbackViewerSecretToken
                 });
             }
