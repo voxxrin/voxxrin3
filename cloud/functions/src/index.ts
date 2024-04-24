@@ -1,20 +1,6 @@
-import crawl from "./functions/http/deprecated_crawl"
-import {migrateFirestoreSchema} from "./functions/http/migrateFirestoreSchema";
-import {onUserTalksNoteCreate, onUserTalksNoteUpdate} from "./functions/firestore/onUserTalkNotes"
-import {onUserCreated} from "./functions/firestore/onUserCreated";
-import {
-    onTalkFeedbackCreated,
-    onTalkFeedbackUpdated
-} from "./functions/firestore/onTalkFeedbackProvided";
-import attendeesFeedbacks from "./functions/http/event/attendeesFeedbacks";
-import deprecatedEventStats from "./functions/http/event/deprecatedEventStats";
-import talkFeedbacksViewers from "./functions/http/event/talkFeedbacksViewers";
-import publicEventStats from "./functions/http/event/publicEventStats";
-import {globalStats} from "./functions/http/event/globalStatistics";
 import * as express from 'express';
 import * as functions from 'firebase-functions';
 import {declareExpressHttpRoutes} from "./functions/http/api/routes";
-import {refreshSlowPacedTalkStatsForOngoingEvents} from "./cron/slowPacedTalkStatsRefresh";
 
 const app = express()
 app.use(express.json());
@@ -22,34 +8,66 @@ app.use(express.json());
 // Legacy HTTP Endpoints declaration... please use declareRoutes() instead !
 
 // For organizers
-exports.crawl = crawl
-exports.talkFeedbacksViewers = talkFeedbacksViewers
+exports.crawl = functions.https.onRequest(async (request, response) => {
+  (await import("./functions/http/deprecated_crawl")).crawl(request, response)
+})
+exports.talkFeedbacksViewers = functions.https.onRequest(async (request, response) => {
+  (await import("./functions/http/event/talkFeedbacksViewers")).talkFeedbacksViewers(request, response)
+})
 // For organizers + co organizers (in same event family)
-exports.attendeesFeedbacks = attendeesFeedbacks
-exports.publicEventStats = publicEventStats
+exports.attendeesFeedbacks = functions.https.onRequest(async (request, response) => {
+  (await import("./functions/http/event/attendeesFeedbacks")).attendeesFeedbacks(request, response)
+})
+exports.publicEventStats = functions.https.onRequest(async (request, response) => {
+  (await import("./functions/http/event/publicEventStats")).publicEventStats(request, response)
+})
 
 // Deprecated (wait for Devoxx BE end to safely remove it)
-exports.eventStats = deprecatedEventStats
+exports.eventStats = functions.https.onRequest(async (request, response) => {
+  (await import("./functions/http/event/deprecatedEventStats")).deprecatedEventStats(request, response)
+})
 
 // Admin only
-exports.migrateFirestoreSchema = migrateFirestoreSchema
-exports.globalStats = globalStats
+exports.migrateFirestoreSchema = functions.https.onRequest(async (request, response) => {
+  (await import("./functions/http/migrateFirestoreSchema")).migrateFirestoreSchema(request, response)
+})
+exports.globalStats = functions.https.onRequest(async (request, response) => {
+  (await import("./functions/http/event/globalStatistics")).globalStats(request, response)
+})
 
 // Express handler
 declareExpressHttpRoutes(app)
 exports.api = functions.https.onRequest(app);
 
 // Firebase handlers
-exports.onUserTalksNoteCreate = onUserTalksNoteCreate
-exports.onUserTalksNoteUpdate = onUserTalksNoteUpdate
-exports.onUserCreated = onUserCreated
-exports.onTalkFeedbackUpdated = onTalkFeedbackUpdated
-exports.onTalkFeedbackCreated = onTalkFeedbackCreated
+exports.onUserTalksNoteCreate = functions.firestore
+  .document("users/{userId}/events/{eventId}/talksNotes/{talkId}")
+  .onCreate(async (change, context) => {
+    (await import('./functions/firestore/onUserTalkNotes')).onUserTalksNoteCreate(change, context)
+  });
+exports.onUserTalksNoteUpdate = functions.firestore
+  .document("users/{userId}/events/{eventId}/talksNotes/{talkId}")
+  .onUpdate(async (change, context) => {
+    (await import('./functions/firestore/onUserTalkNotes')).onUserTalksNoteUpdate(change, context)
+  });
+exports.onUserCreated = functions.auth.user().onCreate(async (user, context) => {
+  (await import('./functions/firestore/onUserCreated')).onUserCreated(user, context)
+});
+exports.onTalkFeedbackUpdated = functions.firestore
+  .document(`users/{userId}/events/{eventId}/days/{dayId}/feedbacks/self`)
+  .onUpdate(async (change, context) => {
+    (await import('./functions/firestore/onTalkFeedbackProvided')).onTalkFeedbackUpdated(change, context)
+  });
+exports.onTalkFeedbackCreated = functions.firestore
+  .document(`users/{userId}/events/{eventId}/days/{dayId}/feedbacks/self`)
+  .onCreate(async (snapshot, context) => {
+    (await import('./functions/firestore/onTalkFeedbackProvided')).onTalkFeedbackCreated(snapshot, context)
+  });
 
 // Schedulers
 exports.refreshSlowPacedTalkStatsCron = functions.pubsub
   .schedule("*/10 5-20 * * *").timeZone("Europe/Paris")
   .onRun(async (event) => {
 
-    refreshSlowPacedTalkStatsForOngoingEvents();
+    (await import('./cron/slowPacedTalkStatsRefresh')).refreshSlowPacedTalkStatsForOngoingEvents()
 });

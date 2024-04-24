@@ -7,8 +7,9 @@ import {
 } from "../../firestore/firestore-utils";
 import {match, P} from "ts-pattern";
 import {TalkStats} from "../../../../../../shared/event-stats";
+import * as express from "express";
 
-const deprecatedEventStats = functions.https.onRequest(async (request, response) => {
+export async function deprecatedEventStats(request: functions.https.Request, response: express.Response) {
 
     const organizerSecretToken = extractSingleQueryParam(request, 'organizerSecretToken');
     const familyToken = extractSingleQueryParam(request, 'familyToken');
@@ -50,6 +51,4 @@ const deprecatedEventStats = functions.https.onRequest(async (request, response)
     } catch(error) {
         sendResponseMessage(response, 500, ""+error)
     }
-});
-
-export default deprecatedEventStats
+}

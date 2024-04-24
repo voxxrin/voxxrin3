@@ -12,9 +12,9 @@ import {
     ConferenceOrganizerSpace
 } from "../../../../../../shared/conference-organizer-space.firestore";
 import {EventLastUpdates} from "../../../../../../shared/event-list.firestore";
-import talkFeedbacksViewers from "./talkFeedbacksViewers";
+import * as express from "express";
 
-const attendeesFeedbacks = functions.https.onRequest(async (request, response) => {
+export async function attendeesFeedbacks(request: functions.https.Request, response: express.Response) {
 
     const organizerSecretToken = extractSingleQueryParam(request, 'organizerSecretToken');
     const talkIds = extractMultiQueryParam(request, 'talkIds');
@@ -98,6 +98,4 @@ const attendeesFeedbacks = functions.https.onRequest(async (request, response) =
     } catch(error) {
         sendResponseMessage(response, 500, ""+error);
     }
-});
-
-export default attendeesFeedbacks
+}

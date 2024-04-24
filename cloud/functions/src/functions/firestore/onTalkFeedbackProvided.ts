@@ -12,35 +12,34 @@ import {UserTokensWallet} from "../../../../../shared/user-tokens-wallet.firesto
 import {EventLastUpdates} from "../../../../../shared/event-list.firestore";
 import {ISODatetime} from "../../../../../shared/type-utils";
 import {ConferenceDescriptor} from "../../../../../shared/conference-descriptor.firestore";
+import {Change} from "firebase-functions/lib/common/change";
+import {QueryDocumentSnapshot} from "firebase-functions/lib/v1/providers/firestore";
+import {EventContext} from "firebase-functions/lib/v1/cloud-functions";
 
 
-export const onTalkFeedbackUpdated = functions.firestore
-    .document(`users/{userId}/events/{eventId}/days/{dayId}/feedbacks/self`)
-    .onUpdate(async (change, context) => {
-        const eventId = context.params.eventId;
-        const userId = context.params.userId;
-        const dayId = context.params.dayId;
+export const onTalkFeedbackUpdated = async (change: Change<QueryDocumentSnapshot>, context: EventContext<{ userId: string, eventId: string, dayId: string }>) => {
+    const eventId = context.params.eventId;
+    const userId = context.params.userId;
+    const dayId = context.params.dayId;
 
-        const feedbacksBefore = change.before.data() as UserDailyFeedbacks;
-        const feedbacksAfter = change.after.data() as UserDailyFeedbacks;
+    const feedbacksBefore = change.before.data() as UserDailyFeedbacks;
+    const feedbacksAfter = change.after.data() as UserDailyFeedbacks;
 
-        const lastModificationTimestampBefore = Math.max(...feedbacksBefore.feedbacks.map(f => Date.parse(f.lastUpdatedOn)));
-        const feedbacksModifiedAfter = feedbacksAfter.feedbacks.filter(f => Date.parse(f.lastUpdatedOn) > lastModificationTimestampBefore);
+    const lastModificationTimestampBefore = Math.max(...feedbacksBefore.feedbacks.map(f => Date.parse(f.lastUpdatedOn)));
+    const feedbacksModifiedAfter = feedbacksAfter.feedbacks.filter(f => Date.parse(f.lastUpdatedOn) > lastModificationTimestampBefore);
 
-        await updateTalkFeedbacksFromUserFeedbacks(userId, eventId, dayId, feedbacksModifiedAfter, ['lastUpdatedOn']);
-    })
+    await updateTalkFeedbacksFromUserFeedbacks(userId, eventId, dayId, feedbacksModifiedAfter, ['lastUpdatedOn']);
+}
 
-export const onTalkFeedbackCreated = functions.firestore
-    .document(`users/{userId}/events/{eventId}/days/{dayId}/feedbacks/self`)
-    .onCreate(async (snapshot, context) => {
-        const eventId = context.params.eventId;
-        const userId = context.params.userId;
-        const dayId = context.params.dayId;
+export const onTalkFeedbackCreated = async (snapshot: QueryDocumentSnapshot, context: EventContext<{ userId: string, eventId: string, dayId: string }>) => {
+    const eventId = context.params.eventId;
+    const userId = context.params.userId;
+    const dayId = context.params.dayId;
 
-        const userDailyFeedbacks = snapshot.data() as UserDailyFeedbacks
+    const userDailyFeedbacks = snapshot.data() as UserDailyFeedbacks
 
-        await updateTalkFeedbacksFromUserFeedbacks(userId, eventId, dayId, userDailyFeedbacks.feedbacks, ['createdOn', 'lastUpdatedOn']);
-    })
+    await updateTalkFeedbacksFromUserFeedbacks(userId, eventId, dayId, userDailyFeedbacks.feedbacks, ['createdOn', 'lastUpdatedOn']);
+}
 
 function enforceBetween(value: number|null, min: number, max: number) {
     if(value === null) {

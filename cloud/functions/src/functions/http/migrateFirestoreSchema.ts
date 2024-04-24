@@ -1,4 +1,3 @@
-import {https} from "firebase-functions";
 import {extractSingleQueryParam, sendResponseMessage} from "./utils";
 import {db} from "../../firebase";
 import {ISODatetime} from "../../../../../shared/type-utils";
@@ -34,6 +33,8 @@ import {
 } from "../firestore/migrations/014-introduceGlobalInfosAndSlowPacedTalkStats";
 import {introduceCrawlerFamilyAndEventName} from "../firestore/migrations/015-introduceCrawlerFamilyAndEventName";
 import {considerCrawlingKeysAsLegacy} from "../firestore/migrations/016-considerCrawlingKeysAsLegacy";
+import * as functions from "firebase-functions";
+import * as express from "express";
 
 /**
  * Like Flyway, but for firestore :-)
@@ -99,7 +100,7 @@ type SchemaMigrations = {
 
 const migrationNames = MIGRATIONS.map(m => m.name);
 
-export const migrateFirestoreSchema = https.onRequest(async (request, response) => {
+export async function migrateFirestoreSchema(request: functions.https.Request, response: express.Response) {
     const migrationToken = extractSingleQueryParam(request, 'migrationToken')
     if(!migrationToken) {
         return sendResponseMessage(response, 400, `Missing 'migrationToken' query parameter !`)
@@ -208,4 +209,4 @@ export const migrateFirestoreSchema = https.onRequest(async (request, response) 
         `Executed migrations: [${executedMigrations.map(m => `${m.name} (${m.duration}ms)`).join(", ")}]`,
         migrationFailure?`Migration failure at ${migrationFailure.name}: ${JSON.stringify(migrationFailure)}`:``
     ].join("\n"))
-});
+}

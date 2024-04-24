@@ -12,8 +12,9 @@ import {
 import {
     ConferenceOrganizerSpace
 } from "../../../../../../shared/conference-organizer-space.firestore";
+import * as express from "express";
 
-const talkFeedbacksViewers = functions.https.onRequest(async (request, response) => {
+export async function talkFeedbacksViewers(request: functions.https.Request, response: express.Response) {
 
     const organizerSecretToken = extractSingleQueryParam(request, 'organizerSecretToken');
     const familyOrganizerSecretToken = extractSingleQueryParam(request, 'familyOrganizerSecretToken');
@@ -59,6 +60,4 @@ const talkFeedbacksViewers = functions.https.onRequest(async (request, response)
             'ETag': cachedHash
         }:{});
     }
-});
-
-export default talkFeedbacksViewers
+}
