@@ -261,9 +261,8 @@ export const BDXIO_CRAWLER: CrawlerKind<typeof BDXIO_PARSER> = {
             return detailedTalks.concat(additionalDetailedTalks);
         }))).flatMap(perSlotDetailedTalks => perSlotDetailedTalks);
 
-        const confDescriptor: ConferenceDescriptor = {
+        const confDescriptor: FullEvent['conferenceDescriptor'] = {
             id: eventId,
-            eventFamily: 'bdxio',
             title: descriptor.title,
             days: descriptor.days as Day[],
             headingTitle: descriptor.headingTitle,
@@ -342,7 +341,6 @@ export const BDXIO_CRAWLER: CrawlerKind<typeof BDXIO_PARSER> = {
             id: eventId,
             info: {
                 id: eventId,
-                eventFamily: 'web2day',
                 title: descriptor.title,
                 days: descriptor.days as any,
                 theming: descriptor.theming as any,

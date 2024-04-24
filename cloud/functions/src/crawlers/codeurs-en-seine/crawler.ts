@@ -241,9 +241,8 @@ export const CODEURS_EN_SEINE_CRAWLER: CrawlerKind<typeof CODEURS_EN_SEINE_PARSE
             timeSlots: timeslots
         }]
 
-        const confDescriptor: ConferenceDescriptor = {
+        const confDescriptor: FullEvent['conferenceDescriptor'] = {
             id: eventId,
-            eventFamily: 'codeurs-en-seine',
             title: descriptor.title,
             days: descriptor.days as Day[],
             headingTitle: descriptor.headingTitle,
@@ -268,7 +267,6 @@ export const CODEURS_EN_SEINE_CRAWLER: CrawlerKind<typeof CODEURS_EN_SEINE_PARSE
             id: eventId,
             info: {
                 id: eventId,
-                eventFamily: confDescriptor.eventFamily,
                 title: confDescriptor.title,
                 days: confDescriptor.days,
                 theming: confDescriptor.theming,

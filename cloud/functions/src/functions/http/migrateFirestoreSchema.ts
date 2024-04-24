@@ -32,6 +32,7 @@ import {introduceRoomsStats} from "../firestore/migrations/013-introduceRoomsSta
 import {
   introduceGlobalInfosAndSlowPacedTalkStats
 } from "../firestore/migrations/014-introduceGlobalInfosAndSlowPacedTalkStats";
+import {introduceCrawlerFamilyAndEventName} from "../firestore/migrations/015-introduceCrawlerFamilyAndEventName";
 
 /**
  * Like Flyway, but for firestore :-)
@@ -55,6 +56,7 @@ const MIGRATIONS: Migration[] = [
     { name: "resetFavoritesLastUpdates", exec: resetFavoritesLastUpdates },
     { name: "introduceRoomsStats", exec: introduceRoomsStats },
     { name: "introduceGlobalInfosAndSlowPacedTalkStats", exec: introduceGlobalInfosAndSlowPacedTalkStats },
+    { name: "introduceCrawlerFamilyAndEventName", exec: introduceCrawlerFamilyAndEventName },
 ];
 
 export type MigrationResult = "OK"|"Error";

@@ -15,6 +15,8 @@ import {
   Track
 } from "../../../../shared/daily-schedule.firestore";
 import {ensureRoomsStatsFilledFor} from "../functions/firestore/services/stats-utils";
+import {ListableEvent} from "../../../../shared/event-list.firestore";
+import {ConferenceDescriptor} from "../../../../shared/conference-descriptor.firestore";
 
 export type CrawlerKind<ZOD_TYPE extends z.ZodType> = {
     crawlerImpl: (eventId: string, crawlerDescriptor: z.infer<ZOD_TYPE>, criteria: { dayIds?: string[]|undefined }) => Promise<FullEvent>,
@@ -111,7 +113,7 @@ const crawlAll = async function(criteria: CrawlCriteria) {
 
             const event = await crawler.crawlerImpl(crawlerDescriptor.id, crawlerKindDescriptor, { dayIds: criteria.dayIds });
             const messages = sanityCheckEvent(event);
-            await saveEvent(event)
+            await saveEvent(event, crawlerDescriptor)
 
             const end = Temporal.Now.instant()
             return {
@@ -194,10 +196,16 @@ function sanityCheckEvent(event: FullEvent): string[] {
   return crawlingMessages;
 }
 
-const saveEvent = async function(event: FullEvent) {
+const saveEvent = async function (event: FullEvent, crawlerDescriptor: z.infer<typeof FIREBASE_CRAWLER_DESCRIPTOR_PARSER>) {
     info("saving event " + event.id)
 
-    await db.collection("events").doc(event.id).set(event.info)
+    const listableEvent: ListableEvent = {
+      ...event.info,
+      eventFamily: crawlerDescriptor.eventFamily,
+      eventName: crawlerDescriptor.eventName,
+    }
+
+    await db.collection("events").doc(event.id).set(listableEvent)
 
     const talksStatsAllInOneDoc = await db.doc(`events/${event.id}/talksStats-allInOne/self`).get()
     if(!talksStatsAllInOneDoc.exists) {
@@ -303,9 +311,15 @@ const saveEvent = async function(event: FullEvent) {
         // TODO: Remove me once watch later will be properly implemented !
         event.conferenceDescriptor.features.remindMeOnceVideosAreAvailableEnabled = false;
 
+        const confDescriptor: ConferenceDescriptor = {
+          ...listableEvent,
+          ...event.conferenceDescriptor,
+        }
+
         await firestoreEvent.collection('event-descriptor')
             .doc('self')
-            .set(event.conferenceDescriptor);
+            .set(confDescriptor);
+
     }catch(e) {
         error(`Error while storing conference descriptor ${event.conferenceDescriptor.id}: ${e?.toString()}`)
     }

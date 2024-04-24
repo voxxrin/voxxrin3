@@ -130,9 +130,8 @@ export const JUG_SUMMERCAMP_CRAWLER: CrawlerKind<typeof JUG_SUMMERCAMP_PARSER> =
             return { url: spUrl, speaker };
         }))
 
-        const confDescriptor: ConferenceDescriptor = {
+        const confDescriptor: FullEvent['conferenceDescriptor'] = {
             id: eventId,
-            eventFamily: 'jugsummercamp',
             title: descriptor.title,
             days: descriptor.days,
             headingTitle: descriptor.headingTitle,
@@ -241,7 +240,6 @@ export const JUG_SUMMERCAMP_CRAWLER: CrawlerKind<typeof JUG_SUMMERCAMP_PARSER> =
             id: eventId,
             info: {
                 id: eventId,
-                eventFamily: 'jugsummercamp',
                 title: descriptor.title,
                 days: descriptor.days as any,
                 theming: descriptor.theming as any,

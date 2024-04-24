@@ -86,15 +86,12 @@ export const DEVOXX_CRAWLER: CrawlerKind<typeof DEVOXX_DESCRIPTOR_PARSER> = {
             return !criteria.dayIds || !criteria.dayIds.length || criteria.dayIds.includes(d.id);
         })
 
-        const eventInfo = {
+        const eventInfo: FullEvent['info'] = {
             id: eventId,
-            eventFamily: descriptor.eventFamily || 'devoxx',
             title: cfpEvent.name,
             description: cfpEvent.description,
             peopleDescription: descriptor.peopleDescription,
             timezone: cfpEvent.timezone,
-            start: start,
-            end: end,
             days: days,
             logoUrl: descriptor.logoUrl,
             backgroundUrl: descriptor.backgroundUrl,
@@ -109,7 +106,7 @@ export const DEVOXX_CRAWLER: CrawlerKind<typeof DEVOXX_DESCRIPTOR_PARSER> = {
             },
             theming: descriptor.theming,
             keywords: descriptor.keywords
-        } as ListableEvent
+        }
 
         const eventTalks: DetailedTalk[] = [],
             daySchedules: DailySchedule[] = [],
@@ -133,7 +130,7 @@ export const DEVOXX_CRAWLER: CrawlerKind<typeof DEVOXX_DESCRIPTOR_PARSER> = {
             })
         }))
 
-        const eventDescriptor: ConferenceDescriptor = {
+        const eventDescriptor: FullEvent['conferenceDescriptor'] = {
             ...eventInfo,
             headingTitle: descriptor.headingTitle,
             features: descriptor.features,

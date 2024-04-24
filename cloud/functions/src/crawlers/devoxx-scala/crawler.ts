@@ -267,15 +267,12 @@ export const DEVOXX_SCALA_CRAWLER: CrawlerKind<typeof DEVOXX_SCALA_DESCRIPTOR_PA
             return voxxrinSchedule;
         }));
 
-        const eventInfo = {
+        const eventInfo: FullEvent['info'] = {
             id: eventId,
-            eventFamily: descriptor.eventFamily || 'devoxx',
             title: descriptor.title,
             description: conferenceResourceUrl.resource.label,
             peopleDescription: descriptor.peopleDescription,
             timezone: descriptor.timezone,
-            start: Temporal.PlainDate.from(descriptor.days[0].localDate).toZonedDateTime(descriptor.timezone).startOfDay().toInstant().toString() as ISODatetime,
-            end: Temporal.PlainDate.from(descriptor.days[0].localDate).toZonedDateTime(descriptor.timezone).startOfDay().add({days:1}).subtract({seconds:1}).toInstant().toString() as ISODatetime,
             days: descriptor.days,
             logoUrl: descriptor.logoUrl,
             backgroundUrl: descriptor.backgroundUrl,
@@ -283,9 +280,9 @@ export const DEVOXX_SCALA_CRAWLER: CrawlerKind<typeof DEVOXX_SCALA_DESCRIPTOR_PA
             location: descriptor.location,
             theming: descriptor.theming,
             keywords: descriptor.keywords
-        } as ListableEvent
+        }
 
-        const eventDescriptor: ConferenceDescriptor = {
+        const eventDescriptor: FullEvent['conferenceDescriptor'] = {
             ...eventInfo,
             headingTitle: descriptor.headingTitle,
             features: descriptor.features,
