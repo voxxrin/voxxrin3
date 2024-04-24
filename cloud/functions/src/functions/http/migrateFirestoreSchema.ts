@@ -33,6 +33,7 @@ import {
   introduceGlobalInfosAndSlowPacedTalkStats
 } from "../firestore/migrations/014-introduceGlobalInfosAndSlowPacedTalkStats";
 import {introduceCrawlerFamilyAndEventName} from "../firestore/migrations/015-introduceCrawlerFamilyAndEventName";
+import {considerCrawlingKeysAsLegacy} from "../firestore/migrations/016-considerCrawlingKeysAsLegacy";
 
 /**
  * Like Flyway, but for firestore :-)
@@ -57,6 +58,7 @@ const MIGRATIONS: Migration[] = [
     { name: "introduceRoomsStats", exec: introduceRoomsStats },
     { name: "introduceGlobalInfosAndSlowPacedTalkStats", exec: introduceGlobalInfosAndSlowPacedTalkStats },
     { name: "introduceCrawlerFamilyAndEventName", exec: introduceCrawlerFamilyAndEventName },
+    { name: "considerCrawlingKeysAsLegacy", exec: considerCrawlingKeysAsLegacy },
 ];
 
 export type MigrationResult = "OK"|"Error";
