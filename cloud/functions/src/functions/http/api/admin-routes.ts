@@ -1,6 +1,7 @@
 import type {Express} from "express";
-import {Routes, sendResponseMessage} from "../utils";
+import {sendResponseMessage} from "../utils";
 import * as z from "zod";
+import {Routes} from "./routes";
 
 export function declareAdminHttpRoutes(app: Express) {
 

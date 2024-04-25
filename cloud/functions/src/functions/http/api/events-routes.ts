@@ -1,7 +1,7 @@
 import type {Express} from "express";
-import {Routes} from "../utils";
 import * as z from "zod";
 import {ISO_DATETIME_PARSER} from "../../../utils/zod-parsers";
+import {Routes} from "./routes";
 
 export function declareEventHttpRoutes(app: Express) {
   // Floxx endpoints
