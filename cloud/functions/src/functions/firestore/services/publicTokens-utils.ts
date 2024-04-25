@@ -26,7 +26,7 @@ export async function getFamilyEventsStatsToken(secretToken: string) {
         return getPublicTokenBySecret(secretToken,
           publicToken =>
             match(publicToken)
-              .with({type: "FamilyEventsStatsAccess"}, t => t)
+              .with({type: "FamilyEventsStatsAccessToken"}, t => t)
               .otherwise(() => undefined),
             "family events stats token")
     })

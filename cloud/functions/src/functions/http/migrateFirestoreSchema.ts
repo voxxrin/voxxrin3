@@ -35,6 +35,7 @@ import {introduceCrawlerFamilyAndEventName} from "../firestore/migrations/015-in
 import {considerCrawlingKeysAsLegacy} from "../firestore/migrations/016-considerCrawlingKeysAsLegacy";
 import * as functions from "firebase-functions";
 import * as express from "express";
+import {migrateFamilyEventsStatsAccessTokenTypes} from "../firestore/migrations/017-migrateSomePublicTokenTypes";
 
 /**
  * Like Flyway, but for firestore :-)
@@ -60,6 +61,7 @@ const MIGRATIONS: Migration[] = [
     { name: "introduceGlobalInfosAndSlowPacedTalkStats", exec: introduceGlobalInfosAndSlowPacedTalkStats },
     { name: "introduceCrawlerFamilyAndEventName", exec: introduceCrawlerFamilyAndEventName },
     { name: "considerCrawlingKeysAsLegacy", exec: considerCrawlingKeysAsLegacy },
+    { name: "migrateFamilyEventsStatsAccessTokenTypes", exec: migrateFamilyEventsStatsAccessTokenTypes },
 ];
 
 export type MigrationResult = "OK"|"Error";

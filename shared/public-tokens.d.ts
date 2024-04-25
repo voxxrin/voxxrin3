@@ -7,7 +7,7 @@ export type PublicToken = FamilyEventsStatsAccessToken
   | EventOrganizerToken
 
 export type FamilyEventsStatsAccessToken = {
-    type: "FamilyEventsStatsAccess",
+    type: "FamilyEventsStatsAccessToken",
     eventFamilies: string[]
 }
 
