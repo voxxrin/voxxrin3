@@ -3,6 +3,7 @@ import * as z from "zod";
 import {ISO_DATETIME_PARSER} from "../../../utils/zod-parsers";
 import {Routes} from "./routes";
 import {
+  ensureHasCrawlerFamilyOrEventOrganizerToken,
   ensureHasEventStatsValidToken,
   ensureHasFamilyOrEventOrganizerToken,
   ensureHasRoomStatsContributorValidToken,
@@ -58,7 +59,7 @@ export function declareEventHttpRoutes(app: Express) {
         eventId: z.string().min(3),
       })
     }),
-    ensureHasFamilyOrEventOrganizerToken(),
+    ensureHasCrawlerFamilyOrEventOrganizerToken(),
     async (res, path, query, body) =>
       (await import("../event/crawlEvent")).requestEventScheduleRefresh(res, path, query));
   Routes.get(app, '/events/:eventId/talkEditors',
