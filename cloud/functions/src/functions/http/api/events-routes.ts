@@ -3,6 +3,7 @@ import * as z from "zod";
 import {ISO_DATETIME_PARSER} from "../../../utils/zod-parsers";
 import {Routes} from "./routes";
 import {
+  ensureHasEventStatsValidToken,
   ensureHasFamilyOrEventOrganizerToken,
   ensureHasRoomStatsContributorValidToken,
 } from "./route-access";
@@ -73,6 +74,30 @@ export function declareEventHttpRoutes(app: Express) {
     ensureHasFamilyOrEventOrganizerToken(),
     async (res, path, query, eventDescriptor, req) =>
       (await import("../event/talkFeedbacksViewers")).eventTalkFeedbacksViewers(res, path, query, req, eventDescriptor));
+  Routes.get(app, '/events/:eventId/topTalks',
+    z.object({
+      query: z.object({
+        token: z.string().min(10),
+      }),
+      path: z.object({
+        eventId: z.string().min(3),
+      })
+    }),
+    ensureHasEventStatsValidToken(),
+    async (res, path, query, eventDescriptor, req) =>
+      (await import("../event/topTalks")).eventTopTalks(res, path, query, req, eventDescriptor));
+  Routes.get(app, '/events/:eventId/talksStats',
+    z.object({
+      query: z.object({
+        token: z.string().min(10),
+      }),
+      path: z.object({
+        eventId: z.string().min(3),
+      })
+    }),
+    ensureHasEventStatsValidToken(),
+    async (res, path, query, eventDescriptor, req) =>
+      (await import("../event/talksStats")).eventTalksStats(res, path, query, req, eventDescriptor));
 
   // For statistical needs, such as getting number of daily feedbacks
   Routes.get(app, '/events/:eventId/dailyRatings/stats',

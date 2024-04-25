@@ -9,10 +9,12 @@ app.use(express.json());
 
 // For organizers
 // TODO: remove me once devoxx cfp will no longer use legacy URL
+//  replaced by POST /api/events/:eventId/refreshScheduleRequest (requires event/family organizer token)
 exports.crawl = functions.https.onRequest(async (request, response) => {
   (await import("./functions/http/event/legacy/deprecated_crawl")).crawl(request, response)
 })
 // TODO: remove me once devoxx cfp will no longer use legacy URL
+//  replaced by GET /api/events/:eventId/talkEditors (requires event/family organizer token)
 exports.talkFeedbacksViewers = functions.https.onRequest(async (request, response) => {
   (await import("./functions/http/event/legacy/deprecatedTalkFeedbacksViewers")).legacyTalkFeedbacksViewers(request, response)
 })
@@ -22,8 +24,11 @@ exports.attendeesFeedbacks = functions.https.onRequest(async (request, response)
   (await import("./functions/http/event/attendeesFeedbacks")).attendeesFeedbacks(request, response)
 })
 // TODO: remove me once devoxx CFP + TweetWall project will no longer use legacy URL
+//  replaced by GET /api/events/:eventId/topTalks (requires event/family organizer token OR event/family event stats access token)
+//    beware, root node renamed from dailyTalksStats to dailyTopTalks
+// +replaced by GET /api/events/:eventId/talksStats (requires event/family organizer token OR event/family event stats access token)
 exports.publicEventStats = functions.https.onRequest(async (request, response) => {
-  (await import("./functions/http/event/legacy/publicEventStats")).legacyPublicEventStats(request, response)
+  (await import("./functions/http/event/legacy/deprecatedPublicEventStats")).legacyPublicEventStats(request, response)
 })
 
 // Deprecated (wait for Devoxx BE 23 end to safely remove it)

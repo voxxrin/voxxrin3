@@ -1,6 +1,6 @@
-import {sendResponseMessage} from "../utils";
 import {getEventDescriptor} from "../../firestore/services/eventDescriptor-utils";
 import {
+  getEventStatsValidToken,
   getFamilyOrEventOrganizerToken,
   getRoomStatsContributorValidToken
 } from "../../firestore/services/publicTokens-utils";
@@ -56,6 +56,10 @@ function ensureEventBasedTokenPredicateIsValid<T extends PublicToken>(publicToke
 
 export function ensureHasFamilyOrEventOrganizerToken() {
   return ensureEventBasedTokenPredicateIsValid((token) => getFamilyOrEventOrganizerToken(token))
+}
+
+export function ensureHasEventStatsValidToken() {
+  return ensureEventBasedTokenPredicateIsValid((token) => getEventStatsValidToken(token))
 }
 
 export function ensureHasRoomStatsContributorValidToken() {

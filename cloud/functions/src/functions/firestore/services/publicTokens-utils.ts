@@ -65,6 +65,20 @@ export async function getEventOrganizerToken(secretToken: string) {
     })
 }
 
+export async function getEventStatsValidToken(secretToken: string) {
+  return logPerf("getEventStatsValidToken()", async () => {
+    return getPublicTokenBySecret(secretToken,
+      publicToken =>
+        match(publicToken)
+          .with({type: "EventStatsAccessToken"}, t => t)
+          .with({type: "FamilyEventsStatsAccessToken"}, t => t)
+          .with({type: "FamilyOrganizerToken"}, t => t)
+          .with({type: "EventOrganizerToken"}, t => t)
+          .otherwise(() => undefined),
+      "event stats access token")
+  })
+}
+
 export async function getRoomStatsContributorValidToken(secretToken: string) {
     return logPerf("getRoomStatsContributorValidToken()", async () => {
         return getPublicTokenBySecret(secretToken,
