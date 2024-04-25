@@ -27,7 +27,7 @@ export async function eventTalksStats(response: Response, pathParams: {eventId: 
         })
 
         const {perTalkStats} = await logPerf("Post processing", async () => {
-            const perTalkStats = timeslottedTalks.map(talk => ({
+            const perTalkStats = timeslottedTalks.filter(tt => !tt.isOverflow).map(talk => ({
                 talkId: talk.id,
                 talkTitle: talk.title,
                 speakers: talk.speakers.map(sp => sp.fullName),
