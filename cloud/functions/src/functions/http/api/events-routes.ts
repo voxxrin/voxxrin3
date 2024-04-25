@@ -2,6 +2,10 @@ import type {Express} from "express";
 import * as z from "zod";
 import {ISO_DATETIME_PARSER} from "../../../utils/zod-parsers";
 import {Routes} from "./routes";
+import {
+  ensureHasFamilyOrEventOrganizerToken,
+  ensureHasRoomStatsContributorValidToken,
+} from "./route-access";
 
 export function declareEventHttpRoutes(app: Express) {
   // Floxx endpoints
@@ -18,8 +22,10 @@ export function declareEventHttpRoutes(app: Express) {
         eventId: z.string().min(3),
         roomId: z.string().min(1)
       })
-    }), async (res, path, query, body) =>
-      (await import("../event/roomStats")).provideRoomStats(res, path, query, body));
+    }),
+    ensureHasRoomStatsContributorValidToken(),
+    async (res, path, query, body, eventDescriptor) =>
+      (await import("../event/roomStats")).provideRoomStats(res, path, query, body, eventDescriptor));
   Routes.post(app, '/events/:eventId/rooms/stats',
     z.object({
       body: z.object({
@@ -35,8 +41,10 @@ export function declareEventHttpRoutes(app: Express) {
       path: z.object({
         eventId: z.string().min(3),
       })
-    }), async (res, path, query, body) =>
-      (await import("../event/roomStats")).provideRoomsStats(res, path, query, body));
+    }),
+    ensureHasRoomStatsContributorValidToken(),
+    async (res, path, query, body, eventDescriptor) =>
+      (await import("../event/roomStats")).provideRoomsStats(res, path, query, body, eventDescriptor));
 
   // For conf organizers
   Routes.post(app, '/events/:eventId/refreshScheduleRequest',
@@ -48,7 +56,9 @@ export function declareEventHttpRoutes(app: Express) {
       path: z.object({
         eventId: z.string().min(3),
       })
-    }), async (res, path, query, body) =>
+    }),
+    ensureHasFamilyOrEventOrganizerToken(),
+    async (res, path, query, body) =>
       (await import("../event/crawlEvent")).requestEventScheduleRefresh(res, path, query));
   Routes.get(app, '/events/:eventId/talkEditors',
     z.object({
@@ -59,8 +69,10 @@ export function declareEventHttpRoutes(app: Express) {
       path: z.object({
         eventId: z.string().min(3),
       })
-    }), async (res, path, query, req) =>
-      (await import("../event/talkFeedbacksViewers")).eventTalkFeedbacksViewers(res, path, query, req));
+    }),
+    ensureHasFamilyOrEventOrganizerToken(),
+    async (res, path, query, eventDescriptor, req) =>
+      (await import("../event/talkFeedbacksViewers")).eventTalkFeedbacksViewers(res, path, query, req, eventDescriptor));
 
   // For statistical needs, such as getting number of daily feedbacks
   Routes.get(app, '/events/:eventId/dailyRatings/stats',
@@ -71,6 +83,8 @@ export function declareEventHttpRoutes(app: Express) {
       path: z.object({
         eventId: z.string().min(3),
       })
-    }), async (res, path, query) =>
+    }),
+    ensureHasFamilyOrEventOrganizerToken(),
+    async (res, path, query) =>
       (await import("../event/dailyRatingsStats")).provideDailyRatingsStats(res, path, query));
 }

@@ -14,6 +14,7 @@ import {
     ConferenceOrganizerSpace
 } from "../../../../../../shared/conference-organizer-space.firestore";
 import * as express from "express";
+import {ConferenceDescriptor} from "../../../../../../shared/conference-descriptor.firestore";
 
 export async function legacyTalkFeedbacksViewers(request: functions.https.Request, response: express.Response) {
 
@@ -63,29 +64,13 @@ export async function legacyTalkFeedbacksViewers(request: functions.https.Reques
     }
 }
 
-export async function eventTalkFeedbacksViewers(response: express.Response, pathParams: {eventId: string}, queryParams: {token: string, baseUrl: string}, request: express.Request) {
-
-    const [eventDescriptor, familyOrEventOrganizerToken] = await Promise.all([
-      getEventDescriptor(pathParams.eventId),
-      getFamilyOrEventOrganizerToken(queryParams.token),
-    ]);
-
-    const validationErrorMessage = match(familyOrEventOrganizerToken)
-      .with({ type: "FamilyOrganizerToken"}, (familyOrganizerToken) => {
-        if(!eventDescriptor.eventFamily || !familyOrganizerToken.eventFamilies.includes(eventDescriptor.eventFamily)) {
-          return `Provided family organizer token doesn't match with event ${pathParams.eventId} family: [${eventDescriptor.eventFamily}]`;
-        }
-        return undefined;
-      }).with({ type: "EventOrganizerToken" }, (eventOrganizerToken) => {
-        if(!eventDescriptor.eventName || !eventOrganizerToken.eventNames.includes(eventDescriptor.eventName)) {
-          return `Provided event organizer token doesn't match with event ${pathParams.eventId} name: [${eventDescriptor.eventName}]`
-        }
-        return undefined;
-      }).exhaustive();
-
-    if(validationErrorMessage) {
-      return sendResponseMessage(response, 400, validationErrorMessage)
-    }
+export async function eventTalkFeedbacksViewers(
+  response: express.Response,
+  pathParams: {eventId: string},
+  queryParams: {token: string, baseUrl: string},
+  request: express.Request,
+  eventDescriptor: ConferenceDescriptor
+) {
 
     const { cachedHash, updatesDetected } = await checkEventLastUpdate(pathParams.eventId, [root => root.talkListUpdated], request, response)
     if(!updatesDetected) {

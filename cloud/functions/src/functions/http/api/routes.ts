@@ -7,10 +7,13 @@ import * as express from "express";
 import {RouteParameters} from "express-serve-static-core";
 import {debug, exposeLogContext} from "../../../firebase";
 import {sendResponseMessage} from "../utils";
+import {publicEndpoint} from "./route-access";
 
 export function declareExpressHttpRoutes(app: Express) {
   // For testing purposes only
-  Routes.get(app, `/helloWorld`, z.object({ query: z.object({ who: z.string().optional() })}),
+  Routes.get(app, `/helloWorld`,
+    z.object({ query: z.object({ who: z.string().optional() })}),
+    publicEndpoint(),
     async (res, path, query) =>
       (await import("../hello")).sayHello(res, path, query));
 
@@ -45,23 +48,44 @@ const validateRouteWith =
       }
     };
 
+
+
 export const Routes = {
   post: function<
     ROUTE extends string,
     VALIDATION_SCHEMA extends RequestWithBodyZodObject,
-    QUERY_PARAMS = z.infer<VALIDATION_SCHEMA>['query'],
-    BODY = z.infer<VALIDATION_SCHEMA>['body'],
-    PATH_PARAMS = Omit< RouteParameters<ROUTE>, keyof z.infer<VALIDATION_SCHEMA>['path']> & z.infer<VALIDATION_SCHEMA>['path']
-  >(app: Express, route: ROUTE, schema: VALIDATION_SCHEMA, callback: (res: express.Response, pathParams: PATH_PARAMS, queryParams: QUERY_PARAMS, body: BODY, req: express.Request) => void) {
+    QUERY_PARAMS extends z.infer<VALIDATION_SCHEMA>['query'],
+    BODY extends z.infer<VALIDATION_SCHEMA>['body'],
+    PATH_PARAMS extends Omit< RouteParameters<ROUTE>, keyof z.infer<VALIDATION_SCHEMA>['path']> & z.infer<VALIDATION_SCHEMA>['path'],
+    ACCESS_GUARD extends (pathParams: PATH_PARAMS, queryParams: QUERY_PARAMS) => Promise<_>,
+    _,
+    ACCESS_GUARD_RETURNTYPE = Awaited<ReturnType<ACCESS_GUARD>>,
+  >(
+    app: Express,
+    route: ROUTE,
+    schema: VALIDATION_SCHEMA,
+    accessGuard: ACCESS_GUARD,
+    callback: (res: express.Response, pathParams: PATH_PARAMS, queryParams: QUERY_PARAMS, body: BODY, accessGuardResult: ACCESS_GUARD_RETURNTYPE, req: express.Request) => void
+  ) {
     app.post(route, validateRouteWith(schema), (req, res) => {
       const stringifiedPathParams = stringifyParams(req.params)
       const stringifiedQueryParams = stringifyParams(req.query as Record<string, string>)
       exposeLogContext({ method: 'POST', route, pathParams: stringifiedPathParams, queryParams: stringifiedQueryParams }, async () => {
         debug(`POST ${route} [${stringifiedPathParams}]`)
+
+        const pathParams = req.params as PATH_PARAMS;
+        const queryParams = req.query as QUERY_PARAMS;
+        const body = req.body as BODY;
+
         try {
-          await callback(res, req.params as PATH_PARAMS, req.query as QUERY_PARAMS, req.body as BODY, req)
+          const accessGuardResult = await accessGuard(pathParams, queryParams) as ACCESS_GUARD_RETURNTYPE;
+          try {
+            await callback(res, pathParams, queryParams, body, accessGuardResult, req)
+          } catch(e) {
+            return sendResponseMessage(res, 500, `Unexpected Error: ${e?.toString()}`)
+          }
         } catch(e) {
-          return sendResponseMessage(res, 500, `Unexpected Error: ${e?.toString()}`)
+          return sendResponseMessage(res, 403, `Forbidden: ${e?.toString()}`)
         }
       })
     })
@@ -69,57 +93,112 @@ export const Routes = {
   put: function<
     ROUTE extends string,
     VALIDATION_SCHEMA extends RequestWithBodyZodObject,
-    QUERY_PARAMS = z.infer<VALIDATION_SCHEMA>['query'],
-    BODY = z.infer<VALIDATION_SCHEMA>['body'],
-    PATH_PARAMS = Omit< RouteParameters<ROUTE>, keyof z.infer<VALIDATION_SCHEMA>['path']> & z.infer<VALIDATION_SCHEMA>['path']
-  >(app: Express, route: ROUTE, schema: VALIDATION_SCHEMA, callback: (res: express.Response, pathParams: PATH_PARAMS, queryParams: QUERY_PARAMS, body: BODY, req: express.Request) => void) {
+    QUERY_PARAMS extends z.infer<VALIDATION_SCHEMA>['query'],
+    BODY extends z.infer<VALIDATION_SCHEMA>['body'],
+    PATH_PARAMS extends Omit< RouteParameters<ROUTE>, keyof z.infer<VALIDATION_SCHEMA>['path']> & z.infer<VALIDATION_SCHEMA>['path'],
+    ACCESS_GUARD extends (pathParams: PATH_PARAMS, queryParams: QUERY_PARAMS) => Promise<_>,
+    _,
+    ACCESS_GUARD_RETURNTYPE = Awaited<ReturnType<ACCESS_GUARD>>,
+  >(
+    app: Express,
+    route: ROUTE,
+    schema: VALIDATION_SCHEMA,
+    accessGuard: ACCESS_GUARD,
+    callback: (res: express.Response, pathParams: PATH_PARAMS, queryParams: QUERY_PARAMS, body: BODY, accessGuardResult: ACCESS_GUARD_RETURNTYPE, req: express.Request) => void
+  ) {
     app.put(route, validateRouteWith(schema), (req, res) => {
       const stringifiedPathParams = stringifyParams(req.params)
       const stringifiedQueryParams = stringifyParams(req.query as Record<string, string>)
       exposeLogContext({ method: 'PUT', route, pathParams: stringifiedPathParams, queryParams: stringifiedQueryParams }, async () => {
         debug(`PUT ${route} [${stringifiedPathParams}]`)
+
+        const pathParams = req.params as PATH_PARAMS;
+        const queryParams = req.query as QUERY_PARAMS;
+        const body = req.body as BODY;
+
         try {
-          await callback(res, req.params as PATH_PARAMS, req.query as QUERY_PARAMS, req.body as BODY, req)
+          const accessGuardResult = await accessGuard(pathParams, queryParams) as ACCESS_GUARD_RETURNTYPE;
+          try {
+            await callback(res, pathParams, queryParams, body, accessGuardResult, req)
+          } catch(e) {
+            return sendResponseMessage(res, 500, `Unexpected Error: ${e?.toString()}`)
+          }
         } catch(e) {
-          return sendResponseMessage(res, 500, `Unexpected Error: ${e?.toString()}`)
+          return sendResponseMessage(res, 403, `Forbidden: ${e?.toString()}`)
         }
       })
     })
   },
   get: function<
     ROUTE extends string,
-    VALIDATION_SCHEMA extends RequestZodObject,
-    QUERY_PARAMS = z.infer<VALIDATION_SCHEMA>['query'],
-    PATH_PARAMS = Omit< RouteParameters<ROUTE>, keyof z.infer<VALIDATION_SCHEMA>['path']> & z.infer<VALIDATION_SCHEMA>['path']
-  >(app: Express, route: ROUTE, schema: VALIDATION_SCHEMA, callback: (res: express.Response, pathParams: PATH_PARAMS, queryParams: QUERY_PARAMS, req: express.Request) => void) {
+    VALIDATION_SCHEMA extends RequestWithBodyZodObject,
+    QUERY_PARAMS extends z.infer<VALIDATION_SCHEMA>['query'],
+    PATH_PARAMS extends Omit< RouteParameters<ROUTE>, keyof z.infer<VALIDATION_SCHEMA>['path']> & z.infer<VALIDATION_SCHEMA>['path'],
+    ACCESS_GUARD extends (pathParams: PATH_PARAMS, queryParams: QUERY_PARAMS) => Promise<_>,
+    _,
+    ACCESS_GUARD_RETURNTYPE = Awaited<ReturnType<ACCESS_GUARD>>,
+  >(
+    app: Express,
+    route: ROUTE,
+    schema: VALIDATION_SCHEMA,
+    accessGuard: ACCESS_GUARD,
+    callback: (res: express.Response, pathParams: PATH_PARAMS, queryParams: QUERY_PARAMS, accessGuardResult: ACCESS_GUARD_RETURNTYPE, req: express.Request) => void
+  ) {
     app.get(route, validateRouteWith(schema), (req, res) => {
       const stringifiedPathParams = stringifyParams(req.params)
       const stringifiedQueryParams = stringifyParams(req.query as Record<string, string>)
       exposeLogContext({ method: 'GET', route, pathParams: stringifiedPathParams, queryParams: stringifiedQueryParams }, async () => {
         debug(`GET ${route} [${stringifiedPathParams}]`)
+
+        const pathParams = req.params as PATH_PARAMS;
+        const queryParams = req.query as QUERY_PARAMS;
+
         try {
-          await callback(res, req.params as PATH_PARAMS, req.query as QUERY_PARAMS, req);
+          const accessGuardResult = await accessGuard(pathParams, queryParams) as ACCESS_GUARD_RETURNTYPE;
+          try {
+            await callback(res, pathParams, queryParams, accessGuardResult, req);
+          } catch(e) {
+            return sendResponseMessage(res, 500, `Unexpected Error: ${e?.toString()}`)
+          }
         } catch(e) {
-          return sendResponseMessage(res, 500, `Unexpected Error: ${e?.toString()}`)
+          return sendResponseMessage(res, 403, `Forbidden: ${e?.toString()}`)
         }
       })
     })
   },
   delete: function<
     ROUTE extends string,
-    VALIDATION_SCHEMA extends RequestZodObject,
-    QUERY_PARAMS = z.infer<VALIDATION_SCHEMA>['query'],
-    PATH_PARAMS = Omit< RouteParameters<ROUTE>, keyof z.infer<VALIDATION_SCHEMA>['path']> & z.infer<VALIDATION_SCHEMA>['path']
-  >(app: Express, route: ROUTE, schema: VALIDATION_SCHEMA, callback: (res: express.Response, pathParams: PATH_PARAMS, queryParams: QUERY_PARAMS, req: express.Request) => void) {
+    VALIDATION_SCHEMA extends RequestWithBodyZodObject,
+    QUERY_PARAMS extends z.infer<VALIDATION_SCHEMA>['query'],
+    PATH_PARAMS extends Omit< RouteParameters<ROUTE>, keyof z.infer<VALIDATION_SCHEMA>['path']> & z.infer<VALIDATION_SCHEMA>['path'],
+    ACCESS_GUARD extends (pathParams: PATH_PARAMS, queryParams: QUERY_PARAMS) => Promise<_>,
+    _,
+    ACCESS_GUARD_RETURNTYPE = Awaited<ReturnType<ACCESS_GUARD>>,
+  >(
+    app: Express,
+    route: ROUTE,
+    schema: VALIDATION_SCHEMA,
+    accessGuard: ACCESS_GUARD,
+    callback: (res: express.Response, pathParams: PATH_PARAMS, queryParams: QUERY_PARAMS, accessGuardResult: ACCESS_GUARD_RETURNTYPE, req: express.Request) => void
+  ) {
     app.delete(route, validateRouteWith(schema), (req, res) => {
       const stringifiedPathParams = stringifyParams(req.params)
       const stringifiedQueryParams = stringifyParams(req.query as Record<string, string>)
       exposeLogContext({ method: 'DELETE', route, pathParams: stringifiedPathParams, queryParams: stringifiedQueryParams }, async () => {
         debug(`DELETE ${route} [${stringifiedPathParams}]`)
+
+        const pathParams = req.params as PATH_PARAMS;
+        const queryParams = req.query as QUERY_PARAMS;
+
         try {
-          await callback(res, req.params as PATH_PARAMS, req.query as QUERY_PARAMS, req);
+          const accessGuardResult = await accessGuard(pathParams, queryParams) as ACCESS_GUARD_RETURNTYPE;
+          try {
+            await callback(res, req.params as PATH_PARAMS, req.query as QUERY_PARAMS, accessGuardResult, req);
+          } catch(e) {
+            return sendResponseMessage(res, 500, `Unexpected Error: ${e?.toString()}`)
+          }
         } catch(e) {
-          return sendResponseMessage(res, 500, `Unexpected Error: ${e?.toString()}`)
+          return sendResponseMessage(res, 403, `Forbidden: ${e?.toString()}`)
         }
       })
     })

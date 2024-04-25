@@ -10,7 +10,7 @@ async function getPublicTokenBySecret<T>(secretToken: string, transformer: (publ
     const publicTokenDoc = await db.doc(`/public-tokens/${secretToken}`).get();
 
     if(!publicTokenDoc.exists) {
-        throw new Error(`Invalid family events stats token: ${secretToken}`);
+        throw new Error(`Invalid public token: ${secretToken}`);
     }
 
     const publicTokenSnap = publicTokenDoc.data() as PublicToken;
@@ -65,13 +65,16 @@ export async function getEventOrganizerToken(secretToken: string) {
     })
 }
 
-export async function getFamilyRoomStatsContributorToken(secretToken: string) {
-    return logPerf("getFamilyRoomStatsContributorToken()", async () => {
+export async function getRoomStatsContributorValidToken(secretToken: string) {
+    return logPerf("getRoomStatsContributorValidToken()", async () => {
         return getPublicTokenBySecret(secretToken,
             publicToken =>
               match(publicToken)
+                .with({type: "EventRoomStatsContributorToken"}, t => t)
                 .with({type: "FamilyRoomStatsContributorToken"}, t => t)
+                .with({type: "FamilyOrganizerToken"}, t => t)
+                .with({type: "EventOrganizerToken"}, t => t)
                 .otherwise(() => undefined),
-            "family room stats contributor token")
+            "room stats contributor token")
     })
 }
