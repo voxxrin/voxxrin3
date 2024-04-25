@@ -1,67 +1,34 @@
 import {extractSingleQueryParam, sendResponseMessage} from "./utils";
 import {db} from "../../firebase";
 import {ISODatetime} from "../../../../../shared/type-utils";
-import {
-    createExistingUsersTokensWallet
-} from "../firestore/migrations/000-createExistingUsersTokensWallet";
-import {createExistingUsersInfos} from "../firestore/migrations/001-createExistingUsersInfos";
-import {addUserIdInTokenWallet} from "../firestore/migrations/002-addUserIdInTokenWallet";
-import {
-    gettingRidOfUserPreferencesPastEvents
-} from "../firestore/migrations/003-gettingRidOfUserPreferencesPastEvents";
-import {createOrganizerSpaceRatings} from "../firestore/migrations/006-createOrganizerSpaceRatings";
-import {
-    cleanComputedTalkFavoritesCollectionsDeletion,
-    deleteComputedTalkFavoritesCollections
-} from "../firestore/migrations/007-deleteComputedTalkFavoritesCollection";
-import {
-    introducingPerTalkFeedbacksLastUpdates,
-} from "../firestore/migrations/008-introducingPerTalkFeedbacksLastUpdates";
-import {
-    refactoOrgaSpaceRatingsToPerTalkRatings
-} from "../firestore/migrations/009-refactoOrgaSpaceRatingsToPerTalkRatings";
-import {
-    introduceTalksStats_allInOneDocument
-} from "../firestore/migrations/010-introduceTalksStats-allInOneDocument";
-import {
-    introduceOrganizerSpaceDailyRatings
-} from "../firestore/migrations/011-introduceOrganizerSpaceDailyRatings";
-import {resetFavoritesLastUpdates} from "../firestore/migrations/012-resetFavoritesLastUpdates";
-import {introduceRoomsStats} from "../firestore/migrations/013-introduceRoomsStats";
-import {
-  introduceGlobalInfosAndSlowPacedTalkStats
-} from "../firestore/migrations/014-introduceGlobalInfosAndSlowPacedTalkStats";
-import {introduceCrawlerFamilyAndEventName} from "../firestore/migrations/015-introduceCrawlerFamilyAndEventName";
-import {considerCrawlingKeysAsLegacy} from "../firestore/migrations/016-considerCrawlingKeysAsLegacy";
 import * as functions from "firebase-functions";
 import * as express from "express";
-import {migrateFamilyEventsStatsAccessTokenTypes} from "../firestore/migrations/017-migrateSomePublicTokenTypes";
 
 /**
  * Like Flyway, but for firestore :-)
  */
 const MIGRATIONS: Migration[] = [
-    { name: "createExistingUsersTokensWallet", exec: createExistingUsersTokensWallet },
-    { name: "createExistingUsersInfos", exec: createExistingUsersInfos },
-    { name: "addUserIdInTokenWallet", exec: addUserIdInTokenWallet },
-    { name: "gettingRidOfUserPreferencesPastEvents", exec: gettingRidOfUserPreferencesPastEvents },
-    { name: "createOrganizerSpaceRatings", exec: createOrganizerSpaceRatings },
+    { name: "createExistingUsersTokensWallet", exec: async () => (await import("../firestore/migrations/000-createExistingUsersTokensWallet")).createExistingUsersTokensWallet() },
+    { name: "createExistingUsersInfos", exec: async () => (await import("../firestore/migrations/001-createExistingUsersInfos")).createExistingUsersInfos() },
+    { name: "addUserIdInTokenWallet", exec: async () => (await import("../firestore/migrations/002-addUserIdInTokenWallet")).addUserIdInTokenWallet() },
+    { name: "gettingRidOfUserPreferencesPastEvents", exec: async () => (await import("../firestore/migrations/003-gettingRidOfUserPreferencesPastEvents")).gettingRidOfUserPreferencesPastEvents() },
+    { name: "createOrganizerSpaceRatings", exec: async () => (await import("../firestore/migrations/006-createOrganizerSpaceRatings")).createOrganizerSpaceRatings() },
     // This migration can wait Devoxx BE '23 to be completed, as __computed collection might still be
     // used by people having an old version of the app in their service worker cache, so the longer we keep
     // the collection and the safer we will be
-    { name: "deleteComputedTalkFavoritesCollections", exec: deleteComputedTalkFavoritesCollections, minimumMigrationDate: "2023-10-09T00:00:00Z" },
-    { name: "introducingPerTalkFeedbacksLastUpdates", exec: introducingPerTalkFeedbacksLastUpdates },
-    { name: "refactoOrgaSpaceRatingsToPerTalkRatings", exec: refactoOrgaSpaceRatingsToPerTalkRatings },
-    { name: "introduceTalksStats_allInOneDocument", exec: introduceTalksStats_allInOneDocument },
-    { name: "introduceOrganizerSpaceDailyRatings", exec: introduceOrganizerSpaceDailyRatings },
-    { name: "introduceOrganizerSpaceDailyRatingsAgain", exec: introduceOrganizerSpaceDailyRatings },
-    { name: "cleanComputedTalkFavoritesCollectionsDeletion", exec: cleanComputedTalkFavoritesCollectionsDeletion },
-    { name: "resetFavoritesLastUpdates", exec: resetFavoritesLastUpdates },
-    { name: "introduceRoomsStats", exec: introduceRoomsStats },
-    { name: "introduceGlobalInfosAndSlowPacedTalkStats", exec: introduceGlobalInfosAndSlowPacedTalkStats },
-    { name: "introduceCrawlerFamilyAndEventName", exec: introduceCrawlerFamilyAndEventName },
-    { name: "considerCrawlingKeysAsLegacy", exec: considerCrawlingKeysAsLegacy },
-    { name: "migrateFamilyEventsStatsAccessTokenTypes", exec: migrateFamilyEventsStatsAccessTokenTypes },
+    { name: "deleteComputedTalkFavoritesCollections", exec: async () => (await import("../firestore/migrations/007-deleteComputedTalkFavoritesCollection")).deleteComputedTalkFavoritesCollections(), minimumMigrationDate: "2023-10-09T00:00:00Z" },
+    { name: "introducingPerTalkFeedbacksLastUpdates", exec: async () => (await import("../firestore/migrations/008-introducingPerTalkFeedbacksLastUpdates")).introducingPerTalkFeedbacksLastUpdates() },
+    { name: "refactoOrgaSpaceRatingsToPerTalkRatings", exec: async () => (await import("../firestore/migrations/009-refactoOrgaSpaceRatingsToPerTalkRatings")).refactoOrgaSpaceRatingsToPerTalkRatings() },
+    { name: "introduceTalksStats_allInOneDocument", exec: async () => (await import("../firestore/migrations/010-introduceTalksStats-allInOneDocument")).introduceTalksStats_allInOneDocument() },
+    { name: "introduceOrganizerSpaceDailyRatings", exec: async () => (await import("../firestore/migrations/011-introduceOrganizerSpaceDailyRatings")).introduceOrganizerSpaceDailyRatings() },
+    { name: "introduceOrganizerSpaceDailyRatingsAgain", exec: async () => (await import("../firestore/migrations/011-introduceOrganizerSpaceDailyRatings")).introduceOrganizerSpaceDailyRatings() },
+    { name: "cleanComputedTalkFavoritesCollectionsDeletion", exec: async () => (await import("../firestore/migrations/007-deleteComputedTalkFavoritesCollection")).cleanComputedTalkFavoritesCollectionsDeletion() },
+    { name: "resetFavoritesLastUpdates", exec: async () => (await import("../firestore/migrations/012-resetFavoritesLastUpdates")).resetFavoritesLastUpdates() },
+    { name: "introduceRoomsStats", exec: async () => (await import("../firestore/migrations/013-introduceRoomsStats")).introduceRoomsStats() },
+    { name: "introduceGlobalInfosAndSlowPacedTalkStats", exec: async () => (await import("../firestore/migrations/014-introduceGlobalInfosAndSlowPacedTalkStats")).introduceGlobalInfosAndSlowPacedTalkStats() },
+    { name: "introduceCrawlerFamilyAndEventName", exec: async () => (await import("../firestore/migrations/015-introduceCrawlerFamilyAndEventName")).introduceCrawlerFamilyAndEventName() },
+    { name: "considerCrawlingKeysAsLegacy", exec: async () => (await import("../firestore/migrations/016-considerCrawlingKeysAsLegacy")).considerCrawlingKeysAsLegacy() },
+    { name: "migrateFamilyEventsStatsAccessTokenTypes", exec: async () => (await import("../firestore/migrations/017-migrateSomePublicTokenTypes")).migrateFamilyEventsStatsAccessTokenTypes() },
 ];
 
 export type MigrationResult = "OK"|"Error";
