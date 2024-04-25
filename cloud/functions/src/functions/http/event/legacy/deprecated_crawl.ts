@@ -1,8 +1,8 @@
 import * as functions from "firebase-functions";
 import * as express from 'express';
 
-import crawlAll from "../../crawlers/crawl"
-import {extractMultiQueryParam, extractSingleQueryParam, sendResponseMessage} from "./utils";
+import crawlAll from "../../../../crawlers/crawl"
+import {extractMultiQueryParam, extractSingleQueryParam, sendResponseMessage} from "../../utils";
 
 export async function crawl(request: functions.https.Request, response: express.Response) {
     const crawlingToken = extractSingleQueryParam(request, 'crawlingToken')

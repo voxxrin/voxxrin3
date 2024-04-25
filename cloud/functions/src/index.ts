@@ -8,23 +8,27 @@ app.use(express.json());
 // Legacy HTTP Endpoints declaration... please use declareRoutes() instead !
 
 // For organizers
+// TODO: remove me once devoxx cfp will no longer use legacy URL
 exports.crawl = functions.https.onRequest(async (request, response) => {
-  (await import("./functions/http/deprecated_crawl")).crawl(request, response)
+  (await import("./functions/http/event/legacy/deprecated_crawl")).crawl(request, response)
 })
+// TODO: remove me once devoxx cfp will no longer use legacy URL
 exports.talkFeedbacksViewers = functions.https.onRequest(async (request, response) => {
-  (await import("./functions/http/event/talkFeedbacksViewers")).legacyTalkFeedbacksViewers(request, response)
+  (await import("./functions/http/event/legacy/deprecatedTalkFeedbacksViewers")).legacyTalkFeedbacksViewers(request, response)
 })
 // For organizers + co organizers (in same event family)
+// TODO: remove me once devoxx cfp will no longer use legacy URL
 exports.attendeesFeedbacks = functions.https.onRequest(async (request, response) => {
   (await import("./functions/http/event/attendeesFeedbacks")).attendeesFeedbacks(request, response)
 })
+// TODO: remove me once devoxx CFP + TweetWall project will no longer use legacy URL
 exports.publicEventStats = functions.https.onRequest(async (request, response) => {
-  (await import("./functions/http/event/publicEventStats")).publicEventStats(request, response)
+  (await import("./functions/http/event/legacy/publicEventStats")).legacyPublicEventStats(request, response)
 })
 
-// Deprecated (wait for Devoxx BE end to safely remove it)
+// Deprecated (wait for Devoxx BE 23 end to safely remove it)
 exports.eventStats = functions.https.onRequest(async (request, response) => {
-  (await import("./functions/http/event/deprecatedEventStats")).deprecatedEventStats(request, response)
+  (await import("./functions/http/event/legacy/deprecatedEventStats")).deprecatedEventStats(request, response)
 })
 
 // Admin only
