@@ -1,25 +1,23 @@
-import {Response} from "express";
+import {Response, Request} from "express";
 import {logPerf, sendResponseMessage} from "../utils";
-import {getEventDescriptor} from "../../firestore/services/eventDescriptor-utils";
-import {getFamilyOrganizerToken} from "../../firestore/services/publicTokens-utils";
-import {getSecretTokenRef} from "../../firestore/firestore-utils";
+import {checkEventLastUpdate, getSecretTokenRef} from "../../firestore/firestore-utils";
 import {DailyTalkFeedbackRatings} from "../../../../../../shared/conference-organizer-space.firestore";
 import {firestore} from "firebase-admin";
 import {match} from "ts-pattern";
 import DocumentReference = firestore.DocumentReference;
 
 
-export async function provideDailyRatingsStats(response: Response, pathParams: {eventId: string}, queryParams: {token: string}) {
+export async function provideDailyRatingsStats(response: Response, pathParams: {eventId: string}, queryParams: {token: string}, request: Request) {
 
-  const [eventDescriptor, familyOrganizerToken] = await logPerf("eventDescriptor and familyRoomStatsContributor retrieval", async () => {
-    return await Promise.all([
-      getEventDescriptor(pathParams.eventId),
-      getFamilyOrganizerToken(queryParams.token),
-    ]);
-  })
+  const { cachedHash, updatesDetected } = await logPerf("cached hash", async () => {
+    return await checkEventLastUpdate(pathParams.eventId, [
+      root => root.allFeedbacks,
+      root => root.talkListUpdated
+    ], request, response)
+  });
 
-  if (!eventDescriptor.eventFamily || !familyOrganizerToken.eventFamilies.includes(eventDescriptor.eventFamily)) {
-    return sendResponseMessage(response, 400, `Provided family organizer token doesn't match with event ${pathParams.eventId} family: [${eventDescriptor.eventFamily}]`)
+  if(!updatesDetected) {
+    return sendResponseMessage(response, 304)
   }
 
   const organizerSpaceRef = await getSecretTokenRef(`events/${pathParams.eventId}/organizer-space`);
@@ -39,5 +37,7 @@ export async function provideDailyRatingsStats(response: Response, pathParams: {
 
   sendResponseMessage(response, 200, {
     dailyFeedbacks
-  });
+  }, cachedHash ? {
+    'ETag': cachedHash
+  }:{});
 }

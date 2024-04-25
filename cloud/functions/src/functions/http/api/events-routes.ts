@@ -124,6 +124,6 @@ export function declareEventHttpRoutes(app: Express) {
       })
     }),
     ensureHasFamilyOrEventOrganizerToken(),
-    async (res, path, query) =>
-      (await import("../event/dailyRatingsStats")).provideDailyRatingsStats(res, path, query));
+    async (res, path, query, eventDescriptor, req) =>
+      (await import("../event/dailyRatingsStats")).provideDailyRatingsStats(res, path, query, req));
 }
