@@ -1,11 +1,15 @@
 import * as express from 'express';
 import * as functions from 'firebase-functions';
 import {declareExpressHttpRoutes} from "./functions/http/api/routes";
+import {extractSingleQueryParam} from "./functions/http/utils";
 
 const app = express()
 app.use(express.json());
 
 // Legacy HTTP Endpoints declaration... please use declareRoutes() instead !
+exports.hello = functions.https.onRequest(async (request, response) => {
+  (await import("./functions/http/hello")).sayHello(response, {}, {who: extractSingleQueryParam(request, 'who') || "default"})
+})
 
 // For organizers
 // TODO: remove me once devoxx cfp will no longer use legacy URL
