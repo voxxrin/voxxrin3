@@ -50,6 +50,17 @@ export function declareEventHttpRoutes(app: Express) {
       })
     }), async (res, path, query, body) =>
       (await import("../event/crawlEvent")).requestEventScheduleRefresh(res, path, query));
+  Routes.get(app, '/events/:eventId/talkEditors',
+    z.object({
+      query: z.object({
+        token: z.string().min(10),
+        baseUrl: z.string().min(10)
+      }),
+      path: z.object({
+        eventId: z.string().min(3),
+      })
+    }), async (res, path, query, req) =>
+      (await import("../event/talkFeedbacksViewers")).eventTalkFeedbacksViewers(res, path, query, req));
 
   // For statistical needs, such as getting number of daily feedbacks
   Routes.get(app, '/events/:eventId/dailyRatings/stats',

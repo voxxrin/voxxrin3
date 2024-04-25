@@ -12,7 +12,7 @@ exports.crawl = functions.https.onRequest(async (request, response) => {
   (await import("./functions/http/deprecated_crawl")).crawl(request, response)
 })
 exports.talkFeedbacksViewers = functions.https.onRequest(async (request, response) => {
-  (await import("./functions/http/event/talkFeedbacksViewers")).talkFeedbacksViewers(request, response)
+  (await import("./functions/http/event/talkFeedbacksViewers")).legacyTalkFeedbacksViewers(request, response)
 })
 // For organizers + co organizers (in same event family)
 exports.attendeesFeedbacks = functions.https.onRequest(async (request, response) => {

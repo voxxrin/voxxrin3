@@ -7,14 +7,15 @@ import {
 import {match, P} from "ts-pattern";
 import {getEventDescriptor} from "../../firestore/services/eventDescriptor-utils";
 import {
-    getFamilyOrganizerToken,
+  getFamilyOrEventOrganizerToken,
+  getFamilyOrganizerToken,
 } from "../../firestore/services/publicTokens-utils";
 import {
     ConferenceOrganizerSpace
 } from "../../../../../../shared/conference-organizer-space.firestore";
 import * as express from "express";
 
-export async function talkFeedbacksViewers(request: functions.https.Request, response: express.Response) {
+export async function legacyTalkFeedbacksViewers(request: functions.https.Request, response: express.Response) {
 
     const organizerSecretToken = extractSingleQueryParam(request, 'organizerSecretToken');
     const familyOrganizerSecretToken = extractSingleQueryParam(request, 'familyOrganizerSecretToken');
@@ -53,6 +54,50 @@ export async function talkFeedbacksViewers(request: functions.https.Request, res
         sendResponseMessage(response, 200, organizerSpace.talkFeedbackViewerTokens.map(tfvt => ({
                 ...tfvt,
                 registrationUrl: `${baseUrl}${baseUrl.endsWith("/")?"":"/"}user-tokens/register?type=TalkFeedbacksViewer&eventId=${tfvt.eventId}&talkId=${tfvt.talkId}&secretToken=${tfvt.secretToken}`
+            })
+        ));
+    } catch(error) {
+        sendResponseMessage(response, 500, ""+error, cachedHash ? {
+            'ETag': cachedHash
+        }:{});
+    }
+}
+
+export async function eventTalkFeedbacksViewers(response: express.Response, pathParams: {eventId: string}, queryParams: {token: string, baseUrl: string}, request: express.Request) {
+
+    const [eventDescriptor, familyOrEventOrganizerToken] = await Promise.all([
+      getEventDescriptor(pathParams.eventId),
+      getFamilyOrEventOrganizerToken(queryParams.token),
+    ]);
+
+    const validationErrorMessage = match(familyOrEventOrganizerToken)
+      .with({ type: "FamilyOrganizerToken"}, (familyOrganizerToken) => {
+        if(!eventDescriptor.eventFamily || !familyOrganizerToken.eventFamilies.includes(eventDescriptor.eventFamily)) {
+          return `Provided family organizer token doesn't match with event ${pathParams.eventId} family: [${eventDescriptor.eventFamily}]`;
+        }
+        return undefined;
+      }).with({ type: "EventOrganizerToken" }, (eventOrganizerToken) => {
+        if(!eventDescriptor.eventName || !eventOrganizerToken.eventNames.includes(eventDescriptor.eventName)) {
+          return `Provided event organizer token doesn't match with event ${pathParams.eventId} name: [${eventDescriptor.eventName}]`
+        }
+        return undefined;
+      }).exhaustive();
+
+    if(validationErrorMessage) {
+      return sendResponseMessage(response, 400, validationErrorMessage)
+    }
+
+    const { cachedHash, updatesDetected } = await checkEventLastUpdate(pathParams.eventId, [root => root.talkListUpdated], request, response)
+    if(!updatesDetected) {
+        return sendResponseMessage(response, 304)
+    }
+
+    try {
+        const organizerSpace = await getSecretTokenDoc<ConferenceOrganizerSpace>(`/events/${pathParams.eventId}/organizer-space`)
+
+        sendResponseMessage(response, 200, organizerSpace.talkFeedbackViewerTokens.map(tfvt => ({
+                ...tfvt,
+                registrationUrl: `${queryParams.baseUrl}${queryParams.baseUrl.endsWith("/")?"":"/"}user-tokens/register?type=TalkFeedbacksViewer&eventId=${tfvt.eventId}&talkId=${tfvt.talkId}&secretToken=${tfvt.secretToken}`
             })
         ));
     } catch(error) {

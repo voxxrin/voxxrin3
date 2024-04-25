@@ -9,6 +9,7 @@ import {firestore} from "firebase-admin";
 import DocumentReference = firestore.DocumentReference;
 import {logPerf} from "../http/utils";
 import {TalkStats} from "../../../../../shared/event-stats";
+import * as express from "express";
 
 export type EventFamilyToken = {
     families: string[],
@@ -108,7 +109,7 @@ export async function eventLastUpdateRefreshed<T extends {[field in keyof T]: IS
 
 export async function checkEventLastUpdate(
     eventId: string, lastUpdateFieldExtractors: Array<(root: EventLastUpdates) => ISODatetime|undefined|null>,
-    request: functions.https.Request, response: functions.Response
+    request: express.Request, response: functions.Response
 ): Promise<{ cachedHash: string|undefined, updatesDetected: boolean }> {
     const eventLastUpdatesDoc = await db
         .collection("events").doc(eventId)

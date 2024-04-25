@@ -42,6 +42,17 @@ export async function getFamilyOrganizerToken(secretToken: string) {
             "family organizer token")
     })
 }
+export async function getFamilyOrEventOrganizerToken(secretToken: string) {
+  return logPerf("getFamilyOrEventOrganizerToken()", async () => {
+    return getPublicTokenBySecret(secretToken,
+      publicToken =>
+        match(publicToken)
+          .with({type: "FamilyOrganizerToken"}, t => t)
+          .with({type: "EventOrganizerToken"}, t => t)
+          .otherwise(() => undefined),
+      "family or event organizer token")
+  })
+}
 
 export async function getEventOrganizerToken(secretToken: string) {
     return logPerf("getEventOrganizerToken()", async () => {

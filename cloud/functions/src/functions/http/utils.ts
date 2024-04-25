@@ -84,14 +84,14 @@ export const Routes = {
     QUERY_PARAMS = z.infer<VALIDATION_SCHEMA>['query'],
     BODY = z.infer<VALIDATION_SCHEMA>['body'],
     PATH_PARAMS = Omit< RouteParameters<ROUTE>, keyof z.infer<VALIDATION_SCHEMA>['path']> & z.infer<VALIDATION_SCHEMA>['path']
-  >(app: Express, route: ROUTE, schema: VALIDATION_SCHEMA, callback: (res: express.Response, pathParams: PATH_PARAMS, queryParams: QUERY_PARAMS, body: BODY) => void) {
+  >(app: Express, route: ROUTE, schema: VALIDATION_SCHEMA, callback: (res: express.Response, pathParams: PATH_PARAMS, queryParams: QUERY_PARAMS, body: BODY, req: express.Request) => void) {
     app.post(route, validateRouteWith(schema), (req, res) => {
       const stringifiedPathParams = stringifyParams(req.params)
       const stringifiedQueryParams = stringifyParams(req.query as Record<string, string>)
       exposeLogContext({ method: 'POST', route, pathParams: stringifiedPathParams, queryParams: stringifiedQueryParams }, async () => {
         debug(`POST ${route} [${stringifiedPathParams}]`)
          try {
-          await callback(res, req.params as PATH_PARAMS, req.query as QUERY_PARAMS, req.body as BODY)
+          await callback(res, req.params as PATH_PARAMS, req.query as QUERY_PARAMS, req.body as BODY, req)
         } catch(e) {
           return sendResponseMessage(res, 500, `Unexpected Error: ${e?.toString()}`)
         }
@@ -104,14 +104,14 @@ export const Routes = {
     QUERY_PARAMS = z.infer<VALIDATION_SCHEMA>['query'],
     BODY = z.infer<VALIDATION_SCHEMA>['body'],
     PATH_PARAMS = Omit< RouteParameters<ROUTE>, keyof z.infer<VALIDATION_SCHEMA>['path']> & z.infer<VALIDATION_SCHEMA>['path']
-  >(app: Express, route: ROUTE, schema: VALIDATION_SCHEMA, callback: (res: express.Response, pathParams: PATH_PARAMS, queryParams: QUERY_PARAMS, body: BODY) => void) {
+  >(app: Express, route: ROUTE, schema: VALIDATION_SCHEMA, callback: (res: express.Response, pathParams: PATH_PARAMS, queryParams: QUERY_PARAMS, body: BODY, req: express.Request) => void) {
     app.put(route, validateRouteWith(schema), (req, res) => {
       const stringifiedPathParams = stringifyParams(req.params)
       const stringifiedQueryParams = stringifyParams(req.query as Record<string, string>)
       exposeLogContext({ method: 'PUT', route, pathParams: stringifiedPathParams, queryParams: stringifiedQueryParams }, async () => {
         debug(`PUT ${route} [${stringifiedPathParams}]`)
         try {
-          await callback(res, req.params as PATH_PARAMS, req.query as QUERY_PARAMS, req.body as BODY)
+          await callback(res, req.params as PATH_PARAMS, req.query as QUERY_PARAMS, req.body as BODY, req)
         } catch(e) {
           return sendResponseMessage(res, 500, `Unexpected Error: ${e?.toString()}`)
         }
@@ -123,14 +123,14 @@ export const Routes = {
     VALIDATION_SCHEMA extends RequestZodObject,
     QUERY_PARAMS = z.infer<VALIDATION_SCHEMA>['query'],
     PATH_PARAMS = Omit< RouteParameters<ROUTE>, keyof z.infer<VALIDATION_SCHEMA>['path']> & z.infer<VALIDATION_SCHEMA>['path']
-  >(app: Express, route: ROUTE, schema: VALIDATION_SCHEMA, callback: (res: express.Response, pathParams: PATH_PARAMS, queryParams: QUERY_PARAMS) => void) {
+  >(app: Express, route: ROUTE, schema: VALIDATION_SCHEMA, callback: (res: express.Response, pathParams: PATH_PARAMS, queryParams: QUERY_PARAMS, req: express.Request) => void) {
     app.get(route, validateRouteWith(schema), (req, res) => {
       const stringifiedPathParams = stringifyParams(req.params)
       const stringifiedQueryParams = stringifyParams(req.query as Record<string, string>)
       exposeLogContext({ method: 'GET', route, pathParams: stringifiedPathParams, queryParams: stringifiedQueryParams }, async () => {
         debug(`GET ${route} [${stringifiedPathParams}]`)
         try {
-          await callback(res, req.params as PATH_PARAMS, req.query as QUERY_PARAMS);
+          await callback(res, req.params as PATH_PARAMS, req.query as QUERY_PARAMS, req);
         } catch(e) {
           return sendResponseMessage(res, 500, `Unexpected Error: ${e?.toString()}`)
         }
@@ -142,14 +142,14 @@ export const Routes = {
     VALIDATION_SCHEMA extends RequestZodObject,
     QUERY_PARAMS = z.infer<VALIDATION_SCHEMA>['query'],
     PATH_PARAMS = Omit< RouteParameters<ROUTE>, keyof z.infer<VALIDATION_SCHEMA>['path']> & z.infer<VALIDATION_SCHEMA>['path']
-  >(app: Express, route: ROUTE, schema: VALIDATION_SCHEMA, callback: (res: express.Response, pathParams: PATH_PARAMS, queryParams: QUERY_PARAMS) => void) {
+  >(app: Express, route: ROUTE, schema: VALIDATION_SCHEMA, callback: (res: express.Response, pathParams: PATH_PARAMS, queryParams: QUERY_PARAMS, req: express.Request) => void) {
     app.delete(route, validateRouteWith(schema), (req, res) => {
       const stringifiedPathParams = stringifyParams(req.params)
       const stringifiedQueryParams = stringifyParams(req.query as Record<string, string>)
       exposeLogContext({ method: 'DELETE', route, pathParams: stringifiedPathParams, queryParams: stringifiedQueryParams }, async () => {
         debug(`DELETE ${route} [${stringifiedPathParams}]`)
         try {
-          await callback(res, req.params as PATH_PARAMS, req.query as QUERY_PARAMS);
+          await callback(res, req.params as PATH_PARAMS, req.query as QUERY_PARAMS, req);
         } catch(e) {
           return sendResponseMessage(res, 500, `Unexpected Error: ${e?.toString()}`)
         }
