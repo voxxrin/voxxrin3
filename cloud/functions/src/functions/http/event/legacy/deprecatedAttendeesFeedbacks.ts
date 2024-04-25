@@ -1,20 +1,20 @@
 import * as functions from "firebase-functions";
-import {extractMultiQueryParam, extractSingleQueryParam, sendResponseMessage} from "../utils";
+import {extractMultiQueryParam, extractSingleQueryParam, sendResponseMessage} from "../../utils";
 import {
     checkEventLastUpdate,
     getOrganizerSpaceByToken,
     ensureTalkFeedbackViewerTokenIsValidThenGetFeedbacks, getSecretTokenDoc
-} from "../../firestore/firestore-utils";
+} from "../../../firestore/firestore-utils";
 import {match, P} from "ts-pattern";
-import {getEventDescriptor} from "../../firestore/services/eventDescriptor-utils";
-import {getFamilyOrganizerToken} from "../../firestore/services/publicTokens-utils";
+import {getEventDescriptor} from "../../../firestore/services/eventDescriptor-utils";
+import {getFamilyOrganizerToken} from "../../../firestore/services/publicTokens-utils";
 import {
     ConferenceOrganizerSpace
-} from "../../../../../../shared/conference-organizer-space.firestore";
-import {EventLastUpdates} from "../../../../../../shared/event-list.firestore";
+} from "../../../../../../../shared/conference-organizer-space.firestore";
+import {EventLastUpdates} from "../../../../../../../shared/event-list.firestore";
 import * as express from "express";
 
-export async function attendeesFeedbacks(request: functions.https.Request, response: express.Response) {
+export async function legacyAttendeesFeedbacks(request: functions.https.Request, response: express.Response) {
 
     const organizerSecretToken = extractSingleQueryParam(request, 'organizerSecretToken');
     const talkIds = extractMultiQueryParam(request, 'talkIds');

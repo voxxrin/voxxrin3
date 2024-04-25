@@ -20,8 +20,11 @@ exports.talkFeedbacksViewers = functions.https.onRequest(async (request, respons
 })
 // For organizers + co organizers (in same event family)
 // TODO: remove me once devoxx cfp will no longer use legacy URL
+//  replaced by GET /api/events/:eventId/talks/:talkId/feedbacks (requires event/family organizer token)
+//    beware, this is now a single-talk endpoint (simplifies ETag caching a lot)
+//    beware, ETag support has been re-added to the new endpoint
 exports.attendeesFeedbacks = functions.https.onRequest(async (request, response) => {
-  (await import("./functions/http/event/attendeesFeedbacks")).attendeesFeedbacks(request, response)
+  (await import("./functions/http/event/legacy/deprecatedAttendeesFeedbacks")).legacyAttendeesFeedbacks(request, response)
 })
 // TODO: remove me once devoxx CFP + TweetWall project will no longer use legacy URL
 //  replaced by GET /api/events/:eventId/topTalks (requires event/family organizer token OR event/family event stats access token)
