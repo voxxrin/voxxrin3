@@ -2,9 +2,16 @@ import * as express from 'express';
 import * as functions from 'firebase-functions';
 import {declareExpressHttpRoutes} from "./functions/http/api/routes";
 import {extractSingleQueryParam} from "./functions/http/utils";
+import {info} from "./firebase";
 
 const app = express()
 app.use(express.json());
+app.use((req, res, next) => {
+  if (req.headers['x-forwarded-host'] && req.headers['x-forwarded-host'].toString().endsWith("voxxr.in") && req.originalUrl.startsWith('/api')) {
+    req.url = req.originalUrl.substring("/api".length);
+  }
+  next();
+})
 
 // Legacy HTTP Endpoints declaration... please use declareRoutes() instead !
 exports.hello = functions.https.onRequest(async (request, response) => {
