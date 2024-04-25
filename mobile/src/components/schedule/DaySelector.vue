@@ -171,14 +171,12 @@ function findDayByLocalDate(localDate: string) {
       min-width: 100%;
       width: fit-content;
       padding: 0;
-      background: rgba(white, 0.6);
-      -webkit-backdrop-filter:  blur(30px) saturate(120%);
-      backdrop-filter:  blur(30px) saturate(120%);
+      background: var(--app-white);
       box-shadow: rgba(99, 99, 99, 0.2) 0 2px 8px 0;
 
       @media (prefers-color-scheme: dark) {
-        border-bottom: 1px solid var(--app-line-contrast);
-        background: rgba(var(--app-medium-contrast-rgb), 0.5);
+        border-top: 1px solid var(--app-line-contrast);
+        background: var(--app-dark-contrast);
       }
 
 

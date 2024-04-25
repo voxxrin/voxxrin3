@@ -1,6 +1,10 @@
 <template>
   <ion-page>
-    <ion-content :fullscreen="true" v-if="confDescriptor">
+    <ion-content :fullscreen="true" v-if="confDescriptor"
+                 :scroll-events="true"
+                 @ion-scroll-start="handleScrollStart"
+                 @ion-scroll="handleScroll"
+                 @ion-scroll-end="handleScrollEnd">
       <current-event-header v-if="!hideHeader" :conf-descriptor="confDescriptor"/>
       <ion-toast position="top" style="--max-width: 70%; --button-color: var(--color)"
            :message="preparingOfflineScheduleToastMessageRef"
@@ -9,7 +13,7 @@
            layout="stacked"
            @didDismiss="preparingOfflineScheduleToastIsOpenRef = false"
       ></ion-toast>
-      <ion-header class="toolbarHeader">
+      <ion-header class="toolbarHeader searchBar" :class="{'_scrollTop' : showHeader}">
         <ion-toolbar>
           <ion-title slot="start">{{ LL.Schedule() }}</ion-title>
           <transition name="searchBar">
@@ -38,7 +42,7 @@
         </ion-toolbar>
       </ion-header>
 
-      <ion-header class="stickyHeader daySelectorContainer">
+      <ion-header class="stickyHeader daySelectorContainer"  :class="{'_scrollTop' : showHeader}">
         <day-selector
             :conf-descriptor="confDescriptor"
             @once-initialized-with-day="(day, days) => onceDayInitializedTo(day, days)">
@@ -124,7 +128,7 @@ import {
   IonToast
 } from '@ionic/vue';
 import {useRoute} from "vue-router";
-import {computed, onMounted, Ref, toValue, watch, nextTick} from "vue";
+import {computed, Ref, toValue, watch, nextTick} from "vue";
 import {managedRef as ref} from "@/views/vue-utils";
 import {
   LabelledTimeslotWithFeedback,
@@ -320,6 +324,30 @@ async function openSchedulePreferencesModal() {
     const { data, role } = await modal.onWillDismiss();
     LOGGER.debug(() => `TODO: Update schedule local preferences`)
 }
+
+// Scroll Interaction
+
+const showHeader = ref(true);
+let lastScrollTop = 0; // Keep track of the last scroll position
+
+const handleScrollStart = () => {
+  // Your logic here
+};
+
+const handleScroll = (event) => {
+  const scrollTop = event.detail.scrollTop;
+  if (Math.abs(scrollTop - lastScrollTop) > 24) { // Only if the scroll is greater than 5 pixels
+    showHeader.value = scrollTop <= lastScrollTop; // If we are scrolling up, show the header
+    lastScrollTop = Math.max(0, scrollTop); // For mobile browsers
+  }
+};
+
+const handleScrollEnd = () => {
+  // If we are at the very top
+  if (lastScrollTop === 0) {
+    showHeader.value = true;
+  }
+};
 </script>
 
 <style scoped lang="scss">
@@ -336,9 +364,25 @@ async function openSchedulePreferencesModal() {
     width: 100%;
   }
 
+  .searchBar {
+    position: sticky;
+    top: -64px;
+    transition: all 200ms ease-in-out;
+
+    &._scrollTop {
+      top: 0;
+      transition: all 200ms ease-in-out;
+    }
+  }
 
   .daySelectorContainer {
     overflow-y: auto;
+    transition: all 200ms ease-in-out;
+
+    &._scrollTop {
+      top: 60px;
+      transition: 200ms ease-in-out;
+    }
   }
 
   $ion-fab-button-height: 56px;

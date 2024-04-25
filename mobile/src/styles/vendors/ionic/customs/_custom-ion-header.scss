@@ -19,7 +19,7 @@ ion-header  {
             --background: var(--app-white);
 
             @media (prefers-color-scheme: dark) {
-                --background: var(--app-dark-contrast);
+                --background: var(--app-light-contrast);
             }
         }
 
