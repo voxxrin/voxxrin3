@@ -62,7 +62,7 @@ export function declareEventHttpRoutes(app: Express) {
     ensureHasCrawlerFamilyOrEventOrganizerToken(),
     async (res, path, query, body) =>
       (await import("../event/crawlEvent")).requestEventScheduleRefresh(res, path, query));
-  Routes.get(app, '/events/:eventId/talkEditors',
+  Routes.get(app, '/events/:eventId/talksEditors',
     z.object({
       query: z.object({
         token: z.string().min(10),

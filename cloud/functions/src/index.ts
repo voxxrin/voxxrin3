@@ -25,7 +25,7 @@ exports.crawl = functions.https.onRequest(async (request, response) => {
   (await import("./functions/http/event/legacy/deprecated_crawl")).crawl(request, response)
 })
 // TODO: remove me once devoxx cfp will no longer use legacy URL
-//  replaced by GET /api/events/:eventId/talkEditors (requires event/family organizer token)
+//  replaced by GET /api/events/:eventId/talksEditors (requires event/family organizer token)
 exports.talkFeedbacksViewers = functions.https.onRequest(async (request, response) => {
   (await import("./functions/http/event/legacy/deprecatedTalkFeedbacksViewers")).legacyTalkFeedbacksViewers(request, response)
 })
