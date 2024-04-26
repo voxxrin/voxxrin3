@@ -22,17 +22,10 @@ export async function legacyAttendeesFeedbacks(request: functions.https.Request,
     const familyToken = extractSingleQueryParam(request, 'familyToken');
     const familyOrganizerSecretToken = extractSingleQueryParam(request, 'familyOrganizerSecretToken');
     const eventId = extractSingleQueryParam(request, 'eventId');
-    let sinceTimestamp = Date.parse(extractSingleQueryParam(request, 'updatedSince') || "");
-
-    // TODO: Remove me
-    if(isNaN(sinceTimestamp)) {
-        sinceTimestamp = Date.parse("1970-01-01T00:00:00Z")
-    }
 
     if(!talkIds || !talkIds.length) { return sendResponseMessage(response, 400, `Missing [talkIds] (multi) query parameter !`) }
     if(!eventId) { return sendResponseMessage(response, 400, `Missing [eventId] query parameter !`) }
     if(!organizerSecretToken && !familyToken && !familyOrganizerSecretToken) { return sendResponseMessage(response, 400, `Missing either [organizerSecretToken] or [familyToken] or [familyOrganizerSecretToken] query parameter !`) }
-    if(isNaN(sinceTimestamp)) { return sendResponseMessage(response, 400, `Missing valid [updatedSince] query parameter !`) }
 
     const eventDescriptor = await getEventDescriptor(eventId);
     if(familyOrganizerSecretToken) {
@@ -54,8 +47,6 @@ export async function legacyAttendeesFeedbacks(request: functions.https.Request,
     //     return sendResponseMessage(response, 304)
     // }
 
-    const updatedSince = new Date(sinceTimestamp);
-
     try {
         const organizerSpace = await match([organizerSecretToken, familyToken, familyOrganizerSecretToken])
             .with([ P.nullish, P.nullish, P.nullish ], async ([_1, _2]) => { throw new Error(`Unexpected state: (undefined,undefined)`); })
@@ -71,7 +62,7 @@ export async function legacyAttendeesFeedbacks(request: functions.https.Request,
             .filter(talkFeedbacksViewerToken => talkIds.includes(talkFeedbacksViewerToken.talkId))
             .map(async (talkFeedbackViewerToken) => {
 
-            const feedbacks = await ensureTalkFeedbackViewerTokenIsValidThenGetFeedbacks(talkFeedbackViewerToken.eventId, talkFeedbackViewerToken.talkId, talkFeedbackViewerToken.secretToken, updatedSince);
+            const feedbacks = await ensureTalkFeedbackViewerTokenIsValidThenGetFeedbacks(talkFeedbackViewerToken.eventId, talkFeedbackViewerToken.talkId, talkFeedbackViewerToken.secretToken);
 
             // Enriching bingo entries with label
             const enrichedFeedbacks = feedbacks.map(feedback => ({

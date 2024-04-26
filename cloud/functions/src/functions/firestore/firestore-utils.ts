@@ -50,7 +50,7 @@ export async function getOrganizerSpaceByToken(
     return organizerSpace;
 }
 
-export async function ensureTalkFeedbackViewerTokenIsValidThenGetFeedbacks(eventId: string, talkId: string, talkViewerToken: string, updatedSince: Date) {
+export async function ensureTalkFeedbackViewerTokenIsValidThenGetFeedbacks(eventId: string, talkId: string, talkViewerToken: string) {
     const feedbacksRefs = await db.collection(
         `events/${eventId}/talks/${talkId}/feedbacks-access/${talkViewerToken}/feedbacks`
     ).listDocuments()
@@ -63,7 +63,7 @@ export async function ensureTalkFeedbackViewerTokenIsValidThenGetFeedbacks(event
     const feedbackSnapshots = await Promise.all(feedbacksRefs.map(ref => ref.get()))
     const feedbacks = feedbackSnapshots.map(snap => snap.data() as TalkAttendeeFeedback)
 
-    return feedbacks.filter(feedback => Date.parse(feedback.lastUpdatedOn) > updatedSince.getTime());
+    return feedbacks;
 }
 
 export async function eventTalkStatsFor(eventId: string): Promise<TalkStats[]> {

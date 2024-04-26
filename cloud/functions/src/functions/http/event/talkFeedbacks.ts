@@ -11,10 +11,6 @@ import {ISODatetime} from "../../../../../../shared/type-utils";
 
 export async function eventTalkFeedbacks(response: Response, pathParams: {eventId: string, talkId: string}, queryParams: {token: string, updatedSince?: ISODatetime|undefined }, request: Request, eventDescriptor: ConferenceDescriptor) {
 
-    const updatedSince = queryParams.updatedSince || "1970-01-01T00:00:00Z";
-    const sinceTimestamp = Date.parse(updatedSince);
-    if(isNaN(sinceTimestamp)) { return sendResponseMessage(response, 400, `Missing valid [updatedSince] query parameter !`) }
-
     const { eventId, talkId } = pathParams
 
     const { cachedHash, updatesDetected } = await checkEventLastUpdate(eventId, [
@@ -34,7 +30,7 @@ export async function eventTalkFeedbacks(response: Response, pathParams: {eventI
           .filter(talkFeedbacksViewerToken => talkId === talkFeedbacksViewerToken.talkId)
           .map(async (talkFeedbackViewerToken) => {
 
-            const feedbacks = await ensureTalkFeedbackViewerTokenIsValidThenGetFeedbacks(talkFeedbackViewerToken.eventId, talkFeedbackViewerToken.talkId, talkFeedbackViewerToken.secretToken, new Date(sinceTimestamp));
+            const feedbacks = await ensureTalkFeedbackViewerTokenIsValidThenGetFeedbacks(talkFeedbackViewerToken.eventId, talkFeedbackViewerToken.talkId, talkFeedbackViewerToken.secretToken);
 
             // Enriching bingo entries with label
             const enrichedFeedbacks = feedbacks.map(feedback => ({
