@@ -74,7 +74,7 @@ export function declareEventHttpRoutes(app: Express) {
     }),
     ensureHasFamilyOrEventOrganizerToken(),
     async (res, path, query, eventDescriptor, req) =>
-      (await import("../event/talkFeedbacksViewers")).eventTalkFeedbacksViewers(res, path, query, req, eventDescriptor));
+      (await import("../event/talksEditors")).eventTalksEditors(res, path, query, req, eventDescriptor));
   Routes.get(app, '/events/:eventId/talks/:talkId/feedbacks',
     z.object({
       query: z.object({

@@ -5,7 +5,7 @@ import * as express from "express";
 import {ConferenceDescriptor} from "../../../../../../shared/conference-descriptor.firestore";
 
 
-export async function eventTalkFeedbacksViewers(
+export async function eventTalksEditors(
   response: express.Response,
   pathParams: {eventId: string},
   queryParams: {token: string, baseUrl: string},
@@ -13,7 +13,9 @@ export async function eventTalkFeedbacksViewers(
   eventDescriptor: ConferenceDescriptor
 ) {
 
-    const { cachedHash, updatesDetected } = await checkEventLastUpdate(pathParams.eventId, [root => root.talkListUpdated], request, response)
+    const { cachedHash, updatesDetected } = await checkEventLastUpdate(pathParams.eventId, [
+      root => root.talkListUpdated
+    ], request, response)
     if(!updatesDetected) {
         return sendResponseMessage(response, 304)
     }
@@ -25,10 +27,10 @@ export async function eventTalkFeedbacksViewers(
                 ...tfvt,
                 registrationUrl: `${queryParams.baseUrl}${queryParams.baseUrl.endsWith("/")?"":"/"}user-tokens/register?type=TalkFeedbacksViewer&eventId=${tfvt.eventId}&talkId=${tfvt.talkId}&secretToken=${tfvt.secretToken}`
             })
-        ));
-    } catch(error) {
-        sendResponseMessage(response, 500, ""+error, cachedHash ? {
-            'ETag': cachedHash
+        ), cachedHash ? {
+          'ETag': cachedHash
         }:{});
+    } catch(error) {
+        sendResponseMessage(response, 500, ""+error);
     }
 }
