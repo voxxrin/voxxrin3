@@ -4,16 +4,18 @@ import {UserTokensWallet} from "../../../../../shared/user-tokens-wallet.firesto
 import {v4 as uuidv4} from "uuid";
 import {User} from "../../../../../shared/user.firestore";
 import {ISODatetime} from "../../../../../shared/type-utils";
+import {UserRecord} from "firebase-admin/auth";
+import {EventContext} from "firebase-functions/lib/v1/cloud-functions";
 
 
 /**
  * Purpose of this function is to initialize a public user token for every users entries
  */
-export const onUserCreated = functions.auth.user().onCreate(async (user, context) => {
+export const onUserCreated = async (user: UserRecord, context: EventContext<{}>) => {
     info(`User created triggered: ${user.uid}`)
     await createEmptyUserTokenWallet(user.uid);
     await createUserInfos(user.uid);
-});
+};
 
 export async function createEmptyUserTokenWallet(userId: string) {
     const publicUserToken = uuidv4();
@@ -35,7 +37,12 @@ export async function createEmptyUserTokenWallet(userId: string) {
 export async function createUserInfos(userId: string) {
     const user: User = {
         userCreation: new Date().toISOString() as ISODatetime,
-        username: `Anonymous${generateRandom15DigitInteger()}`
+        username: `Anonymous${generateRandom15DigitInteger()}`,
+        totalFavs: {
+          total: 0,
+          perEventTotalFavs: {}
+        },
+        _version: 1
     }
 
     await db.collection('users').doc(userId).set(user);

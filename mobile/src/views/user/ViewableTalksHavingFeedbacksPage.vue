@@ -128,24 +128,5 @@ function openTalkDetails(talk: VoxxrinTalk) {
   margin: 16px;
   padding: 8px 4px;
   border-radius: 16px;
-
-  img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    display: block;
-    height: 100%;
-    width: 100%;
-    z-index: -1;
-    object-fit: cover;
-    border-radius: 16px;
-  }
-
-  &-title {
-    padding: 16px 12px;
-    font-size: 18px;
-    font-weight: bold;
-    color: var(--app-white);
-  }
 }
 </style>

@@ -126,7 +126,7 @@ const isMyTalksButtonEnabled = computed(() => {
   .userDashboard {
     &-user {
       display: flex;
-      align-items: center;
+      align-items: top;
       column-gap: 16px;
       padding: var(--app-gutters);
       padding-bottom: 0;
@@ -146,7 +146,7 @@ const isMyTalksButtonEnabled = computed(() => {
         align-items: center;
         justify-content: center;
         height: 54px;
-        width: 54px;
+        min-width: 54px;
         border-radius: 44px;
         font-size: 28px;
         background: var(--app-voxxrin);

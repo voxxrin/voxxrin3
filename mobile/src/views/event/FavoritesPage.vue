@@ -45,7 +45,9 @@
                              @talk-note-updated="updatedTalkNote => userEventTalkNotesRef.set(talk.id.value, updatedTalkNote) " />
 
                           <talk-favorite-button v-if="confDescriptor && !talk.isOverflow"
-                              :conf-descriptor="confDescriptor" :user-talk-notes="talkNotes" :talk-stats="talkStats" />
+                              :conf-descriptor="confDescriptor" :user-talk-notes="talkNotes" :talk-stats="talkStats"
+                              :local-favorite="localEventTalkNotesRef.get(talk.id.value)"
+                          />
                         </template>
                       </schedule-talk>
                     </template>
@@ -84,7 +86,7 @@
   import {useSchedule} from "@/state/useSchedule";
   import {useTabbedPageNav} from "@/state/useTabbedPageNav";
   import {TalkId, VoxxrinTalk} from "@/models/VoxxrinTalk";
-  import {useUserEventTalkNotes} from "@/state/useUserTalkNotes";
+  import {useLocalEventTalkFavsStorage, useUserEventTalkNotes} from "@/state/useUserTalkNotes";
   import TimeSlotSection from "@/components/timeslots/TimeSlotSection.vue";
   import {useSharedEventSelectedDay} from "@/state/useEventSelectedDay";
   import {computed, toValue} from "vue";
@@ -111,6 +113,7 @@
 
   const {firestoreEventTalkStatsRef: talkStatsRefByTalkId} = useEventTalkStats(eventId, talkIdsRef)
   const {userEventTalkNotesRef } = useUserEventTalkNotes(eventId, talkIdsRef)
+  const localEventTalkNotesRef = useLocalEventTalkFavsStorage(eventId);
   const {firestoreRoomsStatsRef: roomsStatsRefByRoomId } = useRoomsStats(eventId)
 
   const favoritedTalkIdsRef = computed(() => {

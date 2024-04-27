@@ -95,7 +95,6 @@ async function loadSpeakerUrl(talk: VoxxrinTalk, speakerUrl: string) {
     } else {
       IN_MEMORY_SPEAKER_URL_PRELOADINGS.add(speakerUrl);
 
-      // TODO: handle picture loading error here maybe ??
       await preloadPicture(speakerUrl)
       resolve(null);
     }

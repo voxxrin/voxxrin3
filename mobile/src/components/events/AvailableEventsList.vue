@@ -124,6 +124,8 @@ watch([currentCategoryRef, perCategoryEventsRef], ([currentCategory, perCategory
   }
 
   .tabsSelection {
+    overflow: hidden;
+
     &._sticky {
       position: sticky;
       top: 68px;

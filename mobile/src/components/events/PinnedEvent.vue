@@ -85,7 +85,7 @@ const props = defineProps({
   }
 
   &:active {
-    transition: 140ms;
+    transition: var(--transition-active-default);
     transform: scale(0.97) !important;
     box-shadow: rgba(99, 99, 99, 0.2) 0 2px 8px 0;
   }

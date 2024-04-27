@@ -113,6 +113,7 @@ export function filterTalksMatching(talks: VoxxrinTalk[], searchTerms: string|un
         const talkSearchableContent = `
             ${talk.title}
             ${talk.speakers.map(sp => `${sp.fullName} ${sp.companyName}`).join("\n")}
+            ${talk.room.title}
         `.toLowerCase()
 
         return searchTerms.split(" ").every(searchTerm => talkSearchableContent.includes(searchTerm.toLowerCase()));

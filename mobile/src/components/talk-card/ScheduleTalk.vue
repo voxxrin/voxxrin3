@@ -43,11 +43,7 @@
         </div>
         <div class="pictures">
           <div class="picturesItem" v-for="(speaker, index) in talk.speakers" :key="speaker.id.value">
-            <ion-thumbnail>
-              <img v-if="speaker.photoUrl" :src="speaker.photoUrl" @error="handle404OnSpeakerThumbnail($event.target as HTMLImageElement)"
-                   :alt="LL.Avatar_Speaker() + ' ' + speaker.fullName"/>
-              <img v-if="!speaker.photoUrl" :src="baseUrl+'assets/images/svg/avatar-shadow.svg'" aria-hidden="true" />
-            </ion-thumbnail>
+            <speaker-thumbnail size="48px" :is-highlighted="isHighlighted(talk, talkNotes) || talkNotes.isFavorite" :speaker="speaker" />
           </div>
         </div>
       </div>
@@ -73,7 +69,6 @@ import {computed, onMounted, PropType} from "vue";
 import {managedRef as ref, toManagedRef as toRef, useInterval} from "@/views/vue-utils";
 import {
   IonBadge,
-  IonThumbnail,
 } from '@ionic/vue';
 import { VoxxrinTalk} from "@/models/VoxxrinTalk";
 import {useRoute} from "vue-router";
@@ -84,10 +79,9 @@ import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor"
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {TalkStats} from "../../../../shared/event-stats";
 import {VoxxrinRoomStats} from "@/models/VoxxrinRoomStats";
-import {useCurrentClock} from "@/state/useCurrentClock";
-import {Temporal} from "temporal-polyfill";
 import {people, person} from "ionicons/icons";
 import RoomCapacityIndicator from "@/components/rooms/RoomCapacityIndicator.vue";
+import SpeakerThumbnail from "@/components/speaker/SpeakerThumbnail.vue";
 
 const { LL } = typesafeI18n()
 const baseUrl = import.meta.env.BASE_URL;
@@ -281,17 +275,6 @@ const theme = {
         &:last-child {
           margin-right: 24px;
         }
-
-        ion-thumbnail {
-          --size: 48px;
-          --border-radius: 40px;
-          filter: drop-shadow(-4px 0px 4px rgba(0, 0, 0, 0.15));
-          background-color: var(--app-background);
-
-          @media (prefers-color-scheme: dark) {
-            background-color: var(--app-medium-contrast);
-          }
-        }
       }
     }
   }
@@ -368,15 +351,6 @@ const theme = {
       }
     }
 
-    ion-thumbnail {
-      background-color: var(--app-background);
-      border: 2px solid var(--app-primary);
-
-      @media (prefers-color-scheme: dark) {
-        border: 2px solid var(--app-white) !important;
-      }
-    }
-
     .talkCard-footer {
       border-width: 2px;
       border-color: var(--app-primary);
@@ -420,8 +394,6 @@ const theme = {
       }
 
       &:before { background: rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.6);}
-
-      ion-thumbnail { border: 2px solid var(--app-primary-shade);}
 
       .talkCard-footer {
         border-color: var(--app-primary-shade);

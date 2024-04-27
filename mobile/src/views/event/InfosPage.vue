@@ -73,7 +73,6 @@
           </ul>
         </div>
       </div>
-      <PoweredVoxxrin></PoweredVoxxrin>
     </ion-content>
   </ion-page>
 </template>

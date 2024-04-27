@@ -1,12 +1,12 @@
 <template>
   <div class="talkAction">
     <ion-button :class="{ 'btnTalk': true, 'btn-favorite': true, '_is-active': !!talkNotes?.isFavorite }"
-                @click.stop="() => toggleFavorite()" v-if="confDescriptor?.features.favoritesEnabled"
+                @click.stop="() => toggleFavorite(!!talkNotes?.isFavorite)" v-if="confDescriptor?.features.favoritesEnabled"
                 :aria-label="talkNotes?.isFavorite ? LL.Remove_Favorites() : LL.Add_Favorites()">
       <span class="btn-favorite-group" :class="{'_animationIn': !!talkNotes?.isFavorite}">
         <ion-icon class="btn-favorite-group-icon" v-if="!talkNotes?.isFavorite" aria-hidden="true" src="/assets/icons/line/bookmark-line-favorite.svg"></ion-icon>
         <ion-icon class="btn-favorite-group-icon" v-if="!!talkNotes?.isFavorite" aria-hidden="true" src="/assets/icons/solid/bookmark-favorite.svg"></ion-icon>
-        <ion-label class="btn-favorite-group-nb" v-if="eventTalkStats !== undefined">{{ eventTalkStats.totalFavoritesCount }}</ion-label>
+        <ion-label class="btn-favorite-group-nb" v-if="eventTalkStats !== undefined">{{ eventTalkStats.totalFavoritesCount + (localFavorite || 0) }}</ion-label>
       </span>
     </ion-button>
   </div>
@@ -35,6 +35,11 @@ const props = defineProps({
     userTalkNotes: {
         required: true,
         type: Object as PropType<TalkNote>
+    },
+    localFavorite: {
+        required: false,
+        type: Number as PropType<1 | -1 | undefined>,
+        default: undefined
     }
 });
 
@@ -46,7 +51,7 @@ const talkNotes: Ref<TalkNote|undefined> = toRef(() => props.userTalkNotes);
 
 const eventTalkStats = computed(() => props.talkStats)
 const {toggleFavorite} = useUserTalkNoteActions(
-    toRef(() => props.confDescriptor?.id),
+    toRef(() => props.confDescriptor.id),
     toRef(() => props.userTalkNotes?.talkId ? new TalkId(props.userTalkNotes.talkId) : undefined),
     talkNotes,
     (updatedTalkNote) => emits('talkNoteUpdated', updatedTalkNote)

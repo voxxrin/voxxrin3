@@ -27,6 +27,10 @@ type RootTranslation = {
 	 */
 	Close: string
 	/**
+	 * O​p​e​n​ ​V​o​x​x​r​i​n​ ​w​e​b​s​i​t​e
+	 */
+	Open_Voxxrin_website: string
+	/**
 	 * P​r​e​v​i​o​u​s​ ​s​c​r​e​e​n
 	 */
 	Previous_screen: string
@@ -559,6 +563,10 @@ type RootTranslation = {
 	 * O​r​g​a​n​i​z​e​r​s​ ​a​r​e​ ​r​e​g​u​l​a​r​l​y​ ​s​e​n​d​i​n​g​ ​r​e​p​o​r​t​s​ ​o​n​ ​h​o​w​ ​f​u​l​l​ ​t​h​e​ ​r​o​o​m​ ​i​s
 	 */
 	Organizers_are_regularly_sending_room_capacity_ratio: string
+	/**
+	 * O​n​ ​f​l​a​c​k​y​ ​c​o​n​n​e​c​t​i​o​n​s​,​ ​a​u​t​h​e​n​t​i​c​a​t​i​n​g​ ​t​h​e​ ​u​s​e​r​ ​c​a​n​ ​t​a​k​e​ ​t​i​m​e​,​ ​l​e​a​d​i​n​g​ ​t​o​ ​a​ ​l​o​n​g​ ​l​o​a​d​i​n​g​ ​s​p​i​n​n​e​r​.​ ​T​o​ ​w​o​r​k​a​r​o​u​n​d​ ​t​h​i​s​,​ ​y​o​u​ ​c​a​n​ ​e​i​t​h​e​r​ ​R​e​l​o​a​d​ ​t​h​e​ ​p​a​g​e​,​ ​o​r​ ​p​u​t​ ​y​o​u​r​ ​d​e​v​i​c​e​ ​c​o​m​p​l​e​t​e​l​y​ ​o​f​f​l​i​n​e​,​ ​s​o​ ​t​h​a​t​ ​F​i​r​e​b​a​s​e​ ​d​o​e​s​n​'​t​ ​e​v​e​n​ ​t​r​y​ ​t​o​ ​u​p​d​a​t​e​ ​a​u​t​h​e​n​t​i​c​a​t​e​d​ ​u​s​e​r​'​s​ ​i​n​f​o​s
+	 */
+	On_flacky_connections_it_is_difficult_to_authenticate_the_user: string
 }
 
 export type TranslationFunctions = {
@@ -574,6 +582,10 @@ export type TranslationFunctions = {
 	 * Close
 	 */
 	Close: () => LocalizedString
+	/**
+	 * Open Voxxrin website
+	 */
+	Open_Voxxrin_website: () => LocalizedString
 	/**
 	 * Previous screen
 	 */
@@ -1102,6 +1114,10 @@ export type TranslationFunctions = {
 	 * Organizers are regularly sending reports on how full the room is
 	 */
 	Organizers_are_regularly_sending_room_capacity_ratio: () => LocalizedString
+	/**
+	 * On flacky connections, authenticating the user can take time, leading to a long loading spinner. To workaround this, you can either Reload the page, or put your device completely offline, so that Firebase doesn't even try to update authenticated user's infos
+	 */
+	On_flacky_connections_it_is_difficult_to_authenticate_the_user: () => LocalizedString
 }
 
 export type Formatters = {

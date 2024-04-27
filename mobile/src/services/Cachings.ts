@@ -61,11 +61,14 @@ export async function checkCache(cacheKey: string, newCacheValidityDuration: Tem
 }
 
 export function preloadPicture(pictureUrl: string) {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     const picture = new Image();
     picture.src = pictureUrl;
 
     picture.onload = resolve;
-    picture.onerror = reject;
+    picture.onerror = () => {
+      LOGGER.debug(`Error while preloading picture [${pictureUrl}] => picture won't be available offline !`)
+      resolve(null);
+    };
   });
 }

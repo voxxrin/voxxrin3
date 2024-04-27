@@ -10,8 +10,8 @@ import {db} from "@/state/firebase";
 import {TalkFeedbacksViewerToken, VoxxrinUserTokensWallet} from "@/models/VoxxrinUser";
 import {createSharedComposable} from "@vueuse/core";
 import {
-    EventOrganizerSecretToken,
-    UserTokensWallet
+  UserWalletEventOrganizerSecretToken,
+  UserTokensWallet, UserWallerTalkFeedbacksViewerSecretToken
 } from "../../../shared/user-tokens-wallet.firestore";
 import {TalkId} from "@/models/VoxxrinTalk";
 import {
@@ -69,7 +69,7 @@ export function useUserTokensWallet() {
         return walletEntry;
     })
 
-    const registerEventOrganizerSecretToken = async (eventOrganizerSecretToken: EventOrganizerSecretToken) => {
+    const registerEventOrganizerSecretToken = async (eventOrganizerSecretToken: UserWalletEventOrganizerSecretToken) => {
         const user = toValue(userRef);
         const firestoreUserTokensWalletDoc = getUserTokensWalletDoc(user);
 
@@ -82,7 +82,7 @@ export function useUserTokensWallet() {
         await updateDoc(firestoreUserTokensWalletDoc, "secretTokens.eventOrganizerTokens", arrayUnion(eventOrganizerSecretToken));
     }
 
-    const registerTalkFeedbacksViewerSecretToken = async (talkFeedbacksViewerSecretToken: TalkFeedbacksViewerSecretToken) => {
+    const registerTalkFeedbacksViewerSecretToken = async (talkFeedbacksViewerSecretToken: UserWallerTalkFeedbacksViewerSecretToken) => {
         const user = toValue(userRef);
         const firestoreUserTokensWalletDoc = getUserTokensWalletDoc(user);
 

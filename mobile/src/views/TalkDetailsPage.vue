@@ -18,14 +18,14 @@
           <div class="favoriteGroup" slot="end" :class="{'_animationIn': talkNotes.isFavorite}" >
             <!-- TODO Fix dynamic aria-label -->
             <ion-button class="btnTalkAction _favorite"
-                        shape="round" fill="outline" @click.stop="() => toggleFavorite()"
+                        shape="round" fill="outline" @click.stop="() => toggleFavorite(!!talkNotes?.isFavorite)"
                         v-if="confDescriptor?.features.favoritesEnabled"
                         :aria-label="talkNotes?.isFavorite ? LL.Remove_Favorites() : LL.Add_Favorites()">
               <ion-icon class="favorite-btn-icon" v-if="!talkNotes.isFavorite" aria-hidden="true" src="/assets/icons/line/bookmark-line-favorite.svg"></ion-icon>
               <ion-icon class="favorite-btn-icon" v-if="talkNotes.isFavorite" aria-hidden="true" src="/assets/icons/solid/bookmark-favorite.svg"></ion-icon>
             </ion-button>
             <ion-label class="favorite-btn-nb" v-if="eventTalkStats !== undefined">
-              <span>{{ eventTalkStats.totalFavoritesCount }}</span>
+              <span>{{ eventTalkStats.totalFavoritesCount + (localFavorite || 0) }}</span>
             </ion-label>
           </div>
         </ion-toolbar>
@@ -59,10 +59,7 @@
         </vox-divider>
         <ion-list class="talkDetails-speakers-list">
           <ion-item v-for="(speaker, index) in detailedTalk?.speakers" :key="speaker.id.value">
-            <ion-avatar>
-              <img :src="speaker.photoUrl" v-if="speaker.photoUrl" :alt="LL.Avatar_Speaker() + ' ' + speaker.fullName"/>
-              <img src="/assets/images/svg/avatar-shadow.svg" v-if="!speaker.photoUrl" aria-hidden="true"/>
-            </ion-avatar>
+            <speaker-thumbnail size="64px" :is-highlighted="false" :speaker="speaker" />
             <div class="speakerInfo">
               <div class="speakerInfo-name">
                 {{speaker.fullName}}
@@ -87,8 +84,9 @@ import {useRoute} from "vue-router";
 import {EventId} from "@/models/VoxxrinEvent";
 import {getRouteParamsValue, isRefDefined, toManagedRef as toRef, managedRef as ref} from "@/views/vue-utils";
 import {
-    useUserEventTalkNotes,
-    useUserTalkNoteActions,
+  useLocalEventTalkFavsStorage,
+  useUserEventTalkNotes,
+  useUserTalkNoteActions,
 } from "@/state/useUserTalkNotes";
 import {TalkId} from "@/models/VoxxrinTalk";
 import {useSharedEventTalk} from "@/state/useEventTalk";
@@ -104,6 +102,7 @@ import {useEventTalkStats} from "@/state/useEventTalkStats";
 import {Logger} from "@/services/Logger";
 import RoomCapacityIndicator from "@/components/rooms/RoomCapacityIndicator.vue";
 import {useRoomStats} from "@/state/useRoomsStats";
+import SpeakerThumbnail from "@/components/speaker/SpeakerThumbnail.vue";
 
 const LOGGER = Logger.named("TalkDetailsPage");
 
@@ -134,6 +133,13 @@ const {toggleFavorite, toggleWatchLater} = useUserTalkNoteActions(
     eventId, talkId,
     talkNotes,
 );
+const localEventTalkNotesRef = useLocalEventTalkFavsStorage(eventId)
+const localFavorite = computed(() => {
+  const localEventTalkNotes = toValue(localEventTalkNotesRef),
+    _talkId = toValue(talkId);
+
+  return localEventTalkNotes.get(_talkId.value);
+})
 
 const theme = computed(() => {
     if(isRefDefined(detailedTalk)) {
@@ -352,16 +358,6 @@ const {firestoreRoomStatsRef } = useRoomStats(eventId, toRef(() => detailedTalk.
             --border-style: none;
           }
 
-          ion-avatar {
-            max-height: 64px;
-            min-height: 64px;
-            min-width: 64px;
-            max-width: 64px;
-            margin-top: 0;
-            margin-right: var(--app-gutters);
-            border: 2px solid var(--app-primary);
-          }
-
           .speakerInfo {
             display: flex;
             flex-direction: column;
@@ -371,6 +367,7 @@ const {firestoreRoomStatsRef } = useRoomStats(eventId, toRef(() => detailedTalk.
               flex-direction: column;
               margin-bottom: 8px;
               font-weight: bold;
+              user-select: all;
             }
 
             &-company {

@@ -1,16 +1,13 @@
-import {logPerf, sendResponseMessage} from "../utils";
+import {sendResponseMessage} from "../utils";
 import {Response} from "express";
 import {ISODatetime} from "../../../../../../shared/type-utils";
-import {getEventDescriptor} from "../../firestore/services/eventDescriptor-utils";
-import {
-  getFamilyRoomStatsContributorToken
-} from "../../firestore/services/publicTokens-utils";
 import {getTimeslottedTalks, TimeslottedTalk} from "../../firestore/services/schedule-utils";
 import {RoomsStats, RoomStats} from "../../../../../../shared/event-stats";
 import {db} from "../../../firebase";
 
 import {toValidFirebaseKey} from "../../../../../../shared/utilities/firebase.utils";
  import {TALK_COMPLETION_THRESHOLD} from "../../../../../../shared/constants/shared-constants.utils";
+import {ConferenceDescriptor} from "../../../../../../shared/conference-descriptor.firestore";
 
 
 export async function provideRoomsStats(response: Response, pathParams: {eventId: string}, queryParams: {token: string}, body: {
@@ -19,18 +16,7 @@ export async function provideRoomsStats(response: Response, pathParams: {eventId
     capacityFillingRatio: number,
     recordedAt: ISODatetime,
   }>
-}) {
-
-  const [eventDescriptor, familyRoomStatsContributorToken] = await logPerf("eventDescriptor and familyRoomStatsContributor retrieval", async () => {
-    return await Promise.all([
-      getEventDescriptor(pathParams.eventId),
-      getFamilyRoomStatsContributorToken(queryParams.token),
-    ]);
-  })
-
-  if (!eventDescriptor.eventFamily || !familyRoomStatsContributorToken.eventFamilies.includes(eventDescriptor.eventFamily)) {
-    return sendResponseMessage(response, 400, `Provided family events stats token doesn't match with event ${pathParams.eventId} family: [${eventDescriptor.eventFamily}]`)
-  }
+}, eventDescriptor: ConferenceDescriptor) {
 
   const timeslottedTalks = await getTimeslottedTalks(pathParams.eventId)
 
@@ -54,18 +40,7 @@ export async function provideRoomsStats(response: Response, pathParams: {eventId
 export async function provideRoomStats(response: Response, pathParams: {eventId: string, roomId: string}, queryParams: {token: string}, body: {
   capacityFillingRatio: number,
   recordedAt: ISODatetime,
-}) {
-
-  const [eventDescriptor, familyRoomStatsContributorToken] = await logPerf("eventDescriptor and familyRoomStatsContributor retrieval", async () => {
-    return await Promise.all([
-      getEventDescriptor(pathParams.eventId),
-      getFamilyRoomStatsContributorToken(queryParams.token),
-    ]);
-  })
-
-  if(!eventDescriptor.eventFamily || !familyRoomStatsContributorToken.eventFamilies.includes(eventDescriptor.eventFamily)) {
-    return sendResponseMessage(response, 400, `Provided family events stats token doesn't match with event ${pathParams.eventId} family: [${eventDescriptor.eventFamily}]`)
-  }
+}, eventDescriptor: ConferenceDescriptor) {
 
   const timeslottedTalks = await getTimeslottedTalks(pathParams.eventId)
   const roomStats = await updateRoomStatsFor({

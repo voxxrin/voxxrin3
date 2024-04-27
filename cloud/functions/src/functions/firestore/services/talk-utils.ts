@@ -37,34 +37,10 @@ class ConfOrganizerAllRatingsModel {
 }
 
 export async function getEveryRatingsForEvent(eventId: string, organizerSpaceToken: string) {
-    // FIXME: move this to conference descriptor at some point
-    const devoxxOverflowTalkIds: Record<string, string[]> = eventId === 'dvbe23' ? {
-        "67956": ["72002", "72003", "72004"],
-        "67953": ["72007", "72006", "72005"],
-        "70101": ["72009", "72008", "72010"],
-    }: {}
-
-    const talkIdByOverflowTalkId = Object.entries(devoxxOverflowTalkIds).reduce((talkIdByOverflowTalkId, [talkId, overflowTalkIds]) => {
-        overflowTalkIds.forEach(overflowTalkId => talkIdByOverflowTalkId[overflowTalkId] = talkId);
-        return talkIdByOverflowTalkId;
-    }, {} as Record<string, string>)
-
     const dailyRatingsColl = await db.collection(`/events/${eventId}/organizer-space/${organizerSpaceToken}/daily-ratings`).listDocuments()
 
     const allDailyRatings: PerTalkPublicUserIdFeedbackRating[][] = await Promise.all(dailyRatingsColl.map(async dailyRatingsDoc => {
         const dailyPerTalkIdRatings = (await dailyRatingsDoc.get()).data() as DailyTalkFeedbackRatings;
-
-        Object.entries(talkIdByOverflowTalkId).forEach(([overflowTalkId, aliasedTalkId]) => {
-            if(dailyPerTalkIdRatings[overflowTalkId]) {
-                // Merging overflow talk id ratings into aliased talk id ratings
-                dailyPerTalkIdRatings[aliasedTalkId] = {
-                    ...(dailyPerTalkIdRatings[aliasedTalkId] || {}),
-                    ...dailyPerTalkIdRatings[overflowTalkId]
-                }
-                delete dailyPerTalkIdRatings[overflowTalkId];
-            }
-        })
-
         const talkIds = Object.keys(dailyPerTalkIdRatings)
         return talkIds.map(talkId => {
             return {
@@ -86,9 +62,11 @@ export async function getTalksDetailsWithRatings(eventId: string) {
             getEveryRatingsForEvent(eventId, organizerSpaceRef.id)
         ]);
 
-        return talks.map(talk => ({
+        return talks
+          .filter(talk => !talk.isOverflow)
+          .map(talk => ({
             talk,
             ratings: everyRatings.ratingsForTalk(talk.id)
-        }))
+          }))
     })
 }

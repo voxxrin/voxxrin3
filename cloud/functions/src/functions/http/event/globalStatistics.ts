@@ -3,9 +3,10 @@ import {extractSingleQueryParam, sendResponseMessage} from "../utils";
 import {db} from "../../../firebase";
 import {FeedbackRatings} from "../../../../../../shared/talk-feedbacks.firestore";
 import {TalkStats} from "../../../../../../shared/event-stats";
+import * as functions from "firebase-functions";
+import * as express from "express";
 
-
-export const globalStats = https.onRequest(async (request, response) => {
+export async function globalStats(request: functions.https.Request, response: express.Response) {
     const migrationToken = extractSingleQueryParam(request, 'migrationToken')
     if (!migrationToken) {
         return sendResponseMessage(response, 400, `Missing 'migrationToken' query parameter !`)
@@ -54,4 +55,4 @@ export const globalStats = https.onRequest(async (request, response) => {
         //     0
         // ),
     });
-});
+}

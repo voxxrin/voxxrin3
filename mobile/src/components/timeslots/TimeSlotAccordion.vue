@@ -116,10 +116,17 @@ const hasMissingFeedback = computed(() => {
 
   // * Base Style Accordion *//
   ion-accordion {
+    display: inherit;
     transition: var(--app-voxxrin-animations-timeslots-anim-duration);
     animation: scale-up-center var(--app-voxxrin-animations-timeslots-anim-duration) cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
-
     border-bottom: 1px solid var(--app-background);
+
+    &::part(header) {
+      position: sticky;
+      top: 59px;
+      margin-bottom: 1px;
+      z-index: 2;
+    }
 
     &.accordion-expanded {
       border-bottom: none;
@@ -145,11 +152,12 @@ const hasMissingFeedback = computed(() => {
     ._provided-feedback {
       width: 48px;
       font-size: 30px;
-      color: var(--app-beige-dark);
+      color: var(--app-white);
+      opacity: 0.7;
 
       @media (prefers-color-scheme: dark) {
         color: var(--app-white);
-        opacity: 0.5;
+        opacity: 0.7;
       }
     }
 
@@ -160,7 +168,7 @@ const hasMissingFeedback = computed(() => {
       transform: translate(0, -50%);
       height: 24px;
       border-radius: 8px;
-      width: 138px;
+      width: 118px;
       z-index: -1;
       --progress-background: rgba(var(--ion-color-light-rgb), 0.4);
       border: 1px solid rgba(var(--ion-color-light-rgb), 0.6);

@@ -178,9 +178,8 @@ export const WEB2DAY_CRAWLER: CrawlerKind<typeof WEB2DAY_PARSER> = {
             return { url: spUrl, speaker };
         }))
 
-        const confDescriptor: ConferenceDescriptor = {
+        const confDescriptor: FullEvent['conferenceDescriptor'] = {
             id: eventId,
-            eventFamily: 'web2day',
             title: descriptor.title,
             days: descriptor.days as Day[],
             headingTitle: descriptor.headingTitle,
@@ -289,7 +288,6 @@ export const WEB2DAY_CRAWLER: CrawlerKind<typeof WEB2DAY_PARSER> = {
             id: eventId,
             info: {
                 id: eventId,
-                eventFamily: 'web2day',
                 title: descriptor.title,
                 days: descriptor.days as any,
                 theming: descriptor.theming as any,

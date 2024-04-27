@@ -33,7 +33,7 @@
     },
     "singleProjectMode": true
   },
-  "hosting": {
+  "hosting": [{
     "site": "voxxrin-v3",
     "public": "hosting/public",
     "ignore": [
@@ -41,11 +41,22 @@
       "**/.*",
       "**/node_modules/**"
     ],
+    "rewrites": [{
+      "source": "!(/assets/**|/favicon.*|/sw.js|/manifest.webmanifest)",
+      "destination": "/index.html"
+    }]
+  }, {
+    "site": "voxxrin-v3-api",
     "rewrites": [
-      {
-        "source": "!(/assets/**|/favicon.*|/sw.js|/manifest.webmanifest)",
-        "destination": "/index.html"
-      }
+      { "source": "/api/**", "function": "api" },
+      { "source": "hello", "function": "hello" },
+      { "source": "crawl", "function": "crawl" },
+      { "source": "talkFeedbacksViewers", "function": "talkFeedbacksViewers" },
+      { "source": "attendeesFeedbacks", "function": "attendeesFeedbacks" },
+      { "source": "publicEventStats", "function": "publicEventStats" },
+      { "source": "eventStats", "function": "eventStats" },
+      { "source": "migrateFirestoreSchema", "function": "migrateFirestoreSchema" },
+      { "source": "globalStats", "function": "globalStats" }
     ]
-  }
+  }]
 }

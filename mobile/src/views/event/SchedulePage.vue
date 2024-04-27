@@ -12,18 +12,20 @@
       <ion-header class="toolbarHeader">
         <ion-toolbar>
           <ion-title slot="start">{{ LL.Schedule() }}</ion-title>
-          <div v-if="searchFieldDisplayed" class="search-input">
-            <ion-input :size="10" ref="$searchInput"
-                       :debounce="300"
-                       :placeholder="`${LL.Search()}...`"
-                       @ionInput="(ev) => searchTermsRef = ''+ev.target.value"
-            />
-            <ion-icon class="iconInput" src="/assets/icons/line/search-line.svg"></ion-icon>
-            <ion-button shape="round" size="small" fill="outline" @click="toggleSearchField()"
-                        :aria-label="LL.Search_close()">
-              <ion-icon src="/assets/icons/line/close-line.svg"></ion-icon>
-            </ion-button>
-          </div>
+          <transition name="searchBar">
+            <div v-if="searchFieldDisplayed" class="search-input">
+              <ion-input :size="10" ref="$searchInput"
+                         :debounce="300"
+                         :placeholder="`${LL.Search()}...`"
+                         @ionInput="(ev) => searchTermsRef = ''+ev.target.value"
+              />
+              <ion-icon class="iconInput" src="/assets/icons/line/search-line.svg"></ion-icon>
+              <ion-button shape="round" size="small" fill="outline" @click="toggleSearchField()"
+                          :aria-label="LL.Search_close()">
+                <ion-icon src="/assets/icons/line/close-line.svg"></ion-icon>
+              </ion-button>
+            </div>
+          </transition>
 
           <ion-button class="ion-margin-end" slot="end" shape="round" size="small" fill="outline" @click="openSchedulePreferencesModal()"
                       v-if="false"   :aria-label="LL.Filters()">
@@ -36,7 +38,7 @@
         </ion-toolbar>
       </ion-header>
 
-      <ion-header class="stickyHeader">
+      <ion-header class="stickyHeader daySelectorContainer">
         <day-selector
             :conf-descriptor="confDescriptor"
             @once-initialized-with-day="(day, days) => onceDayInitializedTo(day, days)">
@@ -77,6 +79,7 @@
                             @talk-note-updated="updatedTalkNote => userEventTalkNotesRef.set(talk.id.value, updatedTalkNote) " />
                           <talk-favorite-button v-if="confDescriptor && !talk.isOverflow"
                             :conf-descriptor="confDescriptor" :user-talk-notes="talkNotes" :talk-stats="talkStats"
+                            :local-favorite="localEventTalkNotesRef.get(talk.id.value)"
                             @talk-note-updated="updatedTalkNote => userEventTalkNotesRef.set(talk.id.value, updatedTalkNote) " />
                         </template>
                       </schedule-talk>
@@ -121,7 +124,7 @@ import {
   IonToast
 } from '@ionic/vue';
 import {useRoute} from "vue-router";
-import {computed, onMounted, Ref, toValue, watch} from "vue";
+import {computed, onMounted, Ref, toValue, watch, nextTick} from "vue";
 import {managedRef as ref} from "@/views/vue-utils";
 import {
   LabelledTimeslotWithFeedback,
@@ -160,7 +163,10 @@ import {useCurrentUser} from "vuefire";
 import {TimeslotAnimations} from "@/services/Animations";
 import {useEventTalkStats} from "@/state/useEventTalkStats";
 import TalkWatchLaterButton from "@/components/talk-card/TalkWatchLaterButton.vue";
-import {useUserEventTalkNotes} from "@/state/useUserTalkNotes";
+import {
+  useLocalEventTalkFavsStorage,
+  useUserEventTalkNotes
+} from "@/state/useUserTalkNotes";
 import ProvideFeedbackTalkButton from "@/components/talk-card/ProvideFeedbackTalkButton.vue";
 import PoweredVoxxrin from "@/components/ui/PoweredVoxxrin.vue";
 import {useRoomsStats} from "@/state/useRoomsStats";
@@ -208,6 +214,7 @@ const talkIdsRef = computed(() => {
 
 const {firestoreEventTalkStatsRef: talkStatsRefByTalkId} = useEventTalkStats(eventId, talkIdsRef)
 const {userEventTalkNotesRef} = useUserEventTalkNotes(eventId, talkIdsRef)
+const localEventTalkNotesRef = useLocalEventTalkFavsStorage(eventId)
 const {firestoreRoomsStatsRef: roomsStatsRefByRoomId } = useRoomsStats(eventId)
 
 const displayedTimeslotsRef = ref<LabelledTimeslotWithFeedback[]>([]) as Ref<LabelledTimeslotWithFeedback[]>;
@@ -292,15 +299,16 @@ function toggleExpandedTimeslot(timeslot: VoxxrinScheduleTimeSlot) {
     }
 }
 
-function toggleSearchField() {
-    searchFieldDisplayed.value = !searchFieldDisplayed.value
-    if(searchFieldDisplayed.value) {
-        if(isRefDefined($searchInput)) {
-            setTimeout(() => $searchInput.value.$el.setFocus(), 100);
-        }
-    } else {
-        searchTermsRef.value = '';
+async function toggleSearchField() {
+  searchFieldDisplayed.value = !searchFieldDisplayed.value
+  if(searchFieldDisplayed.value) {
+    await nextTick(); // Wait for Vue to update the DOM
+    if(isRefDefined($searchInput)) {
+      setTimeout(() => $searchInput.value.$el.setFocus(), 100);
     }
+  } else {
+    searchTermsRef.value = '';
+  }
 }
 
 async function openSchedulePreferencesModal() {
@@ -315,6 +323,23 @@ async function openSchedulePreferencesModal() {
 </script>
 
 <style scoped lang="scss">
+
+  .searchBar-enter-active, .searchBar-leave-active {
+    transition: width 120ms cubic-bezier(0.250, 0.460, 0.450, 0.940);
+  }
+
+  .searchBar-enter-from, .searchBar-leave-to {
+    width: 0;
+  }
+
+  .searchBar-enter-to, .searchBar-leave-from {
+    width: 100%;
+  }
+
+
+  .daySelectorContainer {
+    overflow-y: auto;
+  }
 
   $ion-fab-button-height: 56px;
 
