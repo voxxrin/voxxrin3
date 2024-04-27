@@ -13,11 +13,6 @@ app.use((req, res, next) => {
   next();
 })
 
-// Legacy HTTP Endpoints declaration... please use declareRoutes() instead !
-exports.hello = functions.https.onRequest(async (request, response) => {
-  (await import("./functions/http/hello")).sayHello(response, {}, {who: extractSingleQueryParam(request, 'who') || "default"})
-})
-
 // For organizers
 // TODO: remove me once devoxx cfp will no longer use legacy URL
 //  replaced by POST /api/events/:eventId/refreshScheduleRequest (requires event/family organizer token)
