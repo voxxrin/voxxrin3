@@ -1,19 +1,20 @@
 import * as functions from "firebase-functions";
-import {extractSingleQueryParam, logPerf, roundedAverage, sendResponseMessage} from "../utils";
+import {extractSingleQueryParam, logPerf, roundedAverage, sendResponseMessage} from "../../utils";
 import {
     checkEventLastUpdate,
     eventTalkStatsFor
-} from "../../firestore/firestore-utils";
+} from "../../../firestore/firestore-utils";
 import {match, P} from "ts-pattern";
 import {
     getTalksDetailsWithRatings
-} from "../../firestore/services/talk-utils";
-import {getEventDescriptor} from "../../firestore/services/eventDescriptor-utils";
-import {ISOLocalDate} from "../../../../../../shared/type-utils";
-import {getFamilyEventsStatsToken} from "../../firestore/services/publicTokens-utils";
+} from "../../../firestore/services/talk-utils";
+import {getEventDescriptor} from "../../../firestore/services/eventDescriptor-utils";
+import {ISOLocalDate} from "../../../../../../../shared/type-utils";
+import {getFamilyEventsStatsToken} from "../../../firestore/services/publicTokens-utils";
 import {sortBy} from "lodash";
+import * as express from "express";
 
-const publicEventStats = functions.https.onRequest(async (request, response) => {
+export async function legacyPublicEventStats(request: functions.https.Request, response: express.Response) {
 
     const eventId = extractSingleQueryParam(request, 'eventId');
     const publicToken = extractSingleQueryParam(request, 'publicToken');
@@ -149,6 +150,4 @@ const publicEventStats = functions.https.onRequest(async (request, response) => 
     } catch(error) {
         sendResponseMessage(response, 500, ""+error)
     }
-});
-
-export default publicEventStats
+}

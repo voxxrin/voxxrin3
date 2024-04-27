@@ -3,12 +3,10 @@ import {FullEvent} from "../../models/Event";
 import {ISODatetime, ISOLocalDate} from "../../../../../shared/type-utils";
 import {Temporal} from "@js-temporal/polyfill";
 import {
-    Break,
     BreakTimeSlot,
     DetailedTalk,
     ScheduleTimeSlot,
     Speaker,
-    Talk,
     TalkFormat,
     TalksTimeSlot,
 } from "../../../../../shared/daily-schedule.firestore";
@@ -226,9 +224,8 @@ export const LA_PRODUCT_CONF_CRAWLER: CrawlerKind<typeof LA_PRODUCT_CONF_DESCRIP
 
         const timeSlots = Object.values(dedupedTimeslotsPerId);
 
-        const confDescriptor: ConferenceDescriptor = {
+        const confDescriptor: FullEvent['conferenceDescriptor'] = {
             id: eventId,
-            eventFamily: 'la-product-conf',
             title: descriptor.title,
             days: descriptor.days as Day[],
             headingTitle: descriptor.headingTitle,
@@ -253,7 +250,6 @@ export const LA_PRODUCT_CONF_CRAWLER: CrawlerKind<typeof LA_PRODUCT_CONF_DESCRIP
             id: eventId,
             info: {
                 id: eventId,
-                eventFamily: 'la-product-conf',
                 title: descriptor.title,
                 days: descriptor.days as any,
                 theming: descriptor.theming as any,

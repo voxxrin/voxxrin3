@@ -4,8 +4,8 @@ import {ConferenceDescriptor} from "../../../../shared/conference-descriptor.fir
 
 export interface FullEvent {
     id: string,
-    conferenceDescriptor: ConferenceDescriptor,
-    info: ListableEvent,
+    conferenceDescriptor: Omit<ConferenceDescriptor, "eventFamily"|"eventName">,
+    info: Omit<ListableEvent, "eventFamily"|"eventName">,
     daySchedules: DailySchedule[],
     talks: DetailedTalk[],
 }

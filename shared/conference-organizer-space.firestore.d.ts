@@ -1,8 +1,9 @@
-import {FeedbackRatings, TalkAttendeeFeedback} from "./talk-feedbacks.firestore";
+import {FeedbackRatings} from "./talk-feedbacks.firestore";
 
 export type TalkFeedbacksViewerSecretToken = {
     secretToken: string;
     eventId: string;
+    speakersFullNames: string[];
     talkId: string;
 }
 
