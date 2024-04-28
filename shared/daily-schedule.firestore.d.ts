@@ -49,11 +49,14 @@ export type TalkAsset = {
   createdOn: ISODatetime,
   assetUrl: string
 } & (
-  { type: "recording", platform: "youtube"|"unknown"/* |"twitch"|"dailymotion"... */ }
+  { type: "recording", platform: RecordingPlatform }
   | { type: "slides" }
   | { type: "git-repository", platform: "github"|"gitlab"|"unknown" }
   | { type: "misc" }
 )
+
+export type TalkAssetType = TalkAsset['type'];
+export type RecordingPlatform = "youtube"|"unknown"/* |"twitch"|"dailymotion"... */;
 
 export type TimeSlotBase<START extends ISODatetime = ISODatetime, END extends ISODatetime = ISODatetime> = {
     start: START,

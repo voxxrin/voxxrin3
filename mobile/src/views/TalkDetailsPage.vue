@@ -45,6 +45,13 @@
       </div>
 
 
+      <div v-if="maybeTalkRecording" class="talkDetails-recording">
+        <vox-divider>
+          {{ LL.Talk_Recording() }}
+        </vox-divider>
+        <recording-player :url="maybeTalkRecording.assetUrl" :platform="maybeTalkRecording.platform"></recording-player>
+      </div>
+
       <div class="talkDetails-description">
         <vox-divider>
           {{ LL.Talk_summary() }}
@@ -88,7 +95,7 @@ import {
   useUserEventTalkNotes,
   useUserTalkNoteActions,
 } from "@/state/useUserTalkNotes";
-import {TalkId} from "@/models/VoxxrinTalk";
+import {findAssetOfType, TalkId} from "@/models/VoxxrinTalk";
 import {useSharedEventTalk} from "@/state/useEventTalk";
 import {computed, toValue} from "vue";
 import {typesafeI18n} from "@/i18n/i18n-vue";
@@ -103,6 +110,7 @@ import {Logger} from "@/services/Logger";
 import RoomCapacityIndicator from "@/components/rooms/RoomCapacityIndicator.vue";
 import {useRoomStats} from "@/state/useRoomsStats";
 import SpeakerThumbnail from "@/components/speaker/SpeakerThumbnail.vue";
+import RecordingPlayer from "@/components/ui/RecordingPlayer.vue";
 
 const LOGGER = Logger.named("TalkDetailsPage");
 
@@ -139,6 +147,15 @@ const localFavorite = computed(() => {
     _talkId = toValue(talkId);
 
   return localEventTalkNotes.get(_talkId.value);
+})
+
+const maybeTalkRecording = computed(() => {
+  const detailedTalk = toValue(detailedTalkRef);
+  if(!detailedTalk) {
+    return undefined;
+  }
+
+  return findAssetOfType(detailedTalk, 'recording');
 })
 
 const theme = computed(() => {
@@ -307,7 +324,7 @@ const {firestoreRoomStatsRef } = useRoomStats(eventId, toRef(() => detailedTalkR
       }
     }
 
-    &-description {
+    &-description, &-recording {
       padding: var(--app-gutters);
 
       /**
