@@ -216,7 +216,8 @@ export const WEB2DAY_CRAWLER: CrawlerKind<typeof WEB2DAY_PARSER> = {
                 start: rawTalk!.start,
                 end: rawTalk!.end,
                 tags: [],
-                isOverflow: false
+                isOverflow: false,
+                assets: []
             };
             return detailedTalk;
         });

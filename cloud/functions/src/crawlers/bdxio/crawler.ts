@@ -205,7 +205,8 @@ export const BDXIO_CRAWLER: CrawlerKind<typeof BDXIO_PARSER> = {
                     tags: Array.from<string>([])
                         .concat(levelLabel ? [levelLabel]:[])
                         .concat(roomId === 'Amphi A' ? ['Sous-Titrage' /* 'Closed Captions' */]:[]),
-                    isOverflow: false
+                    isOverflow: false,
+                    assets: []
                 };
 
                 return detailedTalk;
@@ -252,7 +253,8 @@ export const BDXIO_CRAWLER: CrawlerKind<typeof BDXIO_PARSER> = {
                     description: additionnalTalk.description,
                     summary: additionnalTalk.summary,
                     tags: [],
-                    isOverflow: false
+                    isOverflow: false,
+                    assets: []
                 };
 
                 return detailedTalk;

@@ -184,7 +184,8 @@ export const LA_PRODUCT_CONF_CRAWLER: CrawlerKind<typeof LA_PRODUCT_CONF_DESCRIP
                   summary: '',
                   description: '',
                   tags: [],
-                  isOverflow: false
+                  isOverflow: false,
+                        assets: []
                     };
 
                 talks.push(detailedTalk);

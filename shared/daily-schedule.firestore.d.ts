@@ -41,8 +41,19 @@ export type DetailedTalk = Talk & {
     end: ISODatetime,
     summary: string,
     description: string,
-    tags: string[]
+    tags: string[],
+    assets: TalkAsset[]
 }
+
+export type TalkAsset = {
+  createdOn: ISODatetime,
+  assetUrl: string
+} & (
+  { type: "recording", platform: "youtube"|"unknown"/* |"twitch"|"dailymotion"... */ }
+  | { type: "slides" }
+  | { type: "git-repository", platform: "github"|"gitlab"|"unknown" }
+  | { type: "misc" }
+)
 
 export type TimeSlotBase<START extends ISODatetime = ISODatetime, END extends ISODatetime = ISODatetime> = {
     start: START,

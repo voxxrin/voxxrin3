@@ -161,7 +161,8 @@ export const CODEURS_EN_SEINE_CRAWLER: CrawlerKind<typeof CODEURS_EN_SEINE_PARSE
                             track: NO_TRACK,
                             language: FR_LANG.id,
                             room, format,
-                            isOverflow: false
+                            isOverflow: false,
+                            assets: []
                         }
 
                         return { type: 'talks', start, end, talkDetails } as const;

@@ -168,7 +168,8 @@ export const JUG_SUMMERCAMP_CRAWLER: CrawlerKind<typeof JUG_SUMMERCAMP_PARSER> =
                 start: rawTalk!.start,
                 end: rawTalk!.end,
                 tags: rawTalk!.tags,
-                isOverflow: false
+                isOverflow: false,
+                assets: []
             };
             return detailedTalk;
         });

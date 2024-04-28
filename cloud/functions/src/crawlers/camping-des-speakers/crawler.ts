@@ -178,7 +178,8 @@ export const CAMPING_DES_SPEAKERS_CRAWLER: CrawlerKind<typeof CAMPING_DES_SPEAKE
                 start: rawTalk!.start,
                 end: rawTalk!.end,
                 tags: [],
-                isOverflow: false
+                isOverflow: false,
+                assets: []
             };
             return detailedTalk;
         });

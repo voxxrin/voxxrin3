@@ -74,7 +74,8 @@ export function createVoxxrinDetailedTalkFromFirestore(event: VoxxrinConferenceD
             id: new SpeakerId(sp.id)
         })),
         description: firestoreTalk.description,
-        tags: firestoreTalk.tags || []
+        tags: firestoreTalk.tags || [],
+        assets: firestoreTalk.assets
     };
     return detailedTalk;
 }

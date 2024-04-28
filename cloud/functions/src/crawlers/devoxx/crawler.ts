@@ -226,7 +226,8 @@ function toScheduleTalk(item: DevoxxScheduleItem, start: ISODatetime, end: ISODa
     end: end as ISODatetime,
     summary: item.proposal.summary || "",
     description: item.proposal.description || "",
-    tags: [`Audience:${upperFirstAudience}`].concat(item.proposal.tags.map(t => t.name))
+    tags: [`Audience:${upperFirstAudience}`].concat(item.proposal.tags.map(t => t.name)),
+    assets: []
   };
 
   return { type: 'proposal', talk, detailedTalk, totalFavourites: item.totalFavourites };
