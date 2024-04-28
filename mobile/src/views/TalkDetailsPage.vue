@@ -1,6 +1,6 @@
 <template>
   <ion-page>
-    <ion-content v-themed-event-styles="confDescriptor" :fullscreen="true" v-if="confDescriptor && detailedTalk">
+    <ion-content v-themed-event-styles="confDescriptor" :fullscreen="true" v-if="confDescriptor && detailedTalkRef">
       <ion-header class="stickyHeader" v-if="talkNotes" :class="{ 'is-favorited': talkNotes.isFavorite, 'to-watch-later': talkNotes.watchLater }">
         <ion-toolbar>
           <ion-button class="stickyHeader-close" shape="round" slot="start" size="small" fill="outline" @click="closeAndNavigateBack()"
@@ -31,13 +31,13 @@
         </ion-toolbar>
       </ion-header>
 
-      <talk-details-header :conf-descriptor="confDescriptor" :talk="detailedTalk">
-        <room-capacity-indicator :event-id="eventId" :talk="detailedTalk" :room-stats="firestoreRoomStatsRef" :bottom-rounded="true" :show-unknown-capacity="false" />
+      <talk-details-header :conf-descriptor="confDescriptor" :talk="detailedTalkRef">
+        <room-capacity-indicator :event-id="eventId" :talk="detailedTalkRef" :room-stats="firestoreRoomStatsRef" :bottom-rounded="true" :show-unknown-capacity="false" />
       </talk-details-header>
 
-      <div class="talkDetails-tags" v-if="detailedTalk?.tags.length">
+      <div class="talkDetails-tags" v-if="detailedTalkRef?.tags.length">
         <div class="talkDetails-tags-list">
-          <ion-badge v-if="true" class="tagBadge" v-for="(tag) in detailedTalk?.tags" :key="tag">
+          <ion-badge v-if="true" class="tagBadge" v-for="(tag) in detailedTalkRef?.tags" :key="tag">
             <ion-icon aria-hidden="true" src="assets/icons/solid/tag.svg"></ion-icon>
             {{tag}}
           </ion-badge>
@@ -49,7 +49,7 @@
         <vox-divider>
           {{ LL.Talk_summary() }}
         </vox-divider>
-        <ion-text v-html="detailedTalk?.description">
+        <ion-text v-html="detailedTalkRef?.description">
         </ion-text>
       </div>
 
@@ -58,7 +58,7 @@
           {{ LL.Speakers() }}
         </vox-divider>
         <ion-list class="talkDetails-speakers-list">
-          <ion-item v-for="(speaker, index) in detailedTalk?.speakers" :key="speaker.id.value">
+          <ion-item v-for="(speaker, index) in detailedTalkRef?.speakers" :key="speaker.id.value">
             <speaker-thumbnail size="64px" :is-highlighted="false" :speaker="speaker" />
             <div class="speakerInfo">
               <div class="speakerInfo-name">
@@ -126,7 +126,7 @@ const eventTalkStats = computed(() => {
     const firestoreEventTalkStats = toValue(firestoreEventTalkStatsRef);
     return Array.from(firestoreEventTalkStats.values())[0];
 })
-const { talkDetails: detailedTalk } = useSharedEventTalk(confDescriptor, talkId);
+const { talkDetails: detailedTalkRef } = useSharedEventTalk(confDescriptor, talkId);
 const { LL } = typesafeI18n()
 
 const {toggleFavorite, toggleWatchLater} = useUserTalkNoteActions(
@@ -142,10 +142,10 @@ const localFavorite = computed(() => {
 })
 
 const theme = computed(() => {
-    if(isRefDefined(detailedTalk)) {
+    if(isRefDefined(detailedTalkRef)) {
         return {
             track: {
-                color: detailedTalk.value.track.themeColor
+                color: detailedTalkRef.value.track.themeColor
             }
         }
     } else {
@@ -153,7 +153,7 @@ const theme = computed(() => {
     }
 });
 
-const {firestoreRoomStatsRef } = useRoomStats(eventId, toRef(() => detailedTalk.value?.room.id))
+const {firestoreRoomStatsRef } = useRoomStats(eventId, toRef(() => detailedTalkRef.value?.room.id))
 
 </script>
 
