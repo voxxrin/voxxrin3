@@ -62,6 +62,18 @@ export function declareEventHttpRoutes(app: Express) {
     ensureHasCrawlerFamilyOrEventOrganizerToken(),
     async (res, path, query, body) =>
       (await import("../event/crawlEvent")).requestEventScheduleRefresh(res, path, query));
+  Routes.post(app, '/events/:eventId/refreshRecordingAssetsRequest',
+    z.object({
+      query: z.object({
+        token: z.string().min(10),
+      }),
+      path: z.object({
+        eventId: z.string().min(3),
+      })
+    }),
+    ensureHasFamilyOrEventOrganizerToken(),
+    async (res, path, query, body) =>
+      (await import("../event/refreshRecordingAssets")).requestRecordingAssetsRefresh(res, path, query));
   Routes.get(app, '/events/:eventId/talksEditors',
     z.object({
       query: z.object({

@@ -46,6 +46,14 @@ export type ConferenceDescriptor = ListableEvent & {
             minimumNumberOfRatingsToBeConsidered: number,
             minimumAverageScoreToBeConsidered?: number|undefined,
             numberOfDailyTopTalksConsidered: number
+        }|undefined,
+        recording?: {
+          platform: 'youtube',
+          youtubeHandle: string,
+          recordedFormatIds?: string[]|undefined,
+          notRecordedFormatIds?: string[]|undefined,
+          recordedRoomIds?: string[]|undefined,
+          notRecordedRoomIds?: string[]|undefined,
         }|undefined
     },
     talkFormats: Array<ThemedTalkFormat>,

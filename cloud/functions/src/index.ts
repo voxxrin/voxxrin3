@@ -1,8 +1,6 @@
 import * as express from 'express';
 import * as functions from 'firebase-functions';
 import {declareExpressHttpRoutes} from "./functions/http/api/routes";
-import {extractSingleQueryParam} from "./functions/http/utils";
-import {info} from "./firebase";
 
 const app = express()
 app.use(express.json());

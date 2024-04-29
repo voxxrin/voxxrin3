@@ -150,7 +150,15 @@ export const EVENT_DESCRIPTOR_PARSER = LISTABLE_EVENT_PARSER.extend({
             minimumNumberOfRatingsToBeConsidered: z.number(),
             minimumAverageScoreToBeConsidered: z.number().optional(),
             numberOfDailyTopTalksConsidered: z.number()
-        }).optional()
+        }).optional(),
+        recording: z.object({
+          platform: z.literal('youtube'),
+          youtubeHandle: z.string(),
+          recordedFormatIds: z.array(z.string()).optional(),
+          notRecordedFormatIds: z.array(z.string()).optional(),
+          recordedRoomIds: z.array(z.string()).optional(),
+          notRecordedRoomIds: z.array(z.string()).optional(),
+        }).optional(),
     }),
     talkFormats: z.array(THEMABLE_TALK_FORMAT_PARSER),
     talkTracks: z.array(THEMABLE_TALK_TRACK_PARSER),
