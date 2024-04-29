@@ -6,6 +6,10 @@ import {
 } from "../../../../../../shared/conference-organizer-space.firestore";
 import {logPerf} from "../../http/utils";
 import {getTimeslottedTalks} from "./schedule-utils";
+import {firestore} from "firebase-admin";
+import QuerySnapshot = firestore.QuerySnapshot;
+import {Talk} from "../../../../../../shared/daily-schedule.firestore";
+import stringSimilarity from "string-similarity-js";
 
 
 type PerTalkPublicUserIdFeedbackRating = {
@@ -69,4 +73,81 @@ export async function getTalksDetailsWithRatings(eventId: string) {
             ratings: everyRatings.ratingsForTalk(talk.id)
           }))
     })
+}
+
+export async function getEventTalks(eventId: string) {
+  return logPerf(`getEventTalks(${eventId})`, async () => {
+    const talkSnapshots = await db.collection(`events/${eventId}/talks`).get() as QuerySnapshot<Talk>
+
+    return talkSnapshots.docs.map(snap => snap.data());
+  })
+}
+
+
+export type YoutubeVideo = {
+  id: string,
+  publishedAt: string|null|undefined,
+  title: string,
+  duration: string
+}
+
+export type SimpleTalk = {
+  id: string,
+  title: string,
+  speakers: Array<{ fullName: string }>,
+  formatDuration: string
+}
+export function findYoutubeMatchingTalks(eventTalks: SimpleTalk[], youtubeVideos: YoutubeVideo[]) {
+  const matchedTalks: Array<{ score: number, talk: SimpleTalk, video: YoutubeVideo, titles: string[]}> = []
+  const unmatchedTalks: SimpleTalk[] = [];
+
+  for(const talk of eventTalks) {
+    const talkLowTitle = `${talk.title.toLowerCase()} - ${talk.speakers.map(sp => sp.fullName.toLowerCase()).join(", ")}`
+    const matches = youtubeVideos.map(vid => {
+      const lowTitle = vid.title.toLowerCase();
+      const titleSimilarityScore = stringSimilarity(talkLowTitle, lowTitle);
+      const totalScore = Math.round(titleSimilarityScore*1000)/1000;
+
+      return { totalScore, titles: [talkLowTitle, lowTitle], speakers: talk.speakers.map(sp => sp.fullName), video: vid  }
+    })
+
+    matches.sort((m1, m2) => m2.totalScore - m1.totalScore);
+    const bestMatch = matches[0]
+
+    if(bestMatch.totalScore > 0.7) {
+      matchedTalks.push({ score: bestMatch.totalScore, titles: bestMatch.titles, talk, video: bestMatch.video })
+    } else if(bestMatch.totalScore > 0.4) {
+      const candidatesWithAtLeastOneSpeakerFound = matches.filter(m => includesAtLeastOneSpeaker(m.titles[1], m.speakers))
+      if(candidatesWithAtLeastOneSpeakerFound.length) {
+        matchedTalks.push({ score: candidatesWithAtLeastOneSpeakerFound[0].totalScore, titles: candidatesWithAtLeastOneSpeakerFound[0].titles, talk, video: candidatesWithAtLeastOneSpeakerFound[0].video })
+      } else {
+        unmatchedTalks.push(talk);
+      }
+    } else {
+      unmatchedTalks.push(talk);
+    }
+  }
+
+  matchedTalks.sort((m1, m2) => m1.score - m2.score)
+
+  return { matchedTalks, unmatchedTalks, youtubeVideos };
+}
+
+function includesAtLeastOneSpeaker(title: string, speakerFullNames: string[]) {
+  const ADDITIONAL_TOKEN = 1;
+  for(const speakerFullName of speakerFullNames) {
+    const speakerTokens = speakerFullName.toLowerCase().split(" ").filter(value => !!value)
+    const titleTokens = title.split(" ");
+
+    let titleTokensIndex = 0;
+    do {
+      const testingTitleTokens = titleTokens.slice(titleTokensIndex, titleTokensIndex+speakerTokens.length+ADDITIONAL_TOKEN)
+      const speakerSimilarityScore = stringSimilarity(testingTitleTokens.join(" "), speakerTokens.join(" "));
+      if(speakerSimilarityScore > 0.6) {
+        return true;
+      }
+      titleTokensIndex++;
+    } while(titleTokensIndex + speakerTokens.length + ADDITIONAL_TOKEN - 1 < titleTokens.length);
+  }
+  return false;
 }

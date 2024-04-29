@@ -25,6 +25,7 @@
     "firebase-admin": "^11.5.0",
     "firebase-functions": "4.8.2",
     "lodash": "^4.17.21",
+    "string-similarity-js": "2.1.4",
     "ts-pattern": "5.1.1",
     "uuid": "9.0.0",
     "yaml": "2.3.2",
