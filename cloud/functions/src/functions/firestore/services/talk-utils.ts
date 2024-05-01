@@ -116,7 +116,12 @@ export function findYoutubeMatchingTalks(eventTalks: SimpleTalk[], youtubeVideos
     if(bestMatch.totalScore > 0.7) {
       matchedTalks.push({ score: bestMatch.totalScore, titles: bestMatch.titles, talk, video: bestMatch.video })
     } else if(bestMatch.totalScore > 0.4) {
-      const candidatesWithAtLeastOneSpeakerFound = matches.filter(m => includesAtLeastOneSpeaker(m.titles[1], m.speakers))
+      const candidatesWithAtLeastOneSpeakerFound = matches.filter(m =>
+        m.totalScore > 0.4
+        // not matching 1 speaker out of 2 is ok
+        // but wondering if matching "only" 3 speakers out of 6 is ok...
+        && includedSpeakersRatio(m.titles[1], m.speakers) >= 0.5
+      )
       if(candidatesWithAtLeastOneSpeakerFound.length) {
         matchedTalks.push({ score: candidatesWithAtLeastOneSpeakerFound[0].totalScore, titles: candidatesWithAtLeastOneSpeakerFound[0].titles, talk, video: candidatesWithAtLeastOneSpeakerFound[0].video })
       } else {
@@ -132,8 +137,9 @@ export function findYoutubeMatchingTalks(eventTalks: SimpleTalk[], youtubeVideos
   return { matchedTalks, unmatchedTalks, youtubeVideos, talks: eventTalks };
 }
 
-function includesAtLeastOneSpeaker(title: string, speakerFullNames: string[]) {
+function includedSpeakersRatio(title: string, speakerFullNames: string[]) {
   const ADDITIONAL_TOKEN = 1;
+  const matchedSpeakerFullNames: string[] = [];
   for(const speakerFullName of speakerFullNames) {
     const speakerTokens = speakerFullName.toLowerCase().split(" ").filter(value => !!value)
     const titleTokens = title.split(" ");
@@ -143,10 +149,12 @@ function includesAtLeastOneSpeaker(title: string, speakerFullNames: string[]) {
       const testingTitleTokens = titleTokens.slice(titleTokensIndex, titleTokensIndex+speakerTokens.length+ADDITIONAL_TOKEN)
       const speakerSimilarityScore = stringSimilarity(testingTitleTokens.join(" "), speakerTokens.join(" "));
       if(speakerSimilarityScore > 0.6) {
-        return true;
+        matchedSpeakerFullNames.push(speakerFullName);
+        break;
       }
       titleTokensIndex++;
     } while(titleTokensIndex + speakerTokens.length + ADDITIONAL_TOKEN - 1 < titleTokens.length);
   }
-  return false;
+
+  return matchedSpeakerFullNames.length / speakerFullNames.length;
 }
