@@ -84,30 +84,6 @@ export const DVBE23_TALKS_AND_YOUTUBE = {
       "videoId": "ex0t2uaL27I"
     },
     {
-      "__score": 0.692,
-      "__talkTitle": "Java 21 [OVERFLOW]",
-      "__videoTitle": "Java 21 By Brian Goetz",
-      "__speakers": "Brian Goetz",
-      "talkId": "72005",
-      "videoId": "eXCx2hW_xNI"
-    },
-    {
-      "__score": 0.692,
-      "__talkTitle": "Java 21 [OVERFLOW]",
-      "__videoTitle": "Java 21 By Brian Goetz",
-      "__speakers": "Brian Goetz",
-      "talkId": "72006",
-      "videoId": "eXCx2hW_xNI"
-    },
-    {
-      "__score": 0.692,
-      "__talkTitle": "Java 21 [OVERFLOW]",
-      "__videoTitle": "Java 21 By Brian Goetz",
-      "__speakers": "Brian Goetz",
-      "talkId": "72007",
-      "videoId": "eXCx2hW_xNI"
-    },
-    {
       "__score": 0.707,
       "__talkTitle": "How we built AI features to improve the UI of custom business apps",
       "__videoTitle": "Using AI to improve the UI of  Business Applications By  Peter Czuczor",
@@ -148,60 +124,12 @@ export const DVBE23_TALKS_AND_YOUTUBE = {
       "videoId": "YfFYTR8_lBY"
     },
     {
-      "__score": 0.826,
-      "__talkTitle": "Embracing Imposter Syndrome [OVERFLOW]",
-      "__videoTitle": "Embracing Imposter Syndrome By Dom Hodgson",
-      "__speakers": "Dom Hodgson",
-      "talkId": "72008",
-      "videoId": "qgU-BKjE_u4"
-    },
-    {
-      "__score": 0.826,
-      "__talkTitle": "Embracing Imposter Syndrome [OVERFLOW]",
-      "__videoTitle": "Embracing Imposter Syndrome By Dom Hodgson",
-      "__speakers": "Dom Hodgson",
-      "talkId": "72009",
-      "videoId": "qgU-BKjE_u4"
-    },
-    {
-      "__score": 0.826,
-      "__talkTitle": "Embracing Imposter Syndrome [OVERFLOW]",
-      "__videoTitle": "Embracing Imposter Syndrome By Dom Hodgson",
-      "__speakers": "Dom Hodgson",
-      "talkId": "72010",
-      "videoId": "qgU-BKjE_u4"
-    },
-    {
       "__score": 0.834,
       "__talkTitle": "Fake it until you `make it`. API integration testing with WireMock and Testcontainers",
       "__videoTitle": "Fake it until you `make it`  API integration testing with WireMock and Testcontainers By Oleg (2x)",
       "__speakers": "Oleg Nenashev, Oleg Šelajev",
       "talkId": "47045",
       "videoId": "eFILbyaMI2A"
-    },
-    {
-      "__score": 0.849,
-      "__talkTitle": "20th edition of Devoxx Belgium [OVERFLOW]",
-      "__videoTitle": "20th edition of Devoxx Belgium By Stephan Janssen",
-      "__speakers": "Stephan Janssen",
-      "talkId": "72002",
-      "videoId": "ZLjornmjV04"
-    },
-    {
-      "__score": 0.849,
-      "__talkTitle": "20th edition of Devoxx Belgium [OVERFLOW]",
-      "__videoTitle": "20th edition of Devoxx Belgium By Stephan Janssen",
-      "__speakers": "Stephan Janssen",
-      "talkId": "72003",
-      "videoId": "ZLjornmjV04"
-    },
-    {
-      "__score": 0.849,
-      "__talkTitle": "20th edition of Devoxx Belgium [OVERFLOW]",
-      "__videoTitle": "20th edition of Devoxx Belgium By Stephan Janssen",
-      "__speakers": "Stephan Janssen",
-      "talkId": "72004",
-      "videoId": "ZLjornmjV04"
     },
     {
       "__score": 0.859,
@@ -7317,168 +7245,6 @@ export const DVBE23_TALKS_AND_YOUTUBE = {
       "room": {
         "id": "1160",
         "title": "Room 4"
-      }
-    },
-    {
-      "id": "72002",
-      "title": "20th edition of Devoxx Belgium [OVERFLOW]",
-      "speakers": [
-        {
-          "fullName": "Stephan Janssen"
-        }
-      ],
-      "format": {
-        "duration": "PT45m",
-        "id": "68051",
-        "title": "Keynote"
-      },
-      "room": {
-        "id": "1160",
-        "title": "Room 4"
-      }
-    },
-    {
-      "id": "72003",
-      "title": "20th edition of Devoxx Belgium [OVERFLOW]",
-      "speakers": [
-        {
-          "fullName": "Stephan Janssen"
-        }
-      ],
-      "format": {
-        "duration": "PT45m",
-        "id": "68051",
-        "title": "Keynote"
-      },
-      "room": {
-        "id": "1159",
-        "title": "Room 5"
-      }
-    },
-    {
-      "id": "72004",
-      "title": "20th edition of Devoxx Belgium [OVERFLOW]",
-      "speakers": [
-        {
-          "fullName": "Stephan Janssen"
-        }
-      ],
-      "format": {
-        "duration": "PT45m",
-        "id": "68051",
-        "title": "Keynote"
-      },
-      "room": {
-        "id": "1155",
-        "title": "Room 9"
-      }
-    },
-    {
-      "id": "72005",
-      "title": "Java 21 [OVERFLOW]",
-      "speakers": [
-        {
-          "fullName": "Brian Goetz"
-        }
-      ],
-      "format": {
-        "duration": "PT45m",
-        "id": "68051",
-        "title": "Keynote"
-      },
-      "room": {
-        "id": "1155",
-        "title": "Room 9"
-      }
-    },
-    {
-      "id": "72006",
-      "title": "Java 21 [OVERFLOW]",
-      "speakers": [
-        {
-          "fullName": "Brian Goetz"
-        }
-      ],
-      "format": {
-        "duration": "PT45m",
-        "id": "68051",
-        "title": "Keynote"
-      },
-      "room": {
-        "id": "1159",
-        "title": "Room 5"
-      }
-    },
-    {
-      "id": "72007",
-      "title": "Java 21 [OVERFLOW]",
-      "speakers": [
-        {
-          "fullName": "Brian Goetz"
-        }
-      ],
-      "format": {
-        "duration": "PT45m",
-        "id": "68051",
-        "title": "Keynote"
-      },
-      "room": {
-        "id": "1160",
-        "title": "Room 4"
-      }
-    },
-    {
-      "id": "72008",
-      "title": "Embracing Imposter Syndrome [OVERFLOW]",
-      "speakers": [
-        {
-          "fullName": "Dom Hodgson"
-        }
-      ],
-      "format": {
-        "duration": "PT20m",
-        "id": "955",
-        "title": "Keynote"
-      },
-      "room": {
-        "id": "1159",
-        "title": "Room 5"
-      }
-    },
-    {
-      "id": "72009",
-      "title": "Embracing Imposter Syndrome [OVERFLOW]",
-      "speakers": [
-        {
-          "fullName": "Dom Hodgson"
-        }
-      ],
-      "format": {
-        "duration": "PT20m",
-        "id": "955",
-        "title": "Keynote"
-      },
-      "room": {
-        "id": "1160",
-        "title": "Room 4"
-      }
-    },
-    {
-      "id": "72010",
-      "title": "Embracing Imposter Syndrome [OVERFLOW]",
-      "speakers": [
-        {
-          "fullName": "Dom Hodgson"
-        }
-      ],
-      "format": {
-        "duration": "PT20m",
-        "id": "955",
-        "title": "Keynote"
-      },
-      "room": {
-        "id": "1155",
-        "title": "Room 9"
       }
     },
     {

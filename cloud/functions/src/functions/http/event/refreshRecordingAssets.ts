@@ -38,6 +38,7 @@ export async function requestRecordingAssetsRefresh(response: Response, pathPara
       && (!recordingConfig.recordedFormatIds || recordingConfig.recordedFormatIds.includes(talk.format.id))
       && (!recordingConfig.recordedRoomIds || recordingConfig.recordedRoomIds.includes(talk.room.id))
       && !talk.isOverflow
+      && !talk.title.includes("[OVERFLOW]") // ancestors of isOverflow flag
     );
 
   try {
