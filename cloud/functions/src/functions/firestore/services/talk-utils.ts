@@ -95,7 +95,6 @@ export type SimpleTalk = {
   id: string,
   title: string,
   speakers: Array<{ fullName: string }>,
-  formatDuration: string
 }
 export function findYoutubeMatchingTalks(eventTalks: SimpleTalk[], youtubeVideos: YoutubeVideo[]) {
   const matchedTalks: Array<{ score: number, talk: SimpleTalk, video: YoutubeVideo, titles: string[]}> = []

@@ -8,7 +8,7 @@ import {getEventDescriptor} from "../../firestore/services/eventDescriptor-utils
 import {db} from "../../../firebase";
 import {firestore} from "firebase-admin";
 import DocumentReference = firestore.DocumentReference;
-import {DetailedTalk, TalkAsset} from "../../../../../../shared/daily-schedule.firestore";
+import {DetailedTalk, Talk, TalkAsset} from "../../../../../../shared/daily-schedule.firestore";
 
 
 
@@ -47,11 +47,10 @@ export async function requestRecordingAssetsRefresh(response: Response, pathPara
       id: talk.id,
       title: talk.title,
       speakers: talk.speakers.map(sp => ({ fullName: sp.fullName })),
-      formatDuration: talk.format.duration
     }));
-    const matchingYoutubeTalks = findYoutubeMatchingTalks(simpleTalks, allMatchingVideos);
+    const matchingResults = findYoutubeMatchingTalks(simpleTalks, allMatchingVideos);
 
-    await Promise.all(matchingYoutubeTalks.matchedTalks.map(async matchedTalk => {
+    await Promise.all(matchingResults.matchedTalks.map(async matchedTalk => {
       const talkSnapshot = await (db.doc(`events/${pathParams.eventId}/talks/${matchedTalk.talk.id}`) as DocumentReference<DetailedTalk>).get()
       const maybeTalk = talkSnapshot.data();
 
@@ -77,7 +76,7 @@ export async function requestRecordingAssetsRefresh(response: Response, pathPara
       }
     }))
 
-    return sendResponseMessage(response, 200, matchingYoutubeTalks)
+    return sendResponseMessage(response, 200, matchingResults)
   }catch(e) {
     return sendResponseMessage(response, 500, e?.toString() || "");
   }

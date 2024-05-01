@@ -1,12 +1,13 @@
 import {describe, expect, it} from "vitest";
 import {findYoutubeMatchingTalks, SimpleTalk, YoutubeVideo} from "./talk-utils";
 import {DVBE23_TALKS_AND_YOUTUBE} from "../../../../test-data/dvbe23-talks-and-youtube";
+import {TalkMatchingYoutubeTestData} from "../../../../test-data/test-data";
 
 
 describe('findYoutubeMatchingTalks', () => {
   [
     { name: 'dvbe23', testingData: DVBE23_TALKS_AND_YOUTUBE }
-  ].forEach(testDescriptor => {
+  ].forEach((testDescriptor: { name: string, testingData: TalkMatchingYoutubeTestData}) => {
     it(`${testDescriptor.name} talks`, () => {
       const result = findYoutubeMatchingTalks(testDescriptor.testingData.talks, testDescriptor.testingData.youtubeVideos)
 
