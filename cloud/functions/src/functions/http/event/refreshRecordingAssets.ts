@@ -76,6 +76,9 @@ export async function requestRecordingAssetsRefresh(response: Response, pathPara
       }
     }))
 
+    // Uncomment this in DEV if you want to generate unit tests based on fetched talks & youtube videos
+    // generateTestFile(`./test-data/${pathParams.eventId.toLowerCase()}-talks-and-youtube.ts`, `${pathParams.eventId.toUpperCase()}_TALKS_AND_YOUTUBE`, matchingResults, filteredEventTalks);
+
     return sendResponseMessage(response, 200, matchingResults)
   }catch(e) {
     return sendResponseMessage(response, 500, e?.toString() || "");
@@ -162,3 +165,35 @@ async function requestPaginatedYoutubeVideos(yt: youtube_v3.Youtube, playlistId:
   return videosPage.data.nextPageToken;
 }
 
+async function generateTestFile(testFilePath: string, exportedVarName: string, results: ReturnType<typeof findYoutubeMatchingTalks>, talks: Talk[]) {
+  const talkById = talks.reduce((talkById, talk) => {
+    talkById.set(talk.id, talk);
+    return talkById;
+  }, new Map<string, Talk>())
+  const content = `
+import {TalkMatchingYoutubeTestData} from "./test-data";
+
+export const ${exportedVarName} = ${JSON.stringify({
+    expectedMappedTalks: results.matchedTalks.map(mt => ({
+      '__score': mt.score, '__talkTitle': mt.talk.title, '__videoTitle': mt.video.title,
+      '__speakers': mt.talk.speakers.map(sp => sp.fullName).join(", "),
+      talkId: mt.talk.id, videoId: mt.video.id
+    })),
+    expectedUnmappedTalks: results.unmatchedTalks.map(ut => ({
+      '__talkTitle': ut.title, 
+      '__talkFormat': `${talkById.get(ut.id)!.format.title} (id=${talkById.get(ut.id)!.format.id}, duration=${talkById.get(ut.id)!.format.duration})`, 
+      '__talkRoom': `${talkById.get(ut.id)!.room.title} (${talkById.get(ut.id)!.room.id})`,
+      '__talkSpeakers': ut.speakers.map(sp => sp.fullName).join(", "),
+      talkId: ut.id
+    })),
+    youtubeVideos: results.youtubeVideos.map(vid => ({ 
+      id: vid.id, publishedAt: vid.publishedAt, duration: vid.duration, title: vid.title
+    } satisfies YoutubeVideo)),
+    talks: results.talks.map(t => ({
+      id: t.id, title: t.title, speakers: t.speakers, format: talkById.get(t.id)!.format, room: talkById.get(t.id)!.room
+    })),
+  }, null, '  ')} as const satisfies TalkMatchingYoutubeTestData;
+  `
+
+  fs.writeFileSync(testFilePath, content);
+}

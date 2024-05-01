@@ -129,7 +129,7 @@ export function findYoutubeMatchingTalks(eventTalks: SimpleTalk[], youtubeVideos
 
   matchedTalks.sort((m1, m2) => m1.score - m2.score)
 
-  return { matchedTalks, unmatchedTalks, youtubeVideos };
+  return { matchedTalks, unmatchedTalks, youtubeVideos, talks: eventTalks };
 }
 
 function includesAtLeastOneSpeaker(title: string, speakerFullNames: string[]) {
