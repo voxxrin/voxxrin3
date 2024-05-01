@@ -49,7 +49,7 @@ export async function requestRecordingAssetsRefresh(response: Response, pathPara
       title: talk.title,
       speakers: talk.speakers.map(sp => ({ fullName: sp.fullName })),
     }));
-    const matchingResults = findYoutubeMatchingTalks(simpleTalks, allMatchingVideos);
+    const matchingResults = findYoutubeMatchingTalks(simpleTalks, allMatchingVideos, recordingConfig);
 
     await Promise.all(matchingResults.matchedTalks.map(async matchedTalk => {
       const talkSnapshot = await (db.doc(`events/${pathParams.eventId}/talks/${matchedTalk.talk.id}`) as DocumentReference<DetailedTalk>).get()

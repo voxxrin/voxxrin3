@@ -10,6 +10,7 @@ import {firestore} from "firebase-admin";
 import QuerySnapshot = firestore.QuerySnapshot;
 import {Talk} from "../../../../../../shared/daily-schedule.firestore";
 import stringSimilarity from "string-similarity-js";
+import {EventRecordingConfig} from "../../../../../../shared/conference-descriptor.firestore";
 
 
 type PerTalkPublicUserIdFeedbackRating = {
@@ -101,15 +102,15 @@ const SIMILARITY_MIN_SCORE_FOR_TITLE_WITH_SPEAKERS_MATCH = 0.7,
   SIMILARITY_MIN_SCORE_FOR_SPEAKERS_ONLY_TITLE_MATCH = 0.4,
   MIN_SPEAKERS_COUNT_MATCHING_RATIO_TO_CONSIDER_A_MATCH = 0.5,
   SIMILARITY_MIN_SCORE_FOR_SPEAKER_NAMES_MATCH = 0.6;
-export function findYoutubeMatchingTalks(eventTalks: SimpleTalk[], youtubeVideos: YoutubeVideo[]) {
+export function findYoutubeMatchingTalks(eventTalks: SimpleTalk[], youtubeVideos: YoutubeVideo[], recordingConfig: EventRecordingConfig) {
 
   const talkMatchingResults = eventTalks.map(talk => {
-    const talkAndSpeakerLowTitle = `${talk.title.toLowerCase()} - ${talk.speakers.map(sp => sp.fullName.toLowerCase()).join(", ")}`
-    const talkOnlypeakerLowTitle = talk.title.toLowerCase()
+    const talkOnlypeakerLowTitle = removeWordsFrom(talk.title.toLowerCase(), recordingConfig.excludeTitleWordsFromMatching)
+    const talkAndSpeakerLowTitle = `${talkOnlypeakerLowTitle} - ${talk.speakers.map(sp => sp.fullName.toLowerCase()).join(", ")}`
     const speakerNames = talk.speakers.map(sp => sp.fullName);
 
     const videoMatches = youtubeVideos.map(vid => {
-      const videoLowTitle = vid.title.toLowerCase();
+      const videoLowTitle = removeWordsFrom(vid.title.toLowerCase(), recordingConfig.excludeTitleWordsFromMatching);
       const titleWithSpeakersSimilarityScore = Math.round(stringSimilarity(talkAndSpeakerLowTitle, videoLowTitle) * 1000) / 1000;
       const titleOnlySimilarityScore = Math.round(stringSimilarity(talkOnlypeakerLowTitle, videoLowTitle) * 1000) / 1000;
 
@@ -217,6 +218,12 @@ export function findYoutubeMatchingTalks(eventTalks: SimpleTalk[], youtubeVideos
   matchedTalks.sort((m1, m2) => m1.score - m2.score)
 
   return { matchedTalks, unmatchedTalks, unmatchedYoutubeVideos, youtubeVideos, talks: eventTalks };
+}
+
+function removeWordsFrom(str: string, words: string[]|undefined) {
+  return (words||[]).reduce((updatedStr: string, word: string) => {
+    return updatedStr.replace(new RegExp(word.toLowerCase().replace("[", "\\["), "gi"), "")
+  }, str.toLowerCase())
 }
 
 function includedSpeakersRatio(title: string, speakerFullNames: string[]) {

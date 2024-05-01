@@ -4,7 +4,15 @@ import {TalkMatchingYoutubeTestData} from "./test-data";
 export const VDLOA24_TALKS_AND_YOUTUBE = {
   "expectedMappedTalks": [
     {
-      "__score": 0.802,
+      "__score": 0.909,
+      "__talkTitle": "Generative AI in the real world",
+      "__speakers": "Boyan Mihaylov",
+      "__videoTitle": "Voxxed Days Ioannina 2024 - Generative AI in the real world",
+      "talkId": "2403",
+      "videoId": "QzTg_euGY0o"
+    },
+    {
+      "__score": 0.92,
       "__talkTitle": "Tech Symphony: Orchestrating Best Practices Across Diverse Technology Stacks",
       "__speakers": "Christodoulos Pappas",
       "__videoTitle": "Voxxed Days Ioannina 2024 Tech Symphony: Orchestrating Best Practices Across Diverse Techn. Stacks",
@@ -12,15 +20,55 @@ export const VDLOA24_TALKS_AND_YOUTUBE = {
       "videoId": "9FQLl_KvPmA"
     },
     {
-      "__score": 0.818,
-      "__talkTitle": "Beyond Buttons: Crafting Satisfying & Easily Marketable Products",
-      "__speakers": "Eleftheria Batsou",
-      "__videoTitle": "Voxxed Days Ioannina 2024 - Beyond Buttons: Crafting Satisfying & Easily Marketable Products",
-      "talkId": "1716",
-      "videoId": "EBTNLnULT1Q"
+      "__score": 0.927,
+      "__talkTitle": "Magic of Automation and Everyday Chores",
+      "__speakers": "Jamie Coleman",
+      "__videoTitle": "Voxxed Days Ioannina 2024 - Magic of Automation and Everyday Chores",
+      "talkId": "5401",
+      "videoId": "8G8SyJE-Y2g"
     },
     {
-      "__score": 0.82,
+      "__score": 0.932,
+      "__talkTitle": "Strategic Domain-Driven Design for dummies",
+      "__speakers": "Sebastian Malaca",
+      "__videoTitle": "Voxxed Days Ioannina 2024 - Strategic Domain-Driven Design for dummies",
+      "talkId": "1710",
+      "videoId": "OeqwTqoT3z4"
+    },
+    {
+      "__score": 0.936,
+      "__talkTitle": "Data warehousing reinvented for today's needs",
+      "__speakers": "Dimitrios Papageorgiou, Konstantina Mavrodimitraki",
+      "__videoTitle": "Voxxed Days Ioannina 2024 - Data warehousing reinvented for today's needs",
+      "talkId": "1701",
+      "videoId": "P4aaAKp8_aY"
+    },
+    {
+      "__score": 0.939,
+      "__talkTitle": "Abusing Docker builds with BuildKit and friends",
+      "__speakers": "Antonis Kalipetis, Paris Kasidiaris",
+      "__videoTitle": "Voxxed Days Ioannina 2024 - Abusing Docker builds with BuildKit and friends",
+      "talkId": "3656",
+      "videoId": "5zp2rV_I4dw"
+    },
+    {
+      "__score": 0.941,
+      "__talkTitle": "A fun and absurd introduction to Vector Databases",
+      "__speakers": "Alexander  Chatzizacharias",
+      "__videoTitle": "Voxxed Days Ioannina 2024 - A fun and absurd introduction to Vector Databases",
+      "talkId": "1401",
+      "videoId": "Si-TFUSo2wk"
+    },
+    {
+      "__score": 0.945,
+      "__talkTitle": "Building Developer-Friendly Spaces: Nix in a Nutshell",
+      "__speakers": "Konstantinos Liopetas",
+      "__videoTitle": "Voxxed Days Ioannina 2024 - Building Developer-Friendly Spaces: Nix in a Nutshell",
+      "talkId": "5001",
+      "videoId": "CHM93uK1X_I"
+    },
+    {
+      "__score": 0.95,
       "__talkTitle": "Things I learned after a decade of writing code generators",
       "__speakers": "Ioannis Canellos",
       "__videoTitle": "Voxxed Days Ioannina 2024 - Things I learned after a decade of writing code generators",
@@ -28,7 +76,7 @@ export const VDLOA24_TALKS_AND_YOUTUBE = {
       "videoId": "TQXmmBiB2bk"
     },
     {
-      "__score": 0.82,
+      "__score": 0.95,
       "__talkTitle": "The Visible Developer: Why You Shouldn't Blend In",
       "__speakers": "Heather Downing",
       "__videoTitle": "Voxxed Days Ioannina 2024 - The Visible Developer: Why You Shouldn't Blend In by Heather Downing",
@@ -36,15 +84,15 @@ export const VDLOA24_TALKS_AND_YOUTUBE = {
       "videoId": "iezZam36bLQ"
     },
     {
-      "__score": 0.829,
-      "__talkTitle": "Code, Clouds, and AI: A Quick Look into Salesforce Developer Insights",
-      "__speakers": "Eleni Tsiolaki, Alexandros Andreadis",
-      "__videoTitle": "Voxxed Days Ioannina 2024 - Code, Clouds, and AI: A Quick Look into Salesforce Developer Insights",
-      "talkId": "4801",
-      "videoId": "ZxgKNDjb93w"
+      "__score": 0.955,
+      "__talkTitle": "Beyond Buttons: Crafting Satisfying & Easily Marketable Products",
+      "__speakers": "Eleftheria Batsou",
+      "__videoTitle": "Voxxed Days Ioannina 2024 - Beyond Buttons: Crafting Satisfying & Easily Marketable Products",
+      "talkId": "1716",
+      "videoId": "EBTNLnULT1Q"
     },
     {
-      "__score": 0.831,
+      "__score": 0.958,
       "__talkTitle": "Beyond the Sunset: Navigating through Vue.js 2 EOL and Vue 3 Migration",
       "__speakers": "Ema Zyka",
       "__videoTitle": "Voxxed Days Ioannina 2024 - Beyond the Sunset: Navigating through Vue.js 2 EOL and Vue 3 Migration",
@@ -52,12 +100,12 @@ export const VDLOA24_TALKS_AND_YOUTUBE = {
       "videoId": "-UV-WTaYV4U"
     },
     {
-      "__score": 0.913,
-      "__talkTitle": "A fun and absurd introduction to Vector Databases",
-      "__speakers": "Alexander  Chatzizacharias",
-      "__videoTitle": "A fun and absurd introduction to Vector Databases by Alex Chatzizacharias",
-      "talkId": "1401",
-      "videoId": "Kw41RfTWyQ4"
+      "__score": 0.958,
+      "__talkTitle": "Code, Clouds, and AI: A Quick Look into Salesforce Developer Insights",
+      "__speakers": "Eleni Tsiolaki, Alexandros Andreadis",
+      "__videoTitle": "Voxxed Days Ioannina 2024 - Code, Clouds, and AI: A Quick Look into Salesforce Developer Insights",
+      "talkId": "4801",
+      "videoId": "ZxgKNDjb93w"
     }
   ],
   "expectedUnmappedTalks": [
@@ -69,25 +117,11 @@ export const VDLOA24_TALKS_AND_YOUTUBE = {
       "talkId": "1707"
     },
     {
-      "__talkTitle": "Building Developer-Friendly Spaces: Nix in a Nutshell",
-      "__talkFormat": "Quickie (id=960, duration=PT15m)",
+      "__talkTitle": "Developer Joy – How great teams get s%*t done",
+      "__talkFormat": "Keynote (id=994, duration=PT50m)",
       "__talkRoom": "Room A (4301)",
-      "__talkSpeakers": "Konstantinos Liopetas",
-      "talkId": "5001"
-    },
-    {
-      "__talkTitle": "Strategic Domain-Driven Design for dummies",
-      "__talkFormat": "Conference (id=1004, duration=PT40m)",
-      "__talkRoom": "Room B (4302)",
-      "__talkSpeakers": "Sebastian Malaca",
-      "talkId": "1710"
-    },
-    {
-      "__talkTitle": "Magic of Automation and Everyday Chores",
-      "__talkFormat": "Conference (id=1004, duration=PT40m)",
-      "__talkRoom": "Room B (4302)",
-      "__talkSpeakers": "Jamie Coleman",
-      "talkId": "5401"
+      "__talkSpeakers": "Sven Peters",
+      "talkId": "2904"
     },
     {
       "__talkTitle": "Translating a Cretan Book into English, German, Dutch, Chinese, etc. using Java and ChatGPT API",
@@ -97,39 +131,11 @@ export const VDLOA24_TALKS_AND_YOUTUBE = {
       "talkId": "1714"
     },
     {
-      "__talkTitle": "Generative AI in the real world",
-      "__talkFormat": "Conference (id=1004, duration=PT40m)",
-      "__talkRoom": "Room B (4302)",
-      "__talkSpeakers": "Boyan Mihaylov",
-      "talkId": "2403"
-    },
-    {
-      "__talkTitle": "Abusing Docker builds with BuildKit and friends",
-      "__talkFormat": "Conference (id=1004, duration=PT40m)",
-      "__talkRoom": "Room A (4301)",
-      "__talkSpeakers": "Antonis Kalipetis, Paris Kasidiaris",
-      "talkId": "3656"
-    },
-    {
-      "__talkTitle": "Developer Joy – How great teams get s%*t done",
-      "__talkFormat": "Keynote (id=994, duration=PT50m)",
-      "__talkRoom": "Room A (4301)",
-      "__talkSpeakers": "Sven Peters",
-      "talkId": "2904"
-    },
-    {
       "__talkTitle": "Unlocking Collaboration in Code: A Journey through Behavior-Driven Development (BDD)",
       "__talkFormat": "Quickie (id=960, duration=PT15m)",
       "__talkRoom": "Room B (4302)",
       "__talkSpeakers": "George Goulis",
       "talkId": "5651"
-    },
-    {
-      "__talkTitle": "Data warehousing reinvented for today's needs",
-      "__talkFormat": "Conference (id=1004, duration=PT40m)",
-      "__talkRoom": "Room B (4302)",
-      "__talkSpeakers": "Dimitrios Papageorgiou, Konstantina Mavrodimitraki",
-      "talkId": "1701"
     }
   ],
   "unmappedYoutubeVideos": [
@@ -386,6 +392,12 @@ export const VDLOA24_TALKS_AND_YOUTUBE = {
       "title": "Who is Jason, and what’s he doing in my database? by Martin Bach"
     },
     {
+      "id": "Kw41RfTWyQ4",
+      "publishedAt": "2024-03-13T20:50:32Z",
+      "duration": "PT45M47S",
+      "title": "A fun and absurd introduction to Vector Databases by Alex Chatzizacharias"
+    },
+    {
       "id": "N7xoZbxqKhE",
       "publishedAt": "2024-03-13T20:50:32Z",
       "duration": "PT16M24S",
@@ -500,28 +512,10 @@ export const VDLOA24_TALKS_AND_YOUTUBE = {
       "title": "State of change detection in Angular and how far are we from Zoneless applications ? by M. Riegler"
     },
     {
-      "id": "8G8SyJE-Y2g",
-      "publishedAt": "2024-03-04T15:13:49Z",
-      "duration": "PT42M20S",
-      "title": "Voxxed Days Ioannina 2024 - Magic of Automation and Everyday Chores"
-    },
-    {
       "id": "PPmT0PihrO8",
       "publishedAt": "2024-03-04T15:06:17Z",
       "duration": "PT3M41S",
       "title": "Voxxed Days Ioannina 2024 - Welcome"
-    },
-    {
-      "id": "QzTg_euGY0o",
-      "publishedAt": "2024-03-04T15:06:17Z",
-      "duration": "PT35M",
-      "title": "Voxxed Days Ioannina 2024 - Generative AI in the real world"
-    },
-    {
-      "id": "Si-TFUSo2wk",
-      "publishedAt": "2024-03-04T15:06:17Z",
-      "duration": "PT48M23S",
-      "title": "Voxxed Days Ioannina 2024 - A fun and absurd introduction to Vector Databases"
     },
     {
       "id": "i-f56eVzvC8",
@@ -536,40 +530,16 @@ export const VDLOA24_TALKS_AND_YOUTUBE = {
       "title": "Voxxed Days Ioannina 2024 - Developer Joy – How great teams get s%*t done ( Closing Keynote)"
     },
     {
-      "id": "5zp2rV_I4dw",
-      "publishedAt": "2024-03-04T15:06:15Z",
-      "duration": "PT39M22S",
-      "title": "Voxxed Days Ioannina 2024 - Abusing Docker builds with BuildKit and friends"
-    },
-    {
       "id": "7wURMys8H9s",
       "publishedAt": "2024-03-04T15:06:15Z",
       "duration": "PT16M39S",
       "title": "Voxxed Days Ioannina 2024 - Unlocking Collaboration in Code: A Journey through BDD"
     },
     {
-      "id": "CHM93uK1X_I",
-      "publishedAt": "2024-03-04T15:06:15Z",
-      "duration": "PT15M25S",
-      "title": "Voxxed Days Ioannina 2024 - Building Developer-Friendly Spaces: Nix in a Nutshell"
-    },
-    {
       "id": "CtcTMqFyrFs",
       "publishedAt": "2024-03-04T15:06:15Z",
       "duration": "PT1M51S",
       "title": "Voxxed Days Ioannina 2024 - Moments to remember"
-    },
-    {
-      "id": "OeqwTqoT3z4",
-      "publishedAt": "2024-03-04T15:06:15Z",
-      "duration": "PT44M",
-      "title": "Voxxed Days Ioannina 2024 - Strategic Domain-Driven Design for dummies"
-    },
-    {
-      "id": "P4aaAKp8_aY",
-      "publishedAt": "2024-03-04T15:06:15Z",
-      "duration": "PT42M42S",
-      "title": "Voxxed Days Ioannina 2024 - Data warehousing reinvented for today's needs"
     }
   ],
   "youtubeVideos": [

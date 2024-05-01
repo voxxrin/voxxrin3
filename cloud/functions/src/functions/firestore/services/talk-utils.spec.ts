@@ -12,16 +12,16 @@ import {VDTHESS23_TALKS_AND_YOUTUBE} from "../../../../test-data/vdthess23-talks
 
 
 describe('findYoutubeMatchingTalks', () => {
-  [
-    { name: 'dvbe23', testingData: DVBE23_TALKS_AND_YOUTUBE },
-    { name: 'vdbuh2024', testingData: VDBUH2024_TALKS_AND_YOUTUBE },
-    { name: 'vdz24', testingData: VDZ24_TALKS_AND_YOUTUBE },
-    { name: 'vdcern24', testingData: VDCERN24_TALKS_AND_YOUTUBE },
-    { name: 'vdcluj23', testingData: VDCLUJ23_TALKS_AND_YOUTUBE },
-    { name: 'vdloa24', testingData: VDLOA24_TALKS_AND_YOUTUBE },
-    { name: 'vdt24', testingData: VDT24_TALKS_AND_YOUTUBE },
-    { name: 'vdthess23', testingData: VDTHESS23_TALKS_AND_YOUTUBE },
-  ].forEach((testDescriptor: { name: string, testingData: TalkMatchingYoutubeTestData}) => {
+  ([
+    { name: 'dvbe23', testingData: DVBE23_TALKS_AND_YOUTUBE, excludeTitleWordsFromMatching: undefined },
+    { name: 'vdbuh2024', testingData: VDBUH2024_TALKS_AND_YOUTUBE, excludeTitleWordsFromMatching: ["[VDBUH2024]"],  },
+    { name: 'vdz24', testingData: VDZ24_TALKS_AND_YOUTUBE, excludeTitleWordsFromMatching: [],  },
+    { name: 'vdcern24', testingData: VDCERN24_TALKS_AND_YOUTUBE, excludeTitleWordsFromMatching: [],  },
+    { name: 'vdcluj23', testingData: VDCLUJ23_TALKS_AND_YOUTUBE, excludeTitleWordsFromMatching: [],  },
+    { name: 'vdloa24', testingData: VDLOA24_TALKS_AND_YOUTUBE, excludeTitleWordsFromMatching: "Voxxed Days Ioannina 2024".split(" "),  },
+    { name: 'vdt24', testingData: VDT24_TALKS_AND_YOUTUBE, excludeTitleWordsFromMatching: [],  },
+    { name: 'vdthess23', testingData: VDTHESS23_TALKS_AND_YOUTUBE, excludeTitleWordsFromMatching: "Voxxed Days Thessaloniki 2023".split(" "),  },
+  ]).forEach((testDescriptor: { name: string, testingData: TalkMatchingYoutubeTestData, excludeTitleWordsFromMatching: string[]|undefined }) => {
     it(`${testDescriptor.name} shouldn't have same youtube video assigned twice`, () => {
       const talksByVideo = testDescriptor.testingData.expectedMappedTalks.reduce((talksByVideo, mappedTalk) => {
         const key = `${mappedTalk['__videoTitle']} (videoId=${mappedTalk.videoId})`;
@@ -41,7 +41,11 @@ describe('findYoutubeMatchingTalks', () => {
 
     })
     it(`${testDescriptor.name} expected youtube matching talks`, () => {
-      const result = findYoutubeMatchingTalks(testDescriptor.testingData.talks, testDescriptor.testingData.youtubeVideos)
+      const result = findYoutubeMatchingTalks(testDescriptor.testingData.talks, testDescriptor.testingData.youtubeVideos, {
+        platform: 'youtube',
+        youtubeHandle: 'devoxx',
+        excludeTitleWordsFromMatching: testDescriptor.excludeTitleWordsFromMatching
+      })
 
       const unmappedTalks = result.unmatchedTalks.map(gm => gm.id).sort()
       const expectedUnmappedTalks = testDescriptor.testingData.expectedUnmappedTalks.map(ut => ut.talkId).sort();
