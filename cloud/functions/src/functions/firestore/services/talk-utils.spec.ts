@@ -3,12 +3,14 @@ import {findYoutubeMatchingTalks, SimpleTalk, YoutubeVideo} from "./talk-utils";
 import {TalkMatchingYoutubeTestData} from "../../../../test-data/test-data";
 import {VDBUH2024_TALKS_AND_YOUTUBE} from "../../../../test-data/vdbuh2024-talks-and-youtube";
 import {DVBE23_TALKS_AND_YOUTUBE} from "../../../../test-data/dvbe23-talks-and-youtube";
+import {VDZ24_TALKS_AND_YOUTUBE} from "../../../../test-data/vdz24-talks-and-youtube";
 
 
 describe('findYoutubeMatchingTalks', () => {
   [
     { name: 'dvbe23', testingData: DVBE23_TALKS_AND_YOUTUBE },
-    { name: 'vdbuh2024', testingData: VDBUH2024_TALKS_AND_YOUTUBE }
+    { name: 'vdbuh2024', testingData: VDBUH2024_TALKS_AND_YOUTUBE },
+    { name: 'vdz24', testingData: VDZ24_TALKS_AND_YOUTUBE },
   ].forEach((testDescriptor: { name: string, testingData: TalkMatchingYoutubeTestData}) => {
     it(`${testDescriptor.name} shouldn't have same youtube video assigned twice`, () => {
       const talksByVideo = testDescriptor.testingData.expectedMappedTalks.reduce((talksByVideo, mappedTalk) => {
