@@ -4,22 +4,27 @@ import {DVBE23_TALKS_AND_YOUTUBE} from "../../../../test-data/dvbe23-talks-and-y
 
 
 describe('findYoutubeMatchingTalks', () => {
-  it(`dvbe23 talks`, () => {
-    const result = findYoutubeMatchingTalks(DVBE23_TALKS_AND_YOUTUBE.talks, DVBE23_TALKS_AND_YOUTUBE.youtubeVideos)
+  [
+    { name: 'dvbe23', testingData: DVBE23_TALKS_AND_YOUTUBE }
+  ].forEach(testDescriptor => {
+    it(`${testDescriptor.name} talks`, () => {
+      const result = findYoutubeMatchingTalks(testDescriptor.testingData.talks, testDescriptor.testingData.youtubeVideos)
 
-    const unmappedTalks = result.unmatchedTalks.map(gm => gm.id).sort()
-    const expectedUnmappedTalks = DVBE23_TALKS_AND_YOUTUBE.expectedUnmappedTalks.map(ut => ut.talkId).sort();
+      const unmappedTalks = result.unmatchedTalks.map(gm => gm.id).sort()
+      const expectedUnmappedTalks = testDescriptor.testingData.expectedUnmappedTalks.map(ut => ut.talkId).sort();
 
-    expect(unmappedTalks).toStrictEqual(expectedUnmappedTalks)
+      expect(unmappedTalks).toStrictEqual(expectedUnmappedTalks)
 
-    const mappedTalks = result.matchedTalks
-      .map(gm => `${gm.talk.id} -> ${gm.video.id}`)
-      .sort();
+      const mappedTalks = result.matchedTalks
+        .map(gm => `${gm.talk.id} -> ${gm.video.id}`)
+        .sort();
 
-    const expectedMappedTalks = DVBE23_TALKS_AND_YOUTUBE.expectedMappedTalks
-      .map(mt => `${mt.talkId} -> ${mt.videoId}`)
-      .sort()
+      const expectedMappedTalks = testDescriptor.testingData.expectedMappedTalks
+        .map(mt => `${mt.talkId} -> ${mt.videoId}`)
+        .sort()
 
-    expect(mappedTalks).toStrictEqual(expectedMappedTalks)
+      expect(mappedTalks).toStrictEqual(expectedMappedTalks)
+    })
+
   })
 })
