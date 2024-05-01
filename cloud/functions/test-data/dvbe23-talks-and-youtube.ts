@@ -4,1463 +4,1470 @@ import {TalkMatchingYoutubeTestData} from "./test-data";
 export const DVBE23_TALKS_AND_YOUTUBE = {
   "expectedMappedTalks": [
     {
-      "__score": 0.461,
+      "__score": 0.465,
       "__talkTitle": "Empowering Growth: The Art of Harnessing Your Mentor's Expertise as a Senior Developer",
-      "__videoTitle": "[VDCLUJ2023] Rob Geurden - Simplifying Microservices: The art of effortless development",
       "__speakers": "Markus Westergren",
+      "__videoTitle": "Empowering Growth by Markus Westergren",
       "talkId": "25603",
-      "videoId": "dd9NIXCB6hE"
+      "videoId": "1ZQlkZXeROs"
     },
     {
       "__score": 0.558,
       "__talkTitle": "Unleashing the power of Angular: Navigating the latest releases and transformations",
-      "__videoTitle": "Unleashing the power of Angular By Loïc Magnette",
       "__speakers": "Loïc  Magnette",
+      "__videoTitle": "Unleashing the power of Angular By Loïc Magnette",
       "talkId": "23700",
       "videoId": "O6f2Tp8MkdY"
     },
     {
       "__score": 0.569,
       "__talkTitle": "Data Across the Wasm Boundary – A Practical Evaluation of the Current State of the Art",
-      "__videoTitle": "Data Across the Wasm Boundary By Dan Phillips",
       "__speakers": "Dan Phillips",
+      "__videoTitle": "Data Across the Wasm Boundary By Dan Phillips",
       "talkId": "45284",
       "videoId": "2GSlCFCuN8U"
     },
     {
       "__score": 0.595,
       "__talkTitle": "Unlocking the Secrets of the Devoxx Mobile App: A Deep Dive into Open Source PWA with Vue and Firebase",
-      "__videoTitle": "Unlocking the Secrets of the Devoxx Mobile App By Xavier Hanin",
       "__speakers": "Xavier Hanin, Frédéric Camblor",
+      "__videoTitle": "Unlocking the Secrets of the Devoxx Mobile App By Xavier Hanin",
       "talkId": "68701",
       "videoId": "kCiGneWQA24"
     },
     {
       "__score": 0.599,
       "__talkTitle": "OpenTelemetry and Continuous Feedback - Things you need to know about your Java code at runtime",
-      "__videoTitle": "OpenTelemetry and Continuous Feedback by Roni Dover",
       "__speakers": "Roni Dover",
+      "__videoTitle": "OpenTelemetry and Continuous Feedback by Roni Dover",
       "talkId": "35710",
       "videoId": "MTPUtODhNWE"
     },
     {
       "__score": 0.605,
       "__talkTitle": "Boost Your Coding Productivity: Embrace the AI code assistance with GitHub Copilot and Amazon CodeWhisperer",
-      "__videoTitle": "Boost Your Coding Productivity using AI code assistants by Piyush Mundada",
       "__speakers": "Piyush Mundada",
+      "__videoTitle": "Boost Your Coding Productivity using AI code assistants by Piyush Mundada",
       "talkId": "48807",
       "videoId": "FDUhF4jSw3M"
     },
     {
       "__score": 0.634,
       "__talkTitle": "Explainable AI Analysis Visualization: Applications from Brain Computer Interfaces to ChatGPT",
-      "__videoTitle": "Explainable AI Analysis Visualization by Sean Phillips",
       "__speakers": "Sean Phillips",
+      "__videoTitle": "Explainable AI Analysis Visualization by Sean Phillips",
       "talkId": "23661",
       "videoId": "LYtZRWo4t4E"
     },
     {
       "__score": 0.655,
       "__talkTitle": "Unlocking the Potential of Bits and Bytes: Reducing Data Footprint for Cost and Eco-Efficiency",
-      "__videoTitle": "Unlocking the Potential of Bits and Bytes by Frank Delporte",
       "__speakers": "Frank Delporte",
+      "__videoTitle": "Unlocking the Potential of Bits and Bytes by Frank Delporte",
       "talkId": "17255",
       "videoId": "ex0t2uaL27I"
     },
     {
       "__score": 0.707,
       "__talkTitle": "How we built AI features to improve the UI of custom business apps",
-      "__videoTitle": "Using AI to improve the UI of  Business Applications By  Peter Czuczor",
       "__speakers": "Peter Czuczor",
+      "__videoTitle": "Using AI to improve the UI of  Business Applications By  Peter Czuczor",
       "talkId": "66652",
       "videoId": "x6TkzbwLZX0"
     },
     {
       "__score": 0.767,
       "__talkTitle": "GraalVM Native Image: Benefits, Challenges, and the Future",
-      "__videoTitle": "GraalVM Native Image: Benefits, Challenges, and the Future By Shaun Smith, Thomas Wuerthinger, Séba",
       "__speakers": "Shaun Smith, Sébastien Deleuze, Graeme Rocher, Thomas Wuerthinger, Max Rydahl Andersen",
+      "__videoTitle": "GraalVM Native Image: Benefits, Challenges, and the Future By Shaun Smith, Thomas Wuerthinger, Séba",
       "talkId": "32664",
       "videoId": "isr44p7eplQ"
     },
     {
       "__score": 0.859,
       "__talkTitle": "Property-based testing - let your testing library work for you",
-      "__videoTitle": "Property based testing: let your testing library work for you  By  Magda Stożek",
       "__speakers": "Magda Stożek ",
+      "__videoTitle": "Property based testing: let your testing library work for you  By  Magda Stożek",
       "talkId": "47028",
       "videoId": "0NBy4IcSJcA"
     },
     {
       "__score": 0.86,
       "__talkTitle": "In-Memory Computing - The Big Picture",
-      "__videoTitle": "In Memory Computing: The Big Picture By Markus Kett",
       "__speakers": "Markus Kett",
+      "__videoTitle": "In Memory Computing: The Big Picture By Markus Kett",
       "talkId": "20299",
       "videoId": "sR0p8BRSOP0"
     },
     {
       "__score": 0.867,
       "__talkTitle": "Introducing Flow. The worst software development approach in history",
-      "__videoTitle": "Introducing Flow: The worst software development approach in history By Sander & Kim",
       "__speakers": "Sander Hoogendoorn, Kim van Wilgen",
+      "__videoTitle": "Introducing Flow: The worst software development approach in history By Sander & Kim",
       "talkId": "6779",
       "videoId": "TIR84uGD61k"
     },
     {
       "__score": 0.877,
       "__talkTitle": "Performance and Scale - Domain-Oriented Objects vs Tabular Data Structures",
-      "__videoTitle": "Performance and Scale   Domain Oriented Objects vs Tabular Data Structures By Rustam Mehmandarov,",
       "__speakers": "Rustam Mehmandarov, Donald Raab",
+      "__videoTitle": "Performance and Scale   Domain Oriented Objects vs Tabular Data Structures By Rustam Mehmandarov,",
       "talkId": "6257",
       "videoId": "GseytbkkQgg"
     },
     {
       "__score": 0.878,
       "__talkTitle": "Java on Arm. New horizons",
-      "__videoTitle": "Java on Arm : New horizons By Dmitry Chuyko",
       "__speakers": "Dmitry Chuyko",
+      "__videoTitle": "Java on Arm : New horizons By Dmitry Chuyko",
       "talkId": "42874",
       "videoId": "mOcd7GkCMsg"
     },
     {
       "__score": 0.878,
       "__talkTitle": "Java 21",
-      "__videoTitle": "Java 21 By Brian Goetz",
       "__speakers": "Brian Goetz",
+      "__videoTitle": "Java 21 By Brian Goetz",
       "talkId": "67953",
       "videoId": "eXCx2hW_xNI"
     },
     {
       "__score": 0.887,
       "__talkTitle": "Test-Driven Security with Spring",
-      "__videoTitle": "Test Driven Security with Spring  By Eleftheria Stein Kousathana",
       "__speakers": "Eleftheria Stein-Kousathana",
+      "__videoTitle": "Test Driven Security with Spring  By Eleftheria Stein Kousathana",
       "talkId": "39103",
       "videoId": "Akw6MpwnIAM"
     },
     {
       "__score": 0.89,
       "__talkTitle": "Wired! How your brain learns new (programming) languages.",
-      "__videoTitle": "Wired! How your brain learns new programming languages  By  Simone de Gijt",
       "__speakers": "Simone de Gijt",
+      "__videoTitle": "Wired! How your brain learns new programming languages  By  Simone de Gijt",
       "talkId": "32674",
       "videoId": "02fshpG90Hg"
     },
     {
       "__score": 0.891,
       "__talkTitle": "REST next level : Crafting domain-driven web APIs",
-      "__videoTitle": "REST next level : Crafting domain driven web APIs By Julien Topçu",
       "__speakers": "Julien Topçu",
+      "__videoTitle": "REST next level : Crafting domain driven web APIs By Julien Topçu",
       "talkId": "2905",
       "videoId": "bHc8Gudrhdo"
     },
     {
       "__score": 0.893,
       "__talkTitle": "Optimize the world for fun and profit",
-      "__videoTitle": "Optimize the world for fun and profit By Geoffrey De Smet, Lukáš Petrovický",
       "__speakers": "Geoffrey De Smet, Lukáš Petrovický",
+      "__videoTitle": "Optimize the world for fun and profit By Geoffrey De Smet, Lukáš Petrovický",
       "talkId": "23675",
       "videoId": "FLaYKlLWKW4"
     },
     {
       "__score": 0.897,
       "__talkTitle": "Building data-intensive applications - from the trenches",
-      "__videoTitle": "Building data intensive applications   from the trenches  By  Adam Michalik",
       "__speakers": "Adam Michalik",
+      "__videoTitle": "Building data intensive applications   from the trenches  By  Adam Michalik",
       "talkId": "19201",
       "videoId": "H4lXE2B-PPg"
     },
     {
       "__score": 0.9,
       "__talkTitle": "Java at AWS: Lessons Learned from Upgrading and Modernizing a Massive JVM Codebase",
-      "__videoTitle": "Java at AWS: Lessons Learned from Upgrading and Modernizing a Massive JVM Codebase  By  Yishai Galat",
       "__speakers": "Yishai Galatzer, James Gosling",
+      "__videoTitle": "Java at AWS: Lessons Learned from Upgrading and Modernizing a Massive JVM Codebase  By  Yishai Galat",
       "talkId": "70104",
       "videoId": "Yu2BhWk9mKY"
     },
     {
       "__score": 0.901,
       "__talkTitle": "What you can do with WebGPU?",
-      "__videoTitle": "What you can do with WebGPU?  By Corentin Wallez, François Beaufort",
       "__speakers": "François Beaufort, Corentin Wallez",
+      "__videoTitle": "What you can do with WebGPU?  By Corentin Wallez, François Beaufort",
       "talkId": "70108",
       "videoId": "RR4FZ9L4AF4"
     },
     {
       "__score": 0.903,
       "__talkTitle": "Toward a carbon-aware Cloud",
-      "__videoTitle": "Toward a carbon aware Cloud By Olivier Bierlaire",
       "__speakers": "Olivier Bierlaire",
+      "__videoTitle": "Toward a carbon aware Cloud By Olivier Bierlaire",
       "talkId": "36654",
       "videoId": "WvoRz5EYR7Y"
     },
     {
       "__score": 0.904,
       "__talkTitle": "Say the Words:  Modern Java with JavaFX and GraalVM for Rich Client UIs",
-      "__videoTitle": "Say the Words:  Modern Java with JavaFX and GraalVM for Rich Client UIs  By  Paul & Gail Anderson",
       "__speakers": "Paul Anderson, Gail Anderson",
+      "__videoTitle": "Say the Words:  Modern Java with JavaFX and GraalVM for Rich Client UIs  By  Paul & Gail Anderson",
       "talkId": "38409",
       "videoId": "3nT8vurpmqc"
     },
     {
       "__score": 0.905,
       "__talkTitle": "Accessibility, why bother ?",
-      "__videoTitle": "Accessibility, why bother? By Henry Lagarde",
       "__speakers": "Henry Lagarde",
+      "__videoTitle": "Accessibility, why bother? By Henry Lagarde",
       "talkId": "6253",
       "videoId": "fTye4THi-hU"
     },
     {
       "__score": 0.905,
       "__talkTitle": "Kubernetes. From 0 to Production-Grade with Java",
-      "__videoTitle": "Kubernetes  From 0 to Production Grade with Java  By Kevin Dubois, Alex Soto",
       "__speakers": "Kevin Dubois, Alex Soto",
+      "__videoTitle": "Kubernetes  From 0 to Production Grade with Java  By Kevin Dubois, Alex Soto",
       "talkId": "68901",
       "videoId": "EB8kdbAbSmE"
     },
     {
       "__score": 0.906,
       "__talkTitle": "Spring Infrastructure Deep Dive: Virtual Threads, Checkpoint Restore, Native Images",
-      "__videoTitle": "Spring Infrastructure Deep Dive: Virtual Threads, Checkpoint Restore, Native Images By Juergen Hoell",
       "__speakers": "Juergen Hoeller, Sébastien Deleuze, Arjen Poutsma",
+      "__videoTitle": "Spring Infrastructure Deep Dive: Virtual Threads, Checkpoint Restore, Native Images By Juergen Hoell",
       "talkId": "20285",
       "videoId": "YfFYTR8_lBY"
     },
     {
       "__score": 0.906,
       "__talkTitle": "Fake it until you `make it`. API integration testing with WireMock and Testcontainers",
-      "__videoTitle": "Fake it until you `make it`  API integration testing with WireMock and Testcontainers By Oleg (2x)",
       "__speakers": "Oleg Nenashev, Oleg Šelajev",
+      "__videoTitle": "Fake it until you `make it`  API integration testing with WireMock and Testcontainers By Oleg (2x)",
       "talkId": "47045",
       "videoId": "eFILbyaMI2A"
     },
     {
       "__score": 0.907,
       "__talkTitle": "Let's get aware of Accessibility",
-      "__videoTitle": "Let's get aware of Accessibility By Merlin Bögershausen",
       "__speakers": "Merlin Bögershausen",
+      "__videoTitle": "Let's get aware of Accessibility By Merlin Bögershausen",
       "talkId": "45300",
       "videoId": "lfog7NAHAbo"
     },
     {
       "__score": 0.907,
       "__talkTitle": "TornadoVM: Write once, run everywhere...everywhere!",
-      "__videoTitle": "TornadoVM: Write once, run everywhere   everywhere! By  Thanos Stratikopoulos",
       "__speakers": "Thanos Stratikopoulos",
+      "__videoTitle": "TornadoVM: Write once, run everywhere   everywhere! By  Thanos Stratikopoulos",
       "talkId": "47007",
       "videoId": "POanHvoC4qA"
     },
     {
       "__score": 0.908,
       "__talkTitle": "Test-Driven Design Insights - 10 Hints You Were Missing",
-      "__videoTitle": "Test Driven Design Insights : 10 Hints You Were Missing By Victor Rentea",
       "__speakers": "Victor Rentea",
+      "__videoTitle": "Test Driven Design Insights : 10 Hints You Were Missing By Victor Rentea",
       "talkId": "38411",
       "videoId": "sf1vp-U9DYk"
     },
     {
       "__score": 0.909,
       "__talkTitle": "Project Leyden",
-      "__videoTitle": "Project Leyden By Brian Goetz",
       "__speakers": "Brian Goetz",
+      "__videoTitle": "Project Leyden By Brian Goetz",
       "talkId": "67951",
       "videoId": "O1Oz2-AXKKM"
     },
     {
       "__score": 0.912,
       "__talkTitle": "RPG Assistant: Helping Forgetful Game Masters' with AI-Driven World Management",
-      "__videoTitle": "RPG Assistant: Helping Forgetful Game Masters' with AI Driven World Management By Bruno Borges, John",
       "__speakers": "John Oliver, Bruno Borges",
+      "__videoTitle": "RPG Assistant: Helping Forgetful Game Masters' with AI Driven World Management By Bruno Borges, John",
       "talkId": "38404",
       "videoId": "xGvOUmeSczE"
     },
     {
       "__score": 0.912,
       "__talkTitle": "Java 21 💣💥",
-      "__videoTitle": "Java 21 💣💥 By Nicolai Parlog",
       "__speakers": "Nicolai Parlog",
+      "__videoTitle": "Java 21 💣💥 By Nicolai Parlog",
       "talkId": "67954",
       "videoId": "uNeV3EBUS18"
     },
     {
       "__score": 0.913,
       "__talkTitle": "Conway's Law: When Best Practices Are Not Enough",
-      "__videoTitle": "Conway's Law: When Best Practices Are Not Enough By  Julien Topçu",
       "__speakers": "Julien Topçu",
+      "__videoTitle": "Conway's Law: When Best Practices Are Not Enough By  Julien Topçu",
       "talkId": "2906",
       "videoId": "si2amEqforU"
     },
     {
       "__score": 0.914,
       "__talkTitle": "Testing Microservices - Join the Revolution",
-      "__videoTitle": "Testing Microservices: Join the Revolution By Victor Rentea",
       "__speakers": "Victor Rentea",
+      "__videoTitle": "Testing Microservices: Join the Revolution By Victor Rentea",
       "talkId": "30503",
       "videoId": "S8y4-jSJWxI"
     },
     {
       "__score": 0.914,
       "__talkTitle": "From Clicks to Conversations: Designing LLM-powered Apps",
-      "__videoTitle": "From Clicks to Conversations: Designing LLM powered Apps By Marie Alice Blete",
       "__speakers": "Marie-Alice Blete",
+      "__videoTitle": "From Clicks to Conversations: Designing LLM powered Apps By Marie Alice Blete",
       "talkId": "34553",
       "videoId": "7dY8N97qy0k"
     },
     {
       "__score": 0.915,
       "__talkTitle": "The JVM vs. WebAssembly: An In-Depth Comparative Analysis",
-      "__videoTitle": "The JVM vs WebAssembly: An In Depth Comparative Analysis By Shivansh Vij",
       "__speakers": "Shivansh Vij",
+      "__videoTitle": "The JVM vs WebAssembly: An In Depth Comparative Analysis By Shivansh Vij",
       "talkId": "45283",
       "videoId": "qmVG_JLLq40"
     },
     {
       "__score": 0.916,
       "__talkTitle": "Elementary Full-stack Development with Hypermedia and Java 21",
-      "__videoTitle": "Elementary Full stack Development with Hypermedia and Java 21 By Patrik Duditš",
       "__speakers": "Patrik Duditš ",
+      "__videoTitle": "Elementary Full stack Development with Hypermedia and Java 21 By Patrik Duditš",
       "talkId": "44157",
       "videoId": "Ldi1hYQCfFY"
     },
     {
       "__score": 0.917,
       "__talkTitle": "OAuth2, OpenID: live-coding SSO, from first principles",
-      "__videoTitle": "OAuth2, OpenID: live coding SSO, from first principles By Daniel Garnier Moiroux",
       "__speakers": "Daniel Garnier-Moiroux",
+      "__videoTitle": "OAuth2, OpenID: live coding SSO, from first principles By Daniel Garnier Moiroux",
       "talkId": "2943",
       "videoId": "wP4TVTvYL0Y"
     },
     {
       "__score": 0.917,
       "__talkTitle": "Sequenced Collections",
-      "__videoTitle": "Sequenced Collections  By Stuart Marks",
       "__speakers": "Stuart Marks",
+      "__videoTitle": "Sequenced Collections  By Stuart Marks",
       "talkId": "47023",
       "videoId": "fdFM5CFqv6o"
     },
     {
       "__score": 0.917,
       "__talkTitle": "SIMD Parallel Programming with the Vector API",
-      "__videoTitle": "SIMD Parallel Programming with the Vector API By José Paumard",
       "__speakers": "José Paumard",
+      "__videoTitle": "SIMD Parallel Programming with the Vector API By José Paumard",
       "talkId": "50770",
       "videoId": "36DN9sE7ja4"
     },
     {
       "__score": 0.918,
       "__talkTitle": "C4 models as code",
-      "__videoTitle": "C4 models as code By Simon Brown",
       "__speakers": "Simon Brown",
+      "__videoTitle": "C4 models as code By Simon Brown",
       "talkId": "28357",
       "videoId": "LYzOc7vI-Uo"
     },
     {
       "__score": 0.919,
       "__talkTitle": "10 Years of The Well-Grounded Java Developer",
-      "__videoTitle": "10 Years of The Well Grounded Java Developer By Ben Evans",
       "__speakers": "Ben Evans",
+      "__videoTitle": "10 Years of The Well Grounded Java Developer By Ben Evans",
       "talkId": "32657",
       "videoId": "4mY-MFmSO2c"
     },
     {
       "__score": 0.919,
       "__talkTitle": "Game of Loom 2: life and dead(lock) of a virtual thread",
-      "__videoTitle": "Game of Loom 2: life and deadlock of a virtual thread By Mario Fusco",
       "__speakers": "Mario Fusco",
+      "__videoTitle": "Game of Loom 2: life and deadlock of a virtual thread By Mario Fusco",
       "talkId": "6776",
       "videoId": "jJ2g0DneISA"
     },
     {
       "__score": 0.921,
       "__talkTitle": "Devspace vs. Skaffold: Simplify Java Development in the Kubernetes World",
-      "__videoTitle": "Devspace vs  Skaffold: Simplify Java Development in the Kubernetes World  By  Ana Maria Mihalceanu",
       "__speakers": "Ana-Maria Mihalceanu",
+      "__videoTitle": "Devspace vs  Skaffold: Simplify Java Development in the Kubernetes World  By  Ana Maria Mihalceanu",
       "talkId": "35703",
       "videoId": "Q-jilSBje2A"
     },
     {
       "__score": 0.923,
       "__talkTitle": "Speed-Up your API delivery with Microcks",
-      "__videoTitle": "Speed Up your API delivery with Microcks By Laurent Broudoux",
       "__speakers": "Laurent Broudoux",
+      "__videoTitle": "Speed Up your API delivery with Microcks By Laurent Broudoux",
       "talkId": "32654",
       "videoId": "2C2AqEpNAWI"
     },
     {
       "__score": 0.923,
       "__talkTitle": "JavaFX Notebook",
-      "__videoTitle": "JavaFX Notebook By Kevin Rushforth",
       "__speakers": "Kevin Rushforth",
+      "__videoTitle": "JavaFX Notebook By Kevin Rushforth",
       "talkId": "42856",
       "videoId": "R9yhbaN5Xxs"
     },
     {
       "__score": 0.924,
       "__talkTitle": "Reactive applications with Event-Sourcing and Server-Sent events",
-      "__videoTitle": "Reactive applications with Event Sourcing and Server Sent events By Mitchell Herrijgers",
       "__speakers": "Mitchell Herrijgers",
+      "__videoTitle": "Reactive applications with Event Sourcing and Server Sent events By Mitchell Herrijgers",
       "talkId": "16256",
       "videoId": "E7rWSYbZQfg"
     },
     {
       "__score": 0.924,
       "__talkTitle": "JSol'Ex : solar image processing written in Java",
-      "__videoTitle": "JSol'Ex : solar image processing written in Java By Cédric Champeau",
       "__speakers": "Cédric Champeau",
+      "__videoTitle": "JSol'Ex : solar image processing written in Java By Cédric Champeau",
       "talkId": "36657",
       "videoId": "j6KMOXhldEs"
     },
     {
       "__score": 0.924,
       "__talkTitle": "Beyond Logs: Real-Time Anomaly Detection without Migraines",
-      "__videoTitle": "Beyond Logs: Real Time Anomaly Detection without Migraines  By  Fawaz Ghali",
       "__speakers": "Fawaz Ghali",
+      "__videoTitle": "Beyond Logs: Real Time Anomaly Detection without Migraines  By  Fawaz Ghali",
       "talkId": "4762",
       "videoId": "nRLZceYBj2w"
     },
     {
       "__score": 0.924,
       "__talkTitle": "Build your first VS Code extension in 30 minutes",
-      "__videoTitle": "Build your first VS Code extension in 30 minutes By Sébastien Blanc",
       "__speakers": "Sébastien Blanc",
+      "__videoTitle": "Build your first VS Code extension in 30 minutes By Sébastien Blanc",
       "talkId": "50785",
       "videoId": "-0iWSXBZoLM"
     },
     {
       "__score": 0.924,
       "__talkTitle": "Quantum computers Vs. modern cryptography",
-      "__videoTitle": "Quantum computers Vs  modern cryptography By Kristof Verslype",
       "__speakers": "Kristof Verslype",
+      "__videoTitle": "Quantum computers Vs  modern cryptography By Kristof Verslype",
       "talkId": "66651",
       "videoId": "zlDDpQokyfU"
     },
     {
       "__score": 0.925,
       "__talkTitle": "Bootiful Spring Boot 3",
-      "__videoTitle": "Bootiful Spring Boot 3 By Josh Long",
       "__speakers": "Josh Long",
+      "__videoTitle": "Bootiful Spring Boot 3 By Josh Long",
       "talkId": "31411",
       "videoId": "FrqbQPvRNbA"
     },
     {
       "__score": 0.925,
       "__talkTitle": "Java Language update",
-      "__videoTitle": "Java Language update By Brian Goetz",
       "__speakers": "Brian Goetz",
+      "__videoTitle": "Java Language update By Brian Goetz",
       "talkId": "67952",
       "videoId": "TIHx6MNt79Y"
     },
     {
       "__score": 0.927,
       "__talkTitle": "Cascade Solves Styling",
-      "__videoTitle": "Cascade Solves Styling By Maarten Van Hoof",
       "__speakers": "Maarten  Van Hoof",
+      "__videoTitle": "Cascade Solves Styling By Maarten Van Hoof",
       "talkId": "48057",
       "videoId": "xPyqRbIp7ww"
     },
     {
       "__score": 0.928,
       "__talkTitle": "A Glance At The Java Performance Toolbox",
-      "__videoTitle": "A Glance At The Java Performance Toolbox By Ana Maria Mihalceanu",
       "__speakers": "Ana-Maria Mihalceanu",
+      "__videoTitle": "A Glance At The Java Performance Toolbox By Ana Maria Mihalceanu",
       "talkId": "35404",
       "videoId": "dx7TUoCm9oY"
     },
     {
       "__score": 0.93,
       "__talkTitle": "Microservices Got Talent: The Event-Driven Beautiful Dance",
-      "__videoTitle": "Microservices Got Talent: The Event Driven Beautiful Dance  By  Renato Cavalcanti",
       "__speakers": "Renato Cavalcanti",
+      "__videoTitle": "Microservices Got Talent: The Event Driven Beautiful Dance  By  Renato Cavalcanti",
       "talkId": "23697",
       "videoId": "6FuB3cNfRNQ"
     },
     {
       "__score": 0.93,
       "__talkTitle": "Know your Java?",
-      "__videoTitle": "Know your Java? By Venkat Subramaniam",
       "__speakers": "Venkat Subramaniam",
+      "__videoTitle": "Know your Java? By Venkat Subramaniam",
       "talkId": "61501",
       "videoId": "q2T9NlROLqw"
     },
     {
       "__score": 0.932,
       "__talkTitle": "Spring Framework 6: Strategic Themes",
-      "__videoTitle": "Spring Framework 6: Strategic Themes By Juergen Hoeller, Sébastien Deleuze",
       "__speakers": "Juergen Hoeller, Sébastien Deleuze",
+      "__videoTitle": "Spring Framework 6: Strategic Themes By Juergen Hoeller, Sébastien Deleuze",
       "talkId": "20284",
       "videoId": "5jYlKPeo6l4"
     },
     {
       "__score": 0.933,
       "__talkTitle": "Where the JVM is Entering the Era of AI Performance Tuning!",
-      "__videoTitle": "Where the JVM is Entering the Era of AI Performance Tuning!  By  Ana Maria Mihalceanu",
       "__speakers": "Ana-Maria Mihalceanu",
+      "__videoTitle": "Where the JVM is Entering the Era of AI Performance Tuning!  By  Ana Maria Mihalceanu",
       "talkId": "10635",
       "videoId": "HwCW1RjQfd4"
     },
     {
       "__score": 0.933,
       "__talkTitle": "How to build a GPT4All",
-      "__videoTitle": "How to build a GPT4All By Andriy Mulyar",
       "__speakers": "Andriy Mulyar",
+      "__videoTitle": "How to build a GPT4All By Andriy Mulyar",
       "talkId": "12508",
       "videoId": "GBE8ZwPBEmY"
     },
     {
       "__score": 0.933,
       "__talkTitle": "Deep diving in Spring Security (with the latest trends and additions)",
-      "__videoTitle": "Deep diving in Spring Security with the latest trends and additions By Laur Spilca",
       "__speakers": "Laur Spilca",
+      "__videoTitle": "Deep diving in Spring Security with the latest trends and additions By Laur Spilca",
       "talkId": "31410",
       "videoId": "3spgz1LXcS8"
     },
     {
       "__score": 0.933,
       "__talkTitle": "Java Meets AI: A Hands-On Guide to Building LLM-Powered Applications with LangChain4j",
-      "__videoTitle": "Java Meets AI: A Hands On Guide to Building LLM Powered Applications with LangChain4j By Lize Raes",
       "__speakers": "Lize Raes",
+      "__videoTitle": "Java Meets AI: A Hands On Guide to Building LLM Powered Applications with LangChain4j By Lize Raes",
       "talkId": "34002",
       "videoId": "BD1MSLbs9KE"
     },
     {
       "__score": 0.933,
       "__talkTitle": "The Panama Dojo: Black-Belt Programming with Java 21 and the FFM API",
-      "__videoTitle": "The Panama Dojo: Black Belt Programming with Java 21 and the FFM API  By  Per Minborg",
       "__speakers": "Per Minborg",
+      "__videoTitle": "The Panama Dojo: Black Belt Programming with Java 21 and the FFM API  By  Per Minborg",
       "talkId": "4453",
       "videoId": "t8c1Q2wJOoM"
     },
     {
       "__score": 0.933,
       "__talkTitle": "The developer's guide to making money in the open-source galaxy",
-      "__videoTitle": "The developer's guide to making money in the open source galaxy  By  Ronald Dehuysser",
       "__speakers": "Ronald Dehuysser",
+      "__videoTitle": "The developer's guide to making money in the open source galaxy  By  Ronald Dehuysser",
       "talkId": "48054",
       "videoId": "MJBNa5jNvJs"
     },
     {
       "__score": 0.934,
       "__talkTitle": "BERT for Legal Texts: Training and Fine-tuning in a New Language",
-      "__videoTitle": "BERT for Legal Texts: Training and Fine tuning in a New Language  By  Nemanja Petrovic",
       "__speakers": "Nemanja Petrovic",
+      "__videoTitle": "BERT for Legal Texts: Training and Fine tuning in a New Language  By  Nemanja Petrovic",
       "talkId": "29017",
       "videoId": "-Ix2zWbq878"
     },
     {
       "__score": 0.935,
       "__talkTitle": "A hitchhikers guide to observe (Java) applications in Kubernetes",
-      "__videoTitle": "A hitchhikers guide to observe Java applications in Kubernetes By Tiffany Jernigan, Matthias Haeussl",
       "__speakers": "Tiffany Jernigan, Matthias Haeussler",
+      "__videoTitle": "A hitchhikers guide to observe Java applications in Kubernetes By Tiffany Jernigan, Matthias Haeussl",
       "talkId": "23663",
       "videoId": "8qxN9MthSCc"
     },
     {
       "__score": 0.935,
       "__talkTitle": "Quantum Computing in Java: an exceptionential opportunity.",
-      "__videoTitle": "Quantum Computing in Java: an exceptionential opportunity  By Johan Vos",
       "__speakers": "Johan Vos",
+      "__videoTitle": "Quantum Computing in Java: an exceptionential opportunity  By Johan Vos",
       "talkId": "39135",
       "videoId": "eylmTHUGcks"
     },
     {
       "__score": 0.935,
       "__talkTitle": "Teaching old Streams new tricks",
-      "__videoTitle": "Teaching old Streams new tricks  By Viktor Klang",
       "__speakers": "Viktor Klang",
+      "__videoTitle": "Teaching old Streams new tricks  By Viktor Klang",
       "talkId": "45277",
       "videoId": "8fMFa6OqlY8"
     },
     {
       "__score": 0.935,
       "__talkTitle": "Connecting the world to event-driven applications with Kamelets",
-      "__videoTitle": "Connecting the world to event driven applications with Kamelets  By  Christoph Deppisch",
       "__speakers": "Christoph Deppisch",
+      "__videoTitle": "Connecting the world to event driven applications with Kamelets  By  Christoph Deppisch",
       "talkId": "52511",
       "videoId": "s5jJk7C0ljI"
     },
     {
       "__score": 0.936,
       "__talkTitle": "Speed up writing tests with Wiremock Spring Boot",
-      "__videoTitle": "Speed up writing tests with Wiremock Spring Boot By Pieter Jan Drouillon",
       "__speakers": "Pieter-Jan Drouillon",
+      "__videoTitle": "Speed up writing tests with Wiremock Spring Boot By Pieter Jan Drouillon",
       "talkId": "50760",
       "videoId": "PlVisUpE_mU"
     },
     {
       "__score": 0.937,
       "__talkTitle": "Debugging in the Cloud, Mastered Locally with JKube remote-dev",
-      "__videoTitle": "Debugging in the Cloud, Mastered Locally with JKube remote dev By Sun Tan",
       "__speakers": "Sun Tan",
+      "__videoTitle": "Debugging in the Cloud, Mastered Locally with JKube remote dev By Sun Tan",
       "talkId": "31421",
       "videoId": "feL1uL-PLr8"
     },
     {
       "__score": 0.937,
       "__talkTitle": "Maintaining Maven at scale",
-      "__videoTitle": "Maintaining Maven at scale By Tim te Beek",
       "__speakers": "Tim te Beek",
+      "__videoTitle": "Maintaining Maven at scale By Tim te Beek",
       "talkId": "48053",
       "videoId": "o3rMdXR2bIU"
     },
     {
       "__score": 0.938,
       "__talkTitle": "Decoupling Data Policy and Application Code with Open Policy Agent (OPA)",
-      "__videoTitle": "Decoupling Data Policy and Application Code with Open Policy Agent OPA By Lander Visterin",
       "__speakers": "Lander Visterin",
+      "__videoTitle": "Decoupling Data Policy and Application Code with Open Policy Agent OPA By Lander Visterin",
       "talkId": "17252",
       "videoId": "_Trzv60QNPw"
     },
     {
       "__score": 0.938,
       "__talkTitle": "Open standards for building event-driven applications in the cloud",
-      "__videoTitle": "Open standards for building event driven applications in the cloud  By Mete Atamel",
       "__speakers": "Mete Atamel",
+      "__videoTitle": "Open standards for building event driven applications in the cloud  By Mete Atamel",
       "talkId": "20267",
       "videoId": "cIU1Rl1cZjA"
     },
     {
       "__score": 0.938,
       "__talkTitle": "Wargames - Java vulnerabilities and why you should care",
-      "__videoTitle": "Wargames ~ Java vulnerabilities and why you should care By Gerrit Grunwald",
       "__speakers": "Gerrit Grunwald",
+      "__videoTitle": "Wargames ~ Java vulnerabilities and why you should care By Gerrit Grunwald",
       "talkId": "2902",
       "videoId": "X0YEJqYWvDM"
     },
     {
       "__score": 0.938,
       "__talkTitle": "Unmasking the AI Illusion",
-      "__videoTitle": "Unmasking the AI Illusion By Michael Demey",
       "__speakers": "Michael Demey",
+      "__videoTitle": "Unmasking the AI Illusion By Michael Demey",
       "talkId": "48052",
       "videoId": "c4arTYhS2lA"
     },
     {
       "__score": 0.938,
       "__talkTitle": "Embracing Imposter Syndrome",
-      "__videoTitle": "Embracing Imposter Syndrome By Dom Hodgson",
       "__speakers": "Dom Hodgson",
+      "__videoTitle": "Embracing Imposter Syndrome By Dom Hodgson",
       "talkId": "70101",
       "videoId": "qgU-BKjE_u4"
     },
     {
       "__score": 0.94,
       "__talkTitle": "Battling your Biased Brain",
-      "__videoTitle": "Battling your Biased Brain By Peter Wessels",
       "__speakers": "Peter Wessels",
+      "__videoTitle": "Battling your Biased Brain By Peter Wessels",
       "talkId": "10631",
       "videoId": "HivbBFeKQeA"
     },
     {
       "__score": 0.94,
       "__talkTitle": "The Great Divergence - The Widening Gap between Industry and University Java",
-      "__videoTitle": "The Great Divergence:  The Widening Gap between Industry and University Java By Felipe Yanaga",
       "__speakers": "Felipe Yanaga",
+      "__videoTitle": "The Great Divergence:  The Widening Gap between Industry and University Java By Felipe Yanaga",
       "talkId": "20261",
       "videoId": "tEUwBpkX5b8"
     },
     {
       "__score": 0.94,
       "__talkTitle": "Building a Bullsh*t Language ",
-      "__videoTitle": "Building a Bullsh*t Language  By Jan Ouwens",
       "__speakers": "Jan Ouwens",
+      "__videoTitle": "Building a Bullsh*t Language  By Jan Ouwens",
       "talkId": "31405",
       "videoId": "Q6h36S7caNU"
     },
     {
       "__score": 0.94,
       "__talkTitle": "PostgreSQL, The Time-Series Database You Actually Want",
-      "__videoTitle": "PostgreSQL, The Time Series Database You Actually Want By Christoph Engelbert",
       "__speakers": "Christoph Engelbert",
+      "__videoTitle": "PostgreSQL, The Time Series Database You Actually Want By Christoph Engelbert",
       "talkId": "39119",
       "videoId": "HVAImbzm9pc"
     },
     {
       "__score": 0.94,
       "__talkTitle": "Home Automation in Practice",
-      "__videoTitle": "Home Automation in Practice By Dan Hardiker",
       "__speakers": "Dan Hardiker",
+      "__videoTitle": "Home Automation in Practice By Dan Hardiker",
       "talkId": "47014",
       "videoId": "wAI_v68znso"
     },
     {
       "__score": 0.94,
       "__talkTitle": "Prepare for Jakarta EE 11!",
-      "__videoTitle": "Prepare for Jakarta EE 11! By Ivar Grimstad",
       "__speakers": "Ivar Grimstad",
+      "__videoTitle": "Prepare for Jakarta EE 11! By Ivar Grimstad",
       "talkId": "6261",
       "videoId": "1fn87WAhrQw"
     },
     {
       "__score": 0.941,
       "__talkTitle": "Take your shot of Vitamin!",
-      "__videoTitle": "Take your shot of Vitamin! By Gerard Paligot",
       "__speakers": "Gerard Paligot",
+      "__videoTitle": "Take your shot of Vitamin! By Gerard Paligot",
       "talkId": "10601",
       "videoId": "89t2RZV76qk"
     },
     {
       "__score": 0.941,
       "__talkTitle": "Taming performance issues into the wild: a practical guide to JVM profiling",
-      "__videoTitle": "Taming performance issues into the wild: a practical guide to JVM profiling By Francesco Nigro, Mari",
       "__speakers": "Francesco Nigro, Mario Fusco",
+      "__videoTitle": "Taming performance issues into the wild: a practical guide to JVM profiling By Francesco Nigro, Mari",
       "talkId": "4455",
       "videoId": "Cw4nN5L-2vU"
     },
     {
       "__score": 0.942,
       "__talkTitle": "Developers to the rescue: How to design secure and eco-friendly solutions!",
-      "__videoTitle": "Developers to the rescue: How to design secure and eco friendly solutions!  By  Emmanouil Serrelis",
       "__speakers": "Emmanouil Serrelis",
+      "__videoTitle": "Developers to the rescue: How to design secure and eco friendly solutions!  By  Emmanouil Serrelis",
       "talkId": "64002",
       "videoId": "FBKKPGF98Fk"
     },
     {
       "__score": 0.943,
       "__talkTitle": "gRPC Supercharged with Armeria",
-      "__videoTitle": "gRPC Supercharged with Armeria By Trustin Lee",
       "__speakers": "Trustin Lee",
+      "__videoTitle": "gRPC Supercharged with Armeria By Trustin Lee",
       "talkId": "28351",
       "videoId": "g_z_Pbjd0v0"
     },
     {
       "__score": 0.943,
       "__talkTitle": "The Art of Software Development",
-      "__videoTitle": "The Art of Software Development By Sander Mak",
       "__speakers": "Sander Mak",
+      "__videoTitle": "The Art of Software Development By Sander Mak",
       "talkId": "39114",
       "videoId": "lRy3Q6FQ-XU"
     },
     {
       "__score": 0.943,
       "__talkTitle": "Debugging with IntelliJ IDEA",
-      "__videoTitle": "Debugging with IntelliJ IDEA By Anton Arhipov",
       "__speakers": "Anton Arhipov",
+      "__videoTitle": "Debugging with IntelliJ IDEA By Anton Arhipov",
       "talkId": "39142",
       "videoId": "H50J2l2yUAk"
     },
     {
       "__score": 0.943,
       "__talkTitle": "Into the hive of eBPF!",
-      "__videoTitle": "Into the hive of eBPF! By Mohammed Aboullaite",
       "__speakers": "Mohammed Aboullaite",
+      "__videoTitle": "Into the hive of eBPF! By Mohammed Aboullaite",
       "talkId": "6781",
       "videoId": "BXbxI9Z2-SI"
     },
     {
       "__score": 0.943,
       "__talkTitle": "JetBrains AI: A Deep Dive",
-      "__videoTitle": "JetBrains AI: A Deep Dive By Vladislav Tankov",
       "__speakers": "Vladislav Tankov",
+      "__videoTitle": "JetBrains AI: A Deep Dive By Vladislav Tankov",
       "talkId": "70102",
       "videoId": "MYhkTnag81o"
     },
     {
       "__score": 0.944,
       "__talkTitle": "Are Your Tests Slowing You Down?",
-      "__videoTitle": "Are Your Tests Slowing You Down? By Trisha Gee",
       "__speakers": "Trisha Gee",
+      "__videoTitle": "Are Your Tests Slowing You Down? By Trisha Gee",
       "talkId": "39117",
       "videoId": "CNFEKCb72xo"
     },
     {
       "__score": 0.944,
       "__talkTitle": "With Java 21, Your Code Runs Even Faster. But How is that Possible?",
-      "__videoTitle": "With Java 21, Your Code Runs Even Faster  But How is that Possible? By Per Minborg",
       "__speakers": "Per Minborg",
+      "__videoTitle": "With Java 21, Your Code Runs Even Faster  But How is that Possible? By Per Minborg",
       "talkId": "4454",
       "videoId": "T6X2Yytrzyg"
     },
     {
       "__score": 0.944,
       "__talkTitle": "Making your @Beans Intelligent",
-      "__videoTitle": "Making your @Beans Intelligent By Mark Pollack",
       "__speakers": "Mark Pollack",
+      "__videoTitle": "Making your @Beans Intelligent By Mark Pollack",
       "talkId": "70106",
       "videoId": "7OY9fKVxAFQ"
     },
     {
       "__score": 0.944,
       "__talkTitle": "Moving Java Forward Together",
-      "__videoTitle": "Moving Java Forward Together By Sharat Chander",
       "__speakers": "Sharat Chander",
+      "__videoTitle": "Moving Java Forward Together By Sharat Chander",
       "talkId": "72001",
       "videoId": "2sZ6b7M_aYg"
     },
     {
       "__score": 0.946,
       "__talkTitle": "Static Kotlin Bug Hunting",
-      "__videoTitle": "Static Kotlin Bug Hunting By Margarita Nedzelska",
       "__speakers": "Margarita Nedzelska",
+      "__videoTitle": "Static Kotlin Bug Hunting By Margarita Nedzelska",
       "talkId": "10628",
       "videoId": "sU-whKfw8Vk"
     },
     {
       "__score": 0.946,
       "__talkTitle": "Coding Your Documentation",
-      "__videoTitle": "Coding Your Documentation By Hubert Klein Ikkink",
       "__speakers": "Hubert Klein Ikkink",
+      "__videoTitle": "Coding Your Documentation By Hubert Klein Ikkink",
       "talkId": "35711",
       "videoId": "mIb_jPaakoY"
     },
     {
       "__score": 0.946,
       "__talkTitle": "Explaining QUIC: the protocol that is both very similar to and very different from TCP",
-      "__videoTitle": "Explaining QUIC: the protocol that is both very similar to and very different from TCP By Peter Door",
       "__speakers": "Peter Doornbosch",
+      "__videoTitle": "Explaining QUIC: the protocol that is both very similar to and very different from TCP By Peter Door",
       "talkId": "39132",
       "videoId": "sULCOKfc87Y"
     },
     {
       "__score": 0.946,
       "__talkTitle": "Value types and Pattern matching: bringing your data back on stage",
-      "__videoTitle": "Value types and Pattern matching: bringing your data back on stage By José Paumard, Remi Forax",
       "__speakers": "José Paumard, Remi Forax",
+      "__videoTitle": "Value types and Pattern matching: bringing your data back on stage By José Paumard, Remi Forax",
       "talkId": "45266",
       "videoId": "tWonozjIE-s"
     },
     {
       "__score": 0.947,
       "__talkTitle": "Bring agility back to developers !",
-      "__videoTitle": "Bring agility back to developers ! By Fanny KLAUK",
       "__speakers": "Fanny KLAUK",
+      "__videoTitle": "Bring agility back to developers ! By Fanny KLAUK",
       "talkId": "42010",
       "videoId": "lBzYY2vncbs"
     },
     {
       "__score": 0.947,
       "__talkTitle": "Continuous Code Feedback with OpenTelemetry and Digma",
-      "__videoTitle": "Continuous Code Feedback with OpenTelemetry and Digma  By  Roni Dover",
       "__speakers": "Roni Dover",
+      "__videoTitle": "Continuous Code Feedback with OpenTelemetry and Digma  By  Roni Dover",
       "talkId": "44158",
       "videoId": "Tyv79hhaL6c"
     },
     {
       "__score": 0.947,
       "__talkTitle": "Do you really need Hibernate?",
-      "__videoTitle": "Do you really need Hibernate? By Simon Martinelli",
       "__speakers": "Simon Martinelli",
+      "__videoTitle": "Do you really need Hibernate? By Simon Martinelli",
       "talkId": "6760",
       "videoId": "YsLrFAN1190"
     },
     {
       "__score": 0.947,
       "__talkTitle": "20th edition of Devoxx Belgium",
-      "__videoTitle": "20th edition of Devoxx Belgium By Stephan Janssen",
       "__speakers": "Stephan Janssen",
+      "__videoTitle": "20th edition of Devoxx Belgium By Stephan Janssen",
       "talkId": "67956",
       "videoId": "ZLjornmjV04"
     },
     {
       "__score": 0.949,
       "__talkTitle": "SEVEN things about API security",
-      "__videoTitle": "SEVEN things about API security By Philippe De Ryck",
       "__speakers": "Philippe De Ryck",
+      "__videoTitle": "SEVEN things about API security By Philippe De Ryck",
       "talkId": "23654",
       "videoId": "xFzaFo0MiH8"
     },
     {
       "__score": 0.95,
       "__talkTitle": "Keeping Your Java Hot by Solving the JVM Warmup Problem",
-      "__videoTitle": "Keeping Your Java Hot by Solving the JVM Warmup Problem  By  Simon Ritter",
       "__speakers": "Simon Ritter",
+      "__videoTitle": "Keeping Your Java Hot by Solving the JVM Warmup Problem  By  Simon Ritter",
       "talkId": "70107",
       "videoId": "g6Y6F-UfYTI"
     },
     {
       "__score": 0.95,
       "__talkTitle": "Rubber Grokking: Enhancing Software Development with AI",
-      "__videoTitle": "Rubber Grokking: Enhancing Software Development with AI  By  Remo Dentato",
       "__speakers": "Remo Dentato",
+      "__videoTitle": "Rubber Grokking: Enhancing Software Development with AI  By  Remo Dentato",
       "talkId": "71551",
       "videoId": "Zb2ltle3OnU"
     },
     {
       "__score": 0.951,
       "__talkTitle": "Semantic Kernel: AI orchestration for intelligent apps",
-      "__videoTitle": "Semantic Kernel: AI orchestration for intelligent apps By  Bruno Borges, John Oliver",
       "__speakers": "John Oliver, Bruno Borges",
+      "__videoTitle": "Semantic Kernel: AI orchestration for intelligent apps By  Bruno Borges, John Oliver",
       "talkId": "23660",
       "videoId": "8s3ddZ_Z8zg"
     },
     {
       "__score": 0.951,
       "__talkTitle": "ML in Java, YES it's possible!",
-      "__videoTitle": "ML in Java, YES it's possible! By Mohammed Aboullaite",
       "__speakers": "Mohammed Aboullaite",
+      "__videoTitle": "ML in Java, YES it's possible! By Mohammed Aboullaite",
       "talkId": "38408",
       "videoId": "ch73hs-qnPk"
     },
     {
       "__score": 0.952,
       "__talkTitle": "10 Incredible Things you can do with Micronaut & GraalVM",
-      "__videoTitle": "10 Incredible Things you can do with Micronaut & GraalVM  By  Graeme Rocher",
       "__speakers": "Graeme Rocher",
+      "__videoTitle": "10 Incredible Things you can do with Micronaut & GraalVM  By  Graeme Rocher",
       "talkId": "36653",
       "videoId": "Elz_abev4ts"
     },
     {
       "__score": 0.952,
       "__talkTitle": "Java Observability with OpenTelemetry",
-      "__videoTitle": "Java Observability with OpenTelemetry By Andrzej Kubik",
       "__speakers": "Andrzej Kubik",
+      "__videoTitle": "Java Observability with OpenTelemetry By Andrzej Kubik",
       "talkId": "67051",
       "videoId": "vrVL0Ws2eV4"
     },
     {
       "__score": 0.953,
       "__talkTitle": "The battle of the AI coding assistants",
-      "__videoTitle": "The battle of the AI coding assistants By Bouke Nijhuis",
       "__speakers": "Bouke Nijhuis",
+      "__videoTitle": "The battle of the AI coding assistants By Bouke Nijhuis",
       "talkId": "3870",
       "videoId": "3EiLw1dZyu8"
     },
     {
       "__score": 0.954,
       "__talkTitle": "Your tests also need some architecting",
-      "__videoTitle": "Your tests also need some architecting By Jonas Geiregat",
       "__speakers": "Jonas Geiregat",
+      "__videoTitle": "Your tests also need some architecting By Jonas Geiregat",
       "talkId": "2914",
       "videoId": "T0p4FAJdYOQ"
     },
     {
       "__score": 0.954,
       "__talkTitle": "State of the Art of Generative AI",
-      "__videoTitle": "State of the Art of Generative AI By Natalie Pistunovich",
       "__speakers": "Natalie Pistunovich",
+      "__videoTitle": "State of the Art of Generative AI By Natalie Pistunovich",
       "talkId": "32681",
       "videoId": "mB46c6qaWhY"
     },
     {
       "__score": 0.955,
       "__talkTitle": "Project Loom: Modern Scalable Concurrency for the Java Platform",
-      "__videoTitle": "Project Loom: Modern Scalable Concurrency for the Java Platform  By  Alan Bateman",
       "__speakers": "Alan Bateman",
+      "__videoTitle": "Project Loom: Modern Scalable Concurrency for the Java Platform  By  Alan Bateman",
       "talkId": "12201",
       "videoId": "XF4XZlPZc_c"
     },
     {
       "__score": 0.955,
       "__talkTitle": "UX is a full stack Job!",
-      "__videoTitle": "UX is a full stack Job! By Marcel Bagemihl, Miriam Becker",
       "__speakers": "Marcel Bagemihl, Miriam Becker",
+      "__videoTitle": "UX is a full stack Job! By Marcel Bagemihl, Miriam Becker",
       "talkId": "17251",
       "videoId": "1XqKCSRuygg"
     },
     {
       "__score": 0.955,
       "__talkTitle": "Flight recordings and mission control through thick clouds",
-      "__videoTitle": "Flight recordings and mission control through thick clouds  By  Martin Skarsaune",
       "__speakers": "Martin Skarsaune",
+      "__videoTitle": "Flight recordings and mission control through thick clouds  By  Martin Skarsaune",
       "talkId": "25101",
       "videoId": "fg_pMpkxaSE"
     },
     {
       "__score": 0.955,
       "__talkTitle": "Testcontainers: needed, simple, powerful",
-      "__videoTitle": "Testcontainers: needed, simple, powerful By Piotr Przybyl",
       "__speakers": "Piotr Przybyl",
+      "__videoTitle": "Testcontainers: needed, simple, powerful By Piotr Przybyl",
       "talkId": "39140",
       "videoId": "bali16KUnOI"
     },
     {
       "__score": 0.955,
       "__talkTitle": "IntelliJ Super Productivity in 45 Minutes",
-      "__videoTitle": "IntelliJ Super Productivity in 45 Minutes By Heinz Kabutz",
       "__speakers": "Heinz Kabutz",
+      "__videoTitle": "IntelliJ Super Productivity in 45 Minutes By Heinz Kabutz",
       "talkId": "45259",
       "videoId": "cFLz_J9Fdpc"
     },
     {
       "__score": 0.956,
       "__talkTitle": "Lessons Learned Building a GenAI Powered App",
-      "__videoTitle": "Lessons Learned Building a GenAI Powered App By Marc Cohen",
       "__speakers": "Marc Cohen",
+      "__videoTitle": "Lessons Learned Building a GenAI Powered App By Marc Cohen",
       "talkId": "25602",
       "videoId": "gDvTBsA5HnQ"
     },
     {
       "__score": 0.956,
       "__talkTitle": "Securing the Supply Chain for Your Java Applications",
-      "__videoTitle": "Securing the Supply Chain for Your Java Applications By  Thomas Vitale",
       "__speakers": "Thomas Vitale",
+      "__videoTitle": "Securing the Supply Chain for Your Java Applications By  Thomas Vitale",
       "talkId": "42866",
       "videoId": "ftPFxK8JPNM"
     },
     {
       "__score": 0.956,
       "__talkTitle": "Who needs Hibernate when there is SQL?",
-      "__videoTitle": "Who needs Hibernate when there is SQL? By Simon Martinelli",
       "__speakers": "Simon Martinelli",
+      "__videoTitle": "Who needs Hibernate when there is SQL? By Simon Martinelli",
       "talkId": "6762",
       "videoId": "KyP7HXvOgnE"
     },
     {
       "__score": 0.956,
       "__talkTitle": "Turbocharging DevOps with AI Adventures",
-      "__videoTitle": "Turbocharging DevOps with AI Adventures By Madou Coulibaly",
       "__speakers": "Madou Coulibaly",
+      "__videoTitle": "Turbocharging DevOps with AI Adventures By Madou Coulibaly",
       "talkId": "70852",
       "videoId": "c7jxcvwso7Q"
     },
     {
       "__score": 0.957,
       "__talkTitle": "A Java lambda is all you need for distributed background jobs!",
-      "__videoTitle": "A Java lambda is all you need for distributed background jobs!  By  Ronald Dehuysser",
       "__speakers": "Ronald Dehuysser",
+      "__videoTitle": "A Java lambda is all you need for distributed background jobs!  By  Ronald Dehuysser",
       "talkId": "2909",
       "videoId": "nSpcm2Dmx70"
     },
     {
       "__score": 0.957,
       "__talkTitle": "Bootiful AOT with Spring Boot 3",
-      "__videoTitle": "Bootiful AOT with Spring Boot 3 By Josh Long, Alina Yurenko",
       "__speakers": "Josh Long, Alina Yurenko",
+      "__videoTitle": "Bootiful AOT with Spring Boot 3 By Josh Long, Alina Yurenko",
       "talkId": "31412",
       "videoId": "M-7r35sttQI"
     },
     {
       "__score": 0.957,
       "__talkTitle": "A Deep Dive into Advanced TypeScript: A Live Coding Expedition",
-      "__videoTitle": "A Deep Dive into Advanced TypeScript: A Live Coding Expedition  By  Christian Woerz",
       "__speakers": "Christian Woerz",
+      "__videoTitle": "A Deep Dive into Advanced TypeScript: A Live Coding Expedition  By  Christian Woerz",
       "talkId": "38403",
       "videoId": "4SPkpIap4Ls"
     },
     {
       "__score": 0.957,
       "__talkTitle": "Human vs AI: How to ship secure code",
-      "__videoTitle": "Human vs AI: How to ship secure code By Joseph Katsioloudes",
       "__speakers": "Joseph Katsioloudes",
+      "__videoTitle": "Human vs AI: How to ship secure code By Joseph Katsioloudes",
       "talkId": "6775",
       "videoId": "GysUZMPY1QE"
     },
     {
       "__score": 0.957,
       "__talkTitle": "How to build a Secure Supply Chain for your Spring Apps",
-      "__videoTitle": "How to build a Secure Supply Chain for your Spring Apps  By David Caron",
       "__speakers": "David Caron",
+      "__videoTitle": "How to build a Secure Supply Chain for your Spring Apps  By David Caron",
       "talkId": "71251",
       "videoId": "n-a3Rfl2b6A"
     },
     {
       "__score": 0.957,
       "__talkTitle": "Challenges and benefits of coding with generative AI ",
-      "__videoTitle": "Challenges and benefits of coding with generative AI  By  Laurent Doguin",
       "__speakers": "Laurent Doguin",
+      "__videoTitle": "Challenges and benefits of coding with generative AI  By  Laurent Doguin",
       "talkId": "71252",
       "videoId": "Nns1oFd8rVs"
     },
     {
       "__score": 0.958,
       "__talkTitle": "Everything new in Spring Security 6 baked with a Spring Boot 3 recipe",
-      "__videoTitle": "Everything new in Spring Security 6 baked with a Spring Boot 3 recipe  By  Laur Spilca",
       "__speakers": "Laur Spilca",
+      "__videoTitle": "Everything new in Spring Security 6 baked with a Spring Boot 3 recipe  By  Laur Spilca",
       "talkId": "17259",
       "videoId": "uH1hco0LOJ0"
     },
     {
       "__score": 0.958,
       "__talkTitle": "Securing Your Java Containers by Breaking In",
-      "__videoTitle": "Securing Your Java Containers by Breaking In By Brian Vermeer",
       "__speakers": "Brian Vermeer",
+      "__videoTitle": "Securing Your Java Containers by Breaking In By Brian Vermeer",
       "talkId": "2933",
       "videoId": "O33z-CWVNpA"
     },
     {
       "__score": 0.958,
       "__talkTitle": "Speeding up Jenkins, Gradle, and Maven with a Build Cache ",
-      "__videoTitle": "Speeding up Jenkins, Gradle, and Maven with a Build Cache By Justin Reock",
       "__speakers": "Justin Reock",
+      "__videoTitle": "Speeding up Jenkins, Gradle, and Maven with a Build Cache By Justin Reock",
       "talkId": "47010",
       "videoId": "gzLZ0BTXNaE"
     },
     {
       "__score": 0.958,
       "__talkTitle": "Don’t let ephemeral CI kill your developer productivity",
-      "__videoTitle": "Don’t let ephemeral CI kill your developer productivity By  Louis Jacomet",
       "__speakers": "Louis Jacomet",
+      "__videoTitle": "Don’t let ephemeral CI kill your developer productivity By  Louis Jacomet",
       "talkId": "50799",
       "videoId": "YqpTfUVmPZI"
     },
     {
       "__score": 0.958,
       "__talkTitle": "Build Generative AI app in Project IDX and Firebase",
-      "__videoTitle": "Build Generative AI app in Project IDX and Firebase By  Prakhar Srivastav",
       "__speakers": "Prakhar Srivastav",
+      "__videoTitle": "Build Generative AI app in Project IDX and Firebase By  Prakhar Srivastav",
       "talkId": "70851",
       "videoId": "zlSki_HMNWI"
     },
     {
       "__score": 0.959,
       "__talkTitle": "Keep your dependencies up to date with Renovate",
-      "__videoTitle": "Keep your dependencies up to date with Renovate By Michael Vitz",
       "__speakers": "Michael Vitz",
+      "__videoTitle": "Keep your dependencies up to date with Renovate By Michael Vitz",
       "talkId": "12501",
       "videoId": "q43LmW1b2O0"
     },
     {
       "__score": 0.959,
       "__talkTitle": "Automate your Changelogs with Release Drafter",
-      "__videoTitle": "Automate your Changelogs with Release Drafter By Oleg Nenashev",
       "__speakers": "Oleg Nenashev",
+      "__videoTitle": "Automate your Changelogs with Release Drafter By Oleg Nenashev",
       "talkId": "47050",
       "videoId": "EBmcx_gAts8"
     },
     {
       "__score": 0.959,
       "__talkTitle": "How sand and Java are used to create the world’s most powerful chips",
-      "__videoTitle": "How sand and Java are used to create the world’s most powerful chips  By  Johan Janssen",
       "__speakers": "Johan Janssen",
+      "__videoTitle": "How sand and Java are used to create the world’s most powerful chips  By  Johan Janssen",
       "talkId": "8356",
       "videoId": "k3RI1cuYoWs"
     },
     {
       "__score": 0.96,
       "__talkTitle": "Introduction to OAuth 2.0 and OpenID Connect",
-      "__videoTitle": "Introduction to OAuth 2.0 and OpenID Connect By Philippe De Ryck",
       "__speakers": "Philippe De Ryck",
+      "__videoTitle": "Introduction to OAuth 2.0 and OpenID Connect By Philippe De Ryck",
       "talkId": "23653",
       "videoId": "ZuQoN2x8T6k"
     },
     {
       "__score": 0.96,
       "__talkTitle": "Everything you need to know about GraalVM Native Image",
-      "__videoTitle": "Everything you need to know about GraalVM Native Image  By  Alina Yurenko, Fabio Niephaus",
       "__speakers": "Alina Yurenko, Fabio Niephaus",
+      "__videoTitle": "Everything you need to know about GraalVM Native Image  By  Alina Yurenko, Fabio Niephaus",
       "talkId": "32668",
       "videoId": "QMwtJojhzl8"
     },
     {
       "__score": 0.96,
       "__talkTitle": "Lessons learned using Machine Learning in Java",
-      "__videoTitle": "Lessons learned using Machine Learning in Java By Jago de Vreede",
       "__speakers": "Jago de Vreede",
+      "__videoTitle": "Lessons learned using Machine Learning in Java By Jago de Vreede",
       "talkId": "42017",
       "videoId": "QwJ5-8wdheg"
     },
     {
       "__score": 0.96,
       "__talkTitle": "Tradeoffs, Bad Science, and Polar Bears – The World of Java Optimisation",
-      "__videoTitle": "Tradeoffs, Bad Science, and Polar Bears – The World of Java Optimisation  By  Holly Cummins",
       "__speakers": "Holly Cummins",
+      "__videoTitle": "Tradeoffs, Bad Science, and Polar Bears – The World of Java Optimisation  By  Holly Cummins",
       "talkId": "50771",
       "videoId": "PvZaDo_I21g"
     },
     {
       "__score": 0.961,
       "__talkTitle": "A fun and absurd introduction to Vector Databases",
-      "__videoTitle": "A fun and absurd introduction to Vector Databases  By Alexander Chatzizacharias",
       "__speakers": "Alexander Chatzizacharias",
+      "__videoTitle": "A fun and absurd introduction to Vector Databases  By Alexander Chatzizacharias",
       "talkId": "10639",
       "videoId": "W-i8bcxkXok"
     },
     {
       "__score": 0.961,
       "__talkTitle": "Netty, the IO framework that propels them all",
-      "__videoTitle": "Netty, the IO framework that propels them all By Stephane LANDELLE",
       "__speakers": "Stephane LANDELLE",
+      "__videoTitle": "Netty, the IO framework that propels them all By Stephane LANDELLE",
       "talkId": "32675",
       "videoId": "NvnOg6g4114"
     },
     {
       "__score": 0.962,
       "__talkTitle": "Algebraic Data Types + Pattern Matching = Elegant and readable Java code",
-      "__videoTitle": "Algebraic Data Types + Pattern Matching = Elegant and readable Java code  By  Balkrishna Rawool",
       "__speakers": "Balkrishna Rawool",
+      "__videoTitle": "Algebraic Data Types + Pattern Matching = Elegant and readable Java code  By  Balkrishna Rawool",
       "talkId": "35706",
       "videoId": "nDaFENPhAwM"
     },
     {
       "__score": 0.962,
       "__talkTitle": "Java Patterns and Practices for Serverless Applications",
-      "__videoTitle": "Java Patterns and Practices for Serverless Applications By Adam Bien",
       "__speakers": "Adam Bien",
+      "__videoTitle": "Java Patterns and Practices for Serverless Applications By Adam Bien",
       "talkId": "47037",
       "videoId": "Ou82_yDOcmY"
     },
     {
       "__score": 0.962,
       "__talkTitle": "Containers on AWS, so many options out there",
-      "__videoTitle": "Containers on AWS, so many options out there By Niccolo Giulianelli",
       "__speakers": "Niccolo Giulianelli",
+      "__videoTitle": "Containers on AWS, so many options out there By Niccolo Giulianelli",
       "talkId": "70105",
       "videoId": "FPstV7aIsH8"
     },
     {
       "__score": 0.962,
       "__talkTitle": "Sustainable breeding ground for digital talent",
-      "__videoTitle": "Sustainable breeding ground for digital talent By Eppo van der Plas",
       "__speakers": "Eppo van der Plas",
+      "__videoTitle": "Sustainable breeding ground for digital talent By Eppo van der Plas",
       "talkId": "72201",
       "videoId": "L9FoUbEWPco"
     },
     {
       "__score": 0.964,
       "__talkTitle": "Generative AI in practice: Concrete LLM use cases in Java, with the PaLM API",
-      "__videoTitle": "Generative AI in practice: Concrete LLM use cases in Java, with the PaLM API  By  Guillaume Laforge",
       "__speakers": "Guillaume Laforge",
+      "__videoTitle": "Generative AI in practice: Concrete LLM use cases in Java, with the PaLM API  By  Guillaume Laforge",
       "talkId": "4452",
       "videoId": "ioTPfL9cd9k"
     },
     {
       "__score": 0.964,
       "__talkTitle": "Beneath the Planet of the Collections",
-      "__videoTitle": "Beneath the Planet of the Collections By Stuart Marks, Maurice Naftalin",
       "__speakers": "Stuart Marks, Maurice Naftalin",
+      "__videoTitle": "Beneath the Planet of the Collections By Stuart Marks, Maurice Naftalin",
       "talkId": "48553",
       "videoId": "TZDgYA2YDqA"
     },
     {
       "__score": 0.964,
       "__talkTitle": "Introduction To Building AI Applications: LangChain 101",
-      "__videoTitle": "Introduction To Building AI Applications: LangChain 101 By Greg Kamradt",
       "__speakers": "Greg Kamradt",
+      "__videoTitle": "Introduction To Building AI Applications: LangChain 101 By Greg Kamradt",
       "talkId": "5752",
       "videoId": "fK15uqCvYA8"
     },
     {
       "__score": 0.965,
       "__talkTitle": "We all grow older, but do our projects really have to?",
-      "__videoTitle": "We all grow older, but do our projects really have to? By Simon Verhoeven",
       "__speakers": "Simon Verhoeven",
+      "__videoTitle": "We all grow older, but do our projects really have to? By Simon Verhoeven",
       "talkId": "69351",
       "videoId": "G824962s4MI"
     },
     {
       "__score": 0.966,
       "__talkTitle": "IAM Doomsday Prepper: Surviving the Apocalypse with Keycloak",
-      "__videoTitle": "IAM Doomsday Prepper: Surviving the Apocalypse with Keycloak By Maik Kingma",
       "__speakers": "Maik Kingma",
+      "__videoTitle": "IAM Doomsday Prepper: Surviving the Apocalypse with Keycloak By Maik Kingma",
       "talkId": "2604",
       "videoId": "aZOoH0i4s-0"
     },
     {
       "__score": 0.966,
       "__talkTitle": "Building GraalVM Cloud Native Applications with Micronaut 4",
-      "__videoTitle": "Building GraalVM Cloud Native Applications with Micronaut 4 By Graeme Rocher",
       "__speakers": "Graeme Rocher",
+      "__videoTitle": "Building GraalVM Cloud Native Applications with Micronaut 4 By Graeme Rocher",
       "talkId": "36652",
       "videoId": "Vqw1qx5PHOA"
     },
     {
       "__score": 0.966,
       "__talkTitle": "Using OpenRewrite and JDT for transforming large applications",
-      "__videoTitle": "Using OpenRewrite and JDT for transforming large applications By Ben Wilson",
       "__speakers": "Ben Wilson",
+      "__videoTitle": "Using OpenRewrite and JDT for transforming large applications By Ben Wilson",
       "talkId": "38412",
       "videoId": "Vv-54qhnndU"
     },
     {
       "__score": 0.967,
       "__talkTitle": "Things I wish I knew before I started with event sourcing",
-      "__videoTitle": "Things I wish I knew before I started with event sourcing By Michał Ostruszka",
       "__speakers": "Michał Ostruszka",
+      "__videoTitle": "Things I wish I knew before I started with event sourcing By Michał Ostruszka",
       "talkId": "10618",
       "videoId": "3lZkRxgmKt8"
     },
     {
       "__score": 0.967,
       "__talkTitle": "Closing the Developer Experience Gap of your Container Platforms",
-      "__videoTitle": "Closing the Developer Experience Gap of your Container Platforms By Timo Salm",
       "__speakers": "Timo Salm",
+      "__videoTitle": "Closing the Developer Experience Gap of your Container Platforms By Timo Salm",
       "talkId": "20281",
       "videoId": "DoRaHXv3C78"
     },
     {
       "__score": 0.967,
       "__talkTitle": "Write your own Java Profiler in 240 lines of pure Java",
-      "__videoTitle": "Write your own Java Profiler in 240 lines of pure Java By Johannes Bechberger",
       "__speakers": "Johannes Bechberger",
+      "__videoTitle": "Write your own Java Profiler in 240 lines of pure Java By Johannes Bechberger",
       "talkId": "39109",
       "videoId": "Mxcp2khJ4fw"
     },
     {
       "__score": 0.967,
       "__talkTitle": "Why you need performance tests for proper Kubernetes scaling",
-      "__videoTitle": "Why you need performance tests for proper Kubernetes scaling By Dmitry Chuyko",
       "__speakers": "Dmitry Chuyko",
+      "__videoTitle": "Why you need performance tests for proper Kubernetes scaling By Dmitry Chuyko",
       "talkId": "42875",
       "videoId": "VQJ6B35-eWs"
     },
     {
       "__score": 0.967,
       "__talkTitle": "Asynchronous Programming in Java: Options to Choose from",
-      "__videoTitle": "Asynchronous Programming in Java: Options to Choose from By Venkat Subramaniam",
       "__speakers": "Venkat Subramaniam",
+      "__videoTitle": "Asynchronous Programming in Java: Options to Choose from By Venkat Subramaniam",
       "talkId": "64003",
       "videoId": "1zSF1259s6w"
     },
     {
       "__score": 0.968,
       "__talkTitle": "How generative AI brings synthetic data to software engineering",
-      "__videoTitle": "How generative AI brings synthetic data to software engineering By Wim Blommaert",
       "__speakers": "Wim Blommaert",
+      "__videoTitle": "How generative AI brings synthetic data to software engineering By Wim Blommaert",
       "talkId": "20264",
       "videoId": "TOC7rKesK5Y"
     },
     {
       "__score": 0.968,
       "__talkTitle": "From Spring Boot 2 to Spring Boot 3 with Java 21 and Jakarta EE",
-      "__videoTitle": "From Spring Boot 2 to Spring Boot 3 with Java 21 and Jakarta EE By Ivar Grimstad",
       "__speakers": "Ivar Grimstad",
+      "__videoTitle": "From Spring Boot 2 to Spring Boot 3 with Java 21 and Jakarta EE By Ivar Grimstad",
       "talkId": "2932",
       "videoId": "jvDSWwlzeOk"
     },
     {
       "__score": 0.969,
       "__talkTitle": "Practical Pipelines: A Houseplant Soil Alerting System with ksqlDB",
-      "__videoTitle": "Practical Pipelines: A Houseplant Soil Alerting System with ksqlDB By Danica Fine",
       "__speakers": "Danica Fine",
+      "__videoTitle": "Practical Pipelines: A Houseplant Soil Alerting System with ksqlDB By Danica Fine",
       "talkId": "20292",
       "videoId": "Djfbu6GAhdA"
     },
     {
       "__score": 0.969,
       "__talkTitle": "Understanding Probabilistic Data Structures with 112,092 UFO Sightings",
-      "__videoTitle": "Understanding Probabilistic Data Structures with 112,092 UFO Sightings By Guy Royse",
       "__speakers": "Guy Royse",
+      "__videoTitle": "Understanding Probabilistic Data Structures with 112,092 UFO Sightings By Guy Royse",
       "talkId": "31423",
       "videoId": "qMp6jlxC238"
     },
     {
       "__score": 0.969,
       "__talkTitle": "From Web to Flux: Tackling the Challenges of Reactive Programming",
-      "__videoTitle": "From Web to Flux: Tackling the Challenges of Reactive Programming By Victor Rentea",
       "__speakers": "Victor Rentea",
+      "__videoTitle": "From Web to Flux: Tackling the Challenges of Reactive Programming By Victor Rentea",
       "talkId": "39130",
       "videoId": "wsgJU5S1rRY"
     },
     {
       "__score": 0.969,
       "__talkTitle": "AI Unbounded: Multiplying the Collective Intelligence of Humanity",
-      "__videoTitle": "AI Unbounded: Multiplying the Collective Intelligence of Humanity By Greg Kamradt",
       "__speakers": "Greg Kamradt",
+      "__videoTitle": "AI Unbounded: Multiplying the Collective Intelligence of Humanity By Greg Kamradt",
       "talkId": "5755",
       "videoId": "7ss28B4d9RQ"
     },
     {
       "__score": 0.969,
       "__talkTitle": "Clean as You Code: Elevating Software Quality through Continuous Code Improvement ",
-      "__videoTitle": "Clean as You Code: Elevating Software Quality through Continuous Code Improvement  By  Peter McKee",
       "__speakers": "Peter McKee",
+      "__videoTitle": "Clean as You Code: Elevating Software Quality through Continuous Code Improvement  By  Peter McKee",
       "talkId": "64001",
       "videoId": "AoqU6sEuXig"
     },
     {
       "__score": 0.97,
       "__talkTitle": "Release your creations into the world with JReleaser! 🚀",
-      "__videoTitle": "Release your creations into the world with JReleaser! 🚀 By Tom Cools, Maarten Mulders",
       "__speakers": "Tom Cools, Maarten Mulders",
+      "__videoTitle": "Release your creations into the world with JReleaser! 🚀 By Tom Cools, Maarten Mulders",
       "talkId": "20252",
       "videoId": "JzQleuj9054"
     },
     {
       "__score": 0.97,
       "__talkTitle": "Database Migration with Spring Boot – Pitfalls and Hidden Surprises",
-      "__videoTitle": "Database Migration with Spring Boot – Pitfalls and Hidden Surprises By Dmitry Belyaev",
       "__speakers": "Dmitry Belyaev",
+      "__videoTitle": "Database Migration with Spring Boot – Pitfalls and Hidden Surprises By Dmitry Belyaev",
       "talkId": "36659",
       "videoId": "WuIgPPfgQUU"
     },
     {
       "__score": 0.97,
       "__talkTitle": "Narrative Engineering: Unleashing the Power of Storytelling in Software Development",
-      "__videoTitle": "Narrative Engineering: Unleashing the Power of Storytelling in Software Development By Ramon Wielema",
       "__speakers": "Ramon Wieleman",
+      "__videoTitle": "Narrative Engineering: Unleashing the Power of Storytelling in Software Development By Ramon Wielema",
       "talkId": "44159",
       "videoId": "XkVOYlyM6Q0"
     },
     {
       "__score": 0.97,
       "__talkTitle": "Beginners guide to balance your data across Apache Kafka partitions",
-      "__videoTitle": "Beginners guide to balance your data across Apache Kafka partitions By Olena Kutsenko",
       "__speakers": "Olena Kutsenko",
+      "__videoTitle": "Beginners guide to balance your data across Apache Kafka partitions By Olena Kutsenko",
       "talkId": "7951",
       "videoId": "OqXdNWwAMIg"
     },
     {
       "__score": 0.971,
       "__talkTitle": "Everything everywhere all at once; managing interruptions and surprises ",
-      "__videoTitle": "Everything everywhere all at once; managing interruptions and surprises  By Helen Scott",
       "__speakers": "Helen Scott",
+      "__videoTitle": "Everything everywhere all at once; managing interruptions and surprises  By Helen Scott",
       "talkId": "47024",
       "videoId": "nRPSvJ7A4iE"
     },
     {
       "__score": 0.971,
       "__talkTitle": "Speak, Code, Deploy: Transforming Developer Experience with Voice Commands",
-      "__videoTitle": "Speak, Code, Deploy: Transforming Developer Experience with Voice Commands By Sami Ekblad",
       "__speakers": "Sami Ekblad",
+      "__videoTitle": "Speak, Code, Deploy: Transforming Developer Experience with Voice Commands By Sami Ekblad",
       "talkId": "48813",
       "videoId": "bhE9KklHc44"
     },
     {
       "__score": 0.971,
       "__talkTitle": "Effectively running Java applications on AWS",
-      "__videoTitle": "Effectively running Java applications on AWS By Maximilian Schellhorn, Dennis Kieselhorst",
       "__speakers": "Maximilian Schellhorn, Dennis Kieselhorst",
+      "__videoTitle": "Effectively running Java applications on AWS By Maximilian Schellhorn, Dennis Kieselhorst",
       "talkId": "70103",
       "videoId": "u3tgOE8qFjI"
     },
     {
       "__score": 0.972,
       "__talkTitle": "MLOps: Keeping models from misbehaving like angry teenagers",
-      "__videoTitle": "MLOps: Keeping models from misbehaving like angry teenagers By Cedric De Haes, Bert Gossey",
       "__speakers": "Cedric De Haes, Bert Gossey",
+      "__videoTitle": "MLOps: Keeping models from misbehaving like angry teenagers By Cedric De Haes, Bert Gossey",
       "talkId": "39120",
       "videoId": "p5SvPtDzwfA"
     },
     {
       "__score": 0.974,
       "__talkTitle": "Quarkus 3: The Road to Loom for Cheaper, Faster, and Easier Concurrent Applications",
-      "__videoTitle": "Quarkus 3: The Road to Loom for Cheaper, Faster, and Easier Concurrent Applications By Daniel Oh",
       "__speakers": "Daniel Oh",
+      "__videoTitle": "Quarkus 3: The Road to Loom for Cheaper, Faster, and Easier Concurrent Applications By Daniel Oh",
       "talkId": "2915",
       "videoId": "sl4UGdKvC3o"
     },
     {
       "__score": 0.974,
       "__talkTitle": "Building and Deploying Java Client Desktop Applications With JDK 21 and Beyond",
-      "__videoTitle": "Building and Deploying Java Client Desktop Applications With JDK 21 and Beyond By Kevin Rushforth",
       "__speakers": "Kevin Rushforth",
+      "__videoTitle": "Building and Deploying Java Client Desktop Applications With JDK 21 and Beyond By Kevin Rushforth",
       "talkId": "42855",
       "videoId": "Afehjldx4yM"
     },
     {
       "__score": 0.974,
       "__talkTitle": "Ask the Java Architects",
-      "__videoTitle": "Ask the Java Architects By Sharat Chander, Alan Bateman, Stuart Marks, Viktor Klang, Brian Goetz",
       "__speakers": "Sharat Chander, Alan Bateman, Stuart Marks, Viktor Klang, Brian Goetz",
+      "__videoTitle": "Ask the Java Architects By Sharat Chander, Alan Bateman, Stuart Marks, Viktor Klang, Brian Goetz",
       "talkId": "9801",
       "videoId": "DlTUMjg7DD0"
     },
     {
       "__score": 0.979,
       "__talkTitle": "The Fast and the Sustainable: Unleash the Power of Sustainable IT & High-Performance Green Code",
-      "__videoTitle": "The Fast and the Sustainable: Unleash the Power of Sustainable IT & High Performance Green Code",
       "__speakers": "Marc Cortada Bertomeu, Alexandru-Madalin Ghenea",
+      "__videoTitle": "The Fast and the Sustainable: Unleash the Power of Sustainable IT & High Performance Green Code",
       "talkId": "31416",
       "videoId": "CbYZQl27ko8"
     },
     {
       "__score": 0.979,
       "__talkTitle": "Dockerfiles, Buildpacks, Jib and more ... what's the best way to run your Java code in Containers?",
-      "__videoTitle": "Dockerfiles, Buildpacks, Jib and more what's the best way to run your Java code in Containers?",
       "__speakers": "Matthias Haeussler",
+      "__videoTitle": "Dockerfiles, Buildpacks, Jib and more what's the best way to run your Java code in Containers?",
       "talkId": "39107",
       "videoId": "oXS1rS6v0I8"
     },
     {
       "__score": 0.995,
       "__talkTitle": "Implementing passwordless logins using Passkey, WebAuthn protocols and spring authorization server ",
-      "__videoTitle": "Implementing passwordless logins using Passkey, WebAuthn protocols and spring authorization server",
       "__speakers": "Adib Saikali, Joe Grandja",
+      "__videoTitle": "Implementing passwordless logins using Passkey, WebAuthn protocols and spring authorization server",
       "talkId": "50772",
       "videoId": "qNy_Q9fth-4"
     }
   ],
   "expectedUnmappedTalks": [
+    {
+      "__talkTitle": "Observability for Java Developers (2023 Edition)",
+      "__talkFormat": "Conference (id=951, duration=PT50m)",
+      "__talkRoom": "Room 6 (1158)",
+      "__talkSpeakers": "Ben Evans",
+      "talkId": "32655"
+    },
     {
       "__talkTitle": "Keeping Up With LTS: Moving from JDK 17 to 21",
       "__talkFormat": "Deep Dive (id=959, duration=PT180m)",
@@ -1509,130 +1516,23 @@ export const DVBE23_TALKS_AND_YOUTUBE = {
       "__talkRoom": "Room 9 (1155)",
       "__talkSpeakers": "Matt Raible",
       "talkId": "47005"
+    }
+  ],
+  "unmappedYoutubeVideos": [
+    {
+      "id": "MOoVhz3y-k4",
+      "publishedAt": "2023-10-09T07:44:48Z",
+      "duration": "PT38M21S",
+      "title": "Devoxx Belgium 2023 interviews by Frank Delporte"
     },
     {
-      "__talkTitle": "Observability for Java Developers (2023 Edition)",
-      "__talkFormat": "Conference (id=951, duration=PT50m)",
-      "__talkRoom": "Room 6 (1158)",
-      "__talkSpeakers": "Ben Evans",
-      "talkId": "32655"
+      "id": "dGz2MoDR2eE",
+      "publishedAt": "2023-10-06T10:11:48Z",
+      "duration": "PT14M19S",
+      "title": "The Devoxx Belgium timeline"
     }
   ],
   "youtubeVideos": [
-    {
-      "id": "QVCsJ0B3J_k",
-      "publishedAt": "2023-10-25T03:45:37Z",
-      "duration": "PT1H2S",
-      "title": "[VDCLUJ2023] Sander Hoogendoorn - Beyond the innovator’s dilemma"
-    },
-    {
-      "id": "VFMBAV4rrwY",
-      "publishedAt": "2023-10-25T03:45:37Z",
-      "duration": "PT5M6S",
-      "title": "[VDCLUJ2023] - Alex Proca & Andra Ghibuțiu - Welcome thoughts"
-    },
-    {
-      "id": "gVAWKIHeYMQ",
-      "publishedAt": "2023-10-25T03:45:37Z",
-      "duration": "PT56M6S",
-      "title": "[VDCLUJ2023] PANEL: Unleashing the Future: The Impact of Gen AI on Development Productivity"
-    },
-    {
-      "id": "-Nrx5HddBEg",
-      "publishedAt": "2023-10-25T03:45:36Z",
-      "duration": "PT45M52S",
-      "title": "[VDCLUJ2023] Rustam Mehmandarov & Mads Opheim - Modern Java App Development in the Cloud"
-    },
-    {
-      "id": "4RQjwP0ptTw",
-      "publishedAt": "2023-10-25T03:45:36Z",
-      "duration": "PT47M12S",
-      "title": "[VDCLUJ2023] - Ryan & Aiden Clark - Hyper-Productivity with Cloud-Native, Serverless Architectures"
-    },
-    {
-      "id": "7aLO2dsvpS4",
-      "publishedAt": "2023-10-25T03:45:36Z",
-      "duration": "PT32M12S",
-      "title": "[VDCLUJ2023] Andrei Timofticiuc - Building at Google: From Idea to Production"
-    },
-    {
-      "id": "CRvtx0MeGCY",
-      "publishedAt": "2023-10-25T03:45:36Z",
-      "duration": "PT55M41S",
-      "title": "[VDCLUJ2023] Victor Rentea - Clean Code, Two Decades Later"
-    },
-    {
-      "id": "CvkMUO3rZ8M",
-      "publishedAt": "2023-10-25T03:45:36Z",
-      "duration": "PT56M57S",
-      "title": "[VDCLUJ2023] Elias Nogueira - Modern Testing Tools for Java Developers"
-    },
-    {
-      "id": "E-Rf_H7MXpA",
-      "publishedAt": "2023-10-25T03:45:36Z",
-      "duration": "PT28M10S",
-      "title": "[VDCLUJ2023] Anton Caceres - Charge Your Database with Predictive ML Capabilities using Open-Source"
-    },
-    {
-      "id": "KtU2S5ReUhA",
-      "publishedAt": "2023-10-25T03:45:36Z",
-      "duration": "PT49M53S",
-      "title": "[VDCLUJ2023] Brian Vermeer - Stranger Danger: Your Java Attack Surface Just Got Bigger"
-    },
-    {
-      "id": "LJYyUEKFXtI",
-      "publishedAt": "2023-10-25T03:45:36Z",
-      "duration": "PT54M3S",
-      "title": "[VDCLUJ2023] - Hugh Mckee - Micro-Mind Services: Building Complex Behavioral Systems"
-    },
-    {
-      "id": "VXlQ-xC8d1g",
-      "publishedAt": "2023-10-25T03:45:36Z",
-      "duration": "PT33M11S",
-      "title": "[VDCLUJ2023] - Olimpiu Pop - Three Things That Each Developer Should Know to Help Secure Code Base"
-    },
-    {
-      "id": "dd9NIXCB6hE",
-      "publishedAt": "2023-10-25T03:45:36Z",
-      "duration": "PT46M1S",
-      "title": "[VDCLUJ2023] Rob Geurden - Simplifying Microservices: The art of effortless development"
-    },
-    {
-      "id": "eJ5V889lEvM",
-      "publishedAt": "2023-10-25T03:45:36Z",
-      "duration": "PT45M36S",
-      "title": "[VDCLUJ2023] Laurențiu Spilcă - Everything new in Spring Security 6 baked with a Spring Boot3 recipe"
-    },
-    {
-      "id": "hm3K3dlh9M4",
-      "publishedAt": "2023-10-25T03:45:36Z",
-      "duration": "PT47M50S",
-      "title": "[VDCLUJ2023] Ionuț Baloșin & Florin Blănaru - A journey to JVM Excellence: Navigating JDKs and JVMs"
-    },
-    {
-      "id": "kl00P-ocfTQ",
-      "publishedAt": "2023-10-25T03:45:36Z",
-      "duration": "PT50M46S",
-      "title": "[VDCLUJ2023] Otavio Santana - Empowering Enterprise Architectures with Polyglot Persistence"
-    },
-    {
-      "id": "ljesMalbh7Y",
-      "publishedAt": "2023-10-25T03:45:36Z",
-      "duration": "PT2M18S",
-      "title": "[VDCLUJ2023] - Alex Proca & Andra Ghibuțiu - Closing Thoughts"
-    },
-    {
-      "id": "xq6olzNU6iM",
-      "publishedAt": "2023-10-25T03:45:36Z",
-      "duration": "PT52M40S",
-      "title": "[VDCLUJ2023] Ana-Maria Mihălceanu - Calibrate Garbage Collection on the Ground and Run Your Java App"
-    },
-    {
-      "id": "tg_Wy4J46dQ",
-      "publishedAt": "2023-10-13T00:22:07Z",
-      "duration": "PT1H2M24S",
-      "title": "[VDCLUJ2023] PANEL - Unleashing the Future: The Impact of Gen AI on Development Productivity"
-    },
     {
       "id": "MOoVhz3y-k4",
       "publishedAt": "2023-10-09T07:44:48Z",

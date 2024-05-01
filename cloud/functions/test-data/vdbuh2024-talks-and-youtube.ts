@@ -6,200 +6,200 @@ export const VDBUH2024_TALKS_AND_YOUTUBE = {
     {
       "__score": 0.581,
       "__talkTitle": "Scaling personalization with AI: leveraging HuggingFace and RAG for customized user experiences",
-      "__videoTitle": "[VDBUH2024] - Nicolas Boitout & Bogdan Solga - Scaling personalization with AI",
       "__speakers": "Bogdan Solga, Nicolas Boitout",
+      "__videoTitle": "[VDBUH2024] - Nicolas Boitout & Bogdan Solga - Scaling personalization with AI",
       "talkId": "12902",
       "videoId": "JbNjzclyXh0"
     },
     {
       "__score": 0.679,
       "__talkTitle": "The Future is 💚: A Journey through the Energy Efficient Design Principles of Software Engineering",
-      "__videoTitle": "[VDBUH2024]  - Ionuț Baloșin & Ko Turk - The Future is 💚: A Journey through the Energy Efficient ..",
       "__speakers": "Ko Turk, Ionut Balosin",
+      "__videoTitle": "[VDBUH2024]  - Ionuț Baloșin & Ko Turk - The Future is 💚: A Journey through the Energy Efficient ..",
       "talkId": "2809",
       "videoId": "y7ZJ-XpdjNg"
     },
     {
       "__score": 0.767,
       "__talkTitle": "Innovation takes courage",
-      "__videoTitle": "[VDBUH2024] - Alex Pavăl - Innovation takes courage",
       "__speakers": "Alex Paval",
+      "__videoTitle": "[VDBUH2024] - Alex Pavăl - Innovation takes courage",
       "talkId": "12306",
       "videoId": "ykJq6dXwNI4"
     },
     {
       "__score": 0.771,
       "__talkTitle": "Reading code",
-      "__videoTitle": "[VDBUH2024] - Marit van Dijk - Reading code",
       "__speakers": "Marit van Dijk",
+      "__videoTitle": "[VDBUH2024] - Marit van Dijk - Reading code",
       "talkId": "1753",
       "videoId": "kKQqa27NiHM"
     },
     {
       "__score": 0.81,
       "__talkTitle": "Bootiful Spring Boot 3.x",
-      "__videoTitle": "[VDBUH2024] - Josh Long - Bootiful Spring Boot 3.x",
       "__speakers": "Josh Long",
+      "__videoTitle": "[VDBUH2024] - Josh Long - Bootiful Spring Boot 3.x",
       "talkId": "11752",
       "videoId": "3SiYK0BWr0M"
     },
     {
       "__score": 0.833,
       "__talkTitle": "Code Smells - Hall of Fame",
-      "__videoTitle": "[VDBUH2024] - Victor Rentea - Code Smells - Hall of Fame",
       "__speakers": "Victor Rentea",
+      "__videoTitle": "[VDBUH2024] - Victor Rentea - Code Smells - Hall of Fame",
       "talkId": "12305",
       "videoId": "lsW0-sEGr3w"
     },
     {
       "__score": 0.857,
       "__talkTitle": "A Practical Use Case of Software Architecture Evolution",
-      "__videoTitle": "[VDBUH2024] - Ionuț Baloșin - A Practical Use Case of Software Architecture Evolution",
       "__speakers": "Ionut Balosin",
+      "__videoTitle": "[VDBUH2024] - Ionuț Baloșin - A Practical Use Case of Software Architecture Evolution",
       "talkId": "5550",
       "videoId": "Yo1tNeaDQB0"
     },
     {
       "__score": 0.864,
       "__talkTitle": "Lessons learned as a DevOps Consultant",
-      "__videoTitle": "[VDBUH2024] Mircea Rugină - Lessons Learned as a DevOps Consultant",
       "__speakers": "Mircea Rugina",
+      "__videoTitle": "[VDBUH2024] Mircea Rugină - Lessons Learned as a DevOps Consultant",
       "talkId": "12901",
       "videoId": "CS6K3dxyc0I"
     },
     {
       "__score": 0.873,
       "__talkTitle": "AI Showdown: The Good, The Glitchy, and The Risky",
-      "__videoTitle": "[VDBUH2024] - Olimpiu Pop & Steve Poole - AI Showdown: The Good, The Glitchy, and The Risky",
       "__speakers": "Olimpiu Pop, Steve Poole",
+      "__videoTitle": "[VDBUH2024] - Olimpiu Pop & Steve Poole - AI Showdown: The Good, The Glitchy, and The Risky",
       "talkId": "7456",
       "videoId": "WAxBGqiWCI0"
     },
     {
       "__score": 0.874,
       "__talkTitle": "PANEL: Mastering the AI Shift: Adaptive Strategies for Software Evolution",
-      "__videoTitle": "[VDBUH2024] - Mastering the AI Shift: Adaptive Strategies for Software Evolution",
       "__speakers": "Lucian Gruia, Brian Vermeer, Olimpiu Pop, valentin Tomici, PRATIK PATEL, Cristina Duta, Mihaela CUȚUI",
+      "__videoTitle": "[VDBUH2024] - Mastering the AI Shift: Adaptive Strategies for Software Evolution",
       "talkId": "12602",
       "videoId": "OTcNjWA0RZM"
     },
     {
       "__score": 0.878,
       "__talkTitle": "Maximizing Security with JDK: Understanding Built-in Capabilities",
-      "__videoTitle": "[VDBUH2024] - Laurențiu Spilcă - Maximizing Security with JDK: Understanding Built-in Capabilities",
       "__speakers": "Laurentiu Spilca",
+      "__videoTitle": "[VDBUH2024] - Laurențiu Spilcă - Maximizing Security with JDK: Understanding Built-in Capabilities",
       "talkId": "2801",
       "videoId": "TcCkSbari7M"
     },
     {
       "__score": 0.879,
       "__talkTitle": "Securing Your Java Containers by Breaking In",
-      "__videoTitle": "[VDBUH2024] - Brian Vermeer - Securing Your Java Containers by Breaking In",
       "__speakers": "Brian Vermeer",
+      "__videoTitle": "[VDBUH2024] - Brian Vermeer - Securing Your Java Containers by Breaking In",
       "talkId": "4952",
       "videoId": "JKuc3tdzfUM"
     },
     {
       "__score": 0.88,
       "__talkTitle": "Performance and Scale Domain Oriented Objects vs Tabular Data Structures",
-      "__videoTitle": "[VDBUH2024] Rustam Mehmandarov -Performance&Scale Domain Oriented Objects vs Tabular Data Structures",
       "__speakers": "Rustam Mehmandarov",
+      "__videoTitle": "[VDBUH2024] Rustam Mehmandarov -Performance&Scale Domain Oriented Objects vs Tabular Data Structures",
       "talkId": "11751",
       "videoId": "6NaIlETJ3Nw"
     },
     {
       "__score": 0.883,
       "__talkTitle": "Finding the balance between human and bot interaction",
-      "__videoTitle": "[VDBUH2024] Andreea Mihăilescu&Alexandru Ivan -Finding the balance between human and bot interaction",
       "__speakers": "Andreea Mihailescu, Alexandru Ivan",
+      "__videoTitle": "[VDBUH2024] Andreea Mihăilescu&Alexandru Ivan -Finding the balance between human and bot interaction",
       "talkId": "12301",
       "videoId": "SqOZ6I4slok"
     },
     {
       "__score": 0.884,
       "__talkTitle": "CQRS in the small with Java Records and jOOQ",
-      "__videoTitle": "[VDBUH2024] - Simon Martinelli - CQRS in the small with Java Records and jOOQ",
       "__speakers": "Simon Martinelli",
+      "__videoTitle": "[VDBUH2024] - Simon Martinelli - CQRS in the small with Java Records and jOOQ",
       "talkId": "3308",
       "videoId": "JVX8XKPg4xI"
     },
     {
       "__score": 0.889,
       "__talkTitle": "Cloud Cost Optimization for Java Developers",
-      "__videoTitle": "[VDBUH2024] Pratik Patel - Cloud Cost Optimization for Java Developers",
       "__speakers": "PRATIK PATEL",
+      "__videoTitle": "[VDBUH2024] Pratik Patel - Cloud Cost Optimization for Java Developers",
       "talkId": "11755",
       "videoId": "h4f-FunJ-w0"
     },
     {
       "__score": 0.893,
       "__talkTitle": "Beyond the Hammer: Diversifying Your Software Development Toolkit",
-      "__videoTitle": "[VDBUH2024] - Liviu Spiroiu - Beyond the Hammer: Diversifying Your Software Development Toolkit",
       "__speakers": "Liviu N. Spiroiu",
+      "__videoTitle": "[VDBUH2024] - Liviu Spiroiu - Beyond the Hammer: Diversifying Your Software Development Toolkit",
       "talkId": "11756",
       "videoId": "uYSpY0m_3P0"
     },
     {
       "__score": 0.896,
       "__talkTitle": "Effecting Change—The Art of Leading Teams",
-      "__videoTitle": "[VDBUH2024] Venkat Subramaniam - Effecting Change—The Art of Leading Teams",
       "__speakers": "Venkat Subramaniam",
+      "__videoTitle": "[VDBUH2024] Venkat Subramaniam - Effecting Change—The Art of Leading Teams",
       "talkId": "11754",
       "videoId": "7S9bepfGOrw"
     },
     {
       "__score": 0.898,
       "__talkTitle": "Monitoring Java Application Security with JDK tools and JFR Events",
-      "__videoTitle": "[VDBUH2024] Ana-Maria Mihălceanu -Monitoring Java Application Security with JDK tools and JFR Events",
       "__speakers": "Ana-Maria Mihalceanu",
+      "__videoTitle": "[VDBUH2024] Ana-Maria Mihălceanu -Monitoring Java Application Security with JDK tools and JFR Events",
       "talkId": "7801",
       "videoId": "tAtSDsU9Hao"
     },
     {
       "__score": 0.899,
       "__talkTitle": "Continuous Profiling, the missing piece in your observability puzzle!",
-      "__videoTitle": "[VDBUH2024] Mohammed Aboullaite -Continuous Profiling the missing piece in your observability puzzle",
       "__speakers": "Mohammed Aboullaite",
+      "__videoTitle": "[VDBUH2024] Mohammed Aboullaite -Continuous Profiling the missing piece in your observability puzzle",
       "talkId": "1754",
       "videoId": "HSW-h3Ipi3Y"
     },
     {
       "__score": 0.906,
       "__talkTitle": "From Spring Boot 2 to Spring Boot 3 with Java 21 and Jakarta EE",
-      "__videoTitle": "[VDBUH2024] - Ivar Grimstad - From Spring Boot 2 to Spring Boot 3 with Java 21 and Jakarta EE",
       "__speakers": "Ivar Grimstad",
+      "__videoTitle": "[VDBUH2024] - Ivar Grimstad - From Spring Boot 2 to Spring Boot 3 with Java 21 and Jakarta EE",
       "talkId": "5512",
       "videoId": "CfTjir73BzQ"
     },
     {
       "__score": 0.908,
       "__talkTitle": "Five things every developer should know about software architecture",
-      "__videoTitle": "[VDBUH2024] - Simon Brown - Five things every developer should know about software architecture",
       "__speakers": "Simon Brown",
+      "__videoTitle": "[VDBUH2024] - Simon Brown - Five things every developer should know about software architecture",
       "talkId": "11753",
       "videoId": "wcrloUXSFgY"
     },
     {
       "__score": 0.91,
       "__talkTitle": "Practical Guides for Enhancing Your Software Supply Chain Security",
-      "__videoTitle": "[VDBUH2024] - Abdel Sghiouar - Practical Guides for Enhancing Your Software Supply Chain Security",
       "__speakers": "Abdel Sghiouar",
+      "__videoTitle": "[VDBUH2024] - Abdel Sghiouar - Practical Guides for Enhancing Your Software Supply Chain Security",
       "talkId": "3907",
       "videoId": "cn-puSzSiRo"
     },
     {
       "__score": 0.911,
       "__talkTitle": "How sand and Java are used to create the world’s most powerful chips",
-      "__videoTitle": "[VDBUH2024] - Johan Janssen - How sand and Java are used to create the world’s most powerful chips",
       "__speakers": "Johan Janssen",
+      "__videoTitle": "[VDBUH2024] - Johan Janssen - How sand and Java are used to create the world’s most powerful chips",
       "talkId": "4351",
       "videoId": "tRd6uQdL8os"
     },
     {
       "__score": 0.911,
       "__talkTitle": "AI is Coming - Now What? Architecting the Future of Software",
-      "__videoTitle": "[VDBUH2024] - Hugh Mckee - AI is Coming - Now What? Architecting the Future of Software",
       "__speakers": "Hugh McKee",
+      "__videoTitle": "[VDBUH2024] - Hugh Mckee - AI is Coming - Now What? Architecting the Future of Software",
       "talkId": "5548",
       "videoId": "I9S6k4WgB6k"
     }
@@ -225,6 +225,14 @@ export const VDBUH2024_TALKS_AND_YOUTUBE = {
       "__talkRoom": "Crown D (12102)",
       "__talkSpeakers": "Andra Somesan, Adrian Bere",
       "talkId": "5531"
+    }
+  ],
+  "unmappedYoutubeVideos": [
+    {
+      "id": "tXJgJsd_xsQ",
+      "publishedAt": "2024-04-18T04:17:26Z",
+      "duration": "PT5M10S",
+      "title": "[VDBUH2024] -  Alex Proca & Andra Ghibuțiu - Opening Thoughts"
     }
   ],
   "youtubeVideos": [

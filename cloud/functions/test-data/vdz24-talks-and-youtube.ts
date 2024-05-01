@@ -6,288 +6,288 @@ export const VDZ24_TALKS_AND_YOUTUBE = {
     {
       "__score": 0.639,
       "__talkTitle": "Welcome",
-      "__videoTitle": "Welcome to the 8th edition of VoxxedDays Zürich by Federico Yankelevich and Patrick Baumgartner",
       "__speakers": "Federico Yankelevich, Patrick Baumgartner",
+      "__videoTitle": "Welcome to the 8th edition of VoxxedDays Zürich by Federico Yankelevich and Patrick Baumgartner",
       "talkId": "11653",
       "videoId": "N7xoZbxqKhE"
     },
     {
       "__score": 0.819,
       "__talkTitle": "Avoid mastering Kubernetes for local development with Dapr and Testcontainers.",
-      "__videoTitle": "Avoid mastering Kubernetes for local dev. with Dapr and Testcontainers by M. Salatino and O. Šelajev",
       "__speakers": "Mauricio Salatino, Oleg Šelajev",
+      "__videoTitle": "Avoid mastering Kubernetes for local dev. with Dapr and Testcontainers by M. Salatino and O. Šelajev",
       "talkId": "6575",
       "videoId": "VYCelta9WdQ"
     },
     {
       "__score": 0.872,
       "__talkTitle": "NLP à la Suisse",
-      "__videoTitle": "NLP à la Suisse by Andrea Mocci and Jesper Findahl",
       "__speakers": "Andrea Mocci, Jesper Findahl",
+      "__videoTitle": "NLP à la Suisse by Andrea Mocci and Jesper Findahl",
       "talkId": "2934",
       "videoId": "kxYhulu7mmI"
     },
     {
       "__score": 0.898,
       "__talkTitle": "Hitting the “refresh” button on your Spring web application",
-      "__videoTitle": "Hitting the “refresh” button on your Spring web application by Stéphane Nicoll",
       "__speakers": "Stéphane Nicoll, Brian Clozel",
+      "__videoTitle": "Hitting the “refresh” button on your Spring web application by Stéphane Nicoll",
       "talkId": "6570",
       "videoId": "8vtoa8VC-gY"
     },
     {
       "__score": 0.919,
       "__talkTitle": "A fun and absurd introduction to Vector Databases",
-      "__videoTitle": "A fun and absurd introduction to Vector Databases by Alex Chatzizacharias",
       "__speakers": "Alexander Chatzizacharias",
+      "__videoTitle": "A fun and absurd introduction to Vector Databases by Alex Chatzizacharias",
       "talkId": "3865",
       "videoId": "Kw41RfTWyQ4"
     },
     {
       "__score": 0.92,
       "__talkTitle": "Using AI in Software Design: How ChatGPT Can Help With Creating a Solution Architecture",
-      "__videoTitle": "Using AI in Software Design: How ChatGPT Can Help With Creating a Solution Arch. by Ralf D. Müller",
       "__speakers": "Ralf D. Müller",
+      "__videoTitle": "Using AI in Software Design: How ChatGPT Can Help With Creating a Solution Arch. by Ralf D. Müller",
       "talkId": "7666",
       "videoId": "Fv7hpwUgXz8"
     },
     {
       "__score": 0.928,
       "__talkTitle": "State of change detection in Angular and how far are we from Zoneless applications ? ",
-      "__videoTitle": "State of change detection in Angular and how far are we from Zoneless applications ? by M. Riegler",
       "__speakers": "Matthieu Riegler",
+      "__videoTitle": "State of change detection in Angular and how far are we from Zoneless applications ? by M. Riegler",
       "talkId": "6560",
       "videoId": "KdK20Cn9Y4M"
     },
     {
       "__score": 0.933,
       "__talkTitle": "Modern Java in Action",
-      "__videoTitle": "Modern Java in Action by Nicolai Parlog",
       "__speakers": "Nicolai Parlog",
+      "__videoTitle": "Modern Java in Action by Nicolai Parlog",
       "talkId": "2926",
       "videoId": "Pmlpk4Ti9f8"
     },
     {
       "__score": 0.937,
       "__talkTitle": "The dark side of kotlin",
-      "__videoTitle": "The dark side of kotlin by Jarek Ratajski",
       "__speakers": "Jarek Ratajski",
+      "__videoTitle": "The dark side of kotlin by Jarek Ratajski",
       "talkId": "7182",
       "videoId": "25R3WMNSqho"
     },
     {
       "__score": 0.941,
       "__talkTitle": "IntelliJ IDEA Tips & Tricks",
-      "__videoTitle": "IntelliJ IDEA Tips & Tricks by Anton Arhipov",
       "__speakers": "Anton Arhipov",
+      "__videoTitle": "IntelliJ IDEA Tips & Tricks by Anton Arhipov",
       "talkId": "2375",
       "videoId": "53ccfLqYpWY"
     },
     {
       "__score": 0.945,
       "__talkTitle": "From Java 17 to 21: A Showcase of JDK Security Enhancements",
-      "__videoTitle": "From Java 17 to 21: A Showcase of JDK Security Enhancements by Ana Maria Mihalceanu",
       "__speakers": "Ana-Maria Mihalceanu",
+      "__videoTitle": "From Java 17 to 21: A Showcase of JDK Security Enhancements by Ana Maria Mihalceanu",
       "talkId": "2930",
       "videoId": "tQxPRm6-PA8"
     },
     {
       "__score": 0.945,
       "__talkTitle": "Practical Performance Analysis",
-      "__videoTitle": "Practical Performance Analysis by Simone Bordet",
       "__speakers": "Simone Bordet",
+      "__videoTitle": "Practical Performance Analysis by Simone Bordet",
       "talkId": "2949",
       "videoId": "tn1Q7-dAHd8"
     },
     {
       "__score": 0.947,
       "__talkTitle": "Principles of Fluent API Design",
-      "__videoTitle": "Principles of Fluent API Design by David Beaumont",
       "__speakers": "David Beaumont",
+      "__videoTitle": "Principles of Fluent API Design by David Beaumont",
       "talkId": "7181",
       "videoId": "VPu-ytfYTeU"
     },
     {
       "__score": 0.949,
       "__talkTitle": "Power structures. The fair advantage",
-      "__videoTitle": "Power structures. The fair advantage by Anja Kunkel",
       "__speakers": "Anja Kunkel",
+      "__videoTitle": "Power structures. The fair advantage by Anja Kunkel",
       "talkId": "1787",
       "videoId": "p6GUmeOIBUg"
     },
     {
       "__score": 0.951,
       "__talkTitle": "ML in Java, YES it's possible!",
-      "__videoTitle": "ML in Java, YES it's possible! by Mohammed Aboullaite",
       "__speakers": "Mohammed Aboullaite",
+      "__videoTitle": "ML in Java, YES it's possible! by Mohammed Aboullaite",
       "talkId": "1776",
       "videoId": "lPYmDMOJVuM"
     },
     {
       "__score": 0.951,
       "__talkTitle": "The Hidden Dynamic Life of Java",
-      "__videoTitle": "The Hidden Dynamic Life of Java by Nataliia Dziubenko",
       "__speakers": "Nataliia Dziubenko",
+      "__videoTitle": "The Hidden Dynamic Life of Java by Nataliia Dziubenko",
       "talkId": "2935",
       "videoId": "tkZNBFLti1w"
     },
     {
       "__score": 0.958,
       "__talkTitle": "Neurospicy: ADHD as a Competitive Advantage",
-      "__videoTitle": "Neurospicy: ADHD as a Competitive Advantage by Myriam Jessier",
       "__speakers": "Myriam Jessier",
+      "__videoTitle": "Neurospicy: ADHD as a Competitive Advantage by Myriam Jessier",
       "talkId": "4312",
       "videoId": "kbPxRhkYmjU"
     },
     {
       "__score": 0.958,
       "__talkTitle": "Observability 101 with Spring and Micrometer",
-      "__videoTitle": "Observability 101 with Spring and Micrometer by Nele Uhlemann",
       "__speakers": "Nele Uhlemann",
+      "__videoTitle": "Observability 101 with Spring and Micrometer by Nele Uhlemann",
       "talkId": "6551",
       "videoId": "Ssje93u2GWM"
     },
     {
       "__score": 0.959,
       "__talkTitle": "Faster or better designed? Choose any two!",
-      "__videoTitle": "Faster or better designed? Choose any two! by Dmytro Vyazelenko",
       "__speakers": "Dmytro Vyazelenko",
+      "__videoTitle": "Faster or better designed? Choose any two! by Dmytro Vyazelenko",
       "talkId": "2368",
       "videoId": "pdFqKiwgZZY"
     },
     {
       "__score": 0.959,
       "__talkTitle": "Automate your Changelogs with Release Drafter",
-      "__videoTitle": "Automate your Changelogs with Release Drafter by Oleg Nenashev",
       "__speakers": "Oleg Nenashev",
+      "__videoTitle": "Automate your Changelogs with Release Drafter by Oleg Nenashev",
       "talkId": "4327",
       "videoId": "-PIkiXAg8ws"
     },
     {
       "__score": 0.96,
       "__talkTitle": "Who is Jason, and what’s he doing in my database?",
-      "__videoTitle": "Who is Jason, and what’s he doing in my database? by Martin Bach",
       "__speakers": "Martin Bach",
+      "__videoTitle": "Who is Jason, and what’s he doing in my database? by Martin Bach",
       "talkId": "1790",
       "videoId": "pfjAnRl1M0A"
     },
     {
       "__score": 0.961,
       "__talkTitle": "SQL Test Kit, or how to unit test any SQL query",
-      "__videoTitle": "SQL Test Kit, or how to unit test any SQL query by Victor Landeau",
       "__speakers": "Victor Landeau",
+      "__videoTitle": "SQL Test Kit, or how to unit test any SQL query by Victor Landeau",
       "talkId": "7156",
       "videoId": "chB5f80U9jA"
     },
     {
       "__score": 0.962,
       "__talkTitle": "Password-less apps: implementing WebAuthN",
-      "__videoTitle": "Password-less apps: implementing WebAuthN by Daniel Garnier-Moiroux",
       "__speakers": "Daniel Garnier-Moiroux",
+      "__videoTitle": "Password-less apps: implementing WebAuthN by Daniel Garnier-Moiroux",
       "talkId": "2355",
       "videoId": "FUWLYC1z1LU"
     },
     {
       "__score": 0.962,
       "__talkTitle": "Performance oriented Spring Data JPA & Hibernate",
-      "__videoTitle": "Performance oriented Spring Data JPA & Hibernate by Maciej Walkowiak",
       "__speakers": "Maciej Walkowiak",
+      "__videoTitle": "Performance oriented Spring Data JPA & Hibernate by Maciej Walkowiak",
       "talkId": "7670",
       "videoId": "exqfB1WaqIw"
     },
     {
       "__score": 0.963,
       "__talkTitle": "Securing the Supply Chain for Your Java Applications",
-      "__videoTitle": "Securing the Supply Chain for Your Java Applications by Thomas Vitale",
       "__speakers": "Thomas Vitale",
+      "__videoTitle": "Securing the Supply Chain for Your Java Applications by Thomas Vitale",
       "talkId": "2927",
       "videoId": "pS4cmqNN1QY"
     },
     {
       "__score": 0.965,
       "__talkTitle": "React Server Components - Explained for Backend Developers",
-      "__videoTitle": "React Server Components - Explained for Backend Developers by Jonas Bandi",
       "__speakers": "Jonas Bandi",
+      "__videoTitle": "React Server Components - Explained for Backend Developers by Jonas Bandi",
       "talkId": "7190",
       "videoId": "ZRRygeUhSVU"
     },
     {
       "__score": 0.967,
       "__talkTitle": "Navigating the Chaos: A Holistic Approach to Incident Management",
-      "__videoTitle": "Navigating the Chaos: A Holistic Approach to Incident Management by Hila Fish",
       "__speakers": "Hila Fish",
+      "__videoTitle": "Navigating the Chaos: A Holistic Approach to Incident Management by Hila Fish",
       "talkId": "2941",
       "videoId": "WEviDS-8pO4"
     },
     {
       "__score": 0.967,
       "__talkTitle": "From k9s to OpenTelemetry: A guide to observability for your apps in K8s",
-      "__videoTitle": "From k9s to OpenTelemetry: A guide to observability for your apps in K8s by Matthias Haeussle",
       "__speakers": "Matthias Haeussler",
+      "__videoTitle": "From k9s to OpenTelemetry: A guide to observability for your apps in K8s by Matthias Haeussle",
       "talkId": "7163",
       "videoId": "piM7PEswmso"
     },
     {
       "__score": 0.968,
       "__talkTitle": "A Deep Dive Into Advanced TypeScript: A Live-Coding Expedition",
-      "__videoTitle": "A Deep Dive Into Advanced TypeScript: A Live-Coding Expedition by Christian Wörz",
       "__speakers": "Christian Wörz",
+      "__videoTitle": "A Deep Dive Into Advanced TypeScript: A Live-Coding Expedition by Christian Wörz",
       "talkId": "2367",
       "videoId": "zpUQZFrRGHY"
     },
     {
       "__score": 0.969,
       "__talkTitle": "Instrument to Remove: Using Java agents for fun and profit",
-      "__videoTitle": "Instrument to Remove: Using Java agents for fun and profit by Johannes Bechberger",
       "__speakers": "Johannes Bechberger",
+      "__videoTitle": "Instrument to Remove: Using Java agents for fun and profit by Johannes Bechberger",
       "talkId": "1754",
       "videoId": "JnJgvcZo7b8"
     },
     {
       "__score": 0.969,
       "__talkTitle": "The Art and Science of Thriving Developers: 7 Key Strategies",
-      "__videoTitle": "The Art and Science of Thriving Developers: 7 Key Strategies by Dimitris Andreadis",
       "__speakers": "Dimitris Andreadis",
+      "__videoTitle": "The Art and Science of Thriving Developers: 7 Key Strategies by Dimitris Andreadis",
       "talkId": "4992",
       "videoId": "IBUBm0WyZW8"
     },
     {
       "__score": 0.97,
       "__talkTitle": "Mastering complex reactivity with template-driven forms and Signals",
-      "__videoTitle": "Mastering complex reactivity with template-driven forms and Signals by Brecht Billiet",
       "__speakers": "Brecht Billiet",
+      "__videoTitle": "Mastering complex reactivity with template-driven forms and Signals by Brecht Billiet",
       "talkId": "2373",
       "videoId": "2PGKQHiGyio"
     },
     {
       "__score": 0.97,
       "__talkTitle": "Back to the future - how we integrated a 40 year old software system",
-      "__videoTitle": "Back to the future - how we integrated a 40 year old software system by Lukas Pradel",
       "__speakers": "Lukas Pradel",
+      "__videoTitle": "Back to the future - how we integrated a 40 year old software system by Lukas Pradel",
       "talkId": "3857",
       "videoId": "oMqqJuJt0PI"
     },
     {
       "__score": 0.971,
       "__talkTitle": "Faster, greener, and happier- why Quarkus should be your next tech stack",
-      "__videoTitle": "Faster, greener, and happier- why Quarkus should be your next tech stack by Holly Cummins",
       "__speakers": "Holly Cummins",
+      "__videoTitle": "Faster, greener, and happier- why Quarkus should be your next tech stack by Holly Cummins",
       "talkId": "6556",
       "videoId": "jMWXzKZCKqA"
     },
     {
       "__score": 0.973,
       "__talkTitle": "Communication for Developers: estimates, code reviews, and other hard problems",
-      "__videoTitle": "Communication for Developers: estimates, code reviews, and other hard problems by Voytek Pituła",
       "__speakers": "Voytek Pituła",
+      "__videoTitle": "Communication for Developers: estimates, code reviews, and other hard problems by Voytek Pituła",
       "talkId": "4983",
       "videoId": "bVRbxVCHrPE"
     },
     {
       "__score": 0.974,
       "__talkTitle": "The Code Quality Advantage: How Empirical Data Shatters the Speed vs Quality Myth",
-      "__videoTitle": "The Code Quality Advantage: How Empirical Data Shatters the Speed vs Quality Myth by Adam Tornhill",
       "__speakers": "Adam Tornhill",
+      "__videoTitle": "The Code Quality Advantage: How Empirical Data Shatters the Speed vs Quality Myth by Adam Tornhill",
       "talkId": "11651",
       "videoId": "ty9d7wEVTwc"
     }
@@ -299,6 +299,164 @@ export const VDZ24_TALKS_AND_YOUTUBE = {
       "__talkRoom": "Room 7 (4302)",
       "__talkSpeakers": "Mauricio Salatino",
       "talkId": "4995"
+    }
+  ],
+  "unmappedYoutubeVideos": [
+    {
+      "id": "OTcNjWA0RZM",
+      "publishedAt": "2024-04-18T09:08:40Z",
+      "duration": "PT48M10S",
+      "title": "[VDBUH2024] - Mastering the AI Shift: Adaptive Strategies for Software Evolution"
+    },
+    {
+      "id": "tXJgJsd_xsQ",
+      "publishedAt": "2024-04-18T04:17:26Z",
+      "duration": "PT5M10S",
+      "title": "[VDBUH2024] -  Alex Proca & Andra Ghibuțiu - Opening Thoughts"
+    },
+    {
+      "id": "uYSpY0m_3P0",
+      "publishedAt": "2024-04-18T04:17:26Z",
+      "duration": "PT48M22S",
+      "title": "[VDBUH2024] - Liviu Spiroiu - Beyond the Hammer: Diversifying Your Software Development Toolkit"
+    },
+    {
+      "id": "wcrloUXSFgY",
+      "publishedAt": "2024-04-18T04:17:26Z",
+      "duration": "PT44M50S",
+      "title": "[VDBUH2024] - Simon Brown - Five things every developer should know about software architecture"
+    },
+    {
+      "id": "y7ZJ-XpdjNg",
+      "publishedAt": "2024-04-18T04:17:26Z",
+      "duration": "PT48M51S",
+      "title": "[VDBUH2024]  - Ionuț Baloșin & Ko Turk - The Future is 💚: A Journey through the Energy Efficient .."
+    },
+    {
+      "id": "ykJq6dXwNI4",
+      "publishedAt": "2024-04-18T04:17:26Z",
+      "duration": "PT41M7S",
+      "title": "[VDBUH2024] - Alex Pavăl - Innovation takes courage"
+    },
+    {
+      "id": "SqOZ6I4slok",
+      "publishedAt": "2024-04-18T04:17:24Z",
+      "duration": "PT44M48S",
+      "title": "[VDBUH2024] Andreea Mihăilescu&Alexandru Ivan -Finding the balance between human and bot interaction"
+    },
+    {
+      "id": "TcCkSbari7M",
+      "publishedAt": "2024-04-18T04:17:24Z",
+      "duration": "PT40M9S",
+      "title": "[VDBUH2024] - Laurențiu Spilcă - Maximizing Security with JDK: Understanding Built-in Capabilities"
+    },
+    {
+      "id": "WAxBGqiWCI0",
+      "publishedAt": "2024-04-18T04:17:24Z",
+      "duration": "PT54M33S",
+      "title": "[VDBUH2024] - Olimpiu Pop & Steve Poole - AI Showdown: The Good, The Glitchy, and The Risky"
+    },
+    {
+      "id": "Yo1tNeaDQB0",
+      "publishedAt": "2024-04-18T04:17:24Z",
+      "duration": "PT49M46S",
+      "title": "[VDBUH2024] - Ionuț Baloșin - A Practical Use Case of Software Architecture Evolution"
+    },
+    {
+      "id": "cn-puSzSiRo",
+      "publishedAt": "2024-04-18T04:17:24Z",
+      "duration": "PT34M31S",
+      "title": "[VDBUH2024] - Abdel Sghiouar - Practical Guides for Enhancing Your Software Supply Chain Security"
+    },
+    {
+      "id": "h4f-FunJ-w0",
+      "publishedAt": "2024-04-18T04:17:24Z",
+      "duration": "PT1H2M41S",
+      "title": "[VDBUH2024] Pratik Patel - Cloud Cost Optimization for Java Developers"
+    },
+    {
+      "id": "kKQqa27NiHM",
+      "publishedAt": "2024-04-18T04:17:24Z",
+      "duration": "PT48M56S",
+      "title": "[VDBUH2024] - Marit van Dijk - Reading code"
+    },
+    {
+      "id": "lsW0-sEGr3w",
+      "publishedAt": "2024-04-18T04:17:24Z",
+      "duration": "PT45M42S",
+      "title": "[VDBUH2024] - Victor Rentea - Code Smells - Hall of Fame"
+    },
+    {
+      "id": "tAtSDsU9Hao",
+      "publishedAt": "2024-04-18T04:17:24Z",
+      "duration": "PT51M57S",
+      "title": "[VDBUH2024] Ana-Maria Mihălceanu -Monitoring Java Application Security with JDK tools and JFR Events"
+    },
+    {
+      "id": "tRd6uQdL8os",
+      "publishedAt": "2024-04-18T04:17:24Z",
+      "duration": "PT39M14S",
+      "title": "[VDBUH2024] - Johan Janssen - How sand and Java are used to create the world’s most powerful chips"
+    },
+    {
+      "id": "6NaIlETJ3Nw",
+      "publishedAt": "2024-04-18T04:17:22Z",
+      "duration": "PT1H1M8S",
+      "title": "[VDBUH2024] Rustam Mehmandarov -Performance&Scale Domain Oriented Objects vs Tabular Data Structures"
+    },
+    {
+      "id": "7S9bepfGOrw",
+      "publishedAt": "2024-04-18T04:17:22Z",
+      "duration": "PT50M30S",
+      "title": "[VDBUH2024] Venkat Subramaniam - Effecting Change—The Art of Leading Teams"
+    },
+    {
+      "id": "CS6K3dxyc0I",
+      "publishedAt": "2024-04-18T04:17:22Z",
+      "duration": "PT41M36S",
+      "title": "[VDBUH2024] Mircea Rugină - Lessons Learned as a DevOps Consultant"
+    },
+    {
+      "id": "CfTjir73BzQ",
+      "publishedAt": "2024-04-18T04:17:22Z",
+      "duration": "PT54M36S",
+      "title": "[VDBUH2024] - Ivar Grimstad - From Spring Boot 2 to Spring Boot 3 with Java 21 and Jakarta EE"
+    },
+    {
+      "id": "I9S6k4WgB6k",
+      "publishedAt": "2024-04-18T04:17:22Z",
+      "duration": "PT54M11S",
+      "title": "[VDBUH2024] - Hugh Mckee - AI is Coming - Now What? Architecting the Future of Software"
+    },
+    {
+      "id": "JKuc3tdzfUM",
+      "publishedAt": "2024-04-18T04:17:22Z",
+      "duration": "PT52M15S",
+      "title": "[VDBUH2024] - Brian Vermeer - Securing Your Java Containers by Breaking In"
+    },
+    {
+      "id": "JVX8XKPg4xI",
+      "publishedAt": "2024-04-18T04:17:22Z",
+      "duration": "PT47M36S",
+      "title": "[VDBUH2024] - Simon Martinelli - CQRS in the small with Java Records and jOOQ"
+    },
+    {
+      "id": "JbNjzclyXh0",
+      "publishedAt": "2024-04-18T04:17:22Z",
+      "duration": "PT1H5M30S",
+      "title": "[VDBUH2024] - Nicolas Boitout & Bogdan Solga - Scaling personalization with AI"
+    },
+    {
+      "id": "3SiYK0BWr0M",
+      "publishedAt": "2024-04-18T04:17:21Z",
+      "duration": "PT58M10S",
+      "title": "[VDBUH2024] - Josh Long - Bootiful Spring Boot 3.x"
+    },
+    {
+      "id": "HSW-h3Ipi3Y",
+      "publishedAt": "2024-04-18T04:17:21Z",
+      "duration": "PT55M48S",
+      "title": "[VDBUH2024] Mohammed Aboullaite -Continuous Profiling the missing piece in your observability puzzle"
     }
   ],
   "youtubeVideos": [

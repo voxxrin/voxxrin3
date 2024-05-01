@@ -184,8 +184,10 @@ import {TalkMatchingYoutubeTestData} from "./test-data";
 
 export const ${exportedVarName} = ${JSON.stringify({
     expectedMappedTalks: results.matchedTalks.map(mt => ({
-      '__score': mt.score, '__talkTitle': mt.talk.title, '__videoTitle': mt.video.title,
+      '__score': mt.score, 
+      '__talkTitle': mt.talk.title,
       '__speakers': mt.talk.speakers.map(sp => sp.fullName).join(", "),
+      '__videoTitle': mt.video.title,
       talkId: mt.talk.id, videoId: mt.video.id
     })),
     expectedUnmappedTalks: results.unmatchedTalks.map(ut => ({
@@ -195,6 +197,9 @@ export const ${exportedVarName} = ${JSON.stringify({
       '__talkSpeakers': ut.speakers.map(sp => sp.fullName).join(", "),
       talkId: ut.id
     })),
+    unmappedYoutubeVideos: results.unmatchedYoutubeVideos.map(vid => ({
+      id: vid.id, publishedAt: vid.publishedAt, duration: vid.duration, title: vid.title
+    } satisfies YoutubeVideo)),
     youtubeVideos: results.youtubeVideos.map(vid => ({ 
       id: vid.id, publishedAt: vid.publishedAt, duration: vid.duration, title: vid.title
     } satisfies YoutubeVideo)),

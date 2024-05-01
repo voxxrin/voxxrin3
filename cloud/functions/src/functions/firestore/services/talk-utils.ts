@@ -138,6 +138,8 @@ export function findYoutubeMatchingTalks(eventTalks: SimpleTalk[], youtubeVideos
     return { talk, videoMatches };
   });
 
+  const unmatchedYoutubeVideos: YoutubeVideo[] = [...youtubeVideos];
+
   // Processing talks one by one, best scores first
   const { matchedTalks: firstPassMatchedTalks, unmatchedTalkResults, unmatchedTalks: firstPassUnmatchedTalks } = talkMatchingResults
     // Sorting matching results by best score
@@ -155,6 +157,7 @@ export function findYoutubeMatchingTalks(eventTalks: SimpleTalk[], youtubeVideos
           matchedTalks.push({ score: bestMatchingTalk.bestScore, titles: bestMatchingTalk.titles, talk: talkMatchingResult.talk, video: bestMatchingTalk.video })
 
           // Removing matching results with video on every talkMatchingResults
+          unmatchedYoutubeVideos.splice(unmatchedYoutubeVideos.findIndex(vid => vid.id === bestMatchingTalk.video.id), 1);
           talkMatchingResults.forEach(matchingRestult => {
             const videoIndex = matchingRestult.videoMatches.findIndex(videoMatch => videoMatch.video.id === bestMatchingTalk.video.id);
             if(videoIndex !== -1) {
@@ -195,6 +198,7 @@ export function findYoutubeMatchingTalks(eventTalks: SimpleTalk[], youtubeVideos
         matchedTalks.push({ score: bestMatchingTalk.titleWithSpeakersSimilarityScore, titles: bestMatchingTalk.titles, talk: talkMatchingResult.talk, video: bestMatchingTalk.video })
 
         // Removing matching results with video on every talkMatchingResults
+        unmatchedYoutubeVideos.splice(unmatchedYoutubeVideos.findIndex(vid => vid.id === bestMatchingTalk.video.id), 1);
         talkMatchingResults.forEach(matchingRestult => {
           const videoIndex = matchingRestult.videoMatches.findIndex(videoMatch => videoMatch.video.id === bestMatchingTalk.video.id);
           if(videoIndex !== -1) {
@@ -212,7 +216,7 @@ export function findYoutubeMatchingTalks(eventTalks: SimpleTalk[], youtubeVideos
 
   matchedTalks.sort((m1, m2) => m1.score - m2.score)
 
-  return { matchedTalks, unmatchedTalks, youtubeVideos, talks: eventTalks };
+  return { matchedTalks, unmatchedTalks, unmatchedYoutubeVideos, youtubeVideos, talks: eventTalks };
 }
 
 function includedSpeakersRatio(title: string, speakerFullNames: string[]) {
