@@ -101,31 +101,44 @@ export function findYoutubeMatchingTalks(eventTalks: SimpleTalk[], youtubeVideos
   const unmatchedTalks: SimpleTalk[] = [];
 
   for(const talk of eventTalks) {
-    const talkLowTitle = `${talk.title.toLowerCase()} - ${talk.speakers.map(sp => sp.fullName.toLowerCase()).join(", ")}`
-    const matches = youtubeVideos.map(vid => {
-      const lowTitle = vid.title.toLowerCase();
-      const titleSimilarityScore = stringSimilarity(talkLowTitle, lowTitle);
-      const totalScore = Math.round(titleSimilarityScore*1000)/1000;
+    const talkAndSpeakerLowTitle = `${talk.title.toLowerCase()} - ${talk.speakers.map(sp => sp.fullName.toLowerCase()).join(", ")}`
+    const talkOnlypeakerLowTitle = talk.title.toLowerCase()
 
-      return { totalScore, titles: [talkLowTitle, lowTitle], speakers: talk.speakers.map(sp => sp.fullName), video: vid  }
+    const matches = youtubeVideos.map(vid => {
+      const videoLowTitle = vid.title.toLowerCase();
+      const titleWithSpeakersSimilarityScore = Math.round(stringSimilarity(talkAndSpeakerLowTitle, videoLowTitle)*1000)/1000;
+      const titleOnlySimilarityScore = Math.round(stringSimilarity(talkOnlypeakerLowTitle, videoLowTitle)*1000)/1000;
+
+      return { titleWithSpeakersSimilarityScore, titleOnlySimilarityScore, titles: [talkAndSpeakerLowTitle, videoLowTitle], speakers: talk.speakers.map(sp => sp.fullName), video: vid  }
     })
 
-    matches.sort((m1, m2) => m2.totalScore - m1.totalScore);
-    const bestMatch = matches[0]
+    const matchesSortByTitleWithSpeakersSimilarityScore = [...matches].sort((m1, m2) => m2.titleWithSpeakersSimilarityScore - m1.titleWithSpeakersSimilarityScore);
+    const bestTitleWithSpeakersMatch = matchesSortByTitleWithSpeakersSimilarityScore[0]
 
-    if(bestMatch.totalScore > 0.7) {
-      matchedTalks.push({ score: bestMatch.totalScore, titles: bestMatch.titles, talk, video: bestMatch.video })
-    } else if(bestMatch.totalScore > 0.4) {
-      const candidatesWithAtLeastOneSpeakerFound = matches.filter(m =>
-        m.totalScore > 0.4
-        // not matching 1 speaker out of 2 is ok
-        // but wondering if matching "only" 3 speakers out of 6 is ok...
-        && includedSpeakersRatio(m.titles[1], m.speakers) >= 0.5
-      )
-      if(candidatesWithAtLeastOneSpeakerFound.length) {
-        matchedTalks.push({ score: candidatesWithAtLeastOneSpeakerFound[0].totalScore, titles: candidatesWithAtLeastOneSpeakerFound[0].titles, talk, video: candidatesWithAtLeastOneSpeakerFound[0].video })
+    // Matching both title + speaker with a relatively high score
+    if(bestTitleWithSpeakersMatch.titleWithSpeakersSimilarityScore > 0.7) {
+      matchedTalks.push({ score: bestTitleWithSpeakersMatch.titleWithSpeakersSimilarityScore, titles: bestTitleWithSpeakersMatch.titles, talk, video: bestTitleWithSpeakersMatch.video })
+    } else if(bestTitleWithSpeakersMatch.titleWithSpeakersSimilarityScore > 0.4) {
+      // Trying to find a title-only matching with high fidelity
+      const matchesSortByTitleOnlySimilarityScore = [...matches].sort((m1, m2) => m2.titleOnlySimilarityScore - m1.titleOnlySimilarityScore);
+      const bestTitleOnlyMatch = matchesSortByTitleOnlySimilarityScore[0];
+      if(bestTitleOnlyMatch.titleOnlySimilarityScore > 0.8) {
+        matchedTalks.push({ score: bestTitleOnlyMatch.titleOnlySimilarityScore, titles: bestTitleOnlyMatch.titles, talk, video: bestTitleOnlyMatch.video })
       } else {
-        unmatchedTalks.push(talk);
+        // Trying to find talks with similar speakers
+        const candidatesWithAtLeastOneSpeakerFound = matchesSortByTitleWithSpeakersSimilarityScore.filter(m =>
+          m.titleWithSpeakersSimilarityScore > 0.4
+          // not matching 1 speaker out of 2 is ok
+          // but wondering if matching "only" 3 speakers out of 6 is ok...
+          && includedSpeakersRatio(m.titles[1], m.speakers) >= 0.5
+        )
+
+        if(candidatesWithAtLeastOneSpeakerFound.length) {
+          const bestCandidatesWithGoodSpeakersMatchingRatio = candidatesWithAtLeastOneSpeakerFound[0];
+          matchedTalks.push({ score: bestCandidatesWithGoodSpeakersMatchingRatio.titleWithSpeakersSimilarityScore, titles: bestCandidatesWithGoodSpeakersMatchingRatio.titles, talk, video: bestCandidatesWithGoodSpeakersMatchingRatio.video })
+        } else {
+          unmatchedTalks.push(talk);
+        }
       }
     } else {
       unmatchedTalks.push(talk);

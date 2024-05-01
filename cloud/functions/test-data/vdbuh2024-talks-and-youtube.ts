@@ -76,6 +76,14 @@ export const VDBUH2024_TALKS_AND_YOUTUBE = {
       "videoId": "WAxBGqiWCI0"
     },
     {
+      "__score": 0.874,
+      "__talkTitle": "PANEL: Mastering the AI Shift: Adaptive Strategies for Software Evolution",
+      "__videoTitle": "[VDBUH2024] - Mastering the AI Shift: Adaptive Strategies for Software Evolution",
+      "__speakers": "Lucian Gruia, Brian Vermeer, Olimpiu Pop, valentin Tomici, PRATIK PATEL, Cristina Duta, Mihaela CUȚUI",
+      "talkId": "12602",
+      "videoId": "OTcNjWA0RZM"
+    },
+    {
       "__score": 0.878,
       "__talkTitle": "Maximizing Security with JDK: Understanding Built-in Capabilities",
       "__videoTitle": "[VDBUH2024] - Laurențiu Spilcă - Maximizing Security with JDK: Understanding Built-in Capabilities",
@@ -197,13 +205,6 @@ export const VDBUH2024_TALKS_AND_YOUTUBE = {
     }
   ],
   "expectedUnmappedTalks": [
-    {
-      "__talkTitle": "PANEL: Mastering the AI Shift: Adaptive Strategies for Software Evolution",
-      "__talkFormat": "Panel (id=989, duration=PT45m)",
-      "__talkRoom": "Crowne B (4302)",
-      "__talkSpeakers": "Lucian Gruia, Brian Vermeer, Olimpiu Pop, valentin Tomici, PRATIK PATEL, Cristina Duta, Mihaela CUȚUI",
-      "talkId": "12602"
-    },
     {
       "__talkTitle": " Fast And Lightweight Spring Boot Applications With GraalVM",
       "__talkFormat": "Conference (id=951, duration=PT60m)",
