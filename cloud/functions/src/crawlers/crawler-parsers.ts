@@ -104,6 +104,17 @@ export const INFOS_PARSER = z.object({
     })).optional()
 });
 
+export const RECORDING_CONFIG_PARSER = z.object({
+  platform: z.literal('youtube'),
+  youtubeHandle: z.string(),
+  recordedFormatIds: z.array(z.string()).optional(),
+  notRecordedFormatIds: z.array(z.string()).optional(),
+  recordedRoomIds: z.array(z.string()).optional(),
+  notRecordedRoomIds: z.array(z.string()).optional(),
+  ignoreVideosPublishedAfter: ISO_LOCAL_DATE_PARSER.optional(),
+  excludeTitleWordsFromMatching: z.array(z.string()).optional(),
+})
+
 export const EVENT_DESCRIPTOR_PARSER = LISTABLE_EVENT_PARSER.extend({
     headingTitle: z.string(),
     features: z.object({
@@ -150,7 +161,8 @@ export const EVENT_DESCRIPTOR_PARSER = LISTABLE_EVENT_PARSER.extend({
             minimumNumberOfRatingsToBeConsidered: z.number(),
             minimumAverageScoreToBeConsidered: z.number().optional(),
             numberOfDailyTopTalksConsidered: z.number()
-        }).optional()
+        }).optional(),
+        recording: RECORDING_CONFIG_PARSER.optional(),
     }),
     talkFormats: z.array(THEMABLE_TALK_FORMAT_PARSER),
     talkTracks: z.array(THEMABLE_TALK_TRACK_PARSER),

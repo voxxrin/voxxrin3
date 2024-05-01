@@ -1,5 +1,5 @@
 import {sortBy, ValueObject} from "@/models/utils";
-import {Break, DetailedTalk, Talk} from "../../../shared/daily-schedule.firestore";
+import {Break, DetailedTalk, Talk, TalkAsset} from "../../../shared/daily-schedule.firestore";
 import {RoomId, VoxxrinRoom} from "@/models/VoxxrinRoom";
 import {SpeakerId, VoxxrinDetailedSpeaker, VoxxrinSimpleSpeaker} from "@/models/VoxxrinSpeaker";
 import {TalkFormatId, VoxxrinTalkFormat} from "@/models/VoxxrinTalkFormat";
@@ -74,7 +74,8 @@ export function createVoxxrinDetailedTalkFromFirestore(event: VoxxrinConferenceD
             id: new SpeakerId(sp.id)
         })),
         description: firestoreTalk.description,
-        tags: firestoreTalk.tags || []
+        tags: firestoreTalk.tags || [],
+        assets: firestoreTalk.assets
     };
     return detailedTalk;
 }
@@ -118,4 +119,8 @@ export function filterTalksMatching(talks: VoxxrinTalk[], searchTerms: string|un
 
         return searchTerms.split(" ").every(searchTerm => talkSearchableContent.includes(searchTerm.toLowerCase()));
     })
+}
+
+export function findAssetOfType<T extends TalkAsset['type']>(talk: VoxxrinDetailedTalk, type: T) {
+  return talk.assets.find(asset => asset.type === type) as Extract<TalkAsset, { type: T }>|undefined;
 }

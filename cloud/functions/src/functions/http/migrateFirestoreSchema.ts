@@ -29,6 +29,7 @@ const MIGRATIONS: Migration[] = [
     { name: "introduceCrawlerFamilyAndEventName", exec: async () => (await import("../firestore/migrations/015-introduceCrawlerFamilyAndEventName")).introduceCrawlerFamilyAndEventName() },
     { name: "considerCrawlingKeysAsLegacy", exec: async () => (await import("../firestore/migrations/016-considerCrawlingKeysAsLegacy")).considerCrawlingKeysAsLegacy() },
     { name: "migrateFamilyEventsStatsAccessTokenTypes", exec: async () => (await import("../firestore/migrations/017-migrateSomePublicTokenTypes")).migrateFamilyEventsStatsAccessTokenTypes() },
+    { name: "introduceTalkAssets", exec: async () => (await import("../firestore/migrations/018-introduceTalkAssets")).introduceTalkAssets() },
 ];
 
 export type MigrationResult = "OK"|"Error";
