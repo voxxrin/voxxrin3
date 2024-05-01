@@ -158,6 +158,7 @@ export const EVENT_DESCRIPTOR_PARSER = LISTABLE_EVENT_PARSER.extend({
           notRecordedFormatIds: z.array(z.string()).optional(),
           recordedRoomIds: z.array(z.string()).optional(),
           notRecordedRoomIds: z.array(z.string()).optional(),
+          ignoreVideosPublishedAfter: ISO_LOCAL_DATE_PARSER.optional(),
         }).optional(),
     }),
     talkFormats: z.array(THEMABLE_TALK_FORMAT_PARSER),

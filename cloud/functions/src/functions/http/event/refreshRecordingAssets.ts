@@ -42,7 +42,7 @@ export async function requestRecordingAssetsRefresh(response: Response, pathPara
     );
 
   try {
-    const allMatchingVideos = await fetchAllVideos(recordingConfig.youtubeHandle, `${start}T00:00:00Z`);
+    const allMatchingVideos = await fetchAllVideos(recordingConfig.youtubeHandle, `${start}T00:00:00Z`, recordingConfig.ignoreVideosPublishedAfter ? `${recordingConfig.ignoreVideosPublishedAfter}T00:00:00Z`:undefined);
 
     const simpleTalks: SimpleTalk[] = filteredEventTalks.map(talk => ({
       id: talk.id,
@@ -86,7 +86,7 @@ export async function requestRecordingAssetsRefresh(response: Response, pathPara
   }
 }
 
-async function fetchAllVideos(channelHandle: string, minPublishedAt: ISODatetime): Promise<Array<YoutubeVideo>> {
+async function fetchAllVideos(channelHandle: string, minPublishedAt: ISODatetime, maxPublishedAt: ISODatetime|undefined): Promise<Array<YoutubeVideo>> {
   // const EXPORTED_FILE_NAME = `/tmp/vids-${channelHandle}.json`
   // const EXPORTED_UNFILTERED_FILE_NAME = `/tmp/unfilteredVids-${channelHandle}.json`
   // // ⬇️ only for testing purposes to avoid consuming too much youtube api calls
@@ -113,12 +113,10 @@ async function fetchAllVideos(channelHandle: string, minPublishedAt: ISODatetime
   const results: Array<YoutubeVideo> = []
   const unfilteredResults: Array<YoutubeVideo> = []
 
-  let nextPageToken = await requestPaginatedYoutubeVideos(yt, playlistId, undefined, minPublishedAt, results, unfilteredResults);
+  let nextPageToken = await requestPaginatedYoutubeVideos(yt, playlistId, undefined, minPublishedAt, maxPublishedAt, results, unfilteredResults);
 
-  let previousResultsSize = 0;
-  while(nextPageToken && previousResultsSize !== results.length) {
-    previousResultsSize = results.length;
-    nextPageToken = await requestPaginatedYoutubeVideos(yt, playlistId, nextPageToken, minPublishedAt, results, unfilteredResults);
+  while(nextPageToken) {
+    nextPageToken = await requestPaginatedYoutubeVideos(yt, playlistId, nextPageToken, minPublishedAt, maxPublishedAt, results, unfilteredResults);
   }
 
   // fs.writeFileSync(EXPORTED_FILE_NAME, JSON.stringify(results, null, "  "))
@@ -127,8 +125,10 @@ async function fetchAllVideos(channelHandle: string, minPublishedAt: ISODatetime
   return results;
 }
 
-async function requestPaginatedYoutubeVideos(yt: youtube_v3.Youtube, playlistId: string, nextPageToken: string|undefined, minPublishedAt: ISODatetime, results: YoutubeVideo[], unfilteredResults: YoutubeVideo[]) {
-  const minTimestamp = Date.parse(minPublishedAt);
+async function requestPaginatedYoutubeVideos(yt: youtube_v3.Youtube, playlistId: string, nextPageToken: string|undefined, minPublishedAt: ISODatetime, maxPublishedAt: ISODatetime|undefined, results: YoutubeVideo[], unfilteredResults: YoutubeVideo[]) {
+  const minTimestamp = Date.parse(minPublishedAt),
+    maxTimestamp = maxPublishedAt ? Date.parse(maxPublishedAt) : Date.now();
+
   const PAGE_SIZE = 50;
 
   const videosPage = await yt.playlistItems.list({
@@ -157,13 +157,21 @@ async function requestPaginatedYoutubeVideos(yt: youtube_v3.Youtube, playlistId:
   }));
   unfilteredResults.push(...simpleVids);
 
-  const filteredVids = simpleVids.filter(vid => !vid.publishedAt || Date.parse(vid.publishedAt) > minTimestamp)
+  const filteredVids = simpleVids.filter(vid =>
+    !vid.publishedAt
+    || (minTimestamp <= Date.parse(vid.publishedAt) && Date.parse(vid.publishedAt) <= maxTimestamp)
+  )
   console.log(`Filtered ${simpleVids.length - filteredVids.length} vids based on publish date !`)
-
 
   results.push(...filteredVids);
 
-  return videosPage.data.nextPageToken;
+  const tooOldVids = simpleVids.filter(vid =>
+    vid.publishedAt && Date.parse(vid.publishedAt) <= minTimestamp
+  )
+
+  // stopping to return next page token as soon as we get some "too oldish" videos as it seems they are sorted
+  // by publishing date
+  return tooOldVids.length ? undefined : videosPage.data.nextPageToken;
 }
 
 async function generateTestFile(testFilePath: string, exportedVarName: string, results: ReturnType<typeof findYoutubeMatchingTalks>, talks: Talk[]) {

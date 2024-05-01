@@ -1,5 +1,5 @@
 import {ListableEvent} from "./event-list.firestore";
-import {HexColor, SocialMediaType} from "./type-utils";
+import {HexColor, ISODatetime, ISOLocalDate, SocialMediaType} from "./type-utils";
 import {ThemedTalkFormat, ThemedTrack} from "./daily-schedule.firestore";
 
 export type ConferenceDescriptor = ListableEvent & {
@@ -54,6 +54,7 @@ export type ConferenceDescriptor = ListableEvent & {
           notRecordedFormatIds?: string[]|undefined,
           recordedRoomIds?: string[]|undefined,
           notRecordedRoomIds?: string[]|undefined,
+          ignoreVideosPublishedAfter?: ISOLocalDate|undefined
         }|undefined
     },
     talkFormats: Array<ThemedTalkFormat>,
