@@ -1,5 +1,5 @@
 import {z, ZodLiteral} from "zod";
-import {ISOLocalDate} from "../../../../shared/type-utils";
+import {ISOLocalDate, ISOZonedTime} from "../../../../shared/type-utils";
 import {ConferenceDescriptor} from "../../../../shared/conference-descriptor.firestore";
 import {ScheduleTimeSlot} from "../../../../shared/daily-schedule.firestore";
 import {ISO_DATETIME_PARSER} from "../utils/zod-parsers";
@@ -10,6 +10,7 @@ export const DURATION_PARSER = z.string().regex(/PT\d+m/gi) as unknown as ZodLit
 export const ISO_LOCAL_DATE_PARSER = z.string().regex(/\d{4}-\d{2}-\d{2}/gi) as unknown as ZodLiteral<ISOLocalDate>
 export const TIMESLOT_ID_PARSER = z.string()
     .regex(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?(?:Z|(?:[+-]\d{2}:\d{2}))--\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?(?:Z|(?:[+-]\d{2}:\d{2}))/gi) as unknown as ZodLiteral<ScheduleTimeSlot['id']>
+export const TIME_PARSER = z.string().regex(/\d{2}:\d{2}:\d{2}(?:\.\d{3})?(?:Z|(?:[+-]\d{2}:\d{2}))/gi) as unknown as ZodLiteral<ISOZonedTime>;
 
 export const DAY_PARSER = z.object({
     id: z.string(),
@@ -202,15 +203,17 @@ export const TIME_SLOT_BASE_PARSER = z.object({
     id: TIMESLOT_ID_PARSER
 })
 
+export const BREAK_ICON_PARSER = z.union([
+  z.literal('ticket'),
+  z.literal('restaurant'),
+  z.literal('cafe'),
+  z.literal('beer'),
+  z.literal('movie'),
+  z.literal('wallet'),
+])
+
 export const BREAK_PARSER = z.object({
-    icon: z.union([
-        z.literal('ticket'),
-        z.literal('restaurant'),
-        z.literal('cafe'),
-        z.literal('beer'),
-        z.literal('movie'),
-        z.literal('wallet'),
-    ]),
+    icon: BREAK_ICON_PARSER,
     title: z.string(),
     room: ROOM_PARSER
 })

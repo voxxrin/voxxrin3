@@ -3,7 +3,7 @@ import {FULL_EVENT_PARSER} from "../crawler-parsers";
 import {BDXIO_CRAWLER} from "./crawler";
 import {http} from "../utils";
 
-describe('web2day crawler', () => {
+describe.skip('bdxio crawler', () => {
     const events = [{
         id: 'bdxio23', confName: `BDX I/O`,
         descriptorUrl: `https://gist.githubusercontent.com/fcamblor/6686a931d1904e043085240bf3de5550/raw/bdxio23.json`

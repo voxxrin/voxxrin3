@@ -14,20 +14,42 @@ import * as cheerio from 'cheerio';
 import {match, P} from "ts-pattern";
 import {ConferenceDescriptor} from "../../../../../shared/conference-descriptor.firestore";
 import {Day} from "../../../../../shared/event-list.firestore";
-import {EVENT_DESCRIPTOR_PARSER} from "../crawler-parsers";
+import {
+  BREAK_ICON_PARSER, BREAK_TIME_SLOT_PARSER,
+  DAY_PARSER,
+  EVENT_DESCRIPTOR_PARSER, TALKS_TIME_SLOT_PARSER,
+  TIME_PARSER,
+  TIMESLOT_ID_PARSER
+} from "../crawler-parsers";
 import {CrawlerKind} from "../crawl";
 import {http} from "../utils";
+import {ISO_DATETIME_PARSER} from "../../utils/zod-parsers";
+import {TimeslottedTalk} from "../../functions/firestore/services/schedule-utils";
+import {raw} from "express";
 
 const LA_PRODUCT_CONF_DESCRIPTOR_PARSER = EVENT_DESCRIPTOR_PARSER.omit({
-    id: true
+    id: true,
+    days: true
+}).extend({
+    days: z.array(DAY_PARSER.extend({ endTime: TIME_PARSER })).length(1, `Expected a single day event for la-product-conf`),
+    timeslotOverrides: z.record(TIMESLOT_ID_PARSER, z.union([
+      z.object({
+        type: z.literal('remove'),
+      }),
+      z.object({
+        type: z.literal('replace'),
+        replacement: z.union([ BREAK_TIME_SLOT_PARSER.partial(), TALKS_TIME_SLOT_PARSER.partial() ])
+      })
+    ]))
 })
 
-const LOCAL_DATE: ISOLocalDate = "2023-05-24";
 const TIMEZONE_OFFSET = Temporal.Duration.from({hours: 2})
 
 export const LA_PRODUCT_CONF_CRAWLER: CrawlerKind<typeof LA_PRODUCT_CONF_DESCRIPTOR_PARSER> = {
     descriptorParser: LA_PRODUCT_CONF_DESCRIPTOR_PARSER,
     crawlerImpl: async (eventId: string, descriptor: z.infer<typeof LA_PRODUCT_CONF_DESCRIPTOR_PARSER>, criteria: { dayIds?: string[]|undefined }): Promise<FullEvent> => {
+        const DAY = descriptor.days[0]
+        const LOCAL_DATE = DAY.localDate;
         const $speakersPage = cheerio.load(await http.getAsText('https://www.laproductconf.com/paris/lpc'));
 
         const speakers = await Promise.all(
@@ -57,6 +79,7 @@ export const LA_PRODUCT_CONF_CRAWLER: CrawlerKind<typeof LA_PRODUCT_CONF_DESCRIP
 
         const nonMergedTimeslots: ScheduleTimeSlot[] = [],
             talks: DetailedTalk[] = [];
+
         $schedulePage(".tabs-menu > a").map((tabIdx, tab) => {
             const $tab = $schedulePage(tab);
             const roomId = $tab.data()['wTab']
@@ -66,6 +89,11 @@ export const LA_PRODUCT_CONF_CRAWLER: CrawlerKind<typeof LA_PRODUCT_CONF_DESCRIP
                 .map((_, timeslot) => {
                     const $timeslot = $schedulePage(timeslot);
                     const rawTime = $timeslot.find(".time-text").text();
+
+                    if(rawTime === '') {
+                      return undefined;
+                    }
+
                     const timerange = rawTimeRangeToPartialTimeRange(rawTime, LOCAL_DATE, TIMEZONE_OFFSET);
                     const rawParagraphs = $timeslot.find(".activity-description .paragraph")
                         .map((_, par) => $schedulePage(par).text().trim())
@@ -94,115 +122,108 @@ export const LA_PRODUCT_CONF_CRAWLER: CrawlerKind<typeof LA_PRODUCT_CONF_DESCRIP
                         }).run();
 
                     return result;
-                }).toArray()
+                }).toArray().filter(res => !!res).map(res => res!);
 
-            Array.prototype.push.apply(nonMergedTimeslots, rawTimeslots.map((ts, idx) => {
-                const start = ts.timerange.start || rawTimeslots[idx-1].timerange.end as ISODatetime;
-                const end = ts.timerange.end || rawTimeslots[idx+1]?.timerange?.start || `${LOCAL_DATE}T18:00:00.000Z` as ISODatetime;
+            const timeslotsParsingResults = rawTimeslots.map((ts, idx): Error|ScheduleTimeSlot => {
+              const originalStart = ts.timerange.start || rawTimeslots[idx-1].timerange.end as ISODatetime;
+              const originalEnd = ts.timerange.end || rawTimeslots[idx+1]?.timerange?.start || `${LOCAL_DATE}T${DAY.endTime}` as ISODatetime;
 
-                const timeslotId = `${start}__${end}__break` as ScheduleTimeSlot['id'];
-                if(ts.type === 'Break') {
-                    const icon = match<string, BreakTimeSlot['break']['icon']>(timeslotId)
-                        .when(id => [
-                                '2023-05-24T06:30:00.000Z__2023-05-24T07:00:00.000Z__break',
-                                '2023-05-24T08:15:00.000Z__2023-05-24T08:45:00.000Z__break',
-                                '2023-05-24T13:45:00.000Z__2023-05-24T14:15:00.000Z__break',
-                            ].includes(id),
-                            _ => 'cafe'
-                        )
-                        .when(id => [
-                                '2023-05-24T10:30:00.000Z__2023-05-24T12:00:00.000Z__break',
-                            ].includes(id),
-                            _ => 'restaurant'
-                        )
-                        .when(id => [
-                                '2023-05-24T16:00:00.000Z__2023-05-24T18:00:00.000Z__break',
-                                '2023-05-24T15:00:00.000Z__2023-05-24T18:00:00.000Z__break',
-                            ].includes(id),
-                            _ => 'beer'
-                        ).run();
+              const originalTimeslotId = `${originalStart}--${originalEnd}` as const;
+              const overrides = descriptor.timeslotOverrides[originalTimeslotId];
 
-                    const breakTimeslot: BreakTimeSlot = {
-                        start,
-                        end,
-                        id: `${start}__${end}__break` as any,
-                        type: 'break',
-                        break: {
-                            title: ts.breakLabel,
-                            icon,
-                            room: descriptor.rooms[tabIdx]
-                        },
-                    };
+              const { start, end, timeslotId} = {
+                start: originalStart,
+                end: originalEnd,
+                timeslotId: originalTimeslotId,
+                ...(overrides?.type === 'replace' ? {
+                  start: overrides.replacement.start || originalStart,
+                  end: overrides.replacement.end || originalEnd,
+                  timeslotId: overrides.replacement.id || originalTimeslotId,
+                } : {})
+              }
 
-                    return breakTimeslot;
-                } else {
-                    const overrides: Pick<TalksTimeSlot, 'id'|'start'|'end'> = match(timeslotId)
-                        .when(id => [
-                                '2023-05-24T21:45:00.000Z__2023-05-24T10:30:00.000Z__talk',
-                            ].includes(id),
-                            _ => ({
-                                id: '2023-05-24T09:45:00.000Z__2023-05-24T10:30:00.000Z__talk' as TalksTimeSlot['id'],
-                                start: '2023-05-24T09:45:00.000Z' as ISODatetime,
-                                end
-                            })
-                        ).when(id => [
-                                '2023-05-24T21:45:00.000Z__2023-05-24T10:30:00.000Z__break',
-                            ].includes(id),
-                            _ => ({
-                                id: '2023-05-24T21:45:00.000Z__2023-05-24T10:30:00.000Z__break' as TalksTimeSlot['id'],
-                                start: '2023-05-24T09:45:00.000Z' as ISODatetime,
-                                end
-                            })
-                        ).otherwise(() => ({ id: timeslotId, start, end }));
+              const room = descriptor.rooms[tabIdx];
 
-                    const duration = new Date(overrides.end).getTime() - new Date(overrides.start).getTime();
-                    const format = descriptor.talkFormats.find(t => t.id === `talk${duration/60000}`) as TalkFormat;
+              if(ts.type === 'Break') {
+                const breakTimeslot: BreakTimeSlot = {
+                  start,
+                  end,
+                  id: timeslotId,
+                  type: 'break',
+                  break: {
+                    title: ts.breakLabel,
+                    icon: 'cafe',
+                    room
+                  },
+                  ...(overrides?.type === 'replace' ? overrides.replacement as BreakTimeSlot : {})
+                };
 
-                    const detailedTalk: DetailedTalk = {
-                        start: overrides.start,
-                        end: overrides.end,
-                        speakers: ts.speakers,
-                        format: {
-                            id: format.id,
-                            title: format.title,
-                            duration: format.duration
-                        },
-                        language: '',
-                        id: `${timeslotId}__${idx}`,
-                        title: ts.title,
-                        track: {
-                            id: descriptor.talkTracks[tabIdx].id,
-                            title: descriptor.talkTracks[tabIdx].title
-                        },
-                        room: descriptor.rooms[tabIdx],
-                        summary: '',
-                        description: '',
-                        tags: [],
-                        isOverflow: false
-                    };
-
-                    talks.push(detailedTalk);
-
-                    const talksTimeslot: TalksTimeSlot = {
-                        start: overrides.start,
-                        end: overrides.end,
-                        id: overrides.id,
-
-                        type: 'talks',
-                        talks: [{
-                            speakers: detailedTalk.speakers,
-                            format: detailedTalk.format,
-                            language: detailedTalk.language,
-                            id: detailedTalk.id,
-                            title: detailedTalk.title,
-                            track: detailedTalk.track,
-                            room: detailedTalk.room,
-                            isOverflow: false
-                        }],
-                    }
-                    return talksTimeslot;
+                return breakTimeslot;
+              } else {
+                const duration = new Date(end).getTime() - new Date(start).getTime();
+                const expectedFormatId = `talk${duration/60000}`;
+                const format = descriptor.talkFormats.find(t => t.id === expectedFormatId);
+                if(!format) {
+                  return new Error(`No format found with id=${expectedFormatId} for timeslot id ${timeslotId}`)
                 }
-            }));
+
+                const track = descriptor.talkTracks[tabIdx];
+                const detailedTalk: DetailedTalk = {
+                  start, end,
+                  speakers: ts.speakers,
+                  format: {
+                    id: format.id,
+                    title: format.title,
+                    duration: format.duration
+                  },
+                  language: '',
+                  id: `${room.id}__${timeslotId}__${idx}`,
+                  title: ts.title,
+                  track,
+                  room,
+                  summary: '',
+                  description: '',
+                  tags: [],
+                  isOverflow: false
+                    };
+
+                talks.push(detailedTalk);
+
+                const talksTimeslot: TalksTimeSlot = {
+                  start, end,
+                  id: timeslotId,
+
+                  type: 'talks',
+                  talks: [{
+                    speakers: detailedTalk.speakers,
+                    format: detailedTalk.format,
+                    language: detailedTalk.language,
+                    id: detailedTalk.id,
+                    title: detailedTalk.title,
+                    track: detailedTalk.track,
+                    room: detailedTalk.room,
+                    isOverflow: false
+                  }],
+                }
+                return talksTimeslot;
+              }
+            })
+
+          const errors = timeslotsParsingResults
+            .filter(tpr => tpr instanceof Error)
+            .map(res => res as Error);
+
+          if(errors.length) {
+            throw new Error(`Detected errors during timeslots creation:\n${errors.map(err => `  ${err.message}`).join("\n")}`);
+          }
+
+          const timeslots = timeslotsParsingResults.map(res => res as ScheduleTimeSlot)
+          const filteredTimeslots = timeslots.filter(ts => {
+            const override = descriptor.timeslotOverrides[ts.id];
+            return (!override || override.type !== 'remove');
+          });
+
+          nonMergedTimeslots.push(...filteredTimeslots);
         })
 
         const dedupedTimeslotsPerId = nonMergedTimeslots.reduce((result, timeslot) => {
