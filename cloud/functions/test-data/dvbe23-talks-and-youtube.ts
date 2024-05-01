@@ -4,28 +4,12 @@ import {TalkMatchingYoutubeTestData} from "./test-data";
 export const DVBE23_TALKS_AND_YOUTUBE = {
   "expectedMappedTalks": [
     {
-      "__score": 0.465,
+      "__score": 0.461,
       "__talkTitle": "Empowering Growth: The Art of Harnessing Your Mentor's Expertise as a Senior Developer",
-      "__videoTitle": "Empowering Growth by Markus Westergren",
+      "__videoTitle": "[VDCLUJ2023] Rob Geurden - Simplifying Microservices: The art of effortless development",
       "__speakers": "Markus Westergren",
       "talkId": "25603",
-      "videoId": "1ZQlkZXeROs"
-    },
-    {
-      "__score": 0.473,
-      "__talkTitle": "Keeping Up With LTS: Moving from JDK 17 to 21",
-      "__videoTitle": "Keeping Your Java Hot by Solving the JVM Warmup Problem  By  Simon Ritter",
-      "__speakers": "Simon Ritter",
-      "talkId": "50004",
-      "videoId": "g6Y6F-UfYTI"
-    },
-    {
-      "__score": 0.487,
-      "__talkTitle": "Observability for Java Developers (2023 Edition)",
-      "__videoTitle": "10 Years of The Well Grounded Java Developer By Ben Evans",
-      "__speakers": "Ben Evans",
-      "talkId": "32655",
-      "videoId": "4mY-MFmSO2c"
+      "videoId": "dd9NIXCB6hE"
     },
     {
       "__score": 0.558,
@@ -52,20 +36,20 @@ export const DVBE23_TALKS_AND_YOUTUBE = {
       "videoId": "kCiGneWQA24"
     },
     {
+      "__score": 0.599,
+      "__talkTitle": "OpenTelemetry and Continuous Feedback - Things you need to know about your Java code at runtime",
+      "__videoTitle": "OpenTelemetry and Continuous Feedback by Roni Dover",
+      "__speakers": "Roni Dover",
+      "talkId": "35710",
+      "videoId": "MTPUtODhNWE"
+    },
+    {
       "__score": 0.605,
       "__talkTitle": "Boost Your Coding Productivity: Embrace the AI code assistance with GitHub Copilot and Amazon CodeWhisperer",
       "__videoTitle": "Boost Your Coding Productivity using AI code assistants by Piyush Mundada",
       "__speakers": "Piyush Mundada",
       "talkId": "48807",
       "videoId": "FDUhF4jSw3M"
-    },
-    {
-      "__score": 0.606,
-      "__talkTitle": "OpenTelemetry and Continuous Feedback - Things you need to know about your Java code at runtime",
-      "__videoTitle": "Continuous Code Feedback with OpenTelemetry and Digma  By  Roni Dover",
-      "__speakers": "Roni Dover",
-      "talkId": "35710",
-      "videoId": "Tyv79hhaL6c"
     },
     {
       "__score": 0.634,
@@ -100,38 +84,6 @@ export const DVBE23_TALKS_AND_YOUTUBE = {
       "videoId": "isr44p7eplQ"
     },
     {
-      "__score": 0.773,
-      "__talkTitle": "The Fast and the Sustainable: Unleash the Power of Sustainable IT & High-Performance Green Code",
-      "__videoTitle": "The Fast and the Sustainable: Unleash the Power of Sustainable IT & High Performance Green Code",
-      "__speakers": "Marc Cortada Bertomeu, Alexandru-Madalin Ghenea",
-      "talkId": "31416",
-      "videoId": "CbYZQl27ko8"
-    },
-    {
-      "__score": 0.813,
-      "__talkTitle": "Introducing Flow. The worst software development approach in history",
-      "__videoTitle": "Introducing Flow: The worst software development approach in history By Sander & Kim",
-      "__speakers": "Sander Hoogendoorn, Kim van Wilgen",
-      "talkId": "6779",
-      "videoId": "TIR84uGD61k"
-    },
-    {
-      "__score": 0.824,
-      "__talkTitle": "Spring Infrastructure Deep Dive: Virtual Threads, Checkpoint Restore, Native Images",
-      "__videoTitle": "Spring Infrastructure Deep Dive: Virtual Threads, Checkpoint Restore, Native Images By Juergen Hoell",
-      "__speakers": "Juergen Hoeller, Sébastien Deleuze, Arjen Poutsma",
-      "talkId": "20285",
-      "videoId": "YfFYTR8_lBY"
-    },
-    {
-      "__score": 0.834,
-      "__talkTitle": "Fake it until you `make it`. API integration testing with WireMock and Testcontainers",
-      "__videoTitle": "Fake it until you `make it`  API integration testing with WireMock and Testcontainers By Oleg (2x)",
-      "__speakers": "Oleg Nenashev, Oleg Šelajev",
-      "talkId": "47045",
-      "videoId": "eFILbyaMI2A"
-    },
-    {
       "__score": 0.859,
       "__talkTitle": "Property-based testing - let your testing library work for you",
       "__videoTitle": "Property based testing: let your testing library work for you  By  Magda Stożek",
@@ -148,12 +100,12 @@ export const DVBE23_TALKS_AND_YOUTUBE = {
       "videoId": "sR0p8BRSOP0"
     },
     {
-      "__score": 0.87,
-      "__talkTitle": "Implementing passwordless logins using Passkey, WebAuthn protocols and spring authorization server ",
-      "__videoTitle": "Implementing passwordless logins using Passkey, WebAuthn protocols and spring authorization server",
-      "__speakers": "Adib Saikali, Joe Grandja",
-      "talkId": "50772",
-      "videoId": "qNy_Q9fth-4"
+      "__score": 0.867,
+      "__talkTitle": "Introducing Flow. The worst software development approach in history",
+      "__videoTitle": "Introducing Flow: The worst software development approach in history By Sander & Kim",
+      "__speakers": "Sander Hoogendoorn, Kim van Wilgen",
+      "talkId": "6779",
+      "videoId": "TIR84uGD61k"
     },
     {
       "__score": 0.877,
@@ -178,22 +130,6 @@ export const DVBE23_TALKS_AND_YOUTUBE = {
       "__speakers": "Brian Goetz",
       "talkId": "67953",
       "videoId": "eXCx2hW_xNI"
-    },
-    {
-      "__score": 0.882,
-      "__talkTitle": "Dockerfiles, Buildpacks, Jib and more ... what's the best way to run your Java code in Containers?",
-      "__videoTitle": "Dockerfiles, Buildpacks, Jib and more what's the best way to run your Java code in Containers?",
-      "__speakers": "Matthias Haeussler",
-      "talkId": "39107",
-      "videoId": "oXS1rS6v0I8"
-    },
-    {
-      "__score": 0.883,
-      "__talkTitle": "Java at AWS: Lessons Learned from Upgrading and Modernizing a Massive JVM Codebase",
-      "__videoTitle": "Java at AWS: Lessons Learned from Upgrading and Modernizing a Massive JVM Codebase  By  Yishai Galat",
-      "__speakers": "Yishai Galatzer, James Gosling",
-      "talkId": "70104",
-      "videoId": "Yu2BhWk9mKY"
     },
     {
       "__score": 0.887,
@@ -236,6 +172,14 @@ export const DVBE23_TALKS_AND_YOUTUBE = {
       "videoId": "H4lXE2B-PPg"
     },
     {
+      "__score": 0.9,
+      "__talkTitle": "Java at AWS: Lessons Learned from Upgrading and Modernizing a Massive JVM Codebase",
+      "__videoTitle": "Java at AWS: Lessons Learned from Upgrading and Modernizing a Massive JVM Codebase  By  Yishai Galat",
+      "__speakers": "Yishai Galatzer, James Gosling",
+      "talkId": "70104",
+      "videoId": "Yu2BhWk9mKY"
+    },
+    {
       "__score": 0.901,
       "__talkTitle": "What you can do with WebGPU?",
       "__videoTitle": "What you can do with WebGPU?  By Corentin Wallez, François Beaufort",
@@ -274,6 +218,22 @@ export const DVBE23_TALKS_AND_YOUTUBE = {
       "__speakers": "Kevin Dubois, Alex Soto",
       "talkId": "68901",
       "videoId": "EB8kdbAbSmE"
+    },
+    {
+      "__score": 0.906,
+      "__talkTitle": "Spring Infrastructure Deep Dive: Virtual Threads, Checkpoint Restore, Native Images",
+      "__videoTitle": "Spring Infrastructure Deep Dive: Virtual Threads, Checkpoint Restore, Native Images By Juergen Hoell",
+      "__speakers": "Juergen Hoeller, Sébastien Deleuze, Arjen Poutsma",
+      "talkId": "20285",
+      "videoId": "YfFYTR8_lBY"
+    },
+    {
+      "__score": 0.906,
+      "__talkTitle": "Fake it until you `make it`. API integration testing with WireMock and Testcontainers",
+      "__videoTitle": "Fake it until you `make it`  API integration testing with WireMock and Testcontainers By Oleg (2x)",
+      "__speakers": "Oleg Nenashev, Oleg Šelajev",
+      "talkId": "47045",
+      "videoId": "eFILbyaMI2A"
     },
     {
       "__score": 0.907,
@@ -1474,36 +1434,39 @@ export const DVBE23_TALKS_AND_YOUTUBE = {
       "__speakers": "Sharat Chander, Alan Bateman, Stuart Marks, Viktor Klang, Brian Goetz",
       "talkId": "9801",
       "videoId": "DlTUMjg7DD0"
+    },
+    {
+      "__score": 0.979,
+      "__talkTitle": "The Fast and the Sustainable: Unleash the Power of Sustainable IT & High-Performance Green Code",
+      "__videoTitle": "The Fast and the Sustainable: Unleash the Power of Sustainable IT & High Performance Green Code",
+      "__speakers": "Marc Cortada Bertomeu, Alexandru-Madalin Ghenea",
+      "talkId": "31416",
+      "videoId": "CbYZQl27ko8"
+    },
+    {
+      "__score": 0.979,
+      "__talkTitle": "Dockerfiles, Buildpacks, Jib and more ... what's the best way to run your Java code in Containers?",
+      "__videoTitle": "Dockerfiles, Buildpacks, Jib and more what's the best way to run your Java code in Containers?",
+      "__speakers": "Matthias Haeussler",
+      "talkId": "39107",
+      "videoId": "oXS1rS6v0I8"
+    },
+    {
+      "__score": 0.995,
+      "__talkTitle": "Implementing passwordless logins using Passkey, WebAuthn protocols and spring authorization server ",
+      "__videoTitle": "Implementing passwordless logins using Passkey, WebAuthn protocols and spring authorization server",
+      "__speakers": "Adib Saikali, Joe Grandja",
+      "talkId": "50772",
+      "videoId": "qNy_Q9fth-4"
     }
   ],
   "expectedUnmappedTalks": [
     {
-      "__talkTitle": "Hello (Virtual) World",
-      "__talkFormat": "Tools-in-Action (id=957, duration=PT30m)",
-      "__talkRoom": "Room 8 (1156)",
-      "__talkSpeakers": "Keren Kenzi",
-      "talkId": "29012"
-    },
-    {
-      "__talkTitle": "A data-driven study of Spotify’s large-scale micro component architecture",
-      "__talkFormat": "Conference (id=951, duration=PT50m)",
-      "__talkRoom": "Room 9 (1155)",
-      "__talkSpeakers": "Niklas Gustavsson",
-      "talkId": "31430"
-    },
-    {
-      "__talkTitle": "Code a Book with Asciidoctor and Antora",
-      "__talkFormat": "Tools-in-Action (id=957, duration=PT30m)",
-      "__talkRoom": "Room 9 (1155)",
-      "__talkSpeakers": "Matt Raible",
-      "talkId": "47005"
-    },
-    {
-      "__talkTitle": "[CANCELED] Securing service meshes with eBPF",
+      "__talkTitle": "Keeping Up With LTS: Moving from JDK 17 to 21",
       "__talkFormat": "Deep Dive (id=959, duration=PT180m)",
-      "__talkRoom": "Room 4 (1160)",
-      "__talkSpeakers": "Shivay Lamba",
-      "talkId": "52514"
+      "__talkRoom": "Room 5 (1159)",
+      "__talkSpeakers": "Simon Ritter",
+      "talkId": "50004"
     },
     {
       "__talkTitle": "Asynchronous Ruby on the JVM with Project Loom",
@@ -1513,11 +1476,46 @@ export const DVBE23_TALKS_AND_YOUTUBE = {
       "talkId": "6256"
     },
     {
+      "__talkTitle": "[CANCELED] Securing service meshes with eBPF",
+      "__talkFormat": "Deep Dive (id=959, duration=PT180m)",
+      "__talkRoom": "Room 4 (1160)",
+      "__talkSpeakers": "Shivay Lamba",
+      "talkId": "52514"
+    },
+    {
+      "__talkTitle": "Hello (Virtual) World",
+      "__talkFormat": "Tools-in-Action (id=957, duration=PT30m)",
+      "__talkRoom": "Room 8 (1156)",
+      "__talkSpeakers": "Keren Kenzi",
+      "talkId": "29012"
+    },
+    {
+      "__talkTitle": "Code a Book with Asciidoctor and Antora",
+      "__talkFormat": "Tools-in-Action (id=957, duration=PT30m)",
+      "__talkRoom": "Room 9 (1155)",
+      "__talkSpeakers": "Matt Raible",
+      "talkId": "47005"
+    },
+    {
+      "__talkTitle": "Observability for Java Developers (2023 Edition)",
+      "__talkFormat": "Conference (id=951, duration=PT50m)",
+      "__talkRoom": "Room 6 (1158)",
+      "__talkSpeakers": "Ben Evans",
+      "talkId": "32655"
+    },
+    {
       "__talkTitle": "Standardizing Observability in Distributed Systems",
       "__talkFormat": "Conference (id=951, duration=PT50m)",
       "__talkRoom": "Room 6 (1158)",
       "__talkSpeakers": "Lesley Cordero",
       "talkId": "8354"
+    },
+    {
+      "__talkTitle": "A data-driven study of Spotify’s large-scale micro component architecture",
+      "__talkFormat": "Conference (id=951, duration=PT50m)",
+      "__talkRoom": "Room 9 (1155)",
+      "__talkSpeakers": "Niklas Gustavsson",
+      "talkId": "31430"
     }
   ],
   "youtubeVideos": [

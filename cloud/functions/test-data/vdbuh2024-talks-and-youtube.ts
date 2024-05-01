@@ -206,18 +206,18 @@ export const VDBUH2024_TALKS_AND_YOUTUBE = {
   ],
   "expectedUnmappedTalks": [
     {
-      "__talkTitle": " Fast And Lightweight Spring Boot Applications With GraalVM",
-      "__talkFormat": "Conference (id=951, duration=PT60m)",
-      "__talkRoom": "Crowne A (4301)",
-      "__talkSpeakers": "Alina Yurenko",
-      "talkId": "1761"
-    },
-    {
       "__talkTitle": "Coding Context-Aware RAG Applications for Enterprise-Level",
       "__talkFormat": "Hands-on Lab (id=984, duration=PT120m)",
       "__talkRoom": "Crown D (12102)",
       "__talkSpeakers": "Lucian Gruia",
       "talkId": "4651"
+    },
+    {
+      "__talkTitle": " Fast And Lightweight Spring Boot Applications With GraalVM",
+      "__talkFormat": "Conference (id=951, duration=PT60m)",
+      "__talkRoom": "Crowne A (4301)",
+      "__talkSpeakers": "Alina Yurenko",
+      "talkId": "1761"
     },
     {
       "__talkTitle": "Cloud Native Java on Kubernetes",
