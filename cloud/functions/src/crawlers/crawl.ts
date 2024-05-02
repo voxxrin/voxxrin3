@@ -35,6 +35,7 @@ async function resolveCrawler(kind: string): Promise<CrawlerKind<any>|undefined>
         .with("jugsummercamp", async () => import("./jugsummercamp/crawler"))
         .with("bdxio", async () => import("./bdxio/crawler"))
         .with("codeurs-en-seine", async () => import("./codeurs-en-seine/crawler"))
+        .with("openplanner", async () => import("./openplanner/crawler"))
         .run()
 
     if(!crawler) {
