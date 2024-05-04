@@ -113,18 +113,6 @@ export function declareEventHttpRoutes(app: Express) {
     ensureHasEventStatsValidToken(),
     async (res, path, query, eventDescriptor, req) =>
       (await import("../event/topTalks")).eventTopTalks(res, path, query, req, eventDescriptor));
-  Routes.get(app, '/events/:eventId/talksStats',
-    z.object({
-      query: z.object({
-        token: z.string().min(10),
-      }),
-      path: z.object({
-        eventId: z.string().min(3),
-      })
-    }),
-    ensureHasEventStatsValidToken(),
-    async (res, path, query, eventDescriptor, req) =>
-      (await import("../event/talksStats")).eventTalksStats(res, path, query, req, eventDescriptor));
 
   // For statistical needs, such as getting number of daily feedbacks
   Routes.get(app, '/events/:eventId/dailyRatings/stats',
@@ -139,4 +127,19 @@ export function declareEventHttpRoutes(app: Express) {
     ensureHasFamilyOrEventOrganizerToken(),
     async (res, path, query, eventDescriptor, req) =>
       (await import("../event/dailyRatingsStats")).provideDailyRatingsStats(res, path, query, req));
+
+  // For event stats readers
+  Routes.get(app, '/events/:eventId/talksStats',
+    z.object({
+      query: z.object({
+        token: z.string().min(10),
+      }),
+      path: z.object({
+        eventId: z.string().min(3),
+      })
+    }),
+    ensureHasEventStatsValidToken(),
+    async (res, path, query, eventDescriptor, req) =>
+      (await import("../event/talksStats")).eventTalksStats(res, path, query, req, eventDescriptor));
+
 }
