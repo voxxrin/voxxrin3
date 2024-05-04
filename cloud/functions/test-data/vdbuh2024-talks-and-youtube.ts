@@ -1,5 +1,5 @@
 
-import {TalkMatchingYoutubeTestData} from "./test-data";
+import type {TalkMatchingYoutubeTestData} from "./test-data";
 
 export const VDBUH2024_TALKS_AND_YOUTUBE = {
   "expectedMappedTalks": [

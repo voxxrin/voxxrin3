@@ -180,7 +180,7 @@ async function generateTestFile(testFilePath: string, exportedVarName: string, r
     return talkById;
   }, new Map<string, Talk>())
   const content = `
-import {TalkMatchingYoutubeTestData} from "./test-data";
+import type {TalkMatchingYoutubeTestData} from "./test-data";
 
 export const ${exportedVarName} = ${JSON.stringify({
     expectedMappedTalks: results.matchedTalks.map(mt => ({

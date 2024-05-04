@@ -1,5 +1,4 @@
-
-import {TalkMatchingYoutubeTestData} from "./test-data";
+import type {TalkMatchingYoutubeTestData} from "./test-data";
 
 export const VDZ24_TALKS_AND_YOUTUBE = {
   "expectedMappedTalks": [
