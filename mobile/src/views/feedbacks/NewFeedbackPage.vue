@@ -91,11 +91,9 @@
                 <small>({{ LL.During_this_time_slot() }})</small>
             </span>
         </ion-button>
-        <ion-button size="small" fill="solid" shape="round" expand="block" v-if="selectedTalk !== undefined" @click="rateSelectedTalk()"
+        <ion-button class="add-feedback-btn" size="small" fill="solid" shape="round" expand="block" v-if="selectedTalk !== undefined" @click="rateSelectedTalk()"
                     :aria-label="LL.Add_Feedback()">
-            <span class="contentDidntAttendTalk">
               {{LL.Add_Feedback()}}
-            </span>
         </ion-button>
       </template>
     </feedback-footer>
@@ -241,7 +239,7 @@ function updateFeedbackSelectorRefTo(timeslotId: ScheduleTimeSlotId|undefined, f
     justify-content: space-between;
     row-gap: 4px;
     padding: 8px 16px;
-    background: var(--app-primary);
+    background: var(--voxxrin-event-theme-colors-secondary-hex);
     color: white;
     z-index: 1;
 
@@ -277,7 +275,7 @@ function updateFeedbackSelectorRefTo(timeslotId: ScheduleTimeSlotId|undefined, f
       border-radius: 0 0 0 8px;
       padding: 4px 12px;
       font-size: 12px;
-      background-color: var(--app-primary);
+      background-color: var(--voxxrin-event-theme-colors-secondary-hex);
       z-index: 1;
 
       @media (prefers-color-scheme: dark) {
@@ -290,5 +288,9 @@ function updateFeedbackSelectorRefTo(timeslotId: ScheduleTimeSlotId|undefined, f
     display: inline-flex;
     flex-direction: column;
     row-gap: 2px;
+  }
+
+  .add-feedback-btn {
+    --background: var(--voxxrin-event-theme-colors-secondary-hex)
   }
 </style>
