@@ -24,9 +24,9 @@ const props = defineProps({
   font-size: 22px;
 
   &._is-active {
-    --background: var(--ion-color-primary);
-    --color: var(--voxxrin-event-theme-colors-secondary-tertiary-hex);
-    border-left: 1px solid var(--voxxrin-event-theme-colors-tertiary-hex);
+    --background: var(--voxxrin-event-theme-colors-secondary-hex);
+    --color: var(--voxxrin-event-theme-colors-secondary-hex);
+    border-left: 1px solid var(--voxxrin-event-theme-colors-secondary-hex);
     color: white;
 
     @media (prefers-color-scheme: dark) {
