@@ -52,7 +52,7 @@
 
       </slot>
     </base-feedback-step>
-    <feedback-footer>
+    <feedback-footer :conf-descriptor="confDescriptorRef">
       <ion-button size="small" fill="solid" color="medium" shape="round" expand="block" @click="backToSchedulePage"
                   :aria-label="LL.Cancel()">
         {{ LL.Cancel() }}

@@ -69,7 +69,7 @@
         </div>
       </slot>
     </base-feedback-step>
-    <feedback-footer>
+    <feedback-footer :conf-descriptor="confDescriptorRef">
       <template #details>
         <ion-button v-if="confDescriptorRef?.features.remindMeOnceVideosAreAvailableEnabled"
                     @click.stop="watchLaterAllFavoritedTalks()"
