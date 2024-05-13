@@ -33,12 +33,10 @@ export const OPENPLANNER_DESCRIPTOR_PARSER = EVENT_DESCRIPTOR_PARSER.omit({
   talkTracks: true,
   supportedTalkLanguages: true,
   rooms: true,
-  formattings: true,
 }).extend({
   openPlannerGeneratedJson: z.string(),
   language: z.string(),
   ratings: RATINGS_CONFIG_PARSER,
-  formattings: FORMATTINGS_CONFIG_PARSER, // not optional
 })
 
 export const OPENPLANNER_GENERATED_SCHEDULE_PARSER = EVENT_DESCRIPTOR_PARSER.omit({
