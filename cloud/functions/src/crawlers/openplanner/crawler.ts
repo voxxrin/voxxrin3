@@ -56,8 +56,8 @@ export const OPENPLANNER_GENERATED_SCHEDULE_PARSER = EVENT_DESCRIPTOR_PARSER.omi
     tags: z.array(z.string()),
     title: z.string(),
     id: z.string(),
-    categoryName: z.string(),
-    categoryId: z.string(), // talkTrack
+    categoryName: z.string().nullish(),
+    categoryId: z.string().nullish(), // talkTrack
     formatId: z.string(), // talkFormat
     abstract: z.string().nullish(),
     trackId: z.string(), // room
@@ -113,6 +113,15 @@ export const OPENPLANNER_CRAWLER: CrawlerKind<typeof OPENPLANNER_DESCRIPTOR_PARS
       })
 
       let trackFallbackColors = 0
+      const UNKNOWN_TRACK_ID = 'unknown'
+      // Auto-appending an 'unknown' track as openplanner's category might be nullable (ex: on sunnytech, for keynotes)
+      // => in that case, we'll use this special 'unknown' track name
+      tracks.push({
+        id: UNKNOWN_TRACK_ID,
+        title: 'Unknown',
+        themeColor: TALK_TRACK_FALLBACK_COLORS[trackFallbackColors++]
+      })
+
       const dailySchedules = openPlannerSchedule.days.map(day => {
         const dailyRawSessions = Object.values(openPlannerSchedule.sessions)
           .filter(session => session.startTime.startsWith(day.localDate))
@@ -121,7 +130,7 @@ export const OPENPLANNER_CRAWLER: CrawlerKind<typeof OPENPLANNER_DESCRIPTOR_PARS
           const start = Temporal.Instant.from(session.startTime);
           const end = Temporal.Instant.from(session.endTime);
 
-          const track: ThemedTrack = match(tracks.find(t => t.id === session.categoryId))
+          const track: ThemedTrack = match(tracks.find(t => t.id === (session.categoryId || UNKNOWN_TRACK_ID)))
             .with(P.nullish, () => {
               if(!session.categoryId || !session.categoryName) {
                 throw new Error(`Detected a falsey session category id/name for session ${session.id}: aborting as this is truely unexpected as this should have been handled through 'unknown' auto-added track`)
