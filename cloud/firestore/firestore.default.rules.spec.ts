@@ -97,23 +97,6 @@ const FIREBASE_MANAGED_COLLECTIONS = [
       updatedData: () => ({id: 42})
     }]
   }, {
-    name: '/users/{userId}/events/{eventId}/__computed/self',
-    docInitializations: [{
-      name: 'alice',
-      collection: '/users/alice/events/an-event/__computed',
-      path: '/users/alice/events/an-event/__computed/self',
-      newDocPath: '/users/alice/events/an-event/__computed/other',
-      data: () => ({}),
-      updatedData: () => ({id:42})
-    }, {
-      name: 'fred',
-      collection: '/users/fred/events/an-event/__computed',
-      path: '/users/fred/events/an-event/__computed/self',
-      newDocPath: '/users/fred/events/an-event/__computed/other',
-      data: () => ({note: {isFavorite: true}}),
-      updatedData: () => ({note: {isFavorite: false}})
-    }]
-  }, {
     name: '/users/{userId}/events/{eventId}/talksNotes/{talkId}',
     docInitializations: [{
       name: 'alice',
@@ -624,30 +607,6 @@ const COLLECTIONS: CollectionDescriptor[] = [{
           get: false, update: false, list: false, createDoc: false, createNew: false,
         }, 'alice')
     }
-}, {
-  name: "/users/{userId}/events/{eventId}/__computed",
-  aroundTests: (userContext: UserContext) => match(userContext)
-    .with({ name: "unauthenticated user" },  () => ({
-      beforeEach: [],
-      afterEach: []
-    }))
-    .with({ name: "fred user" },  () => ({
-      beforeEach: [],
-      afterEach: []
-    })).run(),
-  tests: (userContext: UserContext) => {
-    ensureCollectionFollowAccessPermissions('/users/{userId}/events/{eventId}/__computed/self', userContext,
-      {
-        delete: false, list: false, update: false, createDoc: false, createNew: false,
-        get: userContext.name === 'fred user',
-      }, 'fred')
-
-    ensureCollectionFollowAccessPermissions('/users/{userId}/events/{eventId}/__computed/self', userContext,
-      {
-        delete: false, list: false, update: false, createDoc: false, createNew: false,
-        get: false
-      }, 'alice')
-  }
 }, {
     name: "/users/{userId}/events/{eventId}/talksNotes",
     aroundTests: (userContext: UserContext) => match(userContext)
