@@ -36,10 +36,10 @@
           </div>
         </div>
 
-        <div class="sectionBloc">
+        <div class="sectionBloc" v-if="confDescriptorRef.infos?.floorPlans?.length">
           <vox-divider>{{ LL.Map_Event() }}</vox-divider>
-          <tips :txt="'Double-tap on the map to zoom in / out'"></tips>
-          <carousel-swiper v-if="confDescriptorRef.infos?.floorPlans?.length" :items="confDescriptorRef.infos.floorPlans || []"></carousel-swiper>
+          <tips :txt="LL.Double_tap_on_the_map_to_zoom_in()"></tips>
+          <carousel-swiper :items="confDescriptorRef.infos.floorPlans || []"></carousel-swiper>
         </div>
 
         <div class="linksInfoConf" v-if="socialMedias.length">

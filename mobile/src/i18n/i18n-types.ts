@@ -571,6 +571,10 @@ type RootTranslation = {
 	 * T​a​l​k​ ​r​e​c​o​r​d
 	 */
 	Talk_Recording: string
+	/**
+	 * D​o​u​b​l​e​-​t​a​p​ ​o​n​ ​t​h​e​ ​m​a​p​ ​t​o​ ​z​o​o​m​ ​i​n
+	 */
+	Double_tap_on_the_map_to_zoom_in: string
 }
 
 export type TranslationFunctions = {
@@ -1126,6 +1130,10 @@ export type TranslationFunctions = {
 	 * Talk record
 	 */
 	Talk_Recording: () => LocalizedString
+	/**
+	 * Double-tap on the map to zoom in
+	 */
+	Double_tap_on_the_map_to_zoom_in: () => LocalizedString
 }
 
 export type Formatters = {
