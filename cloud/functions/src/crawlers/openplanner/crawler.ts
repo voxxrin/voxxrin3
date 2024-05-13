@@ -1,4 +1,4 @@
-import {FullEvent} from "../../models/Event";
+import {BreakTimeslotWithPotentiallyUnknownIcon, FullEvent} from "../../models/Event";
 import {z} from "zod";
 import {
   EVENT_DESCRIPTOR_PARSER,
@@ -9,7 +9,6 @@ import {
 import {CrawlerKind, TALK_TRACK_FALLBACK_COLORS} from "../crawl";
 import {ISO_DATETIME_PARSER} from "../../utils/zod-parsers";
 import {
-  BreakTimeSlot,
   DailySchedule,
   DetailedTalk, Room,
   ScheduleTimeSlot, Speaker,
@@ -18,6 +17,7 @@ import {
 import {match, P} from "ts-pattern";
 import {Temporal} from "@js-temporal/polyfill";
 import {ISODatetime} from "../../../../../shared/type-utils";
+import {fillUnknownBreakIcons} from "../utils";
 
 export const OPENPLANNER_DESCRIPTOR_PARSER = EVENT_DESCRIPTOR_PARSER.omit({
   id: true,
@@ -92,7 +92,8 @@ export const OPENPLANNER_CRAWLER: CrawlerKind<typeof OPENPLANNER_DESCRIPTOR_PARS
       const talks: DetailedTalk[] = [],
         tracks: ThemedTrack[] = openPlannerSchedule.talkTracks,
         formats: TalkFormat[] = openPlannerSchedule.talkFormats,
-        rooms: Room[] = openPlannerSchedule.rooms;
+        rooms: Room[] = openPlannerSchedule.rooms,
+        timezone = openPlannerSchedule.timezone;
 
       const speakers = Object.values(openPlannerSchedule.speakers).map(openPlannerSpeaker => {
         const speaker: Speaker = {
@@ -124,11 +125,11 @@ export const OPENPLANNER_CRAWLER: CrawlerKind<typeof OPENPLANNER_DESCRIPTOR_PARS
         themeColor: TALK_TRACK_FALLBACK_COLORS[trackFallbackColors++]
       })
 
-      const dailySchedules = openPlannerSchedule.days.map(day => {
+      const dailySchedules = openPlannerSchedule.days.map((day, dayIndex) => {
         const dailyRawSessions = Object.values(openPlannerSchedule.sessions)
           .filter(session => session.startTime && session.endTime && session.startTime.startsWith(day.localDate))
 
-        const { timeslots } = dailyRawSessions.reduce(({timeslots}, session) => {
+        const { talkTimeslots, breakTimeslots: breakTimeslotsWithPotentiallyUnknownIcons } = dailyRawSessions.reduce(({talkTimeslots, breakTimeslots}, session) => {
           const startInstant = Temporal.Instant.from(session.startTime!);
           const endInstant = Temporal.Instant.from(session.endTime!);
 
@@ -149,17 +150,17 @@ export const OPENPLANNER_CRAWLER: CrawlerKind<typeof OPENPLANNER_DESCRIPTOR_PARS
             }).otherwise(room => room)
 
           if(!session.formatId) {
-            const breakSlot: BreakTimeSlot = {
+            const breakSlot: BreakTimeslotWithPotentiallyUnknownIcon = {
               type: 'break',
               start, end,
               id: timeslotId,
               break: {
                 title: session.title,
                 room,
-                icon: 'cafe'
+                icon: 'unknown' as const
               }
             }
-            timeslots.push(breakSlot);
+            breakTimeslots.push(breakSlot);
           } else {
             const track: ThemedTrack = match(tracks.find(t => t.id === (session.categoryId || UNKNOWN_TRACK_ID)))
               .with(P.nullish, () => {
@@ -215,7 +216,7 @@ export const OPENPLANNER_CRAWLER: CrawlerKind<typeof OPENPLANNER_DESCRIPTOR_PARS
 
             talks.push(detailedTalk);
 
-            const talksTimeslot = match(timeslots.find(ts => ts.id === timeslotId))
+            const talksTimeslot = match(talkTimeslots.find(ts => ts.id === timeslotId))
               .with(P.nullish, () => {
                 const talksTimeslot: TalksTimeSlot = {
                   id: timeslotId,
@@ -225,7 +226,7 @@ export const OPENPLANNER_CRAWLER: CrawlerKind<typeof OPENPLANNER_DESCRIPTOR_PARS
                   talks: []
                 }
 
-                timeslots.push(talksTimeslot);
+                talkTimeslots.push(talksTimeslot);
                 return talksTimeslot;
               }).with({ type: 'talks'}, (talksTimeslot) => talksTimeslot)
               .otherwise((ts) => { throw new Error(`Unsupported case for timeslot: ${JSON.stringify(ts)}`)})
@@ -233,12 +234,16 @@ export const OPENPLANNER_CRAWLER: CrawlerKind<typeof OPENPLANNER_DESCRIPTOR_PARS
             talksTimeslot.talks.push(talk);
           }
 
-          return { timeslots };
-        }, {timeslots: []} as {timeslots: ScheduleTimeSlot[]})
+          return { talkTimeslots, breakTimeslots };
+        }, {talkTimeslots: [], breakTimeslots: []} as {talkTimeslots: TalksTimeSlot[], breakTimeslots: BreakTimeslotWithPotentiallyUnknownIcon[] })
+
+        const breakTimeslots = fillUnknownBreakIcons(
+          { isFirst: dayIndex === 0, isLast: dayIndex === openPlannerSchedule.days.length-1 },
+          timezone, breakTimeslotsWithPotentiallyUnknownIcons, talkTimeslots);
 
         const dailySchedule: DailySchedule = {
           day: day.id,
-          timeSlots: timeslots
+          timeSlots: ([] as ScheduleTimeSlot[]).concat(...breakTimeslots).concat(...talkTimeslots)
         }
 
         return dailySchedule;
@@ -251,7 +256,7 @@ export const OPENPLANNER_CRAWLER: CrawlerKind<typeof OPENPLANNER_DESCRIPTOR_PARS
           title: openPlannerSchedule.title,
           description: descriptor.description,
           peopleDescription: descriptor.peopleDescription || '500',
-          timezone: openPlannerSchedule.timezone,
+          timezone,
           logoUrl: openPlannerSchedule.logoUrl,
           backgroundUrl: openPlannerSchedule.backgroundUrl,
           headingTitle: openPlannerSchedule.headingTitle,
@@ -279,7 +284,7 @@ export const OPENPLANNER_CRAWLER: CrawlerKind<typeof OPENPLANNER_DESCRIPTOR_PARS
           title: openPlannerSchedule.title,
           description: descriptor.description,
           peopleDescription: descriptor.peopleDescription || '500',
-          timezone: openPlannerSchedule.timezone,
+          timezone,
           days: openPlannerSchedule.days,
           logoUrl: openPlannerSchedule.logoUrl,
           backgroundUrl: openPlannerSchedule.backgroundUrl,
