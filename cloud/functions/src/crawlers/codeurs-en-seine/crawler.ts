@@ -11,8 +11,6 @@ import {
     BREAK_TIME_SLOT_PARSER,
     DAY_PARSER,
     EVENT_DESCRIPTOR_PARSER,
-    SPEAKER_PARSER,
-    TALK_FORMAT_PARSER,
     THEMABLE_TALK_FORMAT_PARSER
 } from "../crawler-parsers";
 import {CrawlerKind} from "../crawl";
@@ -20,7 +18,6 @@ import {ISODatetime, ISOLocalDate, Replace} from "../../../../../shared/type-uti
 import {Temporal} from "@js-temporal/polyfill";
 import {match, P} from "ts-pattern";
 import {GithubMDXCrawler} from "../github/GithubMDXCrawler";
-import {ISO_DATETIME_PARSER} from "../../utils/zod-parsers";
 
 export const CODEURS_EN_SEINE_PARSER = EVENT_DESCRIPTOR_PARSER.omit({
     id: true,
@@ -261,7 +258,10 @@ export const CODEURS_EN_SEINE_CRAWLER: CrawlerKind<typeof CODEURS_EN_SEINE_PARSE
             talkFormats,
             infos: descriptor.infos,
             features: descriptor.features,
-            supportedTalkLanguages: descriptor.supportedTalkLanguages
+            supportedTalkLanguages: descriptor.supportedTalkLanguages,
+            formattings: descriptor.formattings || {
+              talkFormatTitle: 'with-duration'
+            },
         };
 
         const fullEvent: FullEvent = {

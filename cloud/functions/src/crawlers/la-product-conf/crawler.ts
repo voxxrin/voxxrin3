@@ -7,7 +7,6 @@ import {
     DetailedTalk,
     ScheduleTimeSlot,
     Speaker,
-    TalkFormat,
     TalksTimeSlot,
 } from "../../../../../shared/daily-schedule.firestore";
 import * as cheerio from 'cheerio';
@@ -23,9 +22,6 @@ import {
 } from "../crawler-parsers";
 import {CrawlerKind} from "../crawl";
 import {http} from "../utils";
-import {ISO_DATETIME_PARSER} from "../../utils/zod-parsers";
-import {TimeslottedTalk} from "../../functions/firestore/services/schedule-utils";
-import {raw} from "express";
 
 const LA_PRODUCT_CONF_DESCRIPTOR_PARSER = EVENT_DESCRIPTOR_PARSER.omit({
     id: true,
@@ -265,7 +261,10 @@ export const LA_PRODUCT_CONF_CRAWLER: CrawlerKind<typeof LA_PRODUCT_CONF_DESCRIP
             talkFormats: descriptor.talkFormats as ConferenceDescriptor['talkFormats'],
             infos: descriptor.infos,
             features: descriptor.features,
-            supportedTalkLanguages: descriptor.supportedTalkLanguages
+            supportedTalkLanguages: descriptor.supportedTalkLanguages,
+            formattings: descriptor.formattings || {
+              talkFormatTitle: 'with-duration'
+            },
         };
 
         const fullEvent: FullEvent = {

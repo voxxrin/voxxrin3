@@ -78,4 +78,7 @@ export type ConferenceDescriptor = ListableEvent & {
             }>
         }>|undefined,
     },
+    formattings: {
+      talkFormatTitle: 'with-duration'|'without-duration'
+    },
 }

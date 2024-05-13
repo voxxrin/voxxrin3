@@ -153,6 +153,10 @@ export const RATINGS_CONFIG_PARSER = z.object({
   })
 });
 
+export const FORMATTINGS_CONFIG_PARSER = z.object({
+  talkFormatTitle: z.union([z.literal('with-duration'), z.literal('without-duration')])
+})
+
 export const EVENT_FEATURES_CONFIG_PARSER = z.object({
   roomsDisplayed: z.boolean(),
   favoritesEnabled: z.boolean(),
@@ -178,6 +182,7 @@ export const EVENT_DESCRIPTOR_PARSER = LISTABLE_EVENT_PARSER.extend({
     supportedTalkLanguages: z.array(THEMABLE_LANGUAGE_PARSER),
     rooms: z.array(ROOM_PARSER),
     infos: INFOS_PARSER.optional(),
+    formattings: FORMATTINGS_CONFIG_PARSER.optional(),
 })
 
 export const DAILY_TALKS_STATS_PARSER = z.object({

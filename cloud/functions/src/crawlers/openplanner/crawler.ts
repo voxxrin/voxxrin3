@@ -1,7 +1,12 @@
 import {FullEvent} from "../../models/Event";
 import {z} from "zod";
-import {EVENT_DESCRIPTOR_PARSER, EVENT_FEATURES_CONFIG_PARSER, RATINGS_CONFIG_PARSER} from "../crawler-parsers";
-import {CrawlerKind} from "../crawl";
+import {
+  EVENT_DESCRIPTOR_PARSER,
+  EVENT_FEATURES_CONFIG_PARSER,
+  FORMATTINGS_CONFIG_PARSER,
+  RATINGS_CONFIG_PARSER
+} from "../crawler-parsers";
+import {CrawlerKind, TALK_TRACK_FALLBACK_COLORS} from "../crawl";
 import {ISO_DATETIME_PARSER} from "../../utils/zod-parsers";
 import {
   DailySchedule,
@@ -28,10 +33,12 @@ export const OPENPLANNER_DESCRIPTOR_PARSER = EVENT_DESCRIPTOR_PARSER.omit({
   talkTracks: true,
   supportedTalkLanguages: true,
   rooms: true,
+  formattings: true,
 }).extend({
   openPlannerGeneratedJson: z.string(),
   language: z.string(),
-  ratings: RATINGS_CONFIG_PARSER
+  ratings: RATINGS_CONFIG_PARSER,
+  formattings: FORMATTINGS_CONFIG_PARSER, // not optional
 })
 
 export const OPENPLANNER_GENERATED_SCHEDULE_PARSER = EVENT_DESCRIPTOR_PARSER.omit({
@@ -42,7 +49,8 @@ export const OPENPLANNER_GENERATED_SCHEDULE_PARSER = EVENT_DESCRIPTOR_PARSER.omi
   location: true,
   websiteUrl: true,
   theming: true, // hexContrast pattern needs to be fixed,
-  features: true
+  formattings: true,
+  features: true,
 }).extend({
   features: EVENT_FEATURES_CONFIG_PARSER.omit({ ratings: true }).extend({
   }),
@@ -234,7 +242,10 @@ export const OPENPLANNER_CRAWLER: CrawlerKind<typeof OPENPLANNER_DESCRIPTOR_PARS
           features: {
             ...openPlannerSchedule.features,
             ratings: descriptor.ratings
-          }
+          },
+          formattings: descriptor.formattings || {
+            talkFormatTitle: 'with-duration'
+          },
         },
         daySchedules: dailySchedules,
         talks,

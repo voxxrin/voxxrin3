@@ -291,7 +291,10 @@ export const DEVOXX_SCALA_CRAWLER: CrawlerKind<typeof DEVOXX_SCALA_DESCRIPTOR_PA
             talkTracks: Array.from(themedTracksById.values()),
             supportedTalkLanguages: descriptor.supportedTalkLanguages,
             rooms: descriptor.rooms,
-            infos: descriptor.infos
+            infos: descriptor.infos,
+            formattings: descriptor.formattings || {
+              talkFormatTitle: 'with-duration'
+            },
         }
 
         const event: FullEvent = {

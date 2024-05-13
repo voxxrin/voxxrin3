@@ -2,7 +2,7 @@
   <ion-list class="listTalks">
     <div class="listTalks-group" v-for="(perFormatGroup) in perFormatGroups" :key="perFormatGroup.format.id.value" role="listitem">
       <ion-item-divider class="listTalks-divider" role="presentation">
-        <talk-format :format="perFormatGroup.format" />
+        <talk-format :conf-descriptor="confDescriptor" :format="perFormatGroup.format" />
         <span class="listTalks-divider-separator"></span>
       </ion-item-divider>
 
