@@ -197,7 +197,10 @@ export const WEB2DAY_CRAWLER: CrawlerKind<typeof WEB2DAY_PARSER> = {
             talkFormats: descriptor.talkFormats as ConferenceDescriptor['talkFormats'],
             infos: descriptor.infos,
             features: descriptor.features,
-            supportedTalkLanguages: descriptor.supportedTalkLanguages
+            supportedTalkLanguages: descriptor.supportedTalkLanguages,
+            formattings: descriptor.formattings || {
+              talkFormatTitle: 'with-duration'
+            },
         };
 
         const detailedTalks = rawDetailedTalks.map(rawTalk => {

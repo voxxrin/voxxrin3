@@ -5,7 +5,7 @@ import {ScheduleTimeSlot} from "../../../../shared/daily-schedule.firestore";
 import {ISO_DATETIME_PARSER} from "../utils/zod-parsers";
 
 
-export const HEX_COLOR_PARSER = z.string().regex(/#[0-9a-fA-F]{6}/gi) as unknown as ZodLiteral<`#${string}`>
+export const HEX_COLOR_PARSER = z.string().regex(/#[0-9a-fA-F]{3}(?:[0-9a-fA-F]{3})?/gi) as unknown as ZodLiteral<`#${string}`>
 export const DURATION_PARSER = z.string().regex(/PT\d+m/gi) as unknown as ZodLiteral<`PT${number}m`>
 export const ISO_LOCAL_DATE_PARSER = z.string().regex(/\d{4}-\d{2}-\d{2}/gi) as unknown as ZodLiteral<ISOLocalDate>
 export const TIMESLOT_ID_PARSER = z.string()
@@ -73,15 +73,20 @@ export const SOCIAL_MEDIA_TYPE = z.union([
 export const LISTABLE_EVENT_PARSER = z.object({
     id: z.string(),
     title: z.string(),
-    description: z.string().nullable(),
+    description: z.string().nullable().optional(),
     days: z.array(DAY_PARSER),
     timezone: z.string(),
     keywords: z.array(z.string()),
     location: z.object({
         country: z.string(),
         city: z.string(),
+        coords: z.object({
+          latitude: z.number(),
+          longitude: z.number()
+        }).optional(),
+        address: z.string().optional(),
     }),
-    peopleDescription: z.string().nullish(),
+    peopleDescription: z.string().nullish().optional(),
     backgroundUrl: z.string(),
     logoUrl: z.string(),
     websiteUrl: z.string(),
@@ -101,7 +106,7 @@ export const INFOS_PARSER = z.object({
         sponsorships: z.array(z.object({
             name: z.string(), logoUrl: z.string(), href: z.string()
         }))
-    })).optional()
+    })).optional(),
 });
 
 export const RECORDING_CONFIG_PARSER = z.object({
@@ -115,60 +120,69 @@ export const RECORDING_CONFIG_PARSER = z.object({
   excludeTitleWordsFromMatching: z.array(z.string()).optional(),
 })
 
+export const RATINGS_CONFIG_PARSER = z.object({
+  bingo: z.object({
+    enabled: z.boolean(),
+    choices: z.array(z.object({
+      id: z.string(),
+      label: z.string()
+    }))
+  }),
+  scale: z.object({
+    enabled: z.boolean(),
+    icon: z.union([z.literal('star'), z.literal('thumbs-up')]),
+    labels: z.array(z.string())
+      .transform(arr => arr as ConferenceDescriptor['features']['ratings']['scale']['labels'])
+  }),
+  'free-text': z.object({
+    enabled: z.boolean(),
+    maxLength: z.number()
+  }),
+  'custom-scale': z.object({
+    enabled: z.boolean(),
+    choices: z.array(z.object({
+      id: z.string(),
+      icon: z.union([
+        z.literal("happy"),
+        z.literal("sad"),
+        z.literal("thumbs-up"),
+        z.literal("hand-right"),
+        z.literal("thumbs-down")
+      ])
+    }))
+  })
+});
+
+export const FORMATTINGS_CONFIG_PARSER = z.object({
+  talkFormatTitle: z.union([z.literal('with-duration'), z.literal('without-duration')])
+})
+
+export const EVENT_FEATURES_CONFIG_PARSER = z.object({
+  roomsDisplayed: z.boolean(),
+  favoritesEnabled: z.boolean(),
+  remindMeOnceVideosAreAvailableEnabled: z.boolean(),
+  showInfosTab: z.boolean().optional(),
+  // for multi-lang conferences, where we want to hide "default" (implicit) conference lang (ex: in devoxxfr, we'd hide FR)
+  hideLanguages: z.array(z.string()),
+  showRoomCapacityIndicator: z.boolean().optional(),
+  ratings: RATINGS_CONFIG_PARSER,
+  topRatedTalks: z.object({
+    minimumNumberOfRatingsToBeConsidered: z.number(),
+    minimumAverageScoreToBeConsidered: z.number().optional(),
+    numberOfDailyTopTalksConsidered: z.number()
+  }).optional(),
+  recording: RECORDING_CONFIG_PARSER.optional(),
+})
+
 export const EVENT_DESCRIPTOR_PARSER = LISTABLE_EVENT_PARSER.extend({
     headingTitle: z.string(),
-    features: z.object({
-        roomsDisplayed: z.boolean(),
-        favoritesEnabled: z.boolean(),
-        remindMeOnceVideosAreAvailableEnabled: z.boolean(),
-        showInfosTab: z.boolean().optional(),
-        // for multi-lang conferences, where we want to hide "default" (implicit) conference lang (ex: in devoxxfr, we'd hide FR)
-        hideLanguages: z.array(z.string()),
-        showRoomCapacityIndicator: z.boolean().optional(),
-        ratings: z.object({
-            bingo: z.object({
-                enabled: z.boolean(),
-                choices: z.array(z.object({
-                    id: z.string(),
-                    label: z.string()
-                }))
-            }),
-            scale: z.object({
-                enabled: z.boolean(),
-                icon: z.union([z.literal('star'), z.literal('thumbs-up')]),
-                labels: z.array(z.string())
-                    .transform(arr => arr as ConferenceDescriptor['features']['ratings']['scale']['labels'])
-            }),
-            'free-text': z.object({
-                enabled: z.boolean(),
-                maxLength: z.number()
-            }),
-            'custom-scale': z.object({
-                enabled: z.boolean(),
-                choices: z.array(z.object({
-                    id: z.string(),
-                    icon: z.union([
-                        z.literal("happy"),
-                        z.literal("sad"),
-                        z.literal("thumbs-up"),
-                        z.literal("hand-right"),
-                        z.literal("thumbs-down")
-                    ])
-                }))
-            })
-        }),
-        topRatedTalks: z.object({
-            minimumNumberOfRatingsToBeConsidered: z.number(),
-            minimumAverageScoreToBeConsidered: z.number().optional(),
-            numberOfDailyTopTalksConsidered: z.number()
-        }).optional(),
-        recording: RECORDING_CONFIG_PARSER.optional(),
-    }),
+    features: EVENT_FEATURES_CONFIG_PARSER,
     talkFormats: z.array(THEMABLE_TALK_FORMAT_PARSER),
     talkTracks: z.array(THEMABLE_TALK_TRACK_PARSER),
     supportedTalkLanguages: z.array(THEMABLE_LANGUAGE_PARSER),
     rooms: z.array(ROOM_PARSER),
     infos: INFOS_PARSER.optional(),
+    formattings: FORMATTINGS_CONFIG_PARSER.optional(),
 })
 
 export const DAILY_TALKS_STATS_PARSER = z.object({
@@ -258,7 +272,8 @@ export const FULL_EVENT_PARSER = z.object({
 })
 
 export const FIREBASE_CRAWLER_DESCRIPTOR_PARSER = z.object({
-    legacyCrawlingKeys: z.array(z.string()),
+    // TODO: to remove
+    legacyCrawlingKeys: z.array(z.string()).optional(),
     eventFamily: z.string(),
     eventName: z.string(),
     descriptorUrl: z.string(),

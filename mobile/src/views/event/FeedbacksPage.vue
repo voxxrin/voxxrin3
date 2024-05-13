@@ -45,7 +45,7 @@
                                    :conf-descriptor="confDescriptor"
                                    @talkClicked="toBeImplemented('To be implemented: opening feedback page in EDIT mode')">
                       <template #upper-right="{ talk }">
-                        <talk-format :format="talk.format" class="talkFormatContainer" />
+                        <talk-format :conf-descriptor="confDescriptor" :format="talk.format" class="talkFormatContainer" />
                       </template>
                       <template #footer-actions="{ talk }">
                         <linear-rating v-if="confDescriptor.features.ratings.scale.enabled" :config="confDescriptor.features.ratings.scale"

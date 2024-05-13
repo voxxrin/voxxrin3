@@ -19,6 +19,7 @@ import {getEventOrganizerToken, getFamilyOrganizerToken} from "../functions/fire
 import {getCrawlersMatching} from "../functions/firestore/services/crawlers-utils";
 import {ListableEvent} from "../../../../shared/event-list.firestore";
 import {ConferenceDescriptor} from "../../../../shared/conference-descriptor.firestore";
+import {toValidFirebaseKey} from "../../../../shared/utilities/firebase.utils";
 
 export type CrawlerKind<ZOD_TYPE extends z.ZodType> = {
     crawlerImpl: (eventId: string, crawlerDescriptor: z.infer<ZOD_TYPE>, criteria: { dayIds?: string[]|undefined }) => Promise<FullEvent>,
@@ -35,6 +36,7 @@ async function resolveCrawler(kind: string): Promise<CrawlerKind<any>|undefined>
         .with("jugsummercamp", async () => import("./jugsummercamp/crawler"))
         .with("bdxio", async () => import("./bdxio/crawler"))
         .with("codeurs-en-seine", async () => import("./codeurs-en-seine/crawler"))
+        .with("openplanner", async () => import("./openplanner/crawler"))
         .run()
 
     if(!crawler) {
@@ -208,6 +210,40 @@ function sanityCheckEvent(event: FullEvent): string[] {
 
   if(talkLangs.size === 1 && !event.conferenceDescriptor.features.hideLanguages.includes(Array.from(talkLangs)[0])) {
     event.conferenceDescriptor.features.hideLanguages.push(Array.from(talkLangs)[0]);
+  }
+
+  // Ensuring no "/" exists in important ids (talk id & day id)
+  for(const detailedTalk of event.talks) {
+    const validTalkId = toValidFirebaseKey(detailedTalk.id);
+    if(validTalkId !== detailedTalk.id) {
+      // updating talk id references...
+      for(const daySchedule of event.daySchedules) {
+        for(const timeslot of daySchedule.timeSlots) {
+          if(timeslot.type === 'talks') {
+            for(const talk of timeslot.talks) {
+              if(talk.id === detailedTalk.id) {
+                talk.id = validTalkId;
+              }
+            }
+          }
+        }
+      }
+
+      detailedTalk.id = validTalkId;
+    }
+  }
+  for(const dailySchedule of event.daySchedules) {
+    const validDayId = toValidFirebaseKey(dailySchedule.day);
+    if(validDayId !== dailySchedule.day) {
+      // updating day id references...
+      for(const confDescriptorDay of event.conferenceDescriptor.days) {
+        if(confDescriptorDay.id === dailySchedule.day) {
+          confDescriptorDay.id = validDayId;
+        }
+      }
+
+      dailySchedule.day = validDayId;
+    }
   }
 
   return crawlingMessages;
