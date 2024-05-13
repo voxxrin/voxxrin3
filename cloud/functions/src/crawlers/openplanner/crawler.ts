@@ -12,8 +12,7 @@ import {
   DailySchedule,
   DetailedTalk, Room,
   ScheduleTimeSlot, Speaker,
-  Talk, TalkFormat, TalksTimeSlot,
-  Track
+  Talk, TalkFormat, TalksTimeSlot, ThemedTrack,
 } from "../../../../../shared/daily-schedule.firestore";
 import {match, P} from "ts-pattern";
 import {Temporal} from "@js-temporal/polyfill";
@@ -21,8 +20,8 @@ import {ISODatetime} from "../../../../../shared/type-utils";
 
 export const OPENPLANNER_DESCRIPTOR_PARSER = EVENT_DESCRIPTOR_PARSER.omit({
   id: true,
-  // days: true, // to be removed once days.localDate will be an iso date in openplanner
-  // theming: true, // to be removed once hexContrast pattern is fixed in openplanner
+  days: true,
+  theming: true,
   features: true,
   title: true,
   timezone: true,
@@ -44,11 +43,9 @@ export const OPENPLANNER_DESCRIPTOR_PARSER = EVENT_DESCRIPTOR_PARSER.omit({
 export const OPENPLANNER_GENERATED_SCHEDULE_PARSER = EVENT_DESCRIPTOR_PARSER.omit({
   id: true,
   description: true,
-  days: true, // to be put back once days.localDate will be an iso date
   keywords: true,
   location: true,
   websiteUrl: true,
-  theming: true, // hexContrast pattern needs to be fixed,
   formattings: true,
   features: true,
 }).extend({
@@ -56,13 +53,17 @@ export const OPENPLANNER_GENERATED_SCHEDULE_PARSER = EVENT_DESCRIPTOR_PARSER.omi
   }),
   sessions: z.record(z.string(), z.object({
     speakers: z.array(z.string()),
-    // TODO: remove nested array once fixed on openplanner side
-    tags: z.array(z.union([ z.string(), z.array(z.string()) ])),
+    tags: z.array(z.string()),
     title: z.string(),
     id: z.string(),
+    categoryName: z.string(),
+    categoryId: z.string(), // talkTrack
+    formatId: z.string(), // talkFormat
+    abstract: z.string().nullish(),
+    trackId: z.string(), // room
+    trackTitle: z.string(),
     startTime: ISO_DATETIME_PARSER,
     endTime: ISO_DATETIME_PARSER,
-    trackTitle: z.string()
   })),
   speakers: z.record(z.string(), z.object({
     id: z.string(),
@@ -72,7 +73,9 @@ export const OPENPLANNER_GENERATED_SCHEDULE_PARSER = EVENT_DESCRIPTOR_PARSER.omi
       icon: z.union([z.literal("twitter"), z.literal("linkedin"), z.literal("github")]),
       link: z.string(),
       name: z.union([z.literal("LinkedIn"), z.literal("Linkedin"), z.literal("Twitter"), z.literal("GitHub")]),
-    }))
+    })),
+    bio: z.string().nullish(),
+    company: z.string()
   }))
 })
 
@@ -85,7 +88,7 @@ export const OPENPLANNER_CRAWLER: CrawlerKind<typeof OPENPLANNER_DESCRIPTOR_PARS
         .then(data => OPENPLANNER_GENERATED_SCHEDULE_PARSER.parse(data));
 
       const talks: DetailedTalk[] = [],
-        tracks: Track[] = openPlannerSchedule.talkTracks,
+        tracks: ThemedTrack[] = openPlannerSchedule.talkTracks,
         formats: TalkFormat[] = openPlannerSchedule.talkFormats,
         rooms: Room[] = openPlannerSchedule.rooms;
 
@@ -93,9 +96,9 @@ export const OPENPLANNER_CRAWLER: CrawlerKind<typeof OPENPLANNER_DESCRIPTOR_PARS
         const speaker: Speaker = {
           id: openPlannerSpeaker.id,
           fullName: openPlannerSpeaker.name,
-          bio: ``, // TODO: missing info from openplanner
+          bio: openPlannerSpeaker.bio,
           photoUrl: openPlannerSpeaker.photoUrl,
-          companyName: ``, // TODO: missing info from openplanner
+          companyName: openPlannerSpeaker.company,
           social: openPlannerSpeaker.socials.map(opSocial => ({
             type: match(opSocial.name)
               .with('GitHub', () => 'github' as const)
@@ -109,61 +112,56 @@ export const OPENPLANNER_CRAWLER: CrawlerKind<typeof OPENPLANNER_DESCRIPTOR_PARS
         return speaker;
       })
 
-      const dailySchedules = descriptor.days.map(day => {
+      let trackFallbackColors = 0
+      const dailySchedules = openPlannerSchedule.days.map(day => {
         const dailyRawSessions = Object.values(openPlannerSchedule.sessions)
           .filter(session => session.startTime.startsWith(day.localDate))
 
         const { timeslots} = dailyRawSessions.reduce(({timeslots}, session) => {
-          // TODO: Remove random track
-          const track: Track = tracks[Math.floor(Math.random()*tracks.length)]
-
-            // match(tracks.find(t => t.title === session.trackTitle))
-            // .with(P.nullish, () => {
-            //   const newTrack: Track = {
-            //     id: session.trackTitle,
-            //     title: session.trackTitle
-            //   }
-            //   tracks.push(newTrack)
-            //   return newTrack;
-            // }).otherwise(track => track)
-
-          // TODO: refactor session.trackTitle as this is misleading
-          const room = rooms.find(room => room.title === session.trackTitle)
-          if(!room) {
-            throw new Error(`No room found matching ${session.trackTitle} for session ${session.id} !`);
-          }
-
-            // match(rooms.find(r => r.title === MAIN_ROOM_TITLE))
-            // .with(P.nullish, () => {
-            //   const newRoom: Room = {
-            //     id: MAIN_ROOM_TITLE,
-            //     title: MAIN_ROOM_TITLE
-            //   }
-            //   rooms.push(newRoom)
-            //   return newRoom;
-            // }).otherwise(room => room)
-
           const start = Temporal.Instant.from(session.startTime);
           const end = Temporal.Instant.from(session.endTime);
-          const talkDurationInMinutes = start.until(end).total('minutes')
-          const formatDuration = `PT${talkDurationInMinutes}m` as const;
-          let format = formats.find(format => format.duration === formatDuration)
-          if(!format) {
-            console.warn(`No format found matching ${formatDuration} for session ${session.id} !`)
-            // TODO: remove random format
-            format = formats[Math.floor(Math.random()*formats.length)]
-            // throw new Error(`No format found matching ${formatDuration} for session ${session.id} !`);
-          }
-            // match(formats.find(f => f.duration === formatDuration))
-            // .with(P.nullish, () => {
-            //   const newFormat: TalkFormat = {
-            //     id: `talk-${formatDuration}m`,
-            //     title: `Talk de ${formatDuration}m`,
-            //     duration: formatDuration
-            //   }
-            //   formats.push(newFormat)
-            //   return newFormat;
-            // }).otherwise(format => format)
+
+          const track: ThemedTrack = match(tracks.find(t => t.id === session.categoryId))
+            .with(P.nullish, () => {
+              if(!session.categoryId || !session.categoryName) {
+                throw new Error(`Detected a falsey session category id/name for session ${session.id}: aborting as this is truely unexpected as this should have been handled through 'unknown' auto-added track`)
+              }
+              const newTrack: ThemedTrack = {
+                id: session.categoryId,
+                title: session.categoryName,
+                themeColor: TALK_TRACK_FALLBACK_COLORS[trackFallbackColors++]
+              }
+
+              tracks.push(newTrack);
+              console.warn(`Track with id ${session.categoryId} (in talk ${session.id}) was not found in tracks' list !.. Created it !`)
+              return newTrack;
+            }).otherwise(track => track)
+
+          const room = match(rooms.find(r => r.id === session.trackId))
+            .with(P.nullish, () => {
+              const newRoom: Room = {
+                id: session.trackId,
+                title: session.trackTitle
+              }
+              rooms.push(newRoom);
+              console.warn(`Room with id ${session.trackId} (in talk ${session.id}) was not found in rooms' list !.. Created it !`)
+              return newRoom;
+            }).otherwise(room => room)
+
+          const format = match(formats.find(f => f.id === session.formatId))
+            .with(P.nullish, () => {
+              const talkDurationInMinutes = start.until(end).total('minutes')
+              const formatDuration = `PT${talkDurationInMinutes}m` as const;
+
+              const newFormat: TalkFormat = {
+                id: `talk-${formatDuration}m`,
+                title: `Talk de ${formatDuration}m`,
+                duration: formatDuration
+              }
+              formats.push(newFormat)
+              console.warn(`Format with id ${session.formatId} (in talk ${session.id}) was not found in formats' list !.. Created it !`)
+              return newFormat;
+            }).otherwise(format => format)
 
           const talk: Talk = {
             id: session.id,
@@ -181,11 +179,10 @@ export const OPENPLANNER_CRAWLER: CrawlerKind<typeof OPENPLANNER_DESCRIPTOR_PARS
             ...talk,
             start: start.toString() as ISODatetime,
             end: end.toString() as ISODatetime,
-            tags: session.tags.flatMap(tag => Array.isArray(tag) ? tag : [tag]),
+            tags: session.tags,
             assets: [],
-            // TODO: Missing currently in openplanner
-            description: ``,
-            summary: ``,
+            description: session.abstract || "",
+            summary: session.abstract || "",
           }
 
           talks.push(detailedTalk);
@@ -234,11 +231,11 @@ export const OPENPLANNER_CRAWLER: CrawlerKind<typeof OPENPLANNER_DESCRIPTOR_PARS
           talkTracks: openPlannerSchedule.talkTracks,
           supportedTalkLanguages: openPlannerSchedule.supportedTalkLanguages,
           rooms: openPlannerSchedule.rooms,
-          days: descriptor.days,
+          days: openPlannerSchedule.days,
           keywords: descriptor.keywords,
           location: descriptor.location,
           websiteUrl: descriptor.websiteUrl,
-          theming: descriptor.theming,
+          theming: openPlannerSchedule.theming,
           features: {
             ...openPlannerSchedule.features,
             ratings: descriptor.ratings
@@ -255,12 +252,12 @@ export const OPENPLANNER_CRAWLER: CrawlerKind<typeof OPENPLANNER_DESCRIPTOR_PARS
           description: descriptor.description,
           peopleDescription: descriptor.peopleDescription || '500',
           timezone: openPlannerSchedule.timezone,
-          days: descriptor.days,
+          days: openPlannerSchedule.days,
           logoUrl: openPlannerSchedule.logoUrl,
           backgroundUrl: openPlannerSchedule.backgroundUrl,
           websiteUrl: descriptor.infos?.socialMedias?.find(sm => sm.type === 'website')?.href || "",
           location: descriptor.location,
-          theming: descriptor.theming,
+          theming: openPlannerSchedule.theming,
           keywords: descriptor.keywords
         }
       }
