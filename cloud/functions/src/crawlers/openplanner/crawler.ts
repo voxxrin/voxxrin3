@@ -83,6 +83,7 @@ export const OPENPLANNER_CRAWLER: CrawlerKind<typeof OPENPLANNER_DESCRIPTOR_PARS
     descriptorParser: OPENPLANNER_DESCRIPTOR_PARSER,
     crawlerImpl: async (eventId: string, descriptor: z.infer<typeof OPENPLANNER_DESCRIPTOR_PARSER>, criteria: { dayIds?: string[]|undefined }) => {
 
+      console.info(`Crawling openplanner JSON file: ${descriptor.openPlannerGeneratedJson}`)
       const openPlannerSchedule = await fetch(descriptor.openPlannerGeneratedJson)
         .then(resp => resp.json())
         .then(data => OPENPLANNER_GENERATED_SCHEDULE_PARSER.parse(data));
