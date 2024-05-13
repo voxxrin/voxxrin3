@@ -10,7 +10,7 @@ describe('openplanenr crawlers', () => {
         // descriptorUrl: `todo`
       // }, {
         id: 'sunnytech24', confName: `Sunny Tech '24`,
-        descriptorUrl: `https://gist.githubusercontent.com/fcamblor/64ad7b14d77cc0c85bb4d60a6913a022/raw/sunnytech.json`
+        descriptorUrl: `https://gist.githubusercontent.com/fcamblor/2b4cb4f3ee1f2861cfe2ebb434dc6c20/raw/sunnytech.json`
       }
     ] as const;
 
