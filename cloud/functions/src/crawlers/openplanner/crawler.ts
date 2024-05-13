@@ -62,8 +62,8 @@ export const OPENPLANNER_GENERATED_SCHEDULE_PARSER = EVENT_DESCRIPTOR_PARSER.omi
     abstract: z.string().nullish(),
     trackId: z.string(), // room
     trackTitle: z.string(),
-    startTime: ISO_DATETIME_PARSER,
-    endTime: ISO_DATETIME_PARSER,
+    startTime: ISO_DATETIME_PARSER.optional(),
+    endTime: ISO_DATETIME_PARSER.optional(),
   })),
   speakers: z.record(z.string(), z.object({
     id: z.string(),
@@ -124,11 +124,11 @@ export const OPENPLANNER_CRAWLER: CrawlerKind<typeof OPENPLANNER_DESCRIPTOR_PARS
 
       const dailySchedules = openPlannerSchedule.days.map(day => {
         const dailyRawSessions = Object.values(openPlannerSchedule.sessions)
-          .filter(session => session.startTime.startsWith(day.localDate))
+          .filter(session => session.startTime && session.endTime && session.startTime.startsWith(day.localDate))
 
         const { timeslots} = dailyRawSessions.reduce(({timeslots}, session) => {
-          const start = Temporal.Instant.from(session.startTime);
-          const end = Temporal.Instant.from(session.endTime);
+          const start = Temporal.Instant.from(session.startTime!);
+          const end = Temporal.Instant.from(session.endTime!);
 
           const track: ThemedTrack = match(tracks.find(t => t.id === (session.categoryId || UNKNOWN_TRACK_ID)))
             .with(P.nullish, () => {
