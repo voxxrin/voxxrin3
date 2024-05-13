@@ -9,6 +9,7 @@ import {
 import {CrawlerKind, TALK_TRACK_FALLBACK_COLORS} from "../crawl";
 import {ISO_DATETIME_PARSER} from "../../utils/zod-parsers";
 import {
+  BreakTimeSlot,
   DailySchedule,
   DetailedTalk, Room,
   ScheduleTimeSlot, Speaker,
@@ -58,7 +59,7 @@ export const OPENPLANNER_GENERATED_SCHEDULE_PARSER = EVENT_DESCRIPTOR_PARSER.omi
     id: z.string(),
     categoryName: z.string().nullish(),
     categoryId: z.string().nullish(), // talkTrack
-    formatId: z.string(), // talkFormat
+    formatId: z.string().nullish(), // talkFormat
     abstract: z.string().nullish(),
     trackId: z.string(), // room
     trackTitle: z.string(),
@@ -127,25 +128,14 @@ export const OPENPLANNER_CRAWLER: CrawlerKind<typeof OPENPLANNER_DESCRIPTOR_PARS
         const dailyRawSessions = Object.values(openPlannerSchedule.sessions)
           .filter(session => session.startTime && session.endTime && session.startTime.startsWith(day.localDate))
 
-        const { timeslots} = dailyRawSessions.reduce(({timeslots}, session) => {
-          const start = Temporal.Instant.from(session.startTime!);
-          const end = Temporal.Instant.from(session.endTime!);
+        const { timeslots } = dailyRawSessions.reduce(({timeslots}, session) => {
+          const startInstant = Temporal.Instant.from(session.startTime!);
+          const endInstant = Temporal.Instant.from(session.endTime!);
 
-          const track: ThemedTrack = match(tracks.find(t => t.id === (session.categoryId || UNKNOWN_TRACK_ID)))
-            .with(P.nullish, () => {
-              if(!session.categoryId || !session.categoryName) {
-                throw new Error(`Detected a falsey session category id/name for session ${session.id}: aborting as this is truely unexpected as this should have been handled through 'unknown' auto-added track`)
-              }
-              const newTrack: ThemedTrack = {
-                id: session.categoryId,
-                title: session.categoryName,
-                themeColor: TALK_TRACK_FALLBACK_COLORS[trackFallbackColors++]
-              }
+          const start = startInstant.toString() as ISODatetime,
+            end = endInstant.toString() as ISODatetime;
 
-              tracks.push(newTrack);
-              console.warn(`Track with id ${session.categoryId} (in talk ${session.id}) was not found in tracks' list !.. Created it !`)
-              return newTrack;
-            }).otherwise(track => track)
+          const timeslotId = `${start}--${end}` as const
 
           const room = match(rooms.find(r => r.id === session.trackId))
             .with(P.nullish, () => {
@@ -158,62 +148,90 @@ export const OPENPLANNER_CRAWLER: CrawlerKind<typeof OPENPLANNER_DESCRIPTOR_PARS
               return newRoom;
             }).otherwise(room => room)
 
-          const format = match(formats.find(f => f.id === session.formatId))
-            .with(P.nullish, () => {
-              const talkDurationInMinutes = start.until(end).total('minutes')
-              const formatDuration = `PT${talkDurationInMinutes}m` as const;
-
-              const newFormat: TalkFormat = {
-                id: `talk-${formatDuration}m`,
-                title: `Talk de ${formatDuration}m`,
-                duration: formatDuration
+          if(!session.formatId) {
+            const breakSlot: BreakTimeSlot = {
+              type: 'break',
+              start, end,
+              id: timeslotId,
+              break: {
+                title: session.title,
+                room,
+                icon: 'cafe'
               }
-              formats.push(newFormat)
-              console.warn(`Format with id ${session.formatId} (in talk ${session.id}) was not found in formats' list !.. Created it !`)
-              return newFormat;
-            }).otherwise(format => format)
+            }
+            timeslots.push(breakSlot);
+          } else {
+            const track: ThemedTrack = match(tracks.find(t => t.id === (session.categoryId || UNKNOWN_TRACK_ID)))
+              .with(P.nullish, () => {
+                if(!session.categoryId || !session.categoryName) {
+                  throw new Error(`Detected a falsey session category id/name for session ${session.id}: aborting as this is truely unexpected as this should have been handled through 'unknown' auto-added track`)
+                }
+                const newTrack: ThemedTrack = {
+                  id: session.categoryId,
+                  title: session.categoryName,
+                  themeColor: TALK_TRACK_FALLBACK_COLORS[trackFallbackColors++]
+                }
 
-          const talk: Talk = {
-            id: session.id,
-            title: session.title,
-            isOverflow: false,
-            language: descriptor.language,
-            track,
-            room,
-            format,
-            speakers: session.speakers.map(opSpeakerId => speakers.find(sp => sp.id === opSpeakerId))
-              .filter(sp => !!sp).map(sp => sp!),
+                tracks.push(newTrack);
+                console.warn(`Track with id ${session.categoryId} (in talk ${session.id}) was not found in tracks' list !.. Created it !`)
+                return newTrack;
+              }).otherwise(track => track)
+
+            const format = match(formats.find(f => f.id === session.formatId))
+              .with(P.nullish, () => {
+                const talkDurationInMinutes = startInstant.until(endInstant).total('minutes')
+                const formatDuration = `PT${talkDurationInMinutes}m` as const;
+
+                const newFormat: TalkFormat = {
+                  id: `talk-${formatDuration}m`,
+                  title: `Talk de ${formatDuration}m`,
+                  duration: formatDuration
+                }
+                formats.push(newFormat)
+                console.warn(`Format with id ${session.formatId} (in talk ${session.id}) was not found in formats' list !.. Created it !`)
+                return newFormat;
+              }).otherwise(format => format)
+
+            const talk: Talk = {
+              id: session.id,
+              title: session.title,
+              isOverflow: false,
+              language: descriptor.language,
+              track,
+              room,
+              format,
+              speakers: session.speakers.map(opSpeakerId => speakers.find(sp => sp.id === opSpeakerId))
+                .filter(sp => !!sp).map(sp => sp!),
+            }
+
+            const detailedTalk: DetailedTalk = {
+              ...talk,
+              start, end,
+              tags: session.tags,
+              assets: [],
+              description: session.abstract || "",
+              summary: session.abstract || "",
+            }
+
+            talks.push(detailedTalk);
+
+            const talksTimeslot = match(timeslots.find(ts => ts.id === timeslotId))
+              .with(P.nullish, () => {
+                const talksTimeslot: TalksTimeSlot = {
+                  id: timeslotId,
+                  start: detailedTalk.start,
+                  end: detailedTalk.end,
+                  type: 'talks',
+                  talks: []
+                }
+
+                timeslots.push(talksTimeslot);
+                return talksTimeslot;
+              }).with({ type: 'talks'}, (talksTimeslot) => talksTimeslot)
+              .otherwise((ts) => { throw new Error(`Unsupported case for timeslot: ${JSON.stringify(ts)}`)})
+
+            talksTimeslot.talks.push(talk);
           }
-
-          const detailedTalk: DetailedTalk = {
-            ...talk,
-            start: start.toString() as ISODatetime,
-            end: end.toString() as ISODatetime,
-            tags: session.tags,
-            assets: [],
-            description: session.abstract || "",
-            summary: session.abstract || "",
-          }
-
-          talks.push(detailedTalk);
-
-          const timeslotId = `${detailedTalk.start}--${detailedTalk.end}` as const
-          const talksTimeslot = match(timeslots.find(ts => ts.id === timeslotId))
-            .with(P.nullish, () => {
-              const talksTimeslot: TalksTimeSlot = {
-                id: timeslotId,
-                start: detailedTalk.start,
-                end: detailedTalk.end,
-                type: 'talks',
-                talks: []
-              }
-
-              timeslots.push(talksTimeslot);
-              return talksTimeslot;
-            }).with({ type: 'talks'}, (talksTimeslot) => talksTimeslot)
-            .otherwise((ts) => { throw new Error(`Unsupported case for timeslot: ${JSON.stringify(ts)}`)})
-
-          talksTimeslot.talks.push(talk);
 
           return { timeslots };
         }, {timeslots: []} as {timeslots: ScheduleTimeSlot[]})
