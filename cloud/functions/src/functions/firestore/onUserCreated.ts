@@ -1,4 +1,3 @@
-import * as functions from "firebase-functions";
 import {db, info} from "../../firebase"
 import {UserTokensWallet} from "../../../../../shared/user-tokens-wallet.firestore";
 import {v4 as uuidv4} from "uuid";
@@ -35,14 +34,17 @@ export async function createEmptyUserTokenWallet(userId: string) {
 }
 
 export async function createUserInfos(userId: string) {
+    const publicUserToken = uuidv4();
     const user: User = {
+        privateUserId: userId,
+        publicUserToken,
         userCreation: new Date().toISOString() as ISODatetime,
         username: `Anonymous${generateRandom15DigitInteger()}`,
         totalFavs: {
           total: 0,
           perEventTotalFavs: {}
         },
-        _version: 1
+        _version: 2
     }
 
     await db.collection('users').doc(userId).set(user);

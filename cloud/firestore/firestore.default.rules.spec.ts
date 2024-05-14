@@ -547,8 +547,8 @@ const COLLECTIONS: CollectionDescriptor[] = [{
       ensureCollectionFollowAccessPermissions('/users/{userId}/tokens-wallet/self', userContext,
         {
           get: userContext.name === 'fred user', update: userContext.name === 'fred user',
-          createDoc: userContext.name === 'fred user',
-          list: false, delete: false, createNew: false,
+          createDoc: userContext.name === 'fred user', delete: userContext.name === 'fred user',
+          list: false, createNew: false,
         }, 'fred')
 
       ensureCollectionFollowAccessPermissions('/users/{userId}/tokens-wallet/self', userContext,
