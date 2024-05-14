@@ -22,6 +22,7 @@ import {useFirebaseAuth} from "vuefire";
 import {Logger} from "@/services/Logger";
 import {managedRef as ref} from "@/views/vue-utils";
 import {typesafeI18n} from "@/i18n/i18n-vue";
+import {migrateData} from "@/data-migrations/migrate-data";
 
 const LOGGER = Logger.named("App")
 
@@ -49,6 +50,8 @@ new Promise(async resolve => {
     signInAnonymously(auth).then((anonymousUser) => {
         LOGGER.info(() => `Anonymous sign in performed !`)
         userAuthenticatedRef.value = true;
+
+        migrateData(anonymousUser.user.uid);
 
         const userRef = doc(collection(db, 'users'), anonymousUser.user.uid)
         // Letting some time to the server to create the new user node the first time the user authenticates
