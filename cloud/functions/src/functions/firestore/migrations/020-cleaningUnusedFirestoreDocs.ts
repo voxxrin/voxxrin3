@@ -14,7 +14,8 @@ export async function cleaningUnusedFirestoreDocs(): Promise<"OK"|"Error"> {
   const crawlersDocs = await getAllRawCrawlers();
   await Promise.all(crawlersDocs.map(async crawlerDoc => {
     await crawlerDoc.ref.update({
-      stopAutoCrawlingAfter: FieldValue.delete()
+      stopAutoCrawlingAfter: FieldValue.delete(),
+      legacyCrawlingKeys: FieldValue.delete(),
     })
   }))
 

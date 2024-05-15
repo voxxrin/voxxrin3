@@ -78,13 +78,7 @@ async function resolveCrawlerDescriptorsMatchingWithToken(crawlingToken: string)
       return getCrawlersMatching(crawlersColl =>
         crawlersColl.where("eventName", "in", eventToken.eventNames)
       )
-    }).otherwise((legacyCrawlingToken) => {
-      // TODO: Remove me once every event will have migrated to the new public-tokens
-      // resolution policy
-      return getCrawlersMatching(crawlersColl =>
-        crawlersColl.where("legacyCrawlingKeys", "array-contains", legacyCrawlingToken)
-      )
-    })
+    }).run()
 
   if(!fbCrawlerDescriptors.length) {
     throw new Error(`No crawler found matching [${crawlingToken}] token !`)
