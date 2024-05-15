@@ -89,7 +89,6 @@ export const LISTABLE_EVENT_PARSER = z.object({
     peopleDescription: z.string().nullish().optional(),
     backgroundUrl: z.string(),
     logoUrl: z.string(),
-    websiteUrl: z.string(),
     theming: EVENT_THEME_PARSER,
 })
 

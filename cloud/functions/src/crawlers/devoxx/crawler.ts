@@ -95,7 +95,6 @@ export const DEVOXX_CRAWLER: CrawlerKind<typeof DEVOXX_DESCRIPTOR_PARSER> = {
             days: days,
             logoUrl: descriptor.logoUrl,
             backgroundUrl: descriptor.backgroundUrl,
-            websiteUrl: cfpEvent.website,
             location: {
                 city: cfpEvent.locationCity, country: cfpEvent.locationCountry,
                 coords: {

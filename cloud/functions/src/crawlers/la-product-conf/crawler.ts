@@ -252,7 +252,6 @@ export const LA_PRODUCT_CONF_CRAWLER: CrawlerKind<typeof LA_PRODUCT_CONF_DESCRIP
             location: descriptor.location,
             logoUrl: descriptor.logoUrl,
             timezone: descriptor.timezone,
-            websiteUrl: descriptor.websiteUrl,
             peopleDescription: descriptor.peopleDescription || "",
             backgroundUrl: descriptor.backgroundUrl,
             theming: descriptor.theming as ConferenceDescriptor['theming'],
@@ -279,7 +278,6 @@ export const LA_PRODUCT_CONF_CRAWLER: CrawlerKind<typeof LA_PRODUCT_CONF_DESCRIP
                 location: descriptor.location,
                 logoUrl: descriptor.logoUrl,
                 timezone: descriptor.timezone,
-                websiteUrl: descriptor.websiteUrl,
                 peopleDescription: descriptor.peopleDescription as any,
                 backgroundUrl: descriptor.backgroundUrl
             },

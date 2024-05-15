@@ -20,6 +20,7 @@ import {getCrawlersMatching} from "../functions/firestore/services/crawlers-util
 import {ListableEvent} from "../../../../shared/event-list.firestore";
 import {ConferenceDescriptor} from "../../../../shared/conference-descriptor.firestore";
 import {toValidFirebaseKey} from "../../../../shared/utilities/firebase.utils";
+import {crawl} from "../functions/http/event/legacy/deprecated_crawl";
 
 export type CrawlerKind<ZOD_TYPE extends z.ZodType> = {
     crawlerImpl: (eventId: string, crawlerDescriptor: z.infer<ZOD_TYPE>, criteria: { dayIds?: string[]|undefined }) => Promise<FullEvent>,
@@ -244,10 +245,12 @@ function sanityCheckEvent(event: FullEvent): string[] {
 const saveEvent = async function (event: FullEvent, crawlerDescriptor: z.infer<typeof FIREBASE_CRAWLER_DESCRIPTOR_PARSER>) {
     info("saving event " + event.id)
 
+    const websiteUrl = (event.conferenceDescriptor.infos?.socialMedias || []).find(sm => sm.type === 'website')?.href || ""
     const listableEvent: ListableEvent = {
       ...event.info,
       eventFamily: crawlerDescriptor.eventFamily,
       eventName: crawlerDescriptor.eventName,
+      websiteUrl
     }
 
     await db.collection("events").doc(event.id).set(listableEvent)
