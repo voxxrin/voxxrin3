@@ -31,20 +31,13 @@ export async function getSecretTokenDoc<T>(path: string) {
 
 export async function getOrganizerSpaceByToken(
    eventId: string,
-   tokenType: 'organizerSecretToken'|'familyToken',
+   tokenType: 'organizerSecretToken',
    secretToken: string
 ) {
     const organizerSpace: ConferenceOrganizerSpace = await getSecretTokenDoc(`events/${eventId}/organizer-space`);
 
     if(tokenType === 'organizerSecretToken' && organizerSpace.organizerSecretToken !== secretToken) {
         throw new Error(`Invalid organizer token for eventId=${eventId}: ${secretToken}`);
-    }
-
-    if(tokenType === 'familyToken') {
-        const familyTokenValid = await checkEventFamilyTokenIsValid(eventId, secretToken);
-        if(!familyTokenValid) {
-            throw new Error(`Invalid family token for eventId=${eventId}: ${secretToken}`);
-        }
     }
 
     return organizerSpace;
@@ -131,19 +124,4 @@ export async function checkEventLastUpdate(
     }
 
     return { cachedHash, updatesDetected: true };
-}
-
-export async function checkEventFamilyTokenIsValid(eventId: string, token: string) {
-    const listableEvent = (await db.collection("events").doc(eventId).get())?.data() as ListableEvent|undefined;
-
-    if(!listableEvent || !listableEvent.eventFamily) {
-        return false;
-    }
-
-    const familyTokenSnapshots = await db.collection("event-family-tokens")
-        .where('families', 'array-contains', listableEvent.eventFamily)
-        .where("token", '==', token)
-        .get()
-
-    return !familyTokenSnapshots.empty;
 }

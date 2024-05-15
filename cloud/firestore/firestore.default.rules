@@ -17,10 +17,6 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
-    match /event-family-tokens/{familyId} {
-      allow read, write: if false;
-    }
-
     match /public-tokens/{publicSecretToken} {
       allow get: if true;
       allow list, write: if false;

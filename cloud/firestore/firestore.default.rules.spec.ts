@@ -148,16 +148,6 @@ const FIREBASE_MANAGED_COLLECTIONS = [
       updatedData: () => ({dayId: 'tuesday', feedbacks: []})
     }]
   }, {
-    name: '/event-family-tokens/{familyId}',
-    docInitializations: [{
-      name: 'default',
-      collection: '/event-family-tokens',
-      path: '/event-family-tokens/a-family',
-      newDocPath: '/event-family-tokens/another-family',
-      data: () => ({families: ['devoxx'], token: 'ffffffff-ffff-ffff-ffff-ffffffffffff'}),
-      updatedData: () => ({families: ['devoxx'], token: 'ffffffff-ffff-ffff-ffff-fffffffffff0'})
-    }]
-  }, {
     name: '/public-tokens/{tokenId}',
     docInitializations: [{
       name: 'default',
@@ -691,18 +681,6 @@ const COLLECTIONS: CollectionDescriptor[] = [{
           delete: false, list: false, createNew: false,
           get: false, update: false, createDoc: false,
         }, 'alice')
-    }
-}, {
-    name: "/event-family-tokens",
-    aroundTests: (_: UserContext) => ({
-        beforeEach: [],
-        afterEach: [],
-    }),
-    tests: (userContext: UserContext) => {
-      ensureCollectionFollowAccessPermissions('/event-family-tokens/{familyId}', userContext,
-        {
-          read: false, write: false
-        })
     }
 }, {
     name: "/public-tokens",
