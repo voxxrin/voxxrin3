@@ -7,9 +7,19 @@ import {
 } from "../../../shared/user-tokens-wallet.localstorage";
 import {TalkId} from "@/models/VoxxrinTalk";
 import {Replace} from "../../../shared/type-utils";
+import {User} from "../../../shared/user.firestore";
 
 
 export class UserLocale extends ValueObject<string>{ _userLocaleClassDiscriminator!: never; }
+
+export type VoxxrinUser = Replace<User, {}>
+
+export function toVoxxrinUser(firestoreUser: User): VoxxrinUser {
+  return { ...firestoreUser };
+}
+export function toFirestoreUser(voxxrinUser: VoxxrinUser): User {
+  return { ...voxxrinUser };
+}
 
 export type VoxxrinUserPreferences = Replace<UserPreferences, {
     pinnedEventIds: Array<EventId>

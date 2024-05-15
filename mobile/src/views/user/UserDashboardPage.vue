@@ -18,11 +18,11 @@
         </div>
         <div class="userDashboard-user-infos">
           <strong>{{ LL.Anonymous_private_user_id() }}:</strong><br/>
-          <span class="userUid">{{currentUserRef?.uid}}</span><br/>
+          <span class="userUid">{{userRef?.privateUserId}}</span><br/>
           <small>{{LL.Please_keep_this_token_private()}}</small><br/>
           <hr/>
           <strong>{{ LL.Public_user_id() }}:</strong><br/>
-          <span class="userUid">{{userTokensWalletRef?.publicUserToken}}</span><br/>
+          <span class="userUid">{{ userRef?.publicUserToken }}</span><br/>
           <small>{{LL.This_token_will_be_used_to_reference_you_in_APIs()}}</small><br/>
         </div>
       </div>
@@ -97,7 +97,7 @@
 <script setup lang="ts">
 
 import {useIonRouter} from "@ionic/vue";
-import {useCurrentUser} from "@/state/useCurrentUser";
+import {useFirestoreUser} from "@/state/useCurrentUser";
 import Callout from "@/components/ui/Callout.vue";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {computed, toValue} from "vue";
@@ -107,7 +107,7 @@ import {helpCircle} from "ionicons/icons";
 
 const ionRouter = useIonRouter();
 
-const currentUserRef = useCurrentUser();
+const { userRef } = useFirestoreUser();
 const { LL } = typesafeI18n()
 
 const { userTokensWalletRef } = useUserTokensWallet();
