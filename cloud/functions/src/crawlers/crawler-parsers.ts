@@ -278,5 +278,4 @@ export const FIREBASE_CRAWLER_DESCRIPTOR_PARSER = z.object({
     eventName: z.string(),
     descriptorUrl: z.string(),
     kind: z.string(),
-    stopAutoCrawlingAfter: ISO_DATETIME_PARSER,
 })

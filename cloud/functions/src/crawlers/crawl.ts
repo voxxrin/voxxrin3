@@ -104,17 +104,15 @@ const crawlAll = async function(criteria: CrawlCriteria) {
     const crawlerDescriptors = await resolveCrawlerDescriptorsMatchingWithToken(criteria.crawlingToken);
 
     const matchingCrawlerDescriptors = crawlerDescriptors.filter(firestoreCrawler => {
-      const dateConstraintMatches = Temporal.Now.instant().epochMilliseconds < Date.parse(firestoreCrawler.stopAutoCrawlingAfter)
-
       const eventIdConstraintMatches = !criteria.eventIds
         || !criteria.eventIds.length
         || criteria.eventIds.includes(firestoreCrawler.id);
 
-      return dateConstraintMatches && eventIdConstraintMatches;
+      return eventIdConstraintMatches;
     });
 
     if(!matchingCrawlerDescriptors.length) {
-      throw new Error(`No crawler found matching either eventIds=${JSON.stringify(criteria.eventIds)} or crawlers' 'stopAutoCrawlingAfter' deadline`);
+      throw new Error(`No crawler found matching eventIds=${JSON.stringify(criteria.eventIds)}`);
     }
 
     return await Promise.all(matchingCrawlerDescriptors.map(async crawlerDescriptor => {
