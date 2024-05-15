@@ -30,10 +30,8 @@ import './styles/main.scss'
 import {detectLocale} from "@/i18n/i18n-util";
 import {navigatorDetector} from "typesafe-i18n/detectors";
 import {loadLocaleAsync} from "@/i18n/i18n-util.async";
-import {useFirebaseAuth, VueFire, VueFireAuth} from "vuefire";
-import { signInAnonymously } from 'firebase/auth';
+import {VueFire, VueFireAuth} from "vuefire";
 import { provideThemedEventStyles } from "@/directives/ThemedEventStyles";
-import {collection, doc, updateDoc} from "firebase/firestore";
 
 const app = createApp(App);
 app
