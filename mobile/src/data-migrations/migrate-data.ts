@@ -5,6 +5,7 @@ type Migration = {
 }
 
 const MIGRATIONS: Array<Migration> = [
+  { name: "migrateUserTokensWalletToLocalStorage", exec: async (userId) => (await import("./01-migrateUserTokensWalletToLocalStorage")).migrateUserTokensWalletToLocalStorage(userId) }
 ]
 
 type MigrationResult = { name: string, duration: number }

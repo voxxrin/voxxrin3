@@ -1,5 +1,4 @@
 import {db, info} from "../../firebase"
-import {UserTokensWallet} from "../../../../../shared/user-tokens-wallet.firestore";
 import {v4 as uuidv4} from "uuid";
 import {User} from "../../../../../shared/user.firestore";
 import {ISODatetime} from "../../../../../shared/type-utils";
@@ -12,26 +11,8 @@ import {EventContext} from "firebase-functions/lib/v1/cloud-functions";
  */
 export const onUserCreated = async (user: UserRecord, context: EventContext<{}>) => {
     info(`User created triggered: ${user.uid}`)
-    await createEmptyUserTokenWallet(user.uid);
     await createUserInfos(user.uid);
 };
-
-export async function createEmptyUserTokenWallet(userId: string) {
-    const publicUserToken = uuidv4();
-    const userTokensWallet: UserTokensWallet = {
-        privateUserId: userId,
-        publicUserToken,
-        secretTokens: {
-            eventOrganizerTokens: [],
-            talkFeedbacksViewerTokens: []
-        }
-    };
-
-    await db
-        .collection('users').doc(userId)
-        .collection('tokens-wallet').doc('self')
-        .set(userTokensWallet)
-}
 
 export async function createUserInfos(userId: string) {
     const publicUserToken = uuidv4();

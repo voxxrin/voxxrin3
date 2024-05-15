@@ -17,9 +17,8 @@ export async function globalStats(request: functions.https.Request, response: ex
 
     const users = await db.collection(`users`).listDocuments()
     const userStats = await Promise.all(users.map(async user => {
-        const [eventsCount, /* tokensWalletCount */ ] = await Promise.all([
+        const [eventsCount ] = await Promise.all([
             db.collection(`users/${user.id}/events`).count().get().then(snap => snap.data().count),
-            // db.collection(`users/${user.id}/tokens-wallet`).count().get().then(snap => snap.data().count),,
         ])
 
         return { userId: user.id, eventsCount };

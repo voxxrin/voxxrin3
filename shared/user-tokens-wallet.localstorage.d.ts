@@ -1,11 +1,10 @@
-import {TalkFeedbacksViewerSecretToken} from "./conference-organizer-space.firestore";
 
 export type UserTokensWallet = {
     privateUserId: string;
     publicUserToken: string;
     secretTokens: {
         eventOrganizerTokens: UserWalletEventOrganizerSecretToken[],
-        talkFeedbacksViewerTokens: UserWallerTalkFeedbacksViewerSecretToken[]
+        talkFeedbacksViewerTokens: UserWalletTalkFeedbacksViewerSecretToken[]
     }
 }
 
@@ -14,7 +13,7 @@ export type UserWalletEventOrganizerSecretToken = {
     eventId: string;
 }
 
-export type UserWallerTalkFeedbacksViewerSecretToken = {
+export type UserWalletTalkFeedbacksViewerSecretToken = {
   secretToken: string;
   eventId: string;
   talkId: string;

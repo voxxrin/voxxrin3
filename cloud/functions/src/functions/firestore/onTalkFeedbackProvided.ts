@@ -1,4 +1,3 @@
-import * as functions from "firebase-functions";
 import {
     ProvidedUserFeedback,
     UserDailyFeedbacks,
@@ -8,13 +7,13 @@ import {db} from "../../firebase";
 import {eventLastUpdateRefreshed, getSecretTokenDoc, getSecretTokenRef} from "./firestore-utils";
 import {ConferenceOrganizerSpace} from "../../../../../shared/conference-organizer-space.firestore";
 import {TalkAttendeeFeedback} from "../../../../../shared/talk-feedbacks.firestore";
-import {UserTokensWallet} from "../../../../../shared/user-tokens-wallet.firestore";
 import {EventLastUpdates} from "../../../../../shared/event-list.firestore";
 import {ISODatetime} from "../../../../../shared/type-utils";
 import {ConferenceDescriptor} from "../../../../../shared/conference-descriptor.firestore";
 import {Change} from "firebase-functions/lib/common/change";
 import {QueryDocumentSnapshot} from "firebase-functions/lib/v1/providers/firestore";
 import {EventContext} from "firebase-functions/lib/v1/cloud-functions";
+import {User} from "../../../../../shared/user.firestore";
 
 
 export const onTalkFeedbackUpdated = async (change: Change<QueryDocumentSnapshot>, context: EventContext<{ userId: string, eventId: string, dayId: string }>) => {
@@ -95,9 +94,9 @@ async function updateTalkFeedbacksFromUserFeedbacks(userId: string, eventId: str
                 throw new Error(`No organizer talk token found for eventId=${eventId}, talkId=${feedback.talkId}`);
             }
 
-            const userTokensWallet = (await db.doc(`users/${userId}/tokens-wallet/self`).get()).data() as UserTokensWallet|undefined;
-            if(!userTokensWallet) {
-                throw new Error(`Unexpected unexistant user token wallet for userId=${userId}`);
+            const user = (await db.doc(`users/${userId}`).get()).data() as User|undefined;
+            if(!user) {
+                throw new Error(`Unexpected unexistant user for userId=${userId}`);
             }
 
             // Ensuring ratings values are valid values compared to conf descriptor's ratings
@@ -115,14 +114,14 @@ async function updateTalkFeedbacksFromUserFeedbacks(userId: string, eventId: str
                 createdOn: enforceTimestampOnFields.includes("createdOn")?new Date().toISOString() as ISODatetime : existingDBFeedback.createdOn,
                 lastUpdatedOn: enforceTimestampOnFields.includes("lastUpdatedOn")?new Date().toISOString() as ISODatetime : existingDBFeedback.lastUpdatedOn,
                 ratings: enforcedRatings,
-                attendeePublicToken: userTokensWallet.publicUserToken
+                attendeePublicToken: user.publicUserToken
             }
 
             await Promise.all([
-                db.doc(`events/${eventId}/talks/${feedback.talkId}/feedbacks-access/${talkFeedbackViewerToken.secretToken}/feedbacks/${userTokensWallet.publicUserToken}`).set(attendeeFeedback),
-                db.doc(`events/${eventId}/organizer-space/${organizerSpace.organizerSecretToken}/ratings/${feedback.talkId}`).update(`${userTokensWallet.publicUserToken}`, enforcedRatings),
+                db.doc(`events/${eventId}/talks/${feedback.talkId}/feedbacks-access/${talkFeedbackViewerToken.secretToken}/feedbacks/${user.publicUserToken}`).set(attendeeFeedback),
+                db.doc(`events/${eventId}/organizer-space/${organizerSpace.organizerSecretToken}/ratings/${feedback.talkId}`).update(`${user.publicUserToken}`, enforcedRatings),
                 db.doc(`events/${eventId}/organizer-space/${organizerSpace.organizerSecretToken}/daily-ratings/${dayId}`)
-                    .update(`${feedback.talkId}.${userTokensWallet.publicUserToken}`, enforcedRatings),
+                    .update(`${feedback.talkId}.${user.publicUserToken}`, enforcedRatings),
                 eventLastUpdateRefreshed(eventId, [ "allFeedbacks" ]),
                 eventLastUpdateRefreshed(eventId, [ feedback.talkId ], rootNode => {
                     const feedbacks = {} as NonNullable<EventLastUpdates['feedbacks']>;

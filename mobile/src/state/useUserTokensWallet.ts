@@ -1,98 +1,58 @@
 import {EventId} from "@/models/VoxxrinEvent";
-import {computed, ComputedRef, Ref, toValue, unref, watch} from "vue";
+import {computed, Ref, unref} from "vue";
 import {useCurrentUser} from "@/state/useCurrentUser";
 import {
-    collection,
-    doc,
-    DocumentReference, updateDoc,
-} from "firebase/firestore";
-import {db} from "@/state/firebase";
-import {TalkFeedbacksViewerToken, VoxxrinUserTokensWallet} from "@/models/VoxxrinUser";
-import {createSharedComposable} from "@vueuse/core";
+  TalkFeedbacksViewerToken,
+  toRawUserTokensWallet,
+  toVoxxrinUserTokensWallet,
+  toVoxxrinUserWalletEventOrganizerSecretToken,
+  toVoxxrinUserWalletTalkFeedbacksViewerToken,
+  VoxxrinUserTokensWallet
+} from "@/models/VoxxrinUser";
+import {createSharedComposable, useStorage} from "@vueuse/core";
 import {
   UserWalletEventOrganizerSecretToken,
-  UserTokensWallet, UserWallerTalkFeedbacksViewerSecretToken
-} from "../../../shared/user-tokens-wallet.firestore";
-import {TalkId} from "@/models/VoxxrinTalk";
-import {
-    Unreffable,
-    deferredVuefireUseDocument
-} from "@/views/vue-utils";
-import {TalkFeedbacksViewerSecretToken} from "../../../shared/conference-organizer-space.firestore";
-import { arrayUnion } from "firebase/firestore";
+  UserWalletTalkFeedbacksViewerSecretToken
+} from "../../../shared/user-tokens-wallet.localstorage";
+import {Unreffable} from "@/views/vue-utils";
 import {Logger, PERF_LOGGER} from "@/services/Logger";
-import {User} from "firebase/auth";
 
 const LOGGER = Logger.named("useUserTokensWallet");
 
-function getUserTokensWalletDoc(user: User|null|undefined) {
-    if(!user) {
-        return undefined;
-    }
-
-    return doc(collection(doc(collection(db,
-            'users'), user.uid),
-        'tokens-wallet'), 'self'
-    ) as DocumentReference<UserTokensWallet>;
-}
 export function useUserTokensWallet() {
 
     PERF_LOGGER.debug(() => `useUserTokensWallet()`)
 
     const userRef = useCurrentUser()
 
-    const firestoreUserTokensWalletRef = deferredVuefireUseDocument([userRef],
-        ([user]) => getUserTokensWalletDoc(user));
-
-    const voxxrinUserTokensWallet: ComputedRef<VoxxrinUserTokensWallet|undefined> = computed(() => {
-        const firestoreUserTokensWallet = unref(firestoreUserTokensWalletRef)
-
-        if(!firestoreUserTokensWallet) {
-            return undefined;
-        }
-
-        const walletEntry: VoxxrinUserTokensWallet = {
-            publicUserToken: firestoreUserTokensWallet.publicUserToken,
-            privateUserId: firestoreUserTokensWallet.privateUserId,
-            secretTokens: {
-                eventOrganizerTokens: firestoreUserTokensWallet.secretTokens.eventOrganizerTokens.map(fsOrgToken => ({
-                    ...fsOrgToken,
-                    eventId: new EventId(fsOrgToken.eventId)
-                })),
-                talkFeedbacksViewerTokens: firestoreUserTokensWallet.secretTokens.talkFeedbacksViewerTokens.map(fsFeedbackToken => ({
-                    ...fsFeedbackToken,
-                    eventId: new EventId(fsFeedbackToken.eventId),
-                    talkId: new TalkId(fsFeedbackToken.talkId),
-                })),
-            }
-        }
-        return walletEntry;
+    const voxxrinUserTokensWallet = useStorage(`user:${userRef.value?.uid}:tokens-wallet`, undefined, undefined, {
+      serializer: {
+        read: (value: any): VoxxrinUserTokensWallet|undefined => (value ? toVoxxrinUserTokensWallet(JSON.parse(value)) : {
+          secretTokens: {
+            eventOrganizerTokens: [],
+            talkFeedbacksViewerTokens: []
+          }
+        }),
+        write: (value: VoxxrinUserTokensWallet|undefined) => value ? JSON.stringify(toRawUserTokensWallet(value)) : ""
+      }
     })
 
     const registerEventOrganizerSecretToken = async (eventOrganizerSecretToken: UserWalletEventOrganizerSecretToken) => {
-        const user = toValue(userRef);
-        const firestoreUserTokensWalletDoc = getUserTokensWalletDoc(user);
-
-        if(!firestoreUserTokensWalletDoc) {
-            LOGGER.error(() => `firestoreUserTokensWalletDoc is undefined !`)
-            return;
+        voxxrinUserTokensWallet.value = {
+          secretTokens: {
+            eventOrganizerTokens: (voxxrinUserTokensWallet.value?.secretTokens.eventOrganizerTokens || []).concat(toVoxxrinUserWalletEventOrganizerSecretToken(eventOrganizerSecretToken)),
+            talkFeedbacksViewerTokens: (voxxrinUserTokensWallet.value?.secretTokens.talkFeedbacksViewerTokens || [])
+          }
         }
-
-        // Important note: array union prevents duplicates, which is perfect 👌
-        await updateDoc(firestoreUserTokensWalletDoc, "secretTokens.eventOrganizerTokens", arrayUnion(eventOrganizerSecretToken));
     }
 
-    const registerTalkFeedbacksViewerSecretToken = async (talkFeedbacksViewerSecretToken: UserWallerTalkFeedbacksViewerSecretToken) => {
-        const user = toValue(userRef);
-        const firestoreUserTokensWalletDoc = getUserTokensWalletDoc(user);
-
-        if(!firestoreUserTokensWalletDoc) {
-            LOGGER.error(() => `firestoreUserTokensWalletDoc is undefined !`)
-            return;
+    const registerTalkFeedbacksViewerSecretToken = async (talkFeedbacksViewerSecretToken: UserWalletTalkFeedbacksViewerSecretToken) => {
+        voxxrinUserTokensWallet.value = {
+          secretTokens: {
+            eventOrganizerTokens: (voxxrinUserTokensWallet.value?.secretTokens.eventOrganizerTokens || []),
+            talkFeedbacksViewerTokens: (voxxrinUserTokensWallet.value?.secretTokens.talkFeedbacksViewerTokens || []).concat(toVoxxrinUserWalletTalkFeedbacksViewerToken(talkFeedbacksViewerSecretToken))
+          }
         }
-
-        // Important note: array union prevents duplicates, which is perfect 👌
-        await updateDoc(firestoreUserTokensWalletDoc, "secretTokens.talkFeedbacksViewerTokens", arrayUnion(talkFeedbacksViewerSecretToken));
     }
 
     const talkFeedbackViewerTokensRefForEvent = (eventIdRef: Unreffable<EventId|undefined>) => {

@@ -83,7 +83,7 @@ watch([userTokensWalletRef], async ([userTokensWallet]) => {
   }));
 
   feedbackViewerTalksRef.value = sortBy(talkWithFeedbacks, twf => -twf.confDescriptor.start.epochMilliseconds);
-})
+}, {immediate: true})
 
 type EventTalksGroup = {
   confDescriptor: VoxxrinConferenceDescriptor,
