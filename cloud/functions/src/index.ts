@@ -69,6 +69,11 @@ exports.onUserTalksNoteUpdate = functions.firestore
 exports.onUserCreated = functions.auth.user().onCreate(async (user, context) => {
   (await import('./functions/firestore/onUserCreated')).onUserCreated(user, context)
 });
+exports.onUserTokenWalletDeleted = functions.firestore
+  .document(`users/{userId}/tokens-wallet/self`)
+  .onDelete(async (change, context) => {
+    (await import('./functions/firestore/onUserTokensWalletDeleted')).onUserTokensWalletDeleted(change, context)
+  })
 exports.onTalkFeedbackUpdated = functions.firestore
   .document(`users/{userId}/events/{eventId}/days/{dayId}/feedbacks/self`)
   .onUpdate(async (change, context) => {

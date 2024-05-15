@@ -265,7 +265,6 @@ export const OPENPLANNER_CRAWLER: CrawlerKind<typeof OPENPLANNER_DESCRIPTOR_PARS
           days: openPlannerSchedule.days,
           keywords: descriptor.keywords,
           location: descriptor.location,
-          websiteUrl: descriptor.websiteUrl,
           theming: openPlannerSchedule.theming,
           features: {
             ...openPlannerSchedule.features,
@@ -286,7 +285,6 @@ export const OPENPLANNER_CRAWLER: CrawlerKind<typeof OPENPLANNER_DESCRIPTOR_PARS
           days: openPlannerSchedule.days,
           logoUrl: openPlannerSchedule.logoUrl,
           backgroundUrl: openPlannerSchedule.backgroundUrl,
-          websiteUrl: descriptor.infos?.socialMedias?.find(sm => sm.type === 'website')?.href || "",
           location: descriptor.location,
           theming: openPlannerSchedule.theming,
           keywords: descriptor.keywords

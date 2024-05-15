@@ -89,7 +89,6 @@ export const LISTABLE_EVENT_PARSER = z.object({
     peopleDescription: z.string().nullish().optional(),
     backgroundUrl: z.string(),
     logoUrl: z.string(),
-    websiteUrl: z.string(),
     theming: EVENT_THEME_PARSER,
 })
 
@@ -272,11 +271,8 @@ export const FULL_EVENT_PARSER = z.object({
 })
 
 export const FIREBASE_CRAWLER_DESCRIPTOR_PARSER = z.object({
-    // TODO: to remove
-    legacyCrawlingKeys: z.array(z.string()).optional(),
     eventFamily: z.string(),
     eventName: z.string(),
     descriptorUrl: z.string(),
     kind: z.string(),
-    stopAutoCrawlingAfter: ISO_DATETIME_PARSER,
 })

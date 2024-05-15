@@ -13,7 +13,7 @@ export type EventRecordingConfig = {
   excludeTitleWordsFromMatching?: string[]|undefined,
 }
 
-export type ConferenceDescriptor = ListableEvent & {
+export type ConferenceDescriptor = Omit<ListableEvent, "websiteUrl"> & {
     headingTitle: string,
     features: {
         roomsDisplayed: boolean,

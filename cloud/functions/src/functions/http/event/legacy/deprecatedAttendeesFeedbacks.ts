@@ -18,14 +18,12 @@ export async function legacyAttendeesFeedbacks(request: functions.https.Request,
 
     const organizerSecretToken = extractSingleQueryParam(request, 'organizerSecretToken');
     const talkIds = extractMultiQueryParam(request, 'talkIds');
-    // deprecated
-    const familyToken = extractSingleQueryParam(request, 'familyToken');
     const familyOrganizerSecretToken = extractSingleQueryParam(request, 'familyOrganizerSecretToken');
     const eventId = extractSingleQueryParam(request, 'eventId');
 
     if(!talkIds || !talkIds.length) { return sendResponseMessage(response, 400, `Missing [talkIds] (multi) query parameter !`) }
     if(!eventId) { return sendResponseMessage(response, 400, `Missing [eventId] query parameter !`) }
-    if(!organizerSecretToken && !familyToken && !familyOrganizerSecretToken) { return sendResponseMessage(response, 400, `Missing either [organizerSecretToken] or [familyToken] or [familyOrganizerSecretToken] query parameter !`) }
+    if(!organizerSecretToken && !familyOrganizerSecretToken) { return sendResponseMessage(response, 400, `Missing either [organizerSecretToken] or [familyOrganizerSecretToken] query parameter !`) }
 
     const eventDescriptor = await getEventDescriptor(eventId);
     if(familyOrganizerSecretToken) {
@@ -48,13 +46,11 @@ export async function legacyAttendeesFeedbacks(request: functions.https.Request,
     // }
 
     try {
-        const organizerSpace = await match([organizerSecretToken, familyToken, familyOrganizerSecretToken])
-            .with([ P.nullish, P.nullish, P.nullish ], async ([_1, _2]) => { throw new Error(`Unexpected state: (undefined,undefined)`); })
-            .with([ P.not(P.nullish), P.any, P.any ], async ([organizerSecretToken, _]) => {
+        const organizerSpace = await match([organizerSecretToken, familyOrganizerSecretToken])
+            .with([ P.nullish, P.nullish ], async ([_1, _2]) => { throw new Error(`Unexpected state: (undefined,undefined)`); })
+            .with([ P.not(P.nullish), P.any ], async ([organizerSecretToken, _]) => {
                 return getOrganizerSpaceByToken(eventId, 'organizerSecretToken', organizerSecretToken);
-            }).with([ P.any, P.not(P.nullish), P.any ], async ([_, familyToken]) => {
-                return getOrganizerSpaceByToken(eventId, 'familyToken', familyToken);
-            }).with([ P.any, P.any, P.not(P.nullish) ], async ([_1, _2, familyOrganizerSecretToken]) => {
+            }).with([ P.any, P.not(P.nullish) ], async ([_1]) => {
                 return getSecretTokenDoc<ConferenceOrganizerSpace>(`/events/${eventId}/organizer-space`);
             }).run()
 

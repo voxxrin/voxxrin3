@@ -249,7 +249,6 @@ export const CODEURS_EN_SEINE_CRAWLER: CrawlerKind<typeof CODEURS_EN_SEINE_PARSE
             location: descriptor.location,
             logoUrl: descriptor.logoUrl,
             timezone: descriptor.timezone,
-            websiteUrl: descriptor.websiteUrl,
             peopleDescription: descriptor.peopleDescription || "",
             backgroundUrl: descriptor.backgroundUrl,
             theming: descriptor.theming,
@@ -276,7 +275,6 @@ export const CODEURS_EN_SEINE_CRAWLER: CrawlerKind<typeof CODEURS_EN_SEINE_PARSE
                 location: confDescriptor.location,
                 logoUrl: confDescriptor.logoUrl,
                 timezone: confDescriptor.timezone,
-                websiteUrl: confDescriptor.websiteUrl,
                 peopleDescription: confDescriptor.peopleDescription,
                 backgroundUrl: confDescriptor.backgroundUrl
             },

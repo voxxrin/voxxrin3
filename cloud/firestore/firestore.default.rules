@@ -17,10 +17,6 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
-    match /event-family-tokens/{familyId} {
-      allow read, write: if false;
-    }
-
     match /public-tokens/{publicSecretToken} {
       allow get: if true;
       allow list, write: if false;
@@ -111,19 +107,17 @@ service cloud.firestore {
         allow get, create, update: if iAm(userId);
         allow delete, list: if false;
       }
+      /* Legacy node: but kept for backward compatibility until every users have migrated their tokens-wallet
+         (this can take a lot of time)
+       */
       match /tokens-wallet/self {
-        allow get, create, update: if iAm(userId);
-        allow delete, list: if false;
+        allow get, create, update, delete: if iAm(userId);
+        allow list: if false;
       }
       match /events/{eventId} {
         allow get, list, create, update: if iAm(userId);
         allow delete: if false;
 
-        // TODO: Remove it once Devoxx BE is over
-        match /__computed/self {
-          allow get: if iAm(userId);
-          allow list, write: if false;
-        }
         match /talksNotes/{talkId} {
           allow get, list, create, update: if iAm(userId);
           allow delete: if false;

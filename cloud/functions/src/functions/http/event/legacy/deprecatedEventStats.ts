@@ -12,11 +12,10 @@ import * as express from "express";
 export async function deprecatedEventStats(request: functions.https.Request, response: express.Response) {
 
     const organizerSecretToken = extractSingleQueryParam(request, 'organizerSecretToken');
-    const familyToken = extractSingleQueryParam(request, 'familyToken');
     const eventId = extractSingleQueryParam(request, 'eventId');
 
     if(!eventId) { return sendResponseMessage(response, 400, `Missing [eventId] query parameter !`) }
-    if(!organizerSecretToken && !familyToken) { return sendResponseMessage(response, 400, `Missing either [organizerSecretToken] or [familyToken] query parameter !`) }
+    if(!organizerSecretToken) { return sendResponseMessage(response, 400, `Missing either [organizerSecretToken] or [familyToken] query parameter !`) }
 
     const { cachedHash, updatesDetected } = await checkEventLastUpdate(eventId, [
         root => root.favorites,
@@ -27,12 +26,10 @@ export async function deprecatedEventStats(request: functions.https.Request, res
     }
 
     try {
-        const organizerSpace = await match([organizerSecretToken, familyToken])
-            .with([ P.nullish, P.nullish ], async ([_1, _2]) => { throw new Error(`Unexpected state: (undefined,undefined)`); })
-            .with([ P.not(P.nullish), P.any ], async ([organizerSecretToken, _]) => {
+        const organizerSpace = await match([organizerSecretToken])
+            .with([ P.nullish ], async ([_1]) => { throw new Error(`Unexpected state: (undefined,undefined)`); })
+            .with([ P.not(P.nullish) ], async ([organizerSecretToken]) => {
                 return getOrganizerSpaceByToken(eventId, 'organizerSecretToken', organizerSecretToken);
-            }).with([ P.any, P.not(P.nullish) ], async ([_, familyToken]) => {
-                return getOrganizerSpaceByToken(eventId, 'familyToken', familyToken);
             }).run()
 
         const talksStats = await eventTalkStatsFor(eventId);

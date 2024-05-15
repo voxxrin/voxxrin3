@@ -10,3 +10,12 @@ export async function getEventDescriptor(eventId: string) {
         return eventDescriptor;
     })
 }
+
+export async function getAllEventDescriptorDocs() {
+  return logPerf(`getAllEventDescriptorDocs()`, async () => {
+    const eventsColl = await db.collection(`events`).get();
+    return Promise.all(eventsColl.docs.map(async eventDoc => {
+      return db.doc(`events/${eventDoc.id}/event-descriptor/self`).get()
+    }))
+  })
+}

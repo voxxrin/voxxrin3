@@ -277,7 +277,6 @@ export const DEVOXX_SCALA_CRAWLER: CrawlerKind<typeof DEVOXX_SCALA_DESCRIPTOR_PA
             days: descriptor.days,
             logoUrl: descriptor.logoUrl,
             backgroundUrl: descriptor.backgroundUrl,
-            websiteUrl: descriptor.websiteUrl,
             location: descriptor.location,
             theming: descriptor.theming,
             keywords: descriptor.keywords

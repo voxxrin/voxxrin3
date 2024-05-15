@@ -273,7 +273,6 @@ export const BDXIO_CRAWLER: CrawlerKind<typeof BDXIO_PARSER> = {
             location: descriptor.location,
             logoUrl: descriptor.logoUrl,
             timezone: descriptor.timezone,
-            websiteUrl: descriptor.websiteUrl,
             peopleDescription: descriptor.peopleDescription || "",
             backgroundUrl: descriptor.backgroundUrl,
             theming: descriptor.theming as ConferenceDescriptor['theming'],
@@ -354,7 +353,6 @@ export const BDXIO_CRAWLER: CrawlerKind<typeof BDXIO_PARSER> = {
                 location: descriptor.location,
                 logoUrl: descriptor.logoUrl,
                 timezone: descriptor.timezone,
-                websiteUrl: descriptor.websiteUrl,
                 peopleDescription: descriptor.peopleDescription as any,
                 backgroundUrl: descriptor.backgroundUrl
             },

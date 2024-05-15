@@ -20,6 +20,7 @@ import {getCrawlersMatching} from "../functions/firestore/services/crawlers-util
 import {ListableEvent} from "../../../../shared/event-list.firestore";
 import {ConferenceDescriptor} from "../../../../shared/conference-descriptor.firestore";
 import {toValidFirebaseKey} from "../../../../shared/utilities/firebase.utils";
+import {crawl} from "../functions/http/event/legacy/deprecated_crawl";
 
 export type CrawlerKind<ZOD_TYPE extends z.ZodType> = {
     crawlerImpl: (eventId: string, crawlerDescriptor: z.infer<ZOD_TYPE>, criteria: { dayIds?: string[]|undefined }) => Promise<FullEvent>,
@@ -78,13 +79,7 @@ async function resolveCrawlerDescriptorsMatchingWithToken(crawlingToken: string)
       return getCrawlersMatching(crawlersColl =>
         crawlersColl.where("eventName", "in", eventToken.eventNames)
       )
-    }).otherwise((legacyCrawlingToken) => {
-      // TODO: Remove me once every event will have migrated to the new public-tokens
-      // resolution policy
-      return getCrawlersMatching(crawlersColl =>
-        crawlersColl.where("legacyCrawlingKeys", "array-contains", legacyCrawlingToken)
-      )
-    })
+    }).run()
 
   if(!fbCrawlerDescriptors.length) {
     throw new Error(`No crawler found matching [${crawlingToken}] token !`)
@@ -104,17 +99,15 @@ const crawlAll = async function(criteria: CrawlCriteria) {
     const crawlerDescriptors = await resolveCrawlerDescriptorsMatchingWithToken(criteria.crawlingToken);
 
     const matchingCrawlerDescriptors = crawlerDescriptors.filter(firestoreCrawler => {
-      const dateConstraintMatches = Temporal.Now.instant().epochMilliseconds < Date.parse(firestoreCrawler.stopAutoCrawlingAfter)
-
       const eventIdConstraintMatches = !criteria.eventIds
         || !criteria.eventIds.length
         || criteria.eventIds.includes(firestoreCrawler.id);
 
-      return dateConstraintMatches && eventIdConstraintMatches;
+      return eventIdConstraintMatches;
     });
 
     if(!matchingCrawlerDescriptors.length) {
-      throw new Error(`No crawler found matching either eventIds=${JSON.stringify(criteria.eventIds)} or crawlers' 'stopAutoCrawlingAfter' deadline`);
+      throw new Error(`No crawler found matching eventIds=${JSON.stringify(criteria.eventIds)}`);
     }
 
     return await Promise.all(matchingCrawlerDescriptors.map(async crawlerDescriptor => {
@@ -252,10 +245,12 @@ function sanityCheckEvent(event: FullEvent): string[] {
 const saveEvent = async function (event: FullEvent, crawlerDescriptor: z.infer<typeof FIREBASE_CRAWLER_DESCRIPTOR_PARSER>) {
     info("saving event " + event.id)
 
+    const websiteUrl = (event.conferenceDescriptor.infos?.socialMedias || []).find(sm => sm.type === 'website')?.href || ""
     const listableEvent: ListableEvent = {
       ...event.info,
       eventFamily: crawlerDescriptor.eventFamily,
       eventName: crawlerDescriptor.eventName,
+      websiteUrl
     }
 
     await db.collection("events").doc(event.id).set(listableEvent)

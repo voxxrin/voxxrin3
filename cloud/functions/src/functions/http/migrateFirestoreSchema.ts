@@ -13,9 +13,6 @@ const MIGRATIONS: Migration[] = [
     { name: "addUserIdInTokenWallet", exec: async () => (await import("../firestore/migrations/002-addUserIdInTokenWallet")).addUserIdInTokenWallet() },
     { name: "gettingRidOfUserPreferencesPastEvents", exec: async () => (await import("../firestore/migrations/003-gettingRidOfUserPreferencesPastEvents")).gettingRidOfUserPreferencesPastEvents() },
     { name: "createOrganizerSpaceRatings", exec: async () => (await import("../firestore/migrations/006-createOrganizerSpaceRatings")).createOrganizerSpaceRatings() },
-    // This migration can wait Devoxx BE '23 to be completed, as __computed collection might still be
-    // used by people having an old version of the app in their service worker cache, so the longer we keep
-    // the collection and the safer we will be
     { name: "deleteComputedTalkFavoritesCollections", exec: async () => (await import("../firestore/migrations/007-deleteComputedTalkFavoritesCollection")).deleteComputedTalkFavoritesCollections(), minimumMigrationDate: "2023-10-09T00:00:00Z" },
     { name: "introducingPerTalkFeedbacksLastUpdates", exec: async () => (await import("../firestore/migrations/008-introducingPerTalkFeedbacksLastUpdates")).introducingPerTalkFeedbacksLastUpdates() },
     { name: "refactoOrgaSpaceRatingsToPerTalkRatings", exec: async () => (await import("../firestore/migrations/009-refactoOrgaSpaceRatingsToPerTalkRatings")).refactoOrgaSpaceRatingsToPerTalkRatings() },
@@ -31,6 +28,7 @@ const MIGRATIONS: Migration[] = [
     { name: "migrateFamilyEventsStatsAccessTokenTypes", exec: async () => (await import("../firestore/migrations/017-migrateSomePublicTokenTypes")).migrateFamilyEventsStatsAccessTokenTypes() },
     { name: "introduceTalkAssets", exec: async () => (await import("../firestore/migrations/018-introduceTalkAssets")).introduceTalkAssets() },
     { name: "introduceFormattingsFeature", exec: async () => (await import("../firestore/migrations/019-introduceFormattingsFeature")).introduceFormattingsFeature() },
+    { name: "cleaningUnusedFirestoreDocs", exec: async () => (await import("../firestore/migrations/020-cleaningUnusedFirestoreDocs")).cleaningUnusedFirestoreDocs() },
 ];
 
 export type MigrationResult = "OK"|"Error";

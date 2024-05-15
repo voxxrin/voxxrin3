@@ -150,7 +150,6 @@ export const CAMPING_DES_SPEAKERS_CRAWLER: CrawlerKind<typeof CAMPING_DES_SPEAKE
             location: descriptor.location,
             logoUrl: descriptor.logoUrl,
             timezone: descriptor.timezone,
-            websiteUrl: descriptor.websiteUrl,
             peopleDescription: descriptor.peopleDescription || "",
             backgroundUrl: descriptor.backgroundUrl,
             theming: descriptor.theming as ConferenceDescriptor['theming'],
@@ -262,7 +261,6 @@ export const CAMPING_DES_SPEAKERS_CRAWLER: CrawlerKind<typeof CAMPING_DES_SPEAKE
                 location: descriptor.location,
                 logoUrl: descriptor.logoUrl,
                 timezone: descriptor.timezone,
-                websiteUrl: descriptor.websiteUrl,
                 peopleDescription: descriptor.peopleDescription as any,
                 backgroundUrl: descriptor.backgroundUrl
             },
