@@ -42,13 +42,71 @@ function urlToFilename(url: string, checksum: string) {
   return { escapedPath, extension };
 }
 
+abstract class StorageUploader<T> {
+  abstract initialChecks(response: Response): void;
+  abstract initialize(): T;
+  abstract uploadShouldBeSkippedOn(speakerUrl: string): boolean;
+  abstract upload(storage: T, eventId: string, photoUrl: string, cacheUrlCallback: (originalUrlName: string, resizedUrl: string) => Promise<void>): Promise<string>
+}
+
+class GoogleStorageUploader extends StorageUploader<Storage> {
+  initialChecks(response: Response): void {
+    if(!process.env.ASSETS_BUCKET_NAME) {
+      return sendResponseMessage(response, 500, `Missing ASSETS_BUCKET_NAME env variable !`)
+    }
+    if(!process.env.STORAGE_CONFIG) {
+      return sendResponseMessage(response, 500, `Missing STORAGE_CONFIG env variable !`)
+    }
+  }
+
+  initialize(): Storage {
+    const STORAGE_CONFIG = JSON.parse(process.env.STORAGE_CONFIG!)
+
+    const storage = new Storage(STORAGE_CONFIG);
+    return storage;
+  }
+
+  uploadShouldBeSkippedOn(speakerUrl: string): boolean {
+    const BUCKET_NAME = process.env.ASSETS_BUCKET_NAME!;
+    return decodeURIComponent(speakerUrl).includes(`/${BUCKET_NAME}/speaker-pictures/`);
+  }
+
+  async upload(storage: Storage, eventId: string, photoUrl: string, cacheUrlCallback: (originalUrlName: string, resizedUrl: string) => Promise<void>): Promise<string> {
+    const BUCKET_NAME = process.env.ASSETS_BUCKET_NAME!;
+
+    const pictureContent = await fetch(photoUrl).then(resp => resp.arrayBuffer());
+    const { escapedPath, extension } = urlToFilename(photoUrl, await contentChecksum(pictureContent))
+
+    const bucketFile = storage.bucket(BUCKET_NAME).file(`speaker-pictures/${escapedPath}${extension || ""}`);
+    const originalBucketUrl = bucketFile.publicUrl();
+    const resizedFilenameUrl = storage.bucket(BUCKET_NAME).file(`speaker-pictures/resized/${escapedPath}_64x64${extension || ""}`).publicUrl()
+
+    const [fileExists] = await bucketFile.exists()
+
+    if(!fileExists) {
+      try {
+        await bucketFile.save(Buffer.from(pictureContent));
+      } catch(e: any) {
+        console.error(`Error while uploading file ${escapedPath}: ${e.toString()}`)
+        return originalBucketUrl
+      }
+    }
+
+    await cacheUrlCallback(escapedPath+(extension || ""), resizedFilenameUrl);
+
+    // waiting few seconds so that resized pictures get generated
+    if(!fileExists) {
+      await wait(Temporal.Duration.from({ milliseconds: 2000 }))
+    }
+
+    return resizedFilenameUrl
+  }
+}
+
 export async function cacheSpeakersPictures(response: Response, pathParams: {eventId: string}, queryParams: {token: string, force: "true"|"false"}, body: {}) {
-  if(!process.env.ASSETS_BUCKET_NAME) {
-    return sendResponseMessage(response, 500, `Missing ASSETS_BUCKET_NAME env variable !`)
-  }
-  if(!process.env.STORAGE_CONFIG) {
-    return sendResponseMessage(response, 500, `Missing STORAGE_CONFIG env variable !`)
-  }
+  const uploader = new GoogleStorageUploader();
+
+  uploader.initialChecks(response);
 
   const [eventDescriptor, familyOrganizerToken] = await Promise.all([
     getEventDescriptor(pathParams.eventId),
@@ -59,10 +117,7 @@ export async function cacheSpeakersPictures(response: Response, pathParams: {eve
     return sendResponseMessage(response, 400, `Provided family organizer token doesn't match with event ${pathParams.eventId} family: [${eventDescriptor.eventFamily}]`)
   }
 
-  const BUCKET_NAME = process.env.ASSETS_BUCKET_NAME;
-  const STORAGE_CONFIG = JSON.parse(process.env.STORAGE_CONFIG)
-
-  const storage = new Storage(STORAGE_CONFIG);
+  const storage = uploader.initialize();
 
   const dailySchedules = (await db.collection(`events/${pathParams.eventId}/days`).get()).docs.map(d => d.data() as DailySchedule)
   const speakerRefsById = new Map<string, Speaker[]>()
@@ -85,66 +140,41 @@ export async function cacheSpeakersPictures(response: Response, pathParams: {eve
 
   await Promise.all(eventTalks.map(async talk => {
     await Promise.all(talk.speakers.map(async speaker => {
-      const alreadyCachedUrl = speaker.photoUrl && decodeURIComponent(speaker.photoUrl).includes(`/${BUCKET_NAME}/speaker-pictures/`);
-      if(speaker.photoUrl
-        && (!alreadyCachedUrl || queryParams.force === 'true')
-      ) {
-        const photoUrl = speaker.photoUrl;
+      if(!speaker.photoUrl) {
+        return;
+      }
+
+      const uploadShouldBeSkipped = uploader.uploadShouldBeSkippedOn(speaker.photoUrl);
+      if(!uploadShouldBeSkipped || queryParams.force === 'true') {
         const maybeAlreadyCachedUrl = alreadyExistingResizedSpeakerUrls.find(cache => cache.originalUrl === speaker.photoUrl);
 
-        if(alreadyCachedUrl && queryParams.force === 'true' && maybeAlreadyCachedUrl) {
+        if(uploadShouldBeSkipped && queryParams.force === 'true' && maybeAlreadyCachedUrl) {
           speaker.photoUrl = maybeAlreadyCachedUrl.originalUrl
           // TODO: we should consider to consider maybeAlreadyCachedUrl is undefined so that we enter the first part of the match() below
         }
 
         const updatedSpeakerUrl = await match(maybeAlreadyCachedUrl)
           .with(P.nullish, async () => {
-            const pictureContent = await fetch(photoUrl).then(resp => resp.arrayBuffer());
-            const { escapedPath, extension } = urlToFilename(photoUrl, await contentChecksum(pictureContent))
-
-            const bucketFile = storage.bucket(BUCKET_NAME).file(`speaker-pictures/${escapedPath}${extension || ""}`);
-            const originalBucketUrl = bucketFile.publicUrl();
-            const resizedFilenameUrl = storage.bucket(BUCKET_NAME).file(`speaker-pictures/resized/${escapedPath}_64x64${extension || ""}`).publicUrl()
-
-            const [fileExists] = await bucketFile.exists()
-
-            return match({ fileExists })
-              .with({ fileExists: true }, async () => {
-                // TODO: update cachedUrlDoc !
-                return resizedFilenameUrl
-              })
-              .otherwise(async () => {
-                try {
-                  await bucketFile.save(Buffer.from(pictureContent));
-
-                  const escapedFilename = toValidFirebaseKey(escapedPath+(extension || ""))
-                  const firebaseCachedUrlEntry: CachedUrl = {
-                    originalUrl: photoUrl!,
-                    resizedUrl: resizedFilenameUrl,
-                    type: 'speaker-picture'
-                  }
-                  const cachedUrlDoc = db.doc(`events/${pathParams.eventId}/resized-speaker-urls/${escapedFilename}`)
-                  try {
-                    if((await cachedUrlDoc.get()).exists) {
-                      await cachedUrlDoc.update(firebaseCachedUrlEntry)
-                    } else {
-                      await cachedUrlDoc.set(firebaseCachedUrlEntry)
-                    }
-                  }catch(e: any) {
-                    console.error(`Error while persisting cached url for speaker-picture [${escapedPath}]: ${e.toString()}`)
-                  }
-
-                  // waiting few seconds so that resized pictures get generated
-                  await wait(Temporal.Duration.from({ milliseconds: 2000 }))
-
-                  return resizedFilenameUrl;
-                } catch(e: any) {
-                  console.error(`Error while uploading file ${escapedPath}: ${e.toString()}`)
-                  return originalBucketUrl
+            return await uploader.upload(storage, pathParams.eventId, speaker.photoUrl!, async (originalUrlName: string, resizedUrl: string) => {
+              const escapedFilename = toValidFirebaseKey(originalUrlName)
+              const firebaseCachedUrlEntry: CachedUrl = {
+                originalUrl: speaker.photoUrl!,
+                resizedUrl,
+                type: 'speaker-picture'
+              }
+              const cachedUrlDoc = await db.doc(`events/${pathParams.eventId}/resized-speaker-urls/${escapedFilename}`).get()
+              try {
+                if(cachedUrlDoc.exists) {
+                  await cachedUrlDoc.ref.update(firebaseCachedUrlEntry)
+                } else {
+                  await cachedUrlDoc.ref.set(firebaseCachedUrlEntry)
                 }
-              });
+              } catch(e: any) {
+                console.error(`Error while persisting cached url for speaker-picture [${escapedFilename}]: ${e.toString()}`)
+              }
+            });
           }).otherwise(async alreadyCachedUrl => {
-            console.info(`Avoiding to cache [${photoUrl}] as this was already cached on: ${alreadyCachedUrl.resizedUrl}`)
+            console.info(`Avoiding to cache [${speaker.photoUrl}] as this was already cached on: ${alreadyCachedUrl.resizedUrl}`)
             return alreadyCachedUrl.resizedUrl;
           })
 
