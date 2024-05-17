@@ -25,13 +25,13 @@ async function contentChecksum(content: ArrayBuffer) {
   return hashArray.map((h) => h.toString(16).padStart(2, '0')).join('');
 }
 
-function urlToFilename(url: string, checksum: string) {
+function urlToFilename(url: string, checksum: string|undefined) {
   const pathChunks = url.split("/");
   const filename = pathChunks[pathChunks.length-1]
   const filenameChunks = filename.split(".");
 
   const extension = filenameChunks.length > 1 ? "."+filenameChunks[filenameChunks.length-1] : undefined;
-  const checksumedFilenameWithoutExtension = filenameChunks.slice(0, -1).concat(checksum).join(".")
+  const checksumedFilenameWithoutExtension = filenameChunks.slice(0, -1).concat(...(checksum?[checksum]:[])).join(".")
 
   const escapedPath = pathChunks.slice(0, -1)
     .concat(checksumedFilenameWithoutExtension)
