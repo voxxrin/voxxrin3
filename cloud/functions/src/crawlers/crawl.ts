@@ -284,6 +284,10 @@ const saveEvent = async function (event: FullEvent, crawlerDescriptor: z.infer<t
 
             await Promise.all([
                 ...event.talks.map(async talk => {
+                    if(talk.isOverflow) {
+                      return
+                    }
+
                     const talkFeedbacksDoc = db.doc(`events/${event.id}/organizer-space/${organizerSecretToken}/ratings/${talk.id}`)
                     const talkFeedbacks = await talkFeedbacksDoc.get();
                     if(!talkFeedbacks.exists) {
