@@ -77,9 +77,11 @@ class GoogleStorageUploader extends StorageUploader<Storage> {
     const pictureContent = await fetch(photoUrl).then(resp => resp.arrayBuffer());
     const { escapedPath, extension } = urlToFilename(photoUrl, await contentChecksum(pictureContent))
 
-    const bucketFile = storage.bucket(BUCKET_NAME).file(`speaker-pictures/${escapedPath}${extension || ""}`);
+    const forcedExtension = extension || ".png"
+
+    const bucketFile = storage.bucket(BUCKET_NAME).file(`speaker-pictures/${escapedPath}${forcedExtension}`);
     const originalBucketUrl = bucketFile.publicUrl();
-    const resizedFilenameUrl = storage.bucket(BUCKET_NAME).file(`speaker-pictures/resized/${escapedPath}_64x64${extension || ""}`).publicUrl()
+    const resizedFilenameUrl = storage.bucket(BUCKET_NAME).file(`speaker-pictures/resized/${escapedPath}_64x64${forcedExtension}`).publicUrl()
 
     const [fileExists] = await bucketFile.exists()
 
