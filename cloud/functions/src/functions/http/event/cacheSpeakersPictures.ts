@@ -148,11 +148,11 @@ export async function cacheSpeakersPictures(response: Response, pathParams: {eve
 
       const uploadShouldBeSkipped = uploader.uploadShouldBeSkippedOn(speaker.photoUrl);
       if(!uploadShouldBeSkipped || queryParams.force === 'true') {
-        const maybeAlreadyCachedUrl = alreadyExistingResizedSpeakerUrls.find(cache => cache.originalUrl === speaker.photoUrl);
+        let maybeAlreadyCachedUrl = alreadyExistingResizedSpeakerUrls.find(cache => cache.resizedUrl === speaker.photoUrl);
 
         if(uploadShouldBeSkipped && queryParams.force === 'true' && maybeAlreadyCachedUrl) {
           speaker.photoUrl = maybeAlreadyCachedUrl.originalUrl
-          // TODO: we should consider to consider maybeAlreadyCachedUrl is undefined so that we enter the first part of the match() below
+          maybeAlreadyCachedUrl = undefined;
         }
 
         const updatedSpeakerUrl = await match(maybeAlreadyCachedUrl)
