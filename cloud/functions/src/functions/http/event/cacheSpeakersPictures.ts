@@ -45,7 +45,6 @@ function urlToFilename(url: string, checksum: string|undefined) {
 abstract class StorageUploader<T> {
   abstract initialChecks(response: Response): void;
   abstract initialize(): T;
-  abstract uploadShouldBeSkippedOn(speakerUrl: string): boolean;
   abstract upload(storage: T, eventId: string, photoUrl: string, cacheUrlCallback: (originalUrlName: string, resizedUrl: string) => Promise<void>): Promise<string>
 }
 
@@ -64,11 +63,6 @@ class GoogleStorageUploader extends StorageUploader<Storage> {
 
     const storage = new Storage(STORAGE_CONFIG);
     return storage;
-  }
-
-  uploadShouldBeSkippedOn(speakerUrl: string): boolean {
-    const BUCKET_NAME = process.env.ASSETS_BUCKET_NAME!;
-    return decodeURIComponent(speakerUrl).includes(`/${BUCKET_NAME}/speaker-pictures/`);
   }
 
   async upload(storage: Storage, eventId: string, photoUrl: string, cacheUrlCallback: (originalUrlName: string, resizedUrl: string) => Promise<void>): Promise<string> {
@@ -105,7 +99,36 @@ class GoogleStorageUploader extends StorageUploader<Storage> {
   }
 }
 
+type Result = {
+  uploadedPictures: Array<{
+    speakerFullname: string,
+    originalUrl: string,
+    resizedUrl: string,
+  }>,
+  updatedSpeakerPictures: Array<{
+    speakerFullname: string,
+    originalUrl: string,
+    resizedUrl: string,
+    forcedUpdate: boolean,
+  }>,
+  skippedUploads: Array<{
+    speakerFullname: string,
+  } & ({
+    originalUrl: string,
+    resizedUrl: string,
+    reason: "resized-url-already-exists" | "url-previously-cached-already"
+  } | {
+    reason: "no-picture"
+  })>
+}
+
 export async function cacheSpeakersPictures(response: Response, pathParams: {eventId: string}, queryParams: {token: string, force: "true"|"false"}, body: {}) {
+  const results: Result = {
+    uploadedPictures: [],
+    updatedSpeakerPictures: [],
+    skippedUploads: []
+  }
+
   const uploader = new GoogleStorageUploader();
 
   uploader.initialChecks(response);
@@ -143,47 +166,79 @@ export async function cacheSpeakersPictures(response: Response, pathParams: {eve
   await Promise.all(eventTalks.map(async talk => {
     await Promise.all(talk.speakers.map(async speaker => {
       if(!speaker.photoUrl) {
+        results.skippedUploads.push({
+          speakerFullname: speaker.fullName,
+          reason: 'no-picture'
+        })
         return;
       }
 
-      const uploadShouldBeSkipped = uploader.uploadShouldBeSkippedOn(speaker.photoUrl);
-      if(!uploadShouldBeSkipped || queryParams.force === 'true') {
-        let maybeAlreadyCachedUrl = alreadyExistingResizedSpeakerUrls.find(cache => cache.resizedUrl === speaker.photoUrl);
+      const maybeAlreadyCachedUrl = alreadyExistingResizedSpeakerUrls.find(cache => cache.resizedUrl === speaker.photoUrl);
+      if(maybeAlreadyCachedUrl && queryParams.force === 'true') {
+        // resetting speaker photo url to original url
+        speaker.photoUrl = maybeAlreadyCachedUrl.originalUrl;
+      }
 
-        if(uploadShouldBeSkipped && queryParams.force === 'true' && maybeAlreadyCachedUrl) {
-          speaker.photoUrl = maybeAlreadyCachedUrl.originalUrl
-          maybeAlreadyCachedUrl = undefined;
-        }
+      const updatedSpeakerUrl = await match([maybeAlreadyCachedUrl, queryParams.force])
+        .with([P.nonNullable, 'false'], async ([alreadyCachedUrl, _]) => {
+          console.info(`Avoiding to cache [${speaker.photoUrl}] as this was already cached on: ${alreadyCachedUrl.resizedUrl}`)
 
-        const updatedSpeakerUrl = await match(maybeAlreadyCachedUrl)
-          .with(P.nullish, async () => {
-            return await uploader.upload(storage, pathParams.eventId, speaker.photoUrl!, async (originalUrlName: string, resizedUrl: string) => {
-              const escapedFilename = toValidFirebaseKey(originalUrlName)
-              const firebaseCachedUrlEntry: CachedUrl = {
-                originalUrl: speaker.photoUrl!,
-                resizedUrl,
-                type: 'speaker-picture'
-              }
-              const cachedUrlDoc = await db.doc(`events/${pathParams.eventId}/resized-speaker-urls/${escapedFilename}`).get()
-              try {
-                if(cachedUrlDoc.exists) {
-                  await cachedUrlDoc.ref.update(firebaseCachedUrlEntry)
-                } else {
-                  await cachedUrlDoc.ref.set(firebaseCachedUrlEntry)
-                }
-              } catch(e: any) {
-                console.error(`Error while persisting cached url for speaker-picture [${escapedFilename}]: ${e.toString()}`)
-              }
-            });
-          }).otherwise(async alreadyCachedUrl => {
-            console.info(`Avoiding to cache [${speaker.photoUrl}] as this was already cached on: ${alreadyCachedUrl.resizedUrl}`)
-            return alreadyCachedUrl.resizedUrl;
+          results.skippedUploads.push({
+            speakerFullname: speaker.fullName,
+            reason: "url-previously-cached-already",
+            originalUrl: alreadyCachedUrl.originalUrl,
+            resizedUrl: alreadyCachedUrl.resizedUrl
           })
+
+          return alreadyCachedUrl.resizedUrl;
+        }).otherwise(async ([_1, _2]) => {
+          const resizedUrl = await uploader.upload(storage, pathParams.eventId, speaker.photoUrl!, async (originalUrlName: string, resizedUrl: string) => {
+            const escapedFilename = toValidFirebaseKey(originalUrlName)
+            const firebaseCachedUrlEntry: CachedUrl = {
+              originalUrl: speaker.photoUrl!,
+              resizedUrl,
+              type: 'speaker-picture'
+            }
+            const cachedUrlDoc = await db.doc(`events/${pathParams.eventId}/resized-speaker-urls/${escapedFilename}`).get()
+            try {
+              if (cachedUrlDoc.exists) {
+                await cachedUrlDoc.ref.update(firebaseCachedUrlEntry)
+              } else {
+                await cachedUrlDoc.ref.set(firebaseCachedUrlEntry)
+              }
+            } catch (e: any) {
+              console.error(`Error while persisting cached url for speaker-picture [${escapedFilename}]: ${e.toString()}`)
+            }
+          });
+
+          results.uploadedPictures.push({
+            speakerFullname: speaker.fullName,
+            originalUrl: speaker.photoUrl!,
+            resizedUrl
+          })
+
+          return resizedUrl;
+        })
+
+      if(speaker.photoUrl !== updatedSpeakerUrl) {
+        results.updatedSpeakerPictures.push({
+          speakerFullname: speaker.fullName,
+          originalUrl: speaker.photoUrl,
+          resizedUrl: updatedSpeakerUrl,
+          forcedUpdate: queryParams.force === 'true'
+        })
 
         speaker.photoUrl = updatedSpeakerUrl;
         for(const speakerInDailySchedules of (speakerRefsById.get(speaker.id) || [])) {
           speakerInDailySchedules.photoUrl = updatedSpeakerUrl;
         }
+      } else {
+        results.skippedUploads.push({
+          speakerFullname: speaker.fullName,
+          originalUrl: speaker.photoUrl,
+          resizedUrl: updatedSpeakerUrl,
+          reason: 'resized-url-already-exists'
+        })
       }
     }))
 
@@ -194,5 +249,5 @@ export async function cacheSpeakersPictures(response: Response, pathParams: {eve
     await db.doc(`events/${pathParams.eventId}/days/${dailySchedule.day}`).update(dailySchedule);
   }))
 
-  sendResponseMessage(response, 200);
+  sendResponseMessage(response, 200, results);
 }
