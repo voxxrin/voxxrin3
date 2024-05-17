@@ -6,7 +6,7 @@ import * as crypto from "crypto"
 import {match, P} from "ts-pattern";
 import {wait} from "../../../utils/async-utils";
 import {Temporal} from "@js-temporal/polyfill";
-import {toValidFirebaseKey, unescapeFirebaseKey} from "../../../../../../shared/utilities/firebase.utils";
+import {toValidFirebaseKey} from "../../../../../../shared/utilities/firebase.utils";
 import {sendResponseMessage} from "../utils";
 import {getEventDescriptor} from "../../firestore/services/eventDescriptor-utils";
 import {getFamilyOrganizerToken} from "../../firestore/services/publicTokens-utils";

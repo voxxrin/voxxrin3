@@ -5,7 +5,7 @@ import {deferredVuefireUseDocument} from "@/views/vue-utils";
 import {collection, doc, DocumentReference} from "firebase/firestore";
 import {db} from "@/state/firebase";
 import {RoomsStats} from "../../../shared/event-stats";
-import {toValidFirebaseKey, unescapeFirebaseKey} from "../../../shared/utilities/firebase.utils";
+import {toValidFirebaseKey} from "../../../shared/utilities/firebase.utils";
 import {createVoxxrinRoomStatsFromFirestore} from "@/models/VoxxrinRoomStats";
 import {RoomId} from "@/models/VoxxrinRoom";
 
@@ -26,7 +26,7 @@ export function useRoomsStats(eventIdRef: Ref<EventId|undefined>) {
       }
 
       return Object.fromEntries(Object.entries(firestoreRoomsStats).map(([escapedRoomId, roomStats]) => {
-        return [ unescapeFirebaseKey(escapedRoomId), createVoxxrinRoomStatsFromFirestore(roomStats) ]
+        return [ escapedRoomId, createVoxxrinRoomStatsFromFirestore(roomStats) ]
       }))
     })
   }
