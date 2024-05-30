@@ -1,7 +1,7 @@
 import {z, ZodLiteral} from "zod";
-import {ISOLocalDate, ISOZonedTime} from "../../../../shared/type-utils";
+import {type ISODatetime, ISOLocalDate, ISOZonedTime} from "../../../../shared/type-utils";
 import {ConferenceDescriptor} from "../../../../shared/conference-descriptor.firestore";
-import {ScheduleTimeSlot} from "../../../../shared/daily-schedule.firestore";
+import {RecordingPlatform, ScheduleTimeSlot} from "../../../../shared/daily-schedule.firestore";
 import {ISO_DATETIME_PARSER} from "../utils/zod-parsers";
 
 
@@ -211,15 +211,40 @@ export const TALK_PARSER = z.object({
     id: z.string(),
     title: z.string(),
     track: TALK_TRACK_PARSER,
-    room: ROOM_PARSER
+    room: ROOM_PARSER,
+    isOverflow: z.boolean().optional().default(false)
 })
+
+export const RECORDING_PLATFORM_PARSER = z.union([z.literal("youtube"), z.literal("unknown")])
+
+export const TALK_ASSET_BASE_PARSER = z.object({
+  createdOn: ISO_DATETIME_PARSER,
+  assetUrl: z.string()
+})
+export const RECORDING_ASSET_PARSER = TALK_ASSET_BASE_PARSER.extend({
+  type: z.literal("recording"),
+  platform: RECORDING_PLATFORM_PARSER
+})
+export const GIT_REPOSITORY_ASSET_PARSER = TALK_ASSET_BASE_PARSER.extend({
+  type: z.literal("git-repository"),
+  platform: z.union([z.literal("github"), z.literal("gitlab"), z.literal("unknown") ])
+})
+export const SLIDES_ASSET_PARSER = TALK_ASSET_BASE_PARSER.extend({ type: z.literal("slides") })
+export const MISC_ASSET_PARSER = TALK_ASSET_BASE_PARSER.extend({ type: z.literal("misc") })
+export const TALK_ASSET_PARSER = z.discriminatedUnion('type', [
+  RECORDING_ASSET_PARSER,
+  SLIDES_ASSET_PARSER,
+  GIT_REPOSITORY_ASSET_PARSER,
+  MISC_ASSET_PARSER,
+])
 
 export const DETAILED_TALK_PARSER =  TALK_PARSER.extend({
     start: ISO_DATETIME_PARSER,
     end: ISO_DATETIME_PARSER,
     summary: z.string(),
     description: z.string(),
-    tags: z.array(z.string())
+    tags: z.array(z.string()),
+    assets: z.array(TALK_ASSET_PARSER)
 })
 
 export const TIME_SLOT_BASE_PARSER = z.object({
