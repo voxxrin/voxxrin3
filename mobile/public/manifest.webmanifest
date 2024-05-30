@@ -26,9 +26,17 @@
   "description": "Your conference companion",
   "screenshots": [
     {
-      "src": "/assets/imgs/social-media-screenshot.png",
+      "src": "/assets/imgs/screenshot-wide.png",
       "type": "image/png",
-      "sizes": "788x1376"
+      "sizes": "1280x960",
+      "form_factor": "wide",
+      "label": "Voxxrin"
+    }, {
+      "src": "/assets/imgs/screenshot-narrow.png",
+      "type": "image/png",
+      "sizes": "788x1376",
+      "form_factor": "narrow",
+      "label": "Voxxrin"
     }
   ]
 }
