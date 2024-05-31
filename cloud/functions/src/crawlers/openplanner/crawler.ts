@@ -69,12 +69,12 @@ export const OPENPLANNER_GENERATED_SCHEDULE_PARSER = EVENT_DESCRIPTOR_PARSER.omi
     name: z.string(),
     photoUrl: z.string(),
     socials: z.array(z.object({
-      icon: z.union([z.literal("twitter"), z.literal("linkedin"), z.literal("github")]),
+      icon: z.union([z.literal(""), z.literal("site"), z.literal("twitter"), z.literal("linkedin"), z.literal("github")]),
       link: z.string(),
-      name: z.union([z.literal("LinkedIn"), z.literal("Linkedin"), z.literal("Twitter"), z.literal("GitHub")]),
+      name: z.string().optional(),
     })),
     bio: z.string().nullish(),
-    company: z.string()
+    company: z.string().nullish()
   }))
 })
 
@@ -100,15 +100,19 @@ export const OPENPLANNER_CRAWLER: CrawlerKind<typeof OPENPLANNER_DESCRIPTOR_PARS
           bio: openPlannerSpeaker.bio,
           photoUrl: openPlannerSpeaker.photoUrl,
           companyName: openPlannerSpeaker.company,
-          social: openPlannerSpeaker.socials.map(opSocial => ({
-            type: match(opSocial.name)
-              .with('GitHub', () => 'github' as const)
-              .with('Linkedin', () => 'linkedin' as const)
-              .with('LinkedIn', () => 'linkedin' as const)
-              .with('Twitter', () => 'twitter' as const)
-              .exhaustive(),
-            url: opSocial.link
-          })),
+          social: openPlannerSpeaker.socials.map(opSocial => {
+            const type = match([opSocial.icon, opSocial.name])
+              .with(['github', P.any], () => 'github' as const)
+              .with(['linkedin', P.any], () => 'linkedin' as const)
+              .with(['twitter', P.any], () => 'twitter' as const)
+              .with(['site', P.any], () => 'website' as const)
+              .with(['', P.union("Twitter", "twitter")], () => 'twitter' as const)
+              .with(['', P.union("Linkedin", "linkedin", "LinkedIn")], () => 'linkedin' as const)
+              .with(['', P.union("Github", "github", "GitHub")], () => 'github' as const)
+              .otherwise(() => undefined);
+
+            return (type && opSocial.link) ? {type, url: opSocial.link } : undefined;
+          }).filter(s => !!s).map(s => s!),
         }
         return speaker;
       })

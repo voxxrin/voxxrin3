@@ -6,9 +6,9 @@ import {http} from "../utils";
 describe('openplanenr crawlers', () => {
     const events = [
       {
-        // id: 'tw24', confName: `Tech & Wine 2024`,
-        // descriptorUrl: `todo`
-      // }, {
+        id: 'tw24', confName: `Tech & Wine 2024`,
+        descriptorUrl: `https://gist.githubusercontent.com/fcamblor/735f935f7b082f6cd304dcadd5940b8b/raw/tech-and-wine.json`
+      }, {
         id: 'sunnytech24', confName: `Sunny Tech '24`,
         descriptorUrl: `https://gist.githubusercontent.com/fcamblor/2b4cb4f3ee1f2861cfe2ebb434dc6c20/raw/sunnytech.json`
       }
