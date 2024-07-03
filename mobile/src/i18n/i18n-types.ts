@@ -575,6 +575,10 @@ type RootTranslation = {
 	 * D​o​u​b​l​e​-​t​a​p​ ​o​n​ ​t​h​e​ ​m​a​p​ ​t​o​ ​z​o​o​m​ ​i​n
 	 */
 	Double_tap_on_the_map_to_zoom_in: string
+	/**
+	 * M​y​ ​E​v​e​n​t​s
+	 */
+	My_events: string
 }
 
 export type TranslationFunctions = {
@@ -1134,6 +1138,10 @@ export type TranslationFunctions = {
 	 * Double-tap on the map to zoom in
 	 */
 	Double_tap_on_the_map_to_zoom_in: () => LocalizedString
+	/**
+	 * My Events
+	 */
+	My_events: () => LocalizedString
 }
 
 export type Formatters = {
