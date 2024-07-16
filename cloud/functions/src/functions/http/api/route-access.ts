@@ -50,6 +50,8 @@ function ensureEventBasedTokenPredicateIsValid<
           return `Provided event-based token doesn't match with event ${pathParams.eventId} name: [${entity.eventName}]`
         }
         return undefined;
+      }).with({ spaceTokens: P.array(P.string) }, ({ spaceTokens }) => {
+        return `Private Space token is not supposed to be provided here !`
       }).exhaustive();
 
     if(validationErrorMessage) {
