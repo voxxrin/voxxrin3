@@ -15,7 +15,7 @@ const LOGGER = Logger.named("UserTokenRegistrationPage");
 const ionRouter = useIonRouter();
 const route = useRoute();
 
-const {registerEventOrganizerSecretToken, registerTalkFeedbacksViewerSecretToken} = useUserTokensWallet()
+const {registerEventOrganizerSecretToken, registerTalkFeedbacksViewerSecretToken, registerPrivateSpaceSecretToken} = useUserTokensWallet()
 
 onMounted(async () => {
     const tokenType = route.query['type'] as string;
@@ -46,6 +46,17 @@ onMounted(async () => {
             })
 
             return { success: true, redirectTo: `/user/talks` };
+        }).with('PrivateSpace', async () => {
+            const rawSpaceTokens = route.query['spaceTokens'] as string;
+            const spaceTokens = rawSpaceTokens.split(",");
+
+            if(!spaceTokens || !spaceTokens.length) { alert("Missing space tokens !"); return { success: false, redirectTo: undefined }; }
+
+            await registerPrivateSpaceSecretToken({
+                secretToken, spaceTokens,
+            })
+
+            return { success: true, redirectTo: `/event-selector` };
         }).otherwise(() => {
             alert(`Unsupported type: ${tokenType}`)
 

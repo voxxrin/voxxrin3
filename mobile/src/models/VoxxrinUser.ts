@@ -3,7 +3,7 @@ import {UserPreferences} from "../../../shared/user-preferences.firestore";
 import {EventId} from "@/models/VoxxrinEvent";
 import {
   UserWalletEventOrganizerSecretToken,
-  UserTokensWallet, UserWalletTalkFeedbacksViewerSecretToken
+  UserTokensWallet, UserWalletTalkFeedbacksViewerSecretToken, UserWalletPrivateSpaceToken
 } from "../../../shared/user-tokens-wallet.localstorage";
 import {TalkId} from "@/models/VoxxrinTalk";
 import {Replace} from "../../../shared/type-utils";
@@ -32,11 +32,14 @@ export type TalkFeedbacksViewerToken = Replace<UserWalletTalkFeedbacksViewerSecr
     eventId: EventId,
     talkId: TalkId
 }>
+export type PrivateSpaceToken = Replace<UserWalletPrivateSpaceToken, {
+}>
 
 export type VoxxrinUserTokensWallet = Replace<UserTokensWallet, {
     secretTokens: {
         eventOrganizerTokens: EventOrganizerToken[],
-        talkFeedbacksViewerTokens: TalkFeedbacksViewerToken[]
+        talkFeedbacksViewerTokens: TalkFeedbacksViewerToken[],
+        privateSpaceTokens: PrivateSpaceToken[],
     }
 }>
 
@@ -45,6 +48,7 @@ export function toVoxxrinUserTokensWallet(rawUserTokensWallet: UserTokensWallet)
     secretTokens: {
       eventOrganizerTokens: rawUserTokensWallet.secretTokens.eventOrganizerTokens.map(toVoxxrinUserWalletEventOrganizerSecretToken),
       talkFeedbacksViewerTokens: rawUserTokensWallet.secretTokens.talkFeedbacksViewerTokens.map(toVoxxrinUserWalletTalkFeedbacksViewerToken),
+      privateSpaceTokens: rawUserTokensWallet.secretTokens.privateSpaceTokens.map(toVoxxrinUserWalletPrivateSpaceToken),
     }
   }
 }
@@ -62,12 +66,18 @@ export function toVoxxrinUserWalletTalkFeedbacksViewerToken(raw: UserWalletTalkF
     talkId: new TalkId(raw.talkId),
   }
 }
+export function toVoxxrinUserWalletPrivateSpaceToken(raw: UserWalletPrivateSpaceToken): PrivateSpaceToken {
+  return {
+    ...raw,
+  }
+}
 
 export function toRawUserTokensWallet(voxxrinUserTokensWallet: VoxxrinUserTokensWallet): UserTokensWallet {
   return {
     secretTokens: {
       eventOrganizerTokens: voxxrinUserTokensWallet.secretTokens.eventOrganizerTokens.map(toRawUserWalletEventOrganizerSecretToken),
       talkFeedbacksViewerTokens: voxxrinUserTokensWallet.secretTokens.talkFeedbacksViewerTokens.map(toRawUserWalletTalkFeedbacksViewerSecretToken),
+      privateSpaceTokens: voxxrinUserTokensWallet.secretTokens.privateSpaceTokens.map(toRawUserWalletPrivateSpaceToken),
     }
   }
 }
@@ -84,5 +94,11 @@ export function toRawUserWalletTalkFeedbacksViewerSecretToken(voxxrin: TalkFeedb
     ...voxxrin,
     eventId: voxxrin.eventId.value,
     talkId: voxxrin.talkId.value,
+  }
+}
+
+export function toRawUserWalletPrivateSpaceToken(voxxrin: PrivateSpaceToken): UserWalletPrivateSpaceToken {
+  return {
+    ...voxxrin,
   }
 }

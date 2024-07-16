@@ -2,7 +2,8 @@
 export type UserTokensWallet = {
     secretTokens: {
         eventOrganizerTokens: UserWalletEventOrganizerSecretToken[],
-        talkFeedbacksViewerTokens: UserWalletTalkFeedbacksViewerSecretToken[]
+        talkFeedbacksViewerTokens: UserWalletTalkFeedbacksViewerSecretToken[],
+        privateSpaceTokens: UserWalletPrivateSpaceToken[],
     }
 }
 
@@ -15,4 +16,9 @@ export type UserWalletTalkFeedbacksViewerSecretToken = {
   secretToken: string;
   eventId: string;
   talkId: string;
+}
+
+export type UserWalletPrivateSpaceToken = {
+  secretToken: string;
+  spaceTokens: string[];
 }
