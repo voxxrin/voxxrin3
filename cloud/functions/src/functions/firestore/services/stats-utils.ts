@@ -5,15 +5,16 @@ import {getTimeslottedTalks} from "./schedule-utils";
 import {toValidFirebaseKey} from "../../../../../../shared/utilities/firebase.utils";
 import {firestore} from "firebase-admin";
 import QuerySnapshot = firestore.QuerySnapshot;
+import {resolvedEventFirestorePath} from "../../../../../../shared/utilities/event-utils";
 
 
-export async function ensureRoomsStatsFilledFor(eventId: string) {
-  const roomsStatsDoc = db.doc(`events/${eventId}/roomsStats-allInOne/self`)
+export async function ensureRoomsStatsFilledFor(spaceToken: string|undefined, eventId: string) {
+  const roomsStatsDoc = db.doc(`${resolvedEventFirestorePath(eventId, spaceToken)}/roomsStats-allInOne/self`)
 
   const roomsStats = await roomsStatsDoc.get()
 
   if(!roomsStats.exists) {
-    const timeslottedTalks = await getTimeslottedTalks(eventId)
+    const timeslottedTalks = await getTimeslottedTalks(spaceToken, eventId)
 
     const roomsStats = timeslottedTalks.reduce((roomsStats, talk) => {
       if(talk.room.id) {

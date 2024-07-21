@@ -9,28 +9,31 @@ import {db} from "../../../firebase";
 import {firestore} from "firebase-admin";
 import DocumentReference = firestore.DocumentReference;
 import {DetailedTalk, Talk, TalkAsset} from "../../../../../../shared/daily-schedule.firestore";
+import {resolvedEventFirestorePath} from "../../../../../../shared/utilities/event-utils";
 
 
 
-export async function requestRecordingAssetsRefresh(response: Response, pathParams: {eventId: string}, queryParams: {token: string}) {
+export async function requestRecordingAssetsRefresh(response: Response, pathParams: {eventId: string, spaceToken?: string|undefined}, queryParams: {token: string}) {
+  const { eventId, spaceToken } = pathParams;
+
   if(!process.env.YOUTUBE_API_KEY) {
     throw new Error(`Missing YOUTUBE_API_KEY env variable !`);
   }
 
-  const eventDescriptor = await getEventDescriptor(pathParams.eventId);
+  const eventDescriptor = await getEventDescriptor(spaceToken, eventId);
 
   if(!eventDescriptor.features.recording) {
-    throw new Error(`Missing event descriptor ${pathParams.eventId}'s features.recording configuration !`);
+    throw new Error(`Missing event descriptor ${eventId}'s features.recording configuration !`);
   }
 
   const recordingConfig = eventDescriptor.features.recording;
   if(recordingConfig.platform !== 'youtube') {
-    throw new Error(`Unsupported platform type ${recordingConfig.platform} for eventId=${pathParams.eventId}`)
+    throw new Error(`Unsupported platform type ${recordingConfig.platform} for eventId=${eventId}`)
   }
 
   const start = (eventDescriptor.days || []).map(d => d.localDate).sort()[0]
 
-  const eventTalks = await getEventTalks(pathParams.eventId);
+  const eventTalks = await getEventTalks(spaceToken, eventId);
   const filteredEventTalks = eventTalks
     .filter(talk =>
       !(recordingConfig.notRecordedFormatIds || []).includes(talk.format.id)
@@ -52,7 +55,7 @@ export async function requestRecordingAssetsRefresh(response: Response, pathPara
     const matchingResults = findYoutubeMatchingTalks(simpleTalks, allMatchingVideos, recordingConfig);
 
     await Promise.all(matchingResults.matchedTalks.map(async matchedTalk => {
-      const talkSnapshot = await (db.doc(`events/${pathParams.eventId}/talks/${matchedTalk.talk.id}`) as DocumentReference<DetailedTalk>).get()
+      const talkSnapshot = await (db.doc(`${resolvedEventFirestorePath(eventId, spaceToken)}/talks/${matchedTalk.talk.id}`) as DocumentReference<DetailedTalk>).get()
       const maybeTalk = talkSnapshot.data();
 
       if(maybeTalk) {
@@ -72,13 +75,13 @@ export async function requestRecordingAssetsRefresh(response: Response, pathPara
             assets: assets
           })
 
-          console.log(`Updated talkId=${maybeTalk.id}'s youtube recording url to ${assetUrl} for eventId=${pathParams.eventId}`)
+          console.log(`Updated talkId=${maybeTalk.id}'s youtube recording url to ${assetUrl} for eventId=${eventId}, spaceToken=${spaceToken}`)
         }
       }
     }))
 
     // Uncomment this in DEV if you want to generate unit tests based on fetched talks & youtube videos
-    // generateTestFile(`./test-data/${pathParams.eventId.toLowerCase()}-talks-and-youtube.ts`, `${pathParams.eventId.toUpperCase()}_TALKS_AND_YOUTUBE`, matchingResults, filteredEventTalks);
+    // generateTestFile(`./test-data/${eventId.toLowerCase()}-talks-and-youtube.ts`, `${eventId.toUpperCase()}_TALKS_AND_YOUTUBE`, matchingResults, filteredEventTalks);
 
     return sendResponseMessage(response, 200, matchingResults)
   }catch(e) {

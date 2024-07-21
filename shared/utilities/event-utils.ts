@@ -1,13 +1,21 @@
 
 
-export function resolvedEventFirestorePath(eventId: string, spaceId?: string) {
-  return `${spaceId ? `spaces/${spaceId}/`:''}events/${eventId}`
+export function resolvedEventsFirestorePath(maybeSpaceId: string|undefined) {
+  return `${maybeSpaceId ? `spaces/${maybeSpaceId}/`:''}events`
 }
 
-export function eventsFirestorePath<SPACE_ID extends string|undefined>(spaceId?: SPACE_ID) {
-  return `${spaceId ? `spaces/{spaceId}/`:''}events` as const
+export function resolvedEventFirestorePath(eventId: string, maybeSpaceId: string|undefined) {
+  return `${maybeSpaceId ? `spaces/${maybeSpaceId}/`:''}events/${eventId}`
 }
 
-export function eventFirestorePath<SPACE_ID extends string|undefined>(spaceId?: SPACE_ID) {
-  return `${spaceId ? `spaces/{spaceId}/`:''}events/{eventId}` as const
+export function resolvedSpacedEventFieldName(eventId: string, maybeSpaceToken: string|undefined) {
+  return `${maybeSpaceToken ? `${maybeSpaceToken}:`:``}${eventId}`
+}
+
+export function eventsFirestorePath<SPACE_ID extends string|undefined>(maybeSpaceId: SPACE_ID) {
+  return `${maybeSpaceId ? `spaces/{spaceId}/`:''}events` as const
+}
+
+export function eventFirestorePath<SPACE_ID extends string|undefined>(maybeSpaceId: SPACE_ID) {
+  return `${maybeSpaceId ? `spaces/{spaceId}/`:''}events/{eventId}` as const
 }

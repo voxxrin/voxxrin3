@@ -20,7 +20,9 @@ import {getCrawlersMatching} from "../functions/firestore/services/crawlers-util
 import {ListableEvent} from "../../../../shared/event-list.firestore";
 import {ConferenceDescriptor} from "../../../../shared/conference-descriptor.firestore";
 import {toValidFirebaseKey} from "../../../../shared/utilities/firebase.utils";
-import {crawl} from "../functions/http/event/legacy/deprecated_crawl";
+import {
+  resolvedEventFirestorePath,
+} from "../../../../shared/utilities/event-utils";
 
 export type CrawlerKind<ZOD_TYPE extends z.ZodType> = {
     crawlerImpl: (eventId: string, crawlerDescriptor: z.infer<ZOD_TYPE>, criteria: { dayIds?: string[]|undefined }) => Promise<FullEvent>,
@@ -136,7 +138,7 @@ const crawlAll = async function(criteria: CrawlCriteria) {
                 durationInSeconds: start.until(end).total('seconds'),
                 messages
             }
-        }catch(e: any) {
+        } catch(e: any) {
           const baseMessage = `Error during crawler with id ${crawlerDescriptor.id}`;
           // const err = Error("")
           // err.
@@ -254,14 +256,16 @@ const saveEvent = async function (event: FullEvent, crawlerDescriptor: z.infer<t
       websiteUrl
     }
 
-    await db.collection("events").doc(event.id).set(listableEvent)
+    const [spaceToken, spaceContext] = crawlerDescriptor.visibility === 'public' ? [undefined, 'public space'] : [crawlerDescriptor.spaceToken, `private space: ${crawlerDescriptor.spaceToken}`]
 
-    const talksStatsAllInOneDoc = await db.doc(`events/${event.id}/talksStats-allInOne/self`).get()
+    await db.doc(resolvedEventFirestorePath(event.id, spaceToken)).set(listableEvent)
+
+    const talksStatsAllInOneDoc = await db.doc(`${resolvedEventFirestorePath(event.id, spaceToken)}/talksStats-allInOne/self`).get()
     if(!talksStatsAllInOneDoc.exists) {
-        await db.doc(`events/${event.id}/talksStats-allInOne/self`).set({})
+        await db.doc(`${resolvedEventFirestorePath(event.id, spaceToken)}/talksStats-allInOne/self`).set({})
     }
 
-    const firestoreEvent = db.collection("events").doc(event.id);
+    const firestoreEvent = db.doc(`${resolvedEventFirestorePath(event.id, spaceToken)}`);
     const organizerSpaceEntries = await firestoreEvent
         .collection('organizer-space')
         .listDocuments();
@@ -277,15 +281,15 @@ const saveEvent = async function (event: FullEvent, crawlerDescriptor: z.infer<t
             await firestoreEvent.collection('organizer-space').doc(organizerSecretToken).set(organizerSpaceContent)
 
             await Promise.all(event.daySchedules.map(async daySchedule => {
-                const dailyRating = await db.doc(`events/${event.id}/organizer-space/${organizerSecretToken}/daily-ratings/${daySchedule.day}`).get()
+                const dailyRating = await db.doc(`${resolvedEventFirestorePath(event.id, spaceToken)}/organizer-space/${organizerSecretToken}/daily-ratings/${daySchedule.day}`).get()
                 if(!dailyRating.exists) {
-                    await db.doc(`events/${event.id}/organizer-space/${organizerSecretToken}/daily-ratings/${daySchedule.day}`).set({});
+                    await db.doc(`${resolvedEventFirestorePath(event.id, spaceToken)}/organizer-space/${organizerSecretToken}/daily-ratings/${daySchedule.day}`).set({});
                 }
             }))
 
             await Promise.all([
                 ...event.talks.map(async talk => {
-                    const talkFeedbacksDoc = db.doc(`events/${event.id}/organizer-space/${organizerSecretToken}/ratings/${talk.id}`)
+                    const talkFeedbacksDoc = db.doc(`${resolvedEventFirestorePath(event.id, spaceToken)}/organizer-space/${organizerSecretToken}/ratings/${talk.id}`)
                     const talkFeedbacks = await talkFeedbacksDoc.get();
                     if(!talkFeedbacks.exists) {
                         await talkFeedbacksDoc.create({});
@@ -298,7 +302,7 @@ const saveEvent = async function (event: FullEvent, crawlerDescriptor: z.infer<t
             const organizerSpaceContent = (await firestoreEvent.collection('organizer-space').doc(organizerSecretToken).get()).data() as ConferenceOrganizerSpace;
             return {organizerSecretToken, organizerSpaceContent};
         }).otherwise(async () => {
-            throw new Error(`More than 1 organizer-space entries detected (${organizerSpaceEntries.length}) for event ${event.id}`);
+            throw new Error(`More than 1 organizer-space entries detected (${organizerSpaceEntries.length}) for event ${event.id} (${spaceContext})`);
         })
 
     await Promise.all(event.daySchedules.map(async daySchedule => {
@@ -311,7 +315,7 @@ const saveEvent = async function (event: FullEvent, crawlerDescriptor: z.infer<t
         }
     }))
 
-    const talksCollectionRefBeforeUpdate = (await db.collection(`/events/${event.id}/talks`).listDocuments()) || []
+    const talksCollectionRefBeforeUpdate = (await db.collection(`/${resolvedEventFirestorePath(event.id, spaceToken)}/talks`).listDocuments()) || []
     const talkIdsHashBeforeUpdate = talksCollectionRefBeforeUpdate.map(talk => talk.id).sort().join(",")
 
     await Promise.all(event.talks.map(async talk => {
@@ -350,11 +354,11 @@ const saveEvent = async function (event: FullEvent, crawlerDescriptor: z.infer<t
         }
     }));
 
-    const talksCollectionRefAfterUpdate = (await db.collection(`/events/${event.id}/talks`).listDocuments()) || []
+    const talksCollectionRefAfterUpdate = (await db.collection(`/${resolvedEventFirestorePath(event.id, spaceToken)}/talks`).listDocuments()) || []
     const talkIdsHashAfterUpdate = talksCollectionRefAfterUpdate.map(talk => talk.id).sort().join(",")
 
     if(talkIdsHashBeforeUpdate !== talkIdsHashAfterUpdate) {
-        await eventLastUpdateRefreshed(event.id, ['talkListUpdated']);
+        await eventLastUpdateRefreshed(spaceToken, event.id, ['talkListUpdated']);
     }
 
     try {
@@ -371,7 +375,7 @@ const saveEvent = async function (event: FullEvent, crawlerDescriptor: z.infer<t
             .set(confDescriptor);
 
     }catch(e) {
-        error(`Error while storing conference descriptor ${event.conferenceDescriptor.id}: ${e?.toString()}`)
+        error(`Error while storing conference descriptor ${event.conferenceDescriptor.id} (${spaceContext}): ${e?.toString()}`)
     }
 
     try {
@@ -380,7 +384,7 @@ const saveEvent = async function (event: FullEvent, crawlerDescriptor: z.infer<t
         error(`Error while storing event's organizer-space content`)
     }
 
-    await ensureRoomsStatsFilledFor(event.id)
+    await ensureRoomsStatsFilledFor(spaceToken, event.id)
 }
 
 export default crawlAll;

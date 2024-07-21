@@ -30,13 +30,13 @@ function ensureEventBasedTokenPredicateIsValid<
   T extends PublicToken,
   E extends { eventFamily: string, eventName: string }
 >(
-  entityResolver: (eventId: string) => Promise<E>,
+  entityResolver: (eventId: string, maybeSpaceToken?: string|undefined) => Promise<E>,
   publicTokenResolver: (token: string) => Promise<T>
 ) {
-  return async (pathParams: { eventId: string }, queryParams: { token: string }) => {
+  return async (pathParams: { eventId: string, spaceToken?: string|undefined }, queryParams: { token: string }) => {
     const token = queryParams.token;
 
-    const entity = await entityResolver(pathParams.eventId);
+    const entity = await entityResolver(pathParams.eventId, pathParams.spaceToken);
     const matchingPublicToken = await publicTokenResolver(token);
 
     const validationErrorMessage = match(matchingPublicToken as PublicToken)
@@ -62,17 +62,17 @@ function ensureEventBasedTokenPredicateIsValid<
   }
 }
 
-async function resolveEventById(eventId: string): Promise<ConferenceDescriptor> {
-  const eventDescriptor = await getEventDescriptor(eventId);
+async function resolveEventById(eventId: string, maybeSpaceToken?: string|undefined): Promise<ConferenceDescriptor> {
+  const eventDescriptor = await getEventDescriptor(maybeSpaceToken, eventId);
 
   if(!eventDescriptor) {
-    throw new Error(`No event found with id ${eventId}`)
+    throw new Error(`No event found with id ${eventId} (spaceToken=${maybeSpaceToken})`)
   }
 
   return eventDescriptor;
 }
 
-async function resolveCrawlerById(eventId: string): Promise<z.infer<typeof FIREBASE_CRAWLER_DESCRIPTOR_PARSER> & {id: string}> {
+async function resolveCrawlerById(eventId: string, maybeSpaceToken?: string|undefined): Promise<z.infer<typeof FIREBASE_CRAWLER_DESCRIPTOR_PARSER> & {id: string}> {
 
   const crawlerDescriptors = await getCrawlersMatching(crawlerColl => crawlerColl.where(FieldPath.documentId(), "==", eventId))
 

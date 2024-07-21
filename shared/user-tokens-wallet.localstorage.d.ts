@@ -9,11 +9,13 @@ export type UserTokensWallet = {
 
 export type UserWalletEventOrganizerSecretToken = {
     secretToken: string;
+    spaceToken?: string|undefined;
     eventId: string;
 }
 
 export type UserWalletTalkFeedbacksViewerSecretToken = {
   secretToken: string;
+  spaceToken?: string|undefined;
   eventId: string;
   talkId: string;
 }

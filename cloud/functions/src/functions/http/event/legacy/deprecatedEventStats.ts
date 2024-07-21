@@ -13,11 +13,12 @@ export async function deprecatedEventStats(request: functions.https.Request, res
 
     const organizerSecretToken = extractSingleQueryParam(request, 'organizerSecretToken');
     const eventId = extractSingleQueryParam(request, 'eventId');
+    const spaceToken = undefined;
 
     if(!eventId) { return sendResponseMessage(response, 400, `Missing [eventId] query parameter !`) }
     if(!organizerSecretToken) { return sendResponseMessage(response, 400, `Missing either [organizerSecretToken] or [familyToken] query parameter !`) }
 
-    const { cachedHash, updatesDetected } = await checkEventLastUpdate(eventId, [
+    const { cachedHash, updatesDetected } = await checkEventLastUpdate(spaceToken, eventId, [
         root => root.favorites,
         root => root.talkListUpdated
     ], request, response)
@@ -29,10 +30,10 @@ export async function deprecatedEventStats(request: functions.https.Request, res
         const organizerSpace = await match([organizerSecretToken])
             .with([ P.nullish ], async ([_1]) => { throw new Error(`Unexpected state: (undefined,undefined)`); })
             .with([ P.not(P.nullish) ], async ([organizerSecretToken]) => {
-                return getOrganizerSpaceByToken(eventId, 'organizerSecretToken', organizerSecretToken);
+                return getOrganizerSpaceByToken(spaceToken, eventId, 'organizerSecretToken', organizerSecretToken);
             }).run()
 
-        const talksStats = await eventTalkStatsFor(eventId);
+        const talksStats = await eventTalkStatsFor(spaceToken, eventId);
 
         const perTalkStats = await Promise.all(organizerSpace.talkFeedbackViewerTokens.map(async (talkFeedbackViewerToken): Promise<TalkStats> => {
             const talkStats: TalkStats = {
