@@ -11,7 +11,7 @@ import {
 
 export function declareEventHttpRoutes(app: Express) {
   const SPACES = [
-    { pathPrefix: '', spaceTokenValidator: z.never() },
+    { pathPrefix: '', spaceTokenValidator: z.never().optional() },
     { pathPrefix: '/spaces/:spaceToken', spaceTokenValidator: z.string().min(5), },
   ] as const
 
