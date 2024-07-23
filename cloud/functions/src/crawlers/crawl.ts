@@ -17,7 +17,7 @@ import {
 import {ensureRoomsStatsFilledFor} from "../functions/firestore/services/stats-utils";
 import {getEventOrganizerToken, getFamilyOrganizerToken} from "../functions/firestore/services/publicTokens-utils";
 import {getCrawlersMatching} from "../functions/firestore/services/crawlers-utils";
-import {ListableEvent} from "../../../../shared/event-list.firestore";
+import {ListableEvent, PrivateListableEvent} from "../../../../shared/event-list.firestore";
 import {ConferenceDescriptor} from "../../../../shared/conference-descriptor.firestore";
 import {toValidFirebaseKey} from "../../../../shared/utilities/firebase.utils";
 import {
@@ -249,14 +249,17 @@ const saveEvent = async function (event: FullEvent, crawlerDescriptor: z.infer<t
     info("saving event " + event.id)
 
     const websiteUrl = (event.conferenceDescriptor.infos?.socialMedias || []).find(sm => sm.type === 'website')?.href || ""
-    const listableEvent: ListableEvent = {
+    const baseListableEvent: ListableEvent = {
       ...event.info,
       eventFamily: crawlerDescriptor.eventFamily,
       eventName: crawlerDescriptor.eventName,
       websiteUrl
     }
 
-    const [spaceToken, spaceContext] = crawlerDescriptor.visibility === 'public' ? [undefined, 'public space'] : [crawlerDescriptor.spaceToken, `private space: ${crawlerDescriptor.spaceToken}`]
+    const [spaceToken, spaceContext, listableEvent] =
+      crawlerDescriptor.visibility === 'public'
+        ? [undefined, 'public space', baseListableEvent] satisfies [string|undefined, string, ListableEvent]
+        : [crawlerDescriptor.spaceToken, `private space: ${crawlerDescriptor.spaceToken}`, {...baseListableEvent, spaceToken: crawlerDescriptor.spaceToken}] satisfies [string|undefined, string, PrivateListableEvent]
 
     await db.doc(resolvedEventFirestorePath(event.id, spaceToken)).set(listableEvent)
 

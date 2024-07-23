@@ -38,6 +38,8 @@ export type ListableEvent = {
     theming: EventTheme
 }
 
+export type PrivateListableEvent = ListableEvent & { spaceToken: string }
+
 export type EventLastUpdates = {
     favorites: ISODatetime|undefined,
     allFeedbacks: ISODatetime|undefined|null,
