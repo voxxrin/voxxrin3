@@ -26,7 +26,7 @@
         <ion-item-divider class="no-border-top">{{ LL.Pinned_events() }}</ion-item-divider>
         <pinned-event-selector
             class="pinnedEventSelector"
-            :pinned-events="filteredPinnedEvents" @event-selected="(event) => selectEvent(event.id)">
+            :pinned-events="filteredPinnedEvents" @event-selected="(event) => selectEvent(event)">
           <template #no-pinned-events>
             <no-results illu-path="images/svg/illu-list-pinned.svg">
               <template #title>{{ LL.No_pinned_events_available_yet() }}</template>
@@ -36,7 +36,7 @@
         </pinned-event-selector>
 
         <available-events-list
-            :events="filteredAvailableEvents" @event-clicked="(event) => selectEvent(event.id)"
+            :events="filteredAvailableEvents" @event-clicked="(event) => selectEvent(event)"
             :pinned-events="pinnedEventIdsRef" @event-pin-toggled="eventPinToggled">
           <template #no-event>
             <no-results illu-path="images/svg/illu-no-result.svg">
@@ -102,8 +102,8 @@ watch([availableEventsRef, searchTerms, pinnedEventIdsRef, userPreferences], ([a
     }
 }, {immediate: true})
 
-async function selectEvent(eventId: EventId) {
-    router.push(`/events/${eventId.value}`);
+async function selectEvent(event: ListableVoxxrinEvent) {
+    router.push(`${event.visibility === 'private' ? `/spaces/${event.spaceToken}`:``}/events/${event.id.value}`);
 }
 
 function searchTextUpdated(searchText: string) {

@@ -8,14 +8,17 @@ import {Replace} from "../../../shared/type-utils";
 
 export class EventId extends ValueObject<string>{ _eventIdClassDiscriminator!: never; }
 export class EventFamily extends ValueObject<string>{ _eventFamilyClassDiscriminator!: never; }
+export type ListableVoxxrinEventVisibility =
+  | { visibility: 'public' }
+  | { visibility: 'private', spaceToken: string }
 export type ListableVoxxrinEvent = Replace<ListableEvent, {
     id: EventId,
     eventFamily: EventFamily|undefined,
     days: Array<VoxxrinDay>,
     start: Temporal.ZonedDateTime,
     end: Temporal.ZonedDateTime,
-    theming: VoxxrinEventTheme
-}>
+    theming: VoxxrinEventTheme,
+} & ListableVoxxrinEventVisibility>
 
 export type VoxxrinEventTheme = Replace<EventTheme, {
     colors: EventTheme['colors'] & {
@@ -56,7 +59,7 @@ export function searchEvents(events: ListableVoxxrinEvent[], searchCriteria: { t
     }
 }
 
-export function firestoreListableEventToVoxxrinListableEvent(firestoreListableEvent: ListableEvent): ListableVoxxrinEvent {
+export function firestoreListableEventToVoxxrinListableEvent(firestoreListableEvent: ListableEvent, visibility: ListableVoxxrinEventVisibility): ListableVoxxrinEvent {
     const {start, end} = zonedDateTimeRangeOf(
         firestoreListableEvent.days.map(d => d.localDate),
         firestoreListableEvent.timezone
@@ -68,7 +71,8 @@ export function firestoreListableEventToVoxxrinListableEvent(firestoreListableEv
         days: firestoreListableEvent.days.map(d => ({...d, id: new DayId(d.id)})),
         start,
         end,
-        theming: toVoxxrinEventTheme(firestoreListableEvent.theming)
+        theming: toVoxxrinEventTheme(firestoreListableEvent.theming),
+        ...visibility
     };
 }
 
