@@ -20,8 +20,7 @@
 
     <div class="eventItem-end" slot="end">
       <ion-button class="configBtn" v-if="eventOrganizerToken" fill="clear" shape="round"
-                  :aria-label="LL.Config_event()"
-                  @click.stop="navToEventOrganizerPage()">
+                  :aria-label="LL.Config_event()">
         <ion-icon src="/assets/icons/line/settings-cog-line.svg"></ion-icon>
       </ion-button>
       <!-- TODO Fix dynamic aria-label -->
@@ -84,11 +83,6 @@ const isPinnedRef = computed(() => {
 })
 
 const eventOrganizerToken = organizerTokenRefForEvent(eventIdRef)
-
-function navToEventOrganizerPage() {
-  ionRouter.push(`/events/${eventRef.value.id.value}/asOrganizer/${eventOrganizerToken.value}`)
-}
-
 </script>
 
 <style lang="scss" scoped>
