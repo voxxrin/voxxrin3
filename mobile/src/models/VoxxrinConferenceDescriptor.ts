@@ -7,27 +7,23 @@ import {RoomId, VoxxrinRoom} from "@/models/VoxxrinRoom";
 import {
   EventFamily,
   EventId,
+  ListableVoxxrinEvent,
   ListableVoxxrinEventVisibility,
   SpacedEventId,
+  SpaceToken,
   toVoxxrinEventTheme,
 } from "@/models/VoxxrinEvent";
 import {Temporal} from "temporal-polyfill";
-import {match} from "ts-pattern";
+import {match, P} from "ts-pattern";
 import {useCurrentClock} from "@/state/useCurrentClock";
 import {toHMMDuration, zonedDateTimeRangeOf} from "@/models/DatesAndTime";
 import {Replace} from "../../../shared/type-utils";
 
-export type VoxxrinConferenceDescriptor = Replace<ConferenceDescriptor, {
-    id: EventId;
-    eventFamily: EventFamily|undefined,
-    start: Temporal.ZonedDateTime,
-    end: Temporal.ZonedDateTime,
-    days: VoxxrinDay[];
+export type VoxxrinConferenceDescriptor = Omit<ListableVoxxrinEvent, "websiteUrl"> & Replace<Omit<ConferenceDescriptor, keyof ListableVoxxrinEvent>, {
     talkFormats: VoxxrinTalkFormat[],
     talkTracks: VoxxrinTrack[],
     supportedTalkLanguages: VoxxrinLanguaceCode[],
     rooms: VoxxrinRoom[],
-    theming: VoxxrinEventTheme,
 }>;
 
 export type VoxxrinLanguaceCode = Replace<ConferenceDescriptor['supportedTalkLanguages'][number], { id: TalkLanguageCode }>;
@@ -87,7 +83,7 @@ export function createVoxxrinConferenceDescriptor(firestoreConferenceDescriptor:
             ...r,
             id: new RoomId(r.id)
         })),
-        theming: toVoxxrinEventTheme(firestoreConferenceDescriptor.theming)
+        theming: toVoxxrinEventTheme(firestoreConferenceDescriptor.theming),
     };
 
     return voxxrinConferenceDescriptor;
