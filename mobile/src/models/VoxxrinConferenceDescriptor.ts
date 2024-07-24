@@ -4,11 +4,16 @@ import {ConferenceDescriptor} from "../../../shared/conference-descriptor.firest
 import {TalkFormatId, VoxxrinTalkFormat} from "@/models/VoxxrinTalkFormat";
 import {TrackId, VoxxrinTrack} from "@/models/VoxxrinTrack";
 import {RoomId, VoxxrinRoom} from "@/models/VoxxrinRoom";
-import {EventFamily, EventId, toVoxxrinEventTheme, VoxxrinEventTheme} from "@/models/VoxxrinEvent";
+import {
+  EventFamily,
+  EventId,
+  SpacedEventId,
+  toVoxxrinEventTheme,
+} from "@/models/VoxxrinEvent";
 import {Temporal} from "temporal-polyfill";
 import {match} from "ts-pattern";
 import {useCurrentClock} from "@/state/useCurrentClock";
-import {toHMMDuration, toISOLocalDate, zonedDateTimeRangeOf} from "@/models/DatesAndTime";
+import {toHMMDuration, zonedDateTimeRangeOf} from "@/models/DatesAndTime";
 import {Replace} from "../../../shared/type-utils";
 
 export type VoxxrinConferenceDescriptor = Replace<ConferenceDescriptor, {
@@ -130,4 +135,18 @@ export function areFeedbacksEnabled(confDescriptor: VoxxrinConferenceDescriptor)
         || confDescriptor.features.ratings.bingo.enabled
         || confDescriptor.features.ratings["custom-scale"].enabled
         || confDescriptor.features.ratings["free-text"].enabled;
+}
+
+export function maybeSpacedEventIdOf(confDescriptor: VoxxrinConferenceDescriptor|undefined): SpacedEventId|undefined {
+  if(!confDescriptor) {
+    return undefined;
+  }
+
+  return spacedEventIdOf(confDescriptor);
+}
+export function spacedEventIdOf(confDescriptor: VoxxrinConferenceDescriptor): SpacedEventId {
+  return {
+    spaceToken: confDescriptor.spaceToken,
+    eventId: confDescriptor.id,
+  }
 }

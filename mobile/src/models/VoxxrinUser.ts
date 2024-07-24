@@ -1,9 +1,11 @@
 import {ValueObject} from "@/models/utils";
 import {UserPreferences} from "../../../shared/user-preferences.firestore";
-import {EventId} from "@/models/VoxxrinEvent";
+import {EventId, SpaceToken, toMaybeSpaceToken} from "@/models/VoxxrinEvent";
 import {
+  UserTokensWallet,
   UserWalletEventOrganizerSecretToken,
-  UserTokensWallet, UserWalletTalkFeedbacksViewerSecretToken, UserWalletPrivateSpaceToken
+  UserWalletPrivateSpaceToken,
+  UserWalletTalkFeedbacksViewerSecretToken
 } from "../../../shared/user-tokens-wallet.localstorage";
 import {TalkId} from "@/models/VoxxrinTalk";
 import {Replace} from "../../../shared/type-utils";
@@ -26,13 +28,16 @@ export type VoxxrinUserPreferences = Replace<UserPreferences, {
 }>
 
 export type EventOrganizerToken = Replace<UserWalletEventOrganizerSecretToken, {
-    eventId: EventId
+    eventId: EventId,
+    spaceToken: SpaceToken|undefined,
 }>
 export type TalkFeedbacksViewerToken = Replace<UserWalletTalkFeedbacksViewerSecretToken, {
     eventId: EventId,
+    spaceToken: SpaceToken|undefined,
     talkId: TalkId
 }>
 export type PrivateSpaceToken = Replace<UserWalletPrivateSpaceToken, {
+    spaceTokens: SpaceToken[]
 }>
 
 export type VoxxrinUserTokensWallet = Replace<UserTokensWallet, {
@@ -56,19 +61,22 @@ export function toVoxxrinUserTokensWallet(rawUserTokensWallet: UserTokensWallet)
 export function toVoxxrinUserWalletEventOrganizerSecretToken(raw: UserWalletEventOrganizerSecretToken): EventOrganizerToken {
   return {
     ...raw,
-    eventId: new EventId(raw.eventId)
+    eventId: new EventId(raw.eventId),
+    spaceToken: toMaybeSpaceToken(raw.spaceToken),
   }
 }
 export function toVoxxrinUserWalletTalkFeedbacksViewerToken(raw: UserWalletTalkFeedbacksViewerSecretToken): TalkFeedbacksViewerToken {
   return {
     ...raw,
     eventId: new EventId(raw.eventId),
+    spaceToken: toMaybeSpaceToken(raw.spaceToken),
     talkId: new TalkId(raw.talkId),
   }
 }
 export function toVoxxrinUserWalletPrivateSpaceToken(raw: UserWalletPrivateSpaceToken): PrivateSpaceToken {
   return {
     ...raw,
+    spaceTokens: raw.spaceTokens.map(spaceToken => new SpaceToken(spaceToken))
   }
 }
 
@@ -85,7 +93,8 @@ export function toRawUserTokensWallet(voxxrinUserTokensWallet: VoxxrinUserTokens
 export function toRawUserWalletEventOrganizerSecretToken(voxxrin: EventOrganizerToken): UserWalletEventOrganizerSecretToken {
   return {
     ...voxxrin,
-    eventId: voxxrin.eventId.value
+    eventId: voxxrin.eventId.value,
+    spaceToken: voxxrin.spaceToken?.value,
   }
 }
 
@@ -93,6 +102,7 @@ export function toRawUserWalletTalkFeedbacksViewerSecretToken(voxxrin: TalkFeedb
   return {
     ...voxxrin,
     eventId: voxxrin.eventId.value,
+    spaceToken: voxxrin.spaceToken?.value,
     talkId: voxxrin.talkId.value,
   }
 }
@@ -100,5 +110,6 @@ export function toRawUserWalletTalkFeedbacksViewerSecretToken(voxxrin: TalkFeedb
 export function toRawUserWalletPrivateSpaceToken(voxxrin: PrivateSpaceToken): UserWalletPrivateSpaceToken {
   return {
     ...voxxrin,
+    spaceTokens: voxxrin.spaceTokens.map(st => st.value),
   }
 }

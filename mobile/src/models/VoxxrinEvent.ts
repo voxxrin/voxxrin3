@@ -7,6 +7,23 @@ import {zonedDateTimeRangeOf} from "@/models/DatesAndTime";
 import {Replace} from "../../../shared/type-utils";
 
 export class EventId extends ValueObject<string>{ _eventIdClassDiscriminator!: never; }
+export class SpaceToken extends ValueObject<string>{ _spaceIdClassDiscriminator!: never; }
+export function toMaybeSpaceToken(maybeValue: string|undefined): SpaceToken|undefined {
+  return maybeValue ? new SpaceToken(maybeValue) : undefined;
+}
+export type SpacedEventId = {
+  spaceToken: SpaceToken|undefined,
+  eventId: EventId,
+}
+export function stringifySpacedEventId(spacedEventId: SpacedEventId|undefined) {
+  return `{spaceToken:${spacedEventId?.spaceToken?.value}, eventId: ${spacedEventId?.eventId?.value}}`
+}
+export function toSpacedEventId(eventId: EventId, maybeSpaceToken: SpaceToken|undefined): SpacedEventId {
+  return {
+    spaceToken: maybeSpaceToken,
+    eventId,
+  }
+}
 export class EventFamily extends ValueObject<string>{ _eventFamilyClassDiscriminator!: never; }
 export type ListableVoxxrinEventVisibility =
   | { visibility: 'public' }
