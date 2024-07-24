@@ -7,6 +7,7 @@ import {RoomId, VoxxrinRoom} from "@/models/VoxxrinRoom";
 import {
   EventFamily,
   EventId,
+  ListableVoxxrinEventVisibility,
   SpacedEventId,
   toVoxxrinEventTheme,
 } from "@/models/VoxxrinEvent";
@@ -54,8 +55,13 @@ export function createVoxxrinConferenceDescriptor(firestoreConferenceDescriptor:
         firestoreConferenceDescriptor.timezone
     );
 
+    const visibility: ListableVoxxrinEventVisibility = match(firestoreConferenceDescriptor)
+      .with({visibility: 'private', spaceToken: P.string }, (_vis) => ({ visibility: 'private' as const, spaceToken: new SpaceToken(_vis.spaceToken) }))
+      .otherwise(() => ({ visibility: 'public' as const, spaceToken: undefined }))
+
     const voxxrinConferenceDescriptor: VoxxrinConferenceDescriptor = {
         ...firestoreConferenceDescriptor,
+        ...visibility,
         id: new EventId(firestoreConferenceDescriptor.id),
         eventFamily: firestoreConferenceDescriptor.eventFamily===undefined?undefined:new EventFamily(firestoreConferenceDescriptor.eventFamily),
         start,

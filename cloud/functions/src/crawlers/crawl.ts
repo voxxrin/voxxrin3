@@ -17,7 +17,7 @@ import {
 import {ensureRoomsStatsFilledFor} from "../functions/firestore/services/stats-utils";
 import {getEventOrganizerToken, getFamilyOrganizerToken} from "../functions/firestore/services/publicTokens-utils";
 import {getCrawlersMatching} from "../functions/firestore/services/crawlers-utils";
-import {ListableEvent, PrivateListableEvent} from "../../../../shared/event-list.firestore";
+import {ListableEvent} from "../../../../shared/event-list.firestore";
 import {ConferenceDescriptor} from "../../../../shared/conference-descriptor.firestore";
 import {toValidFirebaseKey} from "../../../../shared/utilities/firebase.utils";
 import {
@@ -250,17 +250,17 @@ const saveEvent = async function (event: FullEvent, crawlerDescriptor: z.infer<t
     info("saving event " + event.id)
 
     const websiteUrl = (event.conferenceDescriptor.infos?.socialMedias || []).find(sm => sm.type === 'website')?.href || ""
-    const baseListableEvent: ListableEvent = {
+    const baseListableEvent = {
       ...event.info,
       eventFamily: crawlerDescriptor.eventFamily,
       eventName: crawlerDescriptor.eventName,
-      websiteUrl
-    }
+      websiteUrl,
+    } as const
 
-    const [spaceToken, spaceContext, listableEvent] =
+    const [spaceToken, spaceContext, listableEvent]: [string|undefined, string, ListableEvent] =
       crawlerDescriptor.visibility === 'public'
-        ? [undefined, 'public space', baseListableEvent] satisfies [string|undefined, string, ListableEvent]
-        : [crawlerDescriptor.spaceToken, `private space: ${crawlerDescriptor.spaceToken}`, {...baseListableEvent, spaceToken: crawlerDescriptor.spaceToken}] satisfies [string|undefined, string, PrivateListableEvent]
+        ? [undefined, 'public space', { ...baseListableEvent, visibility: 'public' }]
+        : [crawlerDescriptor.spaceToken, `private space: ${crawlerDescriptor.spaceToken}`, {...baseListableEvent, visibility: 'private', spaceToken: crawlerDescriptor.spaceToken}]
 
     await db.doc(resolvedEventFirestorePath(event.id, spaceToken)).set(listableEvent)
 

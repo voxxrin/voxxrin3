@@ -5,6 +5,7 @@ import {Temporal} from "temporal-polyfill";
 import {useCurrentClock} from "@/state/useCurrentClock";
 import {zonedDateTimeRangeOf} from "@/models/DatesAndTime";
 import {Replace} from "../../../shared/type-utils";
+import {match} from "ts-pattern";
 
 export class EventId extends ValueObject<string>{ _eventIdClassDiscriminator!: never; }
 export class SpaceToken extends ValueObject<string>{ _spaceIdClassDiscriminator!: never; }
@@ -26,8 +27,8 @@ export function toSpacedEventId(eventId: EventId, maybeSpaceToken: SpaceToken|un
 }
 export class EventFamily extends ValueObject<string>{ _eventFamilyClassDiscriminator!: never; }
 export type ListableVoxxrinEventVisibility =
-  | { visibility: 'public' }
-  | { visibility: 'private', spaceToken: string }
+  | { visibility: 'public', spaceToken: undefined }
+  | { visibility: 'private', spaceToken: SpaceToken }
 export type ListableVoxxrinEvent = Replace<ListableEvent, {
     id: EventId,
     eventFamily: EventFamily|undefined,
@@ -76,11 +77,17 @@ export function searchEvents(events: ListableVoxxrinEvent[], searchCriteria: { t
     }
 }
 
-export function firestoreListableEventToVoxxrinListableEvent(firestoreListableEvent: ListableEvent, visibility: ListableVoxxrinEventVisibility): ListableVoxxrinEvent {
+export function firestoreListableEventToVoxxrinListableEvent(firestoreListableEvent: ListableEvent): ListableVoxxrinEvent {
     const {start, end} = zonedDateTimeRangeOf(
         firestoreListableEvent.days.map(d => d.localDate),
         firestoreListableEvent.timezone
     );
+
+    const visibility: ListableVoxxrinEventVisibility = match(firestoreListableEvent)
+      .with({ visibility: 'public' }, (event) => ({ visibility: 'public' as const, spaceToken: undefined }))
+      .with({ visibility: 'private' }, (event) => ({ visibility: 'private' as const, spaceToken: new SpaceToken(event.spaceToken) }))
+      .exhaustive()
+
     return {
         ...firestoreListableEvent,
         id: new EventId(firestoreListableEvent.id),
@@ -89,7 +96,7 @@ export function firestoreListableEventToVoxxrinListableEvent(firestoreListableEv
         start,
         end,
         theming: toVoxxrinEventTheme(firestoreListableEvent.theming),
-        ...visibility
+        ...visibility,
     };
 }
 
