@@ -296,6 +296,7 @@ export const FULL_EVENT_PARSER = z.object({
 })
 
 const firebaseCrawlerDescriptorParserBase = z.object({
+    eventId: z.string().optional(),
     eventFamily: z.string(),
     eventName: z.string(),
     descriptorUrl: z.string(),

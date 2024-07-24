@@ -114,32 +114,33 @@ const crawlAll = async function(criteria: CrawlCriteria) {
     }
 
     return await Promise.all(matchingCrawlerDescriptors.map(async crawlerDescriptor => {
+        const eventId = crawlerDescriptor.eventId || crawlerDescriptor.id;
         try {
             const start = Temporal.Now.instant()
 
             const crawler = await resolveCrawler(crawlerDescriptor.kind);
             if(!crawler) {
-                throw new Error(`Error: no crawler found for kind: ${crawlerDescriptor.kind} (with id=${crawlerDescriptor.id})`)
+                throw new Error(`Error: no crawler found for kind: ${crawlerDescriptor.kind} (with id=${eventId})`)
             }
 
-            info(`crawling event ${crawlerDescriptor.id} of type [${crawlerDescriptor.kind}]...`)
+            info(`crawling event ${eventId} of type [${crawlerDescriptor.kind}]...`)
             const crawlerDescriptorContent = await http.get(crawlerDescriptor.descriptorUrl)
             const crawlerKindDescriptor = crawler.descriptorParser.parse(crawlerDescriptorContent);
 
-            const event = await crawler.crawlerImpl(crawlerDescriptor.id, crawlerKindDescriptor, { dayIds: criteria.dayIds });
+            const event = await crawler.crawlerImpl(eventId, crawlerKindDescriptor, { dayIds: criteria.dayIds });
             const messages = sanityCheckEvent(event);
             await saveEvent(event, crawlerDescriptor)
 
             const end = Temporal.Now.instant()
             return {
-                eventId: crawlerDescriptor.id,
+                eventId,
                 days: event.daySchedules.map(ds => ds.day),
                 descriptorUrlUsed: crawlerDescriptor.descriptorUrl,
                 durationInSeconds: start.until(end).total('seconds'),
                 messages
             }
         } catch(e: any) {
-          const baseMessage = `Error during crawler with id ${crawlerDescriptor.id}`;
+          const baseMessage = `Error during crawler with id ${eventId}`;
           // const err = Error("")
           // err.
           const errMessage = match(e).with(P.instanceOf(Error), (err) => {
