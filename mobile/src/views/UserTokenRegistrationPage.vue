@@ -9,7 +9,8 @@ import {useRoute} from "vue-router";
 import {match} from "ts-pattern";
 import {useUserTokensWallet} from "@/state/useUserTokensWallet";
 import {Logger} from "@/services/Logger";
-import {raw} from "@fcamblor/concurrently/dist/src/defaults";
+import {getResolvedEventRootPath} from "@/services/Spaces";
+import {EventId, toMaybeSpaceToken} from "@/models/VoxxrinEvent";
 
 const LOGGER = Logger.named("UserTokenRegistrationPage");
 
@@ -32,11 +33,12 @@ onMounted(async () => {
 
             if(!eventId) { alert("Missing event id !"); return { success: false, redirectTo: undefined }; }
 
+            const spaceToken = rawSpaceToken || undefined;
             await registerEventOrganizerSecretToken({
-                secretToken, spaceToken: rawSpaceToken || undefined, eventId
+                secretToken, spaceToken, eventId
             })
 
-            return { success: true, redirectTo: `/events/${eventId}/asOrganizer/${secretToken}` };
+            return { success: true, redirectTo: `${getResolvedEventRootPath(new EventId(eventId), toMaybeSpaceToken(spaceToken))}/asOrganizer/${secretToken}` };
         }).with('TalkFeedbacksViewer', async () => {
             const rawSpaceToken = route.query['spaceToken'] as string|undefined;
             const eventId = route.query['eventId'] as string;

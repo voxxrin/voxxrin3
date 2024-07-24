@@ -1,30 +1,29 @@
-import {
-  createVoxxrinDetailedTalkFromFirestore,
-  TalkId, VoxxrinTalk,
-} from "@/models/VoxxrinTalk";
+import {createVoxxrinDetailedTalkFromFirestore, TalkId, VoxxrinTalk,} from "@/models/VoxxrinTalk";
 import {computed, Ref, unref, watch} from "vue";
 import {DetailedTalk} from "../../../shared/daily-schedule.firestore";
-import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
-import {collection, doc, DocumentReference, getDoc} from "firebase/firestore";
+import {maybeSpacedEventIdOf, spacedEventIdOf, VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
+import {doc, DocumentReference, getDoc} from "firebase/firestore";
 import {db} from "@/state/firebase";
-import {
-    deferredVuefireUseDocument
-} from "@/views/vue-utils";
+import {deferredVuefireUseDocument} from "@/views/vue-utils";
 import {createSharedComposable} from "@vueuse/core";
-import {EventId} from "@/models/VoxxrinEvent";
+import {SpacedEventId} from "@/models/VoxxrinEvent";
 import {Logger, PERF_LOGGER} from "@/services/Logger";
 import {DayId} from "@/models/VoxxrinDay";
 import {Temporal} from "temporal-polyfill";
 import {checkCache, preloadPicture} from "@/services/Cachings";
 import {CompletablePromiseQueue} from "@/models/utils";
+import {resolvedEventFirestorePath} from "../../../shared/utilities/event-utils";
 
 
-function getTalkDetailsRef(eventId: EventId|undefined, talkId: TalkId|undefined) {
-    if(!eventId || !eventId.value || !talkId || !talkId.value) {
+function getTalkDetailsRef(spacedEventId: SpacedEventId|undefined, talkId: TalkId|undefined) {
+    if(!spacedEventId || !spacedEventId.eventId || !spacedEventId.eventId.value || !talkId || !talkId.value) {
         return undefined;
     }
 
-    return doc(collection(doc(collection(db, 'events'), eventId.value), 'talks'), talkId.value) as DocumentReference<DetailedTalk>;
+    return doc(
+      db,
+      `${resolvedEventFirestorePath(spacedEventId.eventId.value, spacedEventId.spaceToken?.value)}/talks/${talkId.value}`
+    ) as DocumentReference<DetailedTalk>;
 }
 
 export function useEventTalk(
@@ -40,7 +39,7 @@ export function useEventTalk(
     }, {immediate: true})
 
     const firestoreTalkDetailsRef = deferredVuefireUseDocument([conferenceDescriptorRef, talkIdRef],
-        ([conferenceDescriptor, talkId]) => getTalkDetailsRef(conferenceDescriptor?.id, talkId))
+        ([conferenceDescriptor, talkId]) => getTalkDetailsRef(maybeSpacedEventIdOf(conferenceDescriptor), talkId))
 
     return {
         talkDetails: computed(() => {
@@ -65,7 +64,7 @@ export async function prepareEventTalk(
     queuePriority: number
 ) {
 
-  const talkDetailsRef = getTalkDetailsRef(conferenceDescriptor.id, talk.id);
+  const talkDetailsRef = getTalkDetailsRef(spacedEventIdOf(conferenceDescriptor), talk.id);
   if(talkDetailsRef) {
     await getDoc(talkDetailsRef);
     PERF_LOGGER.debug(`getDoc(${talkDetailsRef.path})`)

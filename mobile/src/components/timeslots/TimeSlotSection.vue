@@ -14,7 +14,7 @@
 
 <script setup lang="ts">
 import {PropType} from "vue";
-import {managedRef as ref, toManagedRef as toRef} from "@/views/vue-utils";
+import {managedRef as ref} from "@/views/vue-utils";
 import {
   getTimeslotLabel,
   getTimeslotTimingProgress,
@@ -22,13 +22,8 @@ import {
   VoxxrinScheduleTimeSlot
 } from "@/models/VoxxrinSchedule";
 import {watchClock} from "@/state/useCurrentClock";
-import {
-    VoxxrinConferenceDescriptor
-} from "@/models/VoxxrinConferenceDescriptor";
+import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {typesafeI18n} from "@/i18n/i18n-vue";
-import {
-    useSharedConferenceDescriptor
-} from "@/state/useConferenceDescriptor";
 import SlotOverlaps from "@/components/schedule/SlotOverlaps.vue";
 
 const props = defineProps({
@@ -46,8 +41,6 @@ defineEmits<{
 }>()
 
 const { LL } = typesafeI18n()
-
-const { conferenceDescriptor } = useSharedConferenceDescriptor(toRef(() => props.confDescriptor?.id));
 
 const progress = ref<TimeslotTimingProgress>()
 watchClock({ freq: "high-frequency" }, (now) => {

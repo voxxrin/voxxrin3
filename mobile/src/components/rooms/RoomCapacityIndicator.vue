@@ -67,12 +67,12 @@ import {computed, PropType, toRef, toValue} from "vue";
 import {IonAlert, IonIcon} from "@ionic/vue";
 import {VoxxrinTalk} from "@/models/VoxxrinTalk";
 import {VoxxrinRoomStats, VoxxrinUnknownRoomStats} from "@/models/VoxxrinRoomStats";
-import {managedRef as ref, useInterval} from "@/views/vue-utils";
+import {managedRef as ref} from "@/views/vue-utils";
 import {watchClock} from "@/state/useCurrentClock";
-import {sad, helpCircleOutline} from "ionicons/icons";
+import {helpCircleOutline, sad} from "ionicons/icons";
 import {match, P} from "ts-pattern";
 import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
-import {EventId} from "@/models/VoxxrinEvent";
+import {SpacedEventId} from "@/models/VoxxrinEvent";
 import {Temporal} from "temporal-polyfill";
 
 const { LL } = typesafeI18n()
@@ -86,9 +86,9 @@ const LEVELS = {
 } as const;
 
 const props = defineProps({
-  eventId: {
+  spacedEventId: {
     required: true,
-    type: Object as PropType<EventId>
+    type: Object as PropType<SpacedEventId>
   },
   talk: {
     required: true,
@@ -161,7 +161,7 @@ const sinceLabelRef = computed(() => {
   } as const;
 })
 
-const { conferenceDescriptor: confDescriptorRef } = useSharedConferenceDescriptor(toRef(() => props.eventId))
+const { conferenceDescriptor: confDescriptorRef } = useSharedConferenceDescriptor(toRef(() => props.spacedEventId))
 const roomCapacityIndicatorShownRef = computed(() => {
   const capacityStatus = toValue(capacityStatusRef),
     showUnknownCapacity = toValue(() => props.showUnknownCapacity),

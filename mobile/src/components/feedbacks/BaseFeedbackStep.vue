@@ -37,10 +37,7 @@ import {LabelledTimeslot} from "@/state/findTimeslot";
 import StepHeader from "@/components/feedbacks/StepHeader.vue";
 import {useIonRouter} from "@ionic/vue";
 import {goBackOrNavigateTo} from "@/router";
-import {useRoute} from "vue-router";
-import {ref} from "vue/dist/vue";
-import {EventId} from "@/models/VoxxrinEvent";
-import {getRouteParamsValue} from "@/views/vue-utils";
+import {getResolvedEventRootPathFromSpacedEventIdRef, useCurrentSpaceEventIdRef} from "@/services/Spaces";
 
 const props = defineProps({
     step: {
@@ -63,12 +60,11 @@ const props = defineProps({
 
 const { LL } = typesafeI18n()
 
-const route = useRoute();
-const eventId = new EventId(getRouteParamsValue(route, 'eventId'));
+const spacedEventIdRef = useCurrentSpaceEventIdRef()
 
 const ionRouter = useIonRouter();
 function backButtonClicked() {
-    goBackOrNavigateTo(ionRouter, `/events/${eventId.value}`)
+    goBackOrNavigateTo(ionRouter, `${getResolvedEventRootPathFromSpacedEventIdRef(spacedEventIdRef)}`)
 }
 </script>
 

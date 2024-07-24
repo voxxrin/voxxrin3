@@ -37,7 +37,7 @@ import {computed, PropType, Ref, toValue} from "vue";
 import {managedRef as ref, toManagedRef as toRef} from "@/views/vue-utils";
 import {TalkId, VoxxrinTalk} from "@/models/VoxxrinTalk";
 import TalkFormatGroupsBreakdown from "@/components/schedule/TalkFormatGroupsBreakdown.vue";
-import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
+import {spacedEventIdOf, VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import TalkWatchLaterButton from "@/components/talk-card/TalkWatchLaterButton.vue";
 import TalkSelectForFeedback from "@/components/talk-card/TalkSelectForFeedback.vue";
@@ -73,12 +73,12 @@ const emits = defineEmits<{
     (e: 'talk-deselected', talk: VoxxrinTalk): void,
 }>()
 
-const eventId = toRef(() => props.confDescriptor?.id);
+const spacedEventId = toRef(() => spacedEventIdOf(props.confDescriptor));
 const feedbackableTalksRef = computed(() => props.talks?.filter(t => !t.isOverflow) || [])
 const talkIdsRef = computed(() => feedbackableTalksRef.value.map(talk => talk.id));
 
-const {firestoreEventTalkStatsRef: talkStatsRefByTalkId} = useEventTalkStats(eventId, talkIdsRef)
-const {userEventTalkNotesRef: userTalkNotesRefByTalkIdRef} = useUserEventTalkNotes(eventId, talkIdsRef)
+const {firestoreEventTalkStatsRef: talkStatsRefByTalkId} = useEventTalkStats(spacedEventId, talkIdsRef)
+const {userEventTalkNotesRef: userTalkNotesRefByTalkIdRef} = useUserEventTalkNotes(spacedEventId, talkIdsRef)
 
 function updateSelected(talk: VoxxrinTalk) {
     if(talk.id.isSameThan(props.selectedTalkId)) {

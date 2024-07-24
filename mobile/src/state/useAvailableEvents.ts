@@ -1,17 +1,12 @@
-import {
-  EventFamily,
-  firestoreListableEventToVoxxrinListableEvent, ListableVoxxrinEvent,
-} from "@/models/VoxxrinEvent";
-import {ListableEvent, PrivateListableEvent} from "../../../shared/event-list.firestore";
+import {EventFamily, firestoreListableEventToVoxxrinListableEvent,} from "@/models/VoxxrinEvent";
+import {ListableEvent} from "../../../shared/event-list.firestore";
 import {sortBy, toCollectionReferenceArray} from "@/models/utils";
 import {computed, unref} from "vue";
 import {collection, CollectionReference} from "firebase/firestore";
 import {db} from "@/state/firebase";
 import {Logger, PERF_LOGGER} from "@/services/Logger";
 import {useOverridenListableEventProperties} from "@/state/useDevUtilities";
-import {
-    deferredVuefireUseCollection
-} from "@/views/vue-utils";
+import {deferredVuefireUseCollection} from "@/views/vue-utils";
 import {match} from "ts-pattern";
 import {useUserTokensWallet} from "@/state/useUserTokensWallet";
 import {resolvedEventsFirestorePath} from "../../../shared/utilities/event-utils";
@@ -48,7 +43,7 @@ export function useAvailableEvents(eventFamilies: EventFamily[]) {
       return spaceTokens;
     })
     const firestorePrivateListableEventsRef = deferredVuefireUseCollection([ firestorePrivateSpaceTokensRef ],
-        ([firestorePrivateSpaceTokens]) => (firestorePrivateSpaceTokens || []).map(spaceId => collection(db, resolvedEventsFirestorePath(spaceId)) as CollectionReference<PrivateListableEvent>),
+        ([firestorePrivateSpaceTokens]) => (firestorePrivateSpaceTokens || []).map(spaceId => collection(db, resolvedEventsFirestorePath(spaceId.value)) as CollectionReference<ListableEvent>),
         firestoreEvent => firestoreEvent,
         () => {},
         (change, docId, collectionRef) => {
@@ -72,16 +67,11 @@ export function useAvailableEvents(eventFamilies: EventFamily[]) {
             }
 
             const filteredVoxxrinListableEvents =
-              ([] as ListableVoxxrinEvent[])
-                .concat(
-                  Array.from(firestoreListableEvents.values())
-                    .filter(validListableEventPredicate)
-                    .map(publicEvent => firestoreListableEventToVoxxrinListableEvent(publicEvent, {visibility: 'public'}))
-                ).concat(
-                  Array.from(firestorePrivateListableEvents.values())
-                    .filter(validListableEventPredicate)
-                    .map(privateEvent => firestoreListableEventToVoxxrinListableEvent(privateEvent, { visibility: 'private', spaceToken: privateEvent.spaceToken }))
-                );
+              ([] as ListableEvent[])
+                .concat(Array.from(firestoreListableEvents.values()))
+                .concat(Array.from(firestorePrivateListableEvents.values()))
+                .filter(validListableEventPredicate)
+                .map(firestoreListableEventToVoxxrinListableEvent)
 
             const availableSortedEvents = sortBy(filteredVoxxrinListableEvents,event => -event.start.epochMilliseconds);
 

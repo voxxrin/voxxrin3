@@ -115,24 +115,11 @@
 </template>
 
 <script setup lang="ts">
-import {
-  IonFabButton,
-  IonFab,
-  IonFabList,
-  IonAccordionGroup,
-  IonInput, modalController,
-  IonToast
-} from '@ionic/vue';
-import {useRoute} from "vue-router";
-import {computed, onMounted, Ref, toValue, watch, nextTick} from "vue";
-import {managedRef as ref} from "@/views/vue-utils";
-import {
-  LabelledTimeslotWithFeedback,
-  useSchedule
-} from "@/state/useSchedule";
+import {IonAccordionGroup, IonFab, IonFabButton, IonFabList, IonInput, IonToast, modalController} from '@ionic/vue';
+import {computed, nextTick, Ref, toValue, watch} from "vue";
+import {isRefDefined, managedRef as ref} from "@/views/vue-utils";
+import {LabelledTimeslotWithFeedback, useSchedule} from "@/state/useSchedule";
 import CurrentEventHeader from "@/components/events/CurrentEventHeader.vue";
-import {getRouteParamsValue, isRefDefined} from "@/views/vue-utils";
-import {EventId} from "@/models/VoxxrinEvent";
 import {VoxxrinDay} from "@/models/VoxxrinDay";
 import {
   extractTalksFromSchedule,
@@ -140,9 +127,7 @@ import {
   VoxxrinScheduleTimeSlot
 } from "@/models/VoxxrinSchedule";
 import DaySelector from "@/components/schedule/DaySelector.vue";
-import {
-    areFeedbacksEnabled,
-} from "@/models/VoxxrinConferenceDescriptor";
+import {areFeedbacksEnabled,} from "@/models/VoxxrinConferenceDescriptor";
 import TimeSlotAccordion from "@/components/timeslots/TimeSlotAccordion.vue";
 import {useCurrentClock} from "@/state/useCurrentClock";
 import {typesafeI18n} from "@/i18n/i18n-vue";
@@ -157,19 +142,16 @@ import TalkFavoriteButton from "@/components/talk-card/TalkFavoriteButton.vue";
 import TalkFormatGroupsBreakdown from "@/components/schedule/TalkFormatGroupsBreakdown.vue";
 import {VoxxrinTalk} from "@/models/VoxxrinTalk";
 import {useSharedEventSelectedDay} from "@/state/useEventSelectedDay";
-import {useUserTokensWallet} from "@/state/useUserTokensWallet";
 import {Logger} from "@/services/Logger";
 import {useCurrentUser} from "vuefire";
 import {TimeslotAnimations} from "@/services/Animations";
 import {useEventTalkStats} from "@/state/useEventTalkStats";
 import TalkWatchLaterButton from "@/components/talk-card/TalkWatchLaterButton.vue";
-import {
-  useLocalEventTalkFavsStorage,
-  useUserEventTalkNotes
-} from "@/state/useUserTalkNotes";
+import {useLocalEventTalkFavsStorage, useUserEventTalkNotes} from "@/state/useUserTalkNotes";
 import ProvideFeedbackTalkButton from "@/components/talk-card/ProvideFeedbackTalkButton.vue";
 import PoweredVoxxrin from "@/components/ui/PoweredVoxxrin.vue";
 import {useRoomsStats} from "@/state/useRoomsStats";
+import {getResolvedEventRootPathFromSpacedEventIdRef, useCurrentSpaceEventIdRef} from "@/services/Spaces";
 
 const LOGGER = Logger.named("SchedulePage");
 
@@ -186,13 +168,12 @@ const props = defineProps({
     }
 })
 
-const route = useRoute();
-const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')));
-const {conferenceDescriptor: confDescriptor} = useSharedConferenceDescriptor(eventId);
+const spacedEventId = useCurrentSpaceEventIdRef()
+const {conferenceDescriptor: confDescriptor} = useSharedConferenceDescriptor(spacedEventId);
 
 const { LL } = typesafeI18n()
 
-const {selectedDayId} = useSharedEventSelectedDay(eventId);
+const {selectedDayId} = useSharedEventSelectedDay(spacedEventId);
 
 const user = useCurrentUser()
 
@@ -212,15 +193,15 @@ const talkIdsRef = computed(() => {
     return schedule ? extractTalksFromSchedule(schedule).map(talk => talk.id) : [];
 })
 
-const {firestoreEventTalkStatsRef: talkStatsRefByTalkId} = useEventTalkStats(eventId, talkIdsRef)
-const {userEventTalkNotesRef} = useUserEventTalkNotes(eventId, talkIdsRef)
-const localEventTalkNotesRef = useLocalEventTalkFavsStorage(eventId)
-const {firestoreRoomsStatsRef: roomsStatsRefByRoomId } = useRoomsStats(eventId)
+const {firestoreEventTalkStatsRef: talkStatsRefByTalkId} = useEventTalkStats(spacedEventId, talkIdsRef)
+const {userEventTalkNotesRef} = useUserEventTalkNotes(spacedEventId, talkIdsRef)
+const localEventTalkNotesRef = useLocalEventTalkFavsStorage(spacedEventId)
+const {firestoreRoomsStatsRef: roomsStatsRefByRoomId } = useRoomsStats(spacedEventId)
 
 const displayedTimeslotsRef = ref<LabelledTimeslotWithFeedback[]>([]) as Ref<LabelledTimeslotWithFeedback[]>;
 
-const {talkFeedbackViewerTokensRefForEvent} = useUserTokensWallet();
-const talkFeedbackViewerTokensRef = talkFeedbackViewerTokensRefForEvent(eventId);
+// const {talkFeedbackViewerTokensRefForEvent} = useUserTokensWallet();
+// const talkFeedbackViewerTokensRef = talkFeedbackViewerTokensRefForEvent(spacedEventId);
 
 const missingFeedbacksPastTimeslots = ref<MissingFeedbackPastTimeslot[]>([])
 const expandedTimeslotIds = ref<string[]>([])
@@ -251,11 +232,11 @@ watch([selectedDayId], ([updatedDayId]) => {
 const { triggerTabbedPageNavigate } = useTabbedPageNav();
 
 async function navigateToTimeslotFeedbackCreation(timeslot: VoxxrinScheduleTimeSlot) {
-    triggerTabbedPageNavigate(`/events/${eventId.value.value}/new-feedback-for-timeslot/${timeslot.id.value}`, "forward", "push");
+    triggerTabbedPageNavigate(`${getResolvedEventRootPathFromSpacedEventIdRef(spacedEventId)}/new-feedback-for-timeslot/${timeslot.id.value}`, "forward", "push");
 }
 
 async function navigateToTalkRatingScreenFor(talk: VoxxrinTalk) {
-    triggerTabbedPageNavigate(`/events/${eventId.value.value}/rate-talk/${talk.id.value}`, "forward", "push");
+    triggerTabbedPageNavigate(`${getResolvedEventRootPathFromSpacedEventIdRef(spacedEventId)}/rate-talk/${talk.id.value}`, "forward", "push");
 }
 
 async function openTalkDetails(talk: VoxxrinTalk) {
@@ -265,7 +246,7 @@ async function openTalkDetails(talk: VoxxrinTalk) {
         // const url = talkFeedbackViewerToken
         //   ?`/events/${eventId.value.value}/talks/${talk.id.value}/asFeedbackViewer/${talkFeedbackViewerToken.secretToken}/details`
         //   :`/events/${eventId.value.value}/talks/${talk.id.value}/details`
-        const url = `/events/${eventId.value.value}/talks/${talk.id.value}/details`
+        const url = `${getResolvedEventRootPathFromSpacedEventIdRef(spacedEventId)}/talks/${talk.id.value}/details`
 
         triggerTabbedPageNavigate(url, "forward", "push");
     }

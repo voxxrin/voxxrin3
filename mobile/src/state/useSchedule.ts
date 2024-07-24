@@ -2,31 +2,29 @@ import {computed, Ref, unref, watch} from "vue";
 import {deferredVuefireUseDocument, managedRef as ref} from "@/views/vue-utils";
 import {DailySchedule} from "../../../shared/daily-schedule.firestore";
 import {
-  createVoxxrinDailyScheduleFromFirestore, extractTalksFromSchedule,
-  getTimeslotLabel, toFilteredLabelledTimeslotWithFeedback,
+  createVoxxrinDailyScheduleFromFirestore,
+  getTimeslotLabel,
+  toFilteredLabelledTimeslotWithFeedback,
   VoxxrinDailySchedule,
   VoxxrinScheduleTimeSlot,
 } from "@/models/VoxxrinSchedule";
 import {DayId} from "@/models/VoxxrinDay";
-import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
-import {DocumentReference, doc, collection, getDoc} from "firebase/firestore";
+import {spacedEventIdOf, VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
+import {doc, DocumentReference, getDoc} from "firebase/firestore";
 import {db} from "@/state/firebase";
 import {prepareEventTalk} from "@/state/useEventTalk";
 import {prepareTalkStats} from "@/state/useEventTalkStats";
 import {prepareUserTalkNotes} from "@/state/useUserTalkNotes";
-import {
-  createVoxxrinTalkFromFirestore,
-  removeTalkOverflowsAndDuplicates,
-  VoxxrinTalk
-} from "@/models/VoxxrinTalk";
+import {createVoxxrinTalkFromFirestore, removeTalkOverflowsAndDuplicates, VoxxrinTalk} from "@/models/VoxxrinTalk";
 import {VoxxrinTimeslotFeedback} from "@/models/VoxxrinFeedback";
 import {UserDailyFeedbacks} from "../../../shared/feedbacks.firestore";
 import {PERF_LOGGER} from "@/services/Logger";
-import { User } from 'firebase/auth';
+import {User} from 'firebase/auth';
 import {CompletablePromiseQueue} from "@/models/utils";
 import {match, P} from "ts-pattern";
 import {checkCache} from "@/services/Cachings";
 import {Temporal} from "temporal-polyfill";
+import {resolvedEventFirestorePath} from "../../../shared/utilities/event-utils";
 
 export function useSchedule(
             conferenceDescriptorRef: Ref<VoxxrinConferenceDescriptor | undefined>,
@@ -63,7 +61,10 @@ export function dailyScheduleDocument(eventDescriptor: VoxxrinConferenceDescript
         return undefined;
     }
 
-    return doc(collection(doc(collection(db, 'events'), eventDescriptor.id.value), 'days'), dayId.value) as DocumentReference<DailySchedule>;
+    return doc(
+      db,
+      `${resolvedEventFirestorePath(eventDescriptor.id.value, eventDescriptor.spaceToken?.value)}/days/${dayId.value}`
+    ) as DocumentReference<DailySchedule>;
 }
 
 export async function prepareDailySchedule(conferenceDescriptor: VoxxrinConferenceDescriptor, day: DayId, dailyTalks: VoxxrinTalk[], promisesQueue: CompletablePromiseQueue, queuePriority: number) {
@@ -121,8 +122,8 @@ prepareSchedules(
 
           // For other days, we also need to prepare talks stats & notes given that it won't have been de-facto
           // pre-loaded by user navigation
-          promisesQueue.add(() => prepareTalkStats(conferenceDescriptor.id, otherDayId, dedupedOtherDayTalks, promisesQueue), { priority: 100 })
-          promisesQueue.add(() => prepareUserTalkNotes(user, conferenceDescriptor.id, otherDayId, dedupedOtherDayTalks, promisesQueue), { priority: 100 });
+          promisesQueue.add(() => prepareTalkStats(spacedEventIdOf(conferenceDescriptor), otherDayId, dedupedOtherDayTalks, promisesQueue), { priority: 100 })
+          promisesQueue.add(() => prepareUserTalkNotes(user, spacedEventIdOf(conferenceDescriptor), otherDayId, dedupedOtherDayTalks, promisesQueue), { priority: 100 });
 
           await prepareDailySchedule(conferenceDescriptor, otherDayId, otherDayTalks, promisesQueue, 100);
       })),

@@ -51,16 +51,11 @@
 </template>
 
 <script setup lang="ts">
-import {
-    ActionSheetButton,
-    IonInput,
-    IonItemDivider,
-    useIonRouter
-} from '@ionic/vue';
-import {EventFamily, EventId, ListableVoxxrinEvent, searchEvents} from "@/models/VoxxrinEvent";
+import {ActionSheetButton, IonInput, IonItemDivider, useIonRouter} from '@ionic/vue';
+import {EventFamily, ListableVoxxrinEvent, searchEvents} from "@/models/VoxxrinEvent";
 import {computed, onMounted, Ref, watch} from "vue";
 import AvailableEventsList from "@/components/events/AvailableEventsList.vue";
-import {presentActionSheetController, managedRef as ref} from "@/views/vue-utils";
+import {managedRef as ref, presentActionSheetController} from "@/views/vue-utils";
 import {Browser} from "@capacitor/browser";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import PinnedEventSelector from "@/components/events/PinnedEventSelector.vue";
@@ -69,6 +64,7 @@ import {useSharedUserPreferences} from "@/state/useUserPreferences";
 import GlobalUserActionsButton from "@/components/user/GlobalUserActionsButton.vue";
 import NoResults from "@/components/ui/NoResults.vue";
 import PoweredVoxxrin from "@/components/ui/PoweredVoxxrin.vue";
+import {getResolvedEventRootPath} from "@/services/Spaces";
 
 const appTitle = import.meta.env.VITE_WHITE_LABEL_NAME;
 
@@ -103,7 +99,7 @@ watch([availableEventsRef, searchTerms, pinnedEventIdsRef, userPreferences], ([a
 }, {immediate: true})
 
 async function selectEvent(event: ListableVoxxrinEvent) {
-    router.push(`${event.visibility === 'private' ? `/spaces/${event.spaceToken}`:``}/events/${event.id.value}`);
+    router.push(`${getResolvedEventRootPath(event.id, event.spaceToken)}`);
 }
 
 function searchTextUpdated(searchText: string) {
