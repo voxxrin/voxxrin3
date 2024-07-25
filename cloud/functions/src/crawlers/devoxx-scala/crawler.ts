@@ -1,28 +1,29 @@
 import {
-    DevoxxScalaConference,
-    DevoxxScalaConferences,
-    DevoxxScalaProposalTypesList, DevoxxScalaSchedule,
-    DevoxxScalaSimpleSpeaker,
-    DevoxxScalaSpeaker,
-    DevoxxScalaTracksList,
-    Link
+  DevoxxScalaConference,
+  DevoxxScalaConferences,
+  DevoxxScalaProposalTypesList,
+  DevoxxScalaSchedule,
+  DevoxxScalaSimpleSpeaker,
+  DevoxxScalaSpeaker,
+  DevoxxScalaTracksList,
+  Link
 } from "./types"
 import {
-    Break, BreakTimeSlot,
-    DailySchedule,
-    DetailedTalk, ScheduleTimeSlot,
-    Speaker,
-    TalksTimeSlot, ThemedTalkFormat, ThemedTrack
+  Break,
+  BreakTimeSlot,
+  DailySchedule,
+  DetailedTalk,
+  ScheduleTimeSlot,
+  Speaker,
+  TalksTimeSlot,
+  ThemedTalkFormat,
+  ThemedTrack
 } from "../../../../../shared/daily-schedule.firestore"
-import { FullEvent } from "../../models/Event";
-import { ISODatetime } from "../../../../../shared/type-utils";
-import { ListableEvent } from "../../../../../shared/event-list.firestore";
-import { Temporal } from "@js-temporal/polyfill";
+import {FullEvent} from "../../models/Event";
+import {ISODatetime} from "../../../../../shared/type-utils";
+import {Temporal} from "@js-temporal/polyfill";
 import {z} from "zod";
-import {ConferenceDescriptor} from "../../../../../shared/conference-descriptor.firestore";
-import {
-    EVENT_DESCRIPTOR_PARSER, THEMABLE_TALK_FORMAT_PARSER, THEMABLE_TALK_TRACK_PARSER,
-} from "../crawler-parsers";
+import {EVENT_DESCRIPTOR_PARSER, THEMABLE_TALK_FORMAT_PARSER, THEMABLE_TALK_TRACK_PARSER,} from "../crawler-parsers";
 import {CrawlerKind} from "../crawl";
 import {match, P} from "ts-pattern";
 import {http} from "../utils";
@@ -292,7 +293,8 @@ export const DEVOXX_SCALA_CRAWLER: CrawlerKind<typeof DEVOXX_SCALA_DESCRIPTOR_PA
             rooms: descriptor.rooms,
             infos: descriptor.infos,
             formattings: descriptor.formattings || {
-              talkFormatTitle: 'with-duration'
+              talkFormatTitle: 'with-duration',
+              parseMarkdownOn: [],
             },
         }
 

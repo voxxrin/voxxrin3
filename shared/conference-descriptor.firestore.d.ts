@@ -79,6 +79,7 @@ export type ConferenceDescriptor = Omit<ListableEvent, "websiteUrl"> & {
         }>|undefined,
     },
     formattings: {
-      talkFormatTitle: 'with-duration'|'without-duration'
+      talkFormatTitle: 'with-duration'|'without-duration',
+      parseMarkdownOn: Array<'speaker-bio'|'talk-summary'>,
     },
 }

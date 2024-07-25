@@ -11,7 +11,8 @@ export async function introduceFormattingsFeature(): Promise<"OK"|"Error"> {
 
     if(!eventDescriptor.formattings) {
       eventDescriptor.formattings = {
-        talkFormatTitle: 'with-duration'
+        talkFormatTitle: 'with-duration',
+        parseMarkdownOn: [],
       }
 
       await db.doc(`events/${event.id}/event-descriptor/self`).update(eventDescriptor);

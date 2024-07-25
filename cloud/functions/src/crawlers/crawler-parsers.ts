@@ -153,7 +153,8 @@ export const RATINGS_CONFIG_PARSER = z.object({
 });
 
 export const FORMATTINGS_CONFIG_PARSER = z.object({
-  talkFormatTitle: z.union([z.literal('with-duration'), z.literal('without-duration')])
+  talkFormatTitle: z.union([z.literal('with-duration'), z.literal('without-duration')]),
+  parseMarkdownOn: z.array(z.union([z.literal("speaker-bio"), z.literal("talk-summary")])).optional().default([]),
 })
 
 export const EVENT_FEATURES_CONFIG_PARSER = z.object({
