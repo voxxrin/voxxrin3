@@ -21,6 +21,7 @@ import {ListableEvent} from "../../../../shared/event-list.firestore";
 import {ConferenceDescriptor} from "../../../../shared/conference-descriptor.firestore";
 import {toValidFirebaseKey} from "../../../../shared/utilities/firebase.utils";
 import { sanitize as domPurifySanitize } from "isomorphic-dompurify";
+import { marked } from 'marked'
 
 export type CrawlerKind<ZOD_TYPE extends z.ZodType> = {
     crawlerImpl: (eventId: string, crawlerDescriptor: z.infer<ZOD_TYPE>, criteria: { dayIds?: string[]|undefined }) => Promise<FullEvent>,
@@ -142,6 +143,7 @@ const crawlAll = async function(criteria: CrawlCriteria) {
                   { get: () => talk.description, set: (content) => talk.description = content },
                 ]),
                 transformations: [
+                  ...(event.conferenceDescriptor.formattings.parseMarkdownOn.includes("talk-summary")?[markdownToHtml]:[]),
                   sanitize
                 ]
               }, {
@@ -161,6 +163,7 @@ const crawlAll = async function(criteria: CrawlCriteria) {
                   ])
                 ),
                 transformations: [
+                  ...(event.conferenceDescriptor.formattings.parseMarkdownOn.includes("speaker-bio")?[markdownToHtml]:[]),
                   sanitize
                 ]
               }
@@ -447,6 +450,10 @@ async function transformEventContent(fullEvent: FullEvent, contentTransformation
 
 async function sanitize(content: string): Promise<string> {
   return domPurifySanitize(content)
+}
+
+async function markdownToHtml(content: string): Promise<string> {
+  return marked.parse(content);
 }
 
 export default crawlAll;
