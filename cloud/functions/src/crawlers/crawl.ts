@@ -20,7 +20,7 @@ import {getCrawlersMatching} from "../functions/firestore/services/crawlers-util
 import {ListableEvent} from "../../../../shared/event-list.firestore";
 import {ConferenceDescriptor} from "../../../../shared/conference-descriptor.firestore";
 import {toValidFirebaseKey} from "../../../../shared/utilities/firebase.utils";
-import {crawl} from "../functions/http/event/legacy/deprecated_crawl";
+import { sanitize as domPurifySanitize } from "isomorphic-dompurify";
 
 export type CrawlerKind<ZOD_TYPE extends z.ZodType> = {
     crawlerImpl: (eventId: string, crawlerDescriptor: z.infer<ZOD_TYPE>, criteria: { dayIds?: string[]|undefined }) => Promise<FullEvent>,
@@ -125,7 +125,47 @@ const crawlAll = async function(criteria: CrawlCriteria) {
             const crawlerKindDescriptor = crawler.descriptorParser.parse(crawlerDescriptorContent);
 
             const event = await crawler.crawlerImpl(crawlerDescriptor.id, crawlerKindDescriptor, { dayIds: criteria.dayIds });
-            const messages = sanityCheckEvent(event);
+            const messages = await sanityCheckEvent(event);
+
+            await transformEventContent(event, [
+              {
+                name: "talks-regular",
+                contentExtractor: (event) => event.talks.flatMap(talk => [
+                  { get: () => talk.title, set: (content) => talk.title = content },
+                  ...talk.tags.map((tag, idx) => ({ get: () => tag, set: (content: string) => talk.tags[idx] = content })),
+                ]),
+                transformations: [sanitize]
+              }, {
+                name: "talks-html",
+                contentExtractor: (event) => event.talks.flatMap(talk => [
+                  { get: () => talk.summary, set: (content) => talk.summary = content },
+                  { get: () => talk.description, set: (content) => talk.description = content },
+                ]),
+                transformations: [
+                  sanitize
+                ]
+              }, {
+                name: "speakers-regular",
+                contentExtractor: (event) => event.talks.flatMap(talk =>
+                  talk.speakers.flatMap(speaker => [
+                    { get: () => speaker.fullName, set: (content: string) => speaker.fullName = content },
+                    { get: () => speaker.companyName, set: (content: string) => speaker.companyName = content },
+                  ])
+                ),
+                transformations: [sanitize]
+              }, {
+                name: "speakers-html",
+                contentExtractor: (event) => event.talks.flatMap(talk =>
+                  talk.speakers.flatMap(speaker => [
+                    { get: () => speaker.bio, set: (content: string) => speaker.bio = content },
+                  ])
+                ),
+                transformations: [
+                  sanitize
+                ]
+              }
+            ])
+
             await saveEvent(event, crawlerDescriptor)
 
             const end = Temporal.Now.instant()
@@ -381,6 +421,32 @@ const saveEvent = async function (event: FullEvent, crawlerDescriptor: z.infer<t
     }
 
     await ensureRoomsStatsFilledFor(event.id)
+}
+
+type ContentTransformation = {
+  name: string,
+  contentExtractor: (fullEvent: FullEvent) => Array<{ get: () => string|null|undefined, set: (value: string) => void }>,
+  transformations: Array<(content: string) => Promise<string>>
+}
+
+async function transformEventContent(fullEvent: FullEvent, contentTransformations: ContentTransformation[]): Promise<void> {
+  for(const contentTransformation of contentTransformations) {
+    for(const contentGetterSetter of contentTransformation.contentExtractor(fullEvent)) {
+      const content = contentGetterSetter.get()
+      if(content) {
+        let updatedContent = content;
+        for(const transformation of contentTransformation.transformations) {
+          updatedContent = await transformation(updatedContent)
+        }
+        contentGetterSetter.set(updatedContent)
+      }
+    }
+  }
+}
+
+
+async function sanitize(content: string): Promise<string> {
+  return domPurifySanitize(content)
 }
 
 export default crawlAll;
