@@ -160,7 +160,8 @@ export const CAMPING_DES_SPEAKERS_CRAWLER: CrawlerKind<typeof CAMPING_DES_SPEAKE
             features: descriptor.features,
             supportedTalkLanguages: descriptor.supportedTalkLanguages,
             formattings: descriptor.formattings || {
-              talkFormatTitle: 'with-duration'
+              talkFormatTitle: 'with-duration',
+              parseMarkdownOn: [],
             },
         };
 

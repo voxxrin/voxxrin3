@@ -3,7 +3,7 @@ import {z} from "zod";
 import {
   BREAK_PARSER,
   DETAILED_TALK_PARSER,
-  EVENT_DESCRIPTOR_PARSER,
+  EVENT_DESCRIPTOR_PARSER, FORMATTINGS_CONFIG_PARSER,
 } from "../crawler-parsers";
 import {CrawlerKind} from "../crawl";
 import {match, P} from "ts-pattern";
@@ -19,9 +19,7 @@ import {ISO_DATETIME_PARSER} from "../../utils/zod-parsers";
 export const SINGLE_FILE_DESCRIPTOR_PARSER = EVENT_DESCRIPTOR_PARSER.omit({
   id: true
 }).extend({
-  formattings: z.object({
-    talkFormatTitle: z.union([z.literal("with-duration"), z.literal("without-duration")])
-  }),
+  formattings: FORMATTINGS_CONFIG_PARSER, // not optional
   talks: z.array(
     DETAILED_TALK_PARSER
       .omit({ track: true, room: true, format: true, language: true, description: true })

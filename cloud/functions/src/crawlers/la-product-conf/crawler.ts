@@ -3,20 +3,21 @@ import {FullEvent} from "../../models/Event";
 import {ISODatetime, ISOLocalDate} from "../../../../../shared/type-utils";
 import {Temporal} from "@js-temporal/polyfill";
 import {
-    BreakTimeSlot,
-    DetailedTalk,
-    ScheduleTimeSlot,
-    Speaker,
-    TalksTimeSlot,
+  BreakTimeSlot,
+  DetailedTalk,
+  ScheduleTimeSlot,
+  Speaker,
+  TalksTimeSlot,
 } from "../../../../../shared/daily-schedule.firestore";
 import * as cheerio from 'cheerio';
 import {match, P} from "ts-pattern";
 import {ConferenceDescriptor} from "../../../../../shared/conference-descriptor.firestore";
 import {Day} from "../../../../../shared/event-list.firestore";
 import {
-  BREAK_ICON_PARSER, BREAK_TIME_SLOT_PARSER,
+  BREAK_TIME_SLOT_PARSER,
   DAY_PARSER,
-  EVENT_DESCRIPTOR_PARSER, TALKS_TIME_SLOT_PARSER,
+  EVENT_DESCRIPTOR_PARSER,
+  TALKS_TIME_SLOT_PARSER,
   TIME_PARSER,
   TIMESLOT_ID_PARSER
 } from "../crawler-parsers";
@@ -262,7 +263,8 @@ export const LA_PRODUCT_CONF_CRAWLER: CrawlerKind<typeof LA_PRODUCT_CONF_DESCRIP
             features: descriptor.features,
             supportedTalkLanguages: descriptor.supportedTalkLanguages,
             formattings: descriptor.formattings || {
-              talkFormatTitle: 'with-duration'
+              talkFormatTitle: 'with-duration',
+              parseMarkdownOn: [],
             },
         };
 

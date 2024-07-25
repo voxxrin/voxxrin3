@@ -198,7 +198,8 @@ export const WEB2DAY_CRAWLER: CrawlerKind<typeof WEB2DAY_PARSER> = {
             features: descriptor.features,
             supportedTalkLanguages: descriptor.supportedTalkLanguages,
             formattings: descriptor.formattings || {
-              talkFormatTitle: 'with-duration'
+              talkFormatTitle: 'with-duration',
+              parseMarkdownOn: [],
             },
         };
 

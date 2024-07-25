@@ -259,7 +259,8 @@ export const CODEURS_EN_SEINE_CRAWLER: CrawlerKind<typeof CODEURS_EN_SEINE_PARSE
             features: descriptor.features,
             supportedTalkLanguages: descriptor.supportedTalkLanguages,
             formattings: descriptor.formattings || {
-              talkFormatTitle: 'with-duration'
+              talkFormatTitle: 'with-duration',
+              parseMarkdownOn: [],
             },
         };
 

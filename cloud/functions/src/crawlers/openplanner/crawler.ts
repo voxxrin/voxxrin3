@@ -1,18 +1,18 @@
 import {BreakTimeslotWithPotentiallyUnknownIcon, FullEvent} from "../../models/Event";
 import {z} from "zod";
-import {
-  EVENT_DESCRIPTOR_PARSER,
-  EVENT_FEATURES_CONFIG_PARSER,
-  FORMATTINGS_CONFIG_PARSER,
-  RATINGS_CONFIG_PARSER
-} from "../crawler-parsers";
+import {EVENT_DESCRIPTOR_PARSER, EVENT_FEATURES_CONFIG_PARSER, RATINGS_CONFIG_PARSER} from "../crawler-parsers";
 import {CrawlerKind, TALK_TRACK_FALLBACK_COLORS} from "../crawl";
 import {ISO_DATETIME_PARSER} from "../../utils/zod-parsers";
 import {
   DailySchedule,
-  DetailedTalk, Room,
-  ScheduleTimeSlot, Speaker,
-  Talk, TalkFormat, TalksTimeSlot, ThemedTrack,
+  DetailedTalk,
+  Room,
+  ScheduleTimeSlot,
+  Speaker,
+  Talk,
+  TalkFormat,
+  TalksTimeSlot,
+  ThemedTrack,
 } from "../../../../../shared/daily-schedule.firestore";
 import {match, P} from "ts-pattern";
 import {Temporal} from "@js-temporal/polyfill";
@@ -275,7 +275,8 @@ export const OPENPLANNER_CRAWLER: CrawlerKind<typeof OPENPLANNER_DESCRIPTOR_PARS
             ratings: descriptor.ratings
           },
           formattings: descriptor.formattings || {
-            talkFormatTitle: 'with-duration'
+            talkFormatTitle: 'with-duration',
+            parseMarkdownOn: [],
           },
         },
         daySchedules: dailySchedules,
