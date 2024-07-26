@@ -6,7 +6,9 @@ import DocumentSnapshot = firestore.DocumentSnapshot;
 
 
 export async function getAllEvents() {
-  return await db.collection('events').get() as QuerySnapshot<ListableEvent>
+  const publicEvents = await db.collection('events').get() as QuerySnapshot<ListableEvent>
+
+  return [publicEvents];
 }
 
 export async function getEventLastUpdates(eventId: string) {
