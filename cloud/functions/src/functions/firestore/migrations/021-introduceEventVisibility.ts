@@ -1,16 +1,16 @@
 import {getAllEventDescriptorDocs} from "../services/eventDescriptor-utils";
-import {getAllEvents} from "../services/event-utils";
+import {getAllEventsDocs} from "../services/event-utils";
 
 
 export async function introduceEventVisibility(): Promise<"OK"|"Error"> {
-  const queryResults = await getAllEvents()
+  const eventDocs = await getAllEventsDocs()
   const eventDescriptorsDocs = await getAllEventDescriptorDocs();
   await Promise.all([
-    ...queryResults.flatMap(queryResults => queryResults.docs.map(async eventSnaphsot => {
+    ...eventDocs.map(async eventSnaphsot => {
       await eventSnaphsot.ref.update({
         visibility: "public"
       })
-    })),
+    }),
     ...eventDescriptorsDocs.map(async eventDescriptorDoc => {
       await eventDescriptorDoc.ref.update({
         visibility: "public"

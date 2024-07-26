@@ -14,7 +14,6 @@ export async function refreshSlowPacedTalkStatsForOngoingEvents() {
     .with(P.nullish, () => [])
     .otherwise(async (globalInfos) => {
       const events = (await getAllEvents({ includePrivateSpaces: true }))
-        .flatMap(queryResults => queryResults.docs.map(doc => doc.data()));
 
       const results = await Promise.all(events.map(async event => {
         const eventLastUpdates = (await getEventLastUpdates(event.id)).data()

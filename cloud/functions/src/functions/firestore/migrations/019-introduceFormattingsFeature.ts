@@ -4,11 +4,9 @@ import {getEventDescriptor} from "../services/eventDescriptor-utils";
 
 
 export async function introduceFormattingsFeature(): Promise<"OK"|"Error"> {
-  const queryResults = await getAllEvents();
+  const events = await getAllEvents();
   await Promise.all(
-    queryResults.flatMap(queryResult =>
-      queryResult.docs.map(async eventDoc => {
-        const event = eventDoc.data()
+    events.map(async event => {
         const spaceToken = undefined;
         const eventDescriptor = await getEventDescriptor(spaceToken, event.id);
 
@@ -19,8 +17,7 @@ export async function introduceFormattingsFeature(): Promise<"OK"|"Error"> {
 
           await db.doc(`events/${event.id}/event-descriptor/self`).update(eventDescriptor);
         }
-      })
-    )
+    })
   )
 
   return "OK"

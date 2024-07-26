@@ -7,7 +7,7 @@ import {getAllSpaceIds} from "./space-utils";
 import {resolvedEventsFirestorePath} from "../../../../../../shared/utilities/event-utils";
 
 
-export async function getAllEvents(opts: { includePrivateSpaces: boolean } = { includePrivateSpaces: false }) {
+export async function getAllEventsDocs(opts: { includePrivateSpaces: boolean } = { includePrivateSpaces: false }) {
   const publicEvents = await db.collection('events').get() as QuerySnapshot<ListableEvent>
 
   const results: Array<QuerySnapshot<ListableEvent>> = [publicEvents];
@@ -21,9 +21,14 @@ export async function getAllEvents(opts: { includePrivateSpaces: boolean } = { i
     results.push(...privateSpacesEventsResults)
   }
 
-  return results;
+  return results.flatMap(eventResult => eventResult.docs);
 }
 
-export async function getEventLastUpdates(eventId: string) {
+export async function getAllEvents(opts: { includePrivateSpaces: boolean } = { includePrivateSpaces: false }) {
+  const eventsDocs = await getAllEventsDocs(opts);
+  return eventsDocs.map(eventDoc => eventDoc.data());
+}
+
+export async function getEventLastUpdates(eventId: string, maybeSpaceId: string|undefined) {
   return await db.doc(`events/${eventId}/last-updates/self`).get() as DocumentSnapshot<EventLastUpdates>
 }
