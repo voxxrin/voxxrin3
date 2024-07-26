@@ -13,7 +13,7 @@ export async function refreshSlowPacedTalkStatsForOngoingEvents() {
   const results = match(maybeGlobalInfos)
     .with(P.nullish, () => [])
     .otherwise(async (globalInfos) => {
-      const events = (await getAllEvents())
+      const events = (await getAllEvents({ includePrivateSpaces: true }))
         .flatMap(queryResults => queryResults.docs.map(doc => doc.data()));
 
       const results = await Promise.all(events.map(async event => {
