@@ -47,9 +47,6 @@ exports.eventStats = functions.https.onRequest(async (request, response) => {
 exports.migrateFirestoreSchema = functions.https.onRequest(async (request, response) => {
   (await import("./functions/http/migrateFirestoreSchema")).migrateFirestoreSchema(request, response)
 })
-exports.globalStats = functions.https.onRequest(async (request, response) => {
-  (await import("./functions/http/event/globalStatistics")).globalStats(request, response)
-})
 
 // Express handler
 declareExpressHttpRoutes(app)
