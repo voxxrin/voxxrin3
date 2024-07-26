@@ -4,7 +4,7 @@ import {EventLastUpdates, ListableEvent} from "../../../../../../shared/event-li
 import QuerySnapshot = firestore.QuerySnapshot;
 import DocumentSnapshot = firestore.DocumentSnapshot;
 import {getAllSpaceIds} from "./space-utils";
-import {resolvedEventsFirestorePath} from "../../../../../../shared/utilities/event-utils";
+import {resolvedEventFirestorePath, resolvedEventsFirestorePath} from "../../../../../../shared/utilities/event-utils";
 
 
 export async function getAllEventsDocs(opts: { includePrivateSpaces: boolean } = { includePrivateSpaces: false }) {
@@ -30,5 +30,5 @@ export async function getAllEvents(opts: { includePrivateSpaces: boolean } = { i
 }
 
 export async function getEventLastUpdates(eventId: string, maybeSpaceId: string|undefined) {
-  return await db.doc(`events/${eventId}/last-updates/self`).get() as DocumentSnapshot<EventLastUpdates>
+  return await db.doc(`${resolvedEventFirestorePath(eventId, maybeSpaceId)}/last-updates/self`).get() as DocumentSnapshot<EventLastUpdates>
 }

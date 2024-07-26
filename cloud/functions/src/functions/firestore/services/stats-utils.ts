@@ -39,12 +39,12 @@ export async function ensureRoomsStatsFilledFor(spaceToken: string|undefined, ev
   }
 }
 
-export async function getEventTalkStats(eventId: string, type: 'standard'|'slowPaced' = 'standard') {
-  return await db.collection(`events/${eventId}/talksStats${type==='standard'?'':'-slowPaced'}`).get() as QuerySnapshot<TalkStats>;
+export async function getEventTalkStats(eventId: string, maybeSpaceToken: string|undefined, type: 'standard'|'slowPaced' = 'standard') {
+  return await db.collection(`${resolvedEventFirestorePath(eventId, maybeSpaceToken)}/talksStats${type==='standard'?'':'-slowPaced'}`).get() as QuerySnapshot<TalkStats>;
 }
 
-export async function storeEventTalkStats(eventId: string, talkStats: TalkStats[], type: 'standard'|'slowPaced' = 'standard') {
+export async function storeEventTalkStats(eventId: string, maybeSpaceToken: string|undefined, talkStats: TalkStats[], type: 'standard'|'slowPaced' = 'standard') {
   return Promise.all(talkStats.map(talkStat =>
-    db.doc(`events/${eventId}/talksStats${type==='standard'?'':'-slowPaced'}/${talkStat.id}`).set(talkStat)
+    db.doc(`${resolvedEventFirestorePath(eventId, maybeSpaceToken)}/talksStats${type==='standard'?'':'-slowPaced'}/${talkStat.id}`).set(talkStat)
   ))
 }
