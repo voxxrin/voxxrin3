@@ -21,6 +21,6 @@ export type UserWalletTalkFeedbacksViewerSecretToken = {
 }
 
 export type UserWalletPrivateSpaceToken = {
-  secretToken: string;
+  name: string;
   spaceTokens: string[];
 }
