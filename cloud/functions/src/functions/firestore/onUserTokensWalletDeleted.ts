@@ -12,9 +12,9 @@ export const onUserTokensWalletDeleted = async (change: QueryDocumentSnapshot, c
     const tokensWalletData = change.data() as { privateUserId: string, publicUserToken: string };
 
     await db.doc(`users/${context.params.userId}`).update({
-      privateUserId: tokensWalletData.privateUserId,
-      publicUserToken: tokensWalletData.publicUserToken,
-      _version: 2
+      _version: 2,
+      ...(tokensWalletData.privateUserId ?{privateUserId: tokensWalletData.privateUserId}:{}),
+      ...(tokensWalletData.publicUserToken ?{publicUserToken: tokensWalletData.publicUserToken}:{}),
     })
 
     info(`User tokens wallet migration performed successully for user ${context.params.userId} !`)
