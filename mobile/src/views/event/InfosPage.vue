@@ -79,9 +79,6 @@
 
 <script setup lang="ts">
   import CurrentEventHeader from "@/components/events/CurrentEventHeader.vue";
-  import {useRoute} from "vue-router";
-  import {EventId} from "@/models/VoxxrinEvent";
-  import {managedRef as ref, getRouteParamsValue} from "@/views/vue-utils";
   import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
   import {typesafeI18n} from "@/i18n/i18n-vue";
   import {
@@ -98,14 +95,13 @@
   import {computed, Ref, toValue} from "vue";
   import {SocialMediaType} from "../../../../shared/type-utils";
   import CarouselSwiper from "@/components/ui/CarouselSwiper.vue";
-  import PoweredVoxxrin from "@/components/ui/PoweredVoxxrin.vue";
   import Tips from "@/components/ui/Tips.vue";
+  import {useCurrentSpaceEventIdRef} from "@/services/Spaces";
 
   const { LL } = typesafeI18n()
 
-  const route = useRoute();
-  const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')));
-  const {conferenceDescriptor: confDescriptorRef} = useSharedConferenceDescriptor(eventId);
+  const spacedEventIdRef = useCurrentSpaceEventIdRef();
+  const {conferenceDescriptor: confDescriptorRef} = useSharedConferenceDescriptor(spacedEventIdRef);
 
   const SUPPORTED_SOCIAL_MEDIAS = {
     "website": { icon: link, label: "Website" },

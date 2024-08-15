@@ -98,6 +98,75 @@ service cloud.firestore {
       }
     }
 
+    match /spaces/{spaceId} {
+      allow get: if true;
+      allow list, write: if false;
+
+      match /events/{event} {
+        allow read: if true;
+        allow write: if false;
+
+        match /days/{dayId} {
+          allow read: if true;
+          allow write: if false;
+        }
+
+        match /event-descriptor/self {
+          allow get: if true;
+          allow list, write: if false;
+        }
+
+        match /talksStats/{talkId} {
+          allow read: if true;
+          allow write: if false;
+        }
+        match /talksStats-slowPaced/{talkId} {
+          allow read: if true;
+          allow write: if false;
+        }
+        match /talksStats-allInOne/self {
+          allow get: if true;
+          allow list, write: if false;
+        }
+        match /roomsStats-allInOne/self {
+          allow get: if true;
+          allow list, write: if false;
+        }
+
+        match /organizer-space/{secretOrganizerToken} {
+          allow get: if true;
+          allow list, write: if false;
+
+          match /ratings/{talkId} {
+            allow read, write: if false;
+          }
+          match /daily-ratings/{dayIf} {
+            allow read, write: if false;
+          }
+        }
+
+        match /last-updates/self {
+          allow get: if true;
+          allow list, write: if false;
+        }
+
+        match /talks/{talkId} {
+          allow read: if true;
+          allow write: if false;
+
+          match /feedbacks-access/{secretFeedbackViewerToken} {
+            allow get: if true;
+            allow list, write: if false;
+
+            match /feedbacks/{userPublicToken} {
+              allow read: if true;
+              allow write: if false;
+            }
+          }
+        }
+      }
+    }
+
     match /users/{userId} {
       allow list, create, delete: if false;
     	allow get: if iAm(userId);
@@ -129,6 +198,30 @@ service cloud.firestore {
           match /feedbacks/self {
             allow get, create, update: if iAm(userId);
             allow list, delete: if false;
+          }
+        }
+      }
+
+      match /spaces/{spaceId} {
+        allow get, list, create, update: if iAm(userId);
+        allow delete: if false;
+
+        match /events/{eventId} {
+          allow get, list, create, update: if iAm(userId);
+          allow delete: if false;
+
+          match /talksNotes/{talkId} {
+            allow get, list, create, update: if iAm(userId);
+            allow delete: if false;
+          }
+          match /days/{dayId} {
+            allow get, list, create, update: if iAm(userId);
+            allow delete: if false;
+
+            match /feedbacks/self {
+              allow get, create, update: if iAm(userId);
+              allow list, delete: if false;
+            }
           }
         }
       }

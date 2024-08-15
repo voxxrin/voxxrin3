@@ -13,25 +13,20 @@
 </template>
 
 <script setup lang="ts">
-import {
-    IonTabBar,
-    IonTabButton,
-    IonTabs,
-    IonRouterOutlet,
-} from '@ionic/vue';
+import {IonRouterOutlet, IonTabBar, IonTabButton, IonTabs,} from '@ionic/vue';
 import {ComponentPublicInstance, PropType, watch} from "vue";
 import {managedRef as ref, toManagedRef as toRef} from "@/views/vue-utils";
 import {useRoute} from "vue-router";
-import {EventId} from "@/models/VoxxrinEvent";
+import {SpacedEventId} from "@/models/VoxxrinEvent";
 import {useTabbedPageNav} from "@/state/useTabbedPageNav";
 import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
 
 const route = useRoute();
 
 const props = defineProps({
-    eventId: {
+    spacedEventId: {
         required: true,
-        type: Object as PropType<EventId>
+        type: Object as PropType<SpacedEventId>
     },
     tabs: {
         required: true,
@@ -41,7 +36,7 @@ const props = defineProps({
     }
 })
 
-const {conferenceDescriptor: confDescriptor} = useSharedConferenceDescriptor(toRef(() => props.eventId));
+const {conferenceDescriptor: confDescriptor} = useSharedConferenceDescriptor(toRef(() => props.spacedEventId));
 
 const { registerTabbedPageNavListeners } = useTabbedPageNav();
 registerTabbedPageNavListeners();

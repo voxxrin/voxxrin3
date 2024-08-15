@@ -22,4 +22,18 @@ export function declareAdminHttpRoutes(app: Express) {
         results
       })
     })
+
+  Routes.get(app, `/admin/globalStats`,
+    z.object({
+      query: z.object({ token: z.string() })
+    }),
+    ensureHasSuperAdminToken(),
+    async (res, path, query, body) => {
+      if(process.env.MIGRATION_TOKEN !== query.token) {
+        return sendResponseMessage(res, 403, `Forbidden: invalid migrationToken !`)
+      }
+
+      const results = await (await import("../event/globalStatistics")).globalStats();
+      return sendResponseMessage(res, 200, results);
+    })
 }

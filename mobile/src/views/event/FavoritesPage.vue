@@ -65,9 +65,6 @@
 
 <script setup lang="ts">
   import CurrentEventHeader from "@/components/events/CurrentEventHeader.vue";
-  import {useRoute} from "vue-router";
-  import {EventId} from "@/models/VoxxrinEvent";
-  import {getRouteParamsValue, isRefDefined} from "@/views/vue-utils";
   import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
   import {typesafeI18n} from "@/i18n/i18n-vue";
   import {managedRef as ref} from "@/views/vue-utils";
@@ -95,14 +92,14 @@
   import ProvideFeedbackTalkButton from "@/components/talk-card/ProvideFeedbackTalkButton.vue";
   import PoweredVoxxrin from "@/components/ui/PoweredVoxxrin.vue";
   import {useRoomsStats} from "@/state/useRoomsStats";
+  import {getResolvedEventRootPathFromSpacedEventIdRef, useCurrentSpaceEventIdRef} from "@/services/Spaces";
 
   const { LL } = typesafeI18n()
 
-  const route = useRoute();
-  const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')));
-  const {conferenceDescriptor: confDescriptor} = useSharedConferenceDescriptor(eventId);
+  const spacedEventIdRef = useCurrentSpaceEventIdRef();
+  const {conferenceDescriptor: confDescriptor} = useSharedConferenceDescriptor(spacedEventIdRef);
 
-  const {selectedDayId} = useSharedEventSelectedDay(eventId);
+  const {selectedDayId} = useSharedEventSelectedDay(spacedEventIdRef);
 
   const { schedule: currentSchedule } = useSchedule(confDescriptor, selectedDayId)
 
@@ -111,10 +108,10 @@
       return schedule ? extractTalksFromSchedule(schedule).map(talk => talk.id) : [];
   })
 
-  const {firestoreEventTalkStatsRef: talkStatsRefByTalkId} = useEventTalkStats(eventId, talkIdsRef)
-  const {userEventTalkNotesRef } = useUserEventTalkNotes(eventId, talkIdsRef)
-  const localEventTalkNotesRef = useLocalEventTalkFavsStorage(eventId);
-  const {firestoreRoomsStatsRef: roomsStatsRefByRoomId } = useRoomsStats(eventId)
+  const {firestoreEventTalkStatsRef: talkStatsRefByTalkId} = useEventTalkStats(spacedEventIdRef, talkIdsRef)
+  const {userEventTalkNotesRef } = useUserEventTalkNotes(spacedEventIdRef, talkIdsRef)
+  const localEventTalkNotesRef = useLocalEventTalkFavsStorage(spacedEventIdRef);
+  const {firestoreRoomsStatsRef: roomsStatsRefByRoomId } = useRoomsStats(spacedEventIdRef)
 
   const favoritedTalkIdsRef = computed(() => {
       const userEventTalkNotes = toValue(userEventTalkNotesRef)
@@ -128,15 +125,15 @@
   const { triggerTabbedPageNavigate } = useTabbedPageNav();
 
   async function navigateToTimeslotFeedbackCreation(timeslot: VoxxrinScheduleTimeSlot) {
-      triggerTabbedPageNavigate(`/events/${eventId.value.value}/new-feedback-for-timeslot/${timeslot.id.value}`, "forward", "push");
+      triggerTabbedPageNavigate(`${getResolvedEventRootPathFromSpacedEventIdRef(spacedEventIdRef)}/new-feedback-for-timeslot/${timeslot.id.value}`, "forward", "push");
   }
   async function openTalkDetails(talk: VoxxrinTalk) {
       if(talk) {
-          triggerTabbedPageNavigate(`/events/${eventId.value.value}/talks/${talk.id.value}/details`, "forward", "push");
+          triggerTabbedPageNavigate(`${getResolvedEventRootPathFromSpacedEventIdRef(spacedEventIdRef)}/talks/${talk.id.value}/details`, "forward", "push");
       }
   }
   async function navigateToTalkRatingScreenFor(talk: VoxxrinTalk) {
-      triggerTabbedPageNavigate(`/events/${eventId.value.value}/rate-talk/${talk.id.value}`, "forward", "push");
+      triggerTabbedPageNavigate(`${getResolvedEventRootPathFromSpacedEventIdRef(spacedEventIdRef)}/rate-talk/${talk.id.value}`, "forward", "push");
   }
 </script>
 

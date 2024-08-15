@@ -47,9 +47,6 @@ exports.eventStats = functions.https.onRequest(async (request, response) => {
 exports.migrateFirestoreSchema = functions.https.onRequest(async (request, response) => {
   (await import("./functions/http/migrateFirestoreSchema")).migrateFirestoreSchema(request, response)
 })
-exports.globalStats = functions.https.onRequest(async (request, response) => {
-  (await import("./functions/http/event/globalStatistics")).globalStats(request, response)
-})
 
 // Express handler
 declareExpressHttpRoutes(app)
@@ -61,8 +58,18 @@ exports.onUserTalksNoteCreate = functions.firestore
   .onCreate(async (change, context) => {
     (await import('./functions/firestore/onUserTalkNotes')).onUserTalksNoteCreate(change, context)
   });
+exports.onUserPrivateSpaceTalksNoteCreate = functions.firestore
+  .document("users/{userId}/spaces/{spaceToken}/events/{eventId}/talksNotes/{talkId}")
+  .onCreate(async (change, context) => {
+    (await import('./functions/firestore/onUserTalkNotes')).onUserTalksNoteCreate(change, context)
+  });
 exports.onUserTalksNoteUpdate = functions.firestore
   .document("users/{userId}/events/{eventId}/talksNotes/{talkId}")
+  .onUpdate(async (change, context) => {
+    (await import('./functions/firestore/onUserTalkNotes')).onUserTalksNoteUpdate(change, context)
+  });
+exports.onUserPrivateSpaceTalksNoteUpdate = functions.firestore
+  .document("users/{userId}/spaces/{spaceToken}/events/{eventId}/talksNotes/{talkId}")
   .onUpdate(async (change, context) => {
     (await import('./functions/firestore/onUserTalkNotes')).onUserTalksNoteUpdate(change, context)
   });
@@ -74,15 +81,27 @@ exports.onUserTokenWalletDeleted = functions.firestore
   .onDelete(async (change, context) => {
     (await import('./functions/firestore/onUserTokensWalletDeleted')).onUserTokensWalletDeleted(change, context)
   })
+// TODO: to rename onUserTalkFeedbackUpdated
 exports.onTalkFeedbackUpdated = functions.firestore
   .document(`users/{userId}/events/{eventId}/days/{dayId}/feedbacks/self`)
   .onUpdate(async (change, context) => {
-    (await import('./functions/firestore/onTalkFeedbackProvided')).onTalkFeedbackUpdated(change, context)
+    (await import('./functions/firestore/onTalkFeedbackProvided')).onUserTalkFeedbackUpdated(change, context)
   });
+exports.onUserPrivateSpaceTalkFeedbackUpdated = functions.firestore
+  .document(`users/{userId}/spaces/{spaceToken}/events/{eventId}/days/{dayId}/feedbacks/self`)
+  .onUpdate(async (change, context) => {
+    (await import('./functions/firestore/onTalkFeedbackProvided')).onUserTalkFeedbackUpdated(change, context)
+  });
+// TODO: to rename onUserTalkFeedbackCreated
 exports.onTalkFeedbackCreated = functions.firestore
   .document(`users/{userId}/events/{eventId}/days/{dayId}/feedbacks/self`)
   .onCreate(async (snapshot, context) => {
-    (await import('./functions/firestore/onTalkFeedbackProvided')).onTalkFeedbackCreated(snapshot, context)
+    (await import('./functions/firestore/onTalkFeedbackProvided')).onUserTalkFeedbackCreated(snapshot, context)
+  });
+exports.onUserPrivateSpaceTalkFeedbackCreated = functions.firestore
+  .document(`users/{userId}/spaces/{spaceToken}/events/{eventId}/days/{dayId}/feedbacks/self`)
+  .onCreate(async (snapshot, context) => {
+    (await import('./functions/firestore/onTalkFeedbackProvided')).onUserTalkFeedbackCreated(snapshot, context)
   });
 
 // Schedulers

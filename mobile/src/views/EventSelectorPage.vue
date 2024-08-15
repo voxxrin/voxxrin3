@@ -26,7 +26,7 @@
         <ion-item-divider class="no-border-top">{{ LL.Pinned_events() }}</ion-item-divider>
         <pinned-event-selector
             class="pinnedEventSelector"
-            :pinned-events="filteredPinnedEvents" @event-selected="(event) => selectEvent(event.id)">
+            :pinned-events="filteredPinnedEvents" @event-selected="(event) => selectEvent(event)">
           <template #no-pinned-events>
             <no-results illu-path="images/svg/illu-list-pinned.svg">
               <template #title>{{ LL.No_pinned_events_available_yet() }}</template>
@@ -36,7 +36,7 @@
         </pinned-event-selector>
 
         <available-events-list
-            :events="filteredAvailableEvents" @event-clicked="(event) => selectEvent(event.id)"
+            :events="filteredAvailableEvents" @event-clicked="(event) => selectEvent(event)"
             :pinned-events="pinnedEventIdsRef" @event-pin-toggled="eventPinToggled">
           <template #no-event>
             <no-results illu-path="images/svg/illu-no-result.svg">
@@ -51,16 +51,11 @@
 </template>
 
 <script setup lang="ts">
-import {
-    ActionSheetButton,
-    IonInput,
-    IonItemDivider,
-    useIonRouter
-} from '@ionic/vue';
-import {EventFamily, EventId, ListableVoxxrinEvent, searchEvents} from "@/models/VoxxrinEvent";
+import {ActionSheetButton, IonInput, IonItemDivider, useIonRouter} from '@ionic/vue';
+import {EventFamily, ListableVoxxrinEvent, searchEvents} from "@/models/VoxxrinEvent";
 import {computed, onMounted, Ref, watch} from "vue";
 import AvailableEventsList from "@/components/events/AvailableEventsList.vue";
-import {presentActionSheetController, managedRef as ref} from "@/views/vue-utils";
+import {managedRef as ref, presentActionSheetController} from "@/views/vue-utils";
 import {Browser} from "@capacitor/browser";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import PinnedEventSelector from "@/components/events/PinnedEventSelector.vue";
@@ -69,6 +64,7 @@ import {useSharedUserPreferences} from "@/state/useUserPreferences";
 import GlobalUserActionsButton from "@/components/user/GlobalUserActionsButton.vue";
 import NoResults from "@/components/ui/NoResults.vue";
 import PoweredVoxxrin from "@/components/ui/PoweredVoxxrin.vue";
+import {getResolvedEventRootPath} from "@/services/Spaces";
 
 const appTitle = import.meta.env.VITE_WHITE_LABEL_NAME;
 
@@ -102,8 +98,8 @@ watch([availableEventsRef, searchTerms, pinnedEventIdsRef, userPreferences], ([a
     }
 }, {immediate: true})
 
-async function selectEvent(eventId: EventId) {
-    router.push(`/events/${eventId.value}`);
+async function selectEvent(event: ListableVoxxrinEvent) {
+    router.push(`${getResolvedEventRootPath(event.id, event.spaceToken)}`);
 }
 
 function searchTextUpdated(searchText: string) {

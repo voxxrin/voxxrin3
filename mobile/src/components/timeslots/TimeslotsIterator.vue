@@ -11,22 +11,23 @@
 </template>
 
 <script setup lang="ts">
-import {onMounted, PropType, Ref, toValue, unref, watch} from "vue";
-import {managedRef as ref, toManagedRef as toRef} from "@/views/vue-utils";
-import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
+import {onMounted, PropType, Ref, toValue, watch} from "vue";
+import {managedRef as ref, toManagedRef as toRef, useInterval} from "@/views/vue-utils";
+import {spacedEventIdOf, VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {DayId} from "@/models/VoxxrinDay";
 import {LabelledTimeslotWithFeedback, useLabelledTimeslotWithFeedbacks} from "@/state/useSchedule";
 import {
   getTemporallyUpcomingTalkIds,
   getTimeslotLabel,
-  getTimeslotTimingProgress, TimeslotTimingProgress, toFilteredLabelledTimeslotWithFeedback,
+  getTimeslotTimingProgress,
+  TimeslotTimingProgress,
+  toFilteredLabelledTimeslotWithFeedback,
   VoxxrinDailySchedule,
   VoxxrinScheduleTimeSlot
 } from "@/models/VoxxrinSchedule";
 import {useUserFeedbacks} from "@/state/useUserFeedbacks";
 import {useCurrentClock, watchClock} from "@/state/useCurrentClock";
-import {useInterval} from "@/views/vue-utils";
-import {PERF_LOGGER, Logger} from "@/services/Logger";
+import {Logger, PERF_LOGGER} from "@/services/Logger";
 import NoResults from "@/components/ui/NoResults.vue";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {Temporal} from "temporal-polyfill";
@@ -65,7 +66,7 @@ onMounted(async () => {
 
 const { LL } = typesafeI18n()
 
-const { userFeedbacks: dailyUserFeedbacksRef  } = useUserFeedbacks(toRef(() => props.confDescriptor?.id), toRef(() => props.dayId))
+const { userFeedbacks: dailyUserFeedbacksRef  } = useUserFeedbacks(toRef(() => spacedEventIdOf(props.confDescriptor)), toRef(() => props.dayId))
 const { timeslotsRef } = useLabelledTimeslotWithFeedbacks(
     toRef(props, 'dailySchedule'),
     dailyUserFeedbacksRef, toRef(props, 'searchTerms'));

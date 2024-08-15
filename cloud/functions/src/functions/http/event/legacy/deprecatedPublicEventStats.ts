@@ -16,6 +16,7 @@ import * as express from "express";
 
 export async function legacyPublicEventStats(request: functions.https.Request, response: express.Response) {
 
+    const spaceToken = undefined;
     const eventId = extractSingleQueryParam(request, 'eventId');
     const publicToken = extractSingleQueryParam(request, 'publicToken');
 
@@ -24,7 +25,7 @@ export async function legacyPublicEventStats(request: functions.https.Request, r
 
     const [eventDescriptor, familyEventsStatsToken] = await logPerf("eventDescriptor and familyEventsStatsToken retrieval", async () => {
          return await Promise.all([
-            getEventDescriptor(eventId),
+            getEventDescriptor(spaceToken, eventId),
             getFamilyEventsStatsToken(publicToken),
         ]);
     })
@@ -34,7 +35,7 @@ export async function legacyPublicEventStats(request: functions.https.Request, r
     }
 
     const { cachedHash, updatesDetected } = await logPerf("cached hash", async () => {
-        return await checkEventLastUpdate(eventId, [
+        return await checkEventLastUpdate(spaceToken, eventId, [
             root => root.favorites,
             root => root.allFeedbacks,
             root => root.talkListUpdated
@@ -48,8 +49,8 @@ export async function legacyPublicEventStats(request: functions.https.Request, r
     try {
         const [talkStats, talksDetailsWithRatings] = await logPerf("eventTalkStats + getTalksDetailsWithRatings", () => {
             return Promise.all([
-                eventTalkStatsFor(eventId),
-                getTalksDetailsWithRatings(eventId),
+                eventTalkStatsFor(spaceToken, eventId),
+                getTalksDetailsWithRatings(spaceToken, eventId),
             ]);
         })
 
