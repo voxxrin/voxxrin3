@@ -52,7 +52,7 @@ export interface DevoxxScheduleProposal {
       imageURL: string
     },
     speakers: DevoxxScheduleSpeakerInfo[],
-    tags: DevoxxScheduleItemTag[],
+    tags: DevoxxScheduleItemTag[]|undefined,
     language: {
       id: number,
       alpha2: string,
