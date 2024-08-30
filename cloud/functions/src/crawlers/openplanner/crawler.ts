@@ -1,4 +1,4 @@
-import {BreakTimeslotWithPotentiallyUnknownIcon, FullEvent} from "../../models/Event";
+import {BreakTimeslotWithPotentiallyUnknownIcon, detailedTalksToSpeakersLineup, FullEvent} from "../../models/Event";
 import {z} from "zod";
 import {
   BREAK_PARSER,
@@ -334,7 +334,8 @@ export const OPENPLANNER_CRAWLER: CrawlerKind<typeof OPENPLANNER_DESCRIPTOR_PARS
           location: descriptor.location,
           theming: descriptor.theming || openPlannerSchedule.theming,
           keywords: descriptor.keywords
-        }
+        },
+        lineupSpeakers: detailedTalksToSpeakersLineup(talks),
       }
 
       return event
