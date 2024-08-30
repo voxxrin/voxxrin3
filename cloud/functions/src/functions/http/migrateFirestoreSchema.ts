@@ -35,6 +35,7 @@ const MIGRATIONS: Migration[] = [
     { name: "fillEmptyUserSubCollectionDocs", exec: async () => (await import("../firestore/migrations/024-fillEmptyUserSubCollectionDocs")).fillEmptyUserSubCollectionDocs() },
     { name: "fillUserLastConnection", exec: async () => (await import("../firestore/migrations/025-fillUserLastConnection")).fillUserLastConnection() },
     { name: "fillTalkEditorsSpeakersAndTitle", exec: async () => (await import("../firestore/migrations/026-fillTalkEditorsSpeakersAndTitle")).fillTalkEditorsSpeakersAndTitle() },
+    { name: "introduceEventSpeakersAndFixTalkUndefinedTags", exec: async () => (await import("../firestore/migrations/027-introduceEventSpeakersAndFixTalkUndefinedTags")).introduceEventSpeakersAndFixTalkUndefinedTags() },
 ];
 
 export type MigrationResult = "OK"|"Error";
