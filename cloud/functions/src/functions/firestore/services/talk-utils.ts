@@ -8,10 +8,12 @@ import {logPerf} from "../../http/utils";
 import {getTimeslottedTalks} from "./schedule-utils";
 import {firestore} from "firebase-admin";
 import QuerySnapshot = firestore.QuerySnapshot;
-import {Talk} from "../../../../../../shared/daily-schedule.firestore";
+import {DetailedTalk, Talk} from "../../../../../../shared/daily-schedule.firestore";
 import stringSimilarity from "string-similarity-js";
 import {EventRecordingConfig} from "../../../../../../shared/conference-descriptor.firestore";
 import {resolvedEventFirestorePath} from "../../../../../../shared/utilities/event-utils";
+import DocumentReference = firestore.DocumentReference;
+import {match, P} from "ts-pattern";
 
 
 type PerTalkPublicUserIdFeedbackRating = {
@@ -77,9 +79,14 @@ export async function getTalksDetailsWithRatings(maybeSpaceToken: string|undefin
     })
 }
 
-export async function getEventTalks(maybeSpaceToken: string|undefined, eventId: string) {
+export async function getEventTalks(maybeSpaceToken: DocumentReference|string|undefined, eventId: string) {
   return logPerf(`getEventTalks(${maybeSpaceToken}, ${eventId})`, async () => {
-    const talkSnapshots = await db.collection(`${resolvedEventFirestorePath(eventId, maybeSpaceToken)}/talks`).get() as QuerySnapshot<Talk>
+    const eventPath = match(maybeSpaceToken)
+      .with(P.nullish, () => resolvedEventFirestorePath(eventId, undefined))
+      .with(P.string, (spaceToken) => resolvedEventFirestorePath(eventId, spaceToken))
+      .otherwise(ref => ref.path)
+
+    const talkSnapshots = await db.collection(`${eventPath}/talks`).get() as QuerySnapshot<DetailedTalk>
 
     return talkSnapshots.docs.map(snap => snap.data());
   })
