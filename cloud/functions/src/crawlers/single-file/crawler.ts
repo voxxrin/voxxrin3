@@ -1,4 +1,4 @@
-import {FullEvent} from "../../models/Event";
+import {detailedTalksToSpeakersLineup, FullEvent} from "../../models/Event";
 import {z} from "zod";
 import {
   BREAK_PARSER,
@@ -119,27 +119,29 @@ export const SINGLE_FILE_CRAWLER: CrawlerKind<typeof SINGLE_FILE_DESCRIPTOR_PARS
       timeSlots: timeslots.filter(timeslot => timeslot.start.startsWith(day.localDate))
     }))
 
+    const talks = descriptor.talks.map(detailedTalk => ({
+      start: detailedTalk.start,
+      end: detailedTalk.end,
+      summary: detailedTalk.summary,
+      description: detailedTalk.summary,
+      tags: detailedTalk.tags,
+      assets: detailedTalk.assets,
+      speakers: detailedTalk.speakers,
+      id: detailedTalk.id,
+      title: detailedTalk.title,
+      isOverflow: detailedTalk.isOverflow,
+
+      format: findItemById(descriptor.talkFormats, detailedTalk.formatId, "format"),
+      language: findItemById(descriptor.supportedTalkLanguages, detailedTalk.langId, "language").id,
+      track: findItemById(descriptor.talkTracks, detailedTalk.trackId, "track"),
+      room: findItemById(descriptor.rooms, detailedTalk.roomId, "room"),
+    }))
+
     const event: FullEvent = {
       id: eventId,
       info: eventInfo,
       daySchedules: dailySchedules,
-      talks: descriptor.talks.map(detailedTalk => ({
-        start: detailedTalk.start,
-        end: detailedTalk.end,
-        summary: detailedTalk.summary,
-        description: detailedTalk.summary,
-        tags: detailedTalk.tags,
-        assets: detailedTalk.assets,
-        speakers: detailedTalk.speakers,
-        id: detailedTalk.id,
-        title: detailedTalk.title,
-        isOverflow: detailedTalk.isOverflow,
-
-        format: findItemById(descriptor.talkFormats, detailedTalk.formatId, "format"),
-        language: findItemById(descriptor.supportedTalkLanguages, detailedTalk.langId, "language").id,
-        track: findItemById(descriptor.talkTracks, detailedTalk.trackId, "track"),
-        room: findItemById(descriptor.rooms, detailedTalk.roomId, "room"),
-      })),
+      talks,
       conferenceDescriptor: {
         ...eventInfo,
         headingTitle: descriptor.headingTitle,
@@ -150,7 +152,8 @@ export const SINGLE_FILE_CRAWLER: CrawlerKind<typeof SINGLE_FILE_DESCRIPTOR_PARS
         rooms: descriptor.rooms,
         infos: descriptor.infos,
         formattings: descriptor.formattings,
-      }
+      },
+      lineupSpeakers: detailedTalksToSpeakersLineup(talks),
     }
     return event
   }

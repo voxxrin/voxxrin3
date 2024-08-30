@@ -1,5 +1,5 @@
 import {z} from "zod";
-import {FullEvent} from "../../models/Event";
+import {detailedTalksToSpeakersLineup, FullEvent} from "../../models/Event";
 import {
     BreakTimeSlot,
     DailySchedule, DetailedTalk, ScheduleTimeSlot,
@@ -258,6 +258,7 @@ export const JUG_SUMMERCAMP_CRAWLER: CrawlerKind<typeof JUG_SUMMERCAMP_PARSER> =
             conferenceDescriptor: confDescriptor,
             daySchedules: dailySchedules,
             talks: detailedTalks,
+            lineupSpeakers: detailedTalksToSpeakersLineup(detailedTalks),
         };
 
         return fullEvent;

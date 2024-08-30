@@ -1,5 +1,5 @@
 import {z} from "zod";
-import {FullEvent} from "../../models/Event";
+import {detailedTalksToSpeakersLineup, FullEvent} from "../../models/Event";
 import {
     BreakTimeSlot,
     DailySchedule, DetailedTalk, ScheduleTimeSlot,
@@ -306,6 +306,7 @@ export const WEB2DAY_CRAWLER: CrawlerKind<typeof WEB2DAY_PARSER> = {
             conferenceDescriptor: confDescriptor,
             daySchedules: dailySchedules,
             talks: detailedTalks,
+            lineupSpeakers: detailedTalksToSpeakersLineup(detailedTalks),
         };
 
         return fullEvent;

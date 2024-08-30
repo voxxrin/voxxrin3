@@ -1,5 +1,5 @@
 import {z} from "zod";
-import {FullEvent} from "../../models/Event";
+import {detailedTalksToSpeakersLineup, FullEvent} from "../../models/Event";
 import {
     BreakTimeSlot,
     DailySchedule, DetailedTalk, ScheduleTimeSlot,
@@ -268,6 +268,7 @@ export const CAMPING_DES_SPEAKERS_CRAWLER: CrawlerKind<typeof CAMPING_DES_SPEAKE
             conferenceDescriptor: confDescriptor,
             daySchedules: dailySchedules,
             talks: detailedTalks,
+            lineupSpeakers: detailedTalksToSpeakersLineup(detailedTalks),
         };
 
         return fullEvent;

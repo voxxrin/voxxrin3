@@ -12,7 +12,7 @@ import {
   Speaker,
   Talk
 } from "../../../../../shared/daily-schedule.firestore"
-import { FullEvent } from "../../models/Event";
+import {detailedTalksToSpeakersLineup, FullEvent} from "../../models/Event";
 import { ISODatetime, ISOLocalDate } from "../../../../../shared/type-utils";
 import { Day, ListableEvent } from "../../../../../shared/event-list.firestore";
 import { Temporal } from "@js-temporal/polyfill";
@@ -153,7 +153,8 @@ export const DEVOXX_CRAWLER: CrawlerKind<typeof DEVOXX_DESCRIPTOR_PARSER> = {
 
         const event: FullEvent = {
             id: eventId, info: eventInfo, daySchedules,
-            talks: eventTalks, conferenceDescriptor: eventDescriptor
+            talks: eventTalks, conferenceDescriptor: eventDescriptor,
+            lineupSpeakers: detailedTalksToSpeakersLineup(eventTalks),
         }
         return event
     }

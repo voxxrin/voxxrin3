@@ -19,7 +19,7 @@ import {
   ThemedTalkFormat,
   ThemedTrack
 } from "../../../../../shared/daily-schedule.firestore"
-import {FullEvent} from "../../models/Event";
+import {detailedTalksToSpeakersLineup, FullEvent} from "../../models/Event";
 import {ISODatetime} from "../../../../../shared/type-utils";
 import {Temporal} from "@js-temporal/polyfill";
 import {z} from "zod";
@@ -300,7 +300,8 @@ export const DEVOXX_SCALA_CRAWLER: CrawlerKind<typeof DEVOXX_SCALA_DESCRIPTOR_PA
 
         const event: FullEvent = {
             id: eventId, info: eventInfo, daySchedules: dailySchedules,
-            talks, conferenceDescriptor: eventDescriptor
+            talks, conferenceDescriptor: eventDescriptor,
+            lineupSpeakers: detailedTalksToSpeakersLineup(talks),
         }
         return event
     }

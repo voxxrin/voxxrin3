@@ -1,4 +1,4 @@
-import {BreakTimeslotWithPotentiallyUnknownIcon, FullEvent} from "../../models/Event";
+import {BreakTimeslotWithPotentiallyUnknownIcon, detailedTalksToSpeakersLineup, FullEvent} from "../../models/Event";
 import {z} from "zod";
 import {EVENT_DESCRIPTOR_PARSER, EVENT_FEATURES_CONFIG_PARSER, RATINGS_CONFIG_PARSER} from "../crawler-parsers";
 import {CrawlerKind, TALK_TRACK_FALLBACK_COLORS} from "../crawl";
@@ -293,7 +293,8 @@ export const OPENPLANNER_CRAWLER: CrawlerKind<typeof OPENPLANNER_DESCRIPTOR_PARS
           location: descriptor.location,
           theming: openPlannerSchedule.theming,
           keywords: descriptor.keywords
-        }
+        },
+        lineupSpeakers: detailedTalksToSpeakersLineup(talks),
       }
 
       return event
