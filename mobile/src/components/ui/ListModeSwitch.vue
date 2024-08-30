@@ -1,21 +1,35 @@
 <template>
-  <!-- TODO #74 Dev btn and custom option / icons depending on context -->
-  <ion-segment value="buttons" class="listModesSwitch">
-    <ion-segment-button class="listModesSwitch-button" value="default" :aria-label="LL.Big_list_mode()">
-      <ion-icon :icon="albums" aria-hidden="true"></ion-icon>
-    </ion-segment-button>
-    <ion-segment-button class="listModesSwitch-button" value="segment" :aria-label="LL.Compact_list_mode()">
-      <ion-icon :icon="list" aria-hidden="true"></ion-icon>
+  <ion-segment :value="selectedModeRef" class="listModesSwitch">
+    <ion-segment-button v-for="mode in modes" :key="mode.id" class="listModesSwitch-button"
+                        :value="mode.id" :aria-label="mode.label"
+                        @click="() => updateSelectedModeTo(mode.id)">
+      <ion-icon :icon="mode.icon" aria-hidden="true"></ion-icon>
     </ion-segment-button>
   </ion-segment>
 </template>
 
 <script setup lang="ts">
-  import {albums, list} from "ionicons/icons";
   import {IonSegment, IonSegmentButton} from "@ionic/vue";
-  import {typesafeI18n} from "@/i18n/i18n-vue";
+  import {PropType, ref} from "vue";
 
-  const { LL } = typesafeI18n()
+  const props = defineProps({
+    modes: {
+      required: true,
+      type: Array as PropType<Array<{id: string, icon: string, label: string, preSelected?: boolean}>>,
+    },
+  })
+
+  const $emits = defineEmits<{
+    (e: 'mode-updated', updatedModeId: string, previousModeId: string|undefined): void
+  }>()
+
+  const selectedModeRef = ref<string|undefined>(props.modes?.find(mode => !!mode.preSelected)?.id)
+
+  function updateSelectedModeTo(updatedModeId: string) {
+    const previousModeId = selectedModeRef.value;
+    selectedModeRef.value = updatedModeId;
+    $emits('mode-updated', updatedModeId, previousModeId);
+  }
 </script>
 
 <style lang="scss">

@@ -9,34 +9,12 @@
            layout="stacked"
            @didDismiss="preparingOfflineScheduleToastIsOpenRef = false"
       ></ion-toast>
-      <ion-header class="toolbarHeader">
-        <ion-toolbar>
-          <ion-title slot="start">{{ LL.Schedule() }}</ion-title>
-          <transition name="searchBar">
-            <div v-if="searchFieldDisplayed" class="search-input">
-              <ion-input :size="10" ref="$searchInput"
-                         :debounce="300"
-                         :placeholder="`${LL.Search()}...`"
-                         @ionInput="(ev) => searchTermsRef = ''+ev.target.value"
-              />
-              <ion-icon class="iconInput" src="/assets/icons/line/search-line.svg"></ion-icon>
-              <ion-button shape="round" size="small" fill="outline" @click="toggleSearchField()"
-                          :aria-label="LL.Search_close()">
-                <ion-icon src="/assets/icons/line/close-line.svg"></ion-icon>
-              </ion-button>
-            </div>
-          </transition>
-
-          <ion-button class="ion-margin-end" slot="end" shape="round" size="small" fill="outline" @click="openSchedulePreferencesModal()"
-                      v-if="false"   :aria-label="LL.Filters()">
-            <ion-icon src="/assets/icons/solid/settings-cog.svg"></ion-icon>
-          </ion-button>
-          <ion-button slot="end" shape="round" size="small" @click="toggleSearchField()"
-                      :aria-label="LL.Search()">
-            <ion-icon src="/assets/icons/line/search-line.svg"></ion-icon>
-          </ion-button>
-        </ion-toolbar>
-      </ion-header>
+      <toolbar-header :title="LL.Schedule()" :search-enabled="true" @search-terms-updated="searchTerms => searchTermsRef = searchTerms">
+        <ion-button class="ion-margin-end" slot="end" shape="round" size="small" fill="outline" @click="openSchedulePreferencesModal()"
+                    v-if="false"   :aria-label="LL.Filters()">
+          <ion-icon src="/assets/icons/solid/settings-cog.svg"></ion-icon>
+        </ion-button>
+      </toolbar-header>
 
       <ion-header class="stickyHeader daySelectorContainer">
         <day-selector
@@ -115,7 +93,15 @@
 </template>
 
 <script setup lang="ts">
-import {IonAccordionGroup, IonFab, IonFabButton, IonFabList, IonInput, IonToast, modalController} from '@ionic/vue';
+import {
+  IonAccordionGroup,
+  IonButton,
+  IonFab,
+  IonFabButton,
+  IonFabList,
+  IonToast,
+  modalController
+} from '@ionic/vue';
 import {computed, nextTick, Ref, toValue, watch} from "vue";
 import {isRefDefined, managedRef as ref} from "@/views/vue-utils";
 import {LabelledTimeslotWithFeedback, useSchedule} from "@/state/useSchedule";
@@ -152,6 +138,8 @@ import ProvideFeedbackTalkButton from "@/components/talk-card/ProvideFeedbackTal
 import PoweredVoxxrin from "@/components/ui/PoweredVoxxrin.vue";
 import {useRoomsStats} from "@/state/useRoomsStats";
 import {getResolvedEventRootPathFromSpacedEventIdRef, useCurrentSpaceEventIdRef} from "@/services/Spaces";
+import {list, star} from "ionicons/icons";
+import ToolbarHeader from "@/components/ui/ToolbarHeader.vue";
 
 const LOGGER = Logger.named("SchedulePage");
 
@@ -205,9 +193,7 @@ const displayedTimeslotsRef = ref<LabelledTimeslotWithFeedback[]>([]) as Ref<Lab
 
 const missingFeedbacksPastTimeslots = ref<MissingFeedbackPastTimeslot[]>([])
 const expandedTimeslotIds = ref<string[]>([])
-const searchFieldDisplayed = ref(false);
 const searchTermsRef = ref<string|undefined>(undefined);
-const $searchInput = ref<{ $el: HTMLIonInputElement }|undefined>(undefined);
 
 const autoExpandTimeslotsRequested = ref(true);
 watch([confDescriptor, displayedTimeslotsRef ], ([confDescriptor, displayedTimeslots]) => {
@@ -280,18 +266,6 @@ function toggleExpandedTimeslot(timeslot: VoxxrinScheduleTimeSlot) {
     }
 }
 
-async function toggleSearchField() {
-  searchFieldDisplayed.value = !searchFieldDisplayed.value
-  if(searchFieldDisplayed.value) {
-    await nextTick(); // Wait for Vue to update the DOM
-    if(isRefDefined($searchInput)) {
-      setTimeout(() => $searchInput.value.$el.setFocus(), 100);
-    }
-  } else {
-    searchTermsRef.value = '';
-  }
-}
-
 async function openSchedulePreferencesModal() {
     const modal = await modalController.create({
         component: SchedulePreferencesModal,
@@ -304,19 +278,6 @@ async function openSchedulePreferencesModal() {
 </script>
 
 <style scoped lang="scss">
-
-  .searchBar-enter-active, .searchBar-leave-active {
-    transition: width 120ms cubic-bezier(0.250, 0.460, 0.450, 0.940);
-  }
-
-  .searchBar-enter-from, .searchBar-leave-to {
-    width: 0;
-  }
-
-  .searchBar-enter-to, .searchBar-leave-from {
-    width: 100%;
-  }
-
 
   .daySelectorContainer {
     overflow-y: auto;
@@ -333,11 +294,6 @@ async function openSchedulePreferencesModal() {
 
   ion-accordion-group {
     margin-bottom: $ion-fab-button-height;
-  }
-
-  ion-toolbar {
-    position: sticky;
-    top: 0;
   }
 
   .listFeedbackSlot {
