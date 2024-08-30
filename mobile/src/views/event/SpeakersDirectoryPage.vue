@@ -2,18 +2,10 @@
   <ion-page>
     <ion-content :fullscreen="true" v-if="confDescriptor">
       <current-event-header :conf-descriptor="confDescriptor" />
-      <ion-header class="toolbarHeader">
-        <ion-toolbar>
-          <ion-title slot="start">{{ LL.Speakers() }}</ion-title>
-          <div class="toolbarHeader-options" slot="end">
-            <ListModeSwitch></ListModeSwitch>
-            <ion-button slot="end" shape="round" size="small" @click="toggleSearchField()"
-                        :aria-label="LL.Search()">
-              <ion-icon src="/assets/icons/line/search-line.svg"></ion-icon>
-            </ion-button>
-          </div>
-        </ion-toolbar>
-      </ion-header>
+      <toolbar-header :title="LL.Speakers()" :modes="MODES" :search-enabled="true"
+                      @search-terms-updated="searchTerms => searchTermsRef = searchTerms"
+                      @mode-updated="(updatedModeId, previousModeId) => console.log(`Mode updated from ${previousModeId} to ${updatedModeId}`)">
+      </toolbar-header>
 
       <speaker-card @speaker-clicked="openSpeakerDetails($event)"></speaker-card>
       <ion-fab vertical="bottom" horizontal="end" slot="fixed">
@@ -35,12 +27,12 @@
   import {typesafeI18n} from "@/i18n/i18n-vue";
   import {managedRef as ref} from "@/views/vue-utils";
   import {IonFab, IonFabButton} from "@ionic/vue";
-  import {ticket} from "ionicons/icons";
+  import {albums, list, ticket} from "ionicons/icons";
   import PoweredVoxxrin from "@/components/ui/PoweredVoxxrin.vue";
   import SpeakerCard from "@/components/speaker-card/SpeakerCard.vue";
-  import ListModeSwitch from "@/components/ui/ListModeSwitch.vue";
   import {useTabbedPageNav} from "@/state/useTabbedPageNav";
   import {VoxxrinSimpleSpeaker} from "@/models/VoxxrinSpeaker";
+  import ToolbarHeader from "@/components/ui/ToolbarHeader.vue";
 
   const { LL } = typesafeI18n()
   const route = useRoute();
@@ -49,6 +41,14 @@
   const { triggerTabbedPageNavigate } = useTabbedPageNav();
 
   const baseUrl = import.meta.env.BASE_URL;
+
+  const MODES = [
+    { id: "detailed", icon: albums, label: LL.value.Big_list_mode(), preSelected: true },
+    { id: "compact", icon: list, label: LL.value.Compact_list_mode() },
+  ]
+
+  const searchTermsRef = ref<string|undefined>(undefined);
+  // TODO: take searchTermsRef into consideration when looking for speakers/talks
 
   async function openSpeakerDetails(speaker: VoxxrinSimpleSpeaker) {
     if(speaker) {
@@ -68,14 +68,6 @@
 </script>
 
 <style lang="scss" scoped>
-  .toolbarHeader {
-    &-options {
-      display: flex;
-      align-items: center;
-      gap: var(--app-gutters);
-    }
-  }
-
   .btnGoToTicketing {
     --background: var(--voxxrin-event-theme-colors-secondary-hex);
     --background-activated: var(--voxxrin-event-theme-colors-secondary-hex);
