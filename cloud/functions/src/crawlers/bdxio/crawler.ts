@@ -1,5 +1,5 @@
 import {z} from "zod";
-import {FullEvent} from "../../models/Event";
+import {detailedTalksToSpeakersLineup, FullEvent} from "../../models/Event";
 import {
     BreakTimeSlot,
     DailySchedule, DetailedTalk, Room, ScheduleTimeSlot,
@@ -361,6 +361,7 @@ export const BDXIO_CRAWLER: CrawlerKind<typeof BDXIO_PARSER> = {
             conferenceDescriptor: confDescriptor,
             daySchedules: dailySchedules,
             talks: detailedTalks,
+            lineupSpeakers: detailedTalksToSpeakersLineup(detailedTalks),
         };
 
         return fullEvent;
