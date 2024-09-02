@@ -2,7 +2,7 @@
   <ion-page>
     <ion-content :fullscreen="true" v-if="confDescriptor">
       <current-event-header :conf-descriptor="confDescriptor" />
-      <toolbar-header :title="LL.Speakers()" :modes="MODES" :search-enabled="true"
+      <toolbar-header :title="LL.Speakers()" :modes="[...MODES]" :search-enabled="true"
                       @search-terms-updated="searchTerms => searchTermsRef = searchTerms"
                       @mode-updated="(updatedModeId, previousModeId) => console.log(`Mode updated from ${previousModeId} to ${updatedModeId}`)">
       </toolbar-header>
@@ -44,7 +44,7 @@
   const MODES = [
     { id: "detailed", icon: albums, label: LL.value.Big_list_mode(), preSelected: true },
     { id: "compact", icon: list, label: LL.value.Compact_list_mode() },
-  ]
+  ] as const
 
   const searchTermsRef = ref<string|undefined>(undefined);
   // TODO: take searchTermsRef into consideration when looking for speakers/talks
