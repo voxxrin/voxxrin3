@@ -21,8 +21,6 @@
 <script setup lang="ts">
   import CurrentEventHeader from "@/components/events/CurrentEventHeader.vue";
   import {useRoute} from "vue-router";
-  import {EventId} from "@/models/VoxxrinEvent";
-  import {getRouteParamsValue} from "@/views/vue-utils";
   import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
   import {typesafeI18n} from "@/i18n/i18n-vue";
   import {managedRef as ref} from "@/views/vue-utils";
@@ -33,11 +31,12 @@
   import {useTabbedPageNav} from "@/state/useTabbedPageNav";
   import {VoxxrinSimpleSpeaker} from "@/models/VoxxrinSpeaker";
   import ToolbarHeader from "@/components/ui/ToolbarHeader.vue";
+  import {getResolvedEventRootPathFromSpacedEventIdRef, useCurrentSpaceEventIdRef} from "@/services/Spaces";
 
   const { LL } = typesafeI18n()
   const route = useRoute();
-  const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')));
-  const {conferenceDescriptor: confDescriptor} = useSharedConferenceDescriptor(eventId);
+  const spacedEventIdRef = useCurrentSpaceEventIdRef();
+  const {conferenceDescriptor: confDescriptor} = useSharedConferenceDescriptor(spacedEventIdRef);
   const { triggerTabbedPageNavigate } = useTabbedPageNav();
 
   const baseUrl = import.meta.env.BASE_URL;
@@ -57,7 +56,7 @@
       // const url = talkFeedbackViewerToken
       //   ?`/events/${eventId.value.value}/talks/${talk.id.value}/asFeedbackViewer/${talkFeedbackViewerToken.secretToken}/details`
       //   :`/events/${eventId.value.value}/talks/${talk.id.value}/details`
-      const url = `/events/${eventId.value.value}/speakers/${speaker.id.value}/details`
+      const url = `${getResolvedEventRootPathFromSpacedEventIdRef(spacedEventIdRef)}/speakers/${speaker.id.value}/details`
 
       triggerTabbedPageNavigate(url, "forward", "push");
     }

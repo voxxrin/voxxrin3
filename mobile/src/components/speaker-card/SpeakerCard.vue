@@ -3,11 +3,7 @@
   <ion-card class="speakerCard" @click="$emit('speaker-clicked', speaker)">
     <div class="speakerCard-head">
       <div class="avatarContainer">
-        <ion-thumbnail class="avatar _large">
-          <img v-if="false" :src="speaker.photoUrl" @error="handle404OnSpeakerThumbnail($event.target as HTMLImageElement)"
-               :alt="LL.Avatar_Speaker() + ' ' + speaker.fullName"/>
-          <img v-if="true" :src="baseUrl+'assets/images/svg/avatar-shadow.svg'" aria-hidden="true"/>
-        </ion-thumbnail>
+        <speaker-thumbnail size="64px" :is-highlighted="false" :speaker="speaker"></speaker-thumbnail>
         <div class="avatarInfos">
           <ion-text class="avatarInfos-title">Name speaker</ion-text>
           <ion-text class="avatarInfos-subTitle">
@@ -38,31 +34,19 @@
 
 
 <script setup lang="ts">
-  import {useRoute} from "vue-router";
-  import {EventId} from "@/models/VoxxrinEvent";
-  import {getRouteParamsValue, isRefDefined} from "@/views/vue-utils";
-  import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
-  import {typesafeI18n} from "@/i18n/i18n-vue";
-  import {managedRef as ref} from "@/views/vue-utils";
-  import {IonThumbnail, IonText} from "@ionic/vue";
-  import {businessSharp} from "ionicons/icons";
-  import SpeakerLikeButton from "@/components/speaker-card/SpeakerLikeButton.vue";
-  import SpeakerResumeTalk from "@/components/speaker-card/SpeakerResumeTalk.vue";
-  import SpeakerInfoButton from "@/components/speaker-card/SpeakerInfoButton.vue";
-  import {VoxxrinTalk} from "@/models/VoxxrinTalk";
-  import {SpeakerId, VoxxrinSimpleSpeaker} from "@/models/VoxxrinSpeaker";
+import {typesafeI18n} from "@/i18n/i18n-vue";
+import {IonText, IonThumbnail} from "@ionic/vue";
+import {businessSharp} from "ionicons/icons";
+import SpeakerResumeTalk from "@/components/speaker-card/SpeakerResumeTalk.vue";
+import {SpeakerId, VoxxrinSimpleSpeaker} from "@/models/VoxxrinSpeaker";
+import SpeakerThumbnail from "@/components/speaker/SpeakerThumbnail.vue";
 
-  const { LL } = typesafeI18n()
+const { LL } = typesafeI18n()
 
   defineEmits<{
     (e: 'speaker-clicked', speaker: VoxxrinSimpleSpeaker): void,
   }>()
 
-
-  const route = useRoute();
-  const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')));
-  const {conferenceDescriptor: confDescriptor} = useSharedConferenceDescriptor(eventId);
-  const baseUrl = import.meta.env.BASE_URL;
 
   const speaker: VoxxrinSimpleSpeaker = {
     id: new SpeakerId('42'),
