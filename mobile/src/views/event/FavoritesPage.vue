@@ -138,15 +138,5 @@
 </script>
 
 <style lang="scss" scoped>
-  .room {
-    position: relative;
-    top: -8px;
-    flex: 0 0 auto;
-    padding: 4px 12px;
-    text-align: center;
-    background-color: var(--app-primary);
-    color: var(--app-primary-contrast);
-    font-weight: bold;
-    border-radius: 0 0 10px 10px;
-  }
+
 </style>
