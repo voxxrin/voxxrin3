@@ -9,7 +9,9 @@
            layout="stacked"
            @didDismiss="preparingOfflineScheduleToastIsOpenRef = false"
       ></ion-toast>
-      <toolbar-header :title="LL.Schedule()" :search-enabled="true" @search-terms-updated="searchTerms => searchTermsRef = searchTerms">
+      <toolbar-header :title="LL.Schedule()" :modes="[...MODES]" :search-enabled="true"
+                      @search-terms-updated="searchTerms => searchTermsRef = searchTerms"
+                      @mode-updated="updatedModeId => currentSelectedMode = updatedModeId as typeof MODES[number]['id']">
         <ion-button class="ion-margin-end" slot="end" shape="round" size="small" fill="outline" @click="openSchedulePreferencesModal()"
                     v-if="false"   :aria-label="LL.Filters()">
           <ion-icon src="/assets/icons/solid/settings-cog.svg"></ion-icon>
@@ -29,43 +31,39 @@
                             @timeslots-list-updated="(displayedTimeslots) => displayedTimeslotsRef = displayedTimeslots"
                             @missing-feedback-past-timeslots-updated="updatedMissingTimeslots => missingFeedbacksPastTimeslots = updatedMissingTimeslots">
           <template #iterator="{ timeslot, index: timeslotIndex, progress, upcomingRawTalkIds }">
-            <time-slot-accordion
-                :animation-delay="timeslotIndex*TimeslotAnimations.ANIMATION_BASE_DELAY.total('milliseconds')"
-                :timeslot-feedback="timeslot.feedback" :timeslot="timeslot" :conf-descriptor="confDescriptor"
-                :elements-shown="['add-feedback-btn']"
-                :progress="progress"
-                @add-timeslot-feedback-clicked="(ts) => navigateToTimeslotFeedbackCreation(ts)"
-                @click="() => toggleExpandedTimeslot(timeslot)">
-              <template #accordion-content="{ timeslot, progressStatus, feedback }">
-                <schedule-break v-if="timeslot.type==='break'" :conf-descriptor="confDescriptor" :talk-break="timeslot.break"></schedule-break>
-                <talk-format-groups-breakdown :conf-descriptor="confDescriptor" v-if="timeslot.type==='talks'"
-                                              :talks="timeslot.talks">
-                  <template #talk="{ talk }">
-                    <ion-item class="listTalks-item" role="listitem">
-                      <schedule-talk :talk="talk" :talk-stats="talkStatsRefByTalkId.get(talk.id.value)"
-                                     :room-stats="roomsStatsRefByRoomId?.[talk.room.id.value]" :is-upcoming-talk="upcomingRawTalkIds.includes(talk.id.value)"
-                                     :talk-notes="userEventTalkNotesRef.get(talk.id.value)" @talkClicked="openTalkDetails($event)" :is-highlighted="(talk, talkNotes) => talkNotes.isFavorite" :conf-descriptor="confDescriptor">
-                        <template #upper-right="{ talk }">
-                          <talk-room :talk="talk" :conf-descriptor="confDescriptor" />
-                        </template>
-                        <template #footer-actions="{ talk, talkStats, talkNotes }">
-                          <provide-feedback-talk-button v-if="!talk.isOverflow"
-                            :conf-descriptor="confDescriptor" :timeslot-progress-status="progressStatus"
-                            :timeslot-feedback="feedback" @click.stop="navigateToTalkRatingScreenFor(talk)" />
-                          <talk-watch-later-button v-if="confDescriptor && !hideWatchLater && !talk.isOverflow"
-                            :conf-descriptor="confDescriptor" :user-talk-notes="talkNotes"
-                            @talk-note-updated="updatedTalkNote => userEventTalkNotesRef.set(talk.id.value, updatedTalkNote) " />
-                          <talk-favorite-button v-if="confDescriptor && !talk.isOverflow"
-                            :conf-descriptor="confDescriptor" :user-talk-notes="talkNotes" :talk-stats="talkStats"
-                            :local-favorite="localEventTalkNotesRef.get(talk.id.value)"
-                            @talk-note-updated="updatedTalkNote => userEventTalkNotesRef.set(talk.id.value, updatedTalkNote) " />
-                        </template>
-                      </schedule-talk>
-                    </ion-item>
-                  </template>
-                </talk-format-groups-breakdown>
-              </template>
-            </time-slot-accordion>
+            <schedule-timeslot-accordion
+              v-show="currentSelectedMode === 'schedule'"
+              :local-event-talk-notes="localEventTalkNotesRef"
+              :user-event-talk-notes="userEventTalkNotesRef"
+              :rooms-stats-ref-by-room-id="roomsStatsRefByRoomId"
+              :talk-stats-ref-by-talk-id="talkStatsRefByTalkId"
+              :upcoming-raw-talk-ids="upcomingRawTalkIds"
+              :progress="progress"
+              :timeslot-index="timeslotIndex"
+              :timeslot="timeslot"
+              :conf-descriptor="confDescriptor"
+              :hide-watch-later="hideWatchLater"
+              @time-slot-accordion-clicked="labelledTimeslot => toggleExpandedTimeslot(labelledTimeslot)"
+              @add-timeslot-feedback-clicked="scheduleTimeslot => navigateToTimeslotFeedbackCreation(scheduleTimeslot)"
+              @talk-clicked="talk => openTalkDetails(talk)"
+              @provide-talk-feedback-clicked="talk => navigateToTalkRatingScreenFor(talk)"
+              :key="`schedule-timeslot-accordion-${timeslotIndex}`"
+            ></schedule-timeslot-accordion>
+
+            <favorites-timeslot-section
+              v-show="currentSelectedMode === 'favorites'"
+              :local-event-talk-notes="localEventTalkNotesRef"
+              :user-event-talk-notes="userEventTalkNotesRef"
+              :rooms-stats-ref-by-room-id="roomsStatsRefByRoomId"
+              :talk-stats-ref-by-talk-id="talkStatsRefByTalkId"
+              :upcoming-raw-talk-ids="upcomingRawTalkIds"
+              :progress="progress"
+              :timeslot="timeslot"
+              :conf-descriptor="confDescriptor"
+              @talk-clicked="talk => openTalkDetails(talk)"
+              @provide-talk-feedback-clicked="talk => navigateToTalkRatingScreenFor(talk)"
+              :key="`favorites-timeslot-section-${timeslotIndex}`"
+            ></favorites-timeslot-section>
           </template>
         </timeslots-iterator>
       </ion-accordion-group>
@@ -93,17 +91,9 @@
 </template>
 
 <script setup lang="ts">
-import {
-  IonAccordionGroup,
-  IonButton,
-  IonFab,
-  IonFabButton,
-  IonFabList,
-  IonToast,
-  modalController
-} from '@ionic/vue';
-import {computed, nextTick, Ref, toValue, watch} from "vue";
-import {isRefDefined, managedRef as ref} from "@/views/vue-utils";
+import {IonAccordionGroup, IonButton, IonFab, IonFabButton, IonFabList, IonToast, modalController} from '@ionic/vue';
+import {computed, Ref, toValue, watch} from "vue";
+import {managedRef as ref} from "@/views/vue-utils";
 import {LabelledTimeslotWithFeedback, useSchedule} from "@/state/useSchedule";
 import CurrentEventHeader from "@/components/events/CurrentEventHeader.vue";
 import {VoxxrinDay} from "@/models/VoxxrinDay";
@@ -114,32 +104,26 @@ import {
 } from "@/models/VoxxrinSchedule";
 import DaySelector from "@/components/schedule/DaySelector.vue";
 import {areFeedbacksEnabled,} from "@/models/VoxxrinConferenceDescriptor";
-import TimeSlotAccordion from "@/components/timeslots/TimeSlotAccordion.vue";
 import {useCurrentClock} from "@/state/useCurrentClock";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {useOfflineEventPreparation, useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
 import SchedulePreferencesModal from '@/components/modals/SchedulePreferencesModal.vue'
 import {useTabbedPageNav} from "@/state/useTabbedPageNav";
 import TimeslotsIterator, {MissingFeedbackPastTimeslot} from "@/components/timeslots/TimeslotsIterator.vue";
-import ScheduleBreak from "@/components/schedule/ScheduleBreak.vue";
-import ScheduleTalk from "@/components/talk-card/ScheduleTalk.vue";
-import TalkRoom from "@/components/talk-card/TalkRoom.vue";
-import TalkFavoriteButton from "@/components/talk-card/TalkFavoriteButton.vue";
-import TalkFormatGroupsBreakdown from "@/components/schedule/TalkFormatGroupsBreakdown.vue";
 import {VoxxrinTalk} from "@/models/VoxxrinTalk";
 import {useSharedEventSelectedDay} from "@/state/useEventSelectedDay";
 import {Logger} from "@/services/Logger";
 import {useCurrentUser} from "vuefire";
 import {TimeslotAnimations} from "@/services/Animations";
 import {useEventTalkStats} from "@/state/useEventTalkStats";
-import TalkWatchLaterButton from "@/components/talk-card/TalkWatchLaterButton.vue";
 import {useLocalEventTalkFavsStorage, useUserEventTalkNotes} from "@/state/useUserTalkNotes";
-import ProvideFeedbackTalkButton from "@/components/talk-card/ProvideFeedbackTalkButton.vue";
 import PoweredVoxxrin from "@/components/ui/PoweredVoxxrin.vue";
 import {useRoomsStats} from "@/state/useRoomsStats";
 import {getResolvedEventRootPathFromSpacedEventIdRef, useCurrentSpaceEventIdRef} from "@/services/Spaces";
 import {list, star} from "ionicons/icons";
 import ToolbarHeader from "@/components/ui/ToolbarHeader.vue";
+import ScheduleTimeslotAccordion from "@/components/schedule/ScheduleTimeslotAccordion.vue";
+import FavoritesTimeslotSection from "@/components/schedule/FavoritesTimeslotSection.vue";
 
 const LOGGER = Logger.named("SchedulePage");
 
@@ -173,6 +157,12 @@ const { LL } = typesafeI18n()
 const {selectedDayId} = useSharedEventSelectedDay(spacedEventId);
 
 const user = useCurrentUser()
+const MODES = [
+  { id: "schedule", icon: list, label: LL.value.Big_list_mode(), preSelected: true },
+  { id: "favorites", icon: star, label: LL.value.Compact_list_mode() },
+] as const
+
+const currentSelectedMode = ref<typeof MODES[number]['id']>("schedule")
 
 const availableDaysRef = ref<VoxxrinDay[]|undefined>(undefined);
 function onceDayInitializedTo(day: VoxxrinDay, availableDays: VoxxrinDay[]) {
@@ -391,24 +381,5 @@ async function openSchedulePreferencesModal() {
     100% { transform: translateX(120%);}
   }
 
-  .listTalks {
-    padding: 0;
-  }
 
-  :deep(.listTalks-item) {
-    overflow: visible !important;
-    --padding-start: 0;
-    --inner-padding-end: 0;
-    --background: transparent;
-    --border-style: none;
-
-    &:last-child {
-      margin-bottom: var(--app-gutters);
-    }
-  }
-
-  .talkCard {
-    margin-top: 8px;
-    margin-bottom: 4px;
-  }
 </style>
