@@ -5,7 +5,6 @@ import 'swiper/css/zoom';
 
 import _BaseEventPages from "@/views/event/_BaseEventPages.vue";
 import _SchedulePage from "@/views/event/SchedulePage.vue";
-import FavoritesPage from "@/views/event/FavoritesPage.vue";
 import FeedbacksPage from "@/views/event/FeedbacksPage.vue";
 import NotificationsPage from "@/views/event/NotificationsPage.vue";
 import InfosPage from "@/views/event/InfosPage.vue";
@@ -26,7 +25,6 @@ import SpeakersDirectoryPage from "@/views/event/SpeakersDirectoryPage.vue";
 const modules = {
     _BaseEventPages,
     SchedulePage: _SchedulePage,
-    FavoritesPage,
     SpeakersDirectoryPage,
     FeedbacksPage,
     NotificationsPage,
