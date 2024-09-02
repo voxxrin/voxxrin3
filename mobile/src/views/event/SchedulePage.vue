@@ -314,7 +314,7 @@ async function openSchedulePreferencesModal() {
       .listFeedbackSlot-item {
         visibility: visible;
 
-        @for $i from 0 through 1000 {
+        @for $i from 0 through 100 {
           animation: slide-left 140ms cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
           animation-timing-function: ease-in-out;
 
@@ -341,7 +341,7 @@ async function openSchedulePreferencesModal() {
         border: none;
       }
 
-      @for $i from 0 through 1000 {
+      @for $i from 0 through 100 {
         animation: slide-left-revert 140ms cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
         animation-timing-function: ease-in-out;
 
