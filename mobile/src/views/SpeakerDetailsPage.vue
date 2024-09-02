@@ -15,7 +15,7 @@
           </ion-button>
           <div class="speakerInfoHeader" slot="start">
             <ion-avatar class="speakerInfoHeader-avatar">
-              <img :src="detailedSpeaker.photoUrl"  :alt="LL.Avatar_Speaker() + ' ' + detailedSpeaker.fullName"/>
+              <speaker-thumbnail size="64px" :is-highlighted="false" :speaker="detailedSpeaker" />
             </ion-avatar>
             <ion-text class="speakerInfoHeader-title">{{detailedSpeaker.fullName}}</ion-text>
           </div>
@@ -29,7 +29,7 @@
             <span class="count">-</span>
           </div>
           <ion-avatar class="speakerAvatar">
-            <img :src="detailedSpeaker.photoUrl"  :alt="LL.Avatar_Speaker() + ' ' + detailedSpeaker.fullName"/>
+            <speaker-thumbnail size="64px" :is-highlighted="false" :speaker="detailedSpeaker" />
           </ion-avatar>
           <div class="speakerDetailsView-head-stats ion-text-right">
             <ion-label>Total favorites</ion-label>
@@ -64,9 +64,7 @@
               <VoxDivider>{{ LL.Social_media() }}</VoxDivider>
               <ul class="linksInfoSpeaker-list">
                 <li v-for="social in detailedSpeaker.social" :key="social.type">
-                  <ion-button color="theming" slot="end" shape="round" size="small" :href="social.type.url">
-                    <ion-icon :icon="social.type.icon" :alt="social.type.label"></ion-icon>
-                  </ion-button>
+                  <social-media-icon :href="social.url" :type="social.type"></social-media-icon>
                 </li>
               </ul>
             </div>
@@ -81,20 +79,17 @@
 import {useRoute} from "vue-router";
 import {EventId} from "@/models/VoxxrinEvent";
 import {getRouteParamsValue, managedRef as ref} from "@/views/vue-utils";
-import {TalkId} from "@/models/VoxxrinTalk";
 import {typesafeI18n} from "@/i18n/i18n-vue";
-import {IonBadge,
-  IonAvatar,
-  IonText,
-  IonSegment,
-  IonSegmentButton,
-  useIonRouter} from "@ionic/vue";
+import {IonAvatar, IonSegment, IonSegmentButton, IonText, useIonRouter} from "@ionic/vue";
 import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
 import {goBackOrNavigateTo} from "@/router";
 import {Logger} from "@/services/Logger";
 import {SpeakerId, VoxxrinDetailedSpeaker} from "@/models/VoxxrinSpeaker";
 import {businessSharp} from "ionicons/icons";
 import VoxDivider from "@/components/ui/VoxDivider.vue";
+import {useCurrentSpaceEventIdRef} from "@/services/Spaces";
+import SpeakerThumbnail from "@/components/speaker/SpeakerThumbnail.vue";
+import SocialMediaIcon from "@/components/ui/SocialMediaIcon.vue";
 
 const LOGGER = Logger.named("TalkDetailsPage");
 
@@ -105,8 +100,9 @@ function closeAndNavigateBack() {
 
 const route = useRoute();
 const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')));
-const speakerId = ref(new TalkId(getRouteParamsValue(route, 'speakerId')));
-const {conferenceDescriptor: confDescriptor} = useSharedConferenceDescriptor(eventId);
+const speakerId = ref(new SpeakerId(getRouteParamsValue(route, 'speakerId')));
+const spacedEventIdRef = useCurrentSpaceEventIdRef();
+const {conferenceDescriptor: confDescriptor} = useSharedConferenceDescriptor(spacedEventIdRef);
 
 const { LL } = typesafeI18n()
 
@@ -119,7 +115,7 @@ const detailedSpeaker: VoxxrinDetailedSpeaker = {
 Web developer at 4SH by day, and OSS commiter by night, he has created/contributed to some more or less well known projects: Voxxrin app, Vitemadose frontend during COVID Pandemic, Devoxx France CFP, RestX framework, as well as some (old) Jenkins plugins.
 As a big fan of strong typing, he loves Typescript, but also like doing all kinds of stuff in Google Spreadsheets.`,
   social: [
-    {type:'twitter', url: 'https://www.twitter.com/fcamblor', label: 'twitter', icon: 'twitter'}
+    {type:'twitter', url: 'https://www.twitter.com/fcamblor' }
   ]
 }
 

@@ -23,12 +23,7 @@
         <div class="avatarContainer">
           <div class="avatarGroup" v-if="true">
             <div class="avatarItem">
-              <ion-thumbnail class="avatar _small">
-                <img v-if="false" :src="speaker.photoUrl"
-                     @error="handle404OnSpeakerThumbnail($event.target as HTMLImageElement)"
-                     :alt="LL.Avatar_Speaker() + ' ' + speaker.fullName"/>
-                <img v-if="true" aria-hidden="true" :src="baseUrl+'assets/images/svg/avatar-shadow.svg'"/>
-              </ion-thumbnail>
+              <speaker-thumbnail size="64px" :is-highlighted="false" :speaker="speaker" />
             </div>
           </div>
           <div class="avatarInfos _small">
@@ -46,9 +41,27 @@
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {IonBadge, IonThumbnail, IonText} from "@ionic/vue";
 import SpeakerFavTalkButton from "@/components/speaker-card/SpeakerFavTalkButton.vue";
+import {
+  SpeakerId,
+  VoxxrinDetailedSpeaker,
+} from "@/models/VoxxrinSpeaker";
+import SpeakerThumbnail from "@/components/speaker/SpeakerThumbnail.vue";
 
 const {LL} = typesafeI18n()
 const baseUrl = import.meta.env.BASE_URL;
+
+const speaker: VoxxrinDetailedSpeaker = {
+  id: new SpeakerId('42'),
+  fullName: "Frédéric Camblor",
+  companyName: "4SH",
+  photoUrl: "https://lh3.googleusercontent.com/a/AAcHTtdsbTGnaxXmrzSi178m_qpxj9c-z12qoL7SLB6cjUSfZhaQ=s96-c",
+  bio: `Retired Bordeaux JUG leader and co-creator of the BDX I/O conference in 2014, Frédéric enjoys mixing with different tech communities and learning new things.
+Web developer at 4SH by day, and OSS commiter by night, he has created/contributed to some more or less well known projects: Voxxrin app, Vitemadose frontend during COVID Pandemic, Devoxx France CFP, RestX framework, as well as some (old) Jenkins plugins.
+As a big fan of strong typing, he loves Typescript, but also like doing all kinds of stuff in Google Spreadsheets.`,
+  social: [
+    {type:'twitter', url: 'https://www.twitter.com/fcamblor' }
+  ]
+}
 </script>
 
 <style lang="scss" scoped>
