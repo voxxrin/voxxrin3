@@ -29,7 +29,6 @@ const routes: Array<RouteRecordRaw> = [
         { path: '', redirect: (route: RouteLocation) => `${space.resolvedPathPrefix(route)}/events/${route.params.eventId}/schedule` },
         { path: 'schedule', component: () => preloadedPage('SchedulePage') },
         { path: 'speakers', component: () => preloadedPage('SpeakersDirectoryPage') },
-        { path: 'favorites', component: () => preloadedPage('FavoritesPage') },
         { path: 'feedbacks', component: () => preloadedPage('FeedbacksPage') },
         { path: 'notifications', component: () => preloadedPage('NotificationsPage') },
         { path: 'infos', component: () => preloadedPage('InfosPage') },
