@@ -18,7 +18,7 @@
           <li>
             <ion-icon aria-hidden="true" src="/assets/icons/solid/calendar.svg" />
             <ion-label>
-              <month-day-date-range :range="{ start: pinnedEvent.start, end: pinnedEvent.end }" /> {{pinnedEvent.start.year}}
+              <month-day-date-range :range="{ start: pinnedEvent.localStartDay, end: pinnedEvent.localEndDay }" /> {{pinnedEvent.start.year}}
             </ion-label>
           </li>
           <li v-if="pinnedEvent.peopleDescription">

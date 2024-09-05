@@ -9,13 +9,15 @@ import {Temporal} from "temporal-polyfill";
 import {match} from "ts-pattern";
 import {useCurrentClock} from "@/state/useCurrentClock";
 import {toHMMDuration, toISOLocalDate, zonedDateTimeRangeOf} from "@/models/DatesAndTime";
-import {Replace} from "../../../shared/type-utils";
+import {ISOLocalDate, Replace} from "../../../shared/type-utils";
 
 export type VoxxrinConferenceDescriptor = Replace<ConferenceDescriptor, {
     id: EventId;
     eventFamily: EventFamily|undefined,
     start: Temporal.ZonedDateTime,
     end: Temporal.ZonedDateTime,
+    localStartDay: ISOLocalDate,
+    localEndDay: ISOLocalDate,
     days: VoxxrinDay[];
     talkFormats: VoxxrinTalkFormat[],
     talkTracks: VoxxrinTrack[],
@@ -49,12 +51,17 @@ export function createVoxxrinConferenceDescriptor(firestoreConferenceDescriptor:
         firestoreConferenceDescriptor.timezone
     );
 
+    const [ localStartDay, localEndDay ]: [ISOLocalDate, ISOLocalDate] = [
+      firestoreConferenceDescriptor.days.map(d => d.localDate).sort()[0] as ISOLocalDate,
+      firestoreConferenceDescriptor.days.map(d => d.localDate).sort().reverse()[0] as ISOLocalDate,
+    ]
+
     const voxxrinConferenceDescriptor: VoxxrinConferenceDescriptor = {
         ...firestoreConferenceDescriptor,
         id: new EventId(firestoreConferenceDescriptor.id),
         eventFamily: firestoreConferenceDescriptor.eventFamily===undefined?undefined:new EventFamily(firestoreConferenceDescriptor.eventFamily),
-        start,
-        end,
+        start, end,
+        localStartDay, localEndDay,
         days: firestoreConferenceDescriptor.days.map(d => ({
             id: new DayId(d.id),
             localDate: d.localDate

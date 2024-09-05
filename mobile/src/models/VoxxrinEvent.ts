@@ -4,7 +4,7 @@ import {DayId, VoxxrinDay} from "@/models/VoxxrinDay";
 import {Temporal} from "temporal-polyfill";
 import {useCurrentClock} from "@/state/useCurrentClock";
 import {zonedDateTimeRangeOf} from "@/models/DatesAndTime";
-import {Replace} from "../../../shared/type-utils";
+import {ISOLocalDate, Replace} from "../../../shared/type-utils";
 
 export class EventId extends ValueObject<string>{ _eventIdClassDiscriminator!: never; }
 export class EventFamily extends ValueObject<string>{ _eventFamilyClassDiscriminator!: never; }
@@ -14,6 +14,8 @@ export type ListableVoxxrinEvent = Replace<ListableEvent, {
     days: Array<VoxxrinDay>,
     start: Temporal.ZonedDateTime,
     end: Temporal.ZonedDateTime,
+    localStartDay: ISOLocalDate,
+    localEndDay: ISOLocalDate,
     theming: VoxxrinEventTheme
 }>
 
@@ -61,13 +63,19 @@ export function firestoreListableEventToVoxxrinListableEvent(firestoreListableEv
         firestoreListableEvent.days.map(d => d.localDate),
         firestoreListableEvent.timezone
     );
+
+    const [ localStartDay, localEndDay ]: [ISOLocalDate, ISOLocalDate] = [
+      firestoreListableEvent.days.map(d => d.localDate).sort()[0] as ISOLocalDate,
+      firestoreListableEvent.days.map(d => d.localDate).sort().reverse()[0] as ISOLocalDate,
+    ]
+
     return {
         ...firestoreListableEvent,
         id: new EventId(firestoreListableEvent.id),
         eventFamily: firestoreListableEvent.eventFamily===undefined?undefined:new EventFamily(firestoreListableEvent.eventFamily),
         days: firestoreListableEvent.days.map(d => ({...d, id: new DayId(d.id)})),
-        start,
-        end,
+        start, end,
+        localStartDay, localEndDay,
         theming: toVoxxrinEventTheme(firestoreListableEvent.theming)
     };
 }

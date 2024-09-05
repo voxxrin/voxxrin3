@@ -10,7 +10,7 @@
       <div class="title">{{event.title}}</div>
       <div class="timeInfos">
         <ion-icon aria-hidden="true" src="/assets/icons/solid/calendar.svg"></ion-icon>
-        <month-day-date-range :format="{separator: '>'}" :range="{start: event.start, end: event.end}" />
+        <month-day-date-range :format="{separator: '>'}" :range="{start: event.localStartDay, end: event.localEndDay}" />
         {{event.start.year}}
       </div>
       <div class="location">
