@@ -17,7 +17,7 @@ import {Temporal} from "temporal-polyfill";
 import {match, P} from "ts-pattern";
 import {useCurrentClock} from "@/state/useCurrentClock";
 import {toHMMDuration, zonedDateTimeRangeOf} from "@/models/DatesAndTime";
-import {Replace} from "../../../shared/type-utils";
+import {ISOLocalDate, Replace} from "../../../shared/type-utils";
 
 export type VoxxrinConferenceDescriptor = Omit<ListableVoxxrinEvent, "websiteUrl"> & Replace<Omit<ConferenceDescriptor, keyof ListableVoxxrinEvent>, {
     talkFormats: VoxxrinTalkFormat[],
@@ -51,6 +51,11 @@ export function createVoxxrinConferenceDescriptor(firestoreConferenceDescriptor:
         firestoreConferenceDescriptor.timezone
     );
 
+    const [ localStartDay, localEndDay ]: [ISOLocalDate, ISOLocalDate] = [
+      firestoreConferenceDescriptor.days.map(d => d.localDate).sort()[0] as ISOLocalDate,
+      firestoreConferenceDescriptor.days.map(d => d.localDate).sort().reverse()[0] as ISOLocalDate,
+    ]
+
     const visibility: ListableVoxxrinEventVisibility = match(firestoreConferenceDescriptor)
       .with({visibility: 'private', spaceToken: P.string }, (_vis) => ({ visibility: 'private' as const, spaceToken: new SpaceToken(_vis.spaceToken) }))
       .otherwise(() => ({ visibility: 'public' as const, spaceToken: undefined }))
@@ -60,8 +65,8 @@ export function createVoxxrinConferenceDescriptor(firestoreConferenceDescriptor:
         ...visibility,
         id: new EventId(firestoreConferenceDescriptor.id),
         eventFamily: firestoreConferenceDescriptor.eventFamily===undefined?undefined:new EventFamily(firestoreConferenceDescriptor.eventFamily),
-        start,
-        end,
+        start, end,
+        localStartDay, localEndDay,
         days: firestoreConferenceDescriptor.days.map(d => ({
             id: new DayId(d.id),
             localDate: d.localDate

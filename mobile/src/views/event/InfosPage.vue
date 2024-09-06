@@ -30,7 +30,7 @@
             <ion-icon aria-hidden="true" :icon="calendar"></ion-icon>
             <div class="utilsInfoConf-item-infos">
               <span class="title">
-                <month-day-date-range :format="{separator: '>'}" :range="{ start: confDescriptorRef.start, end: confDescriptorRef.end }" /> {{ confDescriptorRef.start.year }}
+                <month-day-date-range :format="{separator: '>'}" :range="{ start: confDescriptorRef.localStartDay, end: confDescriptorRef.localEndDay }" /> {{ confDescriptorRef.start.year }}
               </span>
             </div>
           </div>

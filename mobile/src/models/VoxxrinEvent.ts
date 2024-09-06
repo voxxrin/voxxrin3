@@ -4,7 +4,7 @@ import {DayId, VoxxrinDay} from "@/models/VoxxrinDay";
 import {Temporal} from "temporal-polyfill";
 import {useCurrentClock} from "@/state/useCurrentClock";
 import {zonedDateTimeRangeOf} from "@/models/DatesAndTime";
-import {Replace} from "../../../shared/type-utils";
+import {ISOLocalDate, Replace} from "../../../shared/type-utils";
 import {match} from "ts-pattern";
 
 export class EventId extends ValueObject<string>{ _eventIdClassDiscriminator!: never; }
@@ -35,6 +35,8 @@ export type ListableVoxxrinEvent = Replace<ListableEvent, {
     days: Array<VoxxrinDay>,
     start: Temporal.ZonedDateTime,
     end: Temporal.ZonedDateTime,
+    localStartDay: ISOLocalDate,
+    localEndDay: ISOLocalDate,
     theming: VoxxrinEventTheme,
 } & ListableVoxxrinEventVisibility>
 
@@ -83,6 +85,11 @@ export function firestoreListableEventToVoxxrinListableEvent(firestoreListableEv
         firestoreListableEvent.timezone
     );
 
+    const [ localStartDay, localEndDay ]: [ISOLocalDate, ISOLocalDate] = [
+      firestoreListableEvent.days.map(d => d.localDate).sort()[0] as ISOLocalDate,
+      firestoreListableEvent.days.map(d => d.localDate).sort().reverse()[0] as ISOLocalDate,
+    ]
+
     const visibility: ListableVoxxrinEventVisibility = match(firestoreListableEvent)
       .with({ visibility: 'public' }, (event) => ({ visibility: 'public' as const, spaceToken: undefined }))
       .with({ visibility: 'private' }, (event) => ({ visibility: 'private' as const, spaceToken: new SpaceToken(event.spaceToken) }))
@@ -93,8 +100,8 @@ export function firestoreListableEventToVoxxrinListableEvent(firestoreListableEv
         id: new EventId(firestoreListableEvent.id),
         eventFamily: firestoreListableEvent.eventFamily===undefined?undefined:new EventFamily(firestoreListableEvent.eventFamily),
         days: firestoreListableEvent.days.map(d => ({...d, id: new DayId(d.id)})),
-        start,
-        end,
+        start, end,
+        localStartDay, localEndDay,
         theming: toVoxxrinEventTheme(firestoreListableEvent.theming),
         ...visibility,
     };
