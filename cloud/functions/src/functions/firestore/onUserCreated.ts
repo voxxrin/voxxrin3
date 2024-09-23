@@ -1,17 +1,22 @@
-import {db, info} from "../../firebase"
+import {db} from "../../firebase"
 import {v4 as uuidv4} from "uuid";
 import {User} from "../../../../../shared/user.firestore";
 import {ISODatetime} from "../../../../../shared/type-utils";
-import {UserRecord} from "firebase-admin/auth";
-import {EventContext} from "firebase-functions/lib/v1/cloud-functions";
+import {AuthBlockingEvent} from "firebase-functions/lib/common/providers/identity";
 
 
 /**
  * Purpose of this function is to initialize a public user token for every users entries
  */
-export const onUserCreated = async (user: UserRecord, context: EventContext<{}>) => {
-    info(`User created triggered: ${user.uid}`)
-    await createUserInfos(user.uid);
+export const onUserCreated = async (event: AuthBlockingEvent) => {
+    if(!event.data) {
+      return;
+    }
+
+    event.
+
+    info(`User created triggered: ${event.data.uid}`)
+    await createUserInfos(event.data.uid);
 };
 
 export async function createUserInfos(userId: string) {

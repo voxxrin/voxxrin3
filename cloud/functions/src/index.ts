@@ -1,5 +1,4 @@
 import * as express from 'express';
-import * as functions from 'firebase-functions';
 import {declareExpressHttpRoutes} from "./functions/http/api/routes";
 import {onDocumentCreated, onDocumentDeleted, onDocumentUpdated} from "firebase-functions/lib/v2/providers/firestore";
 import {onSchedule} from "firebase-functions/lib/v2/providers/scheduler";
@@ -69,9 +68,10 @@ exports.onUserTalksNoteUpdate = onDocumentUpdated(
   async event => (await import('./functions/firestore/onUserTalkNotes')).onUserTalksNoteUpdate(event)
 )
 
-exports.onUserCreated = functions.auth.user().onCreate(async (user, context) => {
-  (await import('./functions/firestore/onUserCreated')).onUserCreated(user, context)
-});
+exports.onUserCreated = beforeUserCreated(
+  { },
+  async event => (await import('./functions/firestore/onUserCreated')).onUserCreated(event)
+)
 exports.onUserTokenWalletDeleted = onDocumentDeleted(
   {document: `users/{userId}/tokens-wallet/self`},
   async event => (await import('./functions/firestore/onUserTokensWalletDeleted')).onUserTokensWalletDeleted(event)
