@@ -11,18 +11,22 @@ import {EventLastUpdates} from "../../../../../shared/event-list.firestore";
 import {ISODatetime} from "../../../../../shared/type-utils";
 import {ConferenceDescriptor} from "../../../../../shared/conference-descriptor.firestore";
 import {Change} from "firebase-functions/lib/common/change";
-import {QueryDocumentSnapshot} from "firebase-functions/lib/v1/providers/firestore";
-import {EventContext} from "firebase-functions/lib/v1/cloud-functions";
+import {QueryDocumentSnapshot} from "firebase-functions/lib/v2/providers/firestore";
 import {User} from "../../../../../shared/user.firestore";
+import {FirestoreEvent} from "firebase-functions/lib/v2/providers/firestore";
 
 
-export const onTalkFeedbackUpdated = async (change: Change<QueryDocumentSnapshot>, context: EventContext<{ userId: string, eventId: string, dayId: string }>) => {
-    const eventId = context.params.eventId;
-    const userId = context.params.userId;
-    const dayId = context.params.dayId;
+export const onTalkFeedbackUpdated = async (event: FirestoreEvent<Change<QueryDocumentSnapshot>|undefined, { userId: string, eventId: string, dayId: string }>) => {
+    const eventId = event.params.eventId;
+    const userId = event.params.userId;
+    const dayId = event.params.dayId;
 
-    const feedbacksBefore = change.before.data() as UserDailyFeedbacks;
-    const feedbacksAfter = change.after.data() as UserDailyFeedbacks;
+    if(!event.data) {
+      return;
+    }
+
+    const feedbacksBefore = event.data.before.data() as UserDailyFeedbacks;
+    const feedbacksAfter = event.data.after.data() as UserDailyFeedbacks;
 
     const lastModificationTimestampBefore = Math.max(...feedbacksBefore.feedbacks.map(f => Date.parse(f.lastUpdatedOn)));
     const feedbacksModifiedAfter = feedbacksAfter.feedbacks.filter(f => Date.parse(f.lastUpdatedOn) > lastModificationTimestampBefore);
@@ -30,12 +34,16 @@ export const onTalkFeedbackUpdated = async (change: Change<QueryDocumentSnapshot
     await updateTalkFeedbacksFromUserFeedbacks(userId, eventId, dayId, feedbacksModifiedAfter, ['lastUpdatedOn']);
 }
 
-export const onTalkFeedbackCreated = async (snapshot: QueryDocumentSnapshot, context: EventContext<{ userId: string, eventId: string, dayId: string }>) => {
-    const eventId = context.params.eventId;
-    const userId = context.params.userId;
-    const dayId = context.params.dayId;
+export const onTalkFeedbackCreated = async (event: FirestoreEvent<QueryDocumentSnapshot|undefined, { userId: string, eventId: string, dayId: string }>) => {
+    const eventId = event.params.eventId;
+    const userId = event.params.userId;
+    const dayId = event.params.dayId;
 
-    const userDailyFeedbacks = snapshot.data() as UserDailyFeedbacks
+    if(!event.data) {
+      return;
+    }
+
+    const userDailyFeedbacks = event.data.data() as UserDailyFeedbacks
 
     await updateTalkFeedbacksFromUserFeedbacks(userId, eventId, dayId, userDailyFeedbacks.feedbacks, ['createdOn', 'lastUpdatedOn']);
 }

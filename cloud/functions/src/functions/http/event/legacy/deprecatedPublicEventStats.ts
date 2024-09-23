@@ -1,4 +1,4 @@
-import * as functions from "firebase-functions";
+import {https} from "firebase-functions";
 import {extractSingleQueryParam, logPerf, roundedAverage, sendResponseMessage} from "../../utils";
 import {
     checkEventLastUpdate,
@@ -12,9 +12,9 @@ import {getEventDescriptor} from "../../../firestore/services/eventDescriptor-ut
 import {ISOLocalDate} from "../../../../../../../shared/type-utils";
 import {getFamilyEventsStatsToken} from "../../../firestore/services/publicTokens-utils";
 import {sortBy} from "lodash";
-import * as express from "express";
+import {Response} from "express";
 
-export async function legacyPublicEventStats(request: functions.https.Request, response: express.Response) {
+export async function legacyPublicEventStats(request: https.Request, response: Response) {
 
     const eventId = extractSingleQueryParam(request, 'eventId');
     const publicToken = extractSingleQueryParam(request, 'publicToken');

@@ -1,8 +1,8 @@
 import {extractSingleQueryParam, sendResponseMessage} from "./utils";
 import {db} from "../../firebase";
 import {ISODatetime} from "../../../../../shared/type-utils";
-import * as functions from "firebase-functions";
-import * as express from "express";
+import {https} from "firebase-functions";
+import {Response} from "express";
 
 /**
  * Like Flyway, but for firestore :-)
@@ -69,7 +69,7 @@ type SchemaMigrations = {
 
 const migrationNames = MIGRATIONS.map(m => m.name);
 
-export async function migrateFirestoreSchema(request: functions.https.Request, response: express.Response) {
+export async function migrateFirestoreSchema(request: https.Request, response: Response) {
     const migrationToken = extractSingleQueryParam(request, 'migrationToken')
     if(!migrationToken) {
         return sendResponseMessage(response, 400, `Missing 'migrationToken' query parameter !`)

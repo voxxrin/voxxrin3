@@ -1,4 +1,4 @@
-import * as functions from "firebase-functions";
+import {https} from "firebase-functions";
 import {extractSingleQueryParam, sendResponseMessage} from "../../utils";
 import {
     checkEventLastUpdate,
@@ -7,9 +7,9 @@ import {
 } from "../../../firestore/firestore-utils";
 import {match, P} from "ts-pattern";
 import {TalkStats} from "../../../../../../../shared/event-stats";
-import * as express from "express";
+import {Response} from "express";
 
-export async function deprecatedEventStats(request: functions.https.Request, response: express.Response) {
+export async function deprecatedEventStats(request: https.Request, response: Response) {
 
     const organizerSecretToken = extractSingleQueryParam(request, 'organizerSecretToken');
     const eventId = extractSingleQueryParam(request, 'eventId');

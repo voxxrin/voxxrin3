@@ -1,13 +1,12 @@
-import * as functions from "firebase-functions";
-import {Response} from "firebase-functions";
+import {Response, https} from "firebase-functions";
 import {debug} from "../../firebase";
 
-export function extractSingleQueryParam(request: functions.https.Request, paramName: string) {
+export function extractSingleQueryParam(request: https.Request, paramName: string) {
     const value  = request.query[paramName];
     return Array.isArray(value)?value[0]?.toString():value?.toString();
 }
 
-export function extractMultiQueryParam(request: functions.https.Request, paramName: string): string[] {
+export function extractMultiQueryParam(request: https.Request, paramName: string): string[] {
     const value  = request.query[paramName];
     return (Array.isArray(value)?value.map(v => v.toString()):[ value?.toString() ].filter(v => !!v)) as string[];
 }

@@ -1,15 +1,15 @@
 import {sendResponseMessage} from "../utils";
 import {checkEventLastUpdate, getSecretTokenDoc,} from "../../firestore/firestore-utils";
 import {ConferenceOrganizerSpace} from "../../../../../../shared/conference-organizer-space.firestore";
-import * as express from "express";
+import {Request, Response} from "express";
 import {ConferenceDescriptor} from "../../../../../../shared/conference-descriptor.firestore";
 
 
 export async function eventTalksEditors(
-  response: express.Response,
+  response: Response,
   pathParams: {eventId: string},
   queryParams: {token: string, baseUrl: string},
-  request: express.Request,
+  request: Request,
   eventDescriptor: ConferenceDescriptor
 ) {
 

@@ -7,8 +7,8 @@ import {
 import {eventLastUpdateRefreshed} from "./firestore-utils";
 import {TalkStats} from "../../../../../shared/event-stats";
 import {Change} from "firebase-functions/lib/common/change";
-import {QueryDocumentSnapshot} from "firebase-functions/lib/v1/providers/firestore";
-import {EventContext} from "firebase-functions/lib/v1/cloud-functions";
+import {QueryDocumentSnapshot} from "firebase-functions/lib/v2/providers/firestore";
+import {FirestoreEvent} from "firebase-functions/lib/v2/providers/firestore";
 
 async function upsertTalkStats(eventId: string, talkId: string, isFavorite: boolean) {
     const existingTalksStatsEntryRef = db
@@ -40,13 +40,17 @@ async function incrementUserTotalFavs(userId: string, eventId: string, talkId: s
   )
 }
 
-export const onUserTalksNoteUpdate = async (change: Change<QueryDocumentSnapshot>, context: EventContext<{ userId: string, eventId: string, talkId: string }>) => {
-    const userId = context.params.userId;
-    const eventId = context.params.eventId;
-    const talkId = context.params.talkId;
+export const onUserTalksNoteUpdate = async (event: FirestoreEvent<Change<QueryDocumentSnapshot>|undefined, { userId: string, eventId: string, talkId: string }>) => {
+    const userId = event.params.userId;
+    const eventId = event.params.eventId;
+    const talkId = event.params.talkId;
 
-    const beforeTalkNote = change.before.data() as UserTalkNote
-    const afterTalkNote = change.after.data() as UserTalkNote
+    if(!event.data) {
+      return;
+    }
+
+    const beforeTalkNote = event.data.before.data() as UserTalkNote
+    const afterTalkNote = event.data.after.data() as UserTalkNote
 
     const wasFavorite = beforeTalkNote.note.isFavorite;
     const isFavorite = afterTalkNote.note.isFavorite;
@@ -63,12 +67,16 @@ export const onUserTalksNoteUpdate = async (change: Change<QueryDocumentSnapshot
     }
 };
 
-export const onUserTalksNoteCreate = async (change: QueryDocumentSnapshot, context: EventContext<{ userId: string, eventId: string, talkId: string }>) => {
-    const userId = context.params.userId;
-    const eventId = context.params.eventId;
-    const talkId = context.params.talkId;
+export const onUserTalksNoteCreate = async (event: FirestoreEvent<QueryDocumentSnapshot|undefined, { userId: string, eventId: string, talkId: string }>) => {
+    const userId = event.params.userId;
+    const eventId = event.params.eventId;
+    const talkId = event.params.talkId;
 
-    const talkNote = change.data() as UserTalkNote
+    if(!event.data) {
+      return;
+    }
+
+    const talkNote = event.data.data() as UserTalkNote
     const isFavorite = !!talkNote.note.isFavorite;
 
     if(isFavorite) {

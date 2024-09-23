@@ -3,7 +3,7 @@ import {Express, NextFunction} from 'express';
 import {declareEventHttpRoutes} from "./events-routes";
 import {declareAdminHttpRoutes} from "./admin-routes";
 import {AnyZodObject} from "zod";
-import * as express from "express";
+import {Request, Response} from "express";
 import {RouteParameters} from "express-serve-static-core";
 import {debug, exposeLogContext} from "../../../firebase";
 import {sendResponseMessage} from "../utils";
@@ -35,7 +35,7 @@ type RequestWithBodyZodObject = z.ZodObject<{
 
 const validateRouteWith =
   (schema: z.AnyZodObject) =>
-    async (req: express.Request, res: express.Response, next: NextFunction) => {
+    async (req: Request, res: Response, next: NextFunction) => {
       try {
         await schema.parseAsync({
           body: req.body,
@@ -71,7 +71,7 @@ export const Routes = {
     route: ROUTE,
     schema: VALIDATION_SCHEMA,
     accessGuard: ACCESS_GUARD,
-    callback: (res: express.Response, pathParams: PATH_PARAMS, queryParams: QUERY_PARAMS, body: BODY, accessGuardResult: ACCESS_GUARD_RETURNTYPE, req: express.Request) => void
+    callback: (res: Response, pathParams: PATH_PARAMS, queryParams: QUERY_PARAMS, body: BODY, accessGuardResult: ACCESS_GUARD_RETURNTYPE, req: Request) => void
   ) {
     app.post(route, validateRouteWith(schema), (req, res) => {
       const stringifiedPathParams = stringifyParams(req.params)
@@ -112,7 +112,7 @@ export const Routes = {
     route: ROUTE,
     schema: VALIDATION_SCHEMA,
     accessGuard: ACCESS_GUARD,
-    callback: (res: express.Response, pathParams: PATH_PARAMS, queryParams: QUERY_PARAMS, body: BODY, accessGuardResult: ACCESS_GUARD_RETURNTYPE, req: express.Request) => void
+    callback: (res: Response, pathParams: PATH_PARAMS, queryParams: QUERY_PARAMS, body: BODY, accessGuardResult: ACCESS_GUARD_RETURNTYPE, req: Request) => void
   ) {
     app.put(route, validateRouteWith(schema), (req, res) => {
       const stringifiedPathParams = stringifyParams(req.params)
@@ -152,7 +152,7 @@ export const Routes = {
     route: ROUTE,
     schema: VALIDATION_SCHEMA,
     accessGuard: ACCESS_GUARD,
-    callback: (res: express.Response, pathParams: PATH_PARAMS, queryParams: QUERY_PARAMS, accessGuardResult: ACCESS_GUARD_RETURNTYPE, req: express.Request) => void
+    callback: (res: Response, pathParams: PATH_PARAMS, queryParams: QUERY_PARAMS, accessGuardResult: ACCESS_GUARD_RETURNTYPE, req: Request) => void
   ) {
     app.get(route, validateRouteWith(schema), (req, res) => {
       const stringifiedPathParams = stringifyParams(req.params)
@@ -191,7 +191,7 @@ export const Routes = {
     route: ROUTE,
     schema: VALIDATION_SCHEMA,
     accessGuard: ACCESS_GUARD,
-    callback: (res: express.Response, pathParams: PATH_PARAMS, queryParams: QUERY_PARAMS, accessGuardResult: ACCESS_GUARD_RETURNTYPE, req: express.Request) => void
+    callback: (res: Response, pathParams: PATH_PARAMS, queryParams: QUERY_PARAMS, accessGuardResult: ACCESS_GUARD_RETURNTYPE, req: Request) => void
   ) {
     app.delete(route, validateRouteWith(schema), (req, res) => {
       const stringifiedPathParams = stringifyParams(req.params)

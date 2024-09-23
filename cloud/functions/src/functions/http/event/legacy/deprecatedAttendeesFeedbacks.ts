@@ -1,4 +1,4 @@
-import * as functions from "firebase-functions";
+import {https} from "firebase-functions";
 import {extractMultiQueryParam, extractSingleQueryParam, sendResponseMessage} from "../../utils";
 import {
     checkEventLastUpdate,
@@ -12,9 +12,9 @@ import {
     ConferenceOrganizerSpace
 } from "../../../../../../../shared/conference-organizer-space.firestore";
 import {EventLastUpdates} from "../../../../../../../shared/event-list.firestore";
-import * as express from "express";
+import {Response} from "express";
 
-export async function legacyAttendeesFeedbacks(request: functions.https.Request, response: express.Response) {
+export async function legacyAttendeesFeedbacks(request: https.Request, response: Response) {
 
     const organizerSecretToken = extractSingleQueryParam(request, 'organizerSecretToken');
     const talkIds = extractMultiQueryParam(request, 'talkIds');

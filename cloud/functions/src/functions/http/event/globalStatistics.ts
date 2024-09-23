@@ -1,12 +1,10 @@
-import {https} from "firebase-functions";
 import {extractSingleQueryParam, sendResponseMessage} from "../utils";
 import {db} from "../../../firebase";
-import {FeedbackRatings} from "../../../../../../shared/talk-feedbacks.firestore";
 import {TalkStats} from "../../../../../../shared/event-stats";
-import * as functions from "firebase-functions";
-import * as express from "express";
+import {https} from "firebase-functions";
+import {Response} from "express";
 
-export async function globalStats(request: functions.https.Request, response: express.Response) {
+export async function globalStats(request: https.Request, response: Response) {
     const migrationToken = extractSingleQueryParam(request, 'migrationToken')
     if (!migrationToken) {
         return sendResponseMessage(response, 400, `Missing 'migrationToken' query parameter !`)

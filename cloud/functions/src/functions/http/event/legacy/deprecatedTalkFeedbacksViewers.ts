@@ -1,5 +1,5 @@
-import * as functions from "firebase-functions";
-import * as express from "express";
+import {https} from "firebase-functions";
+import {Response} from "express";
 import {extractSingleQueryParam, sendResponseMessage} from "../../utils";
 import {getEventDescriptor} from "../../../firestore/services/eventDescriptor-utils";
 import {getFamilyOrganizerToken} from "../../../firestore/services/publicTokens-utils";
@@ -7,7 +7,7 @@ import {checkEventLastUpdate, getOrganizerSpaceByToken, getSecretTokenDoc} from 
 import {match, P} from "ts-pattern";
 import {ConferenceOrganizerSpace} from "../../../../../../../shared/conference-organizer-space.firestore";
 
-export async function legacyTalkFeedbacksViewers(request: functions.https.Request, response: express.Response) {
+export async function legacyTalkFeedbacksViewers(request: https.Request, response: Response) {
 
   const organizerSecretToken = extractSingleQueryParam(request, 'organizerSecretToken');
   const familyOrganizerSecretToken = extractSingleQueryParam(request, 'familyOrganizerSecretToken');
