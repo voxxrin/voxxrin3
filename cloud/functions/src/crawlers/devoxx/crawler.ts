@@ -64,6 +64,14 @@ export const DEVOXX_CRAWLER: CrawlerKind<typeof DEVOXX_DESCRIPTOR_PARSER> = {
     descriptorParser: DEVOXX_DESCRIPTOR_PARSER,
     crawlerImpl: async (eventId: string, descriptor: z.infer<typeof DEVOXX_DESCRIPTOR_PARSER>, criteria: { dayIds?: string[]|undefined }) => {
         const rawCfpBaseUrl = descriptor.cfpBaseUrl || `https://${descriptor.cfpId}.cfp.dev`;
+
+        if(rawCfpBaseUrl !== `https://${descriptor.cfpId}.cfp.dev`) {
+          throw new Error(`Devoxx descriptor url (${descriptor.cfpId}) not matching with cfp.dev's slug (${rawCfpBaseUrl}).
+This can lead to unexpected behaviour when CFP will try to call voxxrin API using slug as event id.
+Please, unless event id is made configurable at cfp.dev level, you should rather use a voxxrin event id matching cfp.dev's slug !
+`)
+        }
+
         const cfpBaseUrl = rawCfpBaseUrl+(rawCfpBaseUrl.endsWith("/")?"":"/")
         const [cfpEvent, cfpFloorPlans] = await Promise.all([
             http.get<CfpEvent>(`${cfpBaseUrl}api/public/event`),
