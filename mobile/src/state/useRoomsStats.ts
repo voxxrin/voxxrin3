@@ -47,7 +47,7 @@ export function useRoomStats(spacedEventIdRef: Ref<SpacedEventId|undefined>, roo
       }
 
       const firestoreRoomStats = firestoreRoomsStats[toValidFirebaseKey(roomId.value)]
-      if(!firestoreRoomsStats) {
+      if(!firestoreRoomStats) {
         return undefined;
       }
 
