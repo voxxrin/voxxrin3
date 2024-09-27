@@ -347,8 +347,11 @@ function findDayByLocalDate(localDate: string) {
     position: relative;
     --padding-start: 0;
     --padding-end: 0;
+    --min-height: 60px;
     --border-style: none;
+    --background: hsl(0deg 0% 100% / 80%);
     align-items: baseline;
+    -webkit-backdrop-filter: blur(30px) saturate(120%);
     backdrop-filter:  blur(30px) saturate(120%);
 
     @media (prefers-color-scheme: dark) {
