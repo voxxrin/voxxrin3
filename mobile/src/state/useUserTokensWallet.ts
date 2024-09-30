@@ -2,6 +2,7 @@ import {EventId} from "@/models/VoxxrinEvent";
 import {computed, Ref, unref} from "vue";
 import {useCurrentUser} from "@/state/useCurrentUser";
 import {
+  EventOrganizerToken,
   TalkFeedbacksViewerToken,
   toRawUserTokensWallet,
   toVoxxrinUserTokensWallet,
@@ -38,22 +39,45 @@ export function useUserTokensWallet() {
     })
 
     const registerEventOrganizerSecretToken = async (eventOrganizerSecretToken: UserWalletEventOrganizerSecretToken) => {
+        const { eventOrganizerTokens } = (voxxrinUserTokensWallet.value?.secretTokens.eventOrganizerTokens || [])
+          .concat(toVoxxrinUserWalletEventOrganizerSecretToken(eventOrganizerSecretToken))
+          .reduce((result, eventOrganizerToken) => {
+            if(!result.alreadyRegisteredTokens.has(eventOrganizerToken.secretToken)) {
+              result.eventOrganizerTokens.push(eventOrganizerToken)
+              result.alreadyRegisteredTokens.add(eventOrganizerToken.secretToken)
+            }
+
+            return result;
+          }, {eventOrganizerTokens: [] as EventOrganizerToken[], alreadyRegisteredTokens: new Set<string>() })
+
         voxxrinUserTokensWallet.value = {
           secretTokens: {
-            eventOrganizerTokens: (voxxrinUserTokensWallet.value?.secretTokens.eventOrganizerTokens || []).concat(toVoxxrinUserWalletEventOrganizerSecretToken(eventOrganizerSecretToken)),
+            eventOrganizerTokens,
             talkFeedbacksViewerTokens: (voxxrinUserTokensWallet.value?.secretTokens.talkFeedbacksViewerTokens || [])
           }
         }
     }
 
     const registerTalkFeedbacksViewerSecretToken = async (talkFeedbacksViewerSecretToken: UserWalletTalkFeedbacksViewerSecretToken) => {
+        const { talkFeedbacksViewerTokens } = (voxxrinUserTokensWallet.value?.secretTokens.talkFeedbacksViewerTokens || [])
+          .concat(toVoxxrinUserWalletTalkFeedbacksViewerToken(talkFeedbacksViewerSecretToken))
+          .reduce((result, talkFeedbacksViewerToken) => {
+            if(!result.alreadyRegisteredTokens.has(talkFeedbacksViewerToken.secretToken)) {
+              result.talkFeedbacksViewerTokens.push(talkFeedbacksViewerToken)
+              result.alreadyRegisteredTokens.add(talkFeedbacksViewerToken.secretToken)
+            }
+
+            return result;
+          }, { talkFeedbacksViewerTokens: [] as TalkFeedbacksViewerToken[], alreadyRegisteredTokens: new Set<string>() })
+
         voxxrinUserTokensWallet.value = {
           secretTokens: {
             eventOrganizerTokens: (voxxrinUserTokensWallet.value?.secretTokens.eventOrganizerTokens || []),
-            talkFeedbacksViewerTokens: (voxxrinUserTokensWallet.value?.secretTokens.talkFeedbacksViewerTokens || []).concat(toVoxxrinUserWalletTalkFeedbacksViewerToken(talkFeedbacksViewerSecretToken))
+            talkFeedbacksViewerTokens
           }
         }
     }
+
 
     const talkFeedbackViewerTokensRefForEvent = (eventIdRef: Unreffable<EventId|undefined>) => {
         return computed(() => {
