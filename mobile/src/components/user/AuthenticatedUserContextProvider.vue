@@ -8,6 +8,8 @@ import {migrateData} from "@/data-migrations/migrate-data";
 import {collection, doc, updateDoc} from "firebase/firestore";
 import {db} from "@/state/firebase";
 import {User} from "firebase/auth";
+import {useUserTokensWallet} from "@/state/useUserTokensWallet";
+import {match, P} from "ts-pattern";
 
 const props = defineProps({
   user: {
@@ -24,5 +26,30 @@ const userRef = doc(collection(db, 'users'), props.user.uid)
 setTimeout(() => {
   updateDoc(userRef, "userLastConnection", new Date().toISOString())
 }, 30000);
+
+
+const { registerTalkFeedbacksViewerSecretToken, registerEventOrganizerSecretToken, registerPrivateSpaceSecretToken } = useUserTokensWallet();
+(import.meta.env.VITE_WHITE_LABEL_PREREGISTERED_USER_TOKENS || "")
+  .split(",")
+  .map(async rawUserToken => {
+    const [type, secretToken, ...others] = rawUserToken.split("|")
+
+    return match(type)
+      .with("EventOrganizer", () =>
+        match(others[0].split("@"))
+          .with([P.string], ([eventId]) => registerEventOrganizerSecretToken({ secretToken, eventId }))
+          .with([P.string, P.string], ([spaceToken, eventId]) => registerEventOrganizerSecretToken({ secretToken, eventId, spaceToken }))
+          .otherwise(() => { })
+      ).with("TalkFeedbacksViewer", () => {
+        const [spaceAndEventId, talkId] = [ others[0].split("@"), others[1] ]
+        match(others[0].split("@"))
+          .with([P.string], ([eventId]) => registerTalkFeedbacksViewerSecretToken({ secretToken, eventId, talkId }))
+          .with([P.string, P.string], ([spaceToken, eventId]) => registerTalkFeedbacksViewerSecretToken({ secretToken, spaceToken, eventId, talkId }))
+          .otherwise(() => { })
+      })
+      .otherwise((type) => {
+        console.warn(`No AuthenticatedUserContextProvider handler implemented for type: ${type}`)
+      })
+  })
 
 </script>
