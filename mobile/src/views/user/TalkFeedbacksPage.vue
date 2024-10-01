@@ -77,8 +77,8 @@
               <div class="feedback-content-info" v-if="confDescriptorRef.features.ratings['custom-scale'].enabled">
                 <label>{{LL.Custom_rating()}}</label><strong>{{talkFeedback.ratings['custom-rating']}}</strong>
               </div>
-              <div class="feedback-content-info" v-if="false">
-                <label>{{LL.Free_comment}}</label><strong>{{talkFeedback.comment}}</strong>
+              <div class="feedback-content-info" v-if="confDescriptorRef.features.ratings['free-text'].enabled">
+                <label>{{LL.Free_comment()}}</label><strong><pre>{{talkFeedback.comment}}</pre></strong>
               </div>
             </div>
           </ion-card>
