@@ -143,6 +143,7 @@ export const SINGLE_FILE_CRAWLER: CrawlerKind<typeof SINGLE_FILE_DESCRIPTOR_PARS
       conferenceDescriptor: {
         ...eventInfo,
         headingTitle: descriptor.headingTitle,
+        headingBackground: descriptor.headingBackground,
         features: descriptor.features,
         talkFormats: descriptor.talkFormats,
         talkTracks: descriptor.talkTracks,

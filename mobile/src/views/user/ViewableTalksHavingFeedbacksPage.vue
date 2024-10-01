@@ -13,8 +13,9 @@
       </ion-header>
 
       <div class="schedule-talk-event"  v-for="(eventTalksGroup, index) in talksGroupedByEventRef" :key="eventTalksGroup.confDescriptor.id.value"
-           v-themed-event-styles="eventTalksGroup.confDescriptor">
-
+           v-themed-event-styles="eventTalksGroup.confDescriptor"
+           :style="{ 'background': eventTalksGroup.confDescriptor.headingBackground === undefined ? `var(--default-background)` : eventTalksGroup.confDescriptor.headingBackground }"
+      >
         <event-talks-group :conf-descriptor="eventTalksGroup.confDescriptor" :talks="eventTalksGroup.talks"
           @talk-clicked="openTalkDetails($event)"/>
       </div>
@@ -124,7 +125,7 @@ function openTalkDetails(talk: VoxxrinTalk) {
 
 .schedule-talk-event {
   position: relative;
-  background: linear-gradient(0deg, rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.4802) 0%, rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.98) 52.84%);
+  --default-background: linear-gradient(0deg, rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.4802) 0%, rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.98) 52.84%);
   margin: 16px;
   padding: 8px 4px;
   border-radius: 16px;

@@ -183,6 +183,7 @@ export const WEB2DAY_CRAWLER: CrawlerKind<typeof WEB2DAY_PARSER> = {
             title: descriptor.title,
             days: descriptor.days as Day[],
             headingTitle: descriptor.headingTitle,
+            headingBackground: descriptor.headingBackground,
             description: descriptor.description,
             keywords: descriptor.keywords,
             location: descriptor.location,

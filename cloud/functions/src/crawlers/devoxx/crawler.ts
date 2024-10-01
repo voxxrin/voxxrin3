@@ -143,6 +143,7 @@ Please, unless event id is made configurable at cfp.dev level, you should rather
         const eventDescriptor: FullEvent['conferenceDescriptor'] = {
             ...eventInfo,
             headingTitle: descriptor.headingTitle,
+            headingBackground: descriptor.headingBackground,
             features: descriptor.features,
             talkFormats: eventTalkFormats,
             talkTracks: descriptor.talkTracks,
