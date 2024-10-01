@@ -24,7 +24,7 @@ import {
   THEMABLE_TALK_FORMAT_PARSER
 } from "../crawler-parsers";
 import {CrawlerKind, TALK_FORMAT_FALLBACK_COLORS} from "../crawl";
-import {match} from "ts-pattern";
+import {match, P} from "ts-pattern";
 import {http} from "../utils";
 import {TalkStats} from "../../../../../shared/event-stats";
 
@@ -63,10 +63,13 @@ type DevoxxFloorPlan = {
 export const DEVOXX_CRAWLER: CrawlerKind<typeof DEVOXX_DESCRIPTOR_PARSER> = {
     descriptorParser: DEVOXX_DESCRIPTOR_PARSER,
     crawlerImpl: async (eventId: string, descriptor: z.infer<typeof DEVOXX_DESCRIPTOR_PARSER>, criteria: { dayIds?: string[]|undefined }) => {
-        const rawCfpBaseUrl = descriptor.cfpBaseUrl || `https://${descriptor.cfpId}.cfp.dev`;
+        const rawCfpBaseUrl = match([descriptor.cfpBaseUrl, descriptor.cfpId])
+            .with([P.nonNullable, P._], ([cfpBaseUrl, _]) => cfpBaseUrl)
+            .with([P._, P.nonNullable], ([_, cfpId]) => `https://${cfpId}.cfp.dev`)
+            .otherwise(() => `https://${eventId}.cfp.dev`)
 
-        if(rawCfpBaseUrl !== `https://${descriptor.cfpId}.cfp.dev`) {
-          throw new Error(`Devoxx descriptor url (${descriptor.cfpId}) not matching with cfp.dev's slug (${rawCfpBaseUrl}).
+        if(rawCfpBaseUrl !== `https://${eventId}.cfp.dev`) {
+          throw new Error(`Voxxrin event id (${eventId}) not matching with cfp.dev's slug (${rawCfpBaseUrl}).
 This can lead to unexpected behaviour when CFP will try to call voxxrin API using slug as event id.
 Please, unless event id is made configurable at cfp.dev level, you should rather use a voxxrin event id matching cfp.dev's slug !
 `)
@@ -140,6 +143,7 @@ Please, unless event id is made configurable at cfp.dev level, you should rather
         const eventDescriptor: FullEvent['conferenceDescriptor'] = {
             ...eventInfo,
             headingTitle: descriptor.headingTitle,
+            headingBackground: descriptor.headingBackground,
             features: descriptor.features,
             talkFormats: eventTalkFormats,
             talkTracks: descriptor.talkTracks,

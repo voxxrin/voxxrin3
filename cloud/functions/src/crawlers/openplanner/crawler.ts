@@ -262,6 +262,7 @@ export const OPENPLANNER_CRAWLER: CrawlerKind<typeof OPENPLANNER_DESCRIPTOR_PARS
           logoUrl: openPlannerSchedule.logoUrl,
           backgroundUrl: openPlannerSchedule.backgroundUrl,
           headingTitle: openPlannerSchedule.headingTitle,
+          headingBackground: openPlannerSchedule.headingBackground,
           talkFormats: openPlannerSchedule.talkFormats,
           talkTracks: openPlannerSchedule.talkTracks,
           supportedTalkLanguages: openPlannerSchedule.supportedTalkLanguages,

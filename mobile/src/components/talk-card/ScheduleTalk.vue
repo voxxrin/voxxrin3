@@ -401,9 +401,9 @@ const theme = {
     //* Change style type actions *//
     ion-button {
       &.btn-watchLater {
-        --background: var(--voxxrin-event-theme-colors-secondary-hex);
-        --color: var(--voxxrin-event-theme-colors-secondary-contrast-hex);
-        border-left: 1px solid var(--voxxrin-event-theme-colors-secondary-hex);
+        --background: var(--voxxrin-event-theme-colors-tertiary-hex);
+        --color: var(--voxxrin-event-theme-colors-tertiary-contrast-hex);
+        border-left: 1px solid var(--voxxrin-event-theme-colors-tertiary-hex);
       }
 
       &.btn-feedbackSelect {
@@ -449,7 +449,7 @@ const theme = {
 
     &._has-to-watch-later {
       &:before {
-        background: linear-gradient(331deg, rgba(var(--voxxrin-event-theme-colors-secondary-rgb), 0.6) 30%, rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.6) 80%) !important;
+        background: linear-gradient(331deg, rgba(var(--voxxrin-event-theme-colors-tertiary-rgb), 0.6) 30%, rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.6) 80%) !important;
       }
     }
   }

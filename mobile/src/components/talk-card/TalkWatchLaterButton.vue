@@ -53,9 +53,9 @@ defineExpose({
 .btn-watchLater {
 
   &._is-active {
-    --background: var(--voxxrin-event-theme-colors-secondary-hex);
-    --color: var(--voxxrin-event-theme-colors-secondary-contrast-hex);
-    border-left: 1px solid var(--voxxrin-event-theme-colors-secondary-hex);
+    --background: var(--voxxrin-event-theme-colors-tertiary-hex);
+    --color: var(--voxxrin-event-theme-colors-tertiary-contrast-hex);
+    border-left: 1px solid var(--voxxrin-event-theme-colors-tertiary-hex);
   }
 }
 </style>

@@ -244,6 +244,7 @@ export const CODEURS_EN_SEINE_CRAWLER: CrawlerKind<typeof CODEURS_EN_SEINE_PARSE
             title: descriptor.title,
             days: descriptor.days as Day[],
             headingTitle: descriptor.headingTitle,
+            headingBackground: descriptor.headingBackground,
             description: descriptor.description,
             keywords: descriptor.keywords,
             location: descriptor.location,

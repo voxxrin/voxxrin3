@@ -185,15 +185,15 @@ const {firestoreRoomStatsRef } = useRoomStats(spacedEventIdRef, toRef(() => deta
 
     &.to-watch-later{
       .btnTalkAction._watchLater {
-        --background: var(--voxxrin-event-theme-colors-secondary-hex);
-        --background-activated: var(--voxxrin-event-theme-colors-secondary-hex);
+        --background: var(--voxxrin-event-theme-colors-tertiary-hex);
+        --background-activated: var(--voxxrin-event-theme-colors-tertiary-hex);
         --color-activated: var(--app-white);
         --color: var(--app-white);
       }
 
       ion-toolbar {
         &:before {
-          background: linear-gradient(331deg, rgba(var(--voxxrin-event-theme-colors-secondary-rgb), 0.6) 30%, rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.6) 80%) !important;
+          background: linear-gradient(331deg, rgba(var(--voxxrin-event-theme-colors-tertiary-rgb), 0.6) 30%, rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.6) 80%) !important;
         }
       }
     }

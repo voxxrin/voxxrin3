@@ -196,7 +196,7 @@ function backToSchedulePage() {
   display: flex;
   flex-direction: column;
   min-height: 100%;
-  background: var(--app-primary);
+  background: var(--voxxrin-event-theme-colors-secondary-hex);
 
   &-head {
     position: sticky;

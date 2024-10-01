@@ -1,6 +1,6 @@
 <template>
   <ion-header class="ion-no-border">
-    <ion-toolbar>
+    <ion-toolbar :style="{ '--background': headingBackground }">
       <div class="viewsHeader">
         <ion-button class="viewsHeader-back" @click="backButtonClicked" shape="round" :aria-label="LL.Back_List_Events()">
           <ion-icon src="/assets/icons/solid/checkbox-list.svg"></ion-icon>
@@ -21,7 +21,7 @@
 <script setup lang="ts">
 import {useIonRouter} from "@ionic/vue";
 import CurrentEventStatus from "@/components/events/CurrentEventStatus.vue";
-import {PropType} from "vue";
+import {computed, PropType, ref} from "vue";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {useTabbedPageNav} from "@/state/useTabbedPageNav";
 import GlobalUserActionsButton from "@/components/user/GlobalUserActionsButton.vue";
@@ -43,6 +43,9 @@ function backButtonClicked() {
     triggerTabbedPageExitOrNavigate(`/event-selector`);
 }
 
+const headingBackground = computed(() => {
+  return props.confDescriptor?.headingBackground === undefined ? `var(--default-background)` : props.confDescriptor?.headingBackground
+})
 </script>
 
 <style scoped lang="scss">
@@ -77,7 +80,7 @@ function backButtonClicked() {
   ion-toolbar {
     padding-top: 0 !important;
     position: relative;
-    --background: linear-gradient(0deg, rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.4802) 0%, rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.98) 52.84%);
+    --default-background: linear-gradient(0deg, rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.4802) 0%, rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.98) 52.84%);
     z-index: 1;
 
     ion-title {

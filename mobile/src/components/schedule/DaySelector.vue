@@ -170,12 +170,12 @@ function findDayByLocalDate(localDate: string) {
     .dayList  {
       display: flex;
       min-width: 100%;
-      width: fit-content;
       padding: 0;
       background: rgba(white, 0.6);
       -webkit-backdrop-filter:  blur(30px) saturate(120%);
       backdrop-filter:  blur(30px) saturate(120%);
       box-shadow: rgba(99, 99, 99, 0.2) 0 2px 8px 0;
+      overflow-x: auto;
 
       @media (prefers-color-scheme: dark) {
         border-bottom: 1px solid var(--app-line-contrast);
@@ -348,8 +348,11 @@ function findDayByLocalDate(localDate: string) {
     position: relative;
     --padding-start: 0;
     --padding-end: 0;
+    --min-height: 60px;
     --border-style: none;
+    --background: hsl(0deg 0% 100% / 80%);
     align-items: baseline;
+    -webkit-backdrop-filter: blur(30px) saturate(120%);
     backdrop-filter:  blur(30px) saturate(120%);
 
     @media (prefers-color-scheme: dark) {

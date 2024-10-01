@@ -20,6 +20,7 @@ interface ImportMetaEnv {
     readonly VITE_WHITE_LABEL_PAGE_TITLE: string,
     readonly VITE_WHITE_LABEL_PUBLIC_URL: string,
     readonly VITE_WHITE_LABEL_FILTERING_EVENT_FAMILIES: string,
+    readonly VITE_WHITE_LABEL_PREREGISTERED_USER_TOKENS: string,
 }
 
 interface ImportMeta {
