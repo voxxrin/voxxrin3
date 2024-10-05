@@ -38,7 +38,6 @@ import StepHeader from "@/components/feedbacks/StepHeader.vue";
 import {useIonRouter} from "@ionic/vue";
 import {goBackOrNavigateTo} from "@/router";
 import {useRoute} from "vue-router";
-import {ref} from "vue/dist/vue";
 import {EventId} from "@/models/VoxxrinEvent";
 import {getRouteParamsValue} from "@/views/vue-utils";
 
