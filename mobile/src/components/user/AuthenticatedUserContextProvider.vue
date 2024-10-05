@@ -28,26 +28,16 @@ setTimeout(() => {
 }, 30000);
 
 
-const { registerTalkFeedbacksViewerSecretToken, registerEventOrganizerSecretToken, registerPrivateSpaceSecretToken } = useUserTokensWallet();
+const { registerTalkFeedbacksViewerSecretToken, registerEventOrganizerSecretToken } = useUserTokensWallet();
 (import.meta.env.VITE_WHITE_LABEL_PREREGISTERED_USER_TOKENS || "")
   .split(",")
   .map(async rawUserToken => {
     const [type, secretToken, ...others] = rawUserToken.split("|")
 
     return match(type)
-      .with("EventOrganizer", () =>
-        match(others[0].split("@"))
-          .with([P.string], ([eventId]) => registerEventOrganizerSecretToken({ secretToken, eventId }))
-          .with([P.string, P.string], ([spaceToken, eventId]) => registerEventOrganizerSecretToken({ secretToken, eventId, spaceToken }))
-          .otherwise(() => { })
-      ).with("TalkFeedbacksViewer", () => {
-        const [spaceAndEventId, talkId] = [ others[0].split("@"), others[1] ]
-        match(others[0].split("@"))
-          .with([P.string], ([eventId]) => registerTalkFeedbacksViewerSecretToken({ secretToken, eventId, talkId }))
-          .with([P.string, P.string], ([spaceToken, eventId]) => registerTalkFeedbacksViewerSecretToken({ secretToken, spaceToken, eventId, talkId }))
-          .otherwise(() => { })
-      })
-      .otherwise((type) => {
+      .with("EventOrganizer", () => registerEventOrganizerSecretToken({ secretToken, eventId: others[0] })
+      ).with("TalkFeedbacksViewer", () => registerTalkFeedbacksViewerSecretToken({ secretToken, eventId: others[0], talkId: others[1] })
+      ).otherwise((type) => {
         console.warn(`No AuthenticatedUserContextProvider handler implemented for type: ${type}`)
       })
   })
