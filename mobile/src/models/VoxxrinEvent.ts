@@ -5,7 +5,7 @@ import {Temporal} from "temporal-polyfill";
 import {useCurrentClock} from "@/state/useCurrentClock";
 import {zonedDateTimeRangeOf} from "@/models/DatesAndTime";
 import {ISOLocalDate, Replace} from "../../../shared/type-utils";
-import {match} from "ts-pattern";
+import {match, P} from "ts-pattern";
 
 export class EventId extends ValueObject<string>{ _eventIdClassDiscriminator!: never; }
 export class SpaceToken extends ValueObject<string>{ _spaceIdClassDiscriminator!: never; }
@@ -91,9 +91,8 @@ export function firestoreListableEventToVoxxrinListableEvent(firestoreListableEv
     ]
 
     const visibility: ListableVoxxrinEventVisibility = match(firestoreListableEvent)
-      .with({ visibility: 'public' }, (event) => ({ visibility: 'public' as const, spaceToken: undefined }))
       .with({ visibility: 'private' }, (event) => ({ visibility: 'private' as const, spaceToken: new SpaceToken(event.spaceToken) }))
-      .exhaustive()
+      .otherwise((event) => ({ visibility: 'public' as const, spaceToken: undefined }))
 
     return {
         ...firestoreListableEvent,
