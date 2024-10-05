@@ -18,7 +18,7 @@
 <script setup lang="ts">
 import ScheduleTalk from "@/components/talk-card/ScheduleTalk.vue";
 import {typesafeI18n} from "@/i18n/i18n-vue";
-import {PropType} from "vue/dist/vue";
+import {PropType} from "vue";
 import {spacedEventIdOf, VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {VoxxrinTalk} from "@/models/VoxxrinTalk";
 import {toManagedRef as toRef} from "@/views/vue-utils";
