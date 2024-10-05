@@ -11,6 +11,7 @@ import {useUserTokensWallet} from "@/state/useUserTokensWallet";
 import {Logger} from "@/services/Logger";
 import {getResolvedEventRootPath} from "@/services/Spaces";
 import {EventId, toMaybeSpaceToken} from "@/models/VoxxrinEvent";
+import {getRouteQueryParamValue} from "@/views/vue-utils";
 
 const LOGGER = Logger.named("UserTokenRegistrationPage");
 
@@ -20,17 +21,17 @@ const route = useRoute();
 const {registerEventOrganizerSecretToken, registerTalkFeedbacksViewerSecretToken, registerPrivateSpaceSecretToken} = useUserTokensWallet()
 
 onMounted(async () => {
-    const tokenType = route.query['type'] as string;
+    const tokenType = getRouteQueryParamValue(route, 'type');
 
     if(!tokenType) { alert("Missing token type !"); return; }
 
     const { success, redirectTo } = await match(tokenType)
         .with('EventOrganizer', async () => {
-            const secretToken = route.query['secretToken'] as string;
+            const secretToken = getRouteQueryParamValue(route, 'secretToken');
             if(!secretToken) { alert("Missing secret token !"); return { success: false, redirectTo: undefined }; }
 
-            const rawSpaceToken = route.query['spaceToken'] as string|undefined;
-            const eventId = route.query['eventId'] as string;
+            const rawSpaceToken = getRouteQueryParamValue(route, 'spaceToken');
+            const eventId = getRouteQueryParamValue(route, 'eventId');
 
             if(!eventId) { alert("Missing event id !"); return { success: false, redirectTo: undefined }; }
 
@@ -41,12 +42,12 @@ onMounted(async () => {
 
             return { success: true, redirectTo: `${getResolvedEventRootPath(new EventId(eventId), toMaybeSpaceToken(spaceToken))}/asOrganizer/${secretToken}` };
         }).with('TalkFeedbacksViewer', async () => {
-            const secretToken = route.query['secretToken'] as string;
+            const secretToken = getRouteQueryParamValue(route, 'secretToken');
             if(!secretToken) { alert("Missing secret token !"); return { success: false, redirectTo: undefined }; }
 
-            const rawSpaceToken = route.query['spaceToken'] as string|undefined;
-            const eventId = route.query['eventId'] as string;
-            const talkId = route.query['talkId'] as string;
+            const rawSpaceToken = getRouteQueryParamValue(route, 'spaceToken');
+            const eventId = getRouteQueryParamValue(route, 'eventId');
+            const talkId = getRouteQueryParamValue(route, 'talkId');
 
             if(!eventId) { alert("Missing event id !"); return { success: false, redirectTo: undefined }; }
             if(!talkId) { alert("Missing talk id !"); return { success: false, redirectTo: undefined }; }
@@ -57,10 +58,12 @@ onMounted(async () => {
 
             return { success: true, redirectTo: `/user/talks` };
         }).with('PrivateSpace', async () => {
-            const name = route.query['name'] as string;
+            const name = getRouteQueryParamValue(route, 'name');
             if(!name) { alert("Missing private space token name !"); return { success: false, redirectTo: undefined }; }
 
-            const rawSpaceTokens = route.query['spaceTokens'] as string;
+            const rawSpaceTokens = getRouteQueryParamValue(route, 'spaceTokens');
+            if(!rawSpaceTokens) { alert("Missing space token(s) !"); return { success: false, redirectTo: undefined }; }
+
             const spaceTokens = rawSpaceTokens.split(",");
 
             if(!spaceTokens || !spaceTokens.length) { alert("Missing space tokens !"); return { success: false, redirectTo: undefined }; }

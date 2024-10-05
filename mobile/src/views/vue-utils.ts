@@ -1,4 +1,4 @@
-import {RouteLocationNormalizedLoaded} from "vue-router";
+import {LocationQueryValue, RouteLocationNormalizedLoaded} from "vue-router";
 import {
   MaybeRef,
   onUnmounted,
@@ -13,7 +13,7 @@ import {
 } from "vue";
 import {Temporal} from "temporal-polyfill";
 import {actionSheetController, ActionSheetOptions} from "@ionic/vue";
-import {match} from "ts-pattern";
+import {match, P} from "ts-pattern";
 import {
   useCollection as vuefireUseCollection,
   UseCollectionOptions,
@@ -37,6 +37,15 @@ export const getRouteParamsValue = (route: RouteLocationNormalizedLoaded, paramN
     }
 
     return paramValue as string;
+}
+export const getRouteQueryParamValue = (route: RouteLocationNormalizedLoaded, paramName: string): string|null => {
+  const paramValue = route.query[paramName]
+  const unwrappedParamValue = match(paramValue)
+    .with(P.nullish.or(P.string), val => val)
+    .with(P.array(P.nullish.or(P.string)), ([val]) => val)
+    .exhaustive()
+
+  return unwrappedParamValue;
 }
 export const getOptionalTransformedRouteParamsValue = <U>(route: RouteLocationNormalizedLoaded, paramName: string, transformer: (value: string) => U): U|undefined => {
   if(!route.params[paramName]) {
