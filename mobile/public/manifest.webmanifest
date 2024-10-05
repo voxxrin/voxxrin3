@@ -26,16 +26,32 @@
   "description": "Your conference companion",
   "screenshots": [
     {
-      "src": "/assets/imgs/screenshot-wide.png",
+      "src": "/assets/imgs/screenshot-narrow-android.png",
       "type": "image/png",
-      "sizes": "1280x960",
+      "sizes": "1080x2400",
+      "platform": "android",
+      "form_factor": "narrow",
+      "label": "Voxxrin"
+    }, {
+      "src": "/assets/imgs/screenshot-narrow-ios.png",
+      "type": "image/png",
+      "sizes": "1080x2400",
+      "platform": "ios",
+      "form_factor": "narrow",
+      "label": "Voxxrin"
+    }, {
+      "src": "/assets/imgs/screenshot-wide-android.png",
+      "type": "image/png",
+      "sizes": "2400x1080",
+      "platform": "android",
       "form_factor": "wide",
       "label": "Voxxrin"
     }, {
-      "src": "/assets/imgs/screenshot-narrow.png",
+      "src": "/assets/imgs/screenshot-wide-ios.png",
       "type": "image/png",
-      "sizes": "788x1376",
-      "form_factor": "narrow",
+      "sizes": "2400x1080",
+      "platform": "ios",
+      "form_factor": "wide",
       "label": "Voxxrin"
     }
   ]
