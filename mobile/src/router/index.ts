@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
 import { RouteRecordRaw } from 'vue-router';
 import EventSelectorPage from "@/views/EventSelectorPage.vue";
-import {UseIonRouterResult} from "@ionic/vue";
+import {isPlatform, UseIonRouterResult} from "@ionic/vue";
 import {RouteDirection} from "@ionic/vue/dist/types/hooks/router";
 import type {PreloadedModules} from './preloaded-pages'
 import type {PreloadedAdminModules} from './preloaded-admin-pages'
@@ -95,11 +95,19 @@ export async function goBackOrNavigateTo(ionRouter: UseIonRouterResult, fallback
     // (I assume it has something to do with history.state.position)
     // That's why when a navigation backward is requested at the tabbed page's level, we first need to reset
     // vue router's history position to the original tabbed page's one, THEN perform a back() at ion router's level
-    if(routerGoBacks!==0){
-      router.go(routerGoBacks>0?-routerGoBacks:routerGoBacks)
+    const platformRouterGoBacks = -1 * Math.abs(routerGoBacks)
+    if(platformRouterGoBacks  < 0){
+      router.go(platformRouterGoBacks)
     }
-    ionRouter.back();
 
+    // Calling ionRouter.back() can't be done in the same thread than router.go(-x) on iOS
+    // To reproduce: navigate to schedule page from event selector screen, navigate on another tab (ex: favorites tab)
+    // then click on 'back to event list screen' button in event header
+    if(isPlatform('ios') && platformRouterGoBacks < 0) {
+      setTimeout(() => { ionRouter.back(); }, 0)
+    } else {
+      ionRouter.back();
+    }
   // Sometimes, we might be on a tabbed page without having navigated from another context
   // Typical case: if we "refresh" the page on the schedule page, canGoBack() will return false
   // because ionic doesn't have into its (memory) history the previous page we would like to navigate to
