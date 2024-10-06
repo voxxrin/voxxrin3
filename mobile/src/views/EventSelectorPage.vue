@@ -45,7 +45,6 @@
           </template>
         </available-events-list>
       </div>
-      <PoweredVoxxrin></PoweredVoxxrin>
     </ion-content>
   </ion-page>
 </template>

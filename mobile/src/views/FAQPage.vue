@@ -33,10 +33,7 @@
           </ion-item>
           <div slot="content">
             <p>
-              Please, note that Voxxrin should be considered as in a <strong>closed beta</strong> for new conference organizers.
-            </p>
-            <p>
-              That being said, if you're interested in using it on your conference, you can file an issue
+              If you're interested in using it on your conference, you can file an issue
               <a href="https://github.com/voxxrin/voxxrin3/issues" target="_blank">on our Github repository</a>, asking for an Event Registration.
             </p>
             <p>
@@ -56,38 +53,6 @@
             </p>
           </div>
         </ion-accordion>
-        <ion-accordion value="4">
-          <ion-item slot="header" color="light">
-            <ion-text class="title" color="secondary">
-              <h6>There is this "New content available" banner which keeps popping again and again (<em>this is annoying</em>)</h6>
-            </ion-text>
-          </ion-item>
-          <div slot="content">
-            <p>
-              Voxxrin uses Service Workers which helps providing a good offline experience by caching every web assets
-              (<em>like: js ,css, speaker pictures and so on..</em>) and serving it from cache when needed.
-            </p>
-            <p>
-              Service Worker instance is <strong>shared</strong> across all the browser tabs of the {{publicUrl}} website, meaning that when an update of the
-              service worker is detected (<em>generally, after a new Voxxrin deployment</em>) this banner is shown to end users.
-            </p>
-            <p>
-              Problem is: Voxxrin app <strong>doesn't have control over <u>when</u></strong> the browser is going to update the Service Worker process as this involves
-              several processes (such as downloading and caching new assets in the background).
-            </p>
-            <p>
-              It means that when you click <strong>Reload</strong> button, browser works in the background, potentially waiting for other opened tabs
-              on the same website, and refreshing stuff in its cache.<br/>
-              If you refresh the app during this period of time, you will keep having this banner, giving you the impression that Reloading SW
-              didn't happened (which is not completely wrong...)
-            </p>
-            <p>
-              <strong>TLDR;</strong> This is a bad UX (if you have ideas about how to improve it, you're welcome :-)) but when this banner appears, click the "Reload" button
-              and continue browsing normally ... when the SW will be ready to update, it will refresh the page you are currently on and the
-              banner will no longer appear.
-            </p>
-          </div>
-        </ion-accordion>
         <ion-accordion value="5">
           <ion-item slot="header" color="light">
             <ion-text class="title" color="secondary">
@@ -96,10 +61,13 @@
           </ion-item>
           <div slot="content">
             <p>
-              At the moment, we are a team of frontend developers and designers, both working for the same french company,
-              <a href="https://www.4sh.fr" target="_blank">4SH</a>, which helps us by giving some free (day) time in
-              addition to our nightly OSS contributions.<br/>
-              Project
+              I'm <a href="https://www.linkedin.com/in/fr%C3%A9d%C3%A9ric-camblor-6978926/" target="_blank">Frédéric</a>, a passionate web developer based in France.
+            </p>
+            <p>
+              I'm behind Voxxrin v3, with the help of <a href="https://bento.me/robinlopez" target="_blank">Robin Lopez</a>, a talented designer.
+            </p>
+            <p>
+              We like to build apps <a href="https://github.com/voxxrin/voxxrin3" target="_blank">in the open</a>, that's why I created a company (DevXWeb SAS) to distribute Voxxrin <a href="https://www.voxxr.in" target="_blank">as a SaaS</a>.
             </p>
           </div>
         </ion-accordion>
