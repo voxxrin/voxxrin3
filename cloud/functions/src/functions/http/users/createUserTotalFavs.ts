@@ -27,23 +27,3 @@ export async function forEachUsers(limit: number, startingId: string|undefined, 
     count: userDocs.length
   }
 }
-
-async function createUserTotalFavs(userDoc: DocumentReference<User>) {
-  const userEvents = await db.collection(`users/${userDoc.id}/events`).listDocuments()
-  const perEventTotalFavorites = await Promise.all(userEvents.map(async userEvent => {
-    const userEventTalkNotes = await (db.collection(`users/${userDoc.id}/events/${userEvent.id}/talksNotes`) as CollectionReference<UserTalkNote>).listDocuments()
-    const talkNotes = await Promise.all(userEventTalkNotes.map(userTalkNoteDoc => userTalkNoteDoc.get()))
-    return {
-      eventId: userEvent.id,
-      totalFavs: talkNotes.reduce((total, talkNote) => total + (talkNote.data()?.note.isFavorite ? 1:0 ), 0)
-    }
-  }))
-
-  const totalFavs = perEventTotalFavorites.reduce((totalFavs, eventTotalFavs) => {
-    totalFavs.total += eventTotalFavs.totalFavs
-    totalFavs.perEventTotalFavs[eventTotalFavs.eventId] = eventTotalFavs.totalFavs;
-    return totalFavs
-  }, { total: 0, perEventTotalFavs: {} } as UserTotalFavs )
-
-  await userDoc.update("totalFavs", totalFavs, "_version", 1)
-}
