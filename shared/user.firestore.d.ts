@@ -12,6 +12,7 @@ export type User = {
     userLastConnection?: ISODatetime|undefined;
     username: string;
     totalFavs: UserTotalFavs;
-    _version: 2
+    _version: 3;
+    _modelRemainingMigrations: string[];
 }
 
