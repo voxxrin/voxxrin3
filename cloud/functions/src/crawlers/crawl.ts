@@ -305,6 +305,14 @@ const saveEvent = async function (event: FullEvent, crawlerDescriptor: z.infer<t
         ? [undefined, 'public space', { ...baseListableEvent, visibility: 'public' }]
         : [crawlerDescriptor.spaceToken, `private space: ${crawlerDescriptor.spaceToken}`, {...baseListableEvent, visibility: 'private', spaceToken: crawlerDescriptor.spaceToken}]
 
+    if(spaceToken) {
+      const space = await db.doc(`/spaces/${spaceToken}`).get()
+      // Creating (dummy) space entry so that we can list spaces serverside (we can't list ids from empty docs)
+      if(!space.exists) {
+        space.ref.set({ spaceToken });
+      }
+    }
+
     await db.doc(resolvedEventFirestorePath(event.id, spaceToken)).set(listableEvent)
 
     const talksStatsAllInOneDoc = await db.doc(`${resolvedEventFirestorePath(event.id, spaceToken)}/talksStats-allInOne/self`).get()
