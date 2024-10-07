@@ -11,6 +11,7 @@ import {logPerf} from "../http/utils";
 import {TalkStats} from "../../../../../shared/event-stats";
 import * as express from "express";
 import {resolvedEventFirestorePath} from "../../../../../shared/utilities/event-utils";
+import {match, P} from "ts-pattern";
 
 export type EventFamilyToken = {
     families: string[],
@@ -128,4 +129,22 @@ export async function checkEventLastUpdate(
     }
 
     return { cachedHash, updatesDetected: true };
+}
+
+export async function ensureDocPathExists(path: string, contentIfNotExist: object) {
+  const doc = await db.doc(path).get()
+  if(!doc.exists) {
+    await doc.ref.set(contentIfNotExist);
+  }
+}
+
+export async function ensureUserEventDocPathsExist(userId: string, maybeSpaceToken: string|undefined, eventId: string) {
+  const eventPath = `/users/${userId}/${resolvedEventFirestorePath(eventId, maybeSpaceToken)}`
+
+  await Promise.all([
+    match(maybeSpaceToken)
+      .with(P.nullish, () => Promise.resolve())
+      .otherwise((spaceToken) => ensureDocPathExists(`/users/${userId}/spaces/${spaceToken}`, { spaceToken })),
+    ensureDocPathExists(eventPath, { eventId }),
+  ])
 }

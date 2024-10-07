@@ -30,6 +30,7 @@ const MIGRATIONS: Migration[] = [
     { name: "introduceFormattingsFeature", exec: async () => (await import("../firestore/migrations/019-introduceFormattingsFeature")).introduceFormattingsFeature() },
     { name: "cleaningUnusedFirestoreDocs", exec: async () => (await import("../firestore/migrations/020-cleaningUnusedFirestoreDocs")).cleaningUnusedFirestoreDocs() },
     { name: "introduceEventVisibility", exec: async () => (await import("../firestore/migrations/021-introduceEventVisibility")).introduceEventVisibility() },
+    { name: "introduceSpaceTokenDoc", exec: async () => (await import("../firestore/migrations/022-introduceSpaceTokenDoc")).introduceSpaceTokenDoc() },
 ];
 
 export type MigrationResult = "OK"|"Error";
