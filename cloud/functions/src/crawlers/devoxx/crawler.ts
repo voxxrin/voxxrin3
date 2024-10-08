@@ -270,7 +270,7 @@ const crawlDevoxxDay = async (cfpBaseUrl: string, day: string, descriptor: z.inf
       return slots;
     }, {} as Record<string, DevoxxScheduleItem[]>)
 
-    debug(`Devoxx slots for day ${day}: ${JSON.stringify(slots)}`)
+    // debug(`Devoxx slots for day ${day}: ${JSON.stringify(slots)}`)
 
     for(const [key, items] of Object.entries(slots)) {
         const [start, end] = key.split("--")
