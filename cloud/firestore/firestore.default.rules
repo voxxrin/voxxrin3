@@ -72,7 +72,7 @@ service cloud.firestore {
         match /ratings/{talkId} {
           allow read, write: if false;
         }
-        match /daily-ratings/{dayIf} {
+        match /daily-ratings/{dayId} {
           allow read, write: if false;
         }
       }
@@ -140,7 +140,7 @@ service cloud.firestore {
           match /ratings/{talkId} {
             allow read, write: if false;
           }
-          match /daily-ratings/{dayIf} {
+          match /daily-ratings/{dayId} {
             allow read, write: if false;
           }
         }
