@@ -34,7 +34,6 @@ export type ProvidedUserFeedback = BaseUserFeedback & {
         'linear-rating': number | null,
         'bingo': string[],
         'custom-rating': string | null,
-        'comment': string | null,
     },
     comment: string | null,
 }

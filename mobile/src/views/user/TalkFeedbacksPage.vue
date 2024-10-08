@@ -68,17 +68,17 @@
               </ion-row>
             </div>
             <div class="feedback-content">
-              <div class="feedback-content-info" v-if="confDescriptorRef.features.ratings.scale.enabled">
+              <div class="feedback-content-info" v-if="confDescriptorRef.features.ratings.scale.enabled && talkFeedback.ratings['linear-rating'] !== undefined">
                 <label>{{LL.Linear_rating()}}</label> <strong>{{talkFeedback.ratings['linear-rating']}}</strong>
               </div>
-              <div class="feedback-content-info" v-if="confDescriptorRef.features.ratings.bingo.enabled">
+              <div class="feedback-content-info" v-if="confDescriptorRef.features.ratings.bingo.enabled && talkFeedback.ratings['bingo']?.length">
                 <label>{{LL.Bingo()}}</label> <strong>{{talkFeedback.ratings['bingo'].join(", ")}}</strong>
               </div>
-              <div class="feedback-content-info" v-if="confDescriptorRef.features.ratings['custom-scale'].enabled">
+              <div class="feedback-content-info" v-if="confDescriptorRef.features.ratings['custom-scale'].enabled && talkFeedback.ratings['custom-rating'] !== undefined">
                 <label>{{LL.Custom_rating()}}</label><strong>{{talkFeedback.ratings['custom-rating']}}</strong>
               </div>
-              <div class="feedback-content-info" v-if="confDescriptorRef.features.ratings['free-text'].enabled">
-                <label>{{LL.Free_comment()}}</label><strong><pre>{{talkFeedback.comment}}</pre></strong>
+              <div class="feedback-content-info" v-if="confDescriptorRef.features.ratings['free-text'].enabled && talkFeedback.comment">
+                <label>{{LL.Free_comment()}}</label><strong><pre class="wrap">{{talkFeedback.comment}}</pre></strong>
               </div>
             </div>
           </ion-card>
@@ -420,6 +420,11 @@ const talkFeedbacksStats = computed(() => {
       strong {
         flex: 1;
         text-align: left;
+      }
+
+      pre.wrap {
+        white-space: pre-wrap;
+        word-break: break-word;
       }
     }
   }

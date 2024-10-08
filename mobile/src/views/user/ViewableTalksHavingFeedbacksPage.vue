@@ -14,7 +14,7 @@
 
       <div class="schedule-talk-event"  v-for="(eventTalksGroup, index) in talksGroupedByEventRef" :key="eventTalksGroup.confDescriptor.id.value"
            v-themed-event-styles="eventTalksGroup.confDescriptor"
-           :style="{ 'background': eventTalksGroup.confDescriptor.headingBackground === undefined ? `var(--default-background)` : eventTalksGroup.confDescriptor.headingBackground }"
+           :style="{ 'background': eventTalksGroup.confDescriptor.headingBackground || `var(--default-background)` }"
       >
         <event-talks-group :conf-descriptor="eventTalksGroup.confDescriptor" :talks="eventTalksGroup.talks"
           @talk-clicked="openTalkDetails($event)"/>

@@ -109,8 +109,9 @@ async function updateTalkFeedbacksFromUserFeedbacks(userId: string, maybeSpaceTo
                 "linear-rating": enforceBetween(feedback.ratings["linear-rating"], 1, confDescriptor.features.ratings.scale.labels.length),
                 "custom-rating": enforceValueIncludedInto(feedback.ratings["custom-rating"], confDescriptor.features.ratings["custom-scale"].choices.map(choice => choice.id)),
                 bingo: enforceValuesIncludedInto(feedback.ratings.bingo, confDescriptor.features.ratings.bingo.choices.map(choice => choice.id)),
-                comment: feedback.comment || null,
             }
+
+            const ratingsIncludingComment = { ...enforcedRatings, comment: feedback.comment || null };
 
             const attendeeFeedback: TalkAttendeeFeedback = {
                 talkId: feedback.talkId,
@@ -123,9 +124,9 @@ async function updateTalkFeedbacksFromUserFeedbacks(userId: string, maybeSpaceTo
 
             await Promise.all([
                 db.doc(`${resolvedEventFirestorePath(eventId, maybeSpaceToken)}/talks/${feedback.talkId}/feedbacks-access/${talkFeedbackViewerToken.secretToken}/feedbacks/${user.publicUserToken}`).set(attendeeFeedback),
-                db.doc(`${resolvedEventFirestorePath(eventId, maybeSpaceToken)}/organizer-space/${organizerSpace.organizerSecretToken}/ratings/${feedback.talkId}`).update(`${user.publicUserToken}`, enforcedRatings),
+                db.doc(`${resolvedEventFirestorePath(eventId, maybeSpaceToken)}/organizer-space/${organizerSpace.organizerSecretToken}/ratings/${feedback.talkId}`).update(`${user.publicUserToken}`, ratingsIncludingComment),
                 db.doc(`${resolvedEventFirestorePath(eventId, maybeSpaceToken)}/organizer-space/${organizerSpace.organizerSecretToken}/daily-ratings/${dayId}`)
-                    .update(`${feedback.talkId}.${user.publicUserToken}`, enforcedRatings),
+                    .update(`${feedback.talkId}.${user.publicUserToken}`, ratingsIncludingComment),
                 eventLastUpdateRefreshed(maybeSpaceToken, eventId, [ "allFeedbacks" ]),
                 eventLastUpdateRefreshed(maybeSpaceToken, eventId, [ feedback.talkId ], rootNode => {
                     const feedbacks = {} as NonNullable<EventLastUpdates['feedbacks']>;

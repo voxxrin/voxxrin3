@@ -44,7 +44,7 @@ function backButtonClicked() {
 }
 
 const headingBackground = computed(() => {
-  return props.confDescriptor?.headingBackground === undefined ? `var(--default-background)` : props.confDescriptor?.headingBackground
+  return props.confDescriptor?.headingBackground || `var(--default-background)`
 })
 </script>
 
