@@ -176,7 +176,7 @@ export const EVENT_FEATURES_CONFIG_PARSER = z.object({
 
 export const EVENT_DESCRIPTOR_PARSER = LISTABLE_EVENT_PARSER.extend({
     headingTitle: z.string(),
-    headingBackground: z.string().optional(),
+    headingBackground: z.string().optional().nullable().default(null),
     features: EVENT_FEATURES_CONFIG_PARSER,
     talkFormats: z.array(THEMABLE_TALK_FORMAT_PARSER),
     talkTracks: z.array(THEMABLE_TALK_TRACK_PARSER),

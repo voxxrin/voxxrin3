@@ -334,15 +334,6 @@ const saveEvent = async function (event: FullEvent, crawlerDescriptor: z.infer<t
                 }
             }))
 
-            await Promise.all([
-                ...event.talks.map(async talk => {
-                    const talkFeedbacksDoc = db.doc(`${resolvedEventFirestorePath(event.id, spaceToken)}/organizer-space/${organizerSecretToken}/ratings/${talk.id}`)
-                    const talkFeedbacks = await talkFeedbacksDoc.get();
-                    if(!talkFeedbacks.exists) {
-                        await talkFeedbacksDoc.create({});
-                    }
-                })
-            ])
             return {organizerSecretToken, organizerSpaceContent};
         }).with(1, async () => {
             const organizerSecretToken = await organizerSpaceEntries[0].id;
@@ -351,6 +342,30 @@ const saveEvent = async function (event: FullEvent, crawlerDescriptor: z.infer<t
         }).otherwise(async () => {
             throw new Error(`More than 1 organizer-space entries detected (${organizerSpaceEntries.length}) for event ${event.id} (${spaceContext})`);
         })
+
+    const talkFeedbacksDoc = await db.collection(`${resolvedEventFirestorePath(event.id, spaceToken)}/organizer-space/${organizerSecretToken}/ratings`).listDocuments()
+    const ratingsTalkIds = talkFeedbacksDoc.map(doc => doc.id);
+    await Promise.all([
+        ...event.daySchedules.map(async daySchedule => {
+          const dailyRatings = (await db.doc(`${resolvedEventFirestorePath(event.id, spaceToken)}/organizer-space/${organizerSecretToken}/daily-ratings/${daySchedule.day}`).get()).data() as Record<string, object>;
+          const talkIds = daySchedule.timeSlots.flatMap(ts => ts.type === 'talks' ? ts.talks.map(t => t.id) : [])
+          const dailyRatingsToUpdate = talkIds.reduce((dailyRatingsToUpdate, talkId) => {
+            if(!dailyRatings[talkId]) {
+              dailyRatingsToUpdate[talkId] = {};
+            }
+            return dailyRatingsToUpdate;
+          }, {} as Record<string, object>)
+
+          if(Object.keys(dailyRatingsToUpdate).length) {
+            await db.doc(`${resolvedEventFirestorePath(event.id, spaceToken)}/organizer-space/${organizerSecretToken}/daily-ratings/${daySchedule.day}`).update(dailyRatingsToUpdate);
+          }
+        }),
+        ...event.talks.map(async talk => {
+          if(!ratingsTalkIds.includes(talk.id)) {
+            await db.doc(`${resolvedEventFirestorePath(event.id, spaceToken)}/organizer-space/${organizerSecretToken}/ratings/${talk.id}`).create({})
+          }
+        })
+    ])
 
     await Promise.all(event.daySchedules.map(async daySchedule => {
         try {

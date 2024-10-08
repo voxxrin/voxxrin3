@@ -109,6 +109,7 @@ async function updateTalkFeedbacksFromUserFeedbacks(userId: string, maybeSpaceTo
                 "linear-rating": enforceBetween(feedback.ratings["linear-rating"], 1, confDescriptor.features.ratings.scale.labels.length),
                 "custom-rating": enforceValueIncludedInto(feedback.ratings["custom-rating"], confDescriptor.features.ratings["custom-scale"].choices.map(choice => choice.id)),
                 bingo: enforceValuesIncludedInto(feedback.ratings.bingo, confDescriptor.features.ratings.bingo.choices.map(choice => choice.id)),
+                comment: feedback.comment || null,
             }
 
             const attendeeFeedback: TalkAttendeeFeedback = {
