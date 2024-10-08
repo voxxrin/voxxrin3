@@ -78,7 +78,7 @@
                 <label>{{LL.Custom_rating()}}</label><strong>{{talkFeedback.ratings['custom-rating']}}</strong>
               </div>
               <div class="feedback-content-info" v-if="confDescriptorRef.features.ratings['free-text'].enabled">
-                <label>{{LL.Free_comment()}}</label><strong><pre>{{talkFeedback.comment}}</pre></strong>
+                <label>{{LL.Free_comment()}}</label><strong><pre class="wrap">{{talkFeedback.comment}}</pre></strong>
               </div>
             </div>
           </ion-card>
@@ -423,6 +423,11 @@ const talkFeedbacksStats = computed(() => {
       strong {
         flex: 1;
         text-align: left;
+      }
+
+      pre.wrap {
+        white-space: pre-wrap;
+        word-break: break-word;
       }
     }
   }
