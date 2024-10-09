@@ -190,7 +190,7 @@ export const ${exportedVarName} = ${JSON.stringify({
       '__videoTitle': mt.video.title,
       talkId: mt.talk.id, videoId: mt.video.id
     })),
-    expectedUnmappedTalks: results.unmatchedTalks.map(ut => ({
+    expectedUnmappedTalks: results.unmatchedTalks.map(({talk: ut}) => ({
       '__talkTitle': ut.title, 
       '__talkFormat': `${talkById.get(ut.id)!.format.title} (id=${talkById.get(ut.id)!.format.id}, duration=${talkById.get(ut.id)!.format.duration})`, 
       '__talkRoom': `${talkById.get(ut.id)!.room.title} (${talkById.get(ut.id)!.room.id})`,
