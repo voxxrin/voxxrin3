@@ -272,6 +272,18 @@ const theme = {
       .picturesItem {
         width: 24px;
 
+        @media screen and (max-width: 380px) {
+          width: 16px;
+
+          ion-avatar {
+            --size: 38px;
+          }
+
+          &:last-child {
+            margin-right: 16px;
+          }
+        }
+
         &:last-child {
           margin-right: 24px;
         }
