@@ -48,6 +48,7 @@ export async function requestRecordingAssetsRefresh(response: Response, pathPara
     const simpleTalks: SimpleTalk[] = filteredEventTalks.map(talk => ({
       id: talk.id,
       title: talk.title,
+      format: talk.format,
       speakers: talk.speakers.map(sp => ({ fullName: sp.fullName })),
     }));
     const matchingResults = findYoutubeMatchingTalks(simpleTalks, allMatchingVideos, recordingConfig);
@@ -82,10 +83,45 @@ export async function requestRecordingAssetsRefresh(response: Response, pathPara
       return undefined;
     }))).filter(talk => !!talk).map(talk => talk!);
 
+    const updatesSummary = match({ dryRun: queryParams.dryRun, updatedTalks, matchedTalks: matchingResults.matchedTalks })
+      .with({ updatedTalks: [] }, ({ dryRun, updatedTalks, matchedTalks }) => `
+      No talk URL have been updated out of ${matchedTalks.length} matched talks (should have already been set previously)
+      `.trim()
+      ).otherwise(({ dryRun, updatedTalks, matchedTalks }) =>
+        `${updatedTalks.length} talk URLs${dryRun?' should ':' '}have been updated ${dryRun?'(dry run)':''} (out of ${matchedTalks.length} matched talks): ${updatedTalks.map(t => t.id).join(", ")}`
+      )
+
+    const summary = match(matchingResults)
+      .with({ unmatchedTalks: [] }, () => ({
+        matchingSummary: {
+          message: `Every ${eventTalks.length} talks have matched with a video ! So far so good !`,
+          unmatchedElements: [],
+        },
+        updatesSummary,
+      })).with({ unmatchedYoutubeVideos: [] }, () => ({
+        matchingSummary: {
+          message: `Every ${allMatchingVideos.length} matching videos have matched with a talk ! So far so good !`,
+          unmatchedElements: [],
+        },
+        updatesSummary,
+      })).otherwise(({ unmatchedYoutubeVideos, unmatchedTalks }) => ({
+        matchingSummary: {
+          message: `There are ${unmatchedTalks.length} talks and ${unmatchedYoutubeVideos.length} videos which didn't matched`,
+          unmatchedElements: [
+            ...unmatchedYoutubeVideos.map(video => ({ type: 'Video', label: `${video.title} | ${video.duration} | published: ${video.publishedAt}` })),
+            ...unmatchedTalks.map(({talk}) => ({ type: 'Talk', label: `[${talk.id}] ${talk.title} (${talk.speakers.map(sp => sp.fullName).join(", ")})`, format: talk.format.title })),
+          ]
+        },
+        updatesSummary,
+      }))
+
     // Uncomment this in DEV if you want to generate unit tests based on fetched talks & youtube videos
     // generateTestFile(`./test-data/${pathParams.eventId.toLowerCase()}-talks-and-youtube.ts`, `${pathParams.eventId.toUpperCase()}_TALKS_AND_YOUTUBE`, matchingResults, filteredEventTalks);
 
-    return sendResponseMessage(response, 200, matchingResults)
+    return sendResponseMessage(response, 200, {
+      summary,
+      ...matchingResults
+    })
   }catch(e) {
     return sendResponseMessage(response, 500, e?.toString() || "");
   }

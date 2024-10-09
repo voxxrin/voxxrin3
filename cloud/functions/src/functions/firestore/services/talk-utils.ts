@@ -8,7 +8,7 @@ import {logPerf} from "../../http/utils";
 import {getTimeslottedTalks} from "./schedule-utils";
 import {firestore} from "firebase-admin";
 import QuerySnapshot = firestore.QuerySnapshot;
-import {Talk} from "../../../../../../shared/daily-schedule.firestore";
+import {Talk, TalkFormat} from "../../../../../../shared/daily-schedule.firestore";
 import stringSimilarity from "string-similarity-js";
 import {EventRecordingConfig} from "../../../../../../shared/conference-descriptor.firestore";
 
@@ -95,6 +95,7 @@ export type YoutubeVideo = {
 export type SimpleTalk = {
   id: string,
   title: string,
+  format: TalkFormat,
   speakers: Array<{ fullName: string }>,
 }
 
