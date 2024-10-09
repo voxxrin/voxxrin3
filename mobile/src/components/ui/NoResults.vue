@@ -96,7 +96,7 @@ const hasSubtitleSlot = computed(() => {
     margin: 0 auto;
 
     @media (prefers-color-scheme: dark) {
-      color: black;
+      color: white;
     }
 
     &.absolute {
