@@ -9,10 +9,11 @@ import {db} from "../../../firebase";
 import {firestore} from "firebase-admin";
 import DocumentReference = firestore.DocumentReference;
 import {DetailedTalk, Talk, TalkAsset} from "../../../../../../shared/daily-schedule.firestore";
+import {match, P} from "ts-pattern";
 
 
 
-export async function requestRecordingAssetsRefresh(response: Response, pathParams: {eventId: string}, queryParams: {token: string}) {
+export async function requestRecordingAssetsRefresh(response: Response, pathParams: {eventId: string}, queryParams: {token: string, dryRun: boolean}) {
   if(!process.env.YOUTUBE_API_KEY) {
     throw new Error(`Missing YOUTUBE_API_KEY env variable !`);
   }
@@ -51,7 +52,7 @@ export async function requestRecordingAssetsRefresh(response: Response, pathPara
     }));
     const matchingResults = findYoutubeMatchingTalks(simpleTalks, allMatchingVideos, recordingConfig);
 
-    await Promise.all(matchingResults.matchedTalks.map(async matchedTalk => {
+    const updatedTalks = (await Promise.all(matchingResults.matchedTalks.map(async matchedTalk => {
       const talkSnapshot = await (db.doc(`events/${pathParams.eventId}/talks/${matchedTalk.talk.id}`) as DocumentReference<DetailedTalk>).get()
       const maybeTalk = talkSnapshot.data();
 
@@ -68,14 +69,18 @@ export async function requestRecordingAssetsRefresh(response: Response, pathPara
               assetUrl
             })
 
-          await talkSnapshot.ref.update({
-            assets: assets
-          })
+          if(!queryParams.dryRun) {
+            await talkSnapshot.ref.update({
+              assets: assets
+            })
+          }
 
           console.log(`Updated talkId=${maybeTalk.id}'s youtube recording url to ${assetUrl} for eventId=${pathParams.eventId}`)
+          return maybeTalk;
         }
       }
-    }))
+      return undefined;
+    }))).filter(talk => !!talk).map(talk => talk!);
 
     // Uncomment this in DEV if you want to generate unit tests based on fetched talks & youtube videos
     // generateTestFile(`./test-data/${pathParams.eventId.toLowerCase()}-talks-and-youtube.ts`, `${pathParams.eventId.toUpperCase()}_TALKS_AND_YOUTUBE`, matchingResults, filteredEventTalks);

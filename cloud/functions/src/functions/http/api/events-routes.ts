@@ -66,6 +66,7 @@ export function declareEventHttpRoutes(app: Express) {
     z.object({
       query: z.object({
         token: z.string().min(10),
+        dryRun: z.union([z.literal('true'), z.literal('false')]).optional().default("false").transform(value => value === 'true')
       }),
       path: z.object({
         eventId: z.string().min(3),
