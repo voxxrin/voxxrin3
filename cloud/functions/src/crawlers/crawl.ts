@@ -10,7 +10,8 @@ import {ConferenceOrganizerSpace} from "../../../../shared/conference-organizer-
 import {eventLastUpdateRefreshed} from "../functions/firestore/firestore-utils";
 import {http} from "./utils";
 import {
-  Room,
+  DetailedTalk,
+  Room, TalkAsset,
   TalkFormat,
   Track
 } from "../../../../shared/daily-schedule.firestore";
@@ -379,9 +380,11 @@ const saveEvent = async function (event: FullEvent, crawlerDescriptor: z.infer<t
         }
         try {
             info("saving talk " + talk.id + " " + talk.title);
-            await firestoreEvent
-                .collection("talks").doc(talk.id)
-                .set(talk)
+            const talkRef = firestoreEvent.collection("talks").doc(talk.id)
+            const talkDoc = await talkRef.get()
+            const assets: TalkAsset[] = talkDoc.exists ? (talkDoc.data() as DetailedTalk).assets : []
+
+            await talkRef.set({ ...talk, assets })
 
             const existingTalkFeedbackViewerToken = organizerSpaceContent.talkFeedbackViewerTokens
                 .find(tfvt => tfvt.eventId === event.id && tfvt.talkId === talk.id)
