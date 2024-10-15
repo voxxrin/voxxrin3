@@ -289,8 +289,8 @@ const {firestoreRoomStatsRef } = useRoomStats(eventId, toRef(() => detailedTalkR
 
   .talkDetails {
     &-tags {
-      padding: 8px 16px;
-      border-radius: 16px;
+      padding: 16px;
+      background: var(--app-beige-medium);
 
       @media (prefers-color-scheme: dark) {
         --border-style: none;
