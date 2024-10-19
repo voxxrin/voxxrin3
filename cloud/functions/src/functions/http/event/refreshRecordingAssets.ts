@@ -93,26 +93,26 @@ export async function requestRecordingAssetsRefresh(response: Response, pathPara
 
     const summary = match(matchingResults)
       .with({ unmatchedTalks: [] }, () => ({
-        matchingSummary: {
+        updates: updatesSummary,
+        matchings: {
           message: `Every ${eventTalks.length} talks have matched with a video ! So far so good !`,
           unmatchedElements: [],
         },
-        updatesSummary,
       })).with({ unmatchedYoutubeVideos: [] }, () => ({
-        matchingSummary: {
+        updates: updatesSummary,
+        matchings: {
           message: `Every ${allMatchingVideos.length} matching videos have matched with a talk ! So far so good !`,
           unmatchedElements: [],
         },
-        updatesSummary,
       })).otherwise(({ unmatchedYoutubeVideos, unmatchedTalks }) => ({
-        matchingSummary: {
+        updates: updatesSummary,
+        matchings: {
           message: `There are ${unmatchedTalks.length} talks and ${unmatchedYoutubeVideos.length} videos which didn't matched`,
           unmatchedElements: [
             ...unmatchedYoutubeVideos.map(video => ({ type: 'Video', label: `${video.title} | ${video.duration} | published: ${video.publishedAt}` })),
             ...unmatchedTalks.map(({talk}) => ({ type: 'Talk', label: `[${talk.id}] ${talk.title} (${talk.speakers.map(sp => sp.fullName).join(", ")})`, format: talk.format.title })),
           ]
         },
-        updatesSummary,
       }))
 
     // Uncomment this in DEV if you want to generate unit tests based on fetched talks & youtube videos
