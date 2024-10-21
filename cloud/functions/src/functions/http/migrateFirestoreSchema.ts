@@ -3,6 +3,7 @@ import {db} from "../../firebase";
 import {ISODatetime} from "../../../../../shared/type-utils";
 import * as functions from "firebase-functions";
 import * as express from "express";
+import {cleanOutdatedUsers} from "../firestore/migrations/025-cleanOutdatedUsers";
 
 /**
  * Like Flyway, but for firestore :-)
@@ -32,6 +33,7 @@ const MIGRATIONS: Migration[] = [
     { name: "introduceEventVisibility", exec: async () => (await import("../firestore/migrations/021-introduceEventVisibility")).introduceEventVisibility() },
     { name: "introduceSpaceTokenDoc", exec: async () => (await import("../firestore/migrations/022-introduceSpaceTokenDoc")).introduceSpaceTokenDoc() },
     { name: "dontConsiderOptionalMigrationInUserVersion", exec: async () => (await import("../firestore/migrations/023-dontConsiderOptionalMigrationInUserVersion")).dontConsiderOptionalMigrationInUserVersion() },
+    { name: "cleanOutdatedUsers", exec: async () => (await import("../firestore/migrations/025-cleanOutdatedUsers")).cleanOutdatedUsers() },
 ];
 
 export type MigrationResult = "OK"|"Error";

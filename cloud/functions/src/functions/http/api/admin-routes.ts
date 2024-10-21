@@ -23,6 +23,23 @@ export function declareAdminHttpRoutes(app: Express) {
       })
     })
 
+  Routes.post(app, `/cron/cleanOutdatedUsers`,
+    z.object({
+      query: z.object({ token: z.string() })
+    }),
+    ensureHasSuperAdminToken(),
+    async (res, path, query, body) => {
+      if(process.env.MIGRATION_TOKEN !== query.token) {
+        return sendResponseMessage(res, 403, `Forbidden: invalid migrationToken !`)
+      }
+
+      const results = await (await import("../../firestore/services/user-utils")).cleanOutdatedUsers();
+      return sendResponseMessage(res, 200, {
+        message: `${results.totalDeletedUsers} users have been deleted (in ${results.totalDurations}ms) !`,
+        results
+      })
+    })
+
   Routes.get(app, `/admin/globalStats`,
     z.object({
       query: z.object({ token: z.string() })
