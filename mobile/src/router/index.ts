@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
-import { RouteRecordRaw } from 'vue-router';
+import {RouteLocation, RouteRecordRaw} from 'vue-router';
 import EventSelectorPage from "@/views/EventSelectorPage.vue";
 import {isPlatform, UseIonRouterResult} from "@ionic/vue";
 import {RouteDirection} from "@ionic/vue/dist/types/hooks/router";
@@ -15,40 +15,49 @@ async function preloadedAdminPage<M extends keyof PreloadedAdminModules>(moduleN
   return modules.default[moduleName];
 }
 
+const SPACES = [
+  {pathPrefix: '', resolvedPathPrefix: (route: RouteLocation) => ``},
+  {pathPrefix: '/spaces/:spaceId', resolvedPathPrefix: (route: RouteLocation) => `/spaces/${route.params.spaceId}`},
+] as const
+
 const routes: Array<RouteRecordRaw> = [
   { path: '/', redirect: '/event-selector' },
   { path: '/index.html', redirect: '/event-selector' },
   { path: '/event-selector', component: EventSelectorPage },
-  { path: '/events/:eventId', component: () => preloadedPage('_BaseEventPages'), children: [
-    { path: '', redirect: (route) => `/events/${route.params.eventId}/schedule` },
-    { path: 'schedule', component: () => preloadedPage('SchedulePage') },
-    { path: 'favorites', component: () => preloadedPage('FavoritesPage') },
-    { path: 'feedbacks', component: () => preloadedPage('FeedbacksPage') },
-    { path: 'notifications', component: () => preloadedPage('NotificationsPage') },
-    { path: 'infos', component: () => preloadedPage('InfosPage') },
-  ]},
-  { path: '/events/:eventId/embedded-schedule', component: () => import('@/views/event/EmbeddedSchedulePage.vue') },
-  { path: '/events/:eventId/new-feedback-for-timeslot/:timeslotId', component: () => preloadedPage('NewFeedbackPage') },
-  { path: '/events/:eventId/rate-talk/:talkId', component: () => preloadedPage('RateTalkPage') },
-  { path: '/events/:eventId/talks/:talkId/details', component: () => preloadedPage('TalkDetailsPage') },
-  { path: '/events/:eventId/talks/:talkId/asFeedbackViewer/:secretFeedbacksViewerToken', component: () => preloadedPage('_BaseEventDetailsPages'), children: [
-      { path: '', redirect: (route) => `/events/${route.params.eventId}/talks/${route.params.talkId}/asFeedbackViewer/${route.params.secretFeedbacksViewerToken}/details` },
-      { path: 'details', component: () => preloadedPage('TalkDetailsPage') },
-      { path: 'feedbacks', component: () => preloadedPage('TalkFeedbacksPage') },
-  ]},
+  ...SPACES.flatMap(space => [
+    { path: `${space.pathPrefix}/events/:eventId`, component: () => preloadedPage('_BaseEventPages'), children: [
+        { path: '', redirect: (route: RouteLocation) => `${space.resolvedPathPrefix(route)}/events/${route.params.eventId}/schedule` },
+        { path: 'schedule', component: () => preloadedPage('SchedulePage') },
+        { path: 'favorites', component: () => preloadedPage('FavoritesPage') },
+        { path: 'feedbacks', component: () => preloadedPage('FeedbacksPage') },
+        { path: 'notifications', component: () => preloadedPage('NotificationsPage') },
+        { path: 'infos', component: () => preloadedPage('InfosPage') },
+      ]},
+    { path: `${space.pathPrefix}/events/:eventId/embedded-schedule`, component: () => import('@/views/event/EmbeddedSchedulePage.vue') },
+    { path: `${space.pathPrefix}/events/:eventId/new-feedback-for-timeslot/:timeslotId`, component: () => preloadedPage('NewFeedbackPage') },
+    { path: `${space.pathPrefix}/events/:eventId/rate-talk/:talkId`, component: () => preloadedPage('RateTalkPage') },
+    { path: `${space.pathPrefix}/events/:eventId/talks/:talkId/details`, component: () => preloadedPage('TalkDetailsPage') },
+    { path: `${space.pathPrefix}/events/:eventId/talks/:talkId/asFeedbackViewer/:secretFeedbacksViewerToken`, component: () => preloadedPage('_BaseEventDetailsPages'), children: [
+        { path: '', redirect: (route: RouteLocation) => `${space.resolvedPathPrefix(route)}/events/${route.params.eventId}/talks/${route.params.talkId}/asFeedbackViewer/${route.params.secretFeedbacksViewerToken}/details` },
+        { path: 'details', component: () => preloadedPage('TalkDetailsPage') },
+        { path: 'feedbacks', component: () => preloadedPage('TalkFeedbacksPage') },
+      ]},
+    { path: `${space.pathPrefix}/events/:eventId/asOrganizer/:secretOrganizerToken`, component: () => preloadedAdminPage('_BaseEventAdminPages'), children: [
+        { path: '', redirect: (route: RouteLocation) => `${space.resolvedPathPrefix(route)}/events/${route.params.eventId}/asOrganizer/${route.params.secretOrganizerToken}/config` },
+        { path: 'config', component: () => preloadedAdminPage('EventAdminConfiguration') },
+        { path: 'talks-config', component: () => preloadedAdminPage('EventAdminTalksConfiguration') },
+      ]},
+    { path: `${space.pathPrefix}/events/:eventId/asOrganizer/:secretOrganizerToken/talk-feedbacks/:talkId`, component: () => preloadedAdminPage('EventAdminTalkFeedbacks') },
+  ]),
   { path: '/faq', component: () => preloadedPage('FAQPage') },
   { path: '/user/dashboard', component: () => preloadedPage('UserDashboardPage') },
   { path: '/user/talks', component: () => preloadedPage('ViewableTalksHavingFeedbacksPage') },
-  { path: '/user/events/:eventId/talks/:talkId/asFeedbackViewer/:secretFeedbacksViewerToken', component: () => preloadedPage('TalkFeedbacksPage') },
+  ...SPACES.flatMap(space => [
+    { path: `/user${space.pathPrefix}/events/:eventId/talks/:talkId/asFeedbackViewer/:secretFeedbacksViewerToken`, component: () => preloadedPage('TalkFeedbacksPage') },
+  ]),
   { path: '/user/my-global-settings', component: () => preloadedPage('MyGlobalSettingsPage') },
   { path: '/user/my-personal-data', component: () => preloadedPage('MyPersonalDataPage') },
   { path: '/user-tokens/register', component: () => preloadedPage('UserTokenRegistrationPage') },
-  { path: '/events/:eventId/asOrganizer/:secretOrganizerToken', component: () => preloadedAdminPage('_BaseEventAdminPages'), children: [
-      { path: '', redirect: (route) => `/events/${route.params.eventId}/asOrganizer/${route.params.secretOrganizerToken}/config` },
-      { path: 'config', component: () => preloadedAdminPage('EventAdminConfiguration') },
-      { path: 'talks-config', component: () => preloadedAdminPage('EventAdminTalksConfiguration') },
-  ]},
-  { path: '/events/:eventId/asOrganizer/:secretOrganizerToken/talk-feedbacks/:talkId', component: () => preloadedAdminPage('EventAdminTalkFeedbacks') },
 ]
 
 const router = createRouter({

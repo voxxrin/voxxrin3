@@ -39,31 +39,11 @@
 
 <script setup lang="ts">
 import {computed, PropType} from "vue";
-import {managedRef as ref, toManagedRef as toRef} from "@/views/vue-utils";
-import {
-  IonProgressBar,
-  IonAccordion,
-  IonRow,
-  IonCol,
-  IonGrid,
-} from '@ionic/vue';
-import {
-  getTimeslotLabel,
-  getTimeslotTimingProgress,
-  TimeslotTimingProgress,
-  VoxxrinScheduleTimeSlot
-} from "@/models/VoxxrinSchedule";
+import {IonAccordion, IonCol, IonGrid, IonProgressBar, IonRow,} from '@ionic/vue';
+import {getTimeslotLabel, TimeslotTimingProgress, VoxxrinScheduleTimeSlot} from "@/models/VoxxrinSchedule";
 import {VoxxrinTimeslotFeedback} from "@/models/VoxxrinFeedback";
-import {useInterval} from "@/views/vue-utils";
-import {useCurrentClock} from "@/state/useCurrentClock";
-import {
-    areFeedbacksEnabled,
-    VoxxrinConferenceDescriptor
-} from "@/models/VoxxrinConferenceDescriptor";
+import {areFeedbacksEnabled, VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {typesafeI18n} from "@/i18n/i18n-vue";
-import {
-    useSharedConferenceDescriptor
-} from "@/state/useConferenceDescriptor";
 import SlotOverlaps from "@/components/schedule/SlotOverlaps.vue";
 
 const props = defineProps({
@@ -100,8 +80,6 @@ defineEmits<{
 }>()
 
 const { LL } = typesafeI18n()
-
-const { conferenceDescriptor } = useSharedConferenceDescriptor(toRef(() => props.confDescriptor?.id));
 
 const timeslotLabel = getTimeslotLabel(props.timeslot!);
 

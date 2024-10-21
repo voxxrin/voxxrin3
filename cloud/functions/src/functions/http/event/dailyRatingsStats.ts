@@ -5,12 +5,14 @@ import {DailyTalkFeedbackRatings} from "../../../../../../shared/conference-orga
 import {firestore} from "firebase-admin";
 import {match} from "ts-pattern";
 import DocumentReference = firestore.DocumentReference;
+import {resolvedEventFirestorePath} from "../../../../../../shared/utilities/event-utils";
 
 
-export async function provideDailyRatingsStats(response: Response, pathParams: {eventId: string}, queryParams: {token: string}, request: Request) {
+export async function provideDailyRatingsStats(response: Response, pathParams: {eventId: string, spaceToken?: string|undefined}, queryParams: {token: string}, request: Request) {
 
+  const {eventId, spaceToken} = pathParams;
   const { cachedHash, updatesDetected } = await logPerf("cached hash", async () => {
-    return await checkEventLastUpdate(pathParams.eventId, [
+    return await checkEventLastUpdate(spaceToken, eventId, [
       root => root.allFeedbacks,
       root => root.talkListUpdated
     ], request, response)
@@ -20,7 +22,7 @@ export async function provideDailyRatingsStats(response: Response, pathParams: {
     return sendResponseMessage(response, 304)
   }
 
-  const organizerSpaceRef = await getSecretTokenRef(`events/${pathParams.eventId}/organizer-space`);
+  const organizerSpaceRef = await getSecretTokenRef(`${resolvedEventFirestorePath(eventId, spaceToken)}/organizer-space`);
   const days = await organizerSpaceRef.collection('daily-ratings').listDocuments() as Array<DocumentReference<DailyTalkFeedbackRatings>>;
 
   const dailyFeedbacks = await Promise.all(days.map(async day => {

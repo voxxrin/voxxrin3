@@ -1,6 +1,6 @@
 <template>
   <div class="talkItemContainer">
-    <room-capacity-indicator v-if="!!roomStats" :event-id="eventId" :talk="talk" :room-stats="roomStats" :show-unknown-capacity="isUpcomingTalk" />
+    <room-capacity-indicator v-if="!!roomStats" :spaced-event-id="spacedEventIdRef" :talk="talk" :room-stats="roomStats" :show-unknown-capacity="isUpcomingTalk" />
     <ion-card class="talkCard"
               v-if="talkNotes"
               :class="{ container: true, '_is-highlighted': isHighlighted(talk, talkNotes), '_has-favorited': talkNotes.isFavorite, '_has-to-watch-later': talkNotes.watchLater }"
@@ -65,15 +65,9 @@
 </template>
 
 <script setup lang="ts">
-import {computed, onMounted, PropType} from "vue";
-import {managedRef as ref, toManagedRef as toRef, useInterval} from "@/views/vue-utils";
-import {
-  IonBadge,
-} from '@ionic/vue';
-import { VoxxrinTalk} from "@/models/VoxxrinTalk";
-import {useRoute} from "vue-router";
-import {EventId} from "@/models/VoxxrinEvent";
-import {getRouteParamsValue} from "@/views/vue-utils";
+import {computed, PropType} from "vue";
+import {IonBadge,} from '@ionic/vue';
+import {VoxxrinTalk} from "@/models/VoxxrinTalk";
 import {TalkNote} from "../../../../shared/feedbacks.firestore";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {typesafeI18n} from "@/i18n/i18n-vue";
@@ -82,6 +76,7 @@ import {VoxxrinRoomStats} from "@/models/VoxxrinRoomStats";
 import {people, person} from "ionicons/icons";
 import RoomCapacityIndicator from "@/components/rooms/RoomCapacityIndicator.vue";
 import SpeakerThumbnail from "@/components/speaker/SpeakerThumbnail.vue";
+import {useCurrentSpaceEventIdRef} from "@/services/Spaces";
 
 const { LL } = typesafeI18n()
 const baseUrl = import.meta.env.BASE_URL;
@@ -131,8 +126,7 @@ const talkLang = computed(() => {
     return props.confDescriptor!.supportedTalkLanguages.find(lang => lang.id.isSameThan(props.talk!.language))
 })
 
-const route = useRoute();
-const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')));
+const spacedEventIdRef = useCurrentSpaceEventIdRef()
 
 const displayedSpeakers = props.talk!.speakers
     .map(s => `${s.fullName}${s.companyName?` (${s.companyName})`:``}`)

@@ -1,68 +1,75 @@
-import {EventId} from "@/models/VoxxrinEvent";
+import {SpacedEventId, stringifySpacedEventId} from "@/models/VoxxrinEvent";
 import {DayId} from "@/models/VoxxrinDay";
 import {TalkId, VoxxrinTalk} from "@/models/VoxxrinTalk";
 import {Ref, toValue, unref} from "vue";
 import {useCurrentUser} from "@/state/useCurrentUser";
-import {
-    deferredVuefireUseCollection,
-    MAX_NUMBER_OF_PARAMS_IN_FIREBASE_IN_CLAUSES,
-} from "@/views/vue-utils";
+import {deferredVuefireUseCollection, MAX_NUMBER_OF_PARAMS_IN_FIREBASE_IN_CLAUSES,} from "@/views/vue-utils";
 import {
   collection,
+  CollectionReference,
   doc,
   DocumentReference,
-  UpdateData, getDoc, query, CollectionReference, where, setDoc, updateDoc
+  getDoc,
+  query,
+  setDoc,
+  UpdateData,
+  updateDoc,
+  where
 } from "firebase/firestore";
 import {db} from "@/state/firebase";
-import {TalkNote, UserComputedEventInfos, UserTalkNote} from "../../../shared/feedbacks.firestore";
+import {TalkNote, UserTalkNote} from "../../../shared/feedbacks.firestore";
 import {Logger, PERF_LOGGER} from "@/services/Logger";
-import { User } from 'firebase/auth';
+import {User} from 'firebase/auth';
 import {Temporal} from "temporal-polyfill";
 import {checkCache} from "@/services/Cachings";
 import {CompletablePromiseQueue, partitionArray, toValueObjectValues} from "@/models/utils";
-import {match, P} from "ts-pattern";
-import {ISODatetime} from "../../../shared/type-utils";
+import {match} from "ts-pattern";
 import {useStorage} from "@vueuse/core";
+import {getLocalStorageKeyCompound} from "@/services/Spaces";
+import {resolvedEventFirestorePath} from "../../../shared/utilities/event-utils";
 
 const LOGGER = Logger.named("useUserTalkNotes");
 
-function getTalkNotesRef(user: User|undefined|null, eventId: EventId|undefined, talkId: TalkId|undefined): DocumentReference<UserTalkNote>|undefined {
-    if(!eventId || !eventId.value || !user || !talkId || !talkId.value) {
+function getTalkNotesRef(
+  user: User|undefined|null,
+  spacedEventId: SpacedEventId|undefined,
+  talkId: TalkId|undefined
+): DocumentReference<UserTalkNote>|undefined {
+    if(!spacedEventId || !spacedEventId.eventId || !spacedEventId.eventId.value || !user || !talkId || !talkId.value) {
         return undefined;
     }
 
-    return doc(collection(doc(collection(doc(collection(db,
-                'users'), user.uid),
-            'events'), eventId.value),
-        'talksNotes'), talkId.value
+    return doc(
+      db,
+      `/users/${user.uid}/${resolvedEventFirestorePath(spacedEventId.eventId.value, spacedEventId.spaceToken?.value)}/talksNotes/${talkId.value}`
     ) as DocumentReference<UserTalkNote>
 }
 
 export function useUserTalkNoteActions(
-    eventIdRef: Ref<EventId>,
+    spacedEventIdRef: Ref<SpacedEventId>,
     talkIdRef: Ref<TalkId | undefined>,
     maybeNoteRef: Ref<TalkNote|undefined> | undefined,
     onTalkNoteUpdated: (updatedTalkNote: TalkNote) => void = () => {}
 ) {
 
-    PERF_LOGGER.debug(() => `useUserTalkNoteActions(${unref(eventIdRef)?.value}, ${unref(talkIdRef)?.value})`)
+    PERF_LOGGER.debug(() => `useUserTalkNoteActions(${stringifySpacedEventId(unref(spacedEventIdRef))}, ${unref(talkIdRef)?.value})`)
 
     const userRef = useCurrentUser()
 
-    const localEventTalkFavsRef = useLocalEventTalkFavsStorage(eventIdRef)
+    const localEventTalkFavsRef = useLocalEventTalkFavsStorage(spacedEventIdRef)
 
     const updateTalkNotesDocument = async (
         callContextName: string,
         talkNoteUpdater: (talkNote: TalkNote) => Partial<TalkNote>,
         afterUpdate: (updatedTalkNote: TalkNote) => Promise<void>|void = () => {}
     ) => {
-        const eventId = toValue(eventIdRef),
+        const spacedEventId = toValue(spacedEventIdRef),
             talkId = toValue(talkIdRef),
             user = toValue(userRef),
-            firestoreUserTalkNotesDoc = getTalkNotesRef(user, eventId, talkId),
+            firestoreUserTalkNotesDoc = getTalkNotesRef(user, spacedEventId, talkId),
             maybeNote = toValue(maybeNoteRef);
 
-        if(!eventId || !user || !talkId) {
+        if(!spacedEventId || !spacedEventId.eventId || !spacedEventId.eventId.value || !user || !talkId) {
             LOGGER.warn(() => `${callContextName}() called with an undefined eventId/user/talkId`)
             return;
         }
@@ -142,22 +149,22 @@ export function useUserTalkNoteActions(
     }
 }
 
-function getUserEventTalkNotesSources(user: User|null|undefined, eventId: EventId|undefined, talkIds: TalkId[]|undefined) {
-    if(!user || !eventId || !eventId.value || !talkIds || !talkIds.length) {
+function getUserEventTalkNotesSources(user: User|null|undefined, spacedEventId: SpacedEventId|undefined, talkIds: TalkId[]|undefined) {
+    if(!user || !spacedEventId || !spacedEventId.eventId || !spacedEventId.eventId.value || !talkIds || !talkIds.length) {
         return undefined;
     }
 
     return partitionArray(talkIds, MAX_NUMBER_OF_PARAMS_IN_FIREBASE_IN_CLAUSES).map(partitionnedTalkIds =>
-        query(collection(doc(collection(doc(collection(db,
-                'users'), user.uid),
-            'events'), eventId.value),
-        'talksNotes'), where("note.talkId", 'in', partitionnedTalkIds.map(id => id.value))
+        query(collection(
+            db,
+            `/users/${user.uid}/${resolvedEventFirestorePath(spacedEventId.eventId.value, spacedEventId.spaceToken?.value)}/talksNotes`
+          ), where("note.talkId", 'in', partitionnedTalkIds.map(id => id.value))
         ) as CollectionReference<UserTalkNote>
     );
 }
 
-export function useLocalEventTalkFavsStorage(eventIdRef: Ref<EventId>) {
-  return useStorage(`event-${eventIdRef.value.value}-local-talk-favs`, new Map<string, 1|-1>(), undefined, {
+export function useLocalEventTalkFavsStorage(spacedEventIdRef: Ref<SpacedEventId>) {
+  return useStorage(`event-${getLocalStorageKeyCompound(spacedEventIdRef)}-local-talk-favs`, new Map<string, 1|-1>(), undefined, {
     serializer: {
       read: (value: any) => new Map<string, 1|-1>(value ? Object.entries(JSON.parse(value)) : []),
       write: (value: Map<string, 1|-1>) => JSON.stringify(Object.fromEntries(value.entries()))
@@ -165,15 +172,15 @@ export function useLocalEventTalkFavsStorage(eventIdRef: Ref<EventId>) {
   })
 }
 
-export function useUserEventTalkNotes(eventIdRef: Ref<EventId>, talkIdsRef: Ref<TalkId[]|undefined>) {
-    PERF_LOGGER.debug(() => `useUserEventTalkNotes(eventId=${toValue(eventIdRef)?.value}, talkIds=${toValueObjectValues(toValue(talkIdsRef))})`)
+export function useUserEventTalkNotes(spacedEventIdRef: Ref<SpacedEventId>, talkIdsRef: Ref<TalkId[]|undefined>) {
+    PERF_LOGGER.debug(() => `useUserEventTalkNotes(${stringifySpacedEventId(toValue(spacedEventIdRef))}, talkIds=${toValueObjectValues(toValue(talkIdsRef))})`)
     const userRef = useCurrentUser()
 
     const userEventTalkNotesRef = deferredVuefireUseCollection(
-        [eventIdRef, userRef, talkIdsRef],
-        ([eventId, user, talkIds]) => getUserEventTalkNotesSources(user, eventId, talkIds),
+        [spacedEventIdRef, userRef, talkIdsRef],
+        ([spacedEventId, user, talkIds]) => getUserEventTalkNotesSources(user, spacedEventId, talkIds),
         firestoreUserTalkNote => firestoreUserTalkNote.note, // TODO: transform to Voxxrin ???
-        (firestoreUserTalkNotesByTalkIdRef, eventId, user, talkIds) => {
+        (firestoreUserTalkNotesByTalkIdRef, spacedEventId, user, talkIds) => {
             // When talk ids are changing (on a day switch), this callback will be triggered
 
             // Filling map with an "empty" note by default, so that we have one note for every talk
@@ -202,16 +209,16 @@ export function useUserEventTalkNotes(eventIdRef: Ref<EventId>, talkIdsRef: Ref<
 
 export async function prepareUserTalkNotes(
     user: User,
-    eventId: EventId,
+    spacedEventId: SpacedEventId,
     dayId: DayId,
     talks: Array<VoxxrinTalk>,
     promisesQueue: CompletablePromiseQueue
 ) {
-    return checkCache(`prepareUserTalkNotes(eventId=${eventId.value}, dayId=${dayId.value})`, Temporal.Duration.from({ hours: 24 }), async () => {
-        PERF_LOGGER.debug(`prepareUserTalkNotes(user=${user.uid}, eventId=${eventId.value}, talkIds=${JSON.stringify(talks.map(talk => talk.id.value))})`)
+    return checkCache(`prepareUserTalkNotes(${stringifySpacedEventId(spacedEventId)}, dayId=${dayId.value})`, Temporal.Duration.from({ hours: 24 }), async () => {
+        PERF_LOGGER.debug(`prepareUserTalkNotes(user=${user.uid}, spacedEventId=${stringifySpacedEventId(spacedEventId)}, talkIds=${JSON.stringify(talks.map(talk => talk.id.value))})`)
         promisesQueue.addAll(talks.map(talk => {
           return async () => {
-            const talkNotesRef = getTalkNotesRef(user, eventId, talk.id);
+            const talkNotesRef = getTalkNotesRef(user, spacedEventId, talk.id);
             if(talkNotesRef) {
               await getDoc(talkNotesRef)
               PERF_LOGGER.debug(`getDoc(${talkNotesRef.path})`)

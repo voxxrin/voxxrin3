@@ -26,10 +26,10 @@
         <li>Download CSV file with every talk (CFP) id + shareable feedbacks-viewer token link, that could be shared by conference organizer to speakers</li>
       </ul>
 
-      <ion-button @click="triggerTabbedPageNavigate(`/events/${eventId.value}/asOrganizer/${secretOrganizerToken}/talk-feedbacks/1`, 'forward', 'push')">
+      <ion-button @click="triggerTabbedPageNavigate(`${eventRootPath}/asOrganizer/${secretOrganizerToken}/talk-feedbacks/1`, 'forward', 'push')">
         Feedbacks for talk 1
       </ion-button>
-      <ion-button @click="triggerTabbedPageNavigate(`/events/${eventId.value}/asOrganizer/${secretOrganizerToken}/talk-feedbacks/2`, 'forward', 'push')">
+      <ion-button @click="triggerTabbedPageNavigate(`${eventRootPath}/asOrganizer/${secretOrganizerToken}/talk-feedbacks/2`, 'forward', 'push')">
         Feedbacks for talk 2
       </ion-button>
     </ion-content>
@@ -38,20 +38,19 @@
 
 <script setup lang="ts">
 
-import {useIonRouter} from "@ionic/vue";
 import {useRoute} from "vue-router";
-import {managedRef as ref} from "@/views/vue-utils";
-import {EventId} from "@/models/VoxxrinEvent";
-import {getRouteParamsValue} from "@/views/vue-utils";
+import {getRouteParamsValue, managedRef as ref} from "@/views/vue-utils";
 import {useTabbedPageNav} from "@/state/useTabbedPageNav";
 import {typesafeI18n} from "@/i18n/i18n-vue";
+import {getResolvedEventRootPathFromSpacedEventIdRef, useCurrentSpaceEventIdRef} from "@/services/Spaces";
+import {computed} from "vue";
 
 const { LL } = typesafeI18n()
 
-const ionRouter = useIonRouter();
 const route = useRoute()
 
-const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')));
+const spacedEventIdRef = useCurrentSpaceEventIdRef()
+const eventRootPath = computed(() => getResolvedEventRootPathFromSpacedEventIdRef(spacedEventIdRef))
 const secretOrganizerToken = ref(getRouteParamsValue(route, 'secretOrganizerToken'));
 
 const {triggerTabbedPageNavigate, triggerTabbedPageExitOrNavigate} = useTabbedPageNav()

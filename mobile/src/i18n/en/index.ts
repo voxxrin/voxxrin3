@@ -139,7 +139,8 @@ const en = {
   Organizers_are_regularly_sending_room_capacity_ratio: "Organizers are regularly sending reports on how full the room is",
   On_flacky_connections_it_is_difficult_to_authenticate_the_user: "On flacky connections, authenticating the user can take time, leading to a long loading spinner. To workaround this, you can either Reload the page, or put your device completely offline, so that Firebase doesn't even try to update authenticated user's infos",
   Talk_Recording: "Talk record",
-  Double_tap_on_the_map_to_zoom_in : "Double-tap on the map to zoom in"
+  Double_tap_on_the_map_to_zoom_in : "Double-tap on the map to zoom in",
+  My_events : "My Events",
 } satisfies BaseTranslation
 
 export default en

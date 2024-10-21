@@ -14,7 +14,8 @@
     "build": "npm run build:fn && npm run build:mobile",
     "deploy:site": "cd cloud/hosting && npm run deploy && cd -",
     "deploy:fn": "cd cloud/functions && npm run deploy",
-    "deploy": "concurrently 'npm run deploy:fn' 'npm run deploy:site'"
+    "deploy": "concurrently 'npm run deploy:fn' 'npm run deploy:site'",
+    "test": "cd cloud/firestore/ && npm test"
   },
   "license": "Apache-2.0",
   "devDependencies": {

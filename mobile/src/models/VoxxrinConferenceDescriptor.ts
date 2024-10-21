@@ -4,26 +4,26 @@ import {ConferenceDescriptor} from "../../../shared/conference-descriptor.firest
 import {TalkFormatId, VoxxrinTalkFormat} from "@/models/VoxxrinTalkFormat";
 import {TrackId, VoxxrinTrack} from "@/models/VoxxrinTrack";
 import {RoomId, VoxxrinRoom} from "@/models/VoxxrinRoom";
-import {EventFamily, EventId, toVoxxrinEventTheme, VoxxrinEventTheme} from "@/models/VoxxrinEvent";
+import {
+  EventFamily,
+  EventId,
+  ListableVoxxrinEvent,
+  ListableVoxxrinEventVisibility,
+  SpacedEventId,
+  SpaceToken,
+  toVoxxrinEventTheme,
+} from "@/models/VoxxrinEvent";
 import {Temporal} from "temporal-polyfill";
-import {match} from "ts-pattern";
+import {match, P} from "ts-pattern";
 import {useCurrentClock} from "@/state/useCurrentClock";
-import {toHMMDuration, toISOLocalDate, zonedDateTimeRangeOf} from "@/models/DatesAndTime";
+import {toHMMDuration, zonedDateTimeRangeOf} from "@/models/DatesAndTime";
 import {ISOLocalDate, Replace} from "../../../shared/type-utils";
 
-export type VoxxrinConferenceDescriptor = Replace<ConferenceDescriptor, {
-    id: EventId;
-    eventFamily: EventFamily|undefined,
-    start: Temporal.ZonedDateTime,
-    end: Temporal.ZonedDateTime,
-    localStartDay: ISOLocalDate,
-    localEndDay: ISOLocalDate,
-    days: VoxxrinDay[];
+export type VoxxrinConferenceDescriptor = Omit<ListableVoxxrinEvent, "websiteUrl"> & Replace<Omit<ConferenceDescriptor, keyof ListableVoxxrinEvent>, {
     talkFormats: VoxxrinTalkFormat[],
     talkTracks: VoxxrinTrack[],
     supportedTalkLanguages: VoxxrinLanguaceCode[],
     rooms: VoxxrinRoom[],
-    theming: VoxxrinEventTheme,
 }>;
 
 export type VoxxrinLanguaceCode = Replace<ConferenceDescriptor['supportedTalkLanguages'][number], { id: TalkLanguageCode }>;
@@ -56,8 +56,13 @@ export function createVoxxrinConferenceDescriptor(firestoreConferenceDescriptor:
       firestoreConferenceDescriptor.days.map(d => d.localDate).sort().reverse()[0] as ISOLocalDate,
     ]
 
+    const visibility: ListableVoxxrinEventVisibility = match(firestoreConferenceDescriptor)
+      .with({visibility: 'private', spaceToken: P.string }, (_vis) => ({ visibility: 'private' as const, spaceToken: new SpaceToken(_vis.spaceToken) }))
+      .otherwise(() => ({ visibility: 'public' as const, spaceToken: undefined }))
+
     const voxxrinConferenceDescriptor: VoxxrinConferenceDescriptor = {
         ...firestoreConferenceDescriptor,
+        ...visibility,
         id: new EventId(firestoreConferenceDescriptor.id),
         eventFamily: firestoreConferenceDescriptor.eventFamily===undefined?undefined:new EventFamily(firestoreConferenceDescriptor.eventFamily),
         start, end,
@@ -83,7 +88,7 @@ export function createVoxxrinConferenceDescriptor(firestoreConferenceDescriptor:
             ...r,
             id: new RoomId(r.id)
         })),
-        theming: toVoxxrinEventTheme(firestoreConferenceDescriptor.theming)
+        theming: toVoxxrinEventTheme(firestoreConferenceDescriptor.theming),
     };
 
     return voxxrinConferenceDescriptor;
@@ -137,4 +142,18 @@ export function areFeedbacksEnabled(confDescriptor: VoxxrinConferenceDescriptor)
         || confDescriptor.features.ratings.bingo.enabled
         || confDescriptor.features.ratings["custom-scale"].enabled
         || confDescriptor.features.ratings["free-text"].enabled;
+}
+
+export function maybeSpacedEventIdOf(confDescriptor: VoxxrinConferenceDescriptor|undefined): SpacedEventId|undefined {
+  if(!confDescriptor) {
+    return undefined;
+  }
+
+  return spacedEventIdOf(confDescriptor);
+}
+export function spacedEventIdOf(confDescriptor: VoxxrinConferenceDescriptor): SpacedEventId {
+  return {
+    spaceToken: confDescriptor.spaceToken,
+    eventId: confDescriptor.id,
+  }
 }

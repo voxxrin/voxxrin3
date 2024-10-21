@@ -1,20 +1,9 @@
-import {https} from "firebase-functions";
-import {extractSingleQueryParam, sendResponseMessage} from "../utils";
 import {db} from "../../../firebase";
-import {FeedbackRatings} from "../../../../../../shared/talk-feedbacks.firestore";
 import {TalkStats} from "../../../../../../shared/event-stats";
-import * as functions from "firebase-functions";
-import * as express from "express";
+import {getAllEvents} from "../../firestore/services/event-utils";
+import {resolvedEventFirestorePath} from "../../../../../../shared/utilities/event-utils";
 
-export async function globalStats(request: functions.https.Request, response: express.Response) {
-    const migrationToken = extractSingleQueryParam(request, 'migrationToken')
-    if (!migrationToken) {
-        return sendResponseMessage(response, 400, `Missing 'migrationToken' query parameter !`)
-    }
-    if (migrationToken !== process.env.MIGRATION_TOKEN) {
-        return sendResponseMessage(response, 403, `Forbidden: invalid migrationToken !`)
-    }
-
+export async function globalStats() {
     const users = await db.collection(`users`).listDocuments()
     const userStats = await Promise.all(users.map(async user => {
         const [eventsCount ] = await Promise.all([
@@ -24,10 +13,10 @@ export async function globalStats(request: functions.https.Request, response: ex
         return { userId: user.id, eventsCount };
     }))
 
-    const events = await db.collection(`events`).listDocuments()
+    const events = await getAllEvents({includePrivateSpaces: true})
     const eventsStats = await Promise.all(events.map(async event => {
         const [eventTalkStats/* , eventFeedbacksCount */] = await Promise.all([
-            db.collection(`events/${event.id}/talksStats`).listDocuments().then(async (talkStatsSnaps) => {
+            db.collection(`${resolvedEventFirestorePath(event.id, event.visibility==='private'?event.spaceToken:undefined)}/talksStats`).listDocuments().then(async (talkStatsSnaps) => {
                 const talkStats = await Promise.all(talkStatsSnaps.map(async talkStatsSnap => (await talkStatsSnap.get()).data() as TalkStats))
                 return talkStats;
             }),
@@ -38,10 +27,10 @@ export async function globalStats(request: functions.https.Request, response: ex
             // }),
         ])
 
-        return {eventId: event.id, eventTalkStats, /* eventFeedbacksCount */ };
+        return {eventId: event.id, spaceToken: event.visibility==='private'?event.spaceToken:undefined, eventTalkStats, /* eventFeedbacksCount */ };
     }))
 
-    sendResponseMessage(response, 200, {
+    return {
         distinctUsersCount: users.length,
         distinctUsersHavingFavorites: userStats.filter(stats => stats.eventsCount > 0),
         eventsCount: events.length,
@@ -53,5 +42,5 @@ export async function globalStats(request: functions.https.Request, response: ex
         //     totalFeedbacks + eventStat.eventFeedbacksCount,
         //     0
         // ),
-    });
+    };
 }

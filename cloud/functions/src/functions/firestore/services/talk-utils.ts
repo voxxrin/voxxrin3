@@ -11,6 +11,7 @@ import QuerySnapshot = firestore.QuerySnapshot;
 import {Talk, TalkFormat} from "../../../../../../shared/daily-schedule.firestore";
 import stringSimilarity from "string-similarity-js";
 import {EventRecordingConfig} from "../../../../../../shared/conference-descriptor.firestore";
+import {resolvedEventFirestorePath} from "../../../../../../shared/utilities/event-utils";
 
 
 type PerTalkPublicUserIdFeedbackRating = {
@@ -41,8 +42,8 @@ class ConfOrganizerAllRatingsModel {
     }
 }
 
-export async function getEveryRatingsForEvent(eventId: string, organizerSpaceToken: string) {
-    const dailyRatingsColl = await db.collection(`/events/${eventId}/organizer-space/${organizerSpaceToken}/daily-ratings`).listDocuments()
+export async function getEveryRatingsForEvent(maybeSpaceToken: string|undefined, eventId: string, organizerSpaceToken: string) {
+    const dailyRatingsColl = await db.collection(`${resolvedEventFirestorePath(eventId, maybeSpaceToken)}/organizer-space/${organizerSpaceToken}/daily-ratings`).listDocuments()
 
     const allDailyRatings: PerTalkPublicUserIdFeedbackRating[][] = await Promise.all(dailyRatingsColl.map(async dailyRatingsDoc => {
         const dailyPerTalkIdRatings = (await dailyRatingsDoc.get()).data() as DailyTalkFeedbackRatings;
@@ -58,13 +59,13 @@ export async function getEveryRatingsForEvent(eventId: string, organizerSpaceTok
     return new ConfOrganizerAllRatingsModel(allDailyRatings.flatMap(dailyRatings => dailyRatings));
 }
 
-export async function getTalksDetailsWithRatings(eventId: string) {
-    return logPerf(`getTalksDetailsWithRatings(${eventId})`, async () => {
-        const organizerSpaceRef = await getSecretTokenRef(`/events/${eventId}/organizer-space`)
+export async function getTalksDetailsWithRatings(maybeSpaceToken: string|undefined, eventId: string) {
+    return logPerf(`getTalksDetailsWithRatings(${maybeSpaceToken}, ${eventId})`, async () => {
+        const organizerSpaceRef = await getSecretTokenRef(`${resolvedEventFirestorePath(eventId, maybeSpaceToken)}/organizer-space`)
 
         const [ talks, everyRatings ] = await Promise.all([
-            getTimeslottedTalks(eventId),
-            getEveryRatingsForEvent(eventId, organizerSpaceRef.id)
+            getTimeslottedTalks(maybeSpaceToken, eventId),
+            getEveryRatingsForEvent(maybeSpaceToken, eventId, organizerSpaceRef.id)
         ]);
 
         return talks
@@ -76,9 +77,9 @@ export async function getTalksDetailsWithRatings(eventId: string) {
     })
 }
 
-export async function getEventTalks(eventId: string) {
-  return logPerf(`getEventTalks(${eventId})`, async () => {
-    const talkSnapshots = await db.collection(`events/${eventId}/talks`).get() as QuerySnapshot<Talk>
+export async function getEventTalks(maybeSpaceToken: string|undefined, eventId: string) {
+  return logPerf(`getEventTalks(${maybeSpaceToken}, ${eventId})`, async () => {
+    const talkSnapshots = await db.collection(`${resolvedEventFirestorePath(eventId, maybeSpaceToken)}/talks`).get() as QuerySnapshot<Talk>
 
     return talkSnapshots.docs.map(snap => snap.data());
   })

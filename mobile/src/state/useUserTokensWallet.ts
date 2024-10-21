@@ -2,17 +2,17 @@ import {EventId} from "@/models/VoxxrinEvent";
 import {computed, Ref, unref} from "vue";
 import {useCurrentUser} from "@/state/useCurrentUser";
 import {
-  EventOrganizerToken,
+  EventOrganizerToken, PrivateSpaceToken,
   TalkFeedbacksViewerToken,
   toRawUserTokensWallet,
   toVoxxrinUserTokensWallet,
-  toVoxxrinUserWalletEventOrganizerSecretToken,
+  toVoxxrinUserWalletEventOrganizerSecretToken, toVoxxrinUserWalletPrivateSpaceToken,
   toVoxxrinUserWalletTalkFeedbacksViewerToken,
   VoxxrinUserTokensWallet
 } from "@/models/VoxxrinUser";
 import {createSharedComposable} from "@vueuse/core";
 import {
-  UserWalletEventOrganizerSecretToken,
+  UserWalletEventOrganizerSecretToken, UserWalletPrivateSpaceToken,
   UserWalletTalkFeedbacksViewerSecretToken
 } from "../../../shared/user-tokens-wallet.localstorage";
 import {Unreffable} from "@/views/vue-utils";
@@ -32,7 +32,8 @@ export function useUserTokensWallet() {
         read: (value: any): VoxxrinUserTokensWallet|undefined => (value ? toVoxxrinUserTokensWallet(JSON.parse(value)) : {
           secretTokens: {
             eventOrganizerTokens: [],
-            talkFeedbacksViewerTokens: []
+            talkFeedbacksViewerTokens: [],
+            privateSpaceTokens: [],
           }
         }),
         write: (value: VoxxrinUserTokensWallet) => JSON.stringify(toRawUserTokensWallet(value))
@@ -54,7 +55,8 @@ export function useUserTokensWallet() {
         writeTokensWalletInStore({
           secretTokens: {
             eventOrganizerTokens,
-            talkFeedbacksViewerTokens: (voxxrinUserTokensWallet.value?.secretTokens.talkFeedbacksViewerTokens || [])
+            talkFeedbacksViewerTokens: (voxxrinUserTokensWallet.value?.secretTokens.talkFeedbacksViewerTokens || []),
+            privateSpaceTokens: (voxxrinUserTokensWallet.value?.secretTokens.privateSpaceTokens || []),
           }
         });
     }
@@ -74,9 +76,39 @@ export function useUserTokensWallet() {
         writeTokensWalletInStore({
           secretTokens: {
             eventOrganizerTokens: (voxxrinUserTokensWallet.value?.secretTokens.eventOrganizerTokens || []),
-            talkFeedbacksViewerTokens
+            talkFeedbacksViewerTokens,
+            privateSpaceTokens: (voxxrinUserTokensWallet.value?.secretTokens.privateSpaceTokens || []),
           }
         });
+    }
+
+    const registerPrivateSpaceSecretToken = async (privateSpaceSecretToken: UserWalletPrivateSpaceToken) => {
+      const {privateSpaceTokens} = (voxxrinUserTokensWallet.value?.secretTokens.privateSpaceTokens || [])
+          .concat(toVoxxrinUserWalletPrivateSpaceToken(privateSpaceSecretToken))
+          .reduce((result, privateSpaceToken) => {
+            const spaceTokens = privateSpaceToken.spaceTokens.filter(spaceToken => {
+              if(result.alreadyRegisteredTokens.has(spaceToken.value)) {
+                return false;
+              }
+
+              result.alreadyRegisteredTokens.add(spaceToken.value);
+              return spaceToken;
+            })
+
+            if(spaceTokens.length) {
+              result.privateSpaceTokens.push(privateSpaceToken);
+            }
+
+            return result;
+          }, { privateSpaceTokens: [] as PrivateSpaceToken[], alreadyRegisteredTokens: new Set<string>() })
+
+      writeTokensWalletInStore({
+        secretTokens: {
+          eventOrganizerTokens: (voxxrinUserTokensWallet.value?.secretTokens.eventOrganizerTokens || []),
+          talkFeedbacksViewerTokens: (voxxrinUserTokensWallet.value?.secretTokens.talkFeedbacksViewerTokens || []),
+          privateSpaceTokens,
+        }
+      });
     }
 
 
@@ -99,6 +131,7 @@ export function useUserTokensWallet() {
         userTokensWalletRef: voxxrinUserTokensWallet,
         registerEventOrganizerSecretToken,
         registerTalkFeedbacksViewerSecretToken,
+        registerPrivateSpaceSecretToken,
         talkFeedbackViewerTokensRefForEvent,
         organizerTokenRefForEvent: (eventIdRef: Unreffable<EventId|undefined>) => {
             return computed(() => {
