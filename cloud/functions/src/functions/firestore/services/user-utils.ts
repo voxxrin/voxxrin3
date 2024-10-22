@@ -1,4 +1,4 @@
-import {CollectionReference, Query} from "firebase-admin/lib/firestore";
+import {CollectionReference, Query, QueryDocumentSnapshot} from "firebase-admin/lib/firestore";
 import {db} from "../../../firebase";
 import {Temporal} from "@js-temporal/polyfill";
 import {ISODatetime} from "../../../../../../shared/type-utils";
@@ -6,6 +6,8 @@ import {firestore} from "firebase-admin";
 import DocumentReference = firestore.DocumentReference;
 import {durationOf} from "../../http/utils";
 import DocumentData = firestore.DocumentData;
+import QuerySnapshot = firestore.QuerySnapshot;
+import {User} from "../../../../../../shared/user.firestore";
 
 
 async function getRawUsersMatching(collectionFilter: (collection: CollectionReference) => Query) {
@@ -20,66 +22,81 @@ export async function getUserDocsMatching(collectionFilter: (collection: Collect
   return (await getRawUsersMatching(collectionFilter));
 }
 
-type UserCleaningDuration = {type:'fetch'|'deleteUsers', duration:number}
+type UserOpsDuration = { type: 'fetch' | 'exec', duration: number }
+
 export async function cleanOutdatedUsers() {
-  const MAX_WINDOW_SIZE = 800;
-  const oldestValidLastConnectionDate = Temporal.Now.zonedDateTimeISO().subtract({ months: 2 }).toString() as ISODatetime
+  const oldestValidLastConnectionDate = Temporal.Now.zonedDateTimeISO().subtract({months: 2}).toString() as ISODatetime
   const MAXIMUM_NUMBER_OF_FAVS = 0;
 
-  const acc = { durations: [] as Array<UserCleaningDuration>, totalDeletedUsers: 0, totalDurations: 0 }
-
-  let userDocs = (await durationOf(() => findOutdatedUsers({
-    oldestValidLastConnectionDate, MAX_WINDOW_SIZE, MAXIMUM_NUMBER_OF_FAVS,
-  }), ({ durationInMillis }) => acc.durations.push({type: 'fetch', duration: durationInMillis}))).result
-
-  while(!userDocs.empty && userDocs.size === MAX_WINDOW_SIZE) {
-    await deleteOutdatedUsers(userDocs.docs.map(doc => doc.ref), acc)
-
-    userDocs = (await durationOf(() => findOutdatedUsers({
-      oldestValidLastConnectionDate, MAX_WINDOW_SIZE, MAXIMUM_NUMBER_OF_FAVS,
-    }), ({ durationInMillis }) => acc.durations.push({type: 'fetch', duration: durationInMillis}))).result
-  }
-
-  if(userDocs.size) {
-    await deleteOutdatedUsers(userDocs.docs.map(doc => doc.ref), acc)
-  }
-
-  return acc;
-}
-
-async function deleteOutdatedUsers(userRefs: Array<DocumentReference>, acc: { durations: Array<UserCleaningDuration>, totalDeletedUsers: number, totalDurations: number }) {
-  await durationOf(
-    () => Promise.all(userRefs.map(userRef => deleteUserRefIncludingChildren(userRef))),
-    ({ durationInMillis }) => acc.durations.push({type: 'deleteUsers', duration: durationInMillis})
+  const stats = await windowedProcessUsers(
+    db.collection(`/users`)
+      .where(`totalFavs.total`, '<=', MAXIMUM_NUMBER_OF_FAVS)
+      .where(`userLastConnection`, '<', oldestValidLastConnectionDate),
+    (userDoc) => deleteUserRefIncludingChildren(userDoc.ref),
   )
 
-  acc.totalDeletedUsers += userRefs.length
-  const fetchDuration = acc.durations[acc.durations.length-2].duration;
-  const deleteUsersDuration = acc.durations[acc.durations.length-1].duration;
-  const fetchAndDeleteDuration = fetchDuration + deleteUsersDuration
-  acc.totalDurations += fetchAndDeleteDuration
-  console.info(`Deleted ${acc.totalDeletedUsers} users (+${userRefs.length}) in ${acc.totalDurations}ms (+${fetchDuration} + ${deleteUsersDuration}ms )`)
+  return {
+    durations: stats.durations,
+    totalDuration: stats.totalDuration,
+    totalDeletedUsers: stats.successes,
+    failures: stats.failures
+  }
+}
+
+export async function windowedProcessUsers(
+  userQuery: Query,
+  processUserCallback: (userDoc: QueryDocumentSnapshot<User>) => Promise<void>,
+  {maxWindowSize, resultsProcessor}: {
+    maxWindowSize: number,
+    resultsProcessor: (results: Array<{
+      userDoc: QueryDocumentSnapshot<User>,
+      success: boolean
+    }>, durationInMillis: number) => Promise<void>
+  } = {
+    maxWindowSize: 800, resultsProcessor: async () => {
+    }
+  }
+) {
+  const stats = {durations: [] as Array<UserOpsDuration>, totalDuration: 0, successes: 0, failures: 0}
+
+  const fetchNextUsersWindow = async () => {
+    return (await durationOf(
+      () =>
+        userQuery.limit(maxWindowSize).get() as Promise<QuerySnapshot<User>>,
+      ({durationInMillis}) => {
+        stats.durations.push({type: 'fetch', duration: durationInMillis});
+        stats.totalDuration += durationInMillis;
+      }
+    )).result
+  }
+
+  let userDocs = await fetchNextUsersWindow();
+  while (!userDocs.empty) {
+    const {result: perUserResults, durationInMillis} = await durationOf(async () => {
+      const rawResults = await Promise.allSettled(userDocs.docs.map(userDoc => processUserCallback(userDoc)))
+      const perUserResults = rawResults.map(((promiseSettled, index) => ({
+        success: promiseSettled.status === 'fulfilled',
+        userDoc: userDocs.docs[index]
+      })))
+      return perUserResults;
+    });
+
+    const successes = perUserResults.filter(r => r.success).length
+    stats.durations.push({type: 'exec', duration: durationInMillis})
+    stats.totalDuration += durationInMillis;
+    stats.successes += successes
+    stats.failures += perUserResults.length - successes
+
+    await resultsProcessor(perUserResults, durationInMillis);
+
+    userDocs = await fetchNextUsersWindow();
+  }
+
+  return stats;
 }
 
 async function deleteUserRefIncludingChildren(userRef: DocumentReference<DocumentData>) {
   await userRef.delete()
-}
 
-function findOutdatedUsers({
-                             oldestValidLastConnectionDate,
-                             MAX_WINDOW_SIZE,
-                             MAXIMUM_NUMBER_OF_FAVS,
-                           } : {
-  oldestValidLastConnectionDate: ISODatetime,
-  MAX_WINDOW_SIZE: number,
-  MAXIMUM_NUMBER_OF_FAVS: number,
-}) {
-
-  // FIXME: exclude authenticated users (they should never be considered outdated)
-
-  return db.collection(`/users`)
-    .where(`totalFavs.total`, '<=', MAXIMUM_NUMBER_OF_FAVS)
-    .where(`userLastConnection`, '<', oldestValidLastConnectionDate)
-    .limit(MAX_WINDOW_SIZE)
-    .get()
+  // TODO: delete favs & feedbacks sub collections (don't forget space-based data)
 }
