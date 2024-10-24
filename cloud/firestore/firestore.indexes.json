@@ -1,0 +1,17 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "users",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "totalFavs.total", "order": "ASCENDING" },
+        { "fieldPath": "totalFeedbacks.total", "order": "ASCENDING" },
+        { "fieldPath": "userLastConnection", "order": "ASCENDING" },
+        { "fieldPath": "privateUserId", "order": "ASCENDING" },
+        { "fieldPath": "_version", "order": "ASCENDING" },
+        { "fieldPath": "__name__", "order": "ASCENDING" }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}
