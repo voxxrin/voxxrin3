@@ -145,4 +145,3 @@ export async function fillEmptyUserSubCollectionDocs(): Promise<"OK"|"Error"> {
   return "OK"
 }
 
-fillEmptyUserSubCollectionDocs();
