@@ -35,7 +35,7 @@ export function declareAdminHttpRoutes(app: Express) {
 
       const results = await (await import("../../firestore/services/user-utils")).cleanOutdatedUsers();
       return sendResponseMessage(res, 200, {
-        message: `${results.totalDeletedUsers} users have been deleted (in ${results.totalDurations}ms) !`,
+        message: `${results.totalDeletedUsers} users have been deleted (in ${results.totalDuration}ms) !`,
         results
       })
     })

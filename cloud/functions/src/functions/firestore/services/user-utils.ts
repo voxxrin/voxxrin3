@@ -22,8 +22,6 @@ export async function getUserDocsMatching(collectionFilter: (collection: Collect
   return (await getRawUsersMatching(collectionFilter));
 }
 
-type UserOpsDuration = { type: 'fetch' | 'exec', duration: number }
-
 export async function cleanOutdatedUsers() {
   const oldestValidLastConnectionDate = Temporal.Now.zonedDateTimeISO().subtract({months: 2}).toString() as ISODatetime
   const MAXIMUM_NUMBER_OF_FAVS = 0;
@@ -43,9 +41,12 @@ export async function cleanOutdatedUsers() {
   }
 }
 
+type UserOpsDuration = { type: string, duration: number }
+export type WindowedProcessUsersStats = {durations: Array<UserOpsDuration>, totalDuration: number, successes: number, failures: number}
+
 export async function windowedProcessUsers(
   userQuery: Query,
-  processUserCallback: (userDoc: QueryDocumentSnapshot<User>) => Promise<void>,
+  processUserCallback: (userDoc: QueryDocumentSnapshot<User>, stats: WindowedProcessUsersStats) => Promise<void>,
   {maxWindowSize, resultsProcessor}: {
     maxWindowSize: number,
     resultsProcessor: (results: Array<{
@@ -57,14 +58,14 @@ export async function windowedProcessUsers(
     }
   }
 ) {
-  const stats = {durations: [] as Array<UserOpsDuration>, totalDuration: 0, successes: 0, failures: 0}
+  const stats: WindowedProcessUsersStats = {durations: [], totalDuration: 0, successes: 0, failures: 0}
 
   const fetchNextUsersWindow = async () => {
     return (await durationOf(
       () =>
         userQuery.limit(maxWindowSize).get() as Promise<QuerySnapshot<User>>,
       ({durationInMillis}) => {
-        stats.durations.push({type: 'fetch', duration: durationInMillis});
+        stats.durations.push({type: 'fetchingWindowedUsers', duration: durationInMillis});
         stats.totalDuration += durationInMillis;
       }
     )).result
@@ -72,22 +73,32 @@ export async function windowedProcessUsers(
 
   let userDocs = await fetchNextUsersWindow();
   while (!userDocs.empty) {
-    const {result: perUserResults, durationInMillis} = await durationOf(async () => {
-      const rawResults = await Promise.allSettled(userDocs.docs.map(userDoc => processUserCallback(userDoc)))
-      const perUserResults = rawResults.map(((promiseSettled, index) => ({
-        success: promiseSettled.status === 'fulfilled',
-        userDoc: userDocs.docs[index]
-      })))
-      return perUserResults;
-    });
+    try {
+      console.log(`Processing ${userDocs.docs.length} users...`)
+      const {result: perUserResults, durationInMillis} = await durationOf(async () => {
+        const rawResults = await Promise.allSettled(userDocs.docs.map(userDoc => processUserCallback(userDoc, stats)))
+        const perUserResults = rawResults.map(((promiseSettled, index) => ({
+          success: promiseSettled.status === 'fulfilled',
+          userDoc: userDocs.docs[index],
+          error: promiseSettled.status === 'rejected' ? promiseSettled.reason : undefined,
+        })))
+        return perUserResults;
+      });
 
-    const successes = perUserResults.filter(r => r.success).length
-    stats.durations.push({type: 'exec', duration: durationInMillis})
-    stats.totalDuration += durationInMillis;
-    stats.successes += successes
-    stats.failures += perUserResults.length - successes
+      const successes = perUserResults.filter(r => r.success).length
+      const failures = perUserResults.length - successes
+      if(failures > 0) {
+        console.error(`Some failures were detected:\n${perUserResults.filter(pur => !!pur.error).map(pur => pur.error).join(`\n`)}`)
+      }
+      stats.durations.push({type: `usersBatchedExecution(${userDocs.docs.length})`, duration: durationInMillis})
+      stats.totalDuration += durationInMillis;
+      stats.successes += successes
+      stats.failures += failures
 
-    await resultsProcessor(perUserResults, durationInMillis);
+      await resultsProcessor(perUserResults, durationInMillis);
+    } catch(error) {
+      console.error(`Error while looping over windowed users: ${error}`)
+    }
 
     userDocs = await fetchNextUsersWindow();
   }

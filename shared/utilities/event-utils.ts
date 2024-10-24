@@ -1,11 +1,15 @@
 
 
+export function resolvedSpaceFirestorePath(maybeSpaceId: string|undefined, withEndingSlash: boolean, withStartingSlash: boolean) {
+  return maybeSpaceId ? `${withStartingSlash ? '/':''}spaces/${maybeSpaceId}${withEndingSlash?'/':''}`:'';
+}
+
 export function resolvedEventsFirestorePath(maybeSpaceId: string|undefined) {
-  return `${maybeSpaceId ? `spaces/${maybeSpaceId}/`:''}events`
+  return `${resolvedSpaceFirestorePath(maybeSpaceId, true, false)}events`
 }
 
 export function resolvedEventFirestorePath(eventId: string, maybeSpaceId: string|undefined) {
-  return `${maybeSpaceId ? `spaces/${maybeSpaceId}/`:''}events/${eventId}`
+  return `${resolvedSpaceFirestorePath(maybeSpaceId, true, false)}events/${eventId}`
 }
 
 export function resolvedSpacedEventFieldName(eventId: string, maybeSpaceToken: string|undefined) {
