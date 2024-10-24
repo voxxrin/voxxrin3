@@ -14,7 +14,12 @@ import {Change} from "firebase-functions/lib/common/change";
 import {QueryDocumentSnapshot} from "firebase-functions/lib/v1/providers/firestore";
 import {EventContext} from "firebase-functions/lib/v1/cloud-functions";
 import {User} from "../../../../../shared/user.firestore";
-import {resolvedEventFirestorePath, resolvedSpaceFirestorePath} from "../../../../../shared/utilities/event-utils";
+import {
+  resolvedEventFirestorePath,
+  resolvedSpacedEventFieldName,
+  resolvedSpaceFirestorePath
+} from "../../../../../shared/utilities/event-utils";
+import { FieldValue, FieldPath } from "firebase-admin/firestore";
 
 
 export const onUserTalkFeedbackUpdated = async (change: Change<QueryDocumentSnapshot>, context: EventContext<{ userId: string, eventId: string, dayId: string, spaceToken?: string|undefined }>) => {
@@ -113,11 +118,12 @@ async function updateTalkFeedbacksFromUserFeedbacks(userId: string, maybeSpaceTo
 
             const ratingsIncludingComment = { ...enforcedRatings, comment: feedback.comment || null };
 
+            const now = new Date().toISOString() as ISODatetime;
             const attendeeFeedback: TalkAttendeeFeedback = {
                 talkId: feedback.talkId,
                 comment: feedback.comment,
-                createdOn: enforceTimestampOnFields.includes("createdOn")?new Date().toISOString() as ISODatetime : existingDBFeedback.createdOn,
-                lastUpdatedOn: enforceTimestampOnFields.includes("lastUpdatedOn")?new Date().toISOString() as ISODatetime : existingDBFeedback.lastUpdatedOn,
+                createdOn: enforceTimestampOnFields.includes("createdOn")?now : existingDBFeedback.createdOn,
+                lastUpdatedOn: enforceTimestampOnFields.includes("lastUpdatedOn")?now : existingDBFeedback.lastUpdatedOn,
                 ratings: enforcedRatings,
                 attendeePublicToken: user.publicUserToken
             }
@@ -133,10 +139,20 @@ async function updateTalkFeedbacksFromUserFeedbacks(userId: string, maybeSpaceTo
                     rootNode.feedbacks = feedbacks;
                     return { pathPrefix: "feedbacks.", parentNode: feedbacks };
                 }),
+                incrementUserTotalFeedbacks(userId, maybeSpaceToken, eventId, attendeeFeedback),
                 ensureFeedbackIntermediateNodesCreated(userId,maybeSpaceToken, eventId, dayId),
             ])
         }
     }))
+}
+
+async function incrementUserTotalFeedbacks(userId: string, maybeSpaceToken: string|undefined, eventId: string, feedback: TalkAttendeeFeedback) {
+  const userDoc = db.doc(`users/${userId}`)
+  const isNewFeedback = feedback.lastUpdatedOn === feedback.createdOn;
+  await userDoc.update(
+    new FieldPath("totalFeedbacks", "total"), FieldValue.increment(isNewFeedback ? 1:0),
+    new FieldPath("totalFeedbacks", "perEventTotalFeedbacks", resolvedSpacedEventFieldName(eventId, maybeSpaceToken)), FieldValue.increment(isNewFeedback ? 1:0),
+  )
 }
 
 async function ensureFeedbackIntermediateNodesCreated(userId: string, maybeSpaceToken: string|undefined, eventId: string, dayId: string) {
