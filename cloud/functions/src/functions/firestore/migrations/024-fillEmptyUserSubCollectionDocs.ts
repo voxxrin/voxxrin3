@@ -166,20 +166,24 @@ export async function configurableFillEmptyUserSubCollectionDocs(opts?: {fromUse
 }
 
 export async function httpCallAll({baseUrl, token}: { baseUrl: string, token: string }) {
-  // const LETTERS = "0 1 2 3 4 5 6 7 8 9 A B C D E F G H I J K L M N O P Q R S T U V W X Y Z a b c d e f g h i j k l m n o p q r s t u v w x y z".split(" ")
-  const LETTERS = "0 1".split(" ")
+  const LETTERS = "0 1 2 3 4 5 6 7 8 9 A B C D E F G H I J K L M N O P Q R S T U V W X Y Z a b c d e f g h i j k l m n o p q r s t u v w x y z".split(" ")
   const results = await Promise.all((LETTERS as Array<string|undefined>).concat(undefined).map(async (_, idx, letters) => {
-    const params = new URLSearchParams({
-      token,
+    const context = {
       ...(letters[idx-1] === undefined ?{}:{ fromUserId: letters[idx-1]}),
       ...(letters[idx] === undefined ?{}:{ toUserId: letters[idx]}),
+    }
+    const params = new URLSearchParams({
+      token,
+      ...context,
     })
 
     const url = `${baseUrl}/api/admin/fillEmptyUserSubCollectionDocs?${params.toString()}`
     console.info(`Calling ${url}`)
-    return fetch(url, {
+    const shardingResult = await fetch(url, {
       method: 'POST',
     }).then(resp => resp.json() as Promise<ReturnType<typeof configurableFillEmptyUserSubCollectionDocs>>)
+
+    return { context, ...shardingResult }
   }))
 
   return results
