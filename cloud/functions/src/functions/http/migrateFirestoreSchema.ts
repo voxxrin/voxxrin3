@@ -33,7 +33,7 @@ const MIGRATIONS: Migration[] = [
     { name: "introduceEventVisibility", exec: async () => (await import("../firestore/migrations/021-introduceEventVisibility")).introduceEventVisibility() },
     { name: "introduceSpaceTokenDoc", exec: async () => (await import("../firestore/migrations/022-introduceSpaceTokenDoc")).introduceSpaceTokenDoc() },
     { name: "dontConsiderOptionalMigrationInUserVersion", exec: async () => (await import("../firestore/migrations/023-dontConsiderOptionalMigrationInUserVersion")).dontConsiderOptionalMigrationInUserVersion() },
-    { name: "fillEmptyUserSubCollectionDocs", exec: async () => (await import("../firestore/migrations/024-fillEmptyUserSubCollectionDocs")).fillEmptyUserSubCollectionDocs() },
+    // { name: "fillEmptyUserSubCollectionDocs", exec: async () => (await import("../firestore/migrations/024-fillEmptyUserSubCollectionDocs")).fillEmptyUserSubCollectionDocs() },
     // { name: "cleanOutdatedUsers", exec: async () => (await import("../firestore/migrations/025-cleanOutdatedUsers")).cleanOutdatedUsers() },
 ];
 
