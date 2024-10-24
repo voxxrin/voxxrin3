@@ -54,8 +54,7 @@ export async function windowedProcessUsers(
       success: boolean
     }>, durationInMillis: number) => Promise<void>
   } = {
-    maxWindowSize: 800, resultsProcessor: async () => {
-    }
+    maxWindowSize: process.env.USER_MIGRATION_WINDOW_SIZE ? Number(process.env.USER_MIGRATION_WINDOW_SIZE) : 800, resultsProcessor: async () => {}
   }
 ) {
   const stats: WindowedProcessUsersStats = {durations: [], totalDuration: 0, successes: 0, failures: 0}

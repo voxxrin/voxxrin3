@@ -13,7 +13,7 @@ import {UserTotalFeedbacks} from "../../../../../../shared/user.firestore";
  * It is important to have non-empty documents otherwise those documents cannot be listed on the frontend
  */
 export async function fillEmptyUserSubCollectionDocs(): Promise<"OK"|"Error"> {
-  const DRY_RUN = false; // for testing purposes only
+  const DRY_RUN = process.env.USER_MIGRATION_DRY_RUN === 'true'; // for testing purposes only
   const migrationsStats = {
       updateTotalFeedbacks: 0,
       updateFeedbackDay: 0,
