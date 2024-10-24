@@ -14,7 +14,7 @@ import {Change} from "firebase-functions/lib/common/change";
 import {QueryDocumentSnapshot} from "firebase-functions/lib/v1/providers/firestore";
 import {EventContext} from "firebase-functions/lib/v1/cloud-functions";
 import {User} from "../../../../../shared/user.firestore";
-import {resolvedEventFirestorePath} from "../../../../../shared/utilities/event-utils";
+import {resolvedEventFirestorePath, resolvedSpaceFirestorePath} from "../../../../../shared/utilities/event-utils";
 
 
 export const onUserTalkFeedbackUpdated = async (change: Change<QueryDocumentSnapshot>, context: EventContext<{ userId: string, eventId: string, dayId: string, spaceToken?: string|undefined }>) => {
@@ -87,7 +87,7 @@ async function updateTalkFeedbacksFromUserFeedbacks(userId: string, maybeSpaceTo
 
         // Important note: We're not updating `users/${userId}/events/${eventId}/days/${dayId}/feedbacks/self` document's
         // createdOn / lastUpdatedOn based on enforceTimestampOnFields on purpose
-        // If we would do it, it would trigger onTalkFeedbackUpdated() without, leading to an infinite update loop
+        // If we would do it, it would trigger onTalkFeedbackUpdated(), leading to an infinite update loop
 
         if(feedback.status === 'provided') {
             const talkFeedbackViewerToken = organizerSpace.talkFeedbackViewerTokens
@@ -133,7 +133,25 @@ async function updateTalkFeedbacksFromUserFeedbacks(userId: string, maybeSpaceTo
                     rootNode.feedbacks = feedbacks;
                     return { pathPrefix: "feedbacks.", parentNode: feedbacks };
                 }),
+                ensureFeedbackIntermediateNodesCreated(userId,maybeSpaceToken, eventId, dayId),
             ])
         }
     }))
+}
+
+async function ensureFeedbackIntermediateNodesCreated(userId: string, maybeSpaceToken: string|undefined, eventId: string, dayId: string) {
+  const userPath = `users/${userId}`
+  const checks = [
+    {path: `${userPath}/${resolvedEventFirestorePath(eventId, maybeSpaceToken)}/days/${dayId}`, content: { dayId }},
+    {path: `${userPath}/${resolvedEventFirestorePath(eventId, maybeSpaceToken)}`, content: { eventId }},
+    ...(maybeSpaceToken ? [{path: `${userPath}${resolvedSpaceFirestorePath(maybeSpaceToken, false, true)}`, content: {spaceToken: maybeSpaceToken}}]:[])
+  ]
+
+  return Promise.all(checks.map(async check => {
+    const ref = db.doc(check.path)
+    const doc = await ref.get()
+    if(!doc.exists) {
+      await ref.set(check.content);
+    }
+  }))
 }

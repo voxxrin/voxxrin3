@@ -9,7 +9,11 @@ import {TalkStats} from "../../../../../shared/event-stats";
 import {Change} from "firebase-functions/lib/common/change";
 import {QueryDocumentSnapshot} from "firebase-functions/lib/v1/providers/firestore";
 import {EventContext} from "firebase-functions/lib/v1/cloud-functions";
-import {resolvedEventFirestorePath, resolvedSpacedEventFieldName} from "../../../../../shared/utilities/event-utils";
+import {
+  resolvedEventFirestorePath,
+  resolvedSpacedEventFieldName,
+  resolvedSpaceFirestorePath
+} from "../../../../../shared/utilities/event-utils";
 
 async function upsertTalkStats(maybeSpaceToken: string|undefined, eventId: string, talkId: string, isFavorite: boolean) {
     const existingTalksStatsEntryRef = db
@@ -60,6 +64,7 @@ export const onUserTalksNoteUpdate = async (change: Change<QueryDocumentSnapshot
             upsertTalkStats(maybeSpaceToken, eventId, talkId, isFavorite),
             incrementAllInOneTalkStats(maybeSpaceToken, eventId, talkId, isFavorite),
             incrementUserTotalFavs(userId, maybeSpaceToken, eventId, talkId, isFavorite),
+            ensureTalkNotesIntermediateNodesCreated(userId, maybeSpaceToken, eventId),
         ])
     }
 };
@@ -81,6 +86,23 @@ export const onUserTalksNoteCreate = async (change: QueryDocumentSnapshot, conte
             upsertTalkStats(maybeSpaceToken, eventId, talkId, isFavorite),
             incrementAllInOneTalkStats(maybeSpaceToken, eventId, talkId, isFavorite),
             incrementUserTotalFavs(userId, maybeSpaceToken, eventId, talkId, isFavorite),
+            ensureTalkNotesIntermediateNodesCreated(userId, maybeSpaceToken, eventId),
         ])
     }
 };
+
+async function ensureTalkNotesIntermediateNodesCreated(userId: string, maybeSpaceToken: string|undefined, eventId: string) {
+  const userPath = `users/${userId}`
+  const checks = [
+    {path: `${userPath}/${resolvedEventFirestorePath(eventId, maybeSpaceToken)}`, content: { eventId }},
+    ...(maybeSpaceToken ? [{path: `${userPath}${resolvedSpaceFirestorePath(maybeSpaceToken, false, true)}`, content: {spaceToken: maybeSpaceToken}}]:[])
+  ]
+
+  return Promise.all(checks.map(async check => {
+    const ref = db.doc(check.path)
+    const doc = await ref.get()
+    if(!doc.exists) {
+      await ref.set(check.content);
+    }
+  }))
+}
