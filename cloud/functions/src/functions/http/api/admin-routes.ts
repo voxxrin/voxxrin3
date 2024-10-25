@@ -47,7 +47,7 @@ export function declareAdminHttpRoutes(app: Express) {
         fromUserId, toUserId,
       });
       return sendResponseMessage(res, 200, {
-        message: `${results.stats.successes} users have been deleted (in ${results.stats.totalDuration}ms) !`,
+        message: `${results.stats.successes} users have been migrated (in ${results.stats.totalDuration}ms) !`,
         results
       })
     })

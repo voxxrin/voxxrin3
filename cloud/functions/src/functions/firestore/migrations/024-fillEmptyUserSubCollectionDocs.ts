@@ -5,8 +5,9 @@ import {resolvedSpaceFirestorePath} from "../../../../../../shared/utilities/eve
 import {firestore} from "firebase-admin";
 import DocumentSnapshot = firestore.DocumentSnapshot;
 import {UserDailyFeedbacks, UserTalkNote} from "../../../../../../shared/feedbacks.firestore";
-import {UserTotalFeedbacks} from "../../../../../../shared/user.firestore";
+import {User, UserTotalFeedbacks} from "../../../../../../shared/user.firestore";
 import {match, P} from "ts-pattern";
+import {v4 as uuidv4} from "uuid";
 
 
 /**
@@ -51,13 +52,13 @@ export async function configurableFillEmptyUserSubCollectionDocs(opts?: {fromUse
       userQuery: db.collection("users").where("_version", "==", 3),
       logContext: `.->.`
     })).with({ fromUserId: P.nullish, toUserId: P.string }, ({ toUserId }) => ({
-      userQuery: db.collection("users").where("_version", "==", 3).where("privateUserId", "<", toUserId),
+      userQuery: db.collection("users").where("_version", "==", 3).where("__name__", "<", toUserId),
       logContext: `.->${toUserId}`
     })).with({ fromUserId: P.string, toUserId: P.nullish }, ({ fromUserId }) => ({
-      userQuery: db.collection("users").where("_version", "==", 3).where("privateUserId", ">=", fromUserId),
+      userQuery: db.collection("users").where("_version", "==", 3).where("__name__", ">=", fromUserId),
       logContext: `${fromUserId}->.`
     })).otherwise(({ fromUserId, toUserId }) => ({
-      userQuery: db.collection("users").where("_version", "==", 3).where("privateUserId", ">=", fromUserId).where("privateUserId", "<", toUserId),
+      userQuery: db.collection("users").where("_version", "==", 3).where("__name__", ">=", fromUserId).where("__name__", "<", toUserId),
       logContext: `${fromUserId}->${toUserId}`
     }))
 
@@ -151,9 +152,16 @@ export async function configurableFillEmptyUserSubCollectionDocs(opts?: {fromUse
 
           await Promise.all(nodeCreationPromises);
 
-          await executeDryRunnableOperation("updateUserModel", () => db.doc(userPath).update({
+          const userRef = db.doc(userPath)
+          const dbUserDoc = await userRef.get() as DocumentSnapshot<User>
+          const dbUser = dbUserDoc.data()!;
+
+          await executeDryRunnableOperation("updateUserModel", () => userRef.update({
             "_version": 4,
-            "totalFeedbacks": feedbacksCounts,
+            privateUserId: userDoc.id,
+            totalFeedbacks: feedbacksCounts,
+            ...(dbUser.publicUserToken ? {}: {publicUserToken: uuidv4()}),
+            ...(dbUser.userCreation ? {}: {userCreation: new Date(0).toISOString()}),
           }))
           console.log(`[${logContext}] User ${userDoc.id} updated (${nodeCreationPromises.length} nodes created !)`)
       }
