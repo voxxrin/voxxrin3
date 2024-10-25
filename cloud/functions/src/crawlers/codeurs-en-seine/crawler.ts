@@ -31,7 +31,9 @@ export const CODEURS_EN_SEINE_PARSER = EVENT_DESCRIPTOR_PARSER.omit({
         breakTimeslot: BREAK_TIME_SLOT_PARSER.omit({ type: true, id: true }).extend({
             break: BREAK_PARSER.omit({ room: true })
         })
-    }))
+    })),
+    // the old one was: https://www.codeursenseine.com/_ipx/w_256,q_75/%2Fimages%2Fspeakers%2F{speakerImage}
+    speakerPictureTemplate: z.string().default(`https://www.codeursenseine.com/_next/image?url=%2Fimages%2Fspeakers%2F{speakerImage}&w=256&q=75`)
 })
 
 function extractIdFromUrl(url: string) {
@@ -95,7 +97,7 @@ export const CODEURS_EN_SEINE_CRAWLER: CrawlerKind<typeof CODEURS_EN_SEINE_PARSE
                 fullName: fileMetadata.name,
                 bio: speakerMDXFile.content,
                 companyName: fileMetadata.company,
-                photoUrl: `https://www.codeursenseine.com/_ipx/w_256,q_75/%2Fimages%2Fspeakers%2F${fileMetadata.image}`,
+                photoUrl: descriptor.speakerPictureTemplate.replace("{speakerImage}", fileMetadata.image),
                 social: ([] as SocialLink[])
                     .concat(fileMetadata.twitter ? [{type: 'twitter', url: `https://twitter.com/${fileMetadata.twitter.substring("@".length)}`}] as const:[])
                     .concat(fileMetadata.github ? [{type: 'github', url: `https://github.com/${fileMetadata.github}`}] as const:[]),
