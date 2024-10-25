@@ -45,3 +45,11 @@ export async function logPerf<T>(message: string, callback: () => Promise<T>) {
 
     return results;
 }
+
+export async function durationOf<T>(callback: () => Promise<T>, doAtTheEnd: (result: {durationInMillis: number, result: T }) => void = () => {}): Promise<{durationInMillis: number, result: T }> {
+  const start = Date.now();
+  const callbackResult = await callback();
+  const result = { result: callbackResult, durationInMillis: Date.now()-start };
+  doAtTheEnd(result);
+  return result;
+}

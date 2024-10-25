@@ -25,8 +25,12 @@ export async function createUserInfos(userId: string) {
           total: 0,
           perEventTotalFavs: {}
         },
+        totalFeedbacks: {
+          total: 0,
+          perEventTotalFeedbacks: {}
+        },
         _modelRemainingMigrations: [],
-        _version: 3
+        _version: 4
     }
 
     await db.collection('users').doc(userId).set(user);
