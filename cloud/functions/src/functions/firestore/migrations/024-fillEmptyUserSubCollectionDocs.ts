@@ -8,6 +8,7 @@ import {UserDailyFeedbacks, UserTalkNote} from "../../../../../../shared/feedbac
 import {User, UserTotalFeedbacks} from "../../../../../../shared/user.firestore";
 import {match, P} from "ts-pattern";
 import {v4 as uuidv4} from "uuid";
+import {FieldPath} from "firebase-admin/firestore";
 
 
 /**
@@ -47,23 +48,23 @@ export async function configurableFillEmptyUserSubCollectionDocs(opts?: {fromUse
     console.log(`[${logContext}] After ${(Date.now() - start)/1000}s: ${JSON.stringify(migrationsStats, null, '  ')}`)
   }, 3000);
 
-  const {logContext, userQuery} = match(opts)
+  const {logContext, userQueryFactory} = match(opts)
     .with(P.nullish.or({ fromUserId: P.nullish, toUserId: P.nullish }), () => ({
-      userQuery: db.collection("users").where("_version", "==", 3),
+      userQueryFactory: () => db.collection("users").where("_version", "==", 3),
       logContext: `.->.`
     })).with({ fromUserId: P.nullish, toUserId: P.string }, ({ toUserId }) => ({
-      userQuery: db.collection("users").where("_version", "==", 3).where("__name__", "<", toUserId),
+      userQueryFactory: () => db.collection("users").where("_version", "==", 3).where(FieldPath.documentId(), "<", toUserId),
       logContext: `.->${toUserId}`
     })).with({ fromUserId: P.string, toUserId: P.nullish }, ({ fromUserId }) => ({
-      userQuery: db.collection("users").where("_version", "==", 3).where("__name__", ">=", fromUserId),
+      userQueryFactory: () => db.collection("users").where("_version", "==", 3).where(FieldPath.documentId(), ">=", fromUserId),
       logContext: `${fromUserId}->.`
     })).otherwise(({ fromUserId, toUserId }) => ({
-      userQuery: db.collection("users").where("_version", "==", 3).where("__name__", ">=", fromUserId).where("__name__", "<", toUserId),
+      userQueryFactory: () => db.collection("users").where("_version", "==", 3).where(FieldPath.documentId(), ">=", fromUserId).where(FieldPath.documentId(), "<", toUserId),
       logContext: `${fromUserId}->${toUserId}`
     }))
 
   const stats = await windowedProcessUsers(
-      userQuery,
+      userQueryFactory,
       async userDoc => {
           const user = userDoc.data();
 

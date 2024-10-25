@@ -27,7 +27,7 @@ export async function cleanOutdatedUsers() {
   const MAXIMUM_NUMBER_OF_FAVS = 0;
 
   const stats = await windowedProcessUsers(
-    db.collection(`/users`)
+    () => db.collection(`/users`)
       .where(`totalFavs.total`, '<=', MAXIMUM_NUMBER_OF_FAVS)
       .where(`userLastConnection`, '<', oldestValidLastConnectionDate),
     (userDoc) => deleteUserRefIncludingChildren(userDoc.ref),
@@ -45,7 +45,7 @@ type UserOpsDuration = { type: string, duration: number }
 export type WindowedProcessUsersStats = {durations: Array<UserOpsDuration>, totalDuration: number, successes: number, failures: number}
 
 export async function windowedProcessUsers(
-  userQuery: Query,
+  userQueryFactory: (maybePreviousResults: undefined|QuerySnapshot<User>) => Query,
   processUserCallback: (userDoc: QueryDocumentSnapshot<User>, stats: WindowedProcessUsersStats) => Promise<void>,
   {maxWindowSize, resultsProcessor}: {
     maxWindowSize: number,
@@ -59,10 +59,10 @@ export async function windowedProcessUsers(
 ) {
   const stats: WindowedProcessUsersStats = {durations: [], totalDuration: 0, successes: 0, failures: 0}
 
-  const fetchNextUsersWindow = async () => {
+  const fetchNextUsersWindow = async (maybePreviousResults: undefined|QuerySnapshot<User>) => {
     return (await durationOf(
       () =>
-        userQuery.limit(maxWindowSize).get() as Promise<QuerySnapshot<User>>,
+        userQueryFactory(maybePreviousResults).limit(maxWindowSize).get() as Promise<QuerySnapshot<User>>,
       ({durationInMillis}) => {
         stats.durations.push({type: 'fetchingWindowedUsers', duration: durationInMillis});
         stats.totalDuration += durationInMillis;
@@ -70,7 +70,7 @@ export async function windowedProcessUsers(
     )).result
   }
 
-  let userDocs = await fetchNextUsersWindow();
+  let userDocs = await fetchNextUsersWindow(undefined);
   while (!userDocs.empty) {
     try {
       console.log(`Processing ${userDocs.docs.length} users...`)
@@ -99,7 +99,12 @@ export async function windowedProcessUsers(
       console.error(`Error while looping over windowed users: ${error}`)
     }
 
-    userDocs = await fetchNextUsersWindow();
+    const previousUserDocsHash = userDocs.docs.map(doc => doc.id).join(",")
+    userDocs = await fetchNextUsersWindow(userDocs);
+    const newUserDocsHash = userDocs.docs.map(doc => doc.id).join(",")
+    if(previousUserDocsHash === newUserDocsHash) {
+      throw new Error(`Stable users results detected: did you provide a discriminator in your query ?`)
+    }
   }
 
   return stats;

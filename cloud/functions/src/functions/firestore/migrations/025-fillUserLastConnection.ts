@@ -1,13 +1,7 @@
 import {db} from "../../../firebase";
-import {getAllEventsWithTalks} from "../services/event-utils";
 import {windowedProcessUsers} from "../services/user-utils";
-import {resolvedSpaceFirestorePath} from "../../../../../../shared/utilities/event-utils";
-import {firestore} from "firebase-admin";
-import DocumentSnapshot = firestore.DocumentSnapshot;
-import {UserDailyFeedbacks, UserTalkNote} from "../../../../../../shared/feedbacks.firestore";
-import {User, UserTotalFeedbacks} from "../../../../../../shared/user.firestore";
 import {match, P} from "ts-pattern";
-import {v4 as uuidv4} from "uuid";
+import {FieldPath} from "firebase-admin/firestore";
 
 
 /**
@@ -16,7 +10,9 @@ import {v4 as uuidv4} from "uuid";
 export async function fillUserLastConnection(): Promise<"OK"|"Error"> {
   let updateCounts = 0
   const stats = await windowedProcessUsers(
-    db.collection('users'),
+    (maybePreviousResults) => match(maybePreviousResults)
+      .with(P.nullish, () => db.collection('users'))
+      .otherwise(previousResults => db.collection('users').where(FieldPath.documentId(), '>', previousResults.docs[previousResults.docs.length-1].id)),
     async userDoc => {
       const user = userDoc.data();
       if(!user.userLastConnection) {
@@ -26,6 +22,6 @@ export async function fillUserLastConnection(): Promise<"OK"|"Error"> {
     }
   )
 
-  console.log(`${updateCounts} user with empty userLastConnection field have been updated !`)
+  console.log(`${updateCounts} user with empty userLastConnection field have been updated (in ${stats.totalDuration}ms) !`)
   return "OK";
 }
