@@ -26,7 +26,7 @@ export async function getUserDocsMatching(collectionFilter: (collection: Collect
   return (await getRawUsersMatching(collectionFilter));
 }
 
-export async function cleanOutdatedUsers() {
+export async function cleanOutdatedUsers(opts: { force: boolean, dryRun: boolean } = { force: false, dryRun: false }) {
   const oldestValidLastConnectionDate = Temporal.Now.zonedDateTimeISO().subtract({months: 2}).toString() as ISODatetime
   const MAXIMUM_NUMBER_OF_FAVS = 0;
   const MAXIMUM_NUMBER_OF_FEEDBACKS = 0;
@@ -43,7 +43,7 @@ export async function cleanOutdatedUsers() {
         ).otherwise(maybeLastPreviousUserDoc => baseQuery.where(FieldPath.documentId(), '>', maybeLastPreviousUserDoc.id))
         .orderBy(FieldPath.documentId(), 'asc')
     },
-    userDoc => deleteUserRefIncludingChildren(userDoc.ref),
+    userDoc => deleteUserRefIncludingChildren(userDoc.ref, opts),
   )
 
   return {
@@ -123,7 +123,7 @@ export async function windowedProcessUsers(
   return stats;
 }
 
-async function deleteUserRefIncludingChildren(userRef: DocumentReference<DocumentData>, force = false) {
+async function deleteUserRefIncludingChildren(userRef: DocumentReference<DocumentData>, {force, dryRun}: { force: boolean, dryRun: boolean } = { force: false, dryRun: false }) {
   const tokensWalletDoc = await db.doc(`${userRef.path}/tokens-wallet/self`).get() as DocumentSnapshot<UserTokensWallet>
   const walletSecrets = tokensWalletDoc.data()?.secretTokens;
 
@@ -139,59 +139,65 @@ async function deleteUserRefIncludingChildren(userRef: DocumentReference<Documen
   const preferencesDoc = await db.doc(`${userRef.path}/preferences/self`).get()
 
   await Promise.all([
-    deleteUserSpaces(userRef),
-    deleteUserEventsFromNode(userRef),
-    ...(preferencesDoc.exists ? [preferencesDoc.ref.delete()]:[]),
-    ...(tokensWalletDoc.exists ? [tokensWalletDoc.ref.delete()]:[]),
+    deleteUserSpaces(userRef, { dryRun }),
+    deleteUserEventsFromNode(userRef, { dryRun }),
+    ...((preferencesDoc.exists && !dryRun) ? [preferencesDoc.ref.delete()]:[]),
+    ...((tokensWalletDoc.exists && !dryRun) ? [tokensWalletDoc.ref.delete()]:[]),
   ])
 
   console.info(`Deleting user entry ${userRef.path}`)
-  await userRef.delete()
+  if(!dryRun) {
+    await userRef.delete()
+  }
 }
 
-async function deleteUserEventsFromNode(rootRef: DocumentReference) {
+async function deleteUserEventsFromNode(rootRef: DocumentReference, {dryRun}: { dryRun: boolean } = { dryRun: false }) {
   const eventRefs = await db.collection(`${rootRef.path}/events`).listDocuments();
 
   await Promise.all(eventRefs.map(async eventRef => {
     console.debug(`Deleting user event entry ${eventRef.path}...`)
     return Promise.all([
-      deleteUserTalkNotesFromEvent(eventRef),
-      deleteUserDailyFeedbacksFromEvent(eventRef),
-      eventRef.delete(),
+      deleteUserTalkNotesFromEvent(eventRef, { dryRun }),
+      deleteUserDailyFeedbacksFromEvent(eventRef, { dryRun }),
+      ...(!dryRun ? [eventRef.delete()]:[]),
     ])
   }))
 }
 
-async function deleteUserSpaces(userRef: DocumentReference<DocumentData>) {
+async function deleteUserSpaces(userRef: DocumentReference<DocumentData>, {dryRun}: { dryRun: boolean } = { dryRun: false }) {
   const spaceRefs = await db.collection(`${userRef.path}/spaces`).listDocuments()
 
   await Promise.all(spaceRefs.map(async spaceRef => {
     console.debug(`Deleting user space entry ${spaceRef.path}...`)
     return Promise.all([
-      deleteUserEventsFromNode(spaceRef),
-      spaceRef.delete(),
+      deleteUserEventsFromNode(spaceRef, { dryRun }),
+      ...(!dryRun ? [spaceRef.delete()]:[]),
     ])
   }))
 }
 
-async function deleteUserTalkNotesFromEvent(eventRef: DocumentReference<DocumentData>) {
+async function deleteUserTalkNotesFromEvent(eventRef: DocumentReference<DocumentData>, {dryRun}: { dryRun: boolean } = { dryRun: false }) {
   const talkNotesRefs = await db.collection(`${eventRef.path}/talksNotes`).listDocuments()
 
   await Promise.all(talkNotesRefs.map(async talkNotesRef => {
     console.debug(`Deleting user talk notes entry ${talkNotesRef.path}...`)
-    return talkNotesRef.delete()
+    if(!dryRun) {
+      await talkNotesRef.delete()
+    }
   }))
 }
 
-async function deleteUserDailyFeedbacksFromEvent(eventRef: DocumentReference<DocumentData>) {
+async function deleteUserDailyFeedbacksFromEvent(eventRef: DocumentReference<DocumentData>, {dryRun}: { dryRun: boolean } = { dryRun: false }) {
   const dailyFeedbackRefs = await db.collection(`${eventRef.path}/days`).listDocuments()
 
   await Promise.all(dailyFeedbackRefs.map(async dailyFeedbackRef => {
     console.debug(`Deleting user daily feedback entry ${dailyFeedbackRef.path}...`)
-    return Promise.all([
-      db.doc(`${dailyFeedbackRef.path}/feedbacks/self`).delete(),
-      dailyFeedbackRef.delete(),
-    ])
+    if(!dryRun) {
+      await Promise.all([
+        db.doc(`${dailyFeedbackRef.path}/feedbacks/self`).delete(),
+        dailyFeedbackRef.delete(),
+      ])
+    }
   }))
 }
 

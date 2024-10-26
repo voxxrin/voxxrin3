@@ -22,11 +22,15 @@ export function declareAdminHttpRoutes(app: Express) {
 
   Routes.post(app, `/cron/cleanOutdatedUsers`,
     z.object({
-      query: z.object({ token: z.string() })
+      query: z.object({
+        token: z.string(),
+        dryRun: z.boolean().default(false),
+        force: z.boolean().default(false),
+      })
     }),
     ensureHasSuperAdminToken(),
-    async (res, path, query, body) => {
-      const results = await (await import("../../../cron/cleanOutdatedUsers")).cleanOutdatedUsers();
+    async (res, path, { dryRun, force }, body) => {
+      const results = await (await import("../../../cron/cleanOutdatedUsers")).cleanOutdatedUsers({ dryRun, force });
       return sendResponseMessage(res, 200, {
         message: `${results.totalDeletedUsers} users have been deleted (in ${results.totalDuration}ms) !`,
         results
