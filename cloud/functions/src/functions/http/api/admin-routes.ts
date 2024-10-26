@@ -26,7 +26,7 @@ export function declareAdminHttpRoutes(app: Express) {
     }),
     ensureHasSuperAdminToken(),
     async (res, path, query, body) => {
-      const results = await (await import("../../firestore/services/user-utils")).cleanOutdatedUsers();
+      const results = await (await import("../../../cron/cleanOutdatedUsers")).cleanOutdatedUsers();
       return sendResponseMessage(res, 200, {
         message: `${results.totalDeletedUsers} users have been deleted (in ${results.totalDuration}ms) !`,
         results

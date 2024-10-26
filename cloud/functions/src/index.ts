@@ -111,3 +111,8 @@ exports.refreshSlowPacedTalkStatsCron = functions.pubsub
 
     (await import('./cron/slowPacedTalkStatsRefresh')).refreshSlowPacedTalkStatsForOngoingEvents()
 });
+exports.cleanOutdatedUsersCron = functions.pubsub
+  .schedule("0 0 * * *").timeZone("Europe/Paris")
+  .onRun(async (event) => {
+    (await import('./cron/cleanOutdatedUsers')).cleanOutdatedUsers()
+});
