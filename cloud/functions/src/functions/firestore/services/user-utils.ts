@@ -10,6 +10,8 @@ import QuerySnapshot = firestore.QuerySnapshot;
 import {User} from "../../../../../../shared/user.firestore";
 import {UserTokensWallet} from "../../../../../../shared/user-tokens-wallet.localstorage";
 import DocumentSnapshot = firestore.DocumentSnapshot;
+import {match, P} from "ts-pattern";
+import {FieldPath} from "firebase-admin/firestore";
 
 
 async function getRawUsersMatching(collectionFilter: (collection: CollectionReference) => Query) {
@@ -30,11 +32,18 @@ export async function cleanOutdatedUsers() {
   const MAXIMUM_NUMBER_OF_FEEDBACKS = 0;
 
   const stats = await windowedProcessUsers(
-    () => db.collection(`/users`)
-      .where(`totalFavs.total`, '<=', MAXIMUM_NUMBER_OF_FAVS)
-      .where(`totalFeedbacks.total`, '<=', MAXIMUM_NUMBER_OF_FEEDBACKS)
-      .where(`userLastConnection`, '<', oldestValidLastConnectionDate),
-    (userDoc) => deleteUserRefIncludingChildren(userDoc.ref),
+    (maybePreviousResults) => {
+      const baseQuery = db.collection(`/users`)
+        .where(`totalFavs.total`, '<=', MAXIMUM_NUMBER_OF_FAVS)
+        .where(`totalFeedbacks.total`, '<=', MAXIMUM_NUMBER_OF_FEEDBACKS)
+        .where(`userLastConnection`, '<', oldestValidLastConnectionDate)
+      return match(maybePreviousResults)
+        .with(P.nullish,
+          () => baseQuery
+        ).otherwise(maybeLastPreviousUserDoc => baseQuery.where(FieldPath.documentId(), '>', maybeLastPreviousUserDoc.id))
+        .orderBy(FieldPath.documentId(), 'asc')
+    },
+    userDoc => deleteUserRefIncludingChildren(userDoc.ref),
   )
 
   return {
@@ -49,7 +58,7 @@ type UserOpsDuration = { type: string, duration: number }
 export type WindowedProcessUsersStats = {durations: Array<UserOpsDuration>, totalDuration: number, successes: number, failures: number}
 
 export async function windowedProcessUsers(
-  userQueryFactory: (maybePreviousResults: undefined|QuerySnapshot<User>) => Query,
+  userQueryFactory: (maybeLastPreviousUserDoc: undefined|QueryDocumentSnapshot<User>, maybePreviousResults: undefined|QuerySnapshot<User>) => Query,
   processUserCallback: (userDoc: QueryDocumentSnapshot<User>, stats: WindowedProcessUsersStats) => Promise<void>,
   {maxWindowSize, resultsProcessor}: {
     maxWindowSize: number,
@@ -66,7 +75,7 @@ export async function windowedProcessUsers(
   const fetchNextUsersWindow = async (maybePreviousResults: undefined|QuerySnapshot<User>) => {
     return (await durationOf(
       () =>
-        userQueryFactory(maybePreviousResults).limit(maxWindowSize).get() as Promise<QuerySnapshot<User>>,
+        userQueryFactory(maybePreviousResults ? maybePreviousResults.docs[maybePreviousResults.docs.length-1]:undefined, maybePreviousResults).limit(maxWindowSize).get() as Promise<QuerySnapshot<User>>,
       ({durationInMillis}) => {
         stats.durations.push({type: 'fetchingWindowedUsers', duration: durationInMillis});
         stats.totalDuration += durationInMillis;

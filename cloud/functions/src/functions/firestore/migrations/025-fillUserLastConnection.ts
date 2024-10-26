@@ -10,9 +10,10 @@ import {FieldPath} from "firebase-admin/firestore";
 export async function fillUserLastConnection(): Promise<"OK"|"Error"> {
   let updateCounts = 0
   const stats = await windowedProcessUsers(
-    (maybePreviousResults) => match(maybePreviousResults)
+    (maybeLastPreviousUserDoc) => match(maybeLastPreviousUserDoc)
       .with(P.nullish, () => db.collection('users'))
-      .otherwise(previousResults => db.collection('users').where(FieldPath.documentId(), '>', previousResults.docs[previousResults.docs.length-1].id)),
+      .otherwise(lastPreviousUserDoc => db.collection('users').where(FieldPath.documentId(), '>', lastPreviousUserDoc.id))
+      .orderBy(FieldPath.documentId(), 'asc'),
     async userDoc => {
       const user = userDoc.data();
       if(!user.userLastConnection) {
