@@ -12,8 +12,7 @@ export async function fillUserLastConnection(): Promise<"OK"|"Error"> {
   const stats = await windowedProcessUsers(
     (maybeLastPreviousUserDoc) => match(maybeLastPreviousUserDoc)
       .with(P.nullish, () => db.collection('users'))
-      .otherwise(lastPreviousUserDoc => db.collection('users').where(FieldPath.documentId(), '>', lastPreviousUserDoc.id))
-      .orderBy(FieldPath.documentId(), 'asc'),
+      .otherwise(lastPreviousUserDoc => db.collection('users').where(FieldPath.documentId(), '>', lastPreviousUserDoc.id)),
     async userDoc => {
       const user = userDoc.data();
       if(!user.userLastConnection) {

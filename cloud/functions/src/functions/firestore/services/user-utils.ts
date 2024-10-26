@@ -41,7 +41,6 @@ export async function cleanOutdatedUsers(opts: { force: boolean, dryRun: boolean
         .with(P.nullish,
           () => baseQuery
         ).otherwise(maybeLastPreviousUserDoc => baseQuery.where(FieldPath.documentId(), '>', maybeLastPreviousUserDoc.id))
-        .orderBy(FieldPath.documentId(), 'asc')
     },
     userDoc => deleteUserRefIncludingChildren(userDoc.ref, opts),
   )
