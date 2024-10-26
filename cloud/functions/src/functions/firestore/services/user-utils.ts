@@ -8,6 +8,8 @@ import {durationOf} from "../../http/utils";
 import DocumentData = firestore.DocumentData;
 import QuerySnapshot = firestore.QuerySnapshot;
 import {User} from "../../../../../../shared/user.firestore";
+import {UserTokensWallet} from "../../../../../../shared/user-tokens-wallet.localstorage";
+import DocumentSnapshot = firestore.DocumentSnapshot;
 
 
 async function getRawUsersMatching(collectionFilter: (collection: CollectionReference) => Query) {
@@ -113,23 +115,25 @@ export async function windowedProcessUsers(
 }
 
 async function deleteUserRefIncludingChildren(userRef: DocumentReference<DocumentData>, force = false) {
-  const [preferencesDoc, tokensWalletDoc] = await Promise.all([
-    db.doc(`/users/${userRef.id}/preferences/self`).get(),
-    db.doc(`/users/${userRef.id}/tokens-wallet/self`).get(),
-  ])
+  const tokensWalletDoc = await db.doc(`${userRef.path}/tokens-wallet/self`).get() as DocumentSnapshot<UserTokensWallet>
+  const walletSecrets = tokensWalletDoc.data()?.secretTokens;
 
-  // let's not delete
-  const collectionsPreventingDelete = ([] as string[])
-    .concat(preferencesDoc.exists ? ["preferences"]:[])
-    .concat(tokensWalletDoc.exists ? ["tokens-wallet"]:[])
-  if(collectionsPreventingDelete.length && !force) {
-    console.info(`Not deleting user ${userRef.id} because he has ${collectionsPreventingDelete.join("/")} non-empty collection`)
+  if(!force && tokensWalletDoc.exists && walletSecrets && (
+    (walletSecrets.eventOrganizerTokens && walletSecrets.eventOrganizerTokens.length)
+    || (walletSecrets.privateSpaceTokens && walletSecrets.privateSpaceTokens.length)
+    || (walletSecrets.talkFeedbacksViewerTokens && walletSecrets.talkFeedbacksViewerTokens.length)
+  )) {
+    console.info(`Not deleting user ${userRef.id} because he has tokens-wallet non-empty collection`)
     return;
   }
+
+  const preferencesDoc = await db.doc(`${userRef.path}/preferences/self`).get()
 
   await Promise.all([
     deleteUserSpaces(userRef),
     deleteUserEventsFromNode(userRef),
+    ...(preferencesDoc.exists ? [preferencesDoc.ref.delete()]:[]),
+    ...(tokensWalletDoc.exists ? [tokensWalletDoc.ref.delete()]:[]),
   ])
 
   console.info(`Deleting user entry ${userRef.path}`)
