@@ -34,6 +34,10 @@ const { registerTalkFeedbacksViewerSecretToken, registerEventOrganizerSecretToke
 (import.meta.env.VITE_WHITE_LABEL_PREREGISTERED_USER_TOKENS || "")
   .split(",")
   .map(async rawUserToken => {
+    if(!rawUserToken) {
+      return;
+    }
+
     const [type, secretToken, ...others] = rawUserToken.split("|")
 
     return match(type)
