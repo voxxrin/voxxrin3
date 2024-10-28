@@ -180,20 +180,20 @@ service cloud.firestore {
          (this can take a lot of time)
        */
       match /tokens-wallet/self {
-        allow get, create, update, delete: if iAm(userId);
-        allow list: if false;
+        allow get, delete: if iAm(userId);
+        allow list, create, update: if false;
       }
       match /events/{eventId} {
-        allow get, list, create, update: if iAm(userId);
-        allow delete: if false;
+        allow get, list: if iAm(userId);
+        allow delete, create, update: if false;
 
         match /talksNotes/{talkId} {
           allow get, list, create, update: if iAm(userId);
           allow delete: if false;
         }
         match /days/{dayId} {
-          allow get, list, create, update: if iAm(userId);
-          allow delete: if false;
+          allow get, list: if iAm(userId);
+          allow delete, create, update: if false;
 
           match /feedbacks/self {
             allow get, create, update: if iAm(userId);
@@ -203,20 +203,20 @@ service cloud.firestore {
       }
 
       match /spaces/{spaceId} {
-        allow get, list, create, update: if iAm(userId);
-        allow delete: if false;
+        allow get, list: if iAm(userId);
+        allow delete, create, update: if false;
 
         match /events/{eventId} {
-          allow get, list, create, update: if iAm(userId);
-          allow delete: if false;
+          allow get, list: if iAm(userId);
+          allow delete, create, update: if false;
 
           match /talksNotes/{talkId} {
             allow get, list, create, update: if iAm(userId);
             allow delete: if false;
           }
           match /days/{dayId} {
-            allow get, list, create, update: if iAm(userId);
-            allow delete: if false;
+            allow get, list: if iAm(userId);
+            allow delete, create, update: if false;
 
             match /feedbacks/self {
               allow get, create, update: if iAm(userId);

@@ -792,8 +792,8 @@ const COLLECTIONS: CollectionDescriptor[] = [{
     tests: (userContext: UserContext) => {
       ensureCollectionFollowAccessPermissions('/users/{userId}/tokens-wallet/self', userContext,
         {
-          get: userContext.name === 'fred user', update: userContext.name === 'fred user',
-          createDoc: userContext.name === 'fred user', delete: userContext.name === 'fred user',
+          get: userContext.name === 'fred user', update: false,
+          createDoc: false, delete: userContext.name === 'fred user',
           list: false, createNew: false,
         }, 'fred')
 
@@ -841,9 +841,9 @@ const COLLECTIONS: CollectionDescriptor[] = [{
     tests: (userContext: UserContext) => {
       ensureCollectionFollowAccessPermissions('/users/{userId}/spaces/{spaceId}', userContext,
         {
-          get: userContext.name === 'fred user', update: userContext.name === 'fred user',
-          createDoc: userContext.name === 'fred user',
-          list: userContext.name === 'fred user', delete: false, createNew: userContext.name === 'fred user',
+          get: userContext.name === 'fred user', update: false,
+          createDoc: false,
+          list: userContext.name === 'fred user', delete: false, createNew: false,
         }, 'fred')
 
       ensureCollectionFollowAccessPermissions('/users/{userId}/spaces/{spaceId}', userContext,
@@ -868,9 +868,9 @@ const COLLECTIONS: CollectionDescriptor[] = [{
       ensureCollectionFollowAccessPermissions(`/users/{userId}/${eventFirestorePath(space.id)}`, userContext,
         {
           delete: false,
-          get: userContext.name === 'fred user', update: userContext.name === 'fred user',
-          list: userContext.name === 'fred user', createDoc: userContext.name === 'fred user',
-          createNew: userContext.name === 'fred user',
+          get: userContext.name === 'fred user', update: false,
+          list: userContext.name === 'fred user', createDoc: false,
+          createNew: false,
         }, 'fred')
 
       ensureCollectionFollowAccessPermissions(`/users/{userId}/${eventFirestorePath(space.id)}`, userContext,
@@ -924,9 +924,9 @@ const COLLECTIONS: CollectionDescriptor[] = [{
       ensureCollectionFollowAccessPermissions(`/users/{userId}/${eventFirestorePath(space.id)}/days/{dayId}`, userContext,
         {
           delete: false,
-          get: userContext.name === 'fred user', update: userContext.name === 'fred user',
-          list: userContext.name === 'fred user', createDoc: userContext.name === 'fred user',
-          createNew: userContext.name === 'fred user',
+          get: userContext.name === 'fred user', update: false,
+          list: userContext.name === 'fred user', createDoc: false,
+          createNew: false,
         }, 'fred')
 
       ensureCollectionFollowAccessPermissions(`/users/{userId}/${eventFirestorePath(space.id)}/days/{dayId}`, userContext,
