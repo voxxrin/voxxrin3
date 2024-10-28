@@ -14,26 +14,32 @@ export const onUserCreated = async (user: UserRecord, context: EventContext<{}>)
     await createUserInfos(user.uid);
 };
 
-export async function createUserInfos(userId: string) {
-    const publicUserToken = uuidv4();
-    const user: User = {
-        privateUserId: userId,
-        publicUserToken,
-        userCreation: new Date().toISOString() as ISODatetime,
-        userLastConnection: new Date().toISOString() as ISODatetime,
-        username: `Anonymous${generateRandom15DigitInteger()}`,
-        totalFavs: {
-          total: 0,
-          perEventTotalFavs: {}
-        },
-        totalFeedbacks: {
-          total: 0,
-          perEventTotalFeedbacks: {}
-        },
-        _modelRemainingMigrations: [],
-        _version: 4
-    }
+export function defaultUserInfos(userId: string) {
+  const publicUserToken = uuidv4();
+  const now = new Date().toISOString() as ISODatetime
+  const user: User = {
+    privateUserId: userId,
+    publicUserToken,
+    userCreation: now,
+    userLastConnection: now,
+    username: `Anonymous${generateRandom15DigitInteger()}`,
+    totalFavs: {
+      total: 0,
+      perEventTotalFavs: {}
+    },
+    totalFeedbacks: {
+      total: 0,
+      perEventTotalFeedbacks: {}
+    },
+    _modelRemainingMigrations: [],
+    _version: 4
+  }
 
+  return user;
+}
+
+export async function createUserInfos(userId: string) {
+    const user = defaultUserInfos(userId);
     await db.collection('users').doc(userId).set(user);
 }
 

@@ -10,7 +10,7 @@ import {db} from "@/state/firebase";
 import {User} from "firebase/auth";
 import {useUserTokensWallet} from "@/state/useUserTokensWallet";
 import {match, P} from "ts-pattern";
-import {UserLastConnection} from "../../../../shared/user-last-connection.firestore";
+import {User as FirestoreUser} from "../../../../shared/user.firestore";
 import {ISODatetime} from "../../../../shared/type-utils";
 
 const props = defineProps({
@@ -22,12 +22,12 @@ const props = defineProps({
 
 migrateData(props.user.uid);
 
-const userLastConnexion: UserLastConnection = {
-  privateUserId: props.user.uid,
+const userLastConnexion: Pick<FirestoreUser, "userLastConnection"> = {
   userLastConnection: new Date().toISOString() as ISODatetime,
 }
+const userDoc = doc(db, `/users/${props.user.uid}`)
 // Creating user last-connection doc with (always) last known user connection in it
-setDoc(doc(db, `/users/${props.user.uid}/last-connexion/self`), userLastConnexion);
+setDoc(userDoc, userLastConnexion, { merge: true })
 
 
 const { registerTalkFeedbacksViewerSecretToken, registerEventOrganizerSecretToken, registerPrivateSpaceSecretToken } = useUserTokensWallet();

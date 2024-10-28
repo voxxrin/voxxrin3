@@ -81,24 +81,6 @@ const FIREBASE_MANAGED_COLLECTIONS = [
       updatedData: () => ({pinnedEventIds: ['42']})
     }]
   }, {
-    name: '/users/{userId}/last-connection/self',
-    docInitializations: [{
-      name: 'alice',
-      collection: '/users/alice/last-connection',
-      path: '/users/alice/last-connection/self',
-      newDocPath: '/users/alice/last-connection/other',
-      data: () => ({userLastConnection: "2024-10-27T12:00:00Z"}),
-      updatedData: () => ({userLastConnection: "2024-10-27T12:42:00Z"})
-    }, {
-      name: 'fred',
-      collection: '/users/fred/last-connection',
-      path: '/users/fred/last-connection/self',
-      newDocPath: '/users/fred/last-connection/other',
-      data: () => ({userLastConnection: "2024-10-27T12:00:00Z"}),
-      updatedData: () => ({userLastConnection: "2024-10-27T12:42:00Z"})
-    }]
-
-  }, {
     name: '/users/{userId}/events/{eventId}',
     docInitializations: [{
       name: 'alice',
@@ -818,31 +800,6 @@ const COLLECTIONS: CollectionDescriptor[] = [{
       ensureCollectionFollowAccessPermissions('/users/{userId}/tokens-wallet/self', userContext,
         {
           list: false, createDoc: false, delete: false, get: false, update: false, createNew: false
-        }, 'alice')
-    }
-}, {
-    name: "/users/{userId}/last-connection",
-    aroundTests: (userContext: UserContext) => match(userContext)
-        .with({ name: "unauthenticated user" },  () => ({
-            beforeEach: [],
-            afterEach: [],
-        }))
-        .with({ name: "fred user" },  () => ({
-            beforeEach: [],
-            afterEach: [],
-        })).run(),
-    tests: (userContext: UserContext) => {
-      ensureCollectionFollowAccessPermissions('/users/{userId}/last-connection/self', userContext,
-        {
-          createDoc: userContext.name === 'fred user',
-          get: false, update: userContext.name === 'fred user',
-          list: false, delete: false, createNew: false,
-        }, 'fred')
-
-      ensureCollectionFollowAccessPermissions('/users/{userId}/last-connection/self', userContext,
-        {
-          get: false, update: false, createDoc: false,
-          list: false, delete: false, createNew: false,
         }, 'alice')
     }
 }, {

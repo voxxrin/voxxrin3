@@ -103,10 +103,17 @@ exports.onUserPrivateSpaceTalkFeedbackCreated = functions.firestore
   .onCreate(async (snapshot, context) => {
     (await import('./functions/firestore/onTalkFeedbackProvided')).onUserTalkFeedbackCreated(snapshot, context)
   });
-exports.onUserLastConnectionCreated = functions.firestore
-  .document(`users/{userId}/last-connection/self`)
+exports.onUserNodeCreated = functions.firestore
+  .document(`users/{userId}`)
   .onCreate(async (snapshot, context) => {
-    (await import('./functions/firestore/onUserLastConnectionCreated')).onUserLastConnectionCreated(snapshot, context)
+    console.log(`onUserNodeCreated called !`)
+    return (await import('./functions/firestore/onUserNodeUpserted')).onUserNodeUpserted(context)
+  });
+exports.onUserNodeUpdated = functions.firestore
+  .document(`users/{userId}`)
+  .onUpdate(async (snapshot, context) => {
+    console.log(`onUserNodeUpdated called !`)
+    return (await import('./functions/firestore/onUserNodeUpserted')).onUserNodeUpserted(context)
   });
 
 // Schedulers

@@ -168,22 +168,13 @@ service cloud.firestore {
     }
 
     match /users/{userId} {
-      allow list, create, delete: if false;
-    	allow get: if iAm(userId);
-    	/* TODO: update this to false after DVBE25
-    	  (user should have had time to update to the new version of the app which, now, populates
-    	  /users/{userId}/last-connection/self node which, in turn, copies userLastConnection to this document)
-    	*/
+      allow list, delete: if false;
+    	allow get, create: if iAm(userId);
     	allow update: if iAm(userId) && onlyAllowedUpdatedFields(["userLastConnection"]);
 
       match /preferences/self {
         allow get, create, update: if iAm(userId);
         allow delete, list: if false;
-      }
-      match /last-connection/self {
-        /* Don't know why, but we need to allow update in order to be able to create (at least in unit tests) */
-        allow create, update: if iAm(userId);
-        allow get, delete, list: if false;
       }
       /* Legacy node: but kept for backward compatibility until every users have migrated their tokens-wallet
          (this can take a lot of time)
