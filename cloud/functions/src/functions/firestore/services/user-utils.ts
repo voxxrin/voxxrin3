@@ -136,12 +136,15 @@ async function deleteUserRefIncludingChildren(userRef: DocumentReference<Documen
   }
 
   const preferencesDoc = await db.doc(`${userRef.path}/preferences/self`).get()
+  // For legacy reasons
+  const legacyLastConnectionDoc = await db.doc(`${userRef.path}/last-connection/self`).get()
 
   await Promise.all([
     deleteUserSpaces(userRef, { dryRun }),
     deleteUserEventsFromNode(userRef, { dryRun }),
     ...((preferencesDoc.exists && !dryRun) ? [preferencesDoc.ref.delete()]:[]),
     ...((tokensWalletDoc.exists && !dryRun) ? [tokensWalletDoc.ref.delete()]:[]),
+    ...((legacyLastConnectionDoc.exists && !dryRun) ? [legacyLastConnectionDoc.ref.delete()]:[]),
   ])
 
   console.info(`Deleting user entry ${userRef.path}`)
