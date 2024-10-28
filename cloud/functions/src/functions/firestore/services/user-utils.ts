@@ -132,7 +132,7 @@ async function deleteUserRefIncludingChildren(userRef: DocumentReference<Documen
     || (walletSecrets.talkFeedbacksViewerTokens && walletSecrets.talkFeedbacksViewerTokens.length)
   )) {
     console.info(`Not deleting user ${userRef.id} because he has tokens-wallet non-empty collection`)
-    return;
+    throw new Error(`Not deleting user ${userRef.id} because he has tokens-wallet non-empty collection`)
   }
 
   const preferencesDoc = await db.doc(`${userRef.path}/preferences/self`).get()

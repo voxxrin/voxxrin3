@@ -32,7 +32,7 @@ export function declareAdminHttpRoutes(app: Express) {
     async (res, path, { dryRun, force }, body) => {
       const results = await (await import("../../../cron/cleanOutdatedUsers")).cleanOutdatedUsers({ dryRun, force });
       return sendResponseMessage(res, 200, {
-        message: `${results.totalDeletedUsers} users have been deleted (in ${results.totalDuration}ms) !`,
+        message: `${results.totalDeletedUsers} users have been deleted and ${results.failures} have failed to be deleted (in ${results.totalDuration}ms) !`,
         results
       })
     })
