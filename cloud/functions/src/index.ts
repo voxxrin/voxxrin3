@@ -103,6 +103,11 @@ exports.onUserPrivateSpaceTalkFeedbackCreated = functions.firestore
   .onCreate(async (snapshot, context) => {
     (await import('./functions/firestore/onTalkFeedbackProvided')).onUserTalkFeedbackCreated(snapshot, context)
   });
+exports.onUserLastConnectionCreated = functions.firestore
+  .document(`users/{userId}/last-connection/self`)
+  .onCreate(async (snapshot, context) => {
+    (await import('./functions/firestore/onUserLastConnectionCreated')).onUserLastConnectionCreated(snapshot, context)
+  });
 
 // Schedulers
 exports.refreshSlowPacedTalkStatsCron = functions.pubsub

@@ -20,6 +20,7 @@ export async function createUserInfos(userId: string) {
         privateUserId: userId,
         publicUserToken,
         userCreation: new Date().toISOString() as ISODatetime,
+        userLastConnection: new Date().toISOString() as ISODatetime,
         username: `Anonymous${generateRandom15DigitInteger()}`,
         totalFavs: {
           total: 0,
