@@ -11,6 +11,13 @@ service cloud.firestore {
         && resource.data != null
         && resource.data.diff(request.resource.data).affectedKeys().hasOnly(allowedFieldNames)
     }
+    function onlyAllowedCreatedFields(allowedFieldNames) {
+      return allowedFieldNames != null
+        && request != null
+        && request.resource != null
+        && request.resource.data != null
+        && request.resource.data.diff({}).affectedKeys().hasOnly(allowedFieldNames)
+    }
 
     // By default, prevent reads & writes on any node
     match /{document=**} {
@@ -169,7 +176,8 @@ service cloud.firestore {
 
     match /users/{userId} {
       allow list, delete: if false;
-    	allow get, create: if iAm(userId);
+    	allow get: if iAm(userId);
+    	allow create: if iAm(userId) && onlyAllowedCreatedFields(["userLastConnection"]);
     	allow update: if iAm(userId) && onlyAllowedUpdatedFields(["userLastConnection"]);
 
       match /preferences/self {

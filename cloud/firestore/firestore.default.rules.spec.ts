@@ -744,8 +744,9 @@ const COLLECTIONS: CollectionDescriptor[] = [{
     tests: (userContext: UserContext) => {
         ensureCollectionFollowAccessPermissions('/users/{userId}', userContext,
           {
-            list: false, createNew: false, delete: false, update: false,
-            get: userContext.name === 'fred user', createDoc: userContext.name === 'fred user'
+            list: false, delete: false,
+            get: userContext.name === 'fred user',
+            createDoc: 'check-skipped', createNew: 'check-skipped', update: 'check-skipped' // see below for specificities due to userLastConnection field
           }, 'fred')
 
         ensureCollectionFollowAccessPermissions('/users/{userId}', userContext,
@@ -755,26 +756,70 @@ const COLLECTIONS: CollectionDescriptor[] = [{
           }, 'alice')
 
         if(userContext.name === 'fred user') {
-          it(`As ${userContext.name}, I should be able to only UPDATE userLastConnection field in my user's infos`, async () => {
+          it(`As ${userContext.name}, I should be able to only CREATE userLastConnection field in *my user's* infos`, async () => {
+            await assertSucceeds(setDoc(doc(userContext.context().firestore(),
+              findManagedCollection('/users/{userId}').docInitializations.find(docInit => docInit.name === 'fred')!.path
+            ), { userLastConnection: new Date().toISOString() }))
+          })
+          it(`As ${userContext.name}, I should *NOT* be able to only CREATE userLastConnection field in *another user's* infos`, async () => {
+            await assertFails(setDoc(doc(userContext.context().firestore(),
+              findManagedCollection('/users/{userId}').docInitializations.find(docInit => docInit.name === 'alice')!.path
+            ), { userLastConnection: new Date().toISOString() }))
+          })
+
+          it(`As ${userContext.name}, I should *NOT* be able to CREATE other fields than userLastConnection field in *my user's* infos`, async () => {
+            await assertSucceeds(setDoc(doc(userContext.context().firestore(),
+              findManagedCollection('/users/{userId}').docInitializations.find(docInit => docInit.name === 'fred')!.path
+            ), { userLastConnection: new Date().toISOString(), additionalField: "foo", }))
+          })
+          it(`As ${userContext.name}, I should *NOT* be able to CREATE other fields than userLastConnection field in *another user's* infos`, async () => {
+            await assertFails(setDoc(doc(userContext.context().firestore(),
+              findManagedCollection('/users/{userId}').docInitializations.find(docInit => docInit.name === 'alice')!.path
+            ), { userLastConnection: new Date().toISOString(), additionalField: "foo", }))
+          })
+
+          it(`As ${userContext.name}, I should be able to only UPDATE userLastConnection field in *my user's* infos`, async () => {
             await assertSucceeds(updateDoc(doc(userContext.context().firestore(),
               findManagedCollection('/users/{userId}').docInitializations.find(docInit => docInit.name === 'fred')!.path
             ), { userLastConnection: new Date().toISOString() }))
           })
-          it(`As ${userContext.name}, I should be able to only UPDATE userLastConnection field in my user's infos`, async () => {
+          it(`As ${userContext.name}, I should *NOT* be able to only UPDATE userLastConnection field in *another user's* infos`, async () => {
             await assertFails(updateDoc(doc(userContext.context().firestore(),
               findManagedCollection('/users/{userId}').docInitializations.find(docInit => docInit.name === 'alice')!.path
             ), { userLastConnection: new Date().toISOString() }))
           })
+
+          it(`As ${userContext.name}, I should *NOT* be able to UPDATE other fields than userLastConnection in *my user's* infos`, async () => {
+            await assertFails(updateDoc(doc(userContext.context().firestore(),
+              findManagedCollection('/users/{userId}').docInitializations.find(docInit => docInit.name === 'fred')!.path
+            ), { userLastConnection: new Date().toISOString(), additionalField: "foo", }))
+          })
+          it(`As ${userContext.name}, I should *NOT* be able to UPDATE other fields than userLastConnection in *another user's* infos`, async () => {
+            await assertFails(updateDoc(doc(userContext.context().firestore(),
+              findManagedCollection('/users/{userId}').docInitializations.find(docInit => docInit.name === 'alice')!.path
+            ), { userLastConnection: new Date().toISOString(), additionalField: "foo", }))
+          })
         } else {
-          it(`As ${userContext.name}, I should be able to only UPDATE userLastConnection field in my user's infos`, async () => {
+          it(`As ${userContext.name}, I should *NOT* be able to only CREATE userLastConnection field in *another user's* infos`, async () => {
+            await assertFails(setDoc(doc(userContext.context().firestore(),
+              findManagedCollection('/users/{userId}').docInitializations.find(docInit => docInit.name === 'fred')!.path
+            ), { userLastConnection: new Date().toISOString() }))
+          })
+          it(`As ${userContext.name}, I should *NOT* be able to CREATE other fields than userLastConnection in *another user's* infos`, async () => {
+            await assertFails(setDoc(doc(userContext.context().firestore(),
+              findManagedCollection('/users/{userId}').docInitializations.find(docInit => docInit.name === 'fred')!.path
+            ), { userLastConnection: new Date().toISOString(), additionalField: "foo", }))
+          })
+
+          it(`As ${userContext.name}, I should *NOT* be able to only UPDATE userLastConnection field in *another user's* infos`, async () => {
             await assertFails(updateDoc(doc(userContext.context().firestore(),
               findManagedCollection('/users/{userId}').docInitializations.find(docInit => docInit.name === 'fred')!.path
             ), { userLastConnection: new Date().toISOString() }))
           })
-          it(`As ${userContext.name}, I should be able to only UPDATE userLastConnection field in my user's infos`, async () => {
+          it(`As ${userContext.name}, I should *NOT* be able to UPDATE other fields than userLastConnection in *another user's* infos`, async () => {
             await assertFails(updateDoc(doc(userContext.context().firestore(),
-              findManagedCollection('/users/{userId}').docInitializations.find(docInit => docInit.name === 'alice')!.path
-            ), { userLastConnection: new Date().toISOString() }))
+              findManagedCollection('/users/{userId}').docInitializations.find(docInit => docInit.name === 'fred')!.path
+            ), { userLastConnection: new Date().toISOString(), additionalField: "foo", }))
           })
         }
     }
