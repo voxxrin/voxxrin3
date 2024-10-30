@@ -1,7 +1,7 @@
 import {sortBy, ValueObject} from "@/models/utils";
 import {Break, DetailedTalk, Talk, TalkAsset} from "../../../shared/daily-schedule.firestore";
 import {RoomId, VoxxrinRoom} from "@/models/VoxxrinRoom";
-import {SpeakerId, VoxxrinDetailedSpeaker, VoxxrinSimpleSpeaker} from "@/models/VoxxrinSpeaker";
+import {SpeakerId, toVoxxrinSpeaker, VoxxrinDetailedSpeaker, VoxxrinSimpleSpeaker} from "@/models/VoxxrinSpeaker";
 import {TalkFormatId, VoxxrinTalkFormat} from "@/models/VoxxrinTalkFormat";
 import {TrackId, VoxxrinTrack} from "@/models/VoxxrinTrack";
 import {
@@ -48,12 +48,7 @@ export function createVoxxrinTalkFromFirestore(event: VoxxrinConferenceDescripto
     const talk: VoxxrinTalk = {
         language: new TalkLanguageCode(firestoreTalk.language),
         title: firestoreTalk.title,
-        speakers: firestoreTalk.speakers.map(sp => ({
-            photoUrl: sp.photoUrl,
-            companyName: sp.companyName,
-            fullName: sp.fullName,
-            id: new SpeakerId(sp.id)
-        })),
+        speakers: firestoreTalk.speakers.map(sp => toVoxxrinSpeaker(sp)),
         format,
         track,
         room,

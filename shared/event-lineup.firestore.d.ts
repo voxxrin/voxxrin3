@@ -13,6 +13,7 @@ export type LineupTalk = {
     start: ISODatetime,
     end: ISODatetime,
   }|undefined,
+  otherSpeakers: Speaker[],
 }
 
 export type LineupSpeaker = Speaker & {

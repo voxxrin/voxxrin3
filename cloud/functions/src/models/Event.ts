@@ -50,6 +50,7 @@ export function detailedTalksToSpeakersLineup(talks: DetailedTalk[]): LineupSpea
           start: talk.start,
           end: talk.end,
         },
+        otherSpeakers: talk.speakers.filter(sp => sp.id !== speaker.id),
       })
     })
     return speakers;
