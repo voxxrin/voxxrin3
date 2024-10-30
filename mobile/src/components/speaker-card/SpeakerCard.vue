@@ -1,5 +1,4 @@
 <template>
-  <!-- TODO #74 Dev Card Speaker List -->
   <ion-card class="speakerCard" @click="$emit('speaker-clicked', speaker)">
     <div class="speakerCard-head">
       <div class="avatarContainer">
@@ -14,9 +13,7 @@
       </div>
     </div>
     <div class="speakerCard-content">
-      <ion-list class="talkResumeList">
-        <SpeakerResumeTalk v-for="talk in speaker.talks" :talk="talk" :focused-speaker="speaker" :key="talk.id.value"></SpeakerResumeTalk>
-      </ion-list>
+      <slot name="content"></slot>
       <div class="bulletTagList" role="list" v-for="categoryCount in categoriesCount" :key="categoryCount.id">
         <div class="bulletTag" role="listitem">
           <span class="bulletTag-nb">{{categoryCount.count}}</span> {{categoryCount.categoryLabel}}
@@ -31,7 +28,7 @@
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {IonText, IonThumbnail} from "@ionic/vue";
 import {businessSharp} from "ionicons/icons";
-import SpeakerResumeTalk from "@/components/speaker-card/SpeakerResumeTalk.vue";
+import SpeakerResumeTalk from "@/components/speaker-card/SpeakerTalk.vue";
 import {SpeakerId, VoxxrinLineupSpeaker, VoxxrinSimpleSpeaker} from "@/models/VoxxrinSpeaker";
 import SpeakerThumbnail from "@/components/speaker/SpeakerThumbnail.vue";
 import {computed, PropType, toValue} from "vue";

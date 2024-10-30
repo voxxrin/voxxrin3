@@ -4,10 +4,16 @@
       <current-event-header :conf-descriptor="confDescriptor" />
       <toolbar-header :title="LL.Speakers()" :modes="[...MODES]" :search-enabled="true"
                       @search-terms-updated="searchTerms => searchTermsRef = searchTerms"
-                      @mode-updated="(updatedModeId, previousModeId) => console.log(`Mode updated from ${previousModeId} to ${updatedModeId}`)">
+                      @mode-updated="(updatedModeId, previousModeId) => currentMode = updatedModeId as typeof currentMode">
       </toolbar-header>
 
-      <speaker-card v-for="speaker in speakers" @speaker-clicked="openSpeakerDetails($event)" :speaker="speaker" :key="speaker.id.value"></speaker-card>
+      <speaker-card v-for="speaker in speakers" @speaker-clicked="openSpeakerDetails($event)" :speaker="speaker" :key="speaker.id.value">
+        <template #content="{}">
+          <ion-list class="talkResumeList" :style="{ display: currentMode === 'detailed' ? 'block':'none' }">
+            <SpeakerTalk v-for="talk in speaker.talks" :talk="talk" :focused-speaker="speaker" :key="talk.id.value"></SpeakerTalk>
+          </ion-list>
+        </template>
+      </speaker-card>
       <ion-fab vertical="bottom" horizontal="end" slot="fixed">
         <ion-fab-button class="btnGoToTicketing" :aria-label="LL.Go_To_Ticketing()">
           <ion-icon :icon="ticket" aria-hidden="true"></ion-icon>
@@ -33,6 +39,7 @@
   import ToolbarHeader from "@/components/ui/ToolbarHeader.vue";
   import {getResolvedEventRootPathFromSpacedEventIdRef, useCurrentSpaceEventIdRef} from "@/services/Spaces";
   import {useLineupSpeakers} from "@/state/useEventSpeakers";
+  import SpeakerTalk from "@/components/speaker-card/SpeakerTalk.vue";
 
   const { LL } = typesafeI18n()
   const route = useRoute();
@@ -43,9 +50,11 @@
 
   const baseUrl = import.meta.env.BASE_URL;
 
+  const DEFAULT_MODE = 'compact';
+  const currentMode = ref<typeof MODES[number]['id']>(DEFAULT_MODE);
   const MODES = [
-    { id: "detailed", icon: albums, label: LL.value.Big_list_mode(), preSelected: true },
-    { id: "compact", icon: list, label: LL.value.Compact_list_mode() },
+    { id: "detailed", icon: albums, label: LL.value.Big_list_mode(), preSelected: false },
+    { id: "compact", icon: list, label: LL.value.Compact_list_mode(), preSelected: true },
   ] as const
 
   const searchTermsRef = ref<string|undefined>(undefined);
