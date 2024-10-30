@@ -7,7 +7,7 @@
                       @mode-updated="(updatedModeId, previousModeId) => console.log(`Mode updated from ${previousModeId} to ${updatedModeId}`)">
       </toolbar-header>
 
-      <speaker-card @speaker-clicked="openSpeakerDetails($event)"></speaker-card>
+      <speaker-card v-for="speaker in speakers" @speaker-clicked="openSpeakerDetails($event)" :speaker="speaker" :key="speaker.id.value"></speaker-card>
       <ion-fab vertical="bottom" horizontal="end" slot="fixed">
         <ion-fab-button class="btnGoToTicketing" :aria-label="LL.Go_To_Ticketing()">
           <ion-icon :icon="ticket" aria-hidden="true"></ion-icon>
@@ -32,12 +32,14 @@
   import {VoxxrinSimpleSpeaker} from "@/models/VoxxrinSpeaker";
   import ToolbarHeader from "@/components/ui/ToolbarHeader.vue";
   import {getResolvedEventRootPathFromSpacedEventIdRef, useCurrentSpaceEventIdRef} from "@/services/Spaces";
+  import {useLineupSpeakers} from "@/state/useEventSpeakers";
 
   const { LL } = typesafeI18n()
   const route = useRoute();
   const spacedEventIdRef = useCurrentSpaceEventIdRef();
   const {conferenceDescriptor: confDescriptor} = useSharedConferenceDescriptor(spacedEventIdRef);
   const { triggerTabbedPageNavigate } = useTabbedPageNav();
+  const { speakers } = useLineupSpeakers(confDescriptor)
 
   const baseUrl = import.meta.env.BASE_URL;
 

@@ -611,6 +611,11 @@ type RootTranslation = {
 	 * M​y​ ​E​v​e​n​t​s
 	 */
 	My_events: string
+	/**
+	 * +​{​c​o​u​n​t​}​ ​S​p​e​a​k​e​r​{​{​s​}​}
+	 * @param {number} count
+	 */
+	Talk_additional_speakers: RequiredParams<'count'>
 }
 
 export type TranslationFunctions = {
@@ -1206,6 +1211,10 @@ export type TranslationFunctions = {
 	 * My Events
 	 */
 	My_events: () => LocalizedString
+	/**
+	 * +{count} Speaker{{s}}
+	 */
+	Talk_additional_speakers: (arg: { count: number }) => LocalizedString
 }
 
 export type Formatters = {
