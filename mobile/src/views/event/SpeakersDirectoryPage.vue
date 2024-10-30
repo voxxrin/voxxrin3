@@ -46,7 +46,9 @@
   const spacedEventIdRef = useCurrentSpaceEventIdRef();
   const {conferenceDescriptor: confDescriptor} = useSharedConferenceDescriptor(spacedEventIdRef);
   const { triggerTabbedPageNavigate } = useTabbedPageNav();
-  const { speakers } = useLineupSpeakers(confDescriptor)
+
+  const searchTermsRef = ref<string|undefined>(undefined);
+  const { speakers } = useLineupSpeakers(confDescriptor, searchTermsRef)
 
   const baseUrl = import.meta.env.BASE_URL;
 
@@ -56,9 +58,6 @@
     { id: "detailed", icon: albums, label: LL.value.Big_list_mode(), preSelected: false },
     { id: "compact", icon: list, label: LL.value.Compact_list_mode(), preSelected: true },
   ] as const
-
-  const searchTermsRef = ref<string|undefined>(undefined);
-  // TODO: take searchTermsRef into consideration when looking for speakers/talks
 
   async function openSpeakerDetails(speaker: VoxxrinSimpleSpeaker) {
     if(speaker) {

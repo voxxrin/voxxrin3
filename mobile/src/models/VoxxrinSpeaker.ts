@@ -64,3 +64,18 @@ export const createVoxxrinSpeakerFromFirestore = (conferenceDescriptor: VoxxrinC
     })
   }
 }
+
+export const speakerMatchesSearchTerms = (speaker: VoxxrinLineupSpeaker, searchTerms: string|undefined): boolean => {
+  if(!searchTerms) {
+    return true;
+  }
+
+  const speakerSearchableContent = `
+            ${speaker.fullName}
+            ${speaker.companyName || ''}
+            ${speaker.bio}
+            ${speaker.talks.map(talk => `${talk.title} ${talk.format.title} ${talk.track.title}`).join("\n")}
+        `.toLowerCase()
+
+  return searchTerms.split(" ").every(searchTerm => speakerSearchableContent.includes(searchTerm.toLowerCase()));
+}
