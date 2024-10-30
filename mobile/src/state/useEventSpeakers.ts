@@ -5,11 +5,11 @@ import {collection, CollectionReference, doc, DocumentReference} from "firebase/
 import {db} from "@/state/firebase";
 import {resolvedEventFirestorePath} from "../../../shared/utilities/event-utils";
 import {LineupSpeaker} from "../../../shared/event-lineup.firestore";
-import {createVoxxrinSpeakerFromFirestore} from "@/models/VoxxrinSpeaker";
+import {createVoxxrinSpeakerFromFirestore, speakerMatchesSearchTerms} from "@/models/VoxxrinSpeaker";
 import {match} from "ts-pattern";
 import {sortBy} from "@/models/utils";
 
-export function useLineupSpeakers(eventDescriptorRef: Ref<VoxxrinConferenceDescriptor|undefined>) {
+export function useLineupSpeakers(eventDescriptorRef: Ref<VoxxrinConferenceDescriptor|undefined>, searchTermsRef: Ref<string|undefined>) {
 
   const firestoreSpeakersRef = deferredVuefireUseCollection([ eventDescriptorRef ],
     ([eventDescriptor]) => eventLineupSpeakersCollections(eventDescriptor),
@@ -27,14 +27,17 @@ export function useLineupSpeakers(eventDescriptorRef: Ref<VoxxrinConferenceDescr
   return {
     speakers: computed(() => {
       const firestoreSpeakersLineup = toValue(firestoreSpeakersRef),
-        eventDescriptor = toValue(eventDescriptorRef);
+        eventDescriptor = toValue(eventDescriptorRef),
+        searchTerms = toValue(searchTermsRef);
 
       if(!firestoreSpeakersLineup || !eventDescriptor) {
         return undefined;
       }
 
       const speakers = sortBy(
-        [...firestoreSpeakersLineup.values()].map(fSpeaker => createVoxxrinSpeakerFromFirestore(eventDescriptor, fSpeaker)),
+        [...firestoreSpeakersLineup.values()]
+          .map(fSpeaker => createVoxxrinSpeakerFromFirestore(eventDescriptor, fSpeaker))
+          .filter(speaker => speakerMatchesSearchTerms(speaker, searchTerms)),
         sp => sp.fullName
       );
       return speakers;
