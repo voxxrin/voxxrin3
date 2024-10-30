@@ -39,14 +39,11 @@
 
 <script setup lang="ts">
 import {typesafeI18n} from "@/i18n/i18n-vue";
-import {IonBadge, IonThumbnail, IonText} from "@ionic/vue";
+import {IonBadge, IonText} from "@ionic/vue";
 import SpeakerFavTalkButton from "@/components/speaker-card/SpeakerFavTalkButton.vue";
-import {
-  SpeakerId,
-  VoxxrinDetailedSpeaker, VoxxrinLineupSpeaker, VoxxrinLineupTalk,
-} from "@/models/VoxxrinSpeaker";
+import {VoxxrinLineupSpeaker, VoxxrinLineupTalk,} from "@/models/VoxxrinSpeaker";
 import SpeakerThumbnail from "@/components/speaker/SpeakerThumbnail.vue";
-import {computed, PropType, toValue} from "vue";
+import {PropType} from "vue";
 
 const {LL} = typesafeI18n()
 const baseUrl = import.meta.env.BASE_URL;
