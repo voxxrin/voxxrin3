@@ -93,6 +93,10 @@ service cloud.firestore {
         allow get: if true;
         allow list, write: if false;
       }
+      match /speakers/{speakerId} {
+        allow get, list: if true;
+        allow write: if false;
+      }
 
       match /organizer-space/{secretOrganizerToken} {
         allow get: if true;
@@ -160,6 +164,10 @@ service cloud.firestore {
         match /roomsStats-allInOne/self {
           allow get: if true;
           allow list, write: if false;
+        }
+        match /speakers/{speakerId} {
+          allow get, list: if true;
+          allow write: if false;
         }
 
         match /organizer-space/{secretOrganizerToken} {

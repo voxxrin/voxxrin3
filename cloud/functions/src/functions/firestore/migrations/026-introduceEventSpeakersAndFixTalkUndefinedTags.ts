@@ -26,9 +26,13 @@ export async function introduceEventSpeakersAndFixTalkUndefinedTags(): Promise<"
 
         const lineupSpeakers = detailedTalksToSpeakersLineup(migratedEventTalks);
 
-        const eventSpeakersDoc = db.doc(`${eventDoc.ref.path}/speakers-allInOne/self`)
-        await eventSpeakersDoc.set({ lineupSpeakers });
-        console.log(`Event speakers created for event id ${eventDoc.id}`)
+        const eventSpeakersColl = db.collection(`${eventDoc.ref.path}/speakers`)
+        const existingSpeakerDocs = await eventSpeakersColl.listDocuments()
+
+        // delete all then re-create all
+        await Promise.all(existingSpeakerDocs.map(speakerDoc => speakerDoc.delete()))
+        await Promise.all(lineupSpeakers.map(lineupSpeaker => db.doc(`${eventDoc.ref.path}/speakers/${lineupSpeaker.id}`).set(lineupSpeaker)))
+        console.log(`${lineupSpeakers.length} event speakers created for event id ${eventDoc.id}`)
       } catch (err) {
         console.error(`Error during Event speaker creation for ${eventDoc.id}: ${err}`)
       }

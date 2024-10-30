@@ -392,6 +392,20 @@ const FIREBASE_MANAGED_COLLECTIONS = [
       }),
     }]
   }, {
+    name: '/events/{eventId}/speakers/{speakerId}',
+    docInitializations: [{
+      name: 'default',
+      collection: '/events/an-event/speakers',
+      path: '/events/an-event/speakers/123',
+      newDocPath: '/events/an-event/speakers/456',
+      data: () => ({
+        id: '123'
+      }),
+      updatedData: () => ({
+        id: '456'
+      }),
+    }]
+  }, {
     name: '/events/{eventId}/last-updates/self',
     docInitializations: [{
       name: 'default',
@@ -553,6 +567,20 @@ const FIREBASE_MANAGED_COLLECTIONS = [
           recordedAt: "2024-03-28T11:58:10Z",
           persistedAt: "2024-03-28T12:00:00Z"
         }
+      }),
+    }]
+  }, {
+    name: '/spaces/{spaceId}/events/{eventId}/speakers/{speakerId}',
+    docInitializations: [{
+      name: 'default',
+      collection: '/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/speakers',
+      path: '/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/speakers/123',
+      newDocPath: '/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/speakers/456',
+      data: () => ({
+        id: '123',
+      }),
+      updatedData: () => ({
+        id: '456',
       }),
     }]
   }, {
@@ -1154,6 +1182,20 @@ const COLLECTIONS: CollectionDescriptor[] = [{
         {
           get: true,
           list: false, write: false
+        })
+    },
+    spaceId: space.id,
+  }, {
+    name: `/${eventFirestorePath(space.id)}/speakers`,
+    aroundTests: (_: UserContext) => ({
+      beforeEach: [],
+      afterEach: [],
+    }),
+    tests: (userContext: UserContext) => {
+      ensureCollectionFollowAccessPermissions(`/${eventFirestorePath(space.id)}/speakers/{speakerId}`, userContext,
+        {
+          get: true, list: true,
+          write: false
         })
     },
     spaceId: space.id,
