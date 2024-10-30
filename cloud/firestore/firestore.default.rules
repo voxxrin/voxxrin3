@@ -3,13 +3,35 @@ service cloud.firestore {
   match /databases/{database}/documents {
     function iAm(userId) { return request != null && request.auth != null && request.auth.uid == userId }
     function onlyAllowedUpdatedFields(allowedFieldNames) {
-      return allowedFieldNames != null
-        && request != null
-        && request.resource != null
-        && request.resource.data != null
-        && resource != null
-        && resource.data != null
-        && resource.data.diff(request.resource.data).affectedKeys().hasOnly(allowedFieldNames)
+        return allowedFieldNames != null
+          && request != null
+          && request.resource != null
+          && request.resource.data != null
+          && resource != null
+          && resource.data != null
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(allowedFieldNames)
+          && request.resource.data.diff(resource.data).addedKeys().hasOnly(allowedFieldNames)
+//        return debug('allowedFieldNames != null')!=null && debug(allowedFieldNames != null)!=null && allowedFieldNames != null
+//          && debug('request != null')!=null && debug(request != null)!=null && request != null
+//          && debug('request.resource != null')!=null && debug(request.resource != null)!=null && request.resource != null
+//          && debug('request.resource.data != null')!=null && debug(request.resource.data != null)!=null && request.resource.data != null
+//          && debug('resource != null')!=null && debug(resource != null)!=null && resource != null
+//          && debug('resource.data != null')!=null && debug(resource.data != null)!=null && resource.data != null
+//          && debug('request.resource.data.diff(resource.data).affectedKeys().hasOnly(allowedFieldNames)')!=null && debug(request.resource.data.diff(resource.data).affectedKeys().hasOnly(allowedFieldNames))!=null && request.resource.data.diff(resource.data).affectedKeys().hasOnly(allowedFieldNames)
+//          && debug('request.resource.data.diff(resource.data).addedKeys().hasOnly(allowedFieldNames)')!=null && debug(request.resource.data.diff(resource.data).addedKeys().hasOnly(allowedFieldNames))!=null && request.resource.data.diff(resource.data).addedKeys().hasOnly(allowedFieldNames)
+//      return allowedFieldNames != null
+//        && request != null
+//        && request.resource != null
+//        && request.resource.data != null
+//        && request.resource.data.diff({}).affectedKeys().hasOnly(allowedFieldNames)
+//        && request.resource.data.diff({}).addedKeys().hasOnly(allowedFieldNames);
+//        return debug('allowedFieldNames != null')!=null && debug(allowedFieldNames != null)!=null && allowedFieldNames != null
+//        && debug('request != null')!=null && debug(request != null)!=null && request != null
+//        && debug('request.resource != null')!=null && debug(request.resource != null)!=null && request.resource != null
+//        && debug('request.resource.data != null')!=null && debug(request.resource.data != null)!=null && request.resource.data != null
+//        && debug('request.resource.data.diff({})')!=null && debug(request.resource.data.diff({}))!=null
+//        && debug('request.resource.data.diff({}).affectedKeys().hasOnly(allowedFieldNames)')!=null && debug(request.resource.data.diff({}).affectedKeys().hasOnly(allowedFieldNames))!=null && request.resource.data.diff({}).affectedKeys().hasOnly(allowedFieldNames)
+//        && debug('request.resource.data.diff({}).addedKeys().hasOnly(allowedFieldNames)')!=null && debug(request.resource.data.diff({}).addedKeys().hasOnly(allowedFieldNames))!=null && request.resource.data.diff({}).addedKeys().hasOnly(allowedFieldNames)
     }
     function onlyAllowedCreatedFields(allowedFieldNames) {
       return allowedFieldNames != null
