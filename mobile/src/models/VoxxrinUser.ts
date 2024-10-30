@@ -51,9 +51,9 @@ export type VoxxrinUserTokensWallet = Replace<UserTokensWallet, {
 export function toVoxxrinUserTokensWallet(rawUserTokensWallet: UserTokensWallet): VoxxrinUserTokensWallet {
   return {
     secretTokens: {
-      eventOrganizerTokens: rawUserTokensWallet.secretTokens.eventOrganizerTokens.map(toVoxxrinUserWalletEventOrganizerSecretToken),
-      talkFeedbacksViewerTokens: rawUserTokensWallet.secretTokens.talkFeedbacksViewerTokens.map(toVoxxrinUserWalletTalkFeedbacksViewerToken),
-      privateSpaceTokens: rawUserTokensWallet.secretTokens.privateSpaceTokens.map(toVoxxrinUserWalletPrivateSpaceToken),
+      eventOrganizerTokens: (rawUserTokensWallet.secretTokens.eventOrganizerTokens || []).map(toVoxxrinUserWalletEventOrganizerSecretToken),
+      talkFeedbacksViewerTokens: (rawUserTokensWallet.secretTokens.talkFeedbacksViewerTokens || []).map(toVoxxrinUserWalletTalkFeedbacksViewerToken),
+      privateSpaceTokens: (rawUserTokensWallet.secretTokens.privateSpaceTokens || []).map(toVoxxrinUserWalletPrivateSpaceToken),
     }
   }
 }
@@ -83,9 +83,9 @@ export function toVoxxrinUserWalletPrivateSpaceToken(raw: UserWalletPrivateSpace
 export function toRawUserTokensWallet(voxxrinUserTokensWallet: VoxxrinUserTokensWallet): UserTokensWallet {
   return {
     secretTokens: {
-      eventOrganizerTokens: voxxrinUserTokensWallet.secretTokens.eventOrganizerTokens.map(toRawUserWalletEventOrganizerSecretToken),
-      talkFeedbacksViewerTokens: voxxrinUserTokensWallet.secretTokens.talkFeedbacksViewerTokens.map(toRawUserWalletTalkFeedbacksViewerSecretToken),
-      privateSpaceTokens: voxxrinUserTokensWallet.secretTokens.privateSpaceTokens.map(toRawUserWalletPrivateSpaceToken),
+      eventOrganizerTokens: (voxxrinUserTokensWallet.secretTokens.eventOrganizerTokens || []).map(toRawUserWalletEventOrganizerSecretToken),
+      talkFeedbacksViewerTokens: (voxxrinUserTokensWallet.secretTokens.talkFeedbacksViewerTokens || []).map(toRawUserWalletTalkFeedbacksViewerSecretToken),
+      privateSpaceTokens: (voxxrinUserTokensWallet.secretTokens.privateSpaceTokens || []).map(toRawUserWalletPrivateSpaceToken),
     }
   }
 }
