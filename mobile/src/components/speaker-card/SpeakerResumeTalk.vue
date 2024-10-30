@@ -1,11 +1,11 @@
 <template>
-  <!-- TODO #74 Dev Resume Card -->
+  <!-- TODO #74 Dev Resume Card favorites -->
   <ion-item class="talkResumeCard" :class="{'_has-favorited': false}">
     <span class="talkResumeCard-line"></span>
     <div class="talkResumeCard-content">
       <div class="talkResumeCard-content-description">
         <ion-text>
-          Unlocking the Secrets of the Devoxx Mobile App: A Deep Dive into Open Source PWA with Vue and Firebase
+          {{ talk.title }}
         </ion-text>
         <SpeakerFavTalkButton></SpeakerFavTalkButton>
       </div>
@@ -14,21 +14,21 @@
           <ion-badge class="trackBadge">
             <div class="trackBadge-content">
               <ion-icon src="/assets/icons/solid/tag.svg"></ion-icon>
-              JAVA
+              {{ talk.track.title }}
             </div>
           </ion-badge>
-          <div class="bulletTag _labelOnly">Conf.</div>
+          <div class="bulletTag _labelOnly">{{ talk.format.title }} ({{ talk.format.hmmDuration }})</div>
         </div>
 
         <div class="avatarContainer">
           <div class="avatarGroup" v-if="true">
             <div class="avatarItem">
-              <speaker-thumbnail size="64px" :is-highlighted="false" :speaker="speaker" />
+              <speaker-thumbnail size="64px" :is-highlighted="false" :speaker="focusedSpeaker" />
             </div>
           </div>
           <div class="avatarInfos _small">
-            <ion-text class="avatarInfos-subTitle" v-if="true">
-              (+X Speaker(s))
+            <ion-text class="avatarInfos-subTitle" v-if="talk.otherSpeakers.length > 0">
+              ({{ LL.Talk_additional_speakers({ count: talk.otherSpeakers.length }) }})
             </ion-text>
           </div>
         </div>
@@ -43,25 +43,25 @@ import {IonBadge, IonThumbnail, IonText} from "@ionic/vue";
 import SpeakerFavTalkButton from "@/components/speaker-card/SpeakerFavTalkButton.vue";
 import {
   SpeakerId,
-  VoxxrinDetailedSpeaker,
+  VoxxrinDetailedSpeaker, VoxxrinLineupSpeaker, VoxxrinLineupTalk,
 } from "@/models/VoxxrinSpeaker";
 import SpeakerThumbnail from "@/components/speaker/SpeakerThumbnail.vue";
+import {computed, PropType, toValue} from "vue";
 
 const {LL} = typesafeI18n()
 const baseUrl = import.meta.env.BASE_URL;
 
-const speaker: VoxxrinDetailedSpeaker = {
-  id: new SpeakerId('42'),
-  fullName: "Frédéric Camblor",
-  companyName: "4SH",
-  photoUrl: "https://lh3.googleusercontent.com/a/AAcHTtdsbTGnaxXmrzSi178m_qpxj9c-z12qoL7SLB6cjUSfZhaQ=s96-c",
-  bio: `Retired Bordeaux JUG leader and co-creator of the BDX I/O conference in 2014, Frédéric enjoys mixing with different tech communities and learning new things.
-Web developer at 4SH by day, and OSS commiter by night, he has created/contributed to some more or less well known projects: Voxxrin app, Vitemadose frontend during COVID Pandemic, Devoxx France CFP, RestX framework, as well as some (old) Jenkins plugins.
-As a big fan of strong typing, he loves Typescript, but also like doing all kinds of stuff in Google Spreadsheets.`,
-  social: [
-    {type:'twitter', url: 'https://www.twitter.com/fcamblor' }
-  ]
-}
+const props = defineProps({
+  talk: {
+    required: true,
+    type: Object as PropType<VoxxrinLineupTalk>
+  },
+  focusedSpeaker: {
+    required: true,
+    type: Object as PropType<VoxxrinLineupSpeaker>
+  },
+})
+
 </script>
 
 <style lang="scss" scoped>

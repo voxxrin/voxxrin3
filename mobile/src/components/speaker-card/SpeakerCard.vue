@@ -5,27 +5,21 @@
       <div class="avatarContainer">
         <speaker-thumbnail size="64px" :is-highlighted="false" :speaker="speaker"></speaker-thumbnail>
         <div class="avatarInfos">
-          <ion-text class="avatarInfos-title">Name speaker</ion-text>
-          <ion-text class="avatarInfos-subTitle">
+          <ion-text class="avatarInfos-title">{{speaker.fullName}}</ion-text>
+          <ion-text class="avatarInfos-subTitle" v-if="speaker.companyName">
             <ion-icon :icon="businessSharp" aria-hidden="true"></ion-icon>
-            Company name
+            {{ speaker.companyName }}
           </ion-text>
         </div>
       </div>
     </div>
     <div class="speakerCard-content">
-      <!-- TODO #74 Display only mode full / hide mode compact -->
-      <ion-list class="talkResumeList" v-if="true">
-        <SpeakerResumeTalk></SpeakerResumeTalk>
-        <SpeakerResumeTalk></SpeakerResumeTalk>
+      <ion-list class="talkResumeList">
+        <SpeakerResumeTalk v-for="talk in speaker.talks" :talk="talk" :focused-speaker="speaker" :key="talk.id.value"></SpeakerResumeTalk>
       </ion-list>
-      <!-- TODO #74 Display only mode compact / hide mode full -->
-      <div class="bulletTagList" role="list" v-if="true">
+      <div class="bulletTagList" role="list" v-for="categoryCount in categoriesCount" :key="categoryCount.id">
         <div class="bulletTag" role="listitem">
-          <span class="bulletTag-nb">2</span>Conf.
-        </div>
-        <div class="bulletTag" role="listitem">
-          <span class="bulletTag-nb">1</span>TiA.
+          <span class="bulletTag-nb">{{categoryCount.count}}</span> {{categoryCount.categoryLabel}}
         </div>
       </div>
     </div>
@@ -38,22 +32,32 @@ import {typesafeI18n} from "@/i18n/i18n-vue";
 import {IonText, IonThumbnail} from "@ionic/vue";
 import {businessSharp} from "ionicons/icons";
 import SpeakerResumeTalk from "@/components/speaker-card/SpeakerResumeTalk.vue";
-import {SpeakerId, VoxxrinSimpleSpeaker} from "@/models/VoxxrinSpeaker";
+import {SpeakerId, VoxxrinLineupSpeaker, VoxxrinSimpleSpeaker} from "@/models/VoxxrinSpeaker";
 import SpeakerThumbnail from "@/components/speaker/SpeakerThumbnail.vue";
+import {computed, PropType, toValue} from "vue";
+import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 
 const { LL } = typesafeI18n()
+
+  const props = defineProps({
+    speaker: {
+      required: true,
+      type: Object as PropType<VoxxrinLineupSpeaker>
+    }
+  })
 
   defineEmits<{
     (e: 'speaker-clicked', speaker: VoxxrinSimpleSpeaker): void,
   }>()
 
-
-  const speaker: VoxxrinSimpleSpeaker = {
-    id: new SpeakerId('42'),
-    fullName: "Frédéric Camblor",
-    companyName: "4SH",
-    photoUrl: "https://lh3.googleusercontent.com/a/AAcHTtdsbTGnaxXmrzSi178m_qpxj9c-z12qoL7SLB6cjUSfZhaQ=s96-c",
-  }
+  const categoriesCount = computed(() => {
+    const talks = toValue(props.speaker).talks
+    return talks.reduce((categoriesCount, talk) => {
+      categoriesCount[talk.format.id.value] = categoriesCount[talk.format.id.value] || { id: talk.format.id.value, categoryLabel: talk.format.title, count: 0 }
+      categoriesCount[talk.format.id.value].count++;
+      return categoriesCount;
+    }, {} as Record<string, { id: string, categoryLabel: string, count: number }>)
+  })
 </script>
 
 <style lang="scss">
