@@ -68,17 +68,17 @@
               </ion-row>
             </div>
             <div class="feedback-content">
-              <div class="feedback-content-info" v-if="confDescriptorRef.features.ratings.scale.enabled">
+              <div class="feedback-content-info" v-if="confDescriptorRef.features.ratings.scale.enabled && talkFeedback.ratings['linear-rating'] !== undefined">
                 <label>{{LL.Linear_rating()}}</label> <strong>{{talkFeedback.ratings['linear-rating']}}</strong>
               </div>
-              <div class="feedback-content-info" v-if="confDescriptorRef.features.ratings.bingo.enabled">
+              <div class="feedback-content-info" v-if="confDescriptorRef.features.ratings.bingo.enabled && talkFeedback.ratings['bingo']?.length">
                 <label>{{LL.Bingo()}}</label> <strong>{{talkFeedback.ratings['bingo'].join(", ")}}</strong>
               </div>
-              <div class="feedback-content-info" v-if="confDescriptorRef.features.ratings['custom-scale'].enabled">
+              <div class="feedback-content-info" v-if="confDescriptorRef.features.ratings['custom-scale'].enabled && talkFeedback.ratings['custom-rating'] !== undefined">
                 <label>{{LL.Custom_rating()}}</label><strong>{{talkFeedback.ratings['custom-rating']}}</strong>
               </div>
-              <div class="feedback-content-info" v-if="false">
-                <label>{{LL.Free_comment}}</label><strong>{{talkFeedback.comment}}</strong>
+              <div class="feedback-content-info" v-if="confDescriptorRef.features.ratings['free-text'].enabled && talkFeedback.comment">
+                <label>{{LL.Free_comment()}}</label><strong><pre class="wrap">{{talkFeedback.comment}}</pre></strong>
               </div>
             </div>
           </ion-card>
@@ -93,37 +93,34 @@
 
 <script setup lang="ts">
 import {goBackOrNavigateTo} from "@/router";
-import {useIonRouter, IonProgressBar, IonCol, IonRow } from "@ionic/vue";
+import {IonCol, IonProgressBar, IonRow, useIonRouter} from "@ionic/vue";
 import {useTalkFeedbacks} from "@/state/useTalkFeedbacks";
 import {useRoute} from "vue-router";
-import {EventId} from "@/models/VoxxrinEvent";
-import {getRouteParamsValue} from "@/views/vue-utils";
+import {getRouteParamsValue, managedRef as ref} from "@/views/vue-utils";
 import {TalkId} from "@/models/VoxxrinTalk";
-import {
-  useConferenceDescriptor, useSharedConferenceDescriptor,
-} from "@/state/useConferenceDescriptor";
+import {useConferenceDescriptor, useSharedConferenceDescriptor,} from "@/state/useConferenceDescriptor";
 import {computed, toValue, unref} from "vue";
-import {managedRef as ref} from "@/views/vue-utils";
 import {numberArrayStats, sortBy} from "@/models/utils";
 import TalkDetailsHeader from "@/components/talk-details/TalkDetailsHeader.vue";
 import {useSharedEventTalk} from "@/state/useEventTalk";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import VoxDivider from "@/components/ui/VoxDivider.vue";
 import NoResults from "@/components/ui/NoResults.vue";
+import {useCurrentSpaceEventIdRef} from "@/services/Spaces";
 
 const ionRouter = useIonRouter();
 const route = useRoute();
-const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')));
+const spacedEventIdRef = useCurrentSpaceEventIdRef();
 const talkId = ref(new TalkId(getRouteParamsValue(route, 'talkId')));
 const secretFeedbacksViewerToken = ref(getRouteParamsValue(route, 'secretFeedbacksViewerToken'));
 
-const {conferenceDescriptor: confDescriptorRef} = useConferenceDescriptor(eventId);
-const {conferenceDescriptor: confDescriptor} = useSharedConferenceDescriptor(eventId);
+const {conferenceDescriptor: confDescriptorRef} = useConferenceDescriptor(spacedEventIdRef);
+const {conferenceDescriptor: confDescriptor} = useSharedConferenceDescriptor(spacedEventIdRef);
 const { talkDetails: detailedTalk } = useSharedEventTalk(confDescriptorRef, talkId);
 
 const { LL } = typesafeI18n()
 
-const {firestoreTalkFeedbacksByPublicUserIdRef} = useTalkFeedbacks(eventId, talkId, secretFeedbacksViewerToken);
+const {firestoreTalkFeedbacksByPublicUserIdRef} = useTalkFeedbacks(spacedEventIdRef, talkId, secretFeedbacksViewerToken);
 const displayableTalkFeedbacks = computed(() => {
     const firestoreTalkFeedbacksByPublicUserId = unref(firestoreTalkFeedbacksByPublicUserIdRef);
     const confDescriptor = unref(confDescriptorRef);
@@ -423,6 +420,11 @@ const talkFeedbacksStats = computed(() => {
       strong {
         flex: 1;
         text-align: left;
+      }
+
+      pre.wrap {
+        white-space: pre-wrap;
+        word-break: break-word;
       }
     }
   }

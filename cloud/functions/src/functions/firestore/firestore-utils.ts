@@ -10,6 +10,8 @@ import DocumentReference = firestore.DocumentReference;
 import {logPerf} from "../http/utils";
 import {TalkStats} from "../../../../../shared/event-stats";
 import * as express from "express";
+import {resolvedEventFirestorePath} from "../../../../../shared/utilities/event-utils";
+import {match, P} from "ts-pattern";
 
 export type EventFamilyToken = {
     families: string[],
@@ -29,30 +31,27 @@ export async function getSecretTokenDoc<T>(path: string) {
     return (await (await getSecretTokenRef(path)).get()).data() as T;
 }
 
+/**
+ * @deprecated this function is currently used only from deprecated functions, please avoid using it (or remove this deprecation notice)
+ */
 export async function getOrganizerSpaceByToken(
+   maybeSpaceToken: string|undefined,
    eventId: string,
-   tokenType: 'organizerSecretToken'|'familyToken',
+   tokenType: 'organizerSecretToken',
    secretToken: string
 ) {
-    const organizerSpace: ConferenceOrganizerSpace = await getSecretTokenDoc(`events/${eventId}/organizer-space`);
+    const organizerSpace: ConferenceOrganizerSpace = await getSecretTokenDoc(`${resolvedEventFirestorePath(eventId, maybeSpaceToken)}/organizer-space`);
 
     if(tokenType === 'organizerSecretToken' && organizerSpace.organizerSecretToken !== secretToken) {
         throw new Error(`Invalid organizer token for eventId=${eventId}: ${secretToken}`);
     }
 
-    if(tokenType === 'familyToken') {
-        const familyTokenValid = await checkEventFamilyTokenIsValid(eventId, secretToken);
-        if(!familyTokenValid) {
-            throw new Error(`Invalid family token for eventId=${eventId}: ${secretToken}`);
-        }
-    }
-
     return organizerSpace;
 }
 
-export async function ensureTalkFeedbackViewerTokenIsValidThenGetFeedbacks(eventId: string, talkId: string, talkViewerToken: string) {
+export async function ensureTalkFeedbackViewerTokenIsValidThenGetFeedbacks(maybeSpaceToken: string|undefined, eventId: string, talkId: string, talkViewerToken: string) {
     const feedbacksRefs = await db.collection(
-        `events/${eventId}/talks/${talkId}/feedbacks-access/${talkViewerToken}/feedbacks`
+        `${resolvedEventFirestorePath(eventId, maybeSpaceToken)}/talks/${talkId}/feedbacks-access/${talkViewerToken}/feedbacks`
     ).listDocuments()
 
     if(!feedbacksRefs) {
@@ -66,9 +65,9 @@ export async function ensureTalkFeedbackViewerTokenIsValidThenGetFeedbacks(event
     return feedbacks;
 }
 
-export async function eventTalkStatsFor(eventId: string): Promise<TalkStats[]> {
-    return logPerf(`eventTalkStatsFor(${eventId})`, async () => {
-        const eventTalkStatsPerTalkId = (await db.doc(`events/${eventId}/talksStats-allInOne/self`).get()).data() as Record<string, Omit<TalkStats, 'id'>>;
+export async function eventTalkStatsFor(maybeSpaceToken: string|undefined, eventId: string): Promise<TalkStats[]> {
+    return logPerf(`eventTalkStatsFor(${maybeSpaceToken}, ${eventId})`, async () => {
+        const eventTalkStatsPerTalkId = (await db.doc(`${resolvedEventFirestorePath(eventId, maybeSpaceToken)}/talksStats-allInOne/self`).get()).data() as Record<string, Omit<TalkStats, 'id'>>;
         return Object.entries(eventTalkStatsPerTalkId).map(([id, talkStats]) => ({
           id,
           ...talkStats
@@ -77,6 +76,7 @@ export async function eventTalkStatsFor(eventId: string): Promise<TalkStats[]> {
 }
 
 export async function eventLastUpdateRefreshed<T extends {[field in keyof T]: ISODatetime|null}>(
+    maybeSpaceToken: string|undefined,
     eventId: string, fields: Array<keyof T>,
     parentNodeToUpdate: (root: Partial<EventLastUpdates>) => ({ pathPrefix: string, parentNode: T }) = (root: Partial<EventLastUpdates>) => ({ pathPrefix: "", parentNode: root as T})
 ) {
@@ -94,8 +94,7 @@ export async function eventLastUpdateRefreshed<T extends {[field in keyof T]: IS
     }, [] as Array<{ path: string, value: ISODatetime }>)
 
     const existingLastUpdates = await db
-        .collection("events").doc(eventId)
-        .collection("last-updates").doc("self")
+        .doc(`${resolvedEventFirestorePath(eventId, maybeSpaceToken)}/last-updates/self`)
         .get();
 
     if(existingLastUpdates.exists) {
@@ -108,12 +107,11 @@ export async function eventLastUpdateRefreshed<T extends {[field in keyof T]: IS
 }
 
 export async function checkEventLastUpdate(
-    eventId: string, lastUpdateFieldExtractors: Array<(root: EventLastUpdates) => ISODatetime|undefined|null>,
+    maybeSpaceToken: string|undefined, eventId: string, lastUpdateFieldExtractors: Array<(root: EventLastUpdates) => ISODatetime|undefined|null>,
     request: express.Request, response: functions.Response
 ): Promise<{ cachedHash: string|undefined, updatesDetected: boolean }> {
     const eventLastUpdatesDoc = await db
-        .collection("events").doc(eventId)
-        .collection("last-updates").doc("self")
+        .doc(`${resolvedEventFirestorePath(eventId, maybeSpaceToken)}/last-updates/self`)
         .get();
 
     const eventLastUpdates = eventLastUpdatesDoc.data() as EventLastUpdates|undefined
@@ -133,17 +131,20 @@ export async function checkEventLastUpdate(
     return { cachedHash, updatesDetected: true };
 }
 
-export async function checkEventFamilyTokenIsValid(eventId: string, token: string) {
-    const listableEvent = (await db.collection("events").doc(eventId).get())?.data() as ListableEvent|undefined;
+export async function ensureDocPathExists(path: string, contentIfNotExist: object) {
+  const doc = await db.doc(path).get()
+  if(!doc.exists) {
+    await doc.ref.set(contentIfNotExist);
+  }
+}
 
-    if(!listableEvent || !listableEvent.eventFamily) {
-        return false;
-    }
+export async function ensureUserEventDocPathsExist(userId: string, maybeSpaceToken: string|undefined, eventId: string) {
+  const eventPath = `/users/${userId}/${resolvedEventFirestorePath(eventId, maybeSpaceToken)}`
 
-    const familyTokenSnapshots = await db.collection("event-family-tokens")
-        .where('families', 'array-contains', listableEvent.eventFamily)
-        .where("token", '==', token)
-        .get()
-
-    return !familyTokenSnapshots.empty;
+  await Promise.all([
+    match(maybeSpaceToken)
+      .with(P.nullish, () => Promise.resolve())
+      .otherwise((spaceToken) => ensureDocPathExists(`/users/${userId}/spaces/${spaceToken}`, { spaceToken })),
+    ensureDocPathExists(eventPath, { eventId }),
+  ])
 }

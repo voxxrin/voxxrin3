@@ -205,7 +205,8 @@ export const BDXIO_CRAWLER: CrawlerKind<typeof BDXIO_PARSER> = {
                     tags: Array.from<string>([])
                         .concat(levelLabel ? [levelLabel]:[])
                         .concat(roomId === 'Amphi A' ? ['Sous-Titrage' /* 'Closed Captions' */]:[]),
-                    isOverflow: false
+                    isOverflow: false,
+                    assets: []
                 };
 
                 return detailedTalk;
@@ -252,7 +253,8 @@ export const BDXIO_CRAWLER: CrawlerKind<typeof BDXIO_PARSER> = {
                     description: additionnalTalk.description,
                     summary: additionnalTalk.summary,
                     tags: [],
-                    isOverflow: false
+                    isOverflow: false,
+                    assets: []
                 };
 
                 return detailedTalk;
@@ -266,12 +268,12 @@ export const BDXIO_CRAWLER: CrawlerKind<typeof BDXIO_PARSER> = {
             title: descriptor.title,
             days: descriptor.days as Day[],
             headingTitle: descriptor.headingTitle,
+            headingBackground: descriptor.headingBackground,
             description: descriptor.description,
             keywords: descriptor.keywords,
             location: descriptor.location,
             logoUrl: descriptor.logoUrl,
             timezone: descriptor.timezone,
-            websiteUrl: descriptor.websiteUrl,
             peopleDescription: descriptor.peopleDescription || "",
             backgroundUrl: descriptor.backgroundUrl,
             theming: descriptor.theming as ConferenceDescriptor['theming'],
@@ -280,7 +282,11 @@ export const BDXIO_CRAWLER: CrawlerKind<typeof BDXIO_PARSER> = {
             talkFormats: descriptor.talkFormats as ConferenceDescriptor['talkFormats'],
             infos: descriptor.infos,
             features: descriptor.features,
-            supportedTalkLanguages: descriptor.supportedTalkLanguages
+            supportedTalkLanguages: descriptor.supportedTalkLanguages,
+            formattings: descriptor.formattings || {
+              talkFormatTitle: 'with-duration',
+              parseMarkdownOn: [],
+            },
         };
 
         const breakTimeSlots: BreakTimeSlot[] = descriptor.breaks
@@ -349,7 +355,6 @@ export const BDXIO_CRAWLER: CrawlerKind<typeof BDXIO_PARSER> = {
                 location: descriptor.location,
                 logoUrl: descriptor.logoUrl,
                 timezone: descriptor.timezone,
-                websiteUrl: descriptor.websiteUrl,
                 peopleDescription: descriptor.peopleDescription as any,
                 backgroundUrl: descriptor.backgroundUrl
             },

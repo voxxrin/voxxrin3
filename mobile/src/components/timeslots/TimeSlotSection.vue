@@ -14,7 +14,7 @@
 
 <script setup lang="ts">
 import {PropType} from "vue";
-import {managedRef as ref, toManagedRef as toRef} from "@/views/vue-utils";
+import {managedRef as ref} from "@/views/vue-utils";
 import {
   getTimeslotLabel,
   getTimeslotTimingProgress,
@@ -22,13 +22,8 @@ import {
   VoxxrinScheduleTimeSlot
 } from "@/models/VoxxrinSchedule";
 import {watchClock} from "@/state/useCurrentClock";
-import {
-    VoxxrinConferenceDescriptor
-} from "@/models/VoxxrinConferenceDescriptor";
+import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {typesafeI18n} from "@/i18n/i18n-vue";
-import {
-    useSharedConferenceDescriptor
-} from "@/state/useConferenceDescriptor";
 import SlotOverlaps from "@/components/schedule/SlotOverlaps.vue";
 
 const props = defineProps({
@@ -46,8 +41,6 @@ defineEmits<{
 }>()
 
 const { LL } = typesafeI18n()
-
-const { conferenceDescriptor } = useSharedConferenceDescriptor(toRef(() => props.confDescriptor?.id));
 
 const progress = ref<TimeslotTimingProgress>()
 watchClock({ freq: "high-frequency" }, (now) => {
@@ -72,7 +65,7 @@ const timeslotLabel = getTimeslotLabel(props.timeslot!);
     text-align: center;
     column-gap: 16px;
     height: 100%;
-    width: 64px;
+    width: 54px;
     padding: 16px 0 8px 0;
     border-bottom: 1px dashed var(--app-beige-line);
     border-right: 1px solid var(--app-beige-line);
@@ -89,7 +82,7 @@ const timeslotLabel = getTimeslotLabel(props.timeslot!);
       flex: 0 0 auto;
       margin: 2px 0;
       font-weight: bold;
-      font-size: 15px;
+      font-size: 13px;
       color:  var(--app-primary-dark);
     }
 
@@ -137,7 +130,7 @@ const timeslotLabel = getTimeslotLabel(props.timeslot!);
     .slotOverlap {
       position: absolute;
       top: 50%;
-      left: -4px;
+      left: -8px;
       white-space: nowrap;
       transform: translate(0, -50%) rotate(-90deg);
       border: 2px solid var(--voxxrin-event-theme-colors-secondary-hex);
@@ -146,7 +139,7 @@ const timeslotLabel = getTimeslotLabel(props.timeslot!);
 
   .slotSection-content {
     flex: 1;
-    padding: 0 0 0 64px;
+    padding: 0 0 0 54px;
     border-bottom: 1px dashed var(--app-beige-line);
   }
 

@@ -49,6 +49,11 @@ const validateRouteWith =
     };
 
 
+function specialParamHandling<T extends string>(params: any) {
+  // Put here some special query/path param transformation that would need to be applied
+  // on a general level
+}
+
 
 export const Routes = {
   post: function<
@@ -74,7 +79,9 @@ export const Routes = {
         debug(`POST ${route} [${stringifiedPathParams}]`)
 
         const pathParams = req.params as PATH_PARAMS;
+        specialParamHandling(pathParams);
         const queryParams = req.query as QUERY_PARAMS;
+        specialParamHandling(queryParams)
         const body = req.body as BODY;
 
         try {
@@ -113,7 +120,9 @@ export const Routes = {
         debug(`PUT ${route} [${stringifiedPathParams}]`)
 
         const pathParams = req.params as PATH_PARAMS;
+        specialParamHandling(pathParams);
         const queryParams = req.query as QUERY_PARAMS;
+        specialParamHandling(queryParams)
         const body = req.body as BODY;
 
         try {
@@ -151,7 +160,9 @@ export const Routes = {
         debug(`GET ${route} [${stringifiedPathParams}]`)
 
         const pathParams = req.params as PATH_PARAMS;
+        specialParamHandling(pathParams);
         const queryParams = req.query as QUERY_PARAMS;
+        specialParamHandling(queryParams)
 
         try {
           const accessGuardResult = await accessGuard(pathParams, queryParams) as ACCESS_GUARD_RETURNTYPE;
@@ -188,7 +199,9 @@ export const Routes = {
         debug(`DELETE ${route} [${stringifiedPathParams}]`)
 
         const pathParams = req.params as PATH_PARAMS;
+        specialParamHandling(pathParams);
         const queryParams = req.query as QUERY_PARAMS;
+        specialParamHandling(queryParams)
 
         try {
           const accessGuardResult = await accessGuard(pathParams, queryParams) as ACCESS_GUARD_RETURNTYPE;

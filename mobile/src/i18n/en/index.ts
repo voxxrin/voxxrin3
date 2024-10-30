@@ -74,7 +74,7 @@ const en = {
 	Select_for_feedback: "Select for feedback",
 	Rate_it: "Rate it",
 	Quick_feedback: "Quick Feedback",
-	Enter_some_constructive_feedback_for_the_speaker: "Enter some constructive for the speaker",
+	Enter_some_constructive_feedback_for_the_speaker: "Enter some constructive feedback for the speaker",
 	Submit_Feedback: "Submit Feedback",
 	Free_comment: "Free comment",
 	Skipped: "Skipped",
@@ -137,7 +137,10 @@ const en = {
   few_seconds_ago: "Few seconds ago",
   How_is_room_capacity_indicator_calculated: "How is Room Capacity indicator calculated ?",
   Organizers_are_regularly_sending_room_capacity_ratio: "Organizers are regularly sending reports on how full the room is",
-  On_flacky_connections_it_is_difficult_to_authenticate_the_user: "On flacky connections, authenticating the user can take time, leading to a long loading spinner. To workaround this, you can either Reload the page, or put your device completely offline, so that Firebase doesn't even try to update authenticated user's infos"
+  On_flacky_connections_it_is_difficult_to_authenticate_the_user: "On flacky connections, authenticating the user can take time, leading to a long loading spinner. To workaround this, you can either Reload the page, or put your device completely offline, so that Firebase doesn't even try to update authenticated user's infos",
+  Talk_Recording: "Talk record",
+  Double_tap_on_the_map_to_zoom_in : "Double-tap on the map to zoom in",
+  My_events : "My Events",
 } satisfies BaseTranslation
 
 export default en

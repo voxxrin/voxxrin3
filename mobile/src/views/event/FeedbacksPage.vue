@@ -45,7 +45,7 @@
                                    :conf-descriptor="confDescriptor"
                                    @talkClicked="toBeImplemented('To be implemented: opening feedback page in EDIT mode')">
                       <template #upper-right="{ talk }">
-                        <talk-format :format="talk.format" class="talkFormatContainer" />
+                        <talk-format :conf-descriptor="confDescriptor" :format="talk.format" class="talkFormatContainer" />
                       </template>
                       <template #footer-actions="{ talk }">
                         <linear-rating v-if="confDescriptor.features.ratings.scale.enabled" :config="confDescriptor.features.ratings.scale"
@@ -71,9 +71,7 @@
 
 <script setup lang="ts">
   import CurrentEventHeader from "@/components/events/CurrentEventHeader.vue";
-  import {EventId} from "@/models/VoxxrinEvent";
-  import {getRouteParamsValue, toBeImplemented} from "@/views/vue-utils";
-  import {useRoute} from "vue-router";
+  import {toBeImplemented} from "@/views/vue-utils";
   import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
   import {managedRef as ref} from "@/views/vue-utils";
   import {typesafeI18n} from "@/i18n/i18n-vue";
@@ -94,14 +92,14 @@
   import {computed, toValue} from "vue";
   import NoResults from "@/components/ui/NoResults.vue";
   import PoweredVoxxrin from "@/components/ui/PoweredVoxxrin.vue";
+  import {getResolvedEventRootPathFromSpacedEventIdRef, useCurrentSpaceEventIdRef} from "@/services/Spaces";
 
   const { LL } = typesafeI18n()
 
-  const route = useRoute();
-  const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')));
-  const {conferenceDescriptor: confDescriptor} = useSharedConferenceDescriptor(eventId);
+  const spacedEventIdRef = useCurrentSpaceEventIdRef();
+  const {conferenceDescriptor: confDescriptor} = useSharedConferenceDescriptor(spacedEventIdRef);
 
-  const {selectedDayId} = useSharedEventSelectedDay(eventId);
+  const {selectedDayId} = useSharedEventSelectedDay(spacedEventIdRef);
 
   const { schedule: currentSchedule } = useSchedule(confDescriptor, selectedDayId)
 
@@ -110,7 +108,7 @@
       return schedule ? extractTalksFromSchedule(schedule).map(talk => talk.id) : [];
   })
 
-  const {userEventTalkNotesRef} = useUserEventTalkNotes(eventId, talkIdsRef)
+  const {userEventTalkNotesRef} = useUserEventTalkNotes(spacedEventIdRef, talkIdsRef)
 
   const expandedTimeslotIds = ref<string[]>([])
   function toggleExpandedTimeslot(timeslot: VoxxrinScheduleTimeSlot) {
@@ -125,7 +123,7 @@
   const { triggerTabbedPageNavigate } = useTabbedPageNav();
 
   async function navigateToTimeslotFeedbackCreation(timeslot: VoxxrinScheduleTimeSlot) {
-      triggerTabbedPageNavigate(`/events/${eventId.value.value}/new-feedback-for-timeslot/${timeslot.id.value}`, "forward", "push");
+      triggerTabbedPageNavigate(`${getResolvedEventRootPathFromSpacedEventIdRef(spacedEventIdRef)}/new-feedback-for-timeslot/${timeslot.id.value}`, "forward", "push");
   }
 </script>
 

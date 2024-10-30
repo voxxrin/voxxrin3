@@ -1,9 +1,21 @@
 import {ListableEvent} from "./event-list.firestore";
-import {HexColor, SocialMediaType} from "./type-utils";
+import {HexColor, ISODatetime, ISOLocalDate, SocialMediaType} from "./type-utils";
 import {ThemedTalkFormat, ThemedTrack} from "./daily-schedule.firestore";
 
-export type ConferenceDescriptor = ListableEvent & {
+export type EventRecordingConfig = {
+  platform: 'youtube',
+  youtubeHandle: string,
+  recordedFormatIds?: string[]|undefined,
+  notRecordedFormatIds?: string[]|undefined,
+  recordedRoomIds?: string[]|undefined,
+  notRecordedRoomIds?: string[]|undefined,
+  ignoreVideosPublishedAfter?: ISOLocalDate|undefined,
+  excludeTitleWordsFromMatching?: string[]|undefined,
+}
+
+export type ConferenceDescriptor = Omit<ListableEvent, "websiteUrl"> & {
     headingTitle: string,
+    headingBackground: string|null;
     features: {
         roomsDisplayed: boolean,
         favoritesEnabled: boolean,
@@ -46,7 +58,8 @@ export type ConferenceDescriptor = ListableEvent & {
             minimumNumberOfRatingsToBeConsidered: number,
             minimumAverageScoreToBeConsidered?: number|undefined,
             numberOfDailyTopTalksConsidered: number
-        }|undefined
+        }|undefined,
+        recording?: EventRecordingConfig|undefined
     },
     talkFormats: Array<ThemedTalkFormat>,
     talkTracks: Array<ThemedTrack>,
@@ -65,5 +78,9 @@ export type ConferenceDescriptor = ListableEvent & {
                 name: string, logoUrl: string, href: string
             }>
         }>|undefined,
+    },
+    formattings: {
+      talkFormatTitle: 'with-duration'|'without-duration',
+      parseMarkdownOn: Array<'speaker-bio'|'talk-summary'>,
     },
 }

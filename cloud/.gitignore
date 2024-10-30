@@ -2,3 +2,4 @@
 *.iml
 hosting/public/
 .firebase*
+functions/.env.local

@@ -9,6 +9,7 @@ import {getFirestore as getFirestoreAsAdmin} from "firebase-admin/firestore";
 import * as fs from "fs";
 import { setDoc, doc, collection, getDocs, getDoc, updateDoc, deleteDoc } from "firebase/firestore";
 import {match, P} from "ts-pattern";
+import {eventFirestorePath, eventsFirestorePath} from "../../shared/utilities/event-utils";
 
 
 let testEnv: RulesTestEnvironment;
@@ -97,23 +98,6 @@ const FIREBASE_MANAGED_COLLECTIONS = [
       updatedData: () => ({id: 42})
     }]
   }, {
-    name: '/users/{userId}/events/{eventId}/__computed/self',
-    docInitializations: [{
-      name: 'alice',
-      collection: '/users/alice/events/an-event/__computed',
-      path: '/users/alice/events/an-event/__computed/self',
-      newDocPath: '/users/alice/events/an-event/__computed/other',
-      data: () => ({}),
-      updatedData: () => ({id:42})
-    }, {
-      name: 'fred',
-      collection: '/users/fred/events/an-event/__computed',
-      path: '/users/fred/events/an-event/__computed/self',
-      newDocPath: '/users/fred/events/an-event/__computed/other',
-      data: () => ({note: {isFavorite: true}}),
-      updatedData: () => ({note: {isFavorite: false}})
-    }]
-  }, {
     name: '/users/{userId}/events/{eventId}/talksNotes/{talkId}',
     docInitializations: [{
       name: 'alice',
@@ -165,14 +149,89 @@ const FIREBASE_MANAGED_COLLECTIONS = [
       updatedData: () => ({dayId: 'tuesday', feedbacks: []})
     }]
   }, {
-    name: '/event-family-tokens/{familyId}',
+    name: '/users/{userId}/spaces/{spaceId}',
     docInitializations: [{
-      name: 'default',
-      collection: '/event-family-tokens',
-      path: '/event-family-tokens/a-family',
-      newDocPath: '/event-family-tokens/another-family',
-      data: () => ({families: ['devoxx'], token: 'ffffffff-ffff-ffff-ffff-ffffffffffff'}),
-      updatedData: () => ({families: ['devoxx'], token: 'ffffffff-ffff-ffff-ffff-fffffffffff0'})
+      name: 'alice',
+      collection: '/users/alice/spaces',
+      path: '/users/alice/spaces/12345678-1234-5678-90ab-1234567890ab',
+      newDocPath: '/users/alice/spaces/87654321-4321-8765-ba09-ba0987654321',
+      data: () => ({}),
+      updatedData: () => ({id: 42})
+    }, {
+      name: 'fred',
+      collection: '/users/fred/spaces',
+      path: '/users/fred/spaces/12345678-1234-5678-90ab-1234567890ab',
+      newDocPath: '/users/fred/spaces/87654321-4321-8765-ba09-ba0987654321',
+      data: () => ({}),
+      updatedData: () => ({id: 42})
+    }]
+  }, {
+    name: '/users/{userId}/spaces/{spaceId}/events/{eventId}',
+    docInitializations: [{
+      name: 'alice',
+      collection: '/users/alice/spaces/12345678-1234-5678-90ab-1234567890ab/events',
+      path: '/users/alice/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event',
+      newDocPath: '/users/alice/spaces/12345678-1234-5678-90ab-1234567890ab/events/another-event',
+      data: () => ({}),
+      updatedData: () => ({id: 42})
+    }, {
+      name: 'fred',
+      collection: '/users/fred/spaces/12345678-1234-5678-90ab-1234567890ab/events',
+      path: '/users/fred/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event',
+      newDocPath: '/users/fred/spaces/12345678-1234-5678-90ab-1234567890ab/events/another-event',
+      data: () => ({}),
+      updatedData: () => ({id: 42})
+    }]
+  }, {
+    name: '/users/{userId}/spaces/{spaceId}/events/{eventId}/talksNotes/{talkId}',
+    docInitializations: [{
+      name: 'alice',
+      collection: '/users/alice/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/talksNotes',
+      path: '/users/alice/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/talksNotes/12345',
+      newDocPath: '/users/alice/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/talksNotes/54321',
+      data: () => ({note: {isFavorite: true}}),
+      updatedData: () => ({note: {isFavorite: false}})
+    }, {
+      name: 'fred',
+      collection: '/users/fred/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/talksNotes',
+      path: '/users/fred/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/talksNotes/12345',
+      newDocPath: '/users/fred/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/talksNotes/54321',
+      data: () => ({note: {isFavorite: true}}),
+      updatedData: () => ({note: {isFavorite: false}})
+    }]
+  }, {
+    name: '/users/{userId}/spaces/{spaceId}/events/{eventId}/days/{dayId}',
+    docInitializations: [{
+      name: 'alice',
+      collection: '/users/alice/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/days',
+      path: '/users/alice/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/days/monday',
+      newDocPath: '/users/alice/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/days/tuesday',
+      data: () => ({}),
+      updatedData: () => ({id:42})
+    }, {
+      name: 'fred',
+      collection: '/users/fred/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/days',
+      path: '/users/fred/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/days/monday',
+      newDocPath: '/users/fred/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/days/tuesday',
+      data: () => ({}),
+      updatedData: () => ({id:42})
+    }]
+  }, {
+    name: '/users/{userId}/spaces/{spaceId}/events/{eventId}/days/{dayId}/feedbacks/self',
+    docInitializations: [{
+      name: 'alice',
+      collection: '/users/alice/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/days/monday/feedbacks',
+      path: '/users/alice/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/days/monday/feedbacks/self',
+      newDocPath: '/users/alice/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/days/monday/feedbacks/other',
+      data: () => ({dayId: 'monday', feedbacks: []}),
+      updatedData: () => ({dayId: 'tuesday', feedbacks: []})
+    }, {
+      name: 'fred',
+      collection: '/users/fred/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/days/monday/feedbacks',
+      path: '/users/fred/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/days/monday/feedbacks/self',
+      newDocPath: '/users/fred/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/days/monday/feedbacks/other',
+      data: () => ({dayId: 'monday', feedbacks: []}),
+      updatedData: () => ({dayId: 'tuesday', feedbacks: []})
     }]
   }, {
     name: '/public-tokens/{tokenId}',
@@ -372,6 +431,170 @@ const FIREBASE_MANAGED_COLLECTIONS = [
       data: () => ({attendeePublicToken: 'ffffffff-ffff-ffff-ffff-ffffffffff00', talkId: '1234'}),
       updatedData: () => ({attendeePublicToken: 'ffffffff-ffff-ffff-ffff-ffffffffff01', talkId: '1234'})
     }]
+  }, {
+    name: '/spaces/{spaceId}',
+    docInitializations: [{
+      name: 'default',
+      collection: '/spaces',
+      path: '/spaces/12345678-1234-5678-90ab-1234567890ab',
+      newDocPath: '/spaces/87654321-4321-8765-ba09-ba0987654321',
+      data: () => ({id: '12345678-1234-5678-90ab-1234567890ab' }),
+      updatedData: () => ({id: '87654321-4321-8765-ba09-ba0987654321'})
+    }]
+  }, {
+    name: '/spaces/{spaceId}/events/{eventId}',
+    docInitializations: [{
+      name: 'default',
+      collection: '/spaces/12345678-1234-5678-90ab-1234567890ab/events',
+      path: '/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event',
+      newDocPath: '/spaces/12345678-1234-5678-90ab-1234567890ab/events/another-event',
+      data: () => ({title: `A super event`}),
+      updatedData: () => ({title: `A super super event`})
+    }]
+  }, {
+    name: '/spaces/{spaceId}/events/{eventId}/organizer-space/{secretSpaceId}',
+    docInitializations: [{
+      name: 'default',
+      collection: '/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/organizer-space',
+      path: '/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/organizer-space/ffffffff-ffff-ffff-ffff-ffffffffffff',
+      newDocPath: '/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/organizer-space/ffffffff-ffff-ffff-ffff-fffffffffff0',
+      data: () => ({organizerSecretToken: 'ffffffff-ffff-ffff-ffff-ffffffffffff'}),
+      updatedData: () => ({organizerSecretToken: 'ffffffff-ffff-ffff-ffff-fffffffffff0'})
+    }]
+  }, {
+    name: '/spaces/{spaceId}/events/{eventId}/organizer-space/{secretSpaceId}/ratings/{ratingId}',
+    docInitializations: [{
+      name: 'default',
+      collection: '/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/organizer-space/ffffffff-ffff-ffff-ffff-ffffffffffff/ratings',
+      path: '/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/organizer-space/ffffffff-ffff-ffff-ffff-ffffffffffff/ratings/12345',
+      newDocPath: '/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/organizer-space/ffffffff-ffff-ffff-ffff-ffffffffffff/ratings/54321',
+      data: () => ({}),
+      updatedData: () => ({id:42})
+    }]
+  }, {
+    name: '/spaces/{spaceId}/events/{eventId}/organizer-space/{secretSpaceId}/daily-ratings/{dayId}',
+    docInitializations: [{
+      name: 'default',
+      collection: '/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472/daily-ratings',
+      path: '/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472/daily-ratings/monday',
+      newDocPath: '/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472/daily-ratings/tuesday',
+      data: () => ({}),
+      updatedData: () => ({id:42})
+    }]
+  }, {
+    name: '/spaces/{spaceId}/events/{eventId}/days/{dayId}',
+    docInitializations: [{
+      name: 'default',
+      collection: '/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/days',
+      path: '/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/days/monday',
+      newDocPath: '/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/days/tuesday',
+      data: () => ({day: 'monday', timeSlots: []}),
+      updatedData: () => ({day: 'tuesday', timeSlots: []})
+    }]
+  }, {
+    name: '/spaces/{spaceId}/events/{eventId}/event-descriptor/self',
+    docInitializations: [{
+      name: 'default',
+      collection: '/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/event-descriptor',
+      path: '/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/event-descriptor/self',
+      newDocPath: '/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/event-descriptor/other',
+      data: () => ({title: `A super event`}),
+      updatedData: () => ({title: `A super super event`})
+    }]
+  }, {
+    name: '/spaces/{spaceId}/events/{eventId}/talksStats-allInOne/self',
+    docInitializations: [{
+      name: 'default',
+      collection: '/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/talksStats-allInOne',
+      path: '/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/talksStats-allInOne/self',
+      newDocPath: '/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/talksStats-allInOne/other',
+      data: () => ({"12345": {id: `12345`, totalFavoritesCount: 0}}),
+      updatedData: () => ({"54321": {id: `12345`, totalFavoritesCount: 0}})
+    }]
+  }, {
+    name: '/spaces/{spaceId}/events/{eventId}/talksStats/{talkId}',
+    docInitializations: [{
+      name: 'default',
+      collection: '/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/talksStats',
+      path: '/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/talksStats/12345',
+      newDocPath: '/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/talksStats/54321',
+      data: () => ({id: `12345`, totalFavoritesCount: 0}),
+      updatedData: () => ({id: `54321`, totalFavoritesCount: 0})
+    }]
+  }, {
+    name: '/spaces/{spaceId}/events/{eventId}/talksStats-slowPaced/{talkId}',
+    docInitializations: [{
+      name: 'default',
+      collection: '/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/talksStats-slowPaced',
+      path: '/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/talksStats-slowPaced/12345',
+      newDocPath: '/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/talksStats-slowPaced/54321',
+      data: () => ({id: `12345`, totalFavoritesCount: 0}),
+      updatedData: () => ({id: `54321`, totalFavoritesCount: 0})
+    }]
+  }, {
+    name: '/spaces/{spaceId}/events/{eventId}/roomsStats-allInOne/self',
+    docInitializations: [{
+      name: 'default',
+      collection: '/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/roomsStats-allInOne',
+      path: '/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/roomsStats-allInOne/self',
+      newDocPath: '/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/roomsStats-allInOne/other',
+      data: () => ({
+        "12345": {
+          roomId: `12345`,
+          capacityFillingRatio: 0,
+          recordedAt: "2024-03-28T11:58:10Z",
+          persistedAt: "2024-03-28T12:00:00Z"
+        }
+      }),
+      updatedData: () => ({
+        "54321": {
+          roomId: `54321`,
+          capacityFillingRatio: 0,
+          recordedAt: "2024-03-28T11:58:10Z",
+          persistedAt: "2024-03-28T12:00:00Z"
+        }
+      }),
+    }]
+  }, {
+    name: '/spaces/{spaceId}/events/{eventId}/last-updates/self',
+    docInitializations: [{
+      name: 'default',
+      collection: '/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/last-updates',
+      path: '/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/last-updates/self',
+      newDocPath: '/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/last-updates/other',
+      data: () => ({favorites: '2023-09-01T00:00:00Z'}),
+      updatedData: () => ({favorites: '2023-09-02T00:00:00Z'})
+    }]
+  }, {
+    name: '/spaces/{spaceId}/events/{eventId}/talks/{talkId}',
+    docInitializations: [{
+      name: 'default',
+      collection: '/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/talks',
+      path: '/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/talks/1234',
+      newDocPath: '/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/talks/4321',
+      data: () => ({id: '1234', title: 'A super talk'}),
+      updatedData: () => ({id: '4321', title: 'A super talk'})
+    }]
+  }, {
+    name: '/spaces/{spaceId}/events/{eventId}/talks/{talkId}/feedbacks-access/{secretFeedbackAccessToken}',
+    docInitializations: [{
+      name: 'default',
+      collection: '/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/talks/1234/feedbacks-access',
+      path: '/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/talks/1234/feedbacks-access/ffffffff-ffff-ffff-ffff-ffffffffffff',
+      newDocPath: '/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/talks/1234/feedbacks-access/ffffffff-ffff-ffff-ffff-fffffffffff0',
+      data: () => ({}),
+      updatedData: () => ({id: 42})
+    }]
+  }, {
+    name: '/spaces/{spaceId}/events/{eventId}/talks/{talkId}/feedbacks-access/{secretFeedbackAccessToken}/feedbacks/{userPublicToken}',
+    docInitializations: [{
+      name: 'default',
+      collection: '/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/talks/1234/feedbacks-access/ffffffff-ffff-ffff-ffff-ffffffffffff/feedbacks',
+      path: '/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/talks/1234/feedbacks-access/ffffffff-ffff-ffff-ffff-ffffffffffff/feedbacks/ffffffff-ffff-ffff-ffff-ffffffffff00',
+      newDocPath: '/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/talks/1234/feedbacks-access/ffffffff-ffff-ffff-ffff-ffffffffffff/feedbacks/ffffffff-ffff-ffff-ffff-ffffffffff01',
+      data: () => ({attendeePublicToken: 'ffffffff-ffff-ffff-ffff-ffffffffff00', talkId: '1234'}),
+      updatedData: () => ({attendeePublicToken: 'ffffffff-ffff-ffff-ffff-ffffffffff01', talkId: '1234'})
+    }]
   },
 ] as const;
 
@@ -400,6 +623,11 @@ const USER_CONTEXTS = [
     { name: "fred user", context: () => testEnv.authenticatedContext('fred') },
 ] as const;
 
+const SPACES = [
+  { name: "public", id: undefined, },
+  { name: "private", id: "12345678-1234-5678-90ab-1234567890ab", },
+] as const;
+
 type UserContext = typeof USER_CONTEXTS[number];
 
 type CollectionDescriptor = {
@@ -408,7 +636,8 @@ type CollectionDescriptor = {
         beforeEach: Array<Promise<any>>,
         afterEach: Array<Promise<any>>,
     },
-    tests: (userContext: UserContext) => void
+    tests: (userContext: UserContext) => void,
+    spaceId?: string|undefined,
 }
 
 type FirebaseAccessPermissionCheck = boolean|'check-skipped';
@@ -515,8 +744,9 @@ const COLLECTIONS: CollectionDescriptor[] = [{
     tests: (userContext: UserContext) => {
         ensureCollectionFollowAccessPermissions('/users/{userId}', userContext,
           {
-            list: false, createNew: false, delete: false, update: false,
-            get: userContext.name === 'fred user', createDoc: userContext.name === 'fred user'
+            list: false, delete: false,
+            get: userContext.name === 'fred user',
+            createDoc: 'check-skipped', createNew: 'check-skipped', update: 'check-skipped' // see below for specificities due to userLastConnection field
           }, 'fred')
 
         ensureCollectionFollowAccessPermissions('/users/{userId}', userContext,
@@ -525,28 +755,63 @@ const COLLECTIONS: CollectionDescriptor[] = [{
             get: false, createDoc: false
           }, 'alice')
 
+        const fredUserPath = () => doc(userContext.context().firestore(),
+          findManagedCollection('/users/{userId}').docInitializations.find(docInit => docInit.name === 'fred')!.path
+        );
+        const aliceUserPath = () => doc(userContext.context().firestore(),
+          findManagedCollection('/users/{userId}').docInitializations.find(docInit => docInit.name === 'alice')!.path
+        );
         if(userContext.name === 'fred user') {
-          it(`As ${userContext.name}, I should be able to only UPDATE userLastConnection field in my user's infos`, async () => {
-            await assertSucceeds(updateDoc(doc(userContext.context().firestore(),
-              findManagedCollection('/users/{userId}').docInitializations.find(docInit => docInit.name === 'fred')!.path
-            ), { userLastConnection: new Date().toISOString() }))
+          // Had to skip this test because on emulator firestore rules, onlyAllowedUpdatableFields() will not behave exactly
+          // like in prod (resource being undefined makes every resource-based calls return a non-boolean value ... spent hours to see if it was doable
+          // to check for undefined resource on emulator but never found any viable solution to make it work like in production firestore)
+          // I tested this case in real life though, and it's working:
+          // - Check that an already-authenticated session can update its userLastConnection field
+          // - Open an incognito window and check that a newly-created session has his whole /users/{userId} node created
+          // - Alter AuthenticatedUserContextProvider and try to add another field than only userLastConnection field and check that
+          //   both update and new-creation (in incognito session) are forbidden
+          it.skip(`As ${userContext.name}, I should be able to only CREATE userLastConnection field in *my user's* infos`, async () => {
+            await assertSucceeds(setDoc(fredUserPath(), { userLastConnection: new Date().toISOString() }))
           })
-          it(`As ${userContext.name}, I should be able to only UPDATE userLastConnection field in my user's infos`, async () => {
-            await assertFails(updateDoc(doc(userContext.context().firestore(),
-              findManagedCollection('/users/{userId}').docInitializations.find(docInit => docInit.name === 'alice')!.path
-            ), { userLastConnection: new Date().toISOString() }))
+          it(`As ${userContext.name}, I should *NOT* be able to only CREATE userLastConnection field in *another user's* infos`, async () => {
+            await assertFails(setDoc(aliceUserPath(), { userLastConnection: new Date().toISOString() }))
+          })
+
+          it(`As ${userContext.name}, I should *NOT* be able to CREATE other fields than userLastConnection field in *my user's* infos`, async () => {
+            await assertFails(setDoc(fredUserPath(), { userLastConnection: new Date().toISOString(), additionalField: "foo", }))
+          })
+          it(`As ${userContext.name}, I should *NOT* be able to CREATE other fields than userLastConnection field in *another user's* infos`, async () => {
+            await assertFails(setDoc(aliceUserPath(), { userLastConnection: new Date().toISOString(), additionalField: "foo", }))
+          })
+
+          it(`As ${userContext.name}, I should be able to only UPDATE userLastConnection field in *my user's* infos`, async () => {
+            await assertSucceeds(updateDoc(fredUserPath(), { userLastConnection: new Date().toISOString() }))
+          })
+          it(`As ${userContext.name}, I should *NOT* be able to only UPDATE userLastConnection field in *another user's* infos`, async () => {
+            await assertFails(updateDoc(aliceUserPath(), { userLastConnection: new Date().toISOString() }))
+          })
+
+          it(`As ${userContext.name}, I should *NOT* be able to UPDATE other fields than userLastConnection in *my user's* infos`, async () => {
+            await assertFails(updateDoc(fredUserPath(), { userLastConnection: new Date().toISOString(), additionalField: "foo", }))
+          })
+          it(`As ${userContext.name}, I should *NOT* be able to UPDATE other fields than userLastConnection in *another user's* infos`, async () => {
+            await assertFails(updateDoc(aliceUserPath(), { userLastConnection: new Date().toISOString(), additionalField: "foo", }))
           })
         } else {
-          it(`As ${userContext.name}, I should be able to only UPDATE userLastConnection field in my user's infos`, async () => {
-            await assertFails(updateDoc(doc(userContext.context().firestore(),
-              findManagedCollection('/users/{userId}').docInitializations.find(docInit => docInit.name === 'fred')!.path
-            ), { userLastConnection: new Date().toISOString() }))
+          it(`As ${userContext.name}, I should *NOT* be able to only CREATE userLastConnection field in *another user's* infos`, async () => {
+            await assertFails(setDoc(fredUserPath(), { userLastConnection: new Date().toISOString() }))
           })
-          it(`As ${userContext.name}, I should be able to only UPDATE userLastConnection field in my user's infos`, async () => {
-            await assertFails(updateDoc(doc(userContext.context().firestore(),
-              findManagedCollection('/users/{userId}').docInitializations.find(docInit => docInit.name === 'alice')!.path
-            ), { userLastConnection: new Date().toISOString() }))
+          it(`As ${userContext.name}, I should *NOT* be able to CREATE other fields than userLastConnection in *another user's* infos`, async () => {
+            await assertFails(setDoc(fredUserPath(), { userLastConnection: new Date().toISOString(), additionalField: "foo", }))
           })
+
+          it(`As ${userContext.name}, I should *NOT* be able to only UPDATE userLastConnection field in *another user's* infos`, async () => {
+            await assertFails(updateDoc(fredUserPath(), { userLastConnection: new Date().toISOString() }))
+          })
+          it(`As ${userContext.name}, I should *NOT* be able to UPDATE other fields than userLastConnection in *another user's* infos`, async () => {
+            await assertFails(updateDoc(fredUserPath(), { userLastConnection: new Date().toISOString(), additionalField: "foo", }))
+          })
+          // it(`test bidon`, () => {})
         }
     }
 }, {
@@ -563,9 +828,9 @@ const COLLECTIONS: CollectionDescriptor[] = [{
     tests: (userContext: UserContext) => {
       ensureCollectionFollowAccessPermissions('/users/{userId}/tokens-wallet/self', userContext,
         {
-          get: userContext.name === 'fred user', update: userContext.name === 'fred user',
-          createDoc: userContext.name === 'fred user',
-          list: false, delete: false, createNew: false,
+          get: userContext.name === 'fred user', update: false,
+          createDoc: false, delete: userContext.name === 'fred user',
+          list: false, createNew: false,
         }, 'fred')
 
       ensureCollectionFollowAccessPermissions('/users/{userId}/tokens-wallet/self', userContext,
@@ -599,7 +864,7 @@ const COLLECTIONS: CollectionDescriptor[] = [{
         }, 'alice')
     }
 }, {
-    name: "/users/{userId}/events",
+    name: "/users/{userId}/spaces",
     aroundTests: (userContext: UserContext) => match(userContext)
         .with({ name: "unauthenticated user" },  () => ({
             beforeEach: [],
@@ -610,7 +875,59 @@ const COLLECTIONS: CollectionDescriptor[] = [{
             afterEach: [],
         })).run(),
     tests: (userContext: UserContext) => {
-      ensureCollectionFollowAccessPermissions('/users/{userId}/events/{eventId}', userContext,
+      ensureCollectionFollowAccessPermissions('/users/{userId}/spaces/{spaceId}', userContext,
+        {
+          get: userContext.name === 'fred user', update: false,
+          createDoc: false,
+          list: userContext.name === 'fred user', delete: false, createNew: false,
+        }, 'fred')
+
+      ensureCollectionFollowAccessPermissions('/users/{userId}/spaces/{spaceId}', userContext,
+        {
+          get: false, update: false, createDoc: false,
+          list: false, delete: false, createNew: false,
+        }, 'alice')
+    }
+}, ...SPACES.flatMap(space => [
+  {
+    name: `/users/{userId}/${eventsFirestorePath(space.id)}`,
+    aroundTests: (userContext: UserContext) => match(userContext)
+      .with({ name: "unauthenticated user" },  () => ({
+        beforeEach: [],
+        afterEach: [],
+      }))
+      .with({ name: "fred user" },  () => ({
+        beforeEach: [],
+        afterEach: [],
+      })).run(),
+    tests: (userContext: UserContext) => {
+      ensureCollectionFollowAccessPermissions(`/users/{userId}/${eventFirestorePath(space.id)}`, userContext,
+        {
+          delete: false,
+          get: userContext.name === 'fred user', update: false,
+          list: userContext.name === 'fred user', createDoc: false,
+          createNew: false,
+        }, 'fred')
+
+      ensureCollectionFollowAccessPermissions(`/users/{userId}/${eventFirestorePath(space.id)}`, userContext,
+        {
+          delete: false,
+          get: false, update: false, list: false, createDoc: false, createNew: false,
+        }, 'alice')
+    }
+  }, {
+    name: `/users/{userId}/${eventFirestorePath(space.id)}/talksNotes`,
+    aroundTests: (userContext: UserContext) => match(userContext)
+      .with({ name: "unauthenticated user" },  () => ({
+        beforeEach: [],
+        afterEach: [],
+      }))
+      .with({ name: "fred user" },  () => ({
+        beforeEach: [],
+        afterEach: [],
+      })).run(),
+    tests: (userContext: UserContext) => {
+      ensureCollectionFollowAccessPermissions(`/users/{userId}/${eventFirestorePath(space.id)}/talksNotes/{talkId}`, userContext,
         {
           delete: false,
           get: userContext.name === 'fred user', update: userContext.name === 'fred user',
@@ -618,134 +935,73 @@ const COLLECTIONS: CollectionDescriptor[] = [{
           createNew: userContext.name === 'fred user',
         }, 'fred')
 
-      ensureCollectionFollowAccessPermissions('/users/{userId}/events/{eventId}', userContext,
+      ensureCollectionFollowAccessPermissions(`/users/{userId}/${eventFirestorePath(space.id)}/talksNotes/{talkId}`, userContext,
         {
           delete: false,
           get: false, update: false, list: false, createDoc: false, createNew: false,
         }, 'alice')
     }
-}, {
-  name: "/users/{userId}/events/{eventId}/__computed",
-  aroundTests: (userContext: UserContext) => match(userContext)
-    .with({ name: "unauthenticated user" },  () => ({
-      beforeEach: [],
-      afterEach: []
-    }))
-    .with({ name: "fred user" },  () => ({
-      beforeEach: [],
-      afterEach: []
-    })).run(),
-  tests: (userContext: UserContext) => {
-    ensureCollectionFollowAccessPermissions('/users/{userId}/events/{eventId}/__computed/self', userContext,
-      {
-        delete: false, list: false, update: false, createDoc: false, createNew: false,
-        get: userContext.name === 'fred user',
-      }, 'fred')
-
-    ensureCollectionFollowAccessPermissions('/users/{userId}/events/{eventId}/__computed/self', userContext,
-      {
-        delete: false, list: false, update: false, createDoc: false, createNew: false,
-        get: false
-      }, 'alice')
-  }
-}, {
-    name: "/users/{userId}/events/{eventId}/talksNotes",
+  }, {
+    name: `/users/{userId}/${eventFirestorePath(space.id)}/days`,
     aroundTests: (userContext: UserContext) => match(userContext)
-        .with({ name: "unauthenticated user" },  () => ({
-            beforeEach: [],
-            afterEach: [],
-        }))
-        .with({ name: "fred user" },  () => ({
-            beforeEach: [],
-            afterEach: [],
-        })).run(),
+      .with({ name: "unauthenticated user" },  () => ({
+        beforeEach: [
+        ],
+        afterEach: [
+        ]
+      }))
+      .with({ name: "fred user" },  () => ({
+        beforeEach: [
+        ],
+        afterEach: [
+        ]
+      })).run(),
     tests: (userContext: UserContext) => {
-      ensureCollectionFollowAccessPermissions('/users/{userId}/events/{eventId}/talksNotes/{talkId}', userContext,
+      ensureCollectionFollowAccessPermissions(`/users/{userId}/${eventFirestorePath(space.id)}/days/{dayId}`, userContext,
         {
           delete: false,
-          get: userContext.name === 'fred user', update: userContext.name === 'fred user',
-          list: userContext.name === 'fred user', createDoc: userContext.name === 'fred user',
-          createNew: userContext.name === 'fred user',
+          get: userContext.name === 'fred user', update: false,
+          list: userContext.name === 'fred user', createDoc: false,
+          createNew: false,
         }, 'fred')
 
-      ensureCollectionFollowAccessPermissions('/users/{userId}/events/{eventId}/talksNotes/{talkId}', userContext,
+      ensureCollectionFollowAccessPermissions(`/users/{userId}/${eventFirestorePath(space.id)}/days/{dayId}`, userContext,
         {
           delete: false,
           get: false, update: false, list: false, createDoc: false, createNew: false,
         }, 'alice')
     }
-}, {
-    name: "/users/{userId}/events/{eventId}/days",
+  }, {
+    name: `/users/{userId}/${eventFirestorePath(space.id)}/days/{dayId}/feedbacks`,
     aroundTests: (userContext: UserContext) => match(userContext)
-        .with({ name: "unauthenticated user" },  () => ({
-            beforeEach: [
-            ],
-            afterEach: [
-            ]
-        }))
-        .with({ name: "fred user" },  () => ({
-            beforeEach: [
-            ],
-            afterEach: [
-            ]
-        })).run(),
+      .with({ name: "unauthenticated user" },  () => ({
+        beforeEach: [
+        ],
+        afterEach: [
+        ]
+      }))
+      .with({ name: "fred user" },  () => ({
+        beforeEach: [
+        ],
+        afterEach: [
+        ]
+      })).run(),
     tests: (userContext: UserContext) => {
-      ensureCollectionFollowAccessPermissions('/users/{userId}/events/{eventId}/days/{dayId}', userContext,
-        {
-          delete: false,
-          get: userContext.name === 'fred user', update: userContext.name === 'fred user',
-          list: userContext.name === 'fred user', createDoc: userContext.name === 'fred user',
-          createNew: userContext.name === 'fred user',
-        }, 'fred')
-
-      ensureCollectionFollowAccessPermissions('/users/{userId}/events/{eventId}/days/{dayId}', userContext,
-        {
-          delete: false,
-          get: false, update: false, list: false, createDoc: false, createNew: false,
-        }, 'alice')
-    }
-}, {
-    name: "/users/{userId}/events/{eventId}/days/{dayId}/feedbacks",
-    aroundTests: (userContext: UserContext) => match(userContext)
-        .with({ name: "unauthenticated user" },  () => ({
-            beforeEach: [
-            ],
-            afterEach: [
-            ]
-        }))
-        .with({ name: "fred user" },  () => ({
-            beforeEach: [
-            ],
-            afterEach: [
-            ]
-        })).run(),
-    tests: (userContext: UserContext) => {
-      ensureCollectionFollowAccessPermissions('/users/{userId}/events/{eventId}/days/{dayId}/feedbacks/self', userContext,
+      ensureCollectionFollowAccessPermissions(`/users/{userId}/${eventFirestorePath(space.id)}/days/{dayId}/feedbacks/self`, userContext,
         {
           delete: false, list: false, createNew: false,
           get: userContext.name === 'fred user', update: userContext.name === 'fred user',
           createDoc: userContext.name === 'fred user',
         }, 'fred')
 
-      ensureCollectionFollowAccessPermissions('/users/{userId}/events/{eventId}/days/{dayId}/feedbacks/self', userContext,
+      ensureCollectionFollowAccessPermissions(`/users/{userId}/${eventFirestorePath(space.id)}/days/{dayId}/feedbacks/self`, userContext,
         {
           delete: false, list: false, createNew: false,
           get: false, update: false, createDoc: false,
         }, 'alice')
     }
-}, {
-    name: "/event-family-tokens",
-    aroundTests: (_: UserContext) => ({
-        beforeEach: [],
-        afterEach: [],
-    }),
-    tests: (userContext: UserContext) => {
-      ensureCollectionFollowAccessPermissions('/event-family-tokens/{familyId}', userContext,
-        {
-          read: false, write: false
-        })
-    }
-}, {
+  }
+]), {
     name: "/public-tokens",
     aroundTests: (_: UserContext) => ({
         beforeEach: [],
@@ -795,184 +1051,212 @@ const COLLECTIONS: CollectionDescriptor[] = [{
         })
     }
 }, {
-    name: "/events",
+    name: "/spaces",
     aroundTests: (_: UserContext) => ({
         beforeEach: [],
         afterEach: [],
     }),
     tests: (userContext: UserContext) => {
-      ensureCollectionFollowAccessPermissions('/events/{eventId}', userContext,
+      ensureCollectionFollowAccessPermissions('/spaces/{spaceId}', userContext,
+        {
+          get: true, list: false, write: false,
+        })
+    }
+}, ...SPACES.flatMap(space => [
+  {
+    name: `/${eventsFirestorePath(space.id)}`,
+    aroundTests: (_: UserContext) => ({
+      beforeEach: [],
+      afterEach: [],
+    }),
+    tests: (userContext: UserContext) => {
+      ensureCollectionFollowAccessPermissions(`/${eventFirestorePath(space.id)}`, userContext,
         {
           read: true, write: false
         })
-    }
-}, {
-    name: "/events/{eventId}/days",
+    },
+    spaceId: space.id,
+  }, {
+    name: `/${eventFirestorePath(space.id)}/days`,
     aroundTests: (_: UserContext) => ({
-        beforeEach: [],
-        afterEach: [],
+      beforeEach: [],
+      afterEach: [],
     }),
     tests: (userContext: UserContext) => {
-      ensureCollectionFollowAccessPermissions('/events/{eventId}/days/{dayId}', userContext,
+      ensureCollectionFollowAccessPermissions(`/${eventFirestorePath(space.id)}/days/{dayId}`, userContext,
         {
           read: true, write: false
         })
-    }
-}, {
-    name: "/events/{eventId}/event-descriptor",
+    },
+    spaceId: space.id,
+  }, {
+    name: `/${eventFirestorePath(space.id)}/event-descriptor`,
     aroundTests: (_: UserContext) => ({
-        beforeEach: [],
-        afterEach: [],
+      beforeEach: [],
+      afterEach: [],
     }),
     tests: (userContext: UserContext) => {
-      ensureCollectionFollowAccessPermissions('/events/{eventId}/event-descriptor/self', userContext,
+      ensureCollectionFollowAccessPermissions(`/${eventFirestorePath(space.id)}/event-descriptor/self`, userContext,
         {
           get: true,
           list: false, write: false
         })
-    }
-}, {
-    name: "/events/{eventId}/talksStats",
+    },
+    spaceId: space.id,
+  }, {
+    name: `/${eventFirestorePath(space.id)}/talksStats`,
     aroundTests: (_: UserContext) => ({
-        beforeEach: [],
-        afterEach: [],
+      beforeEach: [],
+      afterEach: [],
     }),
     tests: (userContext: UserContext) => {
-      ensureCollectionFollowAccessPermissions('/events/{eventId}/talks/{talkId}', userContext,
+      ensureCollectionFollowAccessPermissions(`/${eventFirestorePath(space.id)}/talks/{talkId}`, userContext,
         {
           read: true, write: false
         })
-    }
-}, {
-    name: "/events/{eventId}/talksStats-slowPaced",
+    },
+    spaceId: space.id,
+  }, {
+    name: `/${eventFirestorePath(space.id)}/talksStats-slowPaced`,
     aroundTests: (_: UserContext) => ({
-        beforeEach: [],
-        afterEach: [],
+      beforeEach: [],
+      afterEach: [],
     }),
     tests: (userContext: UserContext) => {
-      ensureCollectionFollowAccessPermissions('/events/{eventId}/talksStats-slowPaced/{talkId}', userContext,
+      ensureCollectionFollowAccessPermissions(`/${eventFirestorePath(space.id)}/talksStats-slowPaced/{talkId}`, userContext,
         {
           read: true, write: false
         })
-    }
-}, {
-    name: "/events/{eventId}/talksStats-allInOne",
+    },
+    spaceId: space.id,
+  }, {
+    name: `/${eventFirestorePath(space.id)}/talksStats-allInOne`,
     aroundTests: (_: UserContext) => ({
-        beforeEach: [],
-        afterEach: [],
+      beforeEach: [],
+      afterEach: [],
     }),
     tests: (userContext: UserContext) => {
-      ensureCollectionFollowAccessPermissions('/events/{eventId}/talksStats-allInOne/self', userContext,
+      ensureCollectionFollowAccessPermissions(`/${eventFirestorePath(space.id)}/talksStats-allInOne/self`, userContext,
         {
           get: true,
           list: false, write: false
         })
-    }
-}, {
-    name: "/events/{eventId}/roomsStats-allInOne",
+    },
+    spaceId: space.id,
+  }, {
+    name: `/${eventFirestorePath(space.id)}/roomsStats-allInOne`,
     aroundTests: (_: UserContext) => ({
-        beforeEach: [],
-        afterEach: [],
+      beforeEach: [],
+      afterEach: [],
     }),
     tests: (userContext: UserContext) => {
-      ensureCollectionFollowAccessPermissions('/events/{eventId}/roomsStats-allInOne/self', userContext,
+      ensureCollectionFollowAccessPermissions(`/${eventFirestorePath(space.id)}/roomsStats-allInOne/self`, userContext,
         {
           get: true,
           list: false, write: false
         })
-    }
-}, {
-    name: "/events/{eventId}/organizer-space",
+    },
+    spaceId: space.id,
+  }, {
+    name: `/${eventFirestorePath(space.id)}/organizer-space`,
     aroundTests: (_: UserContext) => ({
-        beforeEach: [],
-        afterEach: [],
+      beforeEach: [],
+      afterEach: [],
     }),
     tests: (userContext: UserContext) => {
-      ensureCollectionFollowAccessPermissions('/events/{eventId}/organizer-space/{secretSpaceId}', userContext,
+      ensureCollectionFollowAccessPermissions(`/${eventFirestorePath(space.id)}/organizer-space/{secretSpaceId}`, userContext,
         {
           get: true,
           list: false, write: false
         })
-    }
-}, {
-    name: "/events/{eventId}/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472/ratings",
+    },
+    spaceId: space.id,
+  }, {
+    name: `/${eventFirestorePath(space.id)}/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472/ratings`,
     aroundTests: (_: UserContext) => ({
-        beforeEach: [],
-        afterEach: [],
+      beforeEach: [],
+      afterEach: [],
     }),
     tests: (userContext: UserContext) => {
-      ensureCollectionFollowAccessPermissions('/events/{eventId}/organizer-space/{secretSpaceId}/ratings/{ratingId}', userContext,
+      ensureCollectionFollowAccessPermissions(`/${eventFirestorePath(space.id)}/organizer-space/{secretSpaceId}/ratings/{ratingId}`, userContext,
         {
           read: false, write: false
         })
-    }
-}, {
-    name: "/events/{eventId}/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472/daily-ratings",
+    },
+    spaceId: space.id,
+  }, {
+    name: `/${eventFirestorePath(space.id)}/organizer-space/6c902c52-9c6d-4d54-b6f2-20814d2f8472/daily-ratings`,
     aroundTests: (_: UserContext) => ({
-        beforeEach: [],
-        afterEach: [],
+      beforeEach: [],
+      afterEach: [],
     }),
     tests: (userContext: UserContext) => {
-      ensureCollectionFollowAccessPermissions('/events/{eventId}/organizer-space/{secretSpaceId}/daily-ratings/{dayId}', userContext,
+      ensureCollectionFollowAccessPermissions(`/${eventFirestorePath(space.id)}/organizer-space/{secretSpaceId}/daily-ratings/{dayId}`, userContext,
         {
           read: false, write: false
         })
-    }
-}, {
-    name: "/events/{eventId}/last-updates",
+    },
+    spaceId: space.id,
+  }, {
+    name: `/${eventFirestorePath(space.id)}/last-updates`,
     aroundTests: (_: UserContext) => ({
-        beforeEach: [],
-        afterEach: [],
+      beforeEach: [],
+      afterEach: [],
     }),
     tests: (userContext: UserContext) => {
-      ensureCollectionFollowAccessPermissions('/events/{eventId}/last-updates/self', userContext,
+      ensureCollectionFollowAccessPermissions(`/${eventFirestorePath(space.id)}/last-updates/self`, userContext,
         {
           get: true,
           list: false, write: false
         })
-    }
-}, {
-    name: "/events/{eventId}/talks",
+    },
+    spaceId: space.id,
+  }, {
+    name: `/${eventFirestorePath(space.id)}/talks`,
     aroundTests: (_: UserContext) => ({
-        beforeEach: [],
-        afterEach: [],
+      beforeEach: [],
+      afterEach: [],
     }),
     tests: (userContext: UserContext) => {
-      ensureCollectionFollowAccessPermissions('/events/{eventId}/talks/{talkId}', userContext,
+      ensureCollectionFollowAccessPermissions(`/${eventFirestorePath(space.id)}/talks/{talkId}`, userContext,
         {
           read: true, write: false
         })
-    }
-}, {
-    name: "/events/{eventId}/talks/{talkId}/feedbacks-access",
+    },
+    spaceId: space.id,
+  }, {
+    name: `/${eventFirestorePath(space.id)}/talks/{talkId}/feedbacks-access`,
     aroundTests: (_: UserContext) => ({
-        beforeEach: [],
-        afterEach: [],
+      beforeEach: [],
+      afterEach: [],
     }),
     tests: (userContext: UserContext) => {
-      ensureCollectionFollowAccessPermissions('/events/{eventId}/talks/{talkId}/feedbacks-access/{secretFeedbackAccessToken}', userContext,
+      ensureCollectionFollowAccessPermissions(`/${eventFirestorePath(space.id)}/talks/{talkId}/feedbacks-access/{secretFeedbackAccessToken}`, userContext,
         {
           get: true,
           list: false, write: false
         })
-    }
-}, {
-    name: "/events/{eventId}/talks/{talkId}/feedbacks-access/{secretFeedbackViewerToken}/feedbacks",
+    },
+    spaceId: space.id,
+  }, {
+    name: `/${eventFirestorePath(space.id)}/talks/{talkId}/feedbacks-access/{secretFeedbackViewerToken}/feedbacks`,
     aroundTests: (_: UserContext) => ({
-        beforeEach: [],
-        afterEach: [],
+      beforeEach: [],
+      afterEach: [],
     }),
     tests: (userContext: UserContext) => {
-      ensureCollectionFollowAccessPermissions('/events/{eventId}/talks/{talkId}/feedbacks-access/{secretFeedbackAccessToken}/feedbacks/{userPublicToken}', userContext,
+      ensureCollectionFollowAccessPermissions(`/${eventFirestorePath(space.id)}/talks/{talkId}/feedbacks-access/{secretFeedbackAccessToken}/feedbacks/{userPublicToken}`, userContext,
         {
           read: true, write: false
         })
-    }
-}];
+    },
+    spaceId: space.id,
+  }] as const),
+];
 
 COLLECTIONS.forEach(collectionContext => {
     USER_CONTEXTS.forEach((userContext) => {
-        describe(`${collectionContext.name} collection - as ${userContext.name}`, () => {
+        describe(`${collectionContext.name} collection - as ${userContext.name}${collectionContext.spaceId?` (space: ${collectionContext.spaceId})`:''}`, () => {
             beforeEach(async () => await Promise.all(collectionContext.aroundTests(userContext).beforeEach))
             afterEach(async () => await Promise.all(collectionContext.aroundTests(userContext).afterEach))
 

@@ -5,14 +5,15 @@ import {
     TalksTimeSlot
 } from "../../../../../../shared/daily-schedule.firestore";
 import {ISODatetime} from "../../../../../../shared/type-utils";
+import {resolvedEventFirestorePath} from "../../../../../../shared/utilities/event-utils";
 
 
 export type TimeslottedTalk = Talk & {start: ISODatetime, end: ISODatetime};
 
-export async function getTimeslottedTalks(eventId: string): Promise<TimeslottedTalk[]> {
-    const days = await db.collection(`events/${eventId}/days`).listDocuments()
+export async function getTimeslottedTalks(spaceToken: string|undefined, eventId: string): Promise<TimeslottedTalk[]> {
+    const days = await db.collection(`${resolvedEventFirestorePath(eventId, spaceToken)}/days`).listDocuments()
     const dailySchedules = await Promise.all(days.map(async dayRef => {
-        const dailySchedule = (await db.doc(`events/${eventId}/days/${dayRef.id}`).get()).data() as DailySchedule
+        const dailySchedule = (await db.doc(`${resolvedEventFirestorePath(eventId, spaceToken)}/days/${dayRef.id}`).get()).data() as DailySchedule
         return dailySchedule;
     }))
 

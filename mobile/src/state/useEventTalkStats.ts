@@ -1,21 +1,14 @@
-import {EventId} from "@/models/VoxxrinEvent";
+import {SpacedEventId, stringifySpacedEventId} from "@/models/VoxxrinEvent";
 import {DayId} from "@/models/VoxxrinDay";
 import {TalkId, VoxxrinTalk} from "@/models/VoxxrinTalk";
-import {computed, Ref, toValue, unref, watch, watchEffect} from "vue";
+import {computed, Ref, toValue, unref, watch} from "vue";
 import {
-    deferredVuefireUseCollection,
-    deferredVuefireUseDocument,
-    managedRef as ref, MAX_NUMBER_OF_PARAMS_IN_FIREBASE_IN_CLAUSES,
+  deferredVuefireUseCollection,
+  deferredVuefireUseDocument,
+  managedRef as ref,
+  MAX_NUMBER_OF_PARAMS_IN_FIREBASE_IN_CLAUSES,
 } from "@/views/vue-utils";
-import {
-    collection,
-    CollectionReference,
-    doc,
-    DocumentReference,
-    getDoc,
-    query,
-    where,
-} from "firebase/firestore";
+import {collection, CollectionReference, doc, DocumentReference, getDoc, query, where,} from "firebase/firestore";
 import {db} from "@/state/firebase";
 import {createVoxxrinTalkStatsFromFirestore} from "@/models/VoxxrinTalkStats";
 import {PERF_LOGGER} from "@/services/Logger";
@@ -25,15 +18,17 @@ import {CompletablePromiseQueue, partitionArray, toValueObjectValues} from "@/mo
 import {match} from "ts-pattern";
 import {TalkStats} from "../../../shared/event-stats";
 import {useLocalEventTalkFavsStorage} from "@/state/useUserTalkNotes";
+import {resolvedEventFirestorePath} from "../../../shared/utilities/event-utils";
 
-function getTalksStatsRef(eventId: EventId|undefined, talkId: TalkId|undefined) {
-    if(!eventId || !eventId.value || !talkId || !talkId.value) {
+function getTalksStatsRef(spacedEventId: SpacedEventId|undefined, talkId: TalkId|undefined) {
+    if(!spacedEventId || !spacedEventId.eventId || !spacedEventId.eventId.value || !talkId || !talkId.value) {
         return undefined;
     }
 
-    return doc(collection(doc(collection(db,
-            'events'), eventId.value),
-        'talksStats-slowPaced'), talkId.value) as DocumentReference<TalkStats>;
+    return doc(
+      db,
+      `${resolvedEventFirestorePath(spacedEventId.eventId.value, spacedEventId.spaceToken?.value)}/talksStats-slowPaced/${talkId.value}`
+    ) as DocumentReference<TalkStats>;
 }
 
 /**
@@ -42,13 +37,13 @@ function getTalksStatsRef(eventId: EventId|undefined, talkId: TalkId|undefined) 
  * @param eventIdRef
  * @param talkIdRef
  */
-export function useTalkStats(eventIdRef: Ref<EventId | undefined>,
+export function useTalkStats(spacedEventIdRef: Ref<SpacedEventId | undefined>,
            talkIdRef: Ref<TalkId | undefined>) {
 
-    PERF_LOGGER.debug(() => `useTalkStats(${unref(eventIdRef)?.value}, ${unref(talkIdRef)?.value})`)
+    PERF_LOGGER.debug(() => `useTalkStats(${stringifySpacedEventId(unref(spacedEventIdRef))}, ${unref(talkIdRef)?.value})`)
 
-    const firestoreTalkStatsRef = deferredVuefireUseDocument([eventIdRef, talkIdRef],
-        ([eventId, talkId]) => getTalksStatsRef(eventId, talkId),
+    const firestoreTalkStatsRef = deferredVuefireUseDocument([spacedEventIdRef, talkIdRef],
+        ([spacedEventId, talkId]) => getTalksStatsRef(spacedEventId, talkId),
     );
 
     // This ref is used to store an increment/decrement of the total number of votes *in memory*
@@ -62,7 +57,7 @@ export function useTalkStats(eventIdRef: Ref<EventId | undefined>,
     const inMemoryDeltaUntilFirestoreRefreshRef = ref(0);
     watch(firestoreTalkStatsRef, (newVal, oldVal) => {
         if(newVal !== oldVal && newVal?.id !== oldVal?.id) {
-            PERF_LOGGER.debug(() => `useTalkStats(${unref(eventIdRef)?.value}, ${unref(talkIdRef)?.value})[firestoreTalkStatsRef] updated from [${oldVal?.id}] to [${newVal?.id}]`)
+            PERF_LOGGER.debug(() => `useTalkStats(${stringifySpacedEventId(unref(spacedEventIdRef))}, ${unref(talkIdRef)?.value})[firestoreTalkStatsRef] updated from [${oldVal?.id}] to [${newVal?.id}]`)
         }
 
         // Resetting local delta everytime we receive a firestore refresh
@@ -102,26 +97,25 @@ export function useTalkStats(eventIdRef: Ref<EventId | undefined>,
     };
 }
 
-function getEventTalkStatsSources(eventId: EventId|undefined, talkIds: TalkId[]|undefined) {
-    if(!eventId || !eventId.value || !talkIds || !talkIds.filter(id => id && id.value).length) {
+function getEventTalkStatsSources(spacedEventId: SpacedEventId|undefined, talkIds: TalkId[]|undefined) {
+    if(!spacedEventId || !spacedEventId.eventId || !spacedEventId.eventId.value || !talkIds || !talkIds.filter(id => id && id.value).length) {
         return undefined;
     }
 
     return partitionArray(talkIds, MAX_NUMBER_OF_PARAMS_IN_FIREBASE_IN_CLAUSES).map(partitionnedTalkIds =>
-        query(collection(doc(collection(db,
-                'events'), eventId.value),
-            'talksStats-slowPaced'), where("id", 'in', toValueObjectValues(partitionnedTalkIds))
+        query(collection(db, `${resolvedEventFirestorePath(spacedEventId.eventId.value, spacedEventId.spaceToken?.value)}/talksStats-slowPaced`),
+          where("id", 'in', toValueObjectValues(partitionnedTalkIds))
         ) as CollectionReference<TalkStats>
     );
 }
 
-export function useEventTalkStats(eventIdRef: Ref<EventId>, talkIdsRef: Ref<TalkId[]|undefined>) {
-    PERF_LOGGER.debug(() => `useEventTalkStats(eventId=${toValue(eventIdRef)?.value}, talkIds=${toValueObjectValues(toValue(talkIdsRef))})`)
+export function useEventTalkStats(spacedEventIdRef: Ref<SpacedEventId>, talkIdsRef: Ref<TalkId[]|undefined>) {
+    PERF_LOGGER.debug(() => `useEventTalkStats(eventId=${stringifySpacedEventId(toValue(spacedEventIdRef))}, talkIds=${toValueObjectValues(toValue(talkIdsRef))})`)
 
-    const localEventTalkFavsRef = useLocalEventTalkFavsStorage(eventIdRef)
+    const localEventTalkFavsRef = useLocalEventTalkFavsStorage(spacedEventIdRef)
 
-    const firestoreEventTalkStatsRef = deferredVuefireUseCollection([eventIdRef, talkIdsRef],
-        ([eventId, talkIds]) => getEventTalkStatsSources(eventId, talkIds),
+    const firestoreEventTalkStatsRef = deferredVuefireUseCollection([spacedEventIdRef, talkIdsRef],
+        ([spacedEventId, talkIds]) => getEventTalkStatsSources(spacedEventId, talkIds),
         firestoreData => firestoreData,
         (eventTalkStatsRef, eventId, talkIds) => {
             eventTalkStatsRef.value.clear();
@@ -161,17 +155,17 @@ export function useEventTalkStats(eventIdRef: Ref<EventId>, talkIdsRef: Ref<Talk
 
 
 export async function prepareTalkStats(
-    eventId: EventId,
+    spacedEventId: SpacedEventId,
     dayId: DayId,
     talks: Array<VoxxrinTalk>,
     promisesQueue: CompletablePromiseQueue
 ) {
-    return checkCache(`talkStatsPreparation(eventId=${eventId.value}, dayId=${dayId.value})`, Temporal.Duration.from({ hours: 2 }), async () => {
-        PERF_LOGGER.debug(`prepareTalkStats(eventId=${eventId.value}, talkIds=${JSON.stringify(talks.map(talk => talk.id.value))})`)
+    return checkCache(`talkStatsPreparation(spacedEventId=${stringifySpacedEventId(spacedEventId)}, dayId=${dayId.value})`, Temporal.Duration.from({ hours: 2 }), async () => {
+        PERF_LOGGER.debug(`prepareTalkStats(spacedEventId=${stringifySpacedEventId(spacedEventId)}, talkIds=${JSON.stringify(talks.map(talk => talk.id.value))})`)
 
         promisesQueue.addAll(talks.map(talk => {
           return async () => {
-            const talksStatsRef = getTalksStatsRef(eventId, talk.id);
+            const talksStatsRef = getTalksStatsRef(spacedEventId, talk.id);
             if(talksStatsRef) {
               await getDoc(talksStatsRef)
               PERF_LOGGER.debug(`getDoc(${talksStatsRef.path})`)

@@ -11,8 +11,6 @@ import {
     BREAK_TIME_SLOT_PARSER,
     DAY_PARSER,
     EVENT_DESCRIPTOR_PARSER,
-    SPEAKER_PARSER,
-    TALK_FORMAT_PARSER,
     THEMABLE_TALK_FORMAT_PARSER
 } from "../crawler-parsers";
 import {CrawlerKind} from "../crawl";
@@ -20,7 +18,6 @@ import {ISODatetime, ISOLocalDate, Replace} from "../../../../../shared/type-uti
 import {Temporal} from "@js-temporal/polyfill";
 import {match, P} from "ts-pattern";
 import {GithubMDXCrawler} from "../github/GithubMDXCrawler";
-import {ISO_DATETIME_PARSER} from "../../utils/zod-parsers";
 
 export const CODEURS_EN_SEINE_PARSER = EVENT_DESCRIPTOR_PARSER.omit({
     id: true,
@@ -34,7 +31,9 @@ export const CODEURS_EN_SEINE_PARSER = EVENT_DESCRIPTOR_PARSER.omit({
         breakTimeslot: BREAK_TIME_SLOT_PARSER.omit({ type: true, id: true }).extend({
             break: BREAK_PARSER.omit({ room: true })
         })
-    }))
+    })),
+    // the old one was: https://www.codeursenseine.com/_ipx/w_256,q_75/%2Fimages%2Fspeakers%2F{speakerImage}
+    speakerPictureTemplate: z.string().default(`https://www.codeursenseine.com/_next/image?url=%2Fimages%2Fspeakers%2F{speakerImage}&w=256&q=75`)
 })
 
 function extractIdFromUrl(url: string) {
@@ -98,7 +97,7 @@ export const CODEURS_EN_SEINE_CRAWLER: CrawlerKind<typeof CODEURS_EN_SEINE_PARSE
                 fullName: fileMetadata.name,
                 bio: speakerMDXFile.content,
                 companyName: fileMetadata.company,
-                photoUrl: `https://www.codeursenseine.com/_ipx/w_256,q_75/%2Fimages%2Fspeakers%2F${fileMetadata.image}`,
+                photoUrl: descriptor.speakerPictureTemplate.replace("{speakerImage}", fileMetadata.image),
                 social: ([] as SocialLink[])
                     .concat(fileMetadata.twitter ? [{type: 'twitter', url: `https://twitter.com/${fileMetadata.twitter.substring("@".length)}`}] as const:[])
                     .concat(fileMetadata.github ? [{type: 'github', url: `https://github.com/${fileMetadata.github}`}] as const:[]),
@@ -161,7 +160,8 @@ export const CODEURS_EN_SEINE_CRAWLER: CrawlerKind<typeof CODEURS_EN_SEINE_PARSE
                             track: NO_TRACK,
                             language: FR_LANG.id,
                             room, format,
-                            isOverflow: false
+                            isOverflow: false,
+                            assets: []
                         }
 
                         return { type: 'talks', start, end, talkDetails } as const;
@@ -246,12 +246,12 @@ export const CODEURS_EN_SEINE_CRAWLER: CrawlerKind<typeof CODEURS_EN_SEINE_PARSE
             title: descriptor.title,
             days: descriptor.days as Day[],
             headingTitle: descriptor.headingTitle,
+            headingBackground: descriptor.headingBackground,
             description: descriptor.description,
             keywords: descriptor.keywords,
             location: descriptor.location,
             logoUrl: descriptor.logoUrl,
             timezone: descriptor.timezone,
-            websiteUrl: descriptor.websiteUrl,
             peopleDescription: descriptor.peopleDescription || "",
             backgroundUrl: descriptor.backgroundUrl,
             theming: descriptor.theming,
@@ -260,7 +260,11 @@ export const CODEURS_EN_SEINE_CRAWLER: CrawlerKind<typeof CODEURS_EN_SEINE_PARSE
             talkFormats,
             infos: descriptor.infos,
             features: descriptor.features,
-            supportedTalkLanguages: descriptor.supportedTalkLanguages
+            supportedTalkLanguages: descriptor.supportedTalkLanguages,
+            formattings: descriptor.formattings || {
+              talkFormatTitle: 'with-duration',
+              parseMarkdownOn: [],
+            },
         };
 
         const fullEvent: FullEvent = {
@@ -275,7 +279,6 @@ export const CODEURS_EN_SEINE_CRAWLER: CrawlerKind<typeof CODEURS_EN_SEINE_PARSE
                 location: confDescriptor.location,
                 logoUrl: confDescriptor.logoUrl,
                 timezone: confDescriptor.timezone,
-                websiteUrl: confDescriptor.websiteUrl,
                 peopleDescription: confDescriptor.peopleDescription,
                 backgroundUrl: confDescriptor.backgroundUrl
             },

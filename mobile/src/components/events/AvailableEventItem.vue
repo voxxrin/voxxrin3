@@ -10,7 +10,7 @@
       <div class="title">{{event.title}}</div>
       <div class="timeInfos">
         <ion-icon aria-hidden="true" src="/assets/icons/solid/calendar.svg"></ion-icon>
-        <month-day-date-range :format="{separator: '>'}" :range="{start: event.start, end: event.end}" />
+        <month-day-date-range :format="{separator: '>'}" :range="{start: event.localStartDay, end: event.localEndDay}" />
         {{event.start.year}}
       </div>
       <div class="location">
@@ -20,8 +20,7 @@
 
     <div class="eventItem-end" slot="end">
       <ion-button class="configBtn" v-if="eventOrganizerToken" fill="clear" shape="round"
-                  :aria-label="LL.Config_event()"
-                  @click.stop="navToEventOrganizerPage()">
+                  :aria-label="LL.Config_event()">
         <ion-icon src="/assets/icons/line/settings-cog-line.svg"></ion-icon>
       </ion-button>
       <!-- TODO Fix dynamic aria-label -->
@@ -84,11 +83,6 @@ const isPinnedRef = computed(() => {
 })
 
 const eventOrganizerToken = organizerTokenRefForEvent(eventIdRef)
-
-function navToEventOrganizerPage() {
-  ionRouter.push(`/events/${eventRef.value.id.value}/asOrganizer/${eventOrganizerToken.value}`)
-}
-
 </script>
 
 <style lang="scss" scoped>

@@ -5,6 +5,8 @@ export type TalkStats = {
   totalFavoritesCount: number
 }
 
+export type AllInOneTalkStats = Record<string, Omit<TalkStats, "id">>
+
 export type RoomStatsBase = {
   roomId: string;
   recordedAt: ISODatetime,

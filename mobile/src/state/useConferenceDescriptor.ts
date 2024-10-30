@@ -1,13 +1,9 @@
 import {computed, onMounted, Ref, unref, watch} from "vue";
-import {
-    createVoxxrinConferenceDescriptor, VoxxrinConferenceDescriptor,
-} from "@/models/VoxxrinConferenceDescriptor";
-import {EventId} from "@/models/VoxxrinEvent";
+import {createVoxxrinConferenceDescriptor, VoxxrinConferenceDescriptor,} from "@/models/VoxxrinConferenceDescriptor";
+import {SpacedEventId, stringifySpacedEventId} from "@/models/VoxxrinEvent";
 import {ConferenceDescriptor} from "../../../shared/conference-descriptor.firestore";
-import {
-    deferredVuefireUseDocument
-} from "@/views/vue-utils";
-import {collection, doc, DocumentReference} from "firebase/firestore";
+import {deferredVuefireUseDocument} from "@/views/vue-utils";
+import {doc, DocumentReference} from "firebase/firestore";
 import {db} from "@/state/firebase";
 import {createSharedComposable} from "@vueuse/core";
 import {Logger, PERF_LOGGER} from "@/services/Logger";
@@ -20,26 +16,27 @@ import {Temporal} from "temporal-polyfill";
 import {CompletablePromiseQueue} from "@/models/utils";
 import {prepareSchedules} from "@/state/useSchedule";
 import {typesafeI18n} from "@/i18n/i18n-vue";
+import {resolvedEventFirestorePath} from "../../../shared/utilities/event-utils";
 
-function getConferenceDescriptorDoc(eventId: EventId|undefined) {
-    if(!eventId || !eventId.value) {
+function getConferenceDescriptorDoc(spacedEventId: SpacedEventId|undefined) {
+    if(!spacedEventId || !spacedEventId.eventId || !spacedEventId.eventId.value) {
         return undefined;
     }
 
-    return doc(collection(doc(collection(db, 'events'), eventId.value), 'event-descriptor'), 'self') as DocumentReference<ConferenceDescriptor & {__initialId: string}>;;
+    return doc(db, `${resolvedEventFirestorePath(spacedEventId.eventId.value, spacedEventId.spaceToken?.value)}/event-descriptor/self`) as DocumentReference<ConferenceDescriptor & {__initialId: string}>;;
 }
 export function useConferenceDescriptor(
-    eventIdRef: Ref<EventId | undefined>) {
+    spacedEventIdRef: Ref<SpacedEventId | undefined>) {
 
     const overridenEventDescriptorPropertiesRef = useOverridenEventDescriptorProperties();
 
-    PERF_LOGGER.debug(() => `useConferenceDescriptor(${unref(eventIdRef)?.value})`)
-    watch(() => unref(eventIdRef), (newVal, oldVal) => {
-        PERF_LOGGER.debug(() => `useConferenceDescriptor[eventIdRef] updated from [${oldVal?.value}] to [${newVal?.value}]`)
+    PERF_LOGGER.debug(() => `useConferenceDescriptor(${stringifySpacedEventId(unref(spacedEventIdRef))})`)
+    watch(() => unref(spacedEventIdRef), (newVal, oldVal) => {
+        PERF_LOGGER.debug(() => `useConferenceDescriptor[spacedEventIdRef] updated from [${stringifySpacedEventId(oldVal)}] to [${stringifySpacedEventId(newVal)}]`)
     }, {immediate: true})
 
-    const firestoreConferenceDescriptorRef = deferredVuefireUseDocument([eventIdRef],
-        ([eventId]) => getConferenceDescriptorDoc(eventId));
+    const firestoreConferenceDescriptorRef = deferredVuefireUseDocument([spacedEventIdRef],
+        ([spacedEventId]) => getConferenceDescriptorDoc(spacedEventId));
 
     return {
         conferenceDescriptor: computed(() => {

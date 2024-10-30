@@ -1,6 +1,6 @@
 <template>
   <ion-page>
-    <ion-content v-themed-event-styles="confDescriptor" :fullscreen="true" v-if="confDescriptor && detailedTalk">
+    <ion-content v-themed-event-styles="confDescriptor" :fullscreen="true" v-if="confDescriptor && detailedTalkRef">
       <ion-header class="stickyHeader" v-if="talkNotes" :class="{ 'is-favorited': talkNotes.isFavorite, 'to-watch-later': talkNotes.watchLater }">
         <ion-toolbar>
           <ion-button class="stickyHeader-close" shape="round" slot="start" size="small" fill="outline" @click="closeAndNavigateBack()"
@@ -31,13 +31,13 @@
         </ion-toolbar>
       </ion-header>
 
-      <talk-details-header :conf-descriptor="confDescriptor" :talk="detailedTalk">
-        <room-capacity-indicator :event-id="eventId" :talk="detailedTalk" :room-stats="firestoreRoomStatsRef" :bottom-rounded="true" :show-unknown-capacity="false" />
+      <talk-details-header :conf-descriptor="confDescriptor" :talk="detailedTalkRef">
+        <room-capacity-indicator :spaced-event-id="spacedEventIdRef" :talk="detailedTalkRef" :room-stats="firestoreRoomStatsRef" :bottom-rounded="true" :show-unknown-capacity="false" />
       </talk-details-header>
 
-      <div class="talkDetails-tags" v-if="detailedTalk?.tags.length">
+      <div class="talkDetails-tags" v-if="detailedTalkRef?.tags.length">
         <div class="talkDetails-tags-list">
-          <ion-badge v-if="true" class="tagBadge" v-for="(tag) in detailedTalk?.tags" :key="tag">
+          <ion-badge v-if="true" class="tagBadge" v-for="(tag) in detailedTalkRef?.tags" :key="tag">
             <ion-icon aria-hidden="true" src="assets/icons/solid/tag.svg"></ion-icon>
             {{tag}}
           </ion-badge>
@@ -45,11 +45,18 @@
       </div>
 
 
+      <div v-if="maybeTalkRecording" class="talkDetails-recording">
+        <vox-divider>
+          {{ LL.Talk_Recording() }}
+        </vox-divider>
+        <recording-player :url="maybeTalkRecording.assetUrl" :platform="maybeTalkRecording.platform"></recording-player>
+      </div>
+
       <div class="talkDetails-description">
         <vox-divider>
           {{ LL.Talk_summary() }}
         </vox-divider>
-        <ion-text v-html="detailedTalk?.description">
+        <ion-text v-html="detailedTalkRef?.description">
         </ion-text>
       </div>
 
@@ -58,7 +65,7 @@
           {{ LL.Speakers() }}
         </vox-divider>
         <ion-list class="talkDetails-speakers-list">
-          <ion-item v-for="(speaker, index) in detailedTalk?.speakers" :key="speaker.id.value">
+          <ion-item v-for="(speaker, index) in detailedTalkRef?.speakers" :key="speaker.id.value">
             <speaker-thumbnail size="64px" :is-highlighted="false" :speaker="speaker" />
             <div class="speakerInfo">
               <div class="speakerInfo-name">
@@ -81,18 +88,13 @@
 
 <script setup lang="ts">
 import {useRoute} from "vue-router";
-import {EventId} from "@/models/VoxxrinEvent";
-import {getRouteParamsValue, isRefDefined, toManagedRef as toRef, managedRef as ref} from "@/views/vue-utils";
-import {
-  useLocalEventTalkFavsStorage,
-  useUserEventTalkNotes,
-  useUserTalkNoteActions,
-} from "@/state/useUserTalkNotes";
-import {TalkId} from "@/models/VoxxrinTalk";
+import {getRouteParamsValue, isRefDefined, managedRef as ref, toManagedRef as toRef} from "@/views/vue-utils";
+import {useLocalEventTalkFavsStorage, useUserEventTalkNotes, useUserTalkNoteActions,} from "@/state/useUserTalkNotes";
+import {findAssetOfType, TalkId} from "@/models/VoxxrinTalk";
 import {useSharedEventTalk} from "@/state/useEventTalk";
 import {computed, toValue} from "vue";
 import {typesafeI18n} from "@/i18n/i18n-vue";
-import {IonBadge, IonAvatar, IonText, useIonRouter} from "@ionic/vue";
+import {IonBadge, IonText, useIonRouter} from "@ionic/vue";
 import {business} from "ionicons/icons";
 import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
 import VoxDivider from "@/components/ui/VoxDivider.vue";
@@ -103,37 +105,39 @@ import {Logger} from "@/services/Logger";
 import RoomCapacityIndicator from "@/components/rooms/RoomCapacityIndicator.vue";
 import {useRoomStats} from "@/state/useRoomsStats";
 import SpeakerThumbnail from "@/components/speaker/SpeakerThumbnail.vue";
+import RecordingPlayer from "@/components/ui/RecordingPlayer.vue";
+import {getResolvedEventRootPathFromSpacedEventIdRef, useCurrentSpaceEventIdRef} from "@/services/Spaces";
 
 const LOGGER = Logger.named("TalkDetailsPage");
 
 const ionRouter = useIonRouter();
 function closeAndNavigateBack() {
-    goBackOrNavigateTo(ionRouter, `/events/${eventId.value.value}/schedule`, 0 /* talk details page is always opened through popups */)
+    goBackOrNavigateTo(ionRouter, `${getResolvedEventRootPathFromSpacedEventIdRef(spacedEventIdRef)}/schedule`, 0 /* talk details page is always opened through popups */)
 }
 
+const spacedEventIdRef = useCurrentSpaceEventIdRef();
 const route = useRoute();
-const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')));
 const talkId = ref(new TalkId(getRouteParamsValue(route, 'talkId')));
-const {conferenceDescriptor: confDescriptor} = useSharedConferenceDescriptor(eventId);
+const {conferenceDescriptor: confDescriptor} = useSharedConferenceDescriptor(spacedEventIdRef);
 
-const { userEventTalkNotesRef } = useUserEventTalkNotes(eventId, toRef(() => talkId ? [talkId.value] : undefined))
+const { userEventTalkNotesRef } = useUserEventTalkNotes(spacedEventIdRef, toRef(() => talkId ? [talkId.value] : undefined))
 const talkNotes = toRef(() => {
     const userEventTalkNotes = toValue(userEventTalkNotesRef)
     return Array.from(userEventTalkNotes.values())[0];
 })
-const {firestoreEventTalkStatsRef} = useEventTalkStats(eventId, toRef(() => talkId ? [talkId.value] : undefined));
+const {firestoreEventTalkStatsRef} = useEventTalkStats(spacedEventIdRef, toRef(() => talkId ? [talkId.value] : undefined));
 const eventTalkStats = computed(() => {
     const firestoreEventTalkStats = toValue(firestoreEventTalkStatsRef);
     return Array.from(firestoreEventTalkStats.values())[0];
 })
-const { talkDetails: detailedTalk } = useSharedEventTalk(confDescriptor, talkId);
+const { talkDetails: detailedTalkRef } = useSharedEventTalk(confDescriptor, talkId);
 const { LL } = typesafeI18n()
 
 const {toggleFavorite, toggleWatchLater} = useUserTalkNoteActions(
-    eventId, talkId,
+    spacedEventIdRef, talkId,
     talkNotes,
 );
-const localEventTalkNotesRef = useLocalEventTalkFavsStorage(eventId)
+const localEventTalkNotesRef = useLocalEventTalkFavsStorage(spacedEventIdRef)
 const localFavorite = computed(() => {
   const localEventTalkNotes = toValue(localEventTalkNotesRef),
     _talkId = toValue(talkId);
@@ -141,11 +145,20 @@ const localFavorite = computed(() => {
   return localEventTalkNotes.get(_talkId.value);
 })
 
+const maybeTalkRecording = computed(() => {
+  const detailedTalk = toValue(detailedTalkRef);
+  if(!detailedTalk) {
+    return undefined;
+  }
+
+  return findAssetOfType(detailedTalk, 'recording');
+})
+
 const theme = computed(() => {
-    if(isRefDefined(detailedTalk)) {
+    if(isRefDefined(detailedTalkRef)) {
         return {
             track: {
-                color: detailedTalk.value.track.themeColor
+                color: detailedTalkRef.value.track.themeColor
             }
         }
     } else {
@@ -153,7 +166,7 @@ const theme = computed(() => {
     }
 });
 
-const {firestoreRoomStatsRef } = useRoomStats(eventId, toRef(() => detailedTalk.value?.room.id))
+const {firestoreRoomStatsRef } = useRoomStats(spacedEventIdRef, toRef(() => detailedTalkRef.value?.room.id))
 
 </script>
 
@@ -172,15 +185,15 @@ const {firestoreRoomStatsRef } = useRoomStats(eventId, toRef(() => detailedTalk.
 
     &.to-watch-later{
       .btnTalkAction._watchLater {
-        --background: var(--voxxrin-event-theme-colors-secondary-hex);
-        --background-activated: var(--voxxrin-event-theme-colors-secondary-hex);
+        --background: var(--voxxrin-event-theme-colors-tertiary-hex);
+        --background-activated: var(--voxxrin-event-theme-colors-tertiary-hex);
         --color-activated: var(--app-white);
         --color: var(--app-white);
       }
 
       ion-toolbar {
         &:before {
-          background: linear-gradient(331deg, rgba(var(--voxxrin-event-theme-colors-secondary-rgb), 0.6) 30%, rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.6) 80%) !important;
+          background: linear-gradient(331deg, rgba(var(--voxxrin-event-theme-colors-tertiary-rgb), 0.6) 30%, rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.6) 80%) !important;
         }
       }
     }
@@ -272,8 +285,8 @@ const {firestoreRoomStatsRef } = useRoomStats(eventId, toRef(() => detailedTalk.
 
   .talkDetails {
     &-tags {
-      padding: 8px 16px;
-      border-radius: 16px;
+      padding: 16px;
+      background: var(--app-beige-medium);
 
       @media (prefers-color-scheme: dark) {
         --border-style: none;
@@ -307,7 +320,7 @@ const {firestoreRoomStatsRef } = useRoomStats(eventId, toRef(() => detailedTalk.
       }
     }
 
-    &-description {
+    &-description, &-recording {
       padding: var(--app-gutters);
 
       /**

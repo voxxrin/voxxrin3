@@ -13,21 +13,21 @@ import {
 } from "../../../../../../../shared/conference-organizer-space.firestore";
 import {EventLastUpdates} from "../../../../../../../shared/event-list.firestore";
 import * as express from "express";
+import {resolvedEventFirestorePath} from "../../../../../../../shared/utilities/event-utils";
 
 export async function legacyAttendeesFeedbacks(request: functions.https.Request, response: express.Response) {
 
     const organizerSecretToken = extractSingleQueryParam(request, 'organizerSecretToken');
     const talkIds = extractMultiQueryParam(request, 'talkIds');
-    // deprecated
-    const familyToken = extractSingleQueryParam(request, 'familyToken');
     const familyOrganizerSecretToken = extractSingleQueryParam(request, 'familyOrganizerSecretToken');
     const eventId = extractSingleQueryParam(request, 'eventId');
+    const spaceToken = undefined;
 
     if(!talkIds || !talkIds.length) { return sendResponseMessage(response, 400, `Missing [talkIds] (multi) query parameter !`) }
     if(!eventId) { return sendResponseMessage(response, 400, `Missing [eventId] query parameter !`) }
-    if(!organizerSecretToken && !familyToken && !familyOrganizerSecretToken) { return sendResponseMessage(response, 400, `Missing either [organizerSecretToken] or [familyToken] or [familyOrganizerSecretToken] query parameter !`) }
+    if(!organizerSecretToken && !familyOrganizerSecretToken) { return sendResponseMessage(response, 400, `Missing either [organizerSecretToken] or [familyOrganizerSecretToken] query parameter !`) }
 
-    const eventDescriptor = await getEventDescriptor(eventId);
+    const eventDescriptor = await getEventDescriptor(spaceToken, eventId);
     if(familyOrganizerSecretToken) {
         const familyOrganizerToken = await getFamilyOrganizerToken(familyOrganizerSecretToken);
 
@@ -36,7 +36,7 @@ export async function legacyAttendeesFeedbacks(request: functions.https.Request,
         }
     }
 
-    const { cachedHash, updatesDetected } = await checkEventLastUpdate(eventId, [
+    const { cachedHash, updatesDetected } = await checkEventLastUpdate(spaceToken, eventId, [
         root => root.allFeedbacks,
         root => root.talkListUpdated,
         ...talkIds.map(talkId => {
@@ -48,21 +48,19 @@ export async function legacyAttendeesFeedbacks(request: functions.https.Request,
     // }
 
     try {
-        const organizerSpace = await match([organizerSecretToken, familyToken, familyOrganizerSecretToken])
-            .with([ P.nullish, P.nullish, P.nullish ], async ([_1, _2]) => { throw new Error(`Unexpected state: (undefined,undefined)`); })
-            .with([ P.not(P.nullish), P.any, P.any ], async ([organizerSecretToken, _]) => {
-                return getOrganizerSpaceByToken(eventId, 'organizerSecretToken', organizerSecretToken);
-            }).with([ P.any, P.not(P.nullish), P.any ], async ([_, familyToken]) => {
-                return getOrganizerSpaceByToken(eventId, 'familyToken', familyToken);
-            }).with([ P.any, P.any, P.not(P.nullish) ], async ([_1, _2, familyOrganizerSecretToken]) => {
-                return getSecretTokenDoc<ConferenceOrganizerSpace>(`/events/${eventId}/organizer-space`);
+        const organizerSpace = await match([organizerSecretToken, familyOrganizerSecretToken])
+            .with([ P.nullish, P.nullish ], async ([_1, _2]) => { throw new Error(`Unexpected state: (undefined,undefined)`); })
+            .with([ P.not(P.nullish), P.any ], async ([organizerSecretToken, _]) => {
+                return getOrganizerSpaceByToken(spaceToken, eventId, 'organizerSecretToken', organizerSecretToken);
+            }).with([ P.any, P.not(P.nullish) ], async ([_1]) => {
+                return getSecretTokenDoc<ConferenceOrganizerSpace>(`${resolvedEventFirestorePath(eventId, spaceToken)}/organizer-space`);
             }).run()
 
         const perTalkFeedbacks = await Promise.all(organizerSpace.talkFeedbackViewerTokens
             .filter(talkFeedbacksViewerToken => talkIds.includes(talkFeedbacksViewerToken.talkId))
             .map(async (talkFeedbackViewerToken) => {
 
-            const feedbacks = await ensureTalkFeedbackViewerTokenIsValidThenGetFeedbacks(talkFeedbackViewerToken.eventId, talkFeedbackViewerToken.talkId, talkFeedbackViewerToken.secretToken);
+            const feedbacks = await ensureTalkFeedbackViewerTokenIsValidThenGetFeedbacks(spaceToken, talkFeedbackViewerToken.eventId, talkFeedbackViewerToken.talkId, talkFeedbackViewerToken.secretToken);
 
             // Enriching bingo entries with label
             const enrichedFeedbacks = feedbacks.map(feedback => ({

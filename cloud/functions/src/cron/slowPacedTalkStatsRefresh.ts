@@ -13,10 +13,11 @@ export async function refreshSlowPacedTalkStatsForOngoingEvents() {
   const results = match(maybeGlobalInfos)
     .with(P.nullish, () => [])
     .otherwise(async (globalInfos) => {
-      const events = (await getAllEvents()).docs.map(doc => doc.data());
+      const events = (await getAllEvents({ includePrivateSpaces: true }))
 
       const results = await Promise.all(events.map(async event => {
-        const eventLastUpdates = (await getEventLastUpdates(event.id)).data()
+        const spaceToken = event.visibility==='private'?event.spaceToken:undefined
+        const eventLastUpdates = (await getEventLastUpdates(event.id, spaceToken)).data()
         if(!eventLastUpdates || !eventLastUpdates.favorites) {
           return undefined;
         }
@@ -25,8 +26,8 @@ export async function refreshSlowPacedTalkStatsForOngoingEvents() {
           return undefined;
         }
 
-        const standardTalkStats = (await getEventTalkStats(event.id, 'standard')).docs.map(doc => doc.data());
-        const slowPacedTalkStats = (await getEventTalkStats(event.id, 'slowPaced')).docs.map(doc => doc.data());
+        const standardTalkStats = (await getEventTalkStats(event.id, spaceToken, 'standard')).docs.map(doc => doc.data());
+        const slowPacedTalkStats = (await getEventTalkStats(event.id, spaceToken, 'slowPaced')).docs.map(doc => doc.data());
 
         const talkStatsToUpdate = standardTalkStats.filter(stdTalkStat => {
           const slowPacedTalkStat = slowPacedTalkStats.find(spts => spts.id === stdTalkStat.id);
@@ -37,7 +38,7 @@ export async function refreshSlowPacedTalkStatsForOngoingEvents() {
           return undefined;
         }
 
-        await storeEventTalkStats(event.id, talkStatsToUpdate, 'slowPaced');
+        await storeEventTalkStats(event.id, spaceToken, talkStatsToUpdate, 'slowPaced');
         return { eventId: event.id, count: talkStatsToUpdate.length };
       }))
 

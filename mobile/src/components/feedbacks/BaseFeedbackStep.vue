@@ -1,19 +1,6 @@
 
 <template>
-  <ion-content :fullscreen="true" v-if="confDescriptor" :style="{
-        '--voxxrin-event-theme-colors-primary-hex': confDescriptor.theming.colors.primaryHex,
-        '--voxxrin-event-theme-colors-primary-rgb': confDescriptor.theming.colors.primaryRGB,
-        '--voxxrin-event-theme-colors-primary-contrast-hex': confDescriptor.theming.colors.primaryContrastHex,
-        '--voxxrin-event-theme-colors-primary-contrast-rgb': confDescriptor.theming.colors.primaryContrastRGB,
-        '--voxxrin-event-theme-colors-secondary-hex': confDescriptor.theming.colors.secondaryHex,
-        '--voxxrin-event-theme-colors-secondary-rgb': confDescriptor.theming.colors.secondaryRGB,
-        '--voxxrin-event-theme-colors-secondary-contrast-hex': confDescriptor.theming.colors.secondaryContrastHex,
-        '--voxxrin-event-theme-colors-secondary-contrast-rgb': confDescriptor.theming.colors.secondaryContrastRGB,
-        '--voxxrin-event-theme-colors-tertiary-hex': confDescriptor.theming.colors.tertiaryHex,
-        '--voxxrin-event-theme-colors-tertiary-rgb': confDescriptor.theming.colors.tertiaryRGB,
-        '--voxxrin-event-theme-colors-tertiary-contrast-hex': confDescriptor.theming.colors.tertiaryContrastHex,
-        '--voxxrin-event-theme-colors-tertiary-contrast-rgb': confDescriptor.theming.colors.tertiaryContrastRGB,
-  }">
+  <ion-content :fullscreen="true" v-themed-event-styles="confDescriptor">
     <ion-header class="stickyHeader">
       <ion-toolbar>
       <ion-button class="stickyHeader-close" shape="round" slot="start" size="small" fill="outline"
@@ -50,10 +37,7 @@ import {LabelledTimeslot} from "@/state/findTimeslot";
 import StepHeader from "@/components/feedbacks/StepHeader.vue";
 import {useIonRouter} from "@ionic/vue";
 import {goBackOrNavigateTo} from "@/router";
-import {useRoute} from "vue-router";
-import {ref} from "vue/dist/vue";
-import {EventId} from "@/models/VoxxrinEvent";
-import {getRouteParamsValue} from "@/views/vue-utils";
+import {getResolvedEventRootPathFromSpacedEventIdRef, useCurrentSpaceEventIdRef} from "@/services/Spaces";
 
 const props = defineProps({
     step: {
@@ -76,12 +60,11 @@ const props = defineProps({
 
 const { LL } = typesafeI18n()
 
-const route = useRoute();
-const eventId = new EventId(getRouteParamsValue(route, 'eventId'));
+const spacedEventIdRef = useCurrentSpaceEventIdRef()
 
 const ionRouter = useIonRouter();
 function backButtonClicked() {
-    goBackOrNavigateTo(ionRouter, `/events/${eventId.value}`)
+    goBackOrNavigateTo(ionRouter, `${getResolvedEventRootPathFromSpacedEventIdRef(spacedEventIdRef)}`)
 }
 </script>
 

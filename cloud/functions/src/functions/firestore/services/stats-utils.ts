@@ -5,15 +5,16 @@ import {getTimeslottedTalks} from "./schedule-utils";
 import {toValidFirebaseKey} from "../../../../../../shared/utilities/firebase.utils";
 import {firestore} from "firebase-admin";
 import QuerySnapshot = firestore.QuerySnapshot;
+import {resolvedEventFirestorePath} from "../../../../../../shared/utilities/event-utils";
 
 
-export async function ensureRoomsStatsFilledFor(eventId: string) {
-  const roomsStatsDoc = db.doc(`events/${eventId}/roomsStats-allInOne/self`)
+export async function ensureRoomsStatsFilledFor(spaceToken: string|undefined, eventId: string) {
+  const roomsStatsDoc = db.doc(`${resolvedEventFirestorePath(eventId, spaceToken)}/roomsStats-allInOne/self`)
 
   const roomsStats = await roomsStatsDoc.get()
 
   if(!roomsStats.exists) {
-    const timeslottedTalks = await getTimeslottedTalks(eventId)
+    const timeslottedTalks = await getTimeslottedTalks(spaceToken, eventId)
 
     const roomsStats = timeslottedTalks.reduce((roomsStats, talk) => {
       if(talk.room.id) {
@@ -38,12 +39,12 @@ export async function ensureRoomsStatsFilledFor(eventId: string) {
   }
 }
 
-export async function getEventTalkStats(eventId: string, type: 'standard'|'slowPaced' = 'standard') {
-  return await db.collection(`events/${eventId}/talksStats${type==='standard'?'':'-slowPaced'}`).get() as QuerySnapshot<TalkStats>;
+export async function getEventTalkStats(eventId: string, maybeSpaceToken: string|undefined, type: 'standard'|'slowPaced' = 'standard') {
+  return await db.collection(`${resolvedEventFirestorePath(eventId, maybeSpaceToken)}/talksStats${type==='standard'?'':'-slowPaced'}`).get() as QuerySnapshot<TalkStats>;
 }
 
-export async function storeEventTalkStats(eventId: string, talkStats: TalkStats[], type: 'standard'|'slowPaced' = 'standard') {
+export async function storeEventTalkStats(eventId: string, maybeSpaceToken: string|undefined, talkStats: TalkStats[], type: 'standard'|'slowPaced' = 'standard') {
   return Promise.all(talkStats.map(talkStat =>
-    db.doc(`events/${eventId}/talksStats${type==='standard'?'':'-slowPaced'}/${talkStat.id}`).set(talkStat)
+    db.doc(`${resolvedEventFirestorePath(eventId, maybeSpaceToken)}/talksStats${type==='standard'?'':'-slowPaced'}/${talkStat.id}`).set(talkStat)
   ))
 }

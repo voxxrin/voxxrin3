@@ -4,18 +4,41 @@ import {DayId, VoxxrinDay} from "@/models/VoxxrinDay";
 import {Temporal} from "temporal-polyfill";
 import {useCurrentClock} from "@/state/useCurrentClock";
 import {zonedDateTimeRangeOf} from "@/models/DatesAndTime";
-import {Replace} from "../../../shared/type-utils";
+import {ISOLocalDate, Replace} from "../../../shared/type-utils";
+import {match, P} from "ts-pattern";
 
 export class EventId extends ValueObject<string>{ _eventIdClassDiscriminator!: never; }
+export class SpaceToken extends ValueObject<string>{ _spaceIdClassDiscriminator!: never; }
+export function toMaybeSpaceToken(maybeValue: string|undefined): SpaceToken|undefined {
+  return maybeValue ? new SpaceToken(maybeValue) : undefined;
+}
+export type SpacedEventId = {
+  spaceToken: SpaceToken|undefined,
+  eventId: EventId,
+}
+export function stringifySpacedEventId(spacedEventId: SpacedEventId|undefined) {
+  return `{spaceToken:${spacedEventId?.spaceToken?.value}, eventId: ${spacedEventId?.eventId?.value}}`
+}
+export function toSpacedEventId(eventId: EventId, maybeSpaceToken: SpaceToken|undefined): SpacedEventId {
+  return {
+    spaceToken: maybeSpaceToken,
+    eventId,
+  }
+}
 export class EventFamily extends ValueObject<string>{ _eventFamilyClassDiscriminator!: never; }
+export type ListableVoxxrinEventVisibility =
+  | { visibility: 'public', spaceToken: undefined }
+  | { visibility: 'private', spaceToken: SpaceToken }
 export type ListableVoxxrinEvent = Replace<ListableEvent, {
     id: EventId,
     eventFamily: EventFamily|undefined,
     days: Array<VoxxrinDay>,
     start: Temporal.ZonedDateTime,
     end: Temporal.ZonedDateTime,
-    theming: VoxxrinEventTheme
-}>
+    localStartDay: ISOLocalDate,
+    localEndDay: ISOLocalDate,
+    theming: VoxxrinEventTheme,
+} & ListableVoxxrinEventVisibility>
 
 export type VoxxrinEventTheme = Replace<EventTheme, {
     colors: EventTheme['colors'] & {
@@ -61,14 +84,25 @@ export function firestoreListableEventToVoxxrinListableEvent(firestoreListableEv
         firestoreListableEvent.days.map(d => d.localDate),
         firestoreListableEvent.timezone
     );
+
+    const [ localStartDay, localEndDay ]: [ISOLocalDate, ISOLocalDate] = [
+      firestoreListableEvent.days.map(d => d.localDate).sort()[0] as ISOLocalDate,
+      firestoreListableEvent.days.map(d => d.localDate).sort().reverse()[0] as ISOLocalDate,
+    ]
+
+    const visibility: ListableVoxxrinEventVisibility = match(firestoreListableEvent)
+      .with({ visibility: 'private' }, (event) => ({ visibility: 'private' as const, spaceToken: new SpaceToken(event.spaceToken) }))
+      .otherwise((event) => ({ visibility: 'public' as const, spaceToken: undefined }))
+
     return {
         ...firestoreListableEvent,
         id: new EventId(firestoreListableEvent.id),
         eventFamily: firestoreListableEvent.eventFamily===undefined?undefined:new EventFamily(firestoreListableEvent.eventFamily),
         days: firestoreListableEvent.days.map(d => ({...d, id: new DayId(d.id)})),
-        start,
-        end,
-        theming: toVoxxrinEventTheme(firestoreListableEvent.theming)
+        start, end,
+        localStartDay, localEndDay,
+        theming: toVoxxrinEventTheme(firestoreListableEvent.theming),
+        ...visibility,
     };
 }
 

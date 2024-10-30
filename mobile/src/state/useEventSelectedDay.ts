@@ -1,39 +1,40 @@
 import {Unreffable} from "@/views/vue-utils";
-import {EventId} from "@/models/VoxxrinEvent";
+import {SpacedEventId, stringifySpacedEventId} from "@/models/VoxxrinEvent";
 import {computed, reactive, unref} from "vue";
 import {DayId} from "@/models/VoxxrinDay";
 import {createSharedComposable} from "@vueuse/core";
 import {PERF_LOGGER} from "@/services/Logger";
+import {resolvedSpacedEventFieldName} from "../../../shared/utilities/event-utils";
 
 
 const perEventIdSelectedDayIdRef = reactive(new Map<string, string>());
 
 function useEventSelectedDay(
-    eventIdRef: Unreffable<EventId|undefined>
+    spacedEventIdRef: Unreffable<SpacedEventId|undefined>
 ) {
-    PERF_LOGGER.debug(() => `useEventSelectedDay(${unref(eventIdRef)?.value})`)
+    PERF_LOGGER.debug(() => `useEventSelectedDay(${stringifySpacedEventId(unref(spacedEventIdRef))})`)
 
     return {
         setSelectedDayId: (dayIdRef: Unreffable<DayId>) => {
-            const eventId = unref(eventIdRef),
+            const spacedEventId = unref(spacedEventIdRef),
                   dayId = unref(dayIdRef),
                   perEventIdSelectedDayId = unref(perEventIdSelectedDayIdRef);
 
-            if(!eventId || !dayId) {
+            if(!spacedEventId || !spacedEventId.eventId || !dayId) {
                 return;
             }
 
-            perEventIdSelectedDayIdRef.set(eventId.value, dayId.value);
+            perEventIdSelectedDayId.set(resolvedSpacedEventFieldName(spacedEventId.eventId.value, spacedEventId.spaceToken?.value), dayId.value);
         },
         selectedDayId: computed((): DayId|undefined => {
-            const eventId = unref(eventIdRef),
+            const spacedEventId = unref(spacedEventIdRef),
                 perEventIdSelectedDayId = unref(perEventIdSelectedDayIdRef);
 
-            if(!eventId) {
+            if(!spacedEventId || !spacedEventId.eventId) {
                 return undefined;
             }
 
-            const rawDayId = perEventIdSelectedDayId.get(eventId.value);
+            const rawDayId = perEventIdSelectedDayId.get(resolvedSpacedEventFieldName(spacedEventId.eventId.value, spacedEventId.spaceToken?.value));
             if(rawDayId) {
                 return new DayId(rawDayId);
             } else {

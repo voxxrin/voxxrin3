@@ -1,5 +1,5 @@
 <template>
-  <ion-footer class="feedBackFooter">
+  <ion-footer class="feedBackFooter" v-themed-event-styles="confDescriptor">
     <ion-toolbar>
       <div class="feedBackFooter-top">
         <slot name="details"></slot>
@@ -14,6 +14,15 @@
 <script setup lang="ts">
 
 import {IonFooter, IonToolbar} from "@ionic/vue";
+import {PropType} from "vue";
+import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
+
+const props = defineProps({
+  confDescriptor: {
+    required: true,
+    type: Object as PropType<VoxxrinConferenceDescriptor>
+  }
+})
 </script>
 
 <style lang="scss" scoped>

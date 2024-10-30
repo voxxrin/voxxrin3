@@ -10,7 +10,8 @@ import {ConferenceOrganizerSpace} from "../../../../shared/conference-organizer-
 import {eventLastUpdateRefreshed} from "../functions/firestore/firestore-utils";
 import {http} from "./utils";
 import {
-  Room,
+  DetailedTalk,
+  Room, TalkAsset,
   TalkFormat,
   Track
 } from "../../../../shared/daily-schedule.firestore";
@@ -19,6 +20,12 @@ import {getEventOrganizerToken, getFamilyOrganizerToken} from "../functions/fire
 import {getCrawlersMatching} from "../functions/firestore/services/crawlers-utils";
 import {ListableEvent} from "../../../../shared/event-list.firestore";
 import {ConferenceDescriptor} from "../../../../shared/conference-descriptor.firestore";
+import {toValidFirebaseKey} from "../../../../shared/utilities/firebase.utils";
+import { sanitize as domPurifySanitize } from "isomorphic-dompurify";
+import { marked } from 'marked'
+import {
+  resolvedEventFirestorePath,
+} from "../../../../shared/utilities/event-utils";
 
 export type CrawlerKind<ZOD_TYPE extends z.ZodType> = {
     crawlerImpl: (eventId: string, crawlerDescriptor: z.infer<ZOD_TYPE>, criteria: { dayIds?: string[]|undefined }) => Promise<FullEvent>,
@@ -35,6 +42,8 @@ async function resolveCrawler(kind: string): Promise<CrawlerKind<any>|undefined>
         .with("jugsummercamp", async () => import("./jugsummercamp/crawler"))
         .with("bdxio", async () => import("./bdxio/crawler"))
         .with("codeurs-en-seine", async () => import("./codeurs-en-seine/crawler"))
+        .with("openplanner", async () => import("./openplanner/crawler"))
+        .with("single-file", async () => import("./single-file/crawler"))
         .run()
 
     if(!crawler) {
@@ -76,13 +85,7 @@ async function resolveCrawlerDescriptorsMatchingWithToken(crawlingToken: string)
       return getCrawlersMatching(crawlersColl =>
         crawlersColl.where("eventName", "in", eventToken.eventNames)
       )
-    }).otherwise((legacyCrawlingToken) => {
-      // TODO: Remove me once every event will have migrated to the new public-tokens
-      // resolution policy
-      return getCrawlersMatching(crawlersColl =>
-        crawlersColl.where("legacyCrawlingKeys", "array-contains", legacyCrawlingToken)
-      )
-    })
+    }).run()
 
   if(!fbCrawlerDescriptors.length) {
     throw new Error(`No crawler found matching [${crawlingToken}] token !`)
@@ -102,46 +105,86 @@ const crawlAll = async function(criteria: CrawlCriteria) {
     const crawlerDescriptors = await resolveCrawlerDescriptorsMatchingWithToken(criteria.crawlingToken);
 
     const matchingCrawlerDescriptors = crawlerDescriptors.filter(firestoreCrawler => {
-      const dateConstraintMatches = Temporal.Now.instant().epochMilliseconds < Date.parse(firestoreCrawler.stopAutoCrawlingAfter)
-
       const eventIdConstraintMatches = !criteria.eventIds
         || !criteria.eventIds.length
         || criteria.eventIds.includes(firestoreCrawler.id);
 
-      return dateConstraintMatches && eventIdConstraintMatches;
+      return eventIdConstraintMatches;
     });
 
     if(!matchingCrawlerDescriptors.length) {
-      throw new Error(`No crawler found matching either eventIds=${JSON.stringify(criteria.eventIds)} or crawlers' 'stopAutoCrawlingAfter' deadline`);
+      throw new Error(`No crawler found matching eventIds=${JSON.stringify(criteria.eventIds)}`);
     }
 
     return await Promise.all(matchingCrawlerDescriptors.map(async crawlerDescriptor => {
+        const eventId = crawlerDescriptor.eventId || crawlerDescriptor.id;
         try {
             const start = Temporal.Now.instant()
 
             const crawler = await resolveCrawler(crawlerDescriptor.kind);
             if(!crawler) {
-                throw new Error(`Error: no crawler found for kind: ${crawlerDescriptor.kind} (with id=${crawlerDescriptor.id})`)
+                throw new Error(`Error: no crawler found for kind: ${crawlerDescriptor.kind} (with id=${eventId})`)
             }
 
-            info(`crawling event ${crawlerDescriptor.id} of type [${crawlerDescriptor.kind}]...`)
+            info(`crawling event ${eventId} of type [${crawlerDescriptor.kind}]...`)
             const crawlerDescriptorContent = await http.get(crawlerDescriptor.descriptorUrl)
             const crawlerKindDescriptor = crawler.descriptorParser.parse(crawlerDescriptorContent);
 
-            const event = await crawler.crawlerImpl(crawlerDescriptor.id, crawlerKindDescriptor, { dayIds: criteria.dayIds });
-            const messages = sanityCheckEvent(event);
+            const event = await crawler.crawlerImpl(eventId, crawlerKindDescriptor, { dayIds: criteria.dayIds });
+            const messages = await sanityCheckEvent(event);
+
+            await transformEventContent(event, [
+              {
+                name: "talks-regular",
+                contentExtractor: (event) => event.talks.flatMap(talk => [
+                  { get: () => talk.title, set: (content) => talk.title = content },
+                  ...talk.tags.map((tag, idx) => ({ get: () => tag, set: (content: string) => talk.tags[idx] = content })),
+                ]),
+                transformations: [sanitize]
+              }, {
+                name: "talks-html",
+                contentExtractor: (event) => event.talks.flatMap(talk => [
+                  { get: () => talk.summary, set: (content) => talk.summary = content },
+                  { get: () => talk.description, set: (content) => talk.description = content },
+                ]),
+                transformations: [
+                  ...(event.conferenceDescriptor.formattings.parseMarkdownOn.includes("talk-summary")?[markdownToHtml]:[]),
+                  sanitize
+                ]
+              }, {
+                name: "speakers-regular",
+                contentExtractor: (event) => event.talks.flatMap(talk =>
+                  talk.speakers.flatMap(speaker => [
+                    { get: () => speaker.fullName, set: (content: string) => speaker.fullName = content },
+                    { get: () => speaker.companyName, set: (content: string) => speaker.companyName = content },
+                  ])
+                ),
+                transformations: [sanitize]
+              }, {
+                name: "speakers-html",
+                contentExtractor: (event) => event.talks.flatMap(talk =>
+                  talk.speakers.flatMap(speaker => [
+                    { get: () => speaker.bio, set: (content: string) => speaker.bio = content },
+                  ])
+                ),
+                transformations: [
+                  ...(event.conferenceDescriptor.formattings.parseMarkdownOn.includes("speaker-bio")?[markdownToHtml]:[]),
+                  sanitize
+                ]
+              }
+            ])
             await saveEvent(event, crawlerDescriptor)
 
             const end = Temporal.Now.instant()
             return {
-                eventId: crawlerDescriptor.id,
+                eventId,
                 days: event.daySchedules.map(ds => ds.day),
                 descriptorUrlUsed: crawlerDescriptor.descriptorUrl,
                 durationInSeconds: start.until(end).total('seconds'),
                 messages
             }
-        }catch(e: any) {
-          const baseMessage = `Error during crawler with id ${crawlerDescriptor.id}`;
+        } catch(e: any) {
+          const baseMessage = `Error during crawler with id ${eventId}`;
           // const err = Error("")
           // err.
           const errMessage = match(e).with(P.instanceOf(Error), (err) => {
@@ -210,26 +253,75 @@ function sanityCheckEvent(event: FullEvent): string[] {
     event.conferenceDescriptor.features.hideLanguages.push(Array.from(talkLangs)[0]);
   }
 
+  // Ensuring no "/" exists in important ids (talk id & day id)
+  for(const detailedTalk of event.talks) {
+    const validTalkId = toValidFirebaseKey(detailedTalk.id);
+    if(validTalkId !== detailedTalk.id) {
+      // updating talk id references...
+      for(const daySchedule of event.daySchedules) {
+        for(const timeslot of daySchedule.timeSlots) {
+          if(timeslot.type === 'talks') {
+            for(const talk of timeslot.talks) {
+              if(talk.id === detailedTalk.id) {
+                talk.id = validTalkId;
+              }
+            }
+          }
+        }
+      }
+
+      detailedTalk.id = validTalkId;
+    }
+  }
+  for(const dailySchedule of event.daySchedules) {
+    const validDayId = toValidFirebaseKey(dailySchedule.day);
+    if(validDayId !== dailySchedule.day) {
+      // updating day id references...
+      for(const confDescriptorDay of event.conferenceDescriptor.days) {
+        if(confDescriptorDay.id === dailySchedule.day) {
+          confDescriptorDay.id = validDayId;
+        }
+      }
+
+      dailySchedule.day = validDayId;
+    }
+  }
+
   return crawlingMessages;
 }
 
 const saveEvent = async function (event: FullEvent, crawlerDescriptor: z.infer<typeof FIREBASE_CRAWLER_DESCRIPTOR_PARSER>) {
     info("saving event " + event.id)
 
-    const listableEvent: ListableEvent = {
+    const websiteUrl = (event.conferenceDescriptor.infos?.socialMedias || []).find(sm => sm.type === 'website')?.href || ""
+    const baseListableEvent = {
       ...event.info,
       eventFamily: crawlerDescriptor.eventFamily,
       eventName: crawlerDescriptor.eventName,
+      websiteUrl,
+    } as const
+
+    const [spaceToken, spaceContext, listableEvent]: [string|undefined, string, ListableEvent] =
+      crawlerDescriptor.visibility === 'public'
+        ? [undefined, 'public space', { ...baseListableEvent, visibility: 'public' }]
+        : [crawlerDescriptor.spaceToken, `private space: ${crawlerDescriptor.spaceToken}`, {...baseListableEvent, visibility: 'private', spaceToken: crawlerDescriptor.spaceToken}]
+
+    if(spaceToken) {
+      const space = await db.doc(`/spaces/${spaceToken}`).get()
+      // Creating (dummy) space entry so that we can list spaces serverside (we can't list ids from empty docs)
+      if(!space.exists) {
+        space.ref.set({ spaceToken });
+      }
     }
 
-    await db.collection("events").doc(event.id).set(listableEvent)
+    await db.doc(resolvedEventFirestorePath(event.id, spaceToken)).set(listableEvent)
 
-    const talksStatsAllInOneDoc = await db.doc(`events/${event.id}/talksStats-allInOne/self`).get()
+    const talksStatsAllInOneDoc = await db.doc(`${resolvedEventFirestorePath(event.id, spaceToken)}/talksStats-allInOne/self`).get()
     if(!talksStatsAllInOneDoc.exists) {
-        await db.doc(`events/${event.id}/talksStats-allInOne/self`).set({})
+        await db.doc(`${resolvedEventFirestorePath(event.id, spaceToken)}/talksStats-allInOne/self`).set({})
     }
 
-    const firestoreEvent = db.collection("events").doc(event.id);
+    const firestoreEvent = db.doc(`${resolvedEventFirestorePath(event.id, spaceToken)}`);
     const organizerSpaceEntries = await firestoreEvent
         .collection('organizer-space')
         .listDocuments();
@@ -245,29 +337,44 @@ const saveEvent = async function (event: FullEvent, crawlerDescriptor: z.infer<t
             await firestoreEvent.collection('organizer-space').doc(organizerSecretToken).set(organizerSpaceContent)
 
             await Promise.all(event.daySchedules.map(async daySchedule => {
-                const dailyRating = await db.doc(`events/${event.id}/organizer-space/${organizerSecretToken}/daily-ratings/${daySchedule.day}`).get()
+                const dailyRating = await db.doc(`${resolvedEventFirestorePath(event.id, spaceToken)}/organizer-space/${organizerSecretToken}/daily-ratings/${daySchedule.day}`).get()
                 if(!dailyRating.exists) {
-                    await db.doc(`events/${event.id}/organizer-space/${organizerSecretToken}/daily-ratings/${daySchedule.day}`).set({});
+                    await db.doc(`${resolvedEventFirestorePath(event.id, spaceToken)}/organizer-space/${organizerSecretToken}/daily-ratings/${daySchedule.day}`).set({});
                 }
             }))
 
-            await Promise.all([
-                ...event.talks.map(async talk => {
-                    const talkFeedbacksDoc = db.doc(`events/${event.id}/organizer-space/${organizerSecretToken}/ratings/${talk.id}`)
-                    const talkFeedbacks = await talkFeedbacksDoc.get();
-                    if(!talkFeedbacks.exists) {
-                        await talkFeedbacksDoc.create({});
-                    }
-                })
-            ])
             return {organizerSecretToken, organizerSpaceContent};
         }).with(1, async () => {
             const organizerSecretToken = await organizerSpaceEntries[0].id;
             const organizerSpaceContent = (await firestoreEvent.collection('organizer-space').doc(organizerSecretToken).get()).data() as ConferenceOrganizerSpace;
             return {organizerSecretToken, organizerSpaceContent};
         }).otherwise(async () => {
-            throw new Error(`More than 1 organizer-space entries detected (${organizerSpaceEntries.length}) for event ${event.id}`);
+            throw new Error(`More than 1 organizer-space entries detected (${organizerSpaceEntries.length}) for event ${event.id} (${spaceContext})`);
         })
+
+    const talkFeedbacksDoc = await db.collection(`${resolvedEventFirestorePath(event.id, spaceToken)}/organizer-space/${organizerSecretToken}/ratings`).listDocuments()
+    const ratingsTalkIds = talkFeedbacksDoc.map(doc => doc.id);
+    await Promise.all([
+        ...event.daySchedules.map(async daySchedule => {
+          const dailyRatings = (await db.doc(`${resolvedEventFirestorePath(event.id, spaceToken)}/organizer-space/${organizerSecretToken}/daily-ratings/${daySchedule.day}`).get()).data() as Record<string, object>;
+          const talkIds = daySchedule.timeSlots.flatMap(ts => ts.type === 'talks' ? ts.talks.map(t => t.id) : [])
+          const dailyRatingsToUpdate = talkIds.reduce((dailyRatingsToUpdate, talkId) => {
+            if(!dailyRatings[talkId]) {
+              dailyRatingsToUpdate[talkId] = {};
+            }
+            return dailyRatingsToUpdate;
+          }, {} as Record<string, object>)
+
+          if(Object.keys(dailyRatingsToUpdate).length) {
+            await db.doc(`${resolvedEventFirestorePath(event.id, spaceToken)}/organizer-space/${organizerSecretToken}/daily-ratings/${daySchedule.day}`).update(dailyRatingsToUpdate);
+          }
+        }),
+        ...event.talks.map(async talk => {
+          if(!ratingsTalkIds.includes(talk.id)) {
+            await db.doc(`${resolvedEventFirestorePath(event.id, spaceToken)}/organizer-space/${organizerSecretToken}/ratings/${talk.id}`).create({})
+          }
+        })
+    ])
 
     await Promise.all(event.daySchedules.map(async daySchedule => {
         try {
@@ -279,7 +386,7 @@ const saveEvent = async function (event: FullEvent, crawlerDescriptor: z.infer<t
         }
     }))
 
-    const talksCollectionRefBeforeUpdate = (await db.collection(`/events/${event.id}/talks`).listDocuments()) || []
+    const talksCollectionRefBeforeUpdate = (await db.collection(`/${resolvedEventFirestorePath(event.id, spaceToken)}/talks`).listDocuments()) || []
     const talkIdsHashBeforeUpdate = talksCollectionRefBeforeUpdate.map(talk => talk.id).sort().join(",")
 
     await Promise.all(event.talks.map(async talk => {
@@ -289,9 +396,11 @@ const saveEvent = async function (event: FullEvent, crawlerDescriptor: z.infer<t
         }
         try {
             info("saving talk " + talk.id + " " + talk.title);
-            await firestoreEvent
-                .collection("talks").doc(talk.id)
-                .set(talk)
+            const talkRef = firestoreEvent.collection("talks").doc(talk.id)
+            const talkDoc = await talkRef.get()
+            const assets: TalkAsset[] = talkDoc.exists ? (talkDoc.data() as DetailedTalk).assets : []
+
+            await talkRef.set({ ...talk, assets })
 
             const existingTalkFeedbackViewerToken = organizerSpaceContent.talkFeedbackViewerTokens
                 .find(tfvt => tfvt.eventId === event.id && tfvt.talkId === talk.id)
@@ -318,11 +427,11 @@ const saveEvent = async function (event: FullEvent, crawlerDescriptor: z.infer<t
         }
     }));
 
-    const talksCollectionRefAfterUpdate = (await db.collection(`/events/${event.id}/talks`).listDocuments()) || []
+    const talksCollectionRefAfterUpdate = (await db.collection(`/${resolvedEventFirestorePath(event.id, spaceToken)}/talks`).listDocuments()) || []
     const talkIdsHashAfterUpdate = talksCollectionRefAfterUpdate.map(talk => talk.id).sort().join(",")
 
     if(talkIdsHashBeforeUpdate !== talkIdsHashAfterUpdate) {
-        await eventLastUpdateRefreshed(event.id, ['talkListUpdated']);
+        await eventLastUpdateRefreshed(spaceToken, event.id, ['talkListUpdated']);
     }
 
     try {
@@ -339,7 +448,7 @@ const saveEvent = async function (event: FullEvent, crawlerDescriptor: z.infer<t
             .set(confDescriptor);
 
     }catch(e) {
-        error(`Error while storing conference descriptor ${event.conferenceDescriptor.id}: ${e?.toString()}`)
+        error(`Error while storing conference descriptor ${event.conferenceDescriptor.id} (${spaceContext}): ${e?.toString()}`)
     }
 
     try {
@@ -348,7 +457,37 @@ const saveEvent = async function (event: FullEvent, crawlerDescriptor: z.infer<t
         error(`Error while storing event's organizer-space content`)
     }
 
-    await ensureRoomsStatsFilledFor(event.id)
+    await ensureRoomsStatsFilledFor(spaceToken, event.id)
+}
+
+type ContentTransformation = {
+  name: string,
+  contentExtractor: (fullEvent: FullEvent) => Array<{ get: () => string|null|undefined, set: (value: string) => void }>,
+  transformations: Array<(content: string) => Promise<string>>
+}
+
+async function transformEventContent(fullEvent: FullEvent, contentTransformations: ContentTransformation[]): Promise<void> {
+  for(const contentTransformation of contentTransformations) {
+    for(const contentGetterSetter of contentTransformation.contentExtractor(fullEvent)) {
+      const content = contentGetterSetter.get()
+      if(content) {
+        let updatedContent = content;
+        for(const transformation of contentTransformation.transformations) {
+          updatedContent = await transformation(updatedContent)
+        }
+        contentGetterSetter.set(updatedContent)
+      }
+    }
+  }
+}
+
+
+async function sanitize(content: string): Promise<string> {
+  return domPurifySanitize(content)
+}
+
+async function markdownToHtml(content: string): Promise<string> {
+  return marked.parse(content);
 }
 
 export default crawlAll;

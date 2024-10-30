@@ -145,12 +145,12 @@ export const CAMPING_DES_SPEAKERS_CRAWLER: CrawlerKind<typeof CAMPING_DES_SPEAKE
             title: descriptor.title,
             days: descriptor.days,
             headingTitle: descriptor.headingTitle,
+            headingBackground: descriptor.headingBackground,
             description: descriptor.description || "",
             keywords: descriptor.keywords,
             location: descriptor.location,
             logoUrl: descriptor.logoUrl,
             timezone: descriptor.timezone,
-            websiteUrl: descriptor.websiteUrl,
             peopleDescription: descriptor.peopleDescription || "",
             backgroundUrl: descriptor.backgroundUrl,
             theming: descriptor.theming as ConferenceDescriptor['theming'],
@@ -159,7 +159,11 @@ export const CAMPING_DES_SPEAKERS_CRAWLER: CrawlerKind<typeof CAMPING_DES_SPEAKE
             talkFormats: descriptor.talkFormats as ConferenceDescriptor['talkFormats'],
             infos: descriptor.infos,
             features: descriptor.features,
-            supportedTalkLanguages: descriptor.supportedTalkLanguages
+            supportedTalkLanguages: descriptor.supportedTalkLanguages,
+            formattings: descriptor.formattings || {
+              talkFormatTitle: 'with-duration',
+              parseMarkdownOn: [],
+            },
         };
 
         const detailedTalks = rawDetailedTalks.map(rawTalk => {
@@ -178,7 +182,8 @@ export const CAMPING_DES_SPEAKERS_CRAWLER: CrawlerKind<typeof CAMPING_DES_SPEAKE
                 start: rawTalk!.start,
                 end: rawTalk!.end,
                 tags: [],
-                isOverflow: false
+                isOverflow: false,
+                assets: []
             };
             return detailedTalk;
         });
@@ -258,7 +263,6 @@ export const CAMPING_DES_SPEAKERS_CRAWLER: CrawlerKind<typeof CAMPING_DES_SPEAKE
                 location: descriptor.location,
                 logoUrl: descriptor.logoUrl,
                 timezone: descriptor.timezone,
-                websiteUrl: descriptor.websiteUrl,
                 peopleDescription: descriptor.peopleDescription as any,
                 backgroundUrl: descriptor.backgroundUrl
             },

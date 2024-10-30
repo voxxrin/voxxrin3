@@ -18,19 +18,28 @@ describe('devoxx crawlers', () => {
 
     const events = [{
         id: 'dvgr23', confName: `Devoxx Greece 23`,
-        descriptorUrl: `https://gist.githubusercontent.com/fcamblor/9947fc134714855116c2afd8c1856303/raw/voxxrin3-dvgr23-crawler-descriptor.json`
+        descriptorUrl: `https://gist.githubusercontent.com/fcamblor/9947fc134714855116c2afd8c1856303/raw/voxxrin3-dvgr23-crawler-descriptor.json`,
+        skipped: false,
     }, {
         id: 'devoxxuk23', confName: `Devoxx UK 23`,
-        descriptorUrl: `https://gist.githubusercontent.com/fcamblor/9947fc134714855116c2afd8c1856303/raw/voxxrin3-devoxxuk23-crawler-descriptor.json`
+        descriptorUrl: `https://gist.githubusercontent.com/fcamblor/9947fc134714855116c2afd8c1856303/raw/voxxrin3-devoxxuk23-crawler-descriptor.json`,
+        skipped: false,
     }, {
         id: 'dvbe22', confName: `Devoxx Belgium 22`,
-        descriptorUrl: `https://gist.githubusercontent.com/fcamblor/9947fc134714855116c2afd8c1856303/raw/voxxrin3-dvbe22-crawler-descriptor.json`
+        descriptorUrl: `https://gist.githubusercontent.com/fcamblor/9947fc134714855116c2afd8c1856303/raw/voxxrin3-dvbe22-crawler-descriptor.json`,
+        // De-activated because we get an error about self-signed certificate on dvbe22.cfp.dev URL
+        skipped: true,
     }, {
         id: 'dvbe23', confName: `Devoxx Belgium 23`,
-        descriptorUrl: `https://gist.githubusercontent.com/stephanj/7d91c0273c16580bd1ef106d0a8097e6/raw/dvbe23.json`
+        descriptorUrl: `https://gist.githubusercontent.com/stephanj/7d91c0273c16580bd1ef106d0a8097e6/raw/dvbe.json`,
+        skipped: false,
+    }, {
+        id: 'dvbe24', confName: `Devoxx Belgium 24`,
+        descriptorUrl: `https://gist.githubusercontent.com/stephanj/7d91c0273c16580bd1ef106d0a8097e6/raw/dvbe24.json`,
+        skipped: false,
     }] as const;
     events.forEach(event => {
-        it(`Loading ${event.confName} schedule`, async () => {
+        (event.skipped ? it.skip : it)(`Loading ${event.confName} schedule`, async () => {
             const descriptorPayload = await http.get(event.descriptorUrl);
             const descriptor = DEVOXX_CRAWLER.descriptorParser.parse(descriptorPayload)
             const result = await DEVOXX_CRAWLER.crawlerImpl(event.id, descriptor, {});

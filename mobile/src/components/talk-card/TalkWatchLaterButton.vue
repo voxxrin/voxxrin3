@@ -12,10 +12,8 @@
 
 <script setup lang="ts">
 import {PropType} from "vue";
-import {
-    useUserTalkNoteActions
-} from "@/state/useUserTalkNotes";
-import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
+import {useUserTalkNoteActions} from "@/state/useUserTalkNotes";
+import {spacedEventIdOf, VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {toManagedRef as toRef} from "@/views/vue-utils";
 import {TalkId} from "@/models/VoxxrinTalk";
 import {TalkNote} from "../../../../shared/feedbacks.firestore";
@@ -40,7 +38,7 @@ const emits = defineEmits<{
 const talkNotes = toRef(() => props.userTalkNotes)
 
 const {toggleWatchLater} = useUserTalkNoteActions(
-    toRef(() => props.confDescriptor.id),
+    toRef(() => spacedEventIdOf(props.confDescriptor)),
     toRef(() => props.userTalkNotes?.talkId ? new TalkId(props.userTalkNotes?.talkId) : undefined),
     talkNotes,
     updatedTalkNote => emits("talkNoteUpdated", updatedTalkNote)
@@ -55,9 +53,9 @@ defineExpose({
 .btn-watchLater {
 
   &._is-active {
-    --background: var(--voxxrin-event-theme-colors-secondary-hex);
-    --color: var(--voxxrin-event-theme-colors-secondary-contrast-hex);
-    border-left: 1px solid var(--voxxrin-event-theme-colors-secondary-hex);
+    --background: var(--voxxrin-event-theme-colors-tertiary-hex);
+    --color: var(--voxxrin-event-theme-colors-tertiary-contrast-hex);
+    border-left: 1px solid var(--voxxrin-event-theme-colors-tertiary-hex);
   }
 }
 </style>

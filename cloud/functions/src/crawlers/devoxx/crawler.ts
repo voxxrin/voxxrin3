@@ -24,7 +24,7 @@ import {
   THEMABLE_TALK_FORMAT_PARSER
 } from "../crawler-parsers";
 import {CrawlerKind, TALK_FORMAT_FALLBACK_COLORS} from "../crawl";
-import {match} from "ts-pattern";
+import {match, P} from "ts-pattern";
 import {http} from "../utils";
 import {TalkStats} from "../../../../../shared/event-stats";
 
@@ -63,7 +63,18 @@ type DevoxxFloorPlan = {
 export const DEVOXX_CRAWLER: CrawlerKind<typeof DEVOXX_DESCRIPTOR_PARSER> = {
     descriptorParser: DEVOXX_DESCRIPTOR_PARSER,
     crawlerImpl: async (eventId: string, descriptor: z.infer<typeof DEVOXX_DESCRIPTOR_PARSER>, criteria: { dayIds?: string[]|undefined }) => {
-        const rawCfpBaseUrl = descriptor.cfpBaseUrl || `https://${descriptor.cfpId}.cfp.dev`;
+        const rawCfpBaseUrl = match([descriptor.cfpBaseUrl, descriptor.cfpId])
+            .with([P.nonNullable, P._], ([cfpBaseUrl, _]) => cfpBaseUrl)
+            .with([P._, P.nonNullable], ([_, cfpId]) => `https://${cfpId}.cfp.dev`)
+            .otherwise(() => `https://${eventId}.cfp.dev`)
+
+        if(rawCfpBaseUrl !== `https://${eventId}.cfp.dev`) {
+          throw new Error(`Voxxrin event id (${eventId}) not matching with cfp.dev's slug (${rawCfpBaseUrl}).
+This can lead to unexpected behaviour when CFP will try to call voxxrin API using slug as event id.
+Please, unless event id is made configurable at cfp.dev level, you should rather use a voxxrin event id matching cfp.dev's slug !
+`)
+        }
+
         const cfpBaseUrl = rawCfpBaseUrl+(rawCfpBaseUrl.endsWith("/")?"":"/")
         const [cfpEvent, cfpFloorPlans] = await Promise.all([
             http.get<CfpEvent>(`${cfpBaseUrl}api/public/event`),
@@ -95,7 +106,6 @@ export const DEVOXX_CRAWLER: CrawlerKind<typeof DEVOXX_DESCRIPTOR_PARSER> = {
             days: days,
             logoUrl: descriptor.logoUrl,
             backgroundUrl: descriptor.backgroundUrl,
-            websiteUrl: cfpEvent.website,
             location: {
                 city: cfpEvent.locationCity, country: cfpEvent.locationCountry,
                 coords: {
@@ -133,6 +143,7 @@ export const DEVOXX_CRAWLER: CrawlerKind<typeof DEVOXX_DESCRIPTOR_PARSER> = {
         const eventDescriptor: FullEvent['conferenceDescriptor'] = {
             ...eventInfo,
             headingTitle: descriptor.headingTitle,
+            headingBackground: descriptor.headingBackground,
             features: descriptor.features,
             talkFormats: eventTalkFormats,
             talkTracks: descriptor.talkTracks,
@@ -145,6 +156,10 @@ export const DEVOXX_CRAWLER: CrawlerKind<typeof DEVOXX_DESCRIPTOR_PARSER> = {
                 })),
                 socialMedias: descriptor.infos?.socialMedias || [],
                 sponsors: descriptor.infos?.sponsors || []
+            },
+            formattings: descriptor.formattings || {
+              talkFormatTitle: 'with-duration',
+              parseMarkdownOn: [],
             },
         }
 
@@ -226,7 +241,8 @@ function toScheduleTalk(item: DevoxxScheduleItem, start: ISODatetime, end: ISODa
     end: end as ISODatetime,
     summary: item.proposal.summary || "",
     description: item.proposal.description || "",
-    tags: [`Audience:${upperFirstAudience}`].concat(item.proposal.tags.map(t => t.name))
+    tags: [`Audience:${upperFirstAudience}`].concat((item.proposal.tags || []).map(t => t.name)),
+    assets: []
   };
 
   return { type: 'proposal', talk, detailedTalk, totalFavourites: item.totalFavourites };
@@ -254,7 +270,7 @@ const crawlDevoxxDay = async (cfpBaseUrl: string, day: string, descriptor: z.inf
       return slots;
     }, {} as Record<string, DevoxxScheduleItem[]>)
 
-    debug(`Devoxx slots for day ${day}: ${JSON.stringify(slots)}`)
+    // debug(`Devoxx slots for day ${day}: ${JSON.stringify(slots)}`)
 
     for(const [key, items] of Object.entries(slots)) {
         const [start, end] = key.split("--")

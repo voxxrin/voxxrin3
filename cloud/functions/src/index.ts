@@ -1,8 +1,6 @@
 import * as express from 'express';
 import * as functions from 'firebase-functions';
 import {declareExpressHttpRoutes} from "./functions/http/api/routes";
-import {extractSingleQueryParam} from "./functions/http/utils";
-import {info} from "./firebase";
 
 const app = express()
 app.use(express.json());
@@ -49,9 +47,6 @@ exports.eventStats = functions.https.onRequest(async (request, response) => {
 exports.migrateFirestoreSchema = functions.https.onRequest(async (request, response) => {
   (await import("./functions/http/migrateFirestoreSchema")).migrateFirestoreSchema(request, response)
 })
-exports.globalStats = functions.https.onRequest(async (request, response) => {
-  (await import("./functions/http/event/globalStatistics")).globalStats(request, response)
-})
 
 // Express handler
 declareExpressHttpRoutes(app)
@@ -63,23 +58,62 @@ exports.onUserTalksNoteCreate = functions.firestore
   .onCreate(async (change, context) => {
     (await import('./functions/firestore/onUserTalkNotes')).onUserTalksNoteCreate(change, context)
   });
+exports.onUserPrivateSpaceTalksNoteCreate = functions.firestore
+  .document("users/{userId}/spaces/{spaceToken}/events/{eventId}/talksNotes/{talkId}")
+  .onCreate(async (change, context) => {
+    (await import('./functions/firestore/onUserTalkNotes')).onUserTalksNoteCreate(change, context)
+  });
 exports.onUserTalksNoteUpdate = functions.firestore
   .document("users/{userId}/events/{eventId}/talksNotes/{talkId}")
+  .onUpdate(async (change, context) => {
+    (await import('./functions/firestore/onUserTalkNotes')).onUserTalksNoteUpdate(change, context)
+  });
+exports.onUserPrivateSpaceTalksNoteUpdate = functions.firestore
+  .document("users/{userId}/spaces/{spaceToken}/events/{eventId}/talksNotes/{talkId}")
   .onUpdate(async (change, context) => {
     (await import('./functions/firestore/onUserTalkNotes')).onUserTalksNoteUpdate(change, context)
   });
 exports.onUserCreated = functions.auth.user().onCreate(async (user, context) => {
   (await import('./functions/firestore/onUserCreated')).onUserCreated(user, context)
 });
+exports.onUserTokenWalletDeleted = functions.firestore
+  .document(`users/{userId}/tokens-wallet/self`)
+  .onDelete(async (change, context) => {
+    (await import('./functions/firestore/onUserTokensWalletDeleted')).onUserTokensWalletDeleted(change, context)
+  })
+// TODO: to rename onUserTalkFeedbackUpdated
 exports.onTalkFeedbackUpdated = functions.firestore
   .document(`users/{userId}/events/{eventId}/days/{dayId}/feedbacks/self`)
   .onUpdate(async (change, context) => {
-    (await import('./functions/firestore/onTalkFeedbackProvided')).onTalkFeedbackUpdated(change, context)
+    (await import('./functions/firestore/onTalkFeedbackProvided')).onUserTalkFeedbackUpdated(change, context)
   });
+exports.onUserPrivateSpaceTalkFeedbackUpdated = functions.firestore
+  .document(`users/{userId}/spaces/{spaceToken}/events/{eventId}/days/{dayId}/feedbacks/self`)
+  .onUpdate(async (change, context) => {
+    (await import('./functions/firestore/onTalkFeedbackProvided')).onUserTalkFeedbackUpdated(change, context)
+  });
+// TODO: to rename onUserTalkFeedbackCreated
 exports.onTalkFeedbackCreated = functions.firestore
   .document(`users/{userId}/events/{eventId}/days/{dayId}/feedbacks/self`)
   .onCreate(async (snapshot, context) => {
-    (await import('./functions/firestore/onTalkFeedbackProvided')).onTalkFeedbackCreated(snapshot, context)
+    (await import('./functions/firestore/onTalkFeedbackProvided')).onUserTalkFeedbackCreated(snapshot, context)
+  });
+exports.onUserPrivateSpaceTalkFeedbackCreated = functions.firestore
+  .document(`users/{userId}/spaces/{spaceToken}/events/{eventId}/days/{dayId}/feedbacks/self`)
+  .onCreate(async (snapshot, context) => {
+    (await import('./functions/firestore/onTalkFeedbackProvided')).onUserTalkFeedbackCreated(snapshot, context)
+  });
+exports.onUserNodeCreated = functions.firestore
+  .document(`users/{userId}`)
+  .onCreate(async (snapshot, context) => {
+    console.log(`onUserNodeCreated called !`)
+    return (await import('./functions/firestore/onUserNodeUpserted')).onUserNodeUpserted(context)
+  });
+exports.onUserNodeUpdated = functions.firestore
+  .document(`users/{userId}`)
+  .onUpdate(async (snapshot, context) => {
+    console.log(`onUserNodeUpdated called !`)
+    return (await import('./functions/firestore/onUserNodeUpserted')).onUserNodeUpserted(context)
   });
 
 // Schedulers
@@ -88,4 +122,9 @@ exports.refreshSlowPacedTalkStatsCron = functions.pubsub
   .onRun(async (event) => {
 
     (await import('./cron/slowPacedTalkStatsRefresh')).refreshSlowPacedTalkStatsForOngoingEvents()
+});
+exports.cleanOutdatedUsersCron = functions.pubsub
+  .schedule("0 0 * * *").timeZone("Europe/Paris")
+  .onRun(async (event) => {
+    (await import('./cron/cleanOutdatedUsers')).cleanOutdatedUsers()
 });

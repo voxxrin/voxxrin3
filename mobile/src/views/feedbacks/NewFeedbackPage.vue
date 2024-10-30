@@ -69,7 +69,7 @@
         </div>
       </slot>
     </base-feedback-step>
-    <feedback-footer>
+    <feedback-footer :conf-descriptor="confDescriptorRef">
       <template #details>
         <ion-button v-if="confDescriptorRef?.features.remindMeOnceVideosAreAvailableEnabled"
                     @click.stop="watchLaterAllFavoritedTalks()"
@@ -91,11 +91,9 @@
                 <small>({{ LL.During_this_time_slot() }})</small>
             </span>
         </ion-button>
-        <ion-button size="small" fill="solid" shape="round" expand="block" v-if="selectedTalk !== undefined" @click="rateSelectedTalk()"
+        <ion-button class="add-feedback-btn" size="small" fill="solid" shape="round" expand="block" v-if="selectedTalk !== undefined" @click="rateSelectedTalk()"
                     :aria-label="LL.Add_Feedback()">
-            <span class="contentDidntAttendTalk">
               {{LL.Add_Feedback()}}
-            </span>
         </ion-button>
       </template>
     </feedback-footer>
@@ -103,32 +101,28 @@
 </template>
 
 <script setup lang="ts">
-import {EventId} from "@/models/VoxxrinEvent";
-import {getRouteParamsValue, isRefDefined, isRefUndefined} from "@/views/vue-utils";
+import {getRouteParamsValue, isRefDefined, isRefUndefined, managedRef as ref} from "@/views/vue-utils";
 import {useRoute} from "vue-router";
 import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
-import {ComponentPublicInstance, computed, Ref, toValue, watch} from "vue";
-import {managedRef as ref, toManagedRef as toRef} from "@/views/vue-utils";
+import {computed, Ref, toValue, watch} from "vue";
 import {typesafeI18n} from "@/i18n/i18n-vue";
-import {
-    ScheduleTimeSlotId
-} from "@/models/VoxxrinSchedule";
+import {ScheduleTimeSlotId} from "@/models/VoxxrinSchedule";
 import {IonAccordion, IonAccordionGroup, useIonRouter} from "@ionic/vue";
 import FeedbackTalkSelector from "@/components/feedbacks/FeedbackTalkSelector.vue";
 import {TalkId, VoxxrinTalk} from "@/models/VoxxrinTalk";
 import BaseFeedbackStep from "@/components/feedbacks/BaseFeedbackStep.vue";
 import {
-    findLabelledTimeslotWithOverlappingsForTimeslotId, LabelledTimeslot,
-    LabelledTimeslotWithOverlappings
+  findLabelledTimeslotWithOverlappingsForTimeslotId,
+  LabelledTimeslot,
+  LabelledTimeslotWithOverlappings
 } from "@/state/findTimeslot";
 import FeedbackFooter from "@/components/feedbacks/FeedbackFooter.vue";
 import SlotOverlaps from "@/components/schedule/SlotOverlaps.vue";
 import {goBackOrNavigateTo} from "@/router";
-import {
-    useUserEventTalkNotes,
-} from "@/state/useUserTalkNotes";
+import {useUserEventTalkNotes,} from "@/state/useUserTalkNotes";
 import {useUserFeedbacks} from "@/state/useUserFeedbacks";
 import {Logger} from "@/services/Logger";
+import {getResolvedEventRootPathFromSpacedEventIdRef, useCurrentSpaceEventIdRef} from "@/services/Spaces";
 
 const LOGGER = Logger.named("NewFeedbackPage");
 
@@ -136,9 +130,9 @@ const { LL } = typesafeI18n()
 
 const ionRouter = useIonRouter();
 const route = useRoute();
-const eventIdRef = computed(() => new EventId(getRouteParamsValue(route, 'eventId')));
+const spacedEventIdRef = useCurrentSpaceEventIdRef();
 const timeslotIdRef = computed(() => new ScheduleTimeSlotId(getRouteParamsValue(route, 'timeslotId')));
-const {conferenceDescriptor: confDescriptorRef } = useSharedConferenceDescriptor(eventIdRef);
+const {conferenceDescriptor: confDescriptorRef } = useSharedConferenceDescriptor(spacedEventIdRef);
 
 const perTimeslotIdFeedbackTalkSelectorsRef = ref(new Map<string, InstanceType<typeof FeedbackTalkSelector>>())
 
@@ -169,7 +163,7 @@ function rateSelectedTalk() {
     }
 
     if(isRefDefined(confDescriptorRef) && isRefDefined(selectedTalk)) {
-        ionRouter.navigate(`/events/${confDescriptorRef.value.id.value}/rate-talk/${selectedTalk.value.id.value}`, 'forward', 'replace')
+        ionRouter.navigate(`${getResolvedEventRootPathFromSpacedEventIdRef(spacedEventIdRef)}/rate-talk/${selectedTalk.value.id.value}`, 'forward', 'replace')
     }
 }
 
@@ -186,7 +180,7 @@ const talkIdsRef = computed(() => {
     const everyCandidateTalks = toValue(everyCandidateTalksRef);
     return everyCandidateTalks.map(talk => talk.id);
 })
-const {userEventTalkNotesRef } = useUserEventTalkNotes(eventIdRef, talkIdsRef);
+const {userEventTalkNotesRef } = useUserEventTalkNotes(spacedEventIdRef, talkIdsRef);
 
 const favoritedTalkIdsRef = computed(() => {
     const userEventTalkNotes = toValue(userEventTalkNotesRef)
@@ -213,18 +207,18 @@ async function watchLaterAllFavoritedTalks() {
 }
 
 function backToSchedulePage() {
-    goBackOrNavigateTo(ionRouter, `/events/${eventIdRef.value.value}`)
+    goBackOrNavigateTo(ionRouter, `${getResolvedEventRootPathFromSpacedEventIdRef(spacedEventIdRef)}`)
 }
 
 const dayIdRef = computed(() => labelledTimeslotWithOverlappingsRef.value?.dayId)
-const { updateTimeslotFeedback } = useUserFeedbacks(eventIdRef, dayIdRef)
+const { updateTimeslotFeedback } = useUserFeedbacks(spacedEventIdRef, dayIdRef)
 async function submitSkippedFeedback() {
     await updateTimeslotFeedback(timeslotIdRef.value, {
         status: 'skipped',
         timeslotId: labelledTimeslotWithOverlappingsRef.value!.labelledTimeslot.id.value,
         alsoConcernsOverlappingTimeslotIds: labelledTimeslotWithOverlappingsRef.value!.overlappingLabelledTimeslots.map(ts => ts.id.value)
     })
-    goBackOrNavigateTo(ionRouter, `/events/${eventIdRef.value.value}`)
+    goBackOrNavigateTo(ionRouter, `${getResolvedEventRootPathFromSpacedEventIdRef(spacedEventIdRef)}`)
 }
 
 function updateFeedbackSelectorRefTo(timeslotId: ScheduleTimeSlotId|undefined, feedbackSelector: any) {
@@ -241,7 +235,7 @@ function updateFeedbackSelectorRefTo(timeslotId: ScheduleTimeSlotId|undefined, f
     justify-content: space-between;
     row-gap: 4px;
     padding: 8px 16px;
-    background: var(--app-primary);
+    background: var(--voxxrin-event-theme-colors-secondary-hex);
     color: white;
     z-index: 1;
 
@@ -277,7 +271,7 @@ function updateFeedbackSelectorRefTo(timeslotId: ScheduleTimeSlotId|undefined, f
       border-radius: 0 0 0 8px;
       padding: 4px 12px;
       font-size: 12px;
-      background-color: var(--app-primary);
+      background-color: var(--voxxrin-event-theme-colors-secondary-hex);
       z-index: 1;
 
       @media (prefers-color-scheme: dark) {
@@ -290,5 +284,9 @@ function updateFeedbackSelectorRefTo(timeslotId: ScheduleTimeSlotId|undefined, f
     display: inline-flex;
     flex-direction: column;
     row-gap: 2px;
+  }
+
+  .add-feedback-btn {
+    --background: var(--voxxrin-event-theme-colors-secondary-hex)
   }
 </style>

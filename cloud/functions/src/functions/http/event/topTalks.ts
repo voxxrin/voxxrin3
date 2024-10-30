@@ -1,6 +1,6 @@
 import {Response, Request} from "express";
 import {logPerf, roundedAverage, sendResponseMessage} from "../utils";
-import {checkEventLastUpdate, eventTalkStatsFor} from "../../firestore/firestore-utils";
+import {checkEventLastUpdate} from "../../firestore/firestore-utils";
 import {getTalksDetailsWithRatings} from "../../firestore/services/talk-utils";
 import {ISOLocalDate} from "../../../../../../shared/type-utils";
 import {match, P} from "ts-pattern";
@@ -8,11 +8,11 @@ import {sortBy} from "lodash";
 import {ConferenceDescriptor} from "../../../../../../shared/conference-descriptor.firestore";
 
 
-export async function eventTopTalks(response: Response, pathParams: {eventId: string}, queryParams: {token: string }, request: Request, eventDescriptor: ConferenceDescriptor) {
+export async function eventTopTalks(response: Response, pathParams: {eventId: string, spaceToken?: string|undefined}, queryParams: {token: string }, request: Request, eventDescriptor: ConferenceDescriptor) {
 
-  const eventId = pathParams.eventId;
+  const { eventId, spaceToken } = pathParams;
   const { cachedHash, updatesDetected } = await logPerf("cached hash", async () => {
-    return await checkEventLastUpdate(eventId, [
+    return await checkEventLastUpdate(spaceToken, eventId, [
       root => root.allFeedbacks,
       root => root.talkListUpdated
     ], request, response)
@@ -23,7 +23,7 @@ export async function eventTopTalks(response: Response, pathParams: {eventId: st
   }
 
   try {
-    const talksDetailsWithRatings = await logPerf("getTalksDetailsWithRatings", () => getTalksDetailsWithRatings(eventId))
+    const talksDetailsWithRatings = await logPerf("getTalksDetailsWithRatings", () => getTalksDetailsWithRatings(spaceToken, eventId))
 
     const { dailyTalksStats} = await logPerf("Post processing", async () => {
       type DailyTalksAndRatings = {
