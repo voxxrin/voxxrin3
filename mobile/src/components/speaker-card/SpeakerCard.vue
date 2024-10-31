@@ -14,9 +14,11 @@
     </div>
     <div class="speakerCard-content">
       <slot name="content"></slot>
-      <div class="bulletTagList" role="list" v-for="categoryCount in categoriesCount" :key="categoryCount.id">
+      <div class="bulletTagList" role="list" v-for="categoryCount in categoriesCount" :key="categoryCount.format.id.value">
         <div class="bulletTag" role="listitem">
-          <span class="bulletTag-nb">{{categoryCount.count}}</span> {{categoryCount.categoryLabel}}
+          <span class="bulletTag-nb">{{categoryCount.count}}</span>
+          {{categoryCount.format.title}}
+          <span v-if="confDescriptor.formattings.talkFormatTitle === 'with-duration'">&nbsp;({{categoryCount.format.hmmDuration}})</span>
         </div>
       </div>
     </div>
@@ -28,11 +30,11 @@
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {IonText, IonThumbnail} from "@ionic/vue";
 import {businessSharp} from "ionicons/icons";
-import SpeakerResumeTalk from "@/components/speaker-card/SpeakerTalk.vue";
-import {SpeakerId, VoxxrinLineupSpeaker, VoxxrinSimpleSpeaker} from "@/models/VoxxrinSpeaker";
+import {VoxxrinLineupSpeaker, VoxxrinSimpleSpeaker} from "@/models/VoxxrinSpeaker";
 import SpeakerThumbnail from "@/components/speaker/SpeakerThumbnail.vue";
 import {computed, PropType, toValue} from "vue";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
+import {VoxxrinTalkFormat} from "@/models/VoxxrinTalkFormat";
 
 const { LL } = typesafeI18n()
 
@@ -40,6 +42,10 @@ const { LL } = typesafeI18n()
     speaker: {
       required: true,
       type: Object as PropType<VoxxrinLineupSpeaker>
+    },
+    confDescriptor: {
+      required: true,
+      type: Object as PropType<VoxxrinConferenceDescriptor>
     }
   })
 
@@ -50,10 +56,13 @@ const { LL } = typesafeI18n()
   const categoriesCount = computed(() => {
     const talks = toValue(props.speaker).talks
     return talks.reduce((categoriesCount, talk) => {
-      categoriesCount[talk.format.id.value] = categoriesCount[talk.format.id.value] || { id: talk.format.id.value, categoryLabel: talk.format.title, count: 0 }
+      categoriesCount[talk.format.id.value] = categoriesCount[talk.format.id.value] || {
+        format: talk.format,
+        count: 0,
+      }
       categoriesCount[talk.format.id.value].count++;
       return categoriesCount;
-    }, {} as Record<string, { id: string, categoryLabel: string, count: number }>)
+    }, {} as Record<string, { format: VoxxrinTalkFormat, count: number }>)
   })
 </script>
 

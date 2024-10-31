@@ -17,7 +17,10 @@
               {{ talk.track.title }}
             </div>
           </ion-badge>
-          <div class="bulletTag _labelOnly">{{ talk.format.title }} ({{ talk.format.hmmDuration }})</div>
+          <div class="bulletTag _labelOnly">
+            {{ talk.format.title }}
+            <span v-if="confDescriptor.formattings.talkFormatTitle === 'with-duration'">&nbsp;({{talk.format.hmmDuration}})</span>
+          </div>
         </div>
 
         <div class="avatarContainer">
@@ -44,6 +47,7 @@ import SpeakerFavTalkButton from "@/components/speaker-card/SpeakerFavTalkButton
 import {VoxxrinLineupSpeaker, VoxxrinLineupTalk,} from "@/models/VoxxrinSpeaker";
 import SpeakerThumbnail from "@/components/speaker/SpeakerThumbnail.vue";
 import {PropType} from "vue";
+import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 
 const {LL} = typesafeI18n()
 const baseUrl = import.meta.env.BASE_URL;
@@ -56,6 +60,10 @@ const props = defineProps({
   focusedSpeaker: {
     required: true,
     type: Object as PropType<VoxxrinLineupSpeaker>
+  },
+  confDescriptor: {
+    required: true,
+    type: Object as PropType<VoxxrinConferenceDescriptor>
   },
 })
 

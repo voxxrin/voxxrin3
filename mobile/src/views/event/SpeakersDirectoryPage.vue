@@ -7,10 +7,10 @@
                       @mode-updated="(updatedModeId, previousModeId) => currentMode = updatedModeId as typeof currentMode">
       </toolbar-header>
 
-      <speaker-card v-for="speaker in speakers" @speaker-clicked="openSpeakerDetails($event)" :speaker="speaker" :key="speaker.id.value">
+      <speaker-card v-for="speaker in speakers" @speaker-clicked="openSpeakerDetails($event)" :confDescriptor="confDescriptor" :speaker="speaker" :key="speaker.id.value">
         <template #content="{}">
           <ion-list class="talkResumeList" :style="{ display: currentMode === 'detailed' ? 'block':'none' }">
-            <SpeakerTalk v-for="talk in speaker.talks" :talk="talk" :focused-speaker="speaker" :key="talk.id.value"></SpeakerTalk>
+            <SpeakerTalk v-for="talk in speaker.talks" :talk="talk" :conf-descriptor="confDescriptor" :focused-speaker="speaker" :key="talk.id.value"></SpeakerTalk>
           </ion-list>
         </template>
       </speaker-card>
@@ -26,7 +26,6 @@
 
 <script setup lang="ts">
   import CurrentEventHeader from "@/components/events/CurrentEventHeader.vue";
-  import {useRoute} from "vue-router";
   import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
   import {typesafeI18n} from "@/i18n/i18n-vue";
   import {managedRef as ref} from "@/views/vue-utils";
@@ -42,15 +41,12 @@
   import SpeakerTalk from "@/components/speaker-card/SpeakerTalk.vue";
 
   const { LL } = typesafeI18n()
-  const route = useRoute();
   const spacedEventIdRef = useCurrentSpaceEventIdRef();
   const {conferenceDescriptor: confDescriptor} = useSharedConferenceDescriptor(spacedEventIdRef);
   const { triggerTabbedPageNavigate } = useTabbedPageNav();
 
   const searchTermsRef = ref<string|undefined>(undefined);
   const { speakers } = useLineupSpeakers(confDescriptor, searchTermsRef)
-
-  const baseUrl = import.meta.env.BASE_URL;
 
   const DEFAULT_MODE = 'compact';
   const currentMode = ref<typeof MODES[number]['id']>(DEFAULT_MODE);
@@ -65,9 +61,6 @@
 
       triggerTabbedPageNavigate(url, "forward", "push");
     }
-  }
-
-  function toggleSearchField() {
   }
 </script>
 
