@@ -26,33 +26,35 @@ export type FullEvent = {
 
 export function detailedTalksToSpeakersLineup(talks: DetailedTalk[]): LineupSpeaker[] {
   return talks.reduce((speakers, talk) => {
-    talk.speakers.forEach(speaker => {
-      const lineupSpeaker = match(speakers.find(lineupSpeaker => lineupSpeaker.id === speaker.id))
-        .with(P.not(P.nullish), lineupSpeaker => lineupSpeaker)
-        .otherwise(() => {
-          const newLineupSpeaker: LineupSpeaker = {
-            ...speaker,
-            talks: []
-          }
-          speakers.push(newLineupSpeaker);
-          return newLineupSpeaker;
-        })
+    if(!talk.isOverflow) {
+      talk.speakers.forEach(speaker => {
+        const lineupSpeaker = match(speakers.find(lineupSpeaker => lineupSpeaker.id === speaker.id))
+          .with(P.not(P.nullish), lineupSpeaker => lineupSpeaker)
+          .otherwise(() => {
+            const newLineupSpeaker: LineupSpeaker = {
+              ...speaker,
+              talks: []
+            }
+            speakers.push(newLineupSpeaker);
+            return newLineupSpeaker;
+          })
 
-      lineupSpeaker.talks.push({
-        id: talk.id,
-        title: talk.title,
-        format: talk.format,
-        language: talk.language,
-        track: talk.track,
-        tags: talk.tags,
-        allocation: {
-          room: talk.room,
-          start: talk.start,
-          end: talk.end,
-        },
-        otherSpeakers: talk.speakers.filter(sp => sp.id !== speaker.id),
+        lineupSpeaker.talks.push({
+          id: talk.id,
+          title: talk.title,
+          format: talk.format,
+          language: talk.language,
+          track: talk.track,
+          tags: talk.tags,
+          allocation: {
+            room: talk.room,
+            start: talk.start,
+            end: talk.end,
+          },
+          otherSpeakers: talk.speakers.filter(sp => sp.id !== speaker.id),
+        })
       })
-    })
+    }
     return speakers;
   }, [] as LineupSpeaker[])
 }
