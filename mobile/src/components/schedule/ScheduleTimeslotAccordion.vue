@@ -25,7 +25,7 @@
                 <talk-watch-later-button v-if="confDescriptor && !hideWatchLater && !talk.isOverflow"
                                          :conf-descriptor="confDescriptor" :user-talk-notes="talkNotes"
                                          @talk-note-updated="updatedTalkNote => userEventTalkNotes.set(talk.id.value, updatedTalkNote) " />
-                <talk-favorite-button v-if="confDescriptor && !talk.isOverflow"
+                <talk-favorite-button scope="schedule-talk" v-if="confDescriptor && !talk.isOverflow"
                                       :conf-descriptor="confDescriptor" :user-talk-notes="talkNotes" :talk-stats="talkStats"
                                       :local-favorite="localEventTalkNotes.get(talk.id.value)"
                                       @talk-note-updated="updatedTalkNote => userEventTalkNotes.set(talk.id.value, updatedTalkNote) " />
@@ -39,7 +39,6 @@
 </template>
 
 <script setup lang="ts">
-import {IonButton} from "@ionic/vue";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {TimeslotAnimations} from "@/services/Animations";
 import TimeSlotAccordion from "@/components/timeslots/TimeSlotAccordion.vue";
