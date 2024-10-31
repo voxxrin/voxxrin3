@@ -22,7 +22,7 @@ import {SocialMediaType} from "../../../../shared/type-utils";
 const props = defineProps({
   type: {
     required: true,
-    type: Object as PropType<SocialMediaType>
+    type: String as PropType<SocialMediaType>
   },
   href: {
     required: true,
