@@ -10,7 +10,13 @@
       <speaker-card v-for="speaker in speakers" @speaker-clicked="openSpeakerDetails($event)" :confDescriptor="confDescriptor" :speaker="speaker" :key="speaker.id.value">
         <template #content="{}">
           <ion-list class="talkResumeList" :style="{ display: currentMode === 'detailed' ? 'block':'none' }">
-            <SpeakerTalk v-for="talk in speaker.talks" :talk="talk" :conf-descriptor="confDescriptor" :focused-speaker="speaker" :key="talk.id.value"></SpeakerTalk>
+            <speaker-talk v-for="talk in speaker.talks" :key="talk.id.value"
+                 :talk="talk" :conf-descriptor="confDescriptor" :focused-speaker="speaker"
+                 :talk-stats="talkStatsRefByTalkId.get(talk.id.value)"
+                 :talk-notes="userEventTalkNotesRef.get(talk.id.value)"
+                 :local-event-talk-notes="localEventTalkNotesRef.get(talk.id.value)"
+                 @talk-note-updated="userEventTalkNotesRef.set(talk.id.value, $event)"
+            />
           </ion-list>
         </template>
       </speaker-card>
@@ -39,6 +45,10 @@
   import {getResolvedEventRootPathFromSpacedEventIdRef, useCurrentSpaceEventIdRef} from "@/services/Spaces";
   import {useLineupSpeakers} from "@/state/useEventSpeakers";
   import SpeakerTalk from "@/components/speaker-card/SpeakerTalk.vue";
+  import {useLocalEventTalkFavsStorage, useUserEventTalkNotes} from "@/state/useUserTalkNotes";
+  import {computed, toValue} from "vue";
+  import {TalkId} from "@/models/VoxxrinTalk";
+  import {useEventTalkStats} from "@/state/useEventTalkStats";
 
   const { LL } = typesafeI18n()
   const spacedEventIdRef = useCurrentSpaceEventIdRef();
@@ -47,6 +57,23 @@
 
   const searchTermsRef = ref<string|undefined>(undefined);
   const { speakers } = useLineupSpeakers(confDescriptor, searchTermsRef)
+
+  const localEventTalkNotesRef = useLocalEventTalkFavsStorage(spacedEventIdRef)
+  const talkIdsRef = computed(() => {
+    const unreffedSpeakers = toValue(speakers);
+    if(!unreffedSpeakers) {
+      return [];
+    }
+
+    const uniqueRawTalkIds = unreffedSpeakers.reduce((rawTalkIds, speaker) => {
+      speaker.talks.forEach(talk => rawTalkIds.add(talk.id.value));
+      return rawTalkIds;
+    }, new Set<string>())
+
+    return [...uniqueRawTalkIds].map(rawTalkId => new TalkId(rawTalkId));
+  })
+  const {userEventTalkNotesRef} = useUserEventTalkNotes(spacedEventIdRef, talkIdsRef)
+  const {firestoreEventTalkStatsRef: talkStatsRefByTalkId} = useEventTalkStats(spacedEventIdRef, talkIdsRef)
 
   const DEFAULT_MODE = 'compact';
   const currentMode = ref<typeof MODES[number]['id']>(DEFAULT_MODE);
