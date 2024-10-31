@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "test": "firebase emulators:exec --only firestore \"jest --detectOpenHandles \"",
-    "deploy": "firebase use ${FIREBASE_PROJECT_NAME:-voxxrin-v3} && firebase deploy --only firestore"
+    "deploy": "npx firebase-tools deploy --only firestore --project ${FIREBASE_PROJECT_NAME:-voxxrin-v3}"
   },
   "license": "Apache-2.0",
   "devDependencies": {
