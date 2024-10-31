@@ -78,8 +78,8 @@
   const DEFAULT_MODE = 'compact';
   const currentMode = ref<typeof MODES[number]['id']>(DEFAULT_MODE);
   const MODES = [
-    { id: "detailed", icon: albums, label: LL.value.Big_list_mode(), preSelected: false },
     { id: "compact", icon: list, label: LL.value.Compact_list_mode(), preSelected: true },
+    { id: "detailed", icon: albums, label: LL.value.Big_list_mode(), preSelected: false },
   ] as const
 
   async function openSpeakerDetails(speaker: VoxxrinSimpleSpeaker) {
