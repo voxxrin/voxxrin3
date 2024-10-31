@@ -149,7 +149,9 @@ const en = {
   Talk_Recording: "Talk record",
   Double_tap_on_the_map_to_zoom_in : "Double-tap on the map to zoom in",
   My_events: "My Events",
-  Talk_additional_speakers: "+{count:number} Speaker{{count:s}}"
+  Talk_additional_speakers: "+{count:number} Speaker{{count:s}}",
+  Speaker_talks: "Talks",
+  Speaker_infos: "Infos",
 } satisfies BaseTranslation
 
 export default en
