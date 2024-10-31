@@ -7,7 +7,10 @@
         <ion-text>
           {{ talk.title }}
         </ion-text>
-        <SpeakerFavTalkButton></SpeakerFavTalkButton>
+        <talk-favorite-button v-if="talkNotes" :conf-descriptor="confDescriptor"
+              :user-talk-notes="talkNotes" :talk-stats="talkStats" :local-favorite="localEventTalkNotes"
+              @talk-note-updated="$emit('talk-note-updated', $event)"
+        />
       </div>
       <div class="talkResumeCard-footer">
         <div class="talkResumeCard-footer-left">
@@ -43,14 +46,15 @@
 <script setup lang="ts">
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {IonBadge, IonText} from "@ionic/vue";
-import SpeakerFavTalkButton from "@/components/speaker-card/SpeakerFavTalkButton.vue";
 import {VoxxrinLineupSpeaker, VoxxrinLineupTalk,} from "@/models/VoxxrinSpeaker";
 import SpeakerThumbnail from "@/components/speaker/SpeakerThumbnail.vue";
 import {PropType} from "vue";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
+import TalkFavoriteButton from "@/components/talk-card/TalkFavoriteButton.vue";
+import {TalkStats} from "../../../../shared/event-stats";
+import {TalkNote} from "../../../../shared/feedbacks.firestore";
 
 const {LL} = typesafeI18n()
-const baseUrl = import.meta.env.BASE_URL;
 
 const props = defineProps({
   talk: {
@@ -65,7 +69,24 @@ const props = defineProps({
     required: true,
     type: Object as PropType<VoxxrinConferenceDescriptor>
   },
+  talkStats: {
+    required: true,
+    type: Object as PropType<TalkStats|undefined>
+  },
+  talkNotes: {
+    required: true,
+    type: Object as PropType<TalkNote|undefined>
+  },
+  localEventTalkNotes: {
+    required: false,
+    type: Number as PropType<1 | -1 | undefined>,
+    default: undefined,
+  }
 })
+
+defineEmits<{
+  (e: 'talk-note-updated', event: TalkNote): void,
+}>()
 
 </script>
 

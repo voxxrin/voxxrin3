@@ -47,7 +47,13 @@
             </div>
             <div class="sectionBloc" v-if="speaker.talks.length > 0">
               <VoxDivider>{{LL.Speaker_talks()}}</VoxDivider>
-              <speaker-talk v-for="talk in speaker.talks" :focused-speaker="speaker" :talk="talk" :key="talk.id.value" />
+              <speaker-talk v-for="talk in speaker.talks" :key="talk.id.value"
+                  :focused-speaker="speaker" :talk="talk" :conf-descriptor="confDescriptor"
+                  :talk-stats="talkStatsRefByTalkId.get(talk.id.value)"
+                  :talk-notes="userEventTalkNotesRef.get(talk.id.value)"
+                  :local-event-talk-notes="localEventTalkNotesRef.get(talk.id.value)"
+                  @talk-note-updated="userEventTalkNotesRef.set(talk.id.value, $event)"
+              />
             </div>
 
             <div class="sectionBloc linksInfoSpeaker" v-if="speaker.social.length">
@@ -82,6 +88,9 @@ import SpeakerThumbnail from "@/components/speaker/SpeakerThumbnail.vue";
 import SocialMediaIcon from "@/components/ui/SocialMediaIcon.vue";
 import {useLineupSpeaker} from "@/state/useEventSpeakers";
 import SpeakerTalk from "@/components/speaker-card/SpeakerTalk.vue";
+import {useLocalEventTalkFavsStorage, useUserEventTalkNotes} from "@/state/useUserTalkNotes";
+import {computed, toValue} from "vue";
+import {useEventTalkStats} from "@/state/useEventTalkStats";
 
 const LOGGER = Logger.named("SpeakerDetailsPage");
 
@@ -97,6 +106,20 @@ const {conferenceDescriptor: confDescriptor} = useSharedConferenceDescriptor(spa
 const {speaker} = useLineupSpeaker(confDescriptor, speakerId)
 
 const { LL } = typesafeI18n()
+
+const localEventTalkNotesRef = useLocalEventTalkFavsStorage(spacedEventIdRef)
+const talkIdsRef = computed(() => {
+  const unreffedSpeaker = toValue(speaker);
+  if(!unreffedSpeaker) {
+    return [];
+  }
+
+  const uniqueTalkIds = unreffedSpeaker.talks.map(talk => talk.id);
+  return uniqueTalkIds;
+})
+const {userEventTalkNotesRef} = useUserEventTalkNotes(spacedEventIdRef, talkIdsRef)
+const {firestoreEventTalkStatsRef: talkStatsRefByTalkId} = useEventTalkStats(spacedEventIdRef, talkIdsRef)
+
 
 // * TODO #74 Check perf impact * //
 const isScrollingDown = ref(false);
