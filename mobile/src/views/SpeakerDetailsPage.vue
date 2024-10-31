@@ -6,7 +6,7 @@
                  @ionScrollStart="handleScrollStart()"
                  @ionScroll="handleScroll($event)"
                  @ionScrollEnd="handleScrollEnd()"
-                 v-themed-event-styles="confDescriptor"  v-if="confDescriptor && detailedSpeaker">
+                 v-themed-event-styles="confDescriptor"  v-if="confDescriptor && speaker">
       <ion-header class="stickyHeader">
         <ion-toolbar>
           <ion-button class="stickyHeader-close" shape="round" slot="start" size="small" fill="outline" @click="closeAndNavigateBack()"
@@ -15,9 +15,9 @@
           </ion-button>
           <div class="speakerInfoHeader" slot="start">
             <ion-avatar class="speakerInfoHeader-avatar">
-              <speaker-thumbnail size="64px" :is-highlighted="false" :speaker="detailedSpeaker" />
+              <speaker-thumbnail size="64px" :is-highlighted="false" :speaker="speaker" />
             </ion-avatar>
-            <ion-text class="speakerInfoHeader-title">{{detailedSpeaker.fullName}}</ion-text>
+            <ion-text class="speakerInfoHeader-title">{{speaker.fullName}}</ion-text>
           </div>
         </ion-toolbar>
       </ion-header>
@@ -25,45 +25,35 @@
       <div class="speakerDetailsView-container">
         <div class="speakerDetailsView-head">
           <div class="speakerDetailsView-head-stats ion-text-left">
-            <ion-label>Total talks</ion-label>
-            <span class="count">-</span>
           </div>
           <ion-avatar class="speakerAvatar">
-            <speaker-thumbnail size="64px" :is-highlighted="false" :speaker="detailedSpeaker" />
+            <speaker-thumbnail size="64px" :is-highlighted="false" :speaker="speaker" />
           </ion-avatar>
           <div class="speakerDetailsView-head-stats ion-text-right">
-            <ion-label>Total favorites</ion-label>
-            <span class="count">-</span>
           </div>
         </div>
         <div class="speakerDetailsView-content">
           <div class="avatarInfos">
-            <ion-text class="avatarInfos-title">{{detailedSpeaker.fullName}}</ion-text>
+            <ion-text class="avatarInfos-title">{{speaker.fullName}}</ion-text>
             <ion-text class="avatarInfos-subTitle">
               <ion-icon :icon="businessSharp" aria-hidden="true"></ion-icon>
-              {{detailedSpeaker.companyName}}
+              {{speaker.companyName}}
             </ion-text>
           </div>
           <div class="speakerDetailsView-tabs">
-            <ion-segment class="tabsSelection _clearMode" value="talks">
-              <ion-segment-button value="talks">
-                <ion-label>Talks</ion-label>
-              </ion-segment-button>
-              <ion-segment-button value="infos">
-                <ion-label>Infos</ion-label>
-              </ion-segment-button>
-            </ion-segment>
-            <div class="sectionBloc">
+            <div class="sectionBloc" v-if="speaker.bio">
               <VoxDivider>{{LL.Speaker_bio()}}</VoxDivider>
-              <ion-text>
-                {{detailedSpeaker.bio}}
-              </ion-text>
+              <ion-text v-html="speaker.bio" />
+            </div>
+            <div class="sectionBloc" v-if="speaker.talks.length > 0">
+              <VoxDivider>{{LL.Speaker_talks()}}</VoxDivider>
+              <speaker-talk v-for="talk in speaker.talks" :focused-speaker="speaker" :talk="talk" :key="talk.id.value" />
             </div>
 
-            <div class="sectionBloc linksInfoSpeaker" v-if="detailedSpeaker.social.length">
+            <div class="sectionBloc linksInfoSpeaker" v-if="speaker.social.length">
               <VoxDivider>{{ LL.Social_media() }}</VoxDivider>
               <ul class="linksInfoSpeaker-list">
-                <li v-for="social in detailedSpeaker.social" :key="social.type">
+                <li v-for="social in speaker.social" :key="social.type">
                   <social-media-icon :href="social.url" :type="social.type"></social-media-icon>
                 </li>
               </ul>
@@ -87,38 +77,26 @@ import {Logger} from "@/services/Logger";
 import {SpeakerId, VoxxrinDetailedSpeaker} from "@/models/VoxxrinSpeaker";
 import {businessSharp} from "ionicons/icons";
 import VoxDivider from "@/components/ui/VoxDivider.vue";
-import {useCurrentSpaceEventIdRef} from "@/services/Spaces";
+import {getResolvedEventRootPathFromSpacedEventIdRef, useCurrentSpaceEventIdRef} from "@/services/Spaces";
 import SpeakerThumbnail from "@/components/speaker/SpeakerThumbnail.vue";
 import SocialMediaIcon from "@/components/ui/SocialMediaIcon.vue";
+import {useLineupSpeaker} from "@/state/useEventSpeakers";
+import SpeakerTalk from "@/components/speaker-card/SpeakerTalk.vue";
 
-const LOGGER = Logger.named("TalkDetailsPage");
+const LOGGER = Logger.named("SpeakerDetailsPage");
 
 const ionRouter = useIonRouter();
 function closeAndNavigateBack() {
-    goBackOrNavigateTo(ionRouter, `/events/${eventId.value.value}/speakers`, 0 /* talk details page is always opened through popups */)
+  goBackOrNavigateTo(ionRouter, `${getResolvedEventRootPathFromSpacedEventIdRef(spacedEventIdRef)}/speakers`, 0 /* talk details page is always opened through popups */)
 }
 
 const route = useRoute();
-const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')));
 const speakerId = ref(new SpeakerId(getRouteParamsValue(route, 'speakerId')));
 const spacedEventIdRef = useCurrentSpaceEventIdRef();
 const {conferenceDescriptor: confDescriptor} = useSharedConferenceDescriptor(spacedEventIdRef);
+const {speaker} = useLineupSpeaker(confDescriptor, speakerId)
 
 const { LL } = typesafeI18n()
-
-const detailedSpeaker: VoxxrinDetailedSpeaker = {
-  id: new SpeakerId('42'),
-  fullName: "Frédéric Camblor",
-  companyName: "4SH",
-  photoUrl: "https://lh3.googleusercontent.com/a/AAcHTtdsbTGnaxXmrzSi178m_qpxj9c-z12qoL7SLB6cjUSfZhaQ=s96-c",
-  bio: `Retired Bordeaux JUG leader and co-creator of the BDX I/O conference in 2014, Frédéric enjoys mixing with different tech communities and learning new things.
-Web developer at 4SH by day, and OSS commiter by night, he has created/contributed to some more or less well known projects: Voxxrin app, Vitemadose frontend during COVID Pandemic, Devoxx France CFP, RestX framework, as well as some (old) Jenkins plugins.
-As a big fan of strong typing, he loves Typescript, but also like doing all kinds of stuff in Google Spreadsheets.`,
-  social: [
-    {type:'twitter', url: 'https://www.twitter.com/fcamblor' }
-  ]
-}
-
 
 // * TODO #74 Check perf impact * //
 const isScrollingDown = ref(false);

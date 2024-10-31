@@ -5,7 +5,7 @@ import {collection, CollectionReference, doc, DocumentReference} from "firebase/
 import {db} from "@/state/firebase";
 import {resolvedEventFirestorePath} from "../../../shared/utilities/event-utils";
 import {LineupSpeaker} from "../../../shared/event-lineup.firestore";
-import {createVoxxrinSpeakerFromFirestore, speakerMatchesSearchTerms} from "@/models/VoxxrinSpeaker";
+import {createVoxxrinSpeakerFromFirestore, SpeakerId, speakerMatchesSearchTerms} from "@/models/VoxxrinSpeaker";
 import {match} from "ts-pattern";
 import {sortBy} from "@/models/utils";
 
@@ -45,6 +45,26 @@ export function useLineupSpeakers(eventDescriptorRef: Ref<VoxxrinConferenceDescr
   }
 }
 
+export function useLineupSpeaker(eventDescriptorRef: Ref<VoxxrinConferenceDescriptor|undefined>, speakerIdRef: Ref<SpeakerId|undefined>) {
+
+  const firestoreSpeakerRef = deferredVuefireUseDocument([eventDescriptorRef, speakerIdRef],
+    ([eventDescriptor, speakerId]) => eventLineupSpeakerDocument(eventDescriptor, speakerId));
+
+  return {
+    speaker: computed(() => {
+      const firestoreSpeaker = toValue(firestoreSpeakerRef),
+        eventDescriptor = toValue(eventDescriptorRef);
+
+      if(!firestoreSpeaker || !eventDescriptor) {
+        return undefined;
+      }
+
+      const speaker = createVoxxrinSpeakerFromFirestore(eventDescriptor, firestoreSpeaker);
+      return speaker;
+    })
+  }
+}
+
 export function eventLineupSpeakersCollections(eventDescriptor: VoxxrinConferenceDescriptor|undefined) {
   if(!eventDescriptor || !eventDescriptor.id || !eventDescriptor.id.value) {
     return [];
@@ -55,4 +75,14 @@ export function eventLineupSpeakersCollections(eventDescriptor: VoxxrinConferenc
     `${resolvedEventFirestorePath(eventDescriptor.id.value, eventDescriptor.spaceToken?.value)}/speakers`
     ) as CollectionReference<LineupSpeaker>
   ];
+}
+
+export function eventLineupSpeakerDocument(eventDescriptor: VoxxrinConferenceDescriptor|undefined, speakerId: SpeakerId|undefined) {
+  if(!eventDescriptor || !eventDescriptor.id || !eventDescriptor.id.value || !speakerId || !speakerId.value) {
+    return undefined;
+  }
+
+  return doc(db,
+    `${resolvedEventFirestorePath(eventDescriptor.id.value, eventDescriptor.spaceToken?.value)}/speakers/${speakerId.value}`
+    ) as DocumentReference<LineupSpeaker>;
 }
