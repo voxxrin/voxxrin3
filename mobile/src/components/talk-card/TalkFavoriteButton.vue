@@ -36,11 +36,15 @@ const props = defineProps({
         required: true,
         type: Object as PropType<TalkNote>
     },
+    scope: {
+      required: true,
+      type: String as PropType<"schedule-talk"|"speaker-talk">,
+    },
     localFavorite: {
         required: false,
         type: Number as PropType<1 | -1 | undefined>,
         default: undefined
-    }
+    },
 });
 
 const emits = defineEmits<{

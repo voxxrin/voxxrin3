@@ -7,7 +7,7 @@
         <ion-text>
           {{ talk.title }}
         </ion-text>
-        <talk-favorite-button v-if="talkNotes" :conf-descriptor="confDescriptor"
+        <talk-favorite-button scope="speaker-talk" v-if="talkNotes" :conf-descriptor="confDescriptor"
               :user-talk-notes="talkNotes" :talk-stats="talkStats" :local-favorite="localEventTalkNotes"
               @talk-note-updated="$emit('talk-note-updated', $event)"
         />

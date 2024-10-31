@@ -25,7 +25,7 @@
                                          :conf-descriptor="confDescriptor" :user-talk-notes="talkNotes"
                                          @talk-note-updated="updatedTalkNote => userEventTalkNotes.set(talk.id.value, updatedTalkNote) " />
 
-                <talk-favorite-button v-if="confDescriptor && !talk.isOverflow"
+                <talk-favorite-button scope="schedule-talk" v-if="confDescriptor && !talk.isOverflow"
                                       :conf-descriptor="confDescriptor" :user-talk-notes="talkNotes" :talk-stats="talkStats"
                                       :local-favorite="localEventTalkNotes.get(talk.id.value)"
                 />
@@ -40,20 +40,16 @@
 </template>
 
 <script setup lang="ts">
-import {IonButton} from "@ionic/vue";
 import {typesafeI18n} from "@/i18n/i18n-vue";
-import {TimeslotAnimations} from "@/services/Animations";
-import TimeSlotAccordion from "@/components/timeslots/TimeSlotAccordion.vue";
 import TalkFormatGroupsBreakdown from "@/components/schedule/TalkFormatGroupsBreakdown.vue";
 import TalkFavoriteButton from "@/components/talk-card/TalkFavoriteButton.vue";
 import ScheduleBreak from "@/components/schedule/ScheduleBreak.vue";
 import TalkWatchLaterButton from "@/components/talk-card/TalkWatchLaterButton.vue";
-import TalkRoom from "@/components/talk-card/TalkRoom.vue";
 import ProvideFeedbackTalkButton from "@/components/talk-card/ProvideFeedbackTalkButton.vue";
 import ScheduleTalk from "@/components/talk-card/ScheduleTalk.vue";
 import {computed, PropType, toValue} from "vue";
 import {LabelledTimeslotWithFeedback} from "@/state/useSchedule";
-import {TimeslotTimingProgress, VoxxrinScheduleTimeSlot} from "@/models/VoxxrinSchedule";
+import {TimeslotTimingProgress} from "@/models/VoxxrinSchedule";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {TalkStats} from "../../../../shared/event-stats";
 import {VoxxrinRoomStats} from "@/models/VoxxrinRoomStats";
@@ -61,6 +57,7 @@ import {TalkNote} from "../../../../shared/feedbacks.firestore";
 import {TalkId, VoxxrinTalk} from "@/models/VoxxrinTalk";
 import NoResults from "@/components/ui/NoResults.vue";
 import TimeSlotSection from "@/components/timeslots/TimeSlotSection.vue";
+
 const { LL } = typesafeI18n()
 
 const props = defineProps({
