@@ -1,4 +1,4 @@
-import {getAllEventsDocs} from "../services/event-utils";
+import {createAllSpeakers, getAllEventsDocs} from "../services/event-utils";
 import {db} from "../../../firebase";
 import {getEventTalks} from "../services/talk-utils";
 import {detailedTalksToSpeakersLineup} from "../../../models/Event";
@@ -24,15 +24,9 @@ export async function introduceEventSpeakersAndFixTalkUndefinedTags(): Promise<"
           }
         }))
 
-        const lineupSpeakers = detailedTalksToSpeakersLineup(migratedEventTalks);
-
-        const eventSpeakersColl = db.collection(`${eventDoc.ref.path}/speakers`)
-        const existingSpeakerDocs = await eventSpeakersColl.listDocuments()
-
-        // delete all then re-create all
-        await Promise.all(existingSpeakerDocs.map(speakerDoc => speakerDoc.delete()))
-        await Promise.all(lineupSpeakers.map(lineupSpeaker => db.doc(`${eventDoc.ref.path}/speakers/${lineupSpeaker.id}`).set(lineupSpeaker)))
-        console.log(`${lineupSpeakers.length} event speakers created for event id ${eventDoc.id}`)
+        const event = eventDoc.data();
+        const { createdSpeakers } = await createAllSpeakers(eventTalks, event.visibility === 'private' ? event.spaceToken : undefined, event.id);
+        console.log(`${createdSpeakers.length} event speakers created for event id ${eventDoc.id}`)
       } catch (err) {
         console.error(`Error during Event speaker creation for ${eventDoc.id}: ${err}`)
       }

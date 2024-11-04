@@ -6,6 +6,9 @@ import DocumentSnapshot = firestore.DocumentSnapshot;
 import {getAllSpaceIds} from "./space-utils";
 import {resolvedEventFirestorePath, resolvedEventsFirestorePath} from "../../../../../../shared/utilities/event-utils";
 import {AllInOneTalkStats} from "../../../../../../shared/event-stats";
+import {getEventTalks} from "./talk-utils";
+import {detailedTalksToSpeakersLineup} from "../../../models/Event";
+import {DetailedTalk} from "../../../../../../shared/daily-schedule.firestore";
 
 
 export async function getAllEventsDocs(opts: { includePrivateSpaces: boolean } = { includePrivateSpaces: false }) {
@@ -40,4 +43,18 @@ export async function getAllEventsWithTalks(opts: { includePrivateSpaces: boolea
      const allInOneTalkStats = (await eventDoc.ref.collection("talksStats-allInOne").doc("self").get() as DocumentSnapshot<AllInOneTalkStats>).data()
     return { event: eventDoc.data(), allInOneTalkStats: allInOneTalkStats || {} };
   }))
+}
+
+export async function createAllSpeakers(eventTalks: DetailedTalk[], maybeSpaceToken: string|undefined, eventId: string) {
+  const lineupSpeakers = detailedTalksToSpeakersLineup(eventTalks);
+
+  const eventRootPath = resolvedEventFirestorePath(eventId, maybeSpaceToken);
+  const eventSpeakersColl = db.collection(`${eventRootPath}/speakers`)
+  const existingSpeakerDocs = await eventSpeakersColl.listDocuments()
+
+  // delete all then re-create all
+  await Promise.all(existingSpeakerDocs.map(speakerDoc => speakerDoc.delete()))
+  await Promise.all(lineupSpeakers.map(lineupSpeaker => db.doc(`${eventRootPath}/speakers/${lineupSpeaker.id}`).set(lineupSpeaker)))
+
+  return { createdSpeakers: lineupSpeakers }
 }
