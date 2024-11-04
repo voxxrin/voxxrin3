@@ -26,6 +26,7 @@ import { marked } from 'marked'
 import {
   resolvedEventFirestorePath,
 } from "../../../../shared/utilities/event-utils";
+import {createAllSpeakers} from "../functions/firestore/services/event-utils";
 
 export type CrawlerKind<ZOD_TYPE extends z.ZodType> = {
     crawlerImpl: (eventId: string, crawlerDescriptor: z.infer<ZOD_TYPE>, criteria: { dayIds?: string[]|undefined }) => Promise<FullEvent>,
@@ -314,27 +315,27 @@ const saveEvent = async function (event: FullEvent, crawlerDescriptor: z.infer<t
       websiteUrl,
     } as const
 
-    const [spaceToken, spaceContext, listableEvent]: [string|undefined, string, ListableEvent] =
+    const [maybeSpaceToken, spaceContext, listableEvent]: [string|undefined, string, ListableEvent] =
       crawlerDescriptor.visibility === 'public'
         ? [undefined, 'public space', { ...baseListableEvent, visibility: 'public' }]
         : [crawlerDescriptor.spaceToken, `private space: ${crawlerDescriptor.spaceToken}`, {...baseListableEvent, visibility: 'private', spaceToken: crawlerDescriptor.spaceToken}]
 
-    if(spaceToken) {
-      const space = await db.doc(`/spaces/${spaceToken}`).get()
+    if(maybeSpaceToken) {
+      const space = await db.doc(`/spaces/${maybeSpaceToken}`).get()
       // Creating (dummy) space entry so that we can list spaces serverside (we can't list ids from empty docs)
       if(!space.exists) {
-        space.ref.set({ spaceToken });
+        space.ref.set({ spaceToken: maybeSpaceToken });
       }
     }
 
-    await db.doc(resolvedEventFirestorePath(event.id, spaceToken)).set(listableEvent)
+    await db.doc(resolvedEventFirestorePath(event.id, maybeSpaceToken)).set(listableEvent)
 
-    const talksStatsAllInOneDoc = await db.doc(`${resolvedEventFirestorePath(event.id, spaceToken)}/talksStats-allInOne/self`).get()
+    const talksStatsAllInOneDoc = await db.doc(`${resolvedEventFirestorePath(event.id, maybeSpaceToken)}/talksStats-allInOne/self`).get()
     if(!talksStatsAllInOneDoc.exists) {
-        await db.doc(`${resolvedEventFirestorePath(event.id, spaceToken)}/talksStats-allInOne/self`).set({})
+        await db.doc(`${resolvedEventFirestorePath(event.id, maybeSpaceToken)}/talksStats-allInOne/self`).set({})
     }
 
-    const firestoreEvent = db.doc(`${resolvedEventFirestorePath(event.id, spaceToken)}`);
+    const firestoreEvent = db.doc(`${resolvedEventFirestorePath(event.id, maybeSpaceToken)}`);
     const organizerSpaceEntries = await firestoreEvent
         .collection('organizer-space')
         .listDocuments();
@@ -350,9 +351,9 @@ const saveEvent = async function (event: FullEvent, crawlerDescriptor: z.infer<t
             await firestoreEvent.collection('organizer-space').doc(organizerSecretToken).set(organizerSpaceContent)
 
             await Promise.all(event.daySchedules.map(async daySchedule => {
-                const dailyRating = await db.doc(`${resolvedEventFirestorePath(event.id, spaceToken)}/organizer-space/${organizerSecretToken}/daily-ratings/${daySchedule.day}`).get()
+                const dailyRating = await db.doc(`${resolvedEventFirestorePath(event.id, maybeSpaceToken)}/organizer-space/${organizerSecretToken}/daily-ratings/${daySchedule.day}`).get()
                 if(!dailyRating.exists) {
-                    await db.doc(`${resolvedEventFirestorePath(event.id, spaceToken)}/organizer-space/${organizerSecretToken}/daily-ratings/${daySchedule.day}`).set({});
+                    await db.doc(`${resolvedEventFirestorePath(event.id, maybeSpaceToken)}/organizer-space/${organizerSecretToken}/daily-ratings/${daySchedule.day}`).set({});
                 }
             }))
 
@@ -365,11 +366,11 @@ const saveEvent = async function (event: FullEvent, crawlerDescriptor: z.infer<t
             throw new Error(`More than 1 organizer-space entries detected (${organizerSpaceEntries.length}) for event ${event.id} (${spaceContext})`);
         })
 
-    const talkFeedbacksDoc = await db.collection(`${resolvedEventFirestorePath(event.id, spaceToken)}/organizer-space/${organizerSecretToken}/ratings`).listDocuments()
+    const talkFeedbacksDoc = await db.collection(`${resolvedEventFirestorePath(event.id, maybeSpaceToken)}/organizer-space/${organizerSecretToken}/ratings`).listDocuments()
     const ratingsTalkIds = talkFeedbacksDoc.map(doc => doc.id);
     await Promise.all([
         ...event.daySchedules.map(async daySchedule => {
-          const dailyRatings = (await db.doc(`${resolvedEventFirestorePath(event.id, spaceToken)}/organizer-space/${organizerSecretToken}/daily-ratings/${daySchedule.day}`).get()).data() as Record<string, object>;
+          const dailyRatings = (await db.doc(`${resolvedEventFirestorePath(event.id, maybeSpaceToken)}/organizer-space/${organizerSecretToken}/daily-ratings/${daySchedule.day}`).get()).data() as Record<string, object>;
           const talkIds = daySchedule.timeSlots.flatMap(ts => ts.type === 'talks' ? ts.talks.map(t => t.id) : [])
           const dailyRatingsToUpdate = talkIds.reduce((dailyRatingsToUpdate, talkId) => {
             if(!dailyRatings[talkId]) {
@@ -379,12 +380,12 @@ const saveEvent = async function (event: FullEvent, crawlerDescriptor: z.infer<t
           }, {} as Record<string, object>)
 
           if(Object.keys(dailyRatingsToUpdate).length) {
-            await db.doc(`${resolvedEventFirestorePath(event.id, spaceToken)}/organizer-space/${organizerSecretToken}/daily-ratings/${daySchedule.day}`).update(dailyRatingsToUpdate);
+            await db.doc(`${resolvedEventFirestorePath(event.id, maybeSpaceToken)}/organizer-space/${organizerSecretToken}/daily-ratings/${daySchedule.day}`).update(dailyRatingsToUpdate);
           }
         }),
         ...event.talks.map(async talk => {
           if(!ratingsTalkIds.includes(talk.id) && !talk.isOverflow) {
-            await db.doc(`${resolvedEventFirestorePath(event.id, spaceToken)}/organizer-space/${organizerSecretToken}/ratings/${talk.id}`).create({})
+            await db.doc(`${resolvedEventFirestorePath(event.id, maybeSpaceToken)}/organizer-space/${organizerSecretToken}/ratings/${talk.id}`).create({})
           }
         })
     ])
@@ -399,7 +400,7 @@ const saveEvent = async function (event: FullEvent, crawlerDescriptor: z.infer<t
         }
     }))
 
-    const talksCollectionRefBeforeUpdate = (await db.collection(`/${resolvedEventFirestorePath(event.id, spaceToken)}/talks`).listDocuments()) || []
+    const talksCollectionRefBeforeUpdate = (await db.collection(`/${resolvedEventFirestorePath(event.id, maybeSpaceToken)}/talks`).listDocuments()) || []
     const talkIdsHashBeforeUpdate = talksCollectionRefBeforeUpdate.map(talk => talk.id).sort().join(",")
 
     await Promise.all(event.talks.map(async talk => {
@@ -447,12 +448,15 @@ const saveEvent = async function (event: FullEvent, crawlerDescriptor: z.infer<t
         }
     }));
 
-    const talksCollectionRefAfterUpdate = (await db.collection(`/${resolvedEventFirestorePath(event.id, spaceToken)}/talks`).listDocuments()) || []
+    const talksCollectionRefAfterUpdate = (await db.collection(`/${resolvedEventFirestorePath(event.id, maybeSpaceToken)}/talks`).listDocuments()) || []
     const talkIdsHashAfterUpdate = talksCollectionRefAfterUpdate.map(talk => talk.id).sort().join(",")
 
     if(talkIdsHashBeforeUpdate !== talkIdsHashAfterUpdate) {
-        await eventLastUpdateRefreshed(spaceToken, event.id, ['talkListUpdated']);
+        await eventLastUpdateRefreshed(maybeSpaceToken, event.id, ['talkListUpdated']);
     }
+
+    const { createdSpeakers } = await createAllSpeakers(event.talks, maybeSpaceToken, event.id);
+    console.log(`Created ${createdSpeakers.length} speakers !`)
 
     try {
         // TODO: Remove me once watch later will be properly implemented !
@@ -477,7 +481,7 @@ const saveEvent = async function (event: FullEvent, crawlerDescriptor: z.infer<t
         error(`Error while storing event's organizer-space content`)
     }
 
-    await ensureRoomsStatsFilledFor(spaceToken, event.id)
+    await ensureRoomsStatsFilledFor(maybeSpaceToken, event.id)
 }
 
 type ContentTransformation = {
