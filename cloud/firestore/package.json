@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "test": "firebase emulators:exec --only firestore \"jest --detectOpenHandles \"",
-    "deploy": "npx firebase-tools deploy --only firestore --project ${FIREBASE_PROJECT_NAME:-voxxrin-v3}"
+    "deploy:rules": "npx firebase-tools deploy --only firestore:rules --project ${FIREBASE_PROJECT_NAME:-voxxrin-v3}",
+    "deploy:indexes": "npx firebase-tools deploy --only firestore:indexes --project ${FIREBASE_PROJECT_NAME:-voxxrin-v3} --force || true",
+    "deploy": "concurrently 'npm run deploy:rules' 'npm run deploy:indexes'"
   },
   "license": "Apache-2.0",
   "devDependencies": {
