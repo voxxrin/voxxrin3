@@ -17,6 +17,7 @@ import {CompletablePromiseQueue} from "@/models/utils";
 import {prepareSchedules} from "@/state/useSchedule";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {resolvedEventFirestorePath} from "../../../shared/utilities/event-utils";
+import {prepareEventSpeakers} from "@/state/useEventSpeakers";
 
 function getConferenceDescriptorDoc(spacedEventId: SpacedEventId|undefined) {
     if(!spacedEventId || !spacedEventId.eventId || !spacedEventId.eventId.value) {
@@ -138,6 +139,7 @@ export function useOfflineEventPreparation(
                 schedulePreparationResolved();
               })
 
+              await prepareEventSpeakers(user, confDescriptor, promisesQueue);
               await prepareEventInfos(user, confDescriptor, promisesQueue)
               await prepareSchedules(user, confDescriptor, currentSchedule.day, extractTalksFromSchedule(currentSchedule), otherDayIds, promisesQueue);
 

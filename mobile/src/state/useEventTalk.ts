@@ -77,15 +77,15 @@ export async function prepareEventTalk(
 
         promisesQueue.addAll(talk.speakers.map(speaker => () => {
           if(speaker.photoUrl) {
-            return loadSpeakerUrl(talk, speaker.photoUrl);
+            return loadSpeakerUrl(speaker.photoUrl, `talkId=${talk.id.value}`);
           }
         }), {priority: queuePriority });
     });
 }
 
 const IN_MEMORY_SPEAKER_URL_PRELOADINGS = new Set<string>();
-async function loadSpeakerUrl(talk: VoxxrinTalk, speakerUrl: string) {
-  const LOGGER = Logger.named(`loadTalkSpeakerUrl(${talk.id.value}): ${speakerUrl}`);
+export async function loadSpeakerUrl(speakerUrl: string, loadingContext?: string|undefined) {
+  const LOGGER = Logger.named(`loadSpeakerUrl(${speakerUrl})${loadingContext ? `(context: ${loadingContext})`:``}`);
 
   return new Promise(async resolve => {
     if(IN_MEMORY_SPEAKER_URL_PRELOADINGS.has(speakerUrl)) {

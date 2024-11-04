@@ -1,13 +1,18 @@
 import {computed, Ref, toValue} from "vue";
 import {deferredVuefireUseCollection, deferredVuefireUseDocument} from "@/views/vue-utils";
-import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
-import {collection, CollectionReference, doc, DocumentReference} from "firebase/firestore";
+import {VoxxrinConferenceDescriptor, VoxxrinLanguaceCode} from "@/models/VoxxrinConferenceDescriptor";
+import {collection, CollectionReference, doc, DocumentReference, getDocs } from "firebase/firestore";
 import {db} from "@/state/firebase";
 import {resolvedEventFirestorePath} from "../../../shared/utilities/event-utils";
 import {LineupSpeaker} from "../../../shared/event-lineup.firestore";
 import {createVoxxrinSpeakerFromFirestore, SpeakerId, speakerMatchesSearchTerms} from "@/models/VoxxrinSpeaker";
 import {match} from "ts-pattern";
-import {sortBy} from "@/models/utils";
+import {CompletablePromiseQueue, sortBy} from "@/models/utils";
+import {User} from "firebase/auth";
+import {checkCache} from "@/services/Cachings";
+import {Temporal} from "temporal-polyfill";
+import {PERF_LOGGER} from "@/services/Logger";
+import {loadSpeakerUrl} from "@/state/useEventTalk";
 
 export function useLineupSpeakers(eventDescriptorRef: Ref<VoxxrinConferenceDescriptor|undefined>, searchTermsRef: Ref<string|undefined>) {
 
@@ -85,4 +90,22 @@ export function eventLineupSpeakerDocument(eventDescriptor: VoxxrinConferenceDes
   return doc(db,
     `${resolvedEventFirestorePath(eventDescriptor.id.value, eventDescriptor.spaceToken?.value)}/speakers/${speakerId.value}`
     ) as DocumentReference<LineupSpeaker>;
+}
+
+export async function prepareEventSpeakers(user: User, conferenceDescriptor: VoxxrinConferenceDescriptor, promisesQueue: CompletablePromiseQueue) {
+  promisesQueue.add(() => checkCache(`eventSpeakersPreparation(eventId=${conferenceDescriptor.id.value})`,
+    Temporal.Duration.from({ hours: 24 }), // No need to have frequent refreshes for list of speakers...
+    async () => {
+      PERF_LOGGER.debug(`eventTalkPreparation(eventId=${conferenceDescriptor.id.value})`)
+
+      const speakersColl = eventLineupSpeakersCollections(conferenceDescriptor)[0];
+      const speakers = await getDocs(speakersColl)
+
+      promisesQueue.addAll(speakers.docs.map(speaker => () => {
+        const speakerData = speaker.data()
+        if(speakerData.photoUrl) {
+          return loadSpeakerUrl(speakerData.photoUrl);
+        }
+      }), {priority: 100 });
+    }), { priority: 1000 });
 }
