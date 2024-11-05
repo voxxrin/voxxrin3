@@ -14,9 +14,10 @@
             <ion-icon src="/assets/icons/solid/close.svg"></ion-icon>
           </ion-button>
           <div class="speakerInfoHeader" slot="start">
-            <ion-avatar class="speakerInfoHeader-avatar">
-              <speaker-thumbnail size="64px" :is-highlighted="false" :speaker="speaker" />
-            </ion-avatar>
+            <div class="speakerInfoHeader-avatar">
+              <speaker-thumbnail size="48px" :is-highlighted="false" :speaker="speaker" />
+            </div>
+
             <ion-text class="speakerInfoHeader-title">{{speaker.fullName}}</ion-text>
           </div>
         </ion-toolbar>
@@ -26,9 +27,9 @@
         <div class="speakerDetailsView-head">
           <div class="speakerDetailsView-head-stats ion-text-left">
           </div>
-          <ion-avatar class="speakerAvatar">
-            <speaker-thumbnail size="64px" :is-highlighted="false" :speaker="speaker" />
-          </ion-avatar>
+          <div class="avatarContainer">
+            <speaker-thumbnail size="144px" :is-highlighted="false" :speaker="speaker" />
+          </div>
           <div class="speakerDetailsView-head-stats ion-text-right">
           </div>
         </div>
@@ -125,7 +126,7 @@ const {firestoreEventTalkStatsRef: talkStatsRefByTalkId} = useEventTalkStats(spa
 const isScrollingDown = ref(false);
 const handleScrollStart = () => {};
 const handleScroll = (ev: CustomEvent) => {
-  isScrollingDown.value = ev.detail.deltaY > 0;
+  isScrollingDown.value = ev.detail.deltaY > 172;
 };
 const handleScrollEnd = () => {};
 </script>
@@ -157,9 +158,9 @@ const handleScrollEnd = () => {};
       transition: opacity 240ms ease-in-out;
 
       &-avatar {
-        height: 54px;
-        width: 54px;
+        width: 44px;
         top: 50%;
+        border-radius: 44px;
         border: 2px solid var(--app-white);
 
         @media (prefers-color-scheme: dark) {
@@ -218,14 +219,12 @@ const handleScrollEnd = () => {};
         }
       }
 
-      .speakerAvatar {
-        height: 124px;
-        width: 124px;
+      .avatarContainer {
         margin-top: -64px;
-        border: 8px solid var(--app-white);
 
-        @media (prefers-color-scheme: dark) {
-          border: 8px solid var(--app-medium-contrast);
+        ion-avatar {
+          margin: 0;
+          border: 4px solid var(--ion-color-dark);
         }
       }
     }
