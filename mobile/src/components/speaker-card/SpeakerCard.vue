@@ -14,8 +14,9 @@
     </div>
     <div class="speakerCard-content">
       <slot name="content"></slot>
-      <div class="bulletTagList" role="list" v-for="categoryCount in categoriesCount" :key="categoryCount.format.id.value">
-        <div class="bulletTag" role="listitem">
+      <!-- TODO@DEV Hide when detail open or list items = 0 -->
+      <div class="bulletTagList" role="list">
+        <div class="bulletTag" role="listitem" v-for="categoryCount in categoriesCount" :key="categoryCount.format.id.value">
           <span class="bulletTag-nb">{{categoryCount.count}}</span>
           {{categoryCount.format.title}}
           <span v-if="confDescriptor.formattings.talkFormatTitle === 'with-duration'">&nbsp;({{categoryCount.format.hmmDuration}})</span>
@@ -194,13 +195,11 @@ const { LL } = typesafeI18n()
       display: flex;
       align-items: center;
       gap: var(--app-gutters-medium);
-      padding: var(--app-gutters-medium) var(--app-gutters-medium) var(--app-gutters-medium) 72px;
+      padding: var(--app-gutters-medium) var(--app-gutters-medium) 0 var(--app-gutters-medium);
 
-      .avatar {
-        position: absolute;
-        left: -18px;
-        top: -8px;
-        --size: 74px;
+
+      ion-avatar {
+        margin: 0;
       }
     }
 
@@ -218,7 +217,10 @@ const { LL } = typesafeI18n()
       }
 
       .bulletTagList {
-        padding-left: 72px;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        padding-left: 88px;
       }
     }
   }
