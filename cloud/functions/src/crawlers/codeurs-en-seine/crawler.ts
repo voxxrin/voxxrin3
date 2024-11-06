@@ -33,7 +33,8 @@ export const CODEURS_EN_SEINE_PARSER = EVENT_DESCRIPTOR_PARSER.omit({
         })
     })),
     // the old one was: https://www.codeursenseine.com/_ipx/w_256,q_75/%2Fimages%2Fspeakers%2F{speakerImage}
-    speakerPictureTemplate: z.string().default(`https://www.codeursenseine.com/_next/image?url=%2Fimages%2Fspeakers%2F{speakerImage}&w=256&q=75`)
+    speakerPictureTemplate: z.string().default(`https://www.codeursenseine.com/_next/image?url=%2Fimages%2Fspeakers%2F{speakerImage}&w=256&q=75`),
+    unknownSpeakerIds: z.array(z.string()).optional().default([]),
 })
 
 function extractIdFromUrl(url: string) {
@@ -112,8 +113,10 @@ export const CODEURS_EN_SEINE_CRAWLER: CrawlerKind<typeof CODEURS_EN_SEINE_PARSE
             await githubMDXCrawler.crawlDirectory("content/talks", (mdxFile, fileEntry) => {
                 const fileMetadata = mdxFile.metadata as CESTalkMDXData;
 
-                const start = `${fileMetadata.start}+02:00` as ISODatetime
-                const end = `${fileMetadata.end}+02:00` as ISODatetime
+                const startZDT = Temporal.PlainDateTime.from(fileMetadata.start).toZonedDateTime(descriptor.timezone)
+                const endZDT = Temporal.PlainDateTime.from(fileMetadata.end).toZonedDateTime(descriptor.timezone)
+                const start = startZDT.toInstant().toString() as ISODatetime
+                const end = endZDT.toInstant().toString() as ISODatetime
                 const duration = durationFrom(start, end, descriptor);
 
                 return match([fileMetadata])
