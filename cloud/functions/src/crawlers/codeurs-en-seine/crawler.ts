@@ -118,6 +118,7 @@ export const CODEURS_EN_SEINE_CRAWLER: CrawlerKind<typeof CODEURS_EN_SEINE_PARSE
                 const start = startZDT.toInstant().toString() as ISODatetime
                 const end = endZDT.toInstant().toString() as ISODatetime
                 const duration = durationFrom(start, end, descriptor);
+                const talkId = fileEntry.name.substring(0, fileEntry.name.length - ".mdx".length);
 
                 return match([fileMetadata])
                     .with([ { kind: P.union("conference","quicky","atelier","sponsor","pleniere","keynote") }], ([talkMetadata]) => {
@@ -136,10 +137,24 @@ export const CODEURS_EN_SEINE_CRAWLER: CrawlerKind<typeof CODEURS_EN_SEINE_PARSE
                                 return undefined;
                             }
 
-                            const speaker = fetchedSpeakers.find(sp => sp.id === speakerId)
-                            if(!speaker) {
-                                throw new Error(`No speaker found in fetched speakers with id: ${speakerId} !`);
-                            }
+                            const speaker = match(fetchedSpeakers.find(sp => sp.id === speakerId))
+                              .with(P.nullish, () => {
+                                if(descriptor.unknownSpeakerIds.includes(speakerId)) {
+                                  const unknownSpeaker: Speaker = {
+                                    id: speakerId,
+                                    fullName: "Speaker inconnu",
+                                    companyName: null,
+                                    bio: null,
+                                    social: [],
+                                    photoUrl: null,
+                                  }
+                                  return unknownSpeaker;
+                                }
+
+                                throw new Error(`No speaker found in fetched speakers with id: ${speakerId} ! (context: talkId=${talkId})`);
+                              })
+                              .otherwise(speaker => speaker)
+
                             return speaker;
                         }).filter(sp => !!sp).map(sp => sp!);
 
@@ -152,8 +167,8 @@ export const CODEURS_EN_SEINE_CRAWLER: CrawlerKind<typeof CODEURS_EN_SEINE_PARSE
                             talkFormats.push(format);
                         }
 
-                        const talkDetails: DetailedTalk = {
-                            id: fileEntry.name.substring(0, fileEntry.name.length - ".mdx".length),
+                      const talkDetails: DetailedTalk = {
+                            id: talkId,
                             start, end,
                             speakers,
                             summary: mdxFile.content,
