@@ -48,13 +48,24 @@
             </div>
             <div class="sectionBloc" v-if="speaker.talks.length > 0">
               <VoxDivider>{{LL.Speaker_talks()}}</VoxDivider>
-              <speaker-talk v-for="talk in speaker.talks" :key="talk.id.value"
-                  :focused-speaker="speaker" :talk="talk" :conf-descriptor="confDescriptor"
-                  :talk-stats="talkStatsRefByTalkId.get(talk.id.value)"
-                  :talk-notes="userEventTalkNotesRef.get(talk.id.value)"
-                  :local-event-talk-notes="localEventTalkNotesRef.get(talk.id.value)"
-                  @talk-note-updated="userEventTalkNotesRef.set(talk.id.value, $event)"
-              />
+              <schedule-talk v-for="talk in speaker.talks" :key="talk.id.value"
+                             :talk="{ ...talk, speakers: [speaker, ...talk.otherSpeakers] }" :room-id="talk.allocation?.room.id" :talk-stats="talkStatsRefByTalkId.get(talk.id.value)"
+                             :talk-notes="userEventTalkNotesRef.get(talk.id.value)"
+                             @talk-clicked="(clickedTalk) => $emit('talk-clicked', clickedTalk)"
+                             :is-highlighted="(talk, talkNotes) => talkNotes.isFavorite" :conf-descriptor="confDescriptor">
+                <template #upper-right>
+                  <talk-room v-if="talk.allocation" :room="talk.allocation.room" :conf-descriptor="confDescriptor" />
+                </template>
+                <template #footer-actions="{ talkStats, talkNotes }">
+                  <talk-watch-later-button v-if="confDescriptor"
+                                           :conf-descriptor="confDescriptor" :user-talk-notes="talkNotes"
+                                           @talk-note-updated="updatedTalkNote => userEventTalkNotesRef.set(talk.id.value, updatedTalkNote) " />
+                  <talk-favorite-button scope="schedule-talk" v-if="confDescriptor"
+                                        :conf-descriptor="confDescriptor" :user-talk-notes="talkNotes" :talk-stats="talkStats"
+                                        :local-favorite="localEventTalkNotesRef.get(talk.id.value)"
+                                        @talk-note-updated="updatedTalkNote => userEventTalkNotesRef.set(talk.id.value, updatedTalkNote) " />
+                </template>
+              </schedule-talk>
             </div>
 
             <div class="sectionBloc linksInfoSpeaker" v-if="speaker.social.length">
@@ -88,10 +99,13 @@ import {getResolvedEventRootPathFromSpacedEventIdRef, useCurrentSpaceEventIdRef}
 import SpeakerThumbnail from "@/components/speaker/SpeakerThumbnail.vue";
 import SocialMediaIcon from "@/components/ui/SocialMediaIcon.vue";
 import {useLineupSpeaker} from "@/state/useEventSpeakers";
-import SpeakerTalk from "@/components/speaker-card/SpeakerTalk.vue";
 import {useLocalEventTalkFavsStorage, useUserEventTalkNotes} from "@/state/useUserTalkNotes";
 import {computed, toValue} from "vue";
 import {useEventTalkStats} from "@/state/useEventTalkStats";
+import ScheduleTalk from "@/components/talk-card/ScheduleTalk.vue";
+import TalkRoom from "@/components/talk-card/TalkRoom.vue";
+import TalkFavoriteButton from "@/components/talk-card/TalkFavoriteButton.vue";
+import TalkWatchLaterButton from "@/components/talk-card/TalkWatchLaterButton.vue";
 
 const LOGGER = Logger.named("SpeakerDetailsPage");
 
