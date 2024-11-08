@@ -122,6 +122,10 @@ const props = defineProps({
   talkNotes: {
       required: false,
       type: Object as PropType<TalkNote|undefined>
+  },
+  scope: {
+    required: true,
+    type: String as PropType<"schedule"|"rating"|"favorites"|"speaker"|"event-talks">
   }
 })
 

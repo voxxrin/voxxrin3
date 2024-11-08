@@ -3,9 +3,9 @@
     <talk-format-groups-breakdown :conf-descriptor="confDescriptor" :talks="displayedTalksRef">
       <template #talk="{ talk }">
         <ion-item class="listTalks-item">
-          <schedule-talk :talk="talk" :room-id="talk.room.id" :talk-stats="talkStatsRefByTalkId.get(talk.id.value)" :talk-notes="userTalkNotesRefByTalkIdRef.get(talk.id.value)"
+          <talk-card :talk="talk" :room-id="talk.room.id" :talk-stats="talkStatsRefByTalkId.get(talk.id.value)" :talk-notes="userTalkNotesRefByTalkIdRef.get(talk.id.value)"
                          :is-highlighted="(talk, talkNotes) => talk.id.isSameThan(selectedTalkId)" :conf-descriptor="confDescriptor"
-                         @talkClicked="updateSelected($event)" >
+                         @talkClicked="updateSelected($event)" scope="rating">
             <template #upper-right="{ talk, talkNotes }">
               <talk-is-favorited :talk-notes="talkNotes" />
             </template>
@@ -18,7 +18,7 @@
                 :is-active="talk.id.isSameThan(selectedTalkId)"
                 @click.stop="() => updateSelected(talk)" />
             </template>
-          </schedule-talk>
+          </talk-card>
         </ion-item>
       </template>
     </talk-format-groups-breakdown>
@@ -41,7 +41,7 @@ import {spacedEventIdOf, VoxxrinConferenceDescriptor} from "@/models/VoxxrinConf
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import TalkWatchLaterButton from "@/components/talk-card/TalkWatchLaterButton.vue";
 import TalkSelectForFeedback from "@/components/talk-card/TalkSelectForFeedback.vue";
-import ScheduleTalk from "@/components/talk-card/ScheduleTalk.vue";
+import TalkCard from "@/components/talk-card/TalkCard.vue";
 import TalkIsFavorited from "@/components/talk-card/TalkIsFavorited.vue";
 import {useEventTalkStats} from "@/state/useEventTalkStats";
 import {useUserEventTalkNotes} from "@/state/useUserTalkNotes";

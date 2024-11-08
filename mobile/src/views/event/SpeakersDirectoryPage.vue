@@ -10,11 +10,11 @@
       <speaker-card v-for="speaker in speakers" @speaker-clicked="openSpeakerDetails($event)" :confDescriptor="confDescriptor" :speaker="speaker" :key="speaker.id.value">
         <template #content="{}">
           <ion-list class="talkResumeList" :style="{ display: currentMode === 'detailed' ? 'block':'none' }">
-            <schedule-talk v-for="talk in speaker.talks" :key="talk.id.value"
+            <talk-card v-for="talk in speaker.talks" :key="talk.id.value"
                            :talk="{ ...talk, speakers: [speaker, ...talk.otherSpeakers] }" :room-id="talk.allocation?.room.id" :talk-stats="talkStatsRefByTalkId.get(talk.id.value)"
                            :talk-notes="userEventTalkNotesRef.get(talk.id.value)"
                            @talk-clicked="(clickedTalk) => $emit('talk-clicked', clickedTalk)"
-                           :is-highlighted="(talk, talkNotes) => talkNotes.isFavorite" :conf-descriptor="confDescriptor">
+                           :is-highlighted="(talk, talkNotes) => talkNotes.isFavorite" :conf-descriptor="confDescriptor" scope="speaker">
               <template #upper-right>
                 <talk-room v-if="talk.allocation" :room="talk.allocation.room" :conf-descriptor="confDescriptor" />
               </template>
@@ -27,7 +27,7 @@
                                       :local-favorite="localEventTalkNotesRef.get(talk.id.value)"
                                       @talk-note-updated="updatedTalkNote => userEventTalkNotesRef.set(talk.id.value, updatedTalkNote) " />
               </template>
-            </schedule-talk>
+            </talk-card>
           </ion-list>
         </template>
       </speaker-card>
@@ -59,7 +59,7 @@
   import {computed, toValue} from "vue";
   import {TalkId} from "@/models/VoxxrinTalk";
   import {useEventTalkStats} from "@/state/useEventTalkStats";
-  import ScheduleTalk from "@/components/talk-card/ScheduleTalk.vue";
+  import TalkCard from "@/components/talk-card/TalkCard.vue";
   import TalkRoom from "@/components/talk-card/TalkRoom.vue";
   import TalkFavoriteButton from "@/components/talk-card/TalkFavoriteButton.vue";
   import TalkWatchLaterButton from "@/components/talk-card/TalkWatchLaterButton.vue";
