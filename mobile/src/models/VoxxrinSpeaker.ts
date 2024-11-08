@@ -4,7 +4,13 @@ import {Replace} from "../../../shared/type-utils";
 import {LineupSpeaker, LineupTalk} from "../../../shared/event-lineup.firestore";
 import {TalkId} from "@/models/VoxxrinTalk";
 import {RoomId, VoxxrinRoom} from "@/models/VoxxrinRoom";
-import {findRoom, findTalkFormat, findTrack, VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
+import {
+  findRoom,
+  findTalkFormat,
+  findTrack,
+  TalkLanguageCode,
+  VoxxrinConferenceDescriptor
+} from "@/models/VoxxrinConferenceDescriptor";
 import {match, P} from "ts-pattern";
 import {TalkFormatId, VoxxrinTalkFormat} from "@/models/VoxxrinTalkFormat";
 import {TrackId, VoxxrinTrack} from "@/models/VoxxrinTrack";
@@ -21,6 +27,7 @@ export type VoxxrinLineupTalk = Replace<LineupTalk, {
     room: VoxxrinRoom,
   }|undefined,
   otherSpeakers: VoxxrinSimpleSpeaker[],
+  language: TalkLanguageCode,
 }>
 
 export type VoxxrinLineupSpeaker = Replace<LineupSpeaker, {
@@ -60,6 +67,7 @@ export const createVoxxrinSpeakerFromFirestore = (conferenceDescriptor: VoxxrinC
         format,
         track,
         otherSpeakers: firestoreTalk.otherSpeakers.map(sp => toVoxxrinSpeaker(sp)),
+        language: new TalkLanguageCode(firestoreTalk.language),
       };
     })
   }
