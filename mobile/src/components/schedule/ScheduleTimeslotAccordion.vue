@@ -16,7 +16,7 @@
                            :room-stats="roomsStatsRefByRoomId?.[talk.room.id.value]" :is-upcoming-talk="upcomingRawTalkIds.includes(talk.id.value)"
                            :talk-notes="userEventTalkNotes.get(talk.id.value)" @talk-clicked="(clickedTalk) => $emit('talk-clicked', clickedTalk)" :is-highlighted="(talk, talkNotes) => talkNotes.isFavorite" :conf-descriptor="confDescriptor">
               <template #upper-right="{ talk }">
-                <talk-room :talk="talk" :conf-descriptor="confDescriptor" />
+                <talk-room :room="talk.room" :conf-descriptor="confDescriptor" />
               </template>
               <template #footer-actions="{ talk, talkStats, talkNotes }">
                 <provide-feedback-talk-button v-if="!talk.isOverflow"
