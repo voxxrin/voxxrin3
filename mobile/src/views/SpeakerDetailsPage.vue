@@ -48,7 +48,7 @@
             </div>
             <div class="sectionBloc" v-if="speaker.talks.length > 0">
               <VoxDivider>{{LL.Speaker_talks()}}</VoxDivider>
-              <schedule-talk v-for="talk in speaker.talks" :key="talk.id.value"
+              <talk-card v-for="talk in speaker.talks" :key="talk.id.value" scope="speaker"
                              :talk="{ ...talk, speakers: [speaker, ...talk.otherSpeakers] }" :room-id="talk.allocation?.room.id" :talk-stats="talkStatsRefByTalkId.get(talk.id.value)"
                              :talk-notes="userEventTalkNotesRef.get(talk.id.value)"
                              @talk-clicked="(clickedTalk) => $emit('talk-clicked', clickedTalk)"
@@ -65,7 +65,7 @@
                                         :local-favorite="localEventTalkNotesRef.get(talk.id.value)"
                                         @talk-note-updated="updatedTalkNote => userEventTalkNotesRef.set(talk.id.value, updatedTalkNote) " />
                 </template>
-              </schedule-talk>
+              </talk-card>
             </div>
 
             <div class="sectionBloc linksInfoSpeaker" v-if="speaker.social.length">
@@ -102,7 +102,7 @@ import {useLineupSpeaker} from "@/state/useEventSpeakers";
 import {useLocalEventTalkFavsStorage, useUserEventTalkNotes} from "@/state/useUserTalkNotes";
 import {computed, toValue} from "vue";
 import {useEventTalkStats} from "@/state/useEventTalkStats";
-import ScheduleTalk from "@/components/talk-card/ScheduleTalk.vue";
+import TalkCard from "@/components/talk-card/TalkCard.vue";
 import TalkRoom from "@/components/talk-card/TalkRoom.vue";
 import TalkFavoriteButton from "@/components/talk-card/TalkFavoriteButton.vue";
 import TalkWatchLaterButton from "@/components/talk-card/TalkWatchLaterButton.vue";

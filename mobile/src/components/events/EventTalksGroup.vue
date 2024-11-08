@@ -2,21 +2,22 @@
   <img :src="confDescriptor.backgroundUrl">
   <span class="schedule-talk-event-title">{{confDescriptor.headingTitle}}</span>
 
-  <schedule-talk v-for="(talk, index) in talks" :key="talk.id.value"
+  <talk-card v-for="(talk, index) in talks" :key="talk.id.value"
                  :conf-descriptor="confDescriptor" :is-highlighted="() => false"
                  :talk="talk" :room-id="talk.room.id"
                  :talk-notes="userEventTalkNotesRef.get(talk.id.value)"
-                 @click="emits('talk-clicked', talk)">
+                 @click="emits('talk-clicked', talk)"
+                 scope="event-talks">
     <template #upper-right="{  }">
       {{confDescriptor.headingTitle}}
     </template>
     <template #footer-actions="{ talk }">
     </template>
-  </schedule-talk>
+  </talk-card>
 </template>
 
 <script setup lang="ts">
-import ScheduleTalk from "@/components/talk-card/ScheduleTalk.vue";
+import TalkCard from "@/components/talk-card/TalkCard.vue";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {PropType} from "vue";
 import {spacedEventIdOf, VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";

@@ -12,7 +12,7 @@
                                     :talks="timeslot.talks">
         <template #talk="{ talk }">
           <ion-item class="listTalks-item" role="listitem">
-            <schedule-talk :talk="talk" :room-id="talk.room.id" :talk-stats="talkStatsRefByTalkId.get(talk.id.value)"
+            <talk-card :talk="talk" :room-id="talk.room.id" :talk-stats="talkStatsRefByTalkId.get(talk.id.value)" scope="schedule"
                            :room-stats="roomsStatsRefByRoomId?.[talk.room.id.value]" :is-upcoming-talk="upcomingRawTalkIds.includes(talk.id.value)"
                            :talk-notes="userEventTalkNotes.get(talk.id.value)" @talk-clicked="(clickedTalk) => $emit('talk-clicked', talk)" :is-highlighted="(talk, talkNotes) => talkNotes.isFavorite" :conf-descriptor="confDescriptor">
               <template #upper-right="{ }">
@@ -30,7 +30,7 @@
                                       :local-favorite="localEventTalkNotes.get(talk.id.value)"
                                       @talk-note-updated="updatedTalkNote => userEventTalkNotes.set(talk.id.value, updatedTalkNote) " />
               </template>
-            </schedule-talk>
+            </talk-card>
           </ion-item>
         </template>
       </talk-format-groups-breakdown>
@@ -48,7 +48,7 @@ import ScheduleBreak from "@/components/schedule/ScheduleBreak.vue";
 import TalkWatchLaterButton from "@/components/talk-card/TalkWatchLaterButton.vue";
 import TalkRoom from "@/components/talk-card/TalkRoom.vue";
 import ProvideFeedbackTalkButton from "@/components/talk-card/ProvideFeedbackTalkButton.vue";
-import ScheduleTalk from "@/components/talk-card/ScheduleTalk.vue";
+import TalkCard from "@/components/talk-card/TalkCard.vue";
 import {PropType} from "vue";
 import {LabelledTimeslotWithFeedback} from "@/state/useSchedule";
 import {TimeslotTimingProgress, VoxxrinScheduleTimeSlot} from "@/models/VoxxrinSchedule";

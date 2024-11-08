@@ -8,10 +8,10 @@
         </no-results>
         <talk-format-groups-breakdown :conf-descriptor="confDescriptor" v-if="timeslot.type==='talks'" :talks="timeslot.talks.filter(t => t.id.isIncludedIntoArray(favoritedTalkIdsRef))">
           <template #talk="{ talk }">
-            <schedule-talk :talk="talk" :room-id="talk.room.id" :talk-stats="talkStatsRefByTalkId.get(talk.id.value)" :talk-notes="userEventTalkNotes.get(talk.id.value)"
+            <talk-card :talk="talk" :room-id="talk.room.id" :talk-stats="talkStatsRefByTalkId.get(talk.id.value)" :talk-notes="userEventTalkNotes.get(talk.id.value)"
                            :is-highlighted="(talk, talkNotes) => talkNotes.isFavorite" :conf-descriptor="confDescriptor"
                            :room-stats="roomsStatsRefByRoomId?.[talk.room.id.value]" :is-upcoming-talk="upcomingRawTalkIds.includes(talk.id.value)"
-                           @talk-clicked="_ => $emit('talk-clicked', talk)" >
+                           @talk-clicked="_ => $emit('talk-clicked', talk)" scope="favorites">
               <template #upper-right="{ }">
                 <div class="room" v-if="confDescriptor?.features.roomsDisplayed">
                   {{talk.room.title}}
@@ -30,7 +30,7 @@
                                       :local-favorite="localEventTalkNotes.get(talk.id.value)"
                 />
               </template>
-            </schedule-talk>
+            </talk-card>
           </template>
         </talk-format-groups-breakdown>
       </div>
@@ -46,7 +46,7 @@ import TalkFavoriteButton from "@/components/talk-card/TalkFavoriteButton.vue";
 import ScheduleBreak from "@/components/schedule/ScheduleBreak.vue";
 import TalkWatchLaterButton from "@/components/talk-card/TalkWatchLaterButton.vue";
 import ProvideFeedbackTalkButton from "@/components/talk-card/ProvideFeedbackTalkButton.vue";
-import ScheduleTalk from "@/components/talk-card/ScheduleTalk.vue";
+import TalkCard from "@/components/talk-card/TalkCard.vue";
 import {computed, PropType, toValue} from "vue";
 import {LabelledTimeslotWithFeedback} from "@/state/useSchedule";
 import {TimeslotTimingProgress} from "@/models/VoxxrinSchedule";

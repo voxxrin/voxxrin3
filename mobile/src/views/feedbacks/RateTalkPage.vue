@@ -6,10 +6,10 @@
       <slot>
         <div class="rateTalkView">
           <div class="rateTalkView-head">
-            <schedule-talk :conf-descriptor="confDescriptorRef" :is-highlighted="() => false" scope="rating"
+            <talk-card :conf-descriptor="confDescriptorRef" :is-highlighted="() => false" scope="rating"
                            :talk="labelledTimeslotWithTalkRef.talk" :room-id="labelledTimeslotWithTalkRef.talk.room.id"
                            :talk-notes="userEventTalkNotesRef.get(labelledTimeslotWithTalkRef.talk.id.value)">
-            </schedule-talk>
+            </talk-card>
           </div>
 
           <div class="rateTalkForm">
@@ -76,7 +76,7 @@ import {typesafeI18n} from "@/i18n/i18n-vue";
 import {TalkId} from "@/models/VoxxrinTalk";
 import BaseFeedbackStep from "@/components/feedbacks/BaseFeedbackStep.vue";
 import {DailyLabelledTimeslotWithTalk, findLabelledTimeslotContainingTalk,} from "@/state/findTimeslot";
-import ScheduleTalk from "@/components/talk-card/ScheduleTalk.vue";
+import TalkCard from "@/components/talk-card/TalkCard.vue";
 import {IonTextarea, useIonRouter} from "@ionic/vue";
 import QuickFeedbackRating from "@/components/ratings/QuickFeedbackRating.vue";
 import IconBasedRating from "@/components/ratings/IconBasedRating.vue";
