@@ -371,7 +371,7 @@ const saveEvent = async function (event: FullEvent, crawlerDescriptor: z.infer<t
           }
         }),
         ...event.talks.map(async talk => {
-          if(!ratingsTalkIds.includes(talk.id)) {
+          if(!ratingsTalkIds.includes(talk.id) && !talk.isOverflow) {
             await db.doc(`${resolvedEventFirestorePath(event.id, maybeSpaceToken)}/organizer-space/${organizerSecretToken}/ratings/${talk.id}`).create({})
           }
         })
