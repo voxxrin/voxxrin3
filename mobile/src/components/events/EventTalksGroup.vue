@@ -4,10 +4,10 @@
 
   <schedule-talk v-for="(talk, index) in talks" :key="talk.id.value"
                  :conf-descriptor="confDescriptor" :is-highlighted="() => false"
-                 :talk="talk"
+                 :talk="talk" :room-id="talk.room.id"
                  :talk-notes="userEventTalkNotesRef.get(talk.id.value)"
                  @click="emits('talk-clicked', talk)">
-    <template #upper-right="{ talk }">
+    <template #upper-right="{  }">
       {{confDescriptor.headingTitle}}
     </template>
     <template #footer-actions="{ talk }">

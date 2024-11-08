@@ -40,6 +40,7 @@
                   </ion-item>
                   <ion-item v-else-if="feedback.status === 'provided'" class="listTalks-item">
                     <schedule-talk :talk="findTimeslotTalkMatchingFeedback(timeslot, feedback.userFeedback)!"
+                                   :room-id="findTimeslotTalkMatchingFeedback(timeslot, feedback.userFeedback)!.room.id"
                                    :talk-notes="userEventTalkNotesRef.get(findTimeslotTalkMatchingFeedback(timeslot, feedback.userFeedback)!.id.value)"
                                    :is-highlighted="(talk, talkNotes) => talkNotes.isFavorite"
                                    :conf-descriptor="confDescriptor"
