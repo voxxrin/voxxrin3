@@ -12,13 +12,13 @@
                                     :talks="timeslot.talks">
         <template #talk="{ talk }">
           <ion-item class="listTalks-item" role="listitem">
-            <schedule-talk :talk="talk" :talk-stats="talkStatsRefByTalkId.get(talk.id.value)"
+            <schedule-talk :talk="talk" :room-id="talk.room.id" :talk-stats="talkStatsRefByTalkId.get(talk.id.value)"
                            :room-stats="roomsStatsRefByRoomId?.[talk.room.id.value]" :is-upcoming-talk="upcomingRawTalkIds.includes(talk.id.value)"
-                           :talk-notes="userEventTalkNotes.get(talk.id.value)" @talk-clicked="(clickedTalk) => $emit('talk-clicked', clickedTalk)" :is-highlighted="(talk, talkNotes) => talkNotes.isFavorite" :conf-descriptor="confDescriptor">
-              <template #upper-right="{ talk }">
+                           :talk-notes="userEventTalkNotes.get(talk.id.value)" @talk-clicked="(clickedTalk) => $emit('talk-clicked', talk)" :is-highlighted="(talk, talkNotes) => talkNotes.isFavorite" :conf-descriptor="confDescriptor">
+              <template #upper-right="{ }">
                 <talk-room :room="talk.room" :conf-descriptor="confDescriptor" />
               </template>
-              <template #footer-actions="{ talk, talkStats, talkNotes }">
+              <template #footer-actions="{ talkStats, talkNotes }">
                 <provide-feedback-talk-button v-if="!talk.isOverflow"
                                               :conf-descriptor="confDescriptor" :timeslot-progress-status="progressStatus"
                                               :timeslot-feedback="feedback" @click.stop="() => $emit('provide-talk-feedback-clicked', talk)" />

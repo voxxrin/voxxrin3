@@ -6,8 +6,8 @@
       <slot>
         <div class="rateTalkView">
           <div class="rateTalkView-head">
-            <schedule-talk :conf-descriptor="confDescriptorRef" :is-highlighted="() => false"
-                           :talk="labelledTimeslotWithTalkRef.talk"
+            <schedule-talk :conf-descriptor="confDescriptorRef" :is-highlighted="() => false" scope="rating"
+                           :talk="labelledTimeslotWithTalkRef.talk" :room-id="labelledTimeslotWithTalkRef.talk.room.id"
                            :talk-notes="userEventTalkNotesRef.get(labelledTimeslotWithTalkRef.talk.id.value)">
             </schedule-talk>
           </div>

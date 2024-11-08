@@ -8,16 +8,16 @@
         </no-results>
         <talk-format-groups-breakdown :conf-descriptor="confDescriptor" v-if="timeslot.type==='talks'" :talks="timeslot.talks.filter(t => t.id.isIncludedIntoArray(favoritedTalkIdsRef))">
           <template #talk="{ talk }">
-            <schedule-talk :talk="talk" :talk-stats="talkStatsRefByTalkId.get(talk.id.value)" :talk-notes="userEventTalkNotes.get(talk.id.value)"
+            <schedule-talk :talk="talk" :room-id="talk.room.id" :talk-stats="talkStatsRefByTalkId.get(talk.id.value)" :talk-notes="userEventTalkNotes.get(talk.id.value)"
                            :is-highlighted="(talk, talkNotes) => talkNotes.isFavorite" :conf-descriptor="confDescriptor"
                            :room-stats="roomsStatsRefByRoomId?.[talk.room.id.value]" :is-upcoming-talk="upcomingRawTalkIds.includes(talk.id.value)"
-                           @talk-clicked="talk => $emit('talk-clicked', talk)" >
-              <template #upper-right="{ talk }">
+                           @talk-clicked="_ => $emit('talk-clicked', talk)" >
+              <template #upper-right="{ }">
                 <div class="room" v-if="confDescriptor?.features.roomsDisplayed">
                   {{talk.room.title}}
                 </div>
               </template>
-              <template #footer-actions="{ talk, talkNotes, talkStats }">
+              <template #footer-actions="{ talkNotes, talkStats }">
                 <provide-feedback-talk-button v-if="!talk.isOverflow"
                                               :conf-descriptor="confDescriptor" :timeslot-progress-status="progress?.status"
                                               :timeslot-feedback="timeslot.feedback" @click.stop="() => $emit('provide-talk-feedback-clicked', talk)" />

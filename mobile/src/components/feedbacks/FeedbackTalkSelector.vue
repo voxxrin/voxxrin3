@@ -3,13 +3,13 @@
     <talk-format-groups-breakdown :conf-descriptor="confDescriptor" :talks="displayedTalksRef">
       <template #talk="{ talk }">
         <ion-item class="listTalks-item">
-          <schedule-talk :talk="talk" :talk-stats="talkStatsRefByTalkId.get(talk.id.value)" :talk-notes="userTalkNotesRefByTalkIdRef.get(talk.id.value)"
+          <schedule-talk :talk="talk" :room-id="talk.room.id" :talk-stats="talkStatsRefByTalkId.get(talk.id.value)" :talk-notes="userTalkNotesRefByTalkIdRef.get(talk.id.value)"
                          :is-highlighted="(talk, talkNotes) => talk.id.isSameThan(selectedTalkId)" :conf-descriptor="confDescriptor"
                          @talkClicked="updateSelected($event)" >
             <template #upper-right="{ talk, talkNotes }">
               <talk-is-favorited :talk-notes="talkNotes" />
             </template>
-            <template #footer-actions="{ talk, talkNotes, talkStats }">
+            <template #footer-actions="{ talkNotes, talkStats }">
               <talk-watch-later-button v-if="!talk.isOverflow"
                    :user-talk-notes="talkNotes" :conf-descriptor="confDescriptor"
                    @talk-note-updated="updatedTalkNote => userTalkNotesRefByTalkIdRef.set(talk.id.value, updatedTalkNote)"

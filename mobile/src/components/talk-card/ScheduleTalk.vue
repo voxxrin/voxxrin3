@@ -1,6 +1,6 @@
 <template>
   <div class="talkItemContainer">
-    <room-capacity-indicator v-if="!!roomStats" :spaced-event-id="spacedEventIdRef" :talk="talk" :room-stats="roomStats" :show-unknown-capacity="isUpcomingTalk" />
+    <room-capacity-indicator v-if="!!roomStats && roomId" :spaced-event-id="spacedEventIdRef" :talkId="talk.id" :roomId="roomId" :room-stats="roomStats" :show-unknown-capacity="isUpcomingTalk" />
     <ion-card class="talkCard"
               v-if="talkNotes"
               :class="{ container: true, '_is-highlighted': isHighlighted(talk, talkNotes), '_has-favorited': talkNotes.isFavorite, '_has-to-watch-later': talkNotes.watchLater }"
@@ -77,6 +77,7 @@ import {people, person} from "ionicons/icons";
 import RoomCapacityIndicator from "@/components/rooms/RoomCapacityIndicator.vue";
 import SpeakerThumbnail from "@/components/speaker/SpeakerThumbnail.vue";
 import {useCurrentSpaceEventIdRef} from "@/services/Spaces";
+import {RoomId} from "@/models/VoxxrinRoom";
 
 const { LL } = typesafeI18n()
 const baseUrl = import.meta.env.BASE_URL;
@@ -86,14 +87,20 @@ function handle404OnSpeakerThumbnail(img: HTMLImageElement|null) {
     }
 }
 
+type MinimumTalkAttrs = Pick<VoxxrinTalk, "id"|"track"|"format"|"speakers"|"language"|"title">
+
 const props = defineProps({
   talk: {
     required: true,
-    type: Object as PropType<VoxxrinTalk>
+    type: Object as PropType<MinimumTalkAttrs>
+  },
+  roomId: {
+    required: true,
+    type: Object as PropType<RoomId|undefined>
   },
   isHighlighted: {
       required: true,
-      type: Function as PropType<(talk: VoxxrinTalk, talkNotes: TalkNote) => boolean>
+      type: Function as PropType<(talk: MinimumTalkAttrs, talkNotes: TalkNote) => boolean>
   },
   confDescriptor: {
       required: true,
@@ -119,7 +126,7 @@ const props = defineProps({
 })
 
 defineEmits<{
-    (e: 'talk-clicked', talk: VoxxrinTalk): void,
+    (e: 'talk-clicked', talk: MinimumTalkAttrs): void,
 }>()
 
 const talkLang = computed(() => {
