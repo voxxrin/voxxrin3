@@ -14,9 +14,12 @@
     </div>
     <div class="speakerCard-content">
       <slot name="content"></slot>
-      <!-- TODO@DEV Hide when detail open or list items = 0 -->
-      <div class="bulletTagList" role="list">
-        <div class="bulletTag" role="listitem" v-for="categoryCount in categoriesCount" :key="categoryCount.format.id.value">
+      <div class="bulletTagList" role="list"
+           v-if="!isDetailed && Object.keys(categoriesCount).length > 0">
+        <div class="bulletTag" role="listitem"
+             v-for="categoryCount in categoriesCount"
+             v-if="Object.keys(categoriesCount).length > 0"
+             :key="categoryCount.format.id.value">
           <span class="bulletTag-nb">{{categoryCount.count}}</span>
           {{categoryCount.format.title}}
           <span v-if="confDescriptor.formattings.talkFormatTitle === 'with-duration'">&nbsp;({{categoryCount.format.hmmDuration}})</span>
@@ -47,7 +50,8 @@ const { LL } = typesafeI18n()
     confDescriptor: {
       required: true,
       type: Object as PropType<VoxxrinConferenceDescriptor>
-    }
+    },
+    isDetailed: Boolean,
   })
 
   defineEmits<{
@@ -206,9 +210,7 @@ const { LL } = typesafeI18n()
     &-content {
       display: flex;
       flex-direction: column;
-      gap: var(--app-gutters);
       justify-content: space-between;
-      padding-bottom: var(--app-gutters-medium);
 
       .talkResumeList {
         background: transparent;
@@ -220,6 +222,7 @@ const { LL } = typesafeI18n()
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
+        padding-bottom: 16px;
         padding-left: 88px;
       }
     }

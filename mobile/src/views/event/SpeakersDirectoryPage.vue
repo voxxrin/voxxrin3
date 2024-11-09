@@ -7,9 +7,12 @@
                       @mode-updated="(updatedModeId, previousModeId) => currentMode = updatedModeId as typeof currentMode">
       </toolbar-header>
 
-      <speaker-card v-for="speaker in speakers" @speaker-clicked="openSpeakerDetails($event)" :confDescriptor="confDescriptor" :speaker="speaker" :key="speaker.id.value">
+      <speaker-card v-for="speaker in speakers" @speaker-clicked="openSpeakerDetails($event)"
+                    :confDescriptor="confDescriptor" :speaker="speaker" :key="speaker.id.value"
+                    :isDetailed="currentMode === 'detailed'">
         <template #content="{}">
-          <ion-list class="talkResumeList" :style="{ display: currentMode === 'detailed' ? 'block':'none' }">
+          <ion-list class="talkResumeList"
+                    :style="{ display: currentMode === 'detailed' ? 'block':'none' }">
             <talk-card v-for="talk in speaker.talks" :key="talk.id.value"
                            :talk="{ ...talk, speakers: [speaker, ...talk.otherSpeakers] }" :room-id="talk.allocation?.room.id" :talk-stats="talkStatsRefByTalkId.get(talk.id.value)"
                            :talk-notes="userEventTalkNotesRef.get(talk.id.value)"
