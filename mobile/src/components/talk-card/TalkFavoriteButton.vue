@@ -13,10 +13,10 @@
 </template>
 
 <script setup lang="ts">
-import {computed, PropType, Ref, toValue} from "vue";
-import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
+import {computed, PropType, Ref} from "vue";
+import {spacedEventIdOf, VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {useUserTalkNoteActions} from "@/state/useUserTalkNotes";
-import {managedRef as ref, toManagedRef as toRef} from "@/views/vue-utils";
+import {toManagedRef as toRef} from "@/views/vue-utils";
 import {TalkId} from "@/models/VoxxrinTalk";
 import {TalkNote} from "../../../../shared/feedbacks.firestore";
 import {typesafeI18n} from "@/i18n/i18n-vue";
@@ -51,7 +51,7 @@ const talkNotes: Ref<TalkNote|undefined> = toRef(() => props.userTalkNotes);
 
 const eventTalkStats = computed(() => props.talkStats)
 const {toggleFavorite} = useUserTalkNoteActions(
-    toRef(() => props.confDescriptor.id),
+    toRef(() => spacedEventIdOf(props.confDescriptor)),
     toRef(() => props.userTalkNotes?.talkId ? new TalkId(props.userTalkNotes.talkId) : undefined),
     talkNotes,
     (updatedTalkNote) => emits('talkNoteUpdated', updatedTalkNote)

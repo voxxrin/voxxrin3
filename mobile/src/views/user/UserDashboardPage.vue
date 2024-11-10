@@ -41,12 +41,21 @@
 
       <div class="userDashboard-content">
         <div class="listCardButton">
-          <ion-button class="listCardButton-item" @click="ionRouter.push(`/user/talks`)" :disabled="!isMyTalksButtonEnabled">
+          <ion-button class="listCardButton-item" @click="ionRouter.push(`/user/talks`)" :disabled="!buttonsEnabled.myTalksEnabled">
             <div class="listCardButton-item-icon">
               <ion-icon src="/assets/icons/solid/comments-2.svg"></ion-icon>
             </div>
             <div class="listCardButton-item-text">
               <span class="titleItem">{{ LL.My_talks_with_Feedbacks() }}</span>
+            </div>
+            <ion-icon class="listCardButton-item-nav" src="/assets/icons/line/chevron-right-line.svg"></ion-icon>
+          </ion-button>
+          <ion-button class="listCardButton-item" @click="ionRouter.push(`/user/events`)" :disabled="!buttonsEnabled.myEventsEnabled">
+            <div class="listCardButton-item-icon">
+              <ion-icon src="/assets/icons/solid/calendar.svg"></ion-icon>
+            </div>
+            <div class="listCardButton-item-text">
+              <span class="titleItem">{{ LL.My_events() }}</span>
             </div>
             <ion-icon class="listCardButton-item-nav" src="/assets/icons/line/chevron-right-line.svg"></ion-icon>
           </ion-button>
@@ -62,7 +71,7 @@
 <!--          </ion-button>-->
 <!--          <ion-button class="listCardButton-item" @click="$router.push(`/user/my-personal-data`)">-->
 <!--            <div class="listCardButton-item-icon">-->
-<!--              <ion-icon src="/assets/icons/solid/data.svg"></ion-icon>-->
+<!--              <ion-icon src="/assets/icons/solid/lock.svg"></ion-icon>-->
 <!--            </div>-->
 <!--            <div class="listCardButton-item-text">-->
 <!--              <span class="titleItem">My personal data</span>-->
@@ -112,13 +121,19 @@ const { LL } = typesafeI18n()
 
 const { userTokensWalletRef } = useUserTokensWallet();
 
-const isMyTalksButtonEnabled = computed(() => {
+const buttonsEnabled = computed(() => {
   const userTokensWallet = toValue(userTokensWalletRef);
   if(!userTokensWallet) {
-    return false;
+    return {
+      myEventsEnabled: false,
+      myTalksEnabled: false,
+    };
   }
 
-  return userTokensWallet.secretTokens.talkFeedbacksViewerTokens.length > 0;
+  return {
+    myEventsEnabled: userTokensWallet.secretTokens.eventOrganizerTokens.length > 0,
+    myTalksEnabled: userTokensWallet.secretTokens.talkFeedbacksViewerTokens.length > 0
+  };
 })
 </script>
 

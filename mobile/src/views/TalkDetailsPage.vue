@@ -32,7 +32,7 @@
       </ion-header>
 
       <talk-details-header :conf-descriptor="confDescriptor" :talk="detailedTalkRef">
-        <room-capacity-indicator :event-id="eventId" :talk="detailedTalkRef" :room-stats="firestoreRoomStatsRef" :bottom-rounded="true" :show-unknown-capacity="false" />
+        <room-capacity-indicator :spaced-event-id="spacedEventIdRef" :talk="detailedTalkRef" :room-stats="firestoreRoomStatsRef" :bottom-rounded="true" :show-unknown-capacity="false" />
       </talk-details-header>
 
       <div class="talkDetails-tags" v-if="detailedTalkRef?.tags.length">
@@ -88,18 +88,13 @@
 
 <script setup lang="ts">
 import {useRoute} from "vue-router";
-import {EventId} from "@/models/VoxxrinEvent";
-import {getRouteParamsValue, isRefDefined, toManagedRef as toRef, managedRef as ref} from "@/views/vue-utils";
-import {
-  useLocalEventTalkFavsStorage,
-  useUserEventTalkNotes,
-  useUserTalkNoteActions,
-} from "@/state/useUserTalkNotes";
+import {getRouteParamsValue, isRefDefined, managedRef as ref, toManagedRef as toRef} from "@/views/vue-utils";
+import {useLocalEventTalkFavsStorage, useUserEventTalkNotes, useUserTalkNoteActions,} from "@/state/useUserTalkNotes";
 import {findAssetOfType, TalkId} from "@/models/VoxxrinTalk";
 import {useSharedEventTalk} from "@/state/useEventTalk";
 import {computed, toValue} from "vue";
 import {typesafeI18n} from "@/i18n/i18n-vue";
-import {IonBadge, IonAvatar, IonText, useIonRouter} from "@ionic/vue";
+import {IonBadge, IonText, useIonRouter} from "@ionic/vue";
 import {business} from "ionicons/icons";
 import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
 import VoxDivider from "@/components/ui/VoxDivider.vue";
@@ -111,25 +106,26 @@ import RoomCapacityIndicator from "@/components/rooms/RoomCapacityIndicator.vue"
 import {useRoomStats} from "@/state/useRoomsStats";
 import SpeakerThumbnail from "@/components/speaker/SpeakerThumbnail.vue";
 import RecordingPlayer from "@/components/ui/RecordingPlayer.vue";
+import {getResolvedEventRootPathFromSpacedEventIdRef, useCurrentSpaceEventIdRef} from "@/services/Spaces";
 
 const LOGGER = Logger.named("TalkDetailsPage");
 
 const ionRouter = useIonRouter();
 function closeAndNavigateBack() {
-    goBackOrNavigateTo(ionRouter, `/events/${eventId.value.value}/schedule`, 0 /* talk details page is always opened through popups */)
+    goBackOrNavigateTo(ionRouter, `${getResolvedEventRootPathFromSpacedEventIdRef(spacedEventIdRef)}/schedule`, 0 /* talk details page is always opened through popups */)
 }
 
+const spacedEventIdRef = useCurrentSpaceEventIdRef();
 const route = useRoute();
-const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')));
 const talkId = ref(new TalkId(getRouteParamsValue(route, 'talkId')));
-const {conferenceDescriptor: confDescriptor} = useSharedConferenceDescriptor(eventId);
+const {conferenceDescriptor: confDescriptor} = useSharedConferenceDescriptor(spacedEventIdRef);
 
-const { userEventTalkNotesRef } = useUserEventTalkNotes(eventId, toRef(() => talkId ? [talkId.value] : undefined))
+const { userEventTalkNotesRef } = useUserEventTalkNotes(spacedEventIdRef, toRef(() => talkId ? [talkId.value] : undefined))
 const talkNotes = toRef(() => {
     const userEventTalkNotes = toValue(userEventTalkNotesRef)
     return Array.from(userEventTalkNotes.values())[0];
 })
-const {firestoreEventTalkStatsRef} = useEventTalkStats(eventId, toRef(() => talkId ? [talkId.value] : undefined));
+const {firestoreEventTalkStatsRef} = useEventTalkStats(spacedEventIdRef, toRef(() => talkId ? [talkId.value] : undefined));
 const eventTalkStats = computed(() => {
     const firestoreEventTalkStats = toValue(firestoreEventTalkStatsRef);
     return Array.from(firestoreEventTalkStats.values())[0];
@@ -138,10 +134,10 @@ const { talkDetails: detailedTalkRef } = useSharedEventTalk(confDescriptor, talk
 const { LL } = typesafeI18n()
 
 const {toggleFavorite, toggleWatchLater} = useUserTalkNoteActions(
-    eventId, talkId,
+    spacedEventIdRef, talkId,
     talkNotes,
 );
-const localEventTalkNotesRef = useLocalEventTalkFavsStorage(eventId)
+const localEventTalkNotesRef = useLocalEventTalkFavsStorage(spacedEventIdRef)
 const localFavorite = computed(() => {
   const localEventTalkNotes = toValue(localEventTalkNotesRef),
     _talkId = toValue(talkId);
@@ -170,7 +166,7 @@ const theme = computed(() => {
     }
 });
 
-const {firestoreRoomStatsRef } = useRoomStats(eventId, toRef(() => detailedTalkRef.value?.room.id))
+const {firestoreRoomStatsRef } = useRoomStats(spacedEventIdRef, toRef(() => detailedTalkRef.value?.room.id))
 
 </script>
 
@@ -189,15 +185,15 @@ const {firestoreRoomStatsRef } = useRoomStats(eventId, toRef(() => detailedTalkR
 
     &.to-watch-later{
       .btnTalkAction._watchLater {
-        --background: var(--voxxrin-event-theme-colors-secondary-hex);
-        --background-activated: var(--voxxrin-event-theme-colors-secondary-hex);
+        --background: var(--voxxrin-event-theme-colors-tertiary-hex);
+        --background-activated: var(--voxxrin-event-theme-colors-tertiary-hex);
         --color-activated: var(--app-white);
         --color: var(--app-white);
       }
 
       ion-toolbar {
         &:before {
-          background: linear-gradient(331deg, rgba(var(--voxxrin-event-theme-colors-secondary-rgb), 0.6) 30%, rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.6) 80%) !important;
+          background: linear-gradient(331deg, rgba(var(--voxxrin-event-theme-colors-tertiary-rgb), 0.6) 30%, rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.6) 80%) !important;
         }
       }
     }
@@ -289,8 +285,8 @@ const {firestoreRoomStatsRef } = useRoomStats(eventId, toRef(() => detailedTalkR
 
   .talkDetails {
     &-tags {
-      padding: 8px 16px;
-      border-radius: 16px;
+      padding: 16px;
+      background: var(--app-beige-medium);
 
       @media (prefers-color-scheme: dark) {
         --border-style: none;

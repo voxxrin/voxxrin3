@@ -176,6 +176,7 @@ export const EVENT_FEATURES_CONFIG_PARSER = z.object({
 
 export const EVENT_DESCRIPTOR_PARSER = LISTABLE_EVENT_PARSER.extend({
     headingTitle: z.string(),
+    headingBackground: z.string().optional().nullable().default(null),
     features: EVENT_FEATURES_CONFIG_PARSER,
     talkFormats: z.array(THEMABLE_TALK_FORMAT_PARSER),
     talkTracks: z.array(THEMABLE_TALK_TRACK_PARSER),
@@ -296,9 +297,21 @@ export const FULL_EVENT_PARSER = z.object({
     talks: z.array(DETAILED_TALK_PARSER)
 })
 
-export const FIREBASE_CRAWLER_DESCRIPTOR_PARSER = z.object({
+const firebaseCrawlerDescriptorParserBase = z.object({
+    eventId: z.string().optional(),
     eventFamily: z.string(),
     eventName: z.string(),
     descriptorUrl: z.string(),
     kind: z.string(),
+    visibility: z.literal("public").default("public"),
 })
+const privateFirebaseCrawlerDescriptorParser = firebaseCrawlerDescriptorParserBase.extend({
+  visibility: z.literal("private"),
+  spaceToken: z.string(),
+});
+const publicFirebaseCrawlerDescriptorParser = firebaseCrawlerDescriptorParserBase.extend({
+});
+export const FIREBASE_CRAWLER_DESCRIPTOR_PARSER = z.union([
+  publicFirebaseCrawlerDescriptorParser,
+  privateFirebaseCrawlerDescriptorParser,
+])

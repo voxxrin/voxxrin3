@@ -1,3 +1,4 @@
+import {introduceUserWalletPrivateSpaceToken} from "@/data-migrations/02-introduceUserWalletPrivateSpaceToken";
 
 type Migration = {
   name: string,
@@ -5,7 +6,8 @@ type Migration = {
 }
 
 const MIGRATIONS: Array<Migration> = [
-  { name: "migrateUserTokensWalletToLocalStorage", exec: async (userId) => (await import("./01-migrateUserTokensWalletToLocalStorage")).migrateUserTokensWalletToLocalStorage(userId) }
+  { name: "migrateUserTokensWalletToLocalStorage", exec: async (userId) => (await import("./01-migrateUserTokensWalletToLocalStorage")).migrateUserTokensWalletToLocalStorage(userId) },
+  { name: "introduceUserWalletPrivateSpaceToken", exec: async (userId) => (await import("./02-introduceUserWalletPrivateSpaceToken")).introduceUserWalletPrivateSpaceToken(userId) },
 ]
 
 type MigrationResult = { name: string, duration: number }

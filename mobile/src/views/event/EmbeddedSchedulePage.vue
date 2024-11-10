@@ -4,7 +4,7 @@
     <ion-footer>
       <em>
         {{ LL.Open_full_version_of_the_schedule() }}
-        <strong><a :href="`${appBaseUrlWithoutTrailingSlash}/events/${eventId.value}`" target="_blank">
+        <strong><a :href="fullScheduleUrl" target="_blank">
           {{ LL.Here() }}
         </a></strong>
       </em>
@@ -14,19 +14,20 @@
 <script setup lang="ts">
 import {SchedulePage} from "@/router/preloaded-pages";
 import {IonFooter} from "@ionic/vue";
-import {useRoute} from "vue-router";
-import {managedRef as ref} from "@/views/vue-utils";
-import {EventId} from "@/models/VoxxrinEvent";
-import {getRouteParamsValue} from "@/views/vue-utils";
 import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
 import {typesafeI18n} from "@/i18n/i18n-vue";
+import {getResolvedEventRootPathFromSpacedEventIdRef, useCurrentSpaceEventIdRef} from "@/services/Spaces";
+import {computed} from "vue";
 
 const appBaseUrl = import.meta.env.VITE_WHITE_LABEL_PUBLIC_URL;
 const appBaseUrlWithoutTrailingSlash = appBaseUrl.substring(0, appBaseUrl.length - (appBaseUrl[appBaseUrl.length-1]==='/'?1:0));
 
-const route = useRoute();
-const eventId = ref(new EventId(getRouteParamsValue(route, 'eventId')));
-const {conferenceDescriptor: confDescriptor} = useSharedConferenceDescriptor(eventId);
+const spacedEventIdRef = useCurrentSpaceEventIdRef()
+const {conferenceDescriptor: confDescriptor} = useSharedConferenceDescriptor(spacedEventIdRef);
+
+const fullScheduleUrl = computed(() => {
+  return `${appBaseUrlWithoutTrailingSlash}/${getResolvedEventRootPathFromSpacedEventIdRef(spacedEventIdRef)}`
+})
 
 const { LL } = typesafeI18n()
 

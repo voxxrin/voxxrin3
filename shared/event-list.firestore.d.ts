@@ -16,6 +16,10 @@ export type Day = {
     localDate: ISOLocalDate
 }
 
+export type ListableEventVisibility =
+  | { visibility: "public" }
+  | { visibility: "private", spaceToken: string }
+
 export type ListableEvent = {
     id: string;
     eventFamily: string,
@@ -36,7 +40,7 @@ export type ListableEvent = {
     logoUrl: string,
     websiteUrl: string,
     theming: EventTheme
-}
+} & ListableEventVisibility;
 
 export type EventLastUpdates = {
     favorites: ISODatetime|undefined,

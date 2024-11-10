@@ -4,10 +4,10 @@
   "description": "",
   "type": "module",
   "scripts": {
-    "test": "firebase emulators:exec \"jest\"",
-    "test:start-dev": "concurrently \"cd ../functions && npm run serve\" \"sleep 5 && npm run test:dev\"",
-    "test:dev": "FIRESTORE_EMULATOR_HOST=127.0.0.1:8080 FIREBASE_AUTH_EMULATOR_HOST=127.0.0.1:9099 jest --watch --detectOpenHandles",
-    "deploy": "firebase use ${FIREBASE_PROJECT_NAME:-voxxrin-v3} && firebase deploy --only firestore"
+    "test": "firebase emulators:exec --only firestore \"jest --detectOpenHandles \"",
+    "deploy:rules": "npx firebase-tools deploy --only firestore:rules --project ${FIREBASE_PROJECT_NAME:-voxxrin-v3}",
+    "deploy:indexes": "npx firebase-tools deploy --only firestore:indexes --project ${FIREBASE_PROJECT_NAME:-voxxrin-v3} --force || true",
+    "deploy": "concurrently 'npm run deploy:rules' 'npm run deploy:indexes'"
   },
   "license": "Apache-2.0",
   "devDependencies": {

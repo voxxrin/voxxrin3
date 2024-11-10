@@ -13,9 +13,11 @@ import {ISOLocalDate} from "../../../../../../../shared/type-utils";
 import {getFamilyEventsStatsToken} from "../../../firestore/services/publicTokens-utils";
 import {sortBy} from "lodash";
 import {Response} from "express";
+import {resolvedSpacedEventFieldName} from "../../../../../../../shared/utilities/event-utils";
 
 export async function legacyPublicEventStats(request: https.Request, response: Response) {
 
+    const spaceToken = undefined;
     const eventId = extractSingleQueryParam(request, 'eventId');
     const publicToken = extractSingleQueryParam(request, 'publicToken');
 
@@ -24,7 +26,7 @@ export async function legacyPublicEventStats(request: https.Request, response: R
 
     const [eventDescriptor, familyEventsStatsToken] = await logPerf("eventDescriptor and familyEventsStatsToken retrieval", async () => {
          return await Promise.all([
-            getEventDescriptor(eventId),
+            getEventDescriptor(spaceToken, eventId),
             getFamilyEventsStatsToken(publicToken),
         ]);
     })
@@ -34,11 +36,13 @@ export async function legacyPublicEventStats(request: https.Request, response: R
     }
 
     const { cachedHash, updatesDetected } = await logPerf("cached hash", async () => {
-        return await checkEventLastUpdate(eventId, [
-            root => root.favorites,
-            root => root.allFeedbacks,
-            root => root.talkListUpdated
-        ], request, response)
+        return await checkEventLastUpdate(spaceToken, eventId, [
+              root => root.favorites,
+              root => root.allFeedbacks,
+              root => root.talkListUpdated
+          ], (lastUpdateDate) => `${resolvedSpacedEventFieldName(eventId, spaceToken)}:${lastUpdateDate}`,
+          request, response
+        )
     });
 
     if(!updatesDetected) {
@@ -48,8 +52,8 @@ export async function legacyPublicEventStats(request: https.Request, response: R
     try {
         const [talkStats, talksDetailsWithRatings] = await logPerf("eventTalkStats + getTalksDetailsWithRatings", () => {
             return Promise.all([
-                eventTalkStatsFor(eventId),
-                getTalksDetailsWithRatings(eventId),
+                eventTalkStatsFor(spaceToken, eventId),
+                getTalksDetailsWithRatings(spaceToken, eventId),
             ]);
         })
 

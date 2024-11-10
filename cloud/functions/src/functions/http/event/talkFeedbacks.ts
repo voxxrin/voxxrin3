@@ -8,29 +8,33 @@ import {ConferenceOrganizerSpace} from "../../../../../../shared/conference-orga
 import {Request, Response} from "express";
 import {ConferenceDescriptor} from "../../../../../../shared/conference-descriptor.firestore";
 import {ISODatetime} from "../../../../../../shared/type-utils";
+import {resolvedEventFirestorePath, resolvedSpacedEventFieldName} from "../../../../../../shared/utilities/event-utils";
 
-export async function eventTalkFeedbacks(response: Response, pathParams: {eventId: string, talkId: string}, queryParams: {token: string, updatedSince?: ISODatetime|undefined }, request: Request, eventDescriptor: ConferenceDescriptor) {
+export async function eventTalkFeedbacks(response: Response, pathParams: {eventId: string, talkId: string, spaceToken?: string|undefined}, queryParams: {token: string, updatedSince?: ISODatetime|undefined }, request: Request, eventDescriptor: ConferenceDescriptor) {
 
-    const { eventId, talkId } = pathParams
+    const { eventId, talkId, spaceToken } = pathParams
 
-    const { cachedHash, updatesDetected } = await checkEventLastUpdate(eventId, [
-        root => root.allFeedbacks,
-        root => root.talkListUpdated,
-        root => root.feedbacks?.[talkId]
-    ], request, response)
+    const { cachedHash, updatesDetected } = await checkEventLastUpdate(spaceToken, eventId, [
+          root => root.allFeedbacks,
+          root => root.talkListUpdated,
+          root => root.feedbacks?.[talkId]
+      ],
+      (lastUpdateDate) => `${resolvedSpacedEventFieldName(eventId, spaceToken)}:${talkId}:${lastUpdateDate}`,
+      request, response
+    );
 
     if(!updatesDetected) {
         return sendResponseMessage(response, 304)
     }
 
     try {
-        const organizerSpace = await getSecretTokenDoc<ConferenceOrganizerSpace>(`/events/${eventId}/organizer-space`)
+        const organizerSpace = await getSecretTokenDoc<ConferenceOrganizerSpace>(`${resolvedEventFirestorePath(eventId, spaceToken)}/organizer-space`)
 
         const perTalkFeedbacks = await Promise.all(organizerSpace.talkFeedbackViewerTokens
           .filter(talkFeedbacksViewerToken => talkId === talkFeedbacksViewerToken.talkId)
           .map(async (talkFeedbackViewerToken) => {
 
-            const feedbacks = await ensureTalkFeedbackViewerTokenIsValidThenGetFeedbacks(talkFeedbackViewerToken.eventId, talkFeedbackViewerToken.talkId, talkFeedbackViewerToken.secretToken);
+            const feedbacks = await ensureTalkFeedbackViewerTokenIsValidThenGetFeedbacks(spaceToken, talkFeedbackViewerToken.eventId, talkFeedbackViewerToken.talkId, talkFeedbackViewerToken.secretToken);
 
             // Enriching bingo entries with label
             const enrichedFeedbacks = feedbacks.map(feedback => ({

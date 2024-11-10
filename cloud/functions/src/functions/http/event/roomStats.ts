@@ -8,9 +8,10 @@ import {db} from "../../../firebase";
 import {toValidFirebaseKey} from "../../../../../../shared/utilities/firebase.utils";
  import {TALK_COMPLETION_THRESHOLD} from "../../../../../../shared/constants/shared-constants.utils";
 import {ConferenceDescriptor} from "../../../../../../shared/conference-descriptor.firestore";
+import {resolvedEventFirestorePath} from "../../../../../../shared/utilities/event-utils";
 
 
-export async function provideRoomsStats(response: Response, pathParams: {eventId: string}, queryParams: {token: string}, body: {
+export async function provideRoomsStats(response: Response, pathParams: {eventId: string, spaceToken?: string|undefined}, queryParams: {token: string}, body: {
   roomsStats: Array<{
     roomId: string,
     capacityFillingRatio: number,
@@ -18,34 +19,38 @@ export async function provideRoomsStats(response: Response, pathParams: {eventId
   }>
 }, eventDescriptor: ConferenceDescriptor) {
 
-  const timeslottedTalks = await getTimeslottedTalks(pathParams.eventId)
+  const {eventId, spaceToken} = pathParams;
+  const timeslottedTalks = await getTimeslottedTalks(spaceToken, eventId)
 
   await Promise.all(body.roomsStats.map(async (bodyRoomStats) => {
     const roomStats = await updateRoomStatsFor({
       timeslottedTalks,
-      eventId: pathParams.eventId,
+      spaceToken,
+      eventId: eventId,
       ...bodyRoomStats
     })
 
     return roomStats;
   }));
 
-  const firebaseRoomsStats = (await db.doc(`events/${pathParams.eventId}/roomsStats-allInOne/self`).get()).data() as RoomsStats
+  const firebaseRoomsStats = (await db.doc(`${resolvedEventFirestorePath(eventId, spaceToken)}/roomsStats-allInOne/self`).get()).data() as RoomsStats
 
   sendResponseMessage(response, 200, {
     roomsStats: firebaseRoomsStats
   });
 }
 
-export async function provideRoomStats(response: Response, pathParams: {eventId: string, roomId: string}, queryParams: {token: string}, body: {
+export async function provideRoomStats(response: Response, pathParams: {spaceToken?: string|undefined, eventId: string, roomId: string}, queryParams: {token: string}, body: {
   capacityFillingRatio: number,
   recordedAt: ISODatetime,
 }, eventDescriptor: ConferenceDescriptor) {
 
-  const timeslottedTalks = await getTimeslottedTalks(pathParams.eventId)
+  const {eventId, spaceToken} = pathParams;
+  const timeslottedTalks = await getTimeslottedTalks(spaceToken, eventId)
   const roomStats = await updateRoomStatsFor({
     timeslottedTalks,
-    eventId: pathParams.eventId,
+    spaceToken,
+    eventId,
     roomId: pathParams.roomId,
     capacityFillingRatio: body.capacityFillingRatio,
     recordedAt: body.recordedAt
@@ -56,7 +61,7 @@ export async function provideRoomStats(response: Response, pathParams: {eventId:
   });
 }
 
-async function updateRoomStatsFor(params: { eventId: string, timeslottedTalks: TimeslottedTalk[], roomId: string, capacityFillingRatio: number, recordedAt: ISODatetime}): Promise<RoomStats> {
+async function updateRoomStatsFor(params: { spaceToken: string|undefined, eventId: string, timeslottedTalks: TimeslottedTalk[], roomId: string, capacityFillingRatio: number, recordedAt: ISODatetime}): Promise<RoomStats> {
   const recordingTimestamp = Date.parse(params.recordedAt)
 
   const talkCandidates = params.timeslottedTalks
@@ -84,7 +89,7 @@ async function updateRoomStatsFor(params: { eventId: string, timeslottedTalks: T
     })
   }
 
-  await db.doc(`events/${params.eventId}/roomsStats-allInOne/self`).update(toValidFirebaseKey(params.roomId), roomStats);
+  await db.doc(`${resolvedEventFirestorePath(params.eventId, params.spaceToken)}/roomsStats-allInOne/self`).update(toValidFirebaseKey(params.roomId), roomStats);
 
   return roomStats;
 }

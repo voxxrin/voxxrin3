@@ -11,8 +11,8 @@ export type BreakTimeslotWithPotentiallyUnknownIcon = Replace<BreakTimeSlot, {
 
 export interface FullEvent {
     id: string,
-    conferenceDescriptor: Omit<ConferenceDescriptor, "eventFamily"|"eventName"|"websiteUrl">,
-    info: Omit<ListableEvent, "eventFamily"|"eventName"|"websiteUrl">,
+    conferenceDescriptor: Omit<ConferenceDescriptor, "eventFamily"|"eventName"|"websiteUrl"|"visibility"|"spaceToken">,
+    info: Omit<ListableEvent, "eventFamily"|"eventName"|"websiteUrl"|"visibility"|"spaceToken">,
     daySchedules: DailySchedule[],
     talks: DetailedTalk[],
 }

@@ -1,4 +1,4 @@
-import {db} from "../../firebase"
+import {db, info} from "../../firebase"
 import {v4 as uuidv4} from "uuid";
 import {User} from "../../../../../shared/user.firestore";
 import {ISODatetime} from "../../../../../shared/type-utils";
@@ -13,26 +13,36 @@ export const onUserCreated = async (event: AuthBlockingEvent) => {
       return;
     }
 
-    event.
-
     info(`User created triggered: ${event.data.uid}`)
     await createUserInfos(event.data.uid);
 };
 
-export async function createUserInfos(userId: string) {
-    const publicUserToken = uuidv4();
-    const user: User = {
-        privateUserId: userId,
-        publicUserToken,
-        userCreation: new Date().toISOString() as ISODatetime,
-        username: `Anonymous${generateRandom15DigitInteger()}`,
-        totalFavs: {
-          total: 0,
-          perEventTotalFavs: {}
-        },
-        _version: 2
-    }
+export function defaultUserInfos(userId: string) {
+  const publicUserToken = uuidv4();
+  const now = new Date().toISOString() as ISODatetime
+  const user: User = {
+    privateUserId: userId,
+    publicUserToken,
+    userCreation: now,
+    userLastConnection: now,
+    username: `Anonymous${generateRandom15DigitInteger()}`,
+    totalFavs: {
+      total: 0,
+      perEventTotalFavs: {}
+    },
+    totalFeedbacks: {
+      total: 0,
+      perEventTotalFeedbacks: {}
+    },
+    _modelRemainingMigrations: [],
+    _version: 4
+  }
 
+  return user;
+}
+
+export async function createUserInfos(userId: string) {
+    const user = defaultUserInfos(userId);
     await db.collection('users').doc(userId).set(user);
 }
 

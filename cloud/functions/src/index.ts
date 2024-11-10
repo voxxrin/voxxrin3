@@ -50,9 +50,6 @@ exports.eventStats = onRequest(async (request, response) => {
 exports.migrateFirestoreSchema = onRequest(async (request, response) => {
   (await import("./functions/http/migrateFirestoreSchema")).migrateFirestoreSchema(request, response)
 })
-exports.globalStats = onRequest(async (request, response) => {
-  (await import("./functions/http/event/globalStatistics")).globalStats(request, response)
-})
 
 // Express handler
 declareExpressHttpRoutes(app)
@@ -60,14 +57,21 @@ exports.api = onRequest({}, app);
 
 // Firebase handlers
 exports.onUserTalksNoteCreate = onDocumentCreated(
-  {document: "users/{userId}/events/{eventId}/talksNotes/{talkId}"},
+  { document: "users/{userId}/events/{eventId}/talksNotes/{talkId}" },
   async event => (await import('./functions/firestore/onUserTalkNotes')).onUserTalksNoteCreate(event)
-)
+);
+exports.onUserPrivateSpaceTalksNoteCreate = onDocumentCreated(
+  { document: "users/{userId}/spaces/{spaceToken}/events/{eventId}/talksNotes/{talkId}" },
+  async event => (await import('./functions/firestore/onUserTalkNotes')).onUserTalksNoteCreate(event)
+);
 exports.onUserTalksNoteUpdate = onDocumentUpdated(
-  {document: "users/{userId}/events/{eventId}/talksNotes/{talkId}"},
+  { document: "users/{userId}/events/{eventId}/talksNotes/{talkId}" },
   async event => (await import('./functions/firestore/onUserTalkNotes')).onUserTalksNoteUpdate(event)
-)
-
+);
+exports.onUserPrivateSpaceTalksNoteUpdate = onDocumentUpdated(
+  { document: "users/{userId}/spaces/{spaceToken}/events/{eventId}/talksNotes/{talkId}" },
+  async event => (await import('./functions/firestore/onUserTalkNotes')).onUserTalksNoteUpdate(event)
+);
 exports.onUserCreated = beforeUserCreated(
   { },
   async event => (await import('./functions/firestore/onUserCreated')).onUserCreated(event)
@@ -76,19 +80,49 @@ exports.onUserTokenWalletDeleted = onDocumentDeleted(
   {document: `users/{userId}/tokens-wallet/self`},
   async event => (await import('./functions/firestore/onUserTokensWalletDeleted')).onUserTokensWalletDeleted(event)
 )
+// TODO: to rename onUserTalkFeedbackUpdated
 exports.onTalkFeedbackUpdated = onDocumentUpdated(
   {document: `users/{userId}/events/{eventId}/days/{dayId}/feedbacks/self`},
-  async event => (await import('./functions/firestore/onTalkFeedbackProvided')).onTalkFeedbackUpdated(event)
+  async event => (await import('./functions/firestore/onTalkFeedbackProvided')).onUserTalkFeedbackUpdated(event)
 )
+exports.onUserPrivateSpaceTalkFeedbackUpdated = onDocumentUpdated(
+  {document: `users/{userId}/spaces/{spaceToken}/events/{eventId}/days/{dayId}/feedbacks/self` },
+  async event => (await import('./functions/firestore/onTalkFeedbackProvided')).onUserTalkFeedbackUpdated(event)
+);
+// TODO: to rename onUserTalkFeedbackCreated
 exports.onTalkFeedbackCreated = onDocumentCreated(
   {document: `users/{userId}/events/{eventId}/days/{dayId}/feedbacks/self`},
-  async event => (await import('./functions/firestore/onTalkFeedbackProvided')).onTalkFeedbackCreated(event)
+  async event => (await import('./functions/firestore/onTalkFeedbackProvided')).onUserTalkFeedbackCreated(event)
 )
+exports.onUserPrivateSpaceTalkFeedbackCreated = onDocumentCreated(
+  { document: `users/{userId}/spaces/{spaceToken}/events/{eventId}/days/{dayId}/feedbacks/self` },
+  async event => (await import('./functions/firestore/onTalkFeedbackProvided')).onUserTalkFeedbackCreated(event)
+);
+exports.onUserNodeCreated = onDocumentCreated(
+  { document: `users/{userId}` },
+  async event => {
+    console.log(`onUserNodeCreated called !`)
+    return (await import('./functions/firestore/onUserNodeUpserted')).onUserNodeUpserted(event);
+  }
+);
+exports.onUserNodeUpdated = onDocumentUpdated(
+  { document: `users/{userId}` },
+  async event => {
+    console.log(`onUserNodeUpdated called !`)
+    return (await import('./functions/firestore/onUserNodeUpserted')).onUserNodeUpserted(event);
+  }
+);
 
 // Schedulers
 exports.refreshSlowPacedTalkStatsCron = onSchedule(
-  {schedule: "*/10 5-20 * * *", timeZone: "Europe/Paris"},
+  { schedule: "*/10 5-20 * * *", timeZone: "Europe/Paris" },
   async event => {
     (await import('./cron/slowPacedTalkStatsRefresh')).refreshSlowPacedTalkStatsForOngoingEvents()
   }
-)
+);
+exports.cleanOutdatedUsersCron = onSchedule(
+  { schedule: "0 0 * * *", timeZone: "Europe/Paris"},
+  async event => {
+    (await import('./cron/cleanOutdatedUsers')).cleanOutdatedUsers()
+  }
+);

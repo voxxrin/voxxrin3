@@ -6,6 +6,10 @@ import {getFamilyOrganizerToken} from "../../../firestore/services/publicTokens-
 import {checkEventLastUpdate, getOrganizerSpaceByToken, getSecretTokenDoc} from "../../../firestore/firestore-utils";
 import {match, P} from "ts-pattern";
 import {ConferenceOrganizerSpace} from "../../../../../../../shared/conference-organizer-space.firestore";
+import {
+  resolvedEventFirestorePath,
+  resolvedSpacedEventFieldName
+} from "../../../../../../../shared/utilities/event-utils";
 
 export async function legacyTalkFeedbacksViewers(request: https.Request, response: Response) {
 
@@ -13,6 +17,7 @@ export async function legacyTalkFeedbacksViewers(request: https.Request, respons
   const familyOrganizerSecretToken = extractSingleQueryParam(request, 'familyOrganizerSecretToken');
   const eventId = extractSingleQueryParam(request, 'eventId');
   const baseUrl = extractSingleQueryParam(request, 'baseUrl');
+  const spaceToken = undefined;
 
   if(!eventId) { return sendResponseMessage(response, 400, `Missing [eventId] query parameter !`) }
   if(!organizerSecretToken && !familyOrganizerSecretToken) { return sendResponseMessage(response, 400, `Missing either [organizerSecretToken] or [familyOrganizerSecretToken] query parameter !`) }
@@ -20,7 +25,7 @@ export async function legacyTalkFeedbacksViewers(request: https.Request, respons
 
   if(familyOrganizerSecretToken) {
     const [eventDescriptor, familyOrganizerToken] = await Promise.all([
-      getEventDescriptor(eventId),
+      getEventDescriptor(spaceToken, eventId),
       getFamilyOrganizerToken(familyOrganizerSecretToken),
     ]);
 
@@ -29,7 +34,11 @@ export async function legacyTalkFeedbacksViewers(request: https.Request, respons
     }
   }
 
-  const { cachedHash, updatesDetected } = await checkEventLastUpdate(eventId, [root => root.talkListUpdated], request, response)
+  const { cachedHash, updatesDetected } = await checkEventLastUpdate(spaceToken, eventId,
+    [root => root.talkListUpdated],
+    (lastUpdateDate) => `${resolvedSpacedEventFieldName(eventId, spaceToken)}:${lastUpdateDate}`,
+    request, response
+  );
   if(!updatesDetected) {
     return sendResponseMessage(response, 304)
   }
@@ -38,9 +47,9 @@ export async function legacyTalkFeedbacksViewers(request: https.Request, respons
     const organizerSpace = await match([organizerSecretToken, familyOrganizerSecretToken])
       .with([ P.nullish, P.nullish ], async ([_1, _2]) => { throw new Error(`Unexpected state: (undefined,undefined)`); })
       .with([ P.not(P.nullish), P.any ], async ([organizerSecretToken, _]) => {
-        return getOrganizerSpaceByToken(eventId, 'organizerSecretToken', organizerSecretToken);
+        return getOrganizerSpaceByToken(spaceToken, eventId, 'organizerSecretToken', organizerSecretToken);
       }).with([ P.any, P.not(P.nullish) ], async ([_, familyToken]) => {
-        return getSecretTokenDoc<ConferenceOrganizerSpace>(`/events/${eventId}/organizer-space`);
+        return getSecretTokenDoc<ConferenceOrganizerSpace>(`${resolvedEventFirestorePath(eventId, spaceToken)}/organizer-space`);
       }).run()
 
     sendResponseMessage(response, 200, organizerSpace.talkFeedbackViewerTokens.map(tfvt => ({

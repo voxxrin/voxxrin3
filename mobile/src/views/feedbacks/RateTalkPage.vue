@@ -68,19 +68,14 @@
 </template>
 
 <script setup lang="ts">
-import {EventId} from "@/models/VoxxrinEvent";
-import {getRouteParamsValue, toManagedRef as toRef} from "@/views/vue-utils";
+import {getRouteParamsValue, managedRef as ref, toManagedRef as toRef} from "@/views/vue-utils";
 import {useRoute} from "vue-router";
 import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
 import {computed, reactive, toValue, unref, watch} from "vue";
-import {managedRef as ref} from "@/views/vue-utils";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {TalkId} from "@/models/VoxxrinTalk";
 import BaseFeedbackStep from "@/components/feedbacks/BaseFeedbackStep.vue";
-import {
-    findLabelledTimeslotContainingTalk,
-    DailyLabelledTimeslotWithTalk,
-} from "@/state/findTimeslot";
+import {DailyLabelledTimeslotWithTalk, findLabelledTimeslotContainingTalk,} from "@/state/findTimeslot";
 import ScheduleTalk from "@/components/talk-card/ScheduleTalk.vue";
 import {IonTextarea, useIonRouter} from "@ionic/vue";
 import QuickFeedbackRating from "@/components/ratings/QuickFeedbackRating.vue";
@@ -93,13 +88,14 @@ import FeedbackFooter from "@/components/feedbacks/FeedbackFooter.vue";
 import {goBackOrNavigateTo} from "@/router";
 import LabelledLinearRating from "@/components/ratings/LabelledLinearRating.vue";
 import {useUserEventTalkNotes} from "@/state/useUserTalkNotes";
+import {getResolvedEventRootPathFromSpacedEventIdRef, useCurrentSpaceEventIdRef} from "@/services/Spaces";
 
 const { LL } = typesafeI18n()
 
 const route = useRoute();
-const eventIdRef = computed(() => new EventId(getRouteParamsValue(route, 'eventId')));
+const spacedEventIdRef = useCurrentSpaceEventIdRef();
 const talkIdRef = ref(new TalkId(getRouteParamsValue(route, 'talkId')));
-const {conferenceDescriptor: confDescriptorRef } = useSharedConferenceDescriptor(eventIdRef);
+const {conferenceDescriptor: confDescriptorRef } = useSharedConferenceDescriptor(spacedEventIdRef);
 
 const labelledTimeslotWithTalkRef = ref<undefined | DailyLabelledTimeslotWithTalk>(undefined);
 const dayIdRef = computed(() => {
@@ -165,9 +161,9 @@ const feedbackCanBeSubmitted = computed(() => {
     return true;
 })
 
-const {updateTimeslotFeedback} = useUserFeedbacks(eventIdRef, dayIdRef);
+const {updateTimeslotFeedback} = useUserFeedbacks(spacedEventIdRef, dayIdRef);
 
-const { userEventTalkNotesRef } = useUserEventTalkNotes(eventIdRef, toRef(() => talkIdRef ? [talkIdRef.value] : undefined))
+const { userEventTalkNotesRef } = useUserEventTalkNotes(spacedEventIdRef, toRef(() => talkIdRef ? [talkIdRef.value] : undefined))
 const talkNotes = toRef(() => {
     const userEventTalkNotes = toValue(userEventTalkNotesRef)
     return Array.from(userEventTalkNotes.values())[0];
@@ -185,7 +181,7 @@ async function submitFeedback() {
 
 const ionRouter = useIonRouter();
 function backToSchedulePage() {
-    goBackOrNavigateTo(ionRouter, `/events/${eventIdRef.value.value}`)
+    goBackOrNavigateTo(ionRouter, `${getResolvedEventRootPathFromSpacedEventIdRef(spacedEventIdRef)}`)
 }
 
 </script>
@@ -200,7 +196,7 @@ function backToSchedulePage() {
   display: flex;
   flex-direction: column;
   min-height: 100%;
-  background: var(--app-primary);
+  background: var(--voxxrin-event-theme-colors-secondary-hex);
 
   &-head {
     position: sticky;

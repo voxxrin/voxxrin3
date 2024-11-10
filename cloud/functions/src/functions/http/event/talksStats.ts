@@ -3,15 +3,20 @@ import {checkEventLastUpdate, eventTalkStatsFor} from "../../firestore/firestore
 import {Request, Response} from "express";
 import {ConferenceDescriptor} from "../../../../../../shared/conference-descriptor.firestore";
 import {getTimeslottedTalks} from "../../firestore/services/schedule-utils";
+import {resolvedSpacedEventFieldName} from "../../../../../../shared/utilities/event-utils";
 
-export async function eventTalksStats(response: Response, pathParams: {eventId: string}, queryParams: {token: string }, request: Request, eventDescriptor: ConferenceDescriptor) {
+export async function eventTalksStats(response: Response, pathParams: {eventId: string, spaceToken?: string|undefined}, queryParams: {token: string }, request: Request, eventDescriptor: ConferenceDescriptor) {
 
-    const eventId = pathParams.eventId;
+    const { eventId, spaceToken } = pathParams;
+
     const { cachedHash, updatesDetected } = await logPerf("cached hash", async () => {
-        return await checkEventLastUpdate(eventId, [
-            root => root.favorites,
-            root => root.talkListUpdated
-        ], request, response)
+        return await checkEventLastUpdate(spaceToken, eventId, [
+              root => root.favorites,
+              root => root.talkListUpdated
+          ],
+          (lastUpdateDate) => `${resolvedSpacedEventFieldName(eventId, spaceToken)}:${lastUpdateDate}`,
+          request, response
+        )
     });
 
     if(!updatesDetected) {
@@ -21,8 +26,8 @@ export async function eventTalksStats(response: Response, pathParams: {eventId: 
     try {
         const [talkStats, timeslottedTalks] = await logPerf("eventTalkStats + getTimeslottedTalks", () => {
             return Promise.all([
-                eventTalkStatsFor(eventId),
-                getTimeslottedTalks(eventId),
+                eventTalkStatsFor(spaceToken, eventId),
+                getTimeslottedTalks(spaceToken, eventId),
             ]);
         })
 

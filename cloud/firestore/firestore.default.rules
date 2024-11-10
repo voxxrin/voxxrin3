@@ -3,13 +3,42 @@ service cloud.firestore {
   match /databases/{database}/documents {
     function iAm(userId) { return request != null && request.auth != null && request.auth.uid == userId }
     function onlyAllowedUpdatedFields(allowedFieldNames) {
+        return allowedFieldNames != null
+          && request != null
+          && request.resource != null
+          && request.resource.data != null
+          && resource != null
+          && resource.data != null
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(allowedFieldNames)
+          && request.resource.data.diff(resource.data).addedKeys().hasOnly(allowedFieldNames)
+//        return debug('allowedFieldNames != null')!=null && debug(allowedFieldNames != null)!=null && allowedFieldNames != null
+//          && debug('request != null')!=null && debug(request != null)!=null && request != null
+//          && debug('request.resource != null')!=null && debug(request.resource != null)!=null && request.resource != null
+//          && debug('request.resource.data != null')!=null && debug(request.resource.data != null)!=null && request.resource.data != null
+//          && debug('resource != null')!=null && debug(resource != null)!=null && resource != null
+//          && debug('resource.data != null')!=null && debug(resource.data != null)!=null && resource.data != null
+//          && debug('request.resource.data.diff(resource.data).affectedKeys().hasOnly(allowedFieldNames)')!=null && debug(request.resource.data.diff(resource.data).affectedKeys().hasOnly(allowedFieldNames))!=null && request.resource.data.diff(resource.data).affectedKeys().hasOnly(allowedFieldNames)
+//          && debug('request.resource.data.diff(resource.data).addedKeys().hasOnly(allowedFieldNames)')!=null && debug(request.resource.data.diff(resource.data).addedKeys().hasOnly(allowedFieldNames))!=null && request.resource.data.diff(resource.data).addedKeys().hasOnly(allowedFieldNames)
+//      return allowedFieldNames != null
+//        && request != null
+//        && request.resource != null
+//        && request.resource.data != null
+//        && request.resource.data.diff({}).affectedKeys().hasOnly(allowedFieldNames)
+//        && request.resource.data.diff({}).addedKeys().hasOnly(allowedFieldNames);
+//        return debug('allowedFieldNames != null')!=null && debug(allowedFieldNames != null)!=null && allowedFieldNames != null
+//        && debug('request != null')!=null && debug(request != null)!=null && request != null
+//        && debug('request.resource != null')!=null && debug(request.resource != null)!=null && request.resource != null
+//        && debug('request.resource.data != null')!=null && debug(request.resource.data != null)!=null && request.resource.data != null
+//        && debug('request.resource.data.diff({})')!=null && debug(request.resource.data.diff({}))!=null
+//        && debug('request.resource.data.diff({}).affectedKeys().hasOnly(allowedFieldNames)')!=null && debug(request.resource.data.diff({}).affectedKeys().hasOnly(allowedFieldNames))!=null && request.resource.data.diff({}).affectedKeys().hasOnly(allowedFieldNames)
+//        && debug('request.resource.data.diff({}).addedKeys().hasOnly(allowedFieldNames)')!=null && debug(request.resource.data.diff({}).addedKeys().hasOnly(allowedFieldNames))!=null && request.resource.data.diff({}).addedKeys().hasOnly(allowedFieldNames)
+    }
+    function onlyAllowedCreatedFields(allowedFieldNames) {
       return allowedFieldNames != null
         && request != null
         && request.resource != null
         && request.resource.data != null
-        && resource != null
-        && resource.data != null
-        && resource.data.diff(request.resource.data).affectedKeys().hasOnly(allowedFieldNames)
+        && request.resource.data.diff({}).affectedKeys().hasOnly(allowedFieldNames)
     }
 
     // By default, prevent reads & writes on any node
@@ -72,7 +101,7 @@ service cloud.firestore {
         match /ratings/{talkId} {
           allow read, write: if false;
         }
-        match /daily-ratings/{dayIf} {
+        match /daily-ratings/{dayId} {
           allow read, write: if false;
         }
       }
@@ -98,9 +127,79 @@ service cloud.firestore {
       }
     }
 
+    match /spaces/{spaceId} {
+      allow get: if true;
+      allow list, write: if false;
+
+      match /events/{event} {
+        allow read: if true;
+        allow write: if false;
+
+        match /days/{dayId} {
+          allow read: if true;
+          allow write: if false;
+        }
+
+        match /event-descriptor/self {
+          allow get: if true;
+          allow list, write: if false;
+        }
+
+        match /talksStats/{talkId} {
+          allow read: if true;
+          allow write: if false;
+        }
+        match /talksStats-slowPaced/{talkId} {
+          allow read: if true;
+          allow write: if false;
+        }
+        match /talksStats-allInOne/self {
+          allow get: if true;
+          allow list, write: if false;
+        }
+        match /roomsStats-allInOne/self {
+          allow get: if true;
+          allow list, write: if false;
+        }
+
+        match /organizer-space/{secretOrganizerToken} {
+          allow get: if true;
+          allow list, write: if false;
+
+          match /ratings/{talkId} {
+            allow read, write: if false;
+          }
+          match /daily-ratings/{dayId} {
+            allow read, write: if false;
+          }
+        }
+
+        match /last-updates/self {
+          allow get: if true;
+          allow list, write: if false;
+        }
+
+        match /talks/{talkId} {
+          allow read: if true;
+          allow write: if false;
+
+          match /feedbacks-access/{secretFeedbackViewerToken} {
+            allow get: if true;
+            allow list, write: if false;
+
+            match /feedbacks/{userPublicToken} {
+              allow read: if true;
+              allow write: if false;
+            }
+          }
+        }
+      }
+    }
+
     match /users/{userId} {
-      allow list, create, delete: if false;
+      allow list, delete: if false;
     	allow get: if iAm(userId);
+    	allow create: if iAm(userId) && onlyAllowedCreatedFields(["userLastConnection"]);
     	allow update: if iAm(userId) && onlyAllowedUpdatedFields(["userLastConnection"]);
 
       match /preferences/self {
@@ -111,24 +210,48 @@ service cloud.firestore {
          (this can take a lot of time)
        */
       match /tokens-wallet/self {
-        allow get, create, update, delete: if iAm(userId);
-        allow list: if false;
+        allow get, delete: if iAm(userId);
+        allow list, create, update: if false;
       }
       match /events/{eventId} {
-        allow get, list, create, update: if iAm(userId);
-        allow delete: if false;
+        allow get, list: if iAm(userId);
+        allow delete, create, update: if false;
 
         match /talksNotes/{talkId} {
           allow get, list, create, update: if iAm(userId);
           allow delete: if false;
         }
         match /days/{dayId} {
-          allow get, list, create, update: if iAm(userId);
-          allow delete: if false;
+          allow get, list: if iAm(userId);
+          allow delete, create, update: if false;
 
           match /feedbacks/self {
             allow get, create, update: if iAm(userId);
             allow list, delete: if false;
+          }
+        }
+      }
+
+      match /spaces/{spaceId} {
+        allow get, list: if iAm(userId);
+        allow delete, create, update: if false;
+
+        match /events/{eventId} {
+          allow get, list: if iAm(userId);
+          allow delete, create, update: if false;
+
+          match /talksNotes/{talkId} {
+            allow get, list, create, update: if iAm(userId);
+            allow delete: if false;
+          }
+          match /days/{dayId} {
+            allow get, list: if iAm(userId);
+            allow delete, create, update: if false;
+
+            match /feedbacks/self {
+              allow get, create, update: if iAm(userId);
+              allow list, delete: if false;
+            }
           }
         }
       }

@@ -4,6 +4,10 @@ export type UserTotalFavs = {
   total: number,
   perEventTotalFavs: Record<string, number>
 }
+export type UserTotalFeedbacks = {
+  total: number,
+  perEventTotalFeedbacks: Record<string, number>
+}
 
 export type User = {
     privateUserId: string,
@@ -12,6 +16,8 @@ export type User = {
     userLastConnection?: ISODatetime|undefined;
     username: string;
     totalFavs: UserTotalFavs;
-    _version: 2
+    totalFeedbacks: UserTotalFeedbacks;
+    _version: 4;
+    _modelRemainingMigrations: string[];
 }
 

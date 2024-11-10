@@ -18,8 +18,8 @@
 <script setup lang="ts">
 import ScheduleTalk from "@/components/talk-card/ScheduleTalk.vue";
 import {typesafeI18n} from "@/i18n/i18n-vue";
-import {PropType} from "vue/dist/vue";
-import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
+import {PropType} from "vue";
+import {spacedEventIdOf, VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {VoxxrinTalk} from "@/models/VoxxrinTalk";
 import {toManagedRef as toRef} from "@/views/vue-utils";
 import {useUserEventTalkNotes} from "@/state/useUserTalkNotes";
@@ -41,10 +41,10 @@ const emits = defineEmits<{
     (e: 'talk-clicked', talk: VoxxrinTalk): void,
 }>()
 
-const eventIdRef = toRef(() => props.confDescriptor?.id)
+const spacedEventIdRef = toRef(() => spacedEventIdOf(props.confDescriptor))
 const talksIdsRef = toRef(() => (props.talks || []).map(talk => talk.id));
 
-const {userEventTalkNotesRef} = useUserEventTalkNotes(eventIdRef, talksIdsRef)
+const {userEventTalkNotesRef} = useUserEventTalkNotes(spacedEventIdRef, talksIdsRef)
 
 </script>
 

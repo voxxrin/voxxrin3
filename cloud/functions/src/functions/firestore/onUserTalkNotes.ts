@@ -9,11 +9,15 @@ import {TalkStats} from "../../../../../shared/event-stats";
 import {Change} from "firebase-functions/lib/common/change";
 import {QueryDocumentSnapshot} from "firebase-functions/lib/v2/providers/firestore";
 import {FirestoreEvent} from "firebase-functions/lib/v2/providers/firestore";
+import {
+  resolvedEventFirestorePath,
+  resolvedSpacedEventFieldName,
+  resolvedSpaceFirestorePath
+} from "../../../../../shared/utilities/event-utils";
 
-async function upsertTalkStats(eventId: string, talkId: string, isFavorite: boolean) {
+async function upsertTalkStats(maybeSpaceToken: string|undefined, eventId: string, talkId: string, isFavorite: boolean) {
     const existingTalksStatsEntryRef = db
-        .collection("events").doc(eventId)
-        .collection("talksStats").doc(talkId)
+        .doc(`${resolvedEventFirestorePath(eventId, maybeSpaceToken)}/talksStats/${talkId}`)
 
     const existingTalksStatsEntry = await existingTalksStatsEntryRef.get()
     if(existingTalksStatsEntry.exists) {
@@ -27,23 +31,24 @@ async function upsertTalkStats(eventId: string, talkId: string, isFavorite: bool
     }
 }
 
-async function incrementAllInOneTalkStats(eventId: string, talkId: string, isFavorite: boolean) {
-    const allInOneTalkStats = db.doc(`events/${eventId}/talksStats-allInOne/self`)
+async function incrementAllInOneTalkStats(maybeSpaceToken: string|undefined, eventId: string, talkId: string, isFavorite: boolean) {
+    const allInOneTalkStats = db.doc(`${resolvedEventFirestorePath(eventId, maybeSpaceToken)}/talksStats-allInOne/self`)
     await allInOneTalkStats.update(`${talkId}.totalFavoritesCount`, FieldValue.increment(isFavorite ? 1 : -1))
 }
 
-async function incrementUserTotalFavs(userId: string, eventId: string, talkId: string, isFavorite: boolean) {
+async function incrementUserTotalFavs(userId: string, maybeSpaceToken: string|undefined, eventId: string, talkId: string, isFavorite: boolean) {
   const userDoc = db.doc(`users/${userId}`)
   await userDoc.update(
     new FieldPath("totalFavs", "total"), FieldValue.increment(isFavorite ? 1:-1),
-    new FieldPath("totalFavs", "perEventTotalFavs", eventId), FieldValue.increment(isFavorite ? 1:-1),
+    new FieldPath("totalFavs", "perEventTotalFavs", resolvedSpacedEventFieldName(eventId, maybeSpaceToken)), FieldValue.increment(isFavorite ? 1:-1),
   )
 }
 
-export const onUserTalksNoteUpdate = async (event: FirestoreEvent<Change<QueryDocumentSnapshot>|undefined, { userId: string, eventId: string, talkId: string }>) => {
+export const onUserTalksNoteUpdate = async (event: FirestoreEvent<Change<QueryDocumentSnapshot>|undefined, { userId: string, eventId: string, talkId: string, spaceToken?: string|undefined }>) => {
     const userId = event.params.userId;
     const eventId = event.params.eventId;
     const talkId = event.params.talkId;
+    const maybeSpaceToken = event.params.spaceToken;
 
     if(!event.data) {
       return;
@@ -59,18 +64,20 @@ export const onUserTalksNoteUpdate = async (event: FirestoreEvent<Change<QueryDo
         info(`favorite update by ${userId} on ${eventId} // ${talkId}: ${wasFavorite} => ${isFavorite}`);
 
         await Promise.all([
-            eventLastUpdateRefreshed(eventId, [ "favorites" ]),
-            upsertTalkStats(eventId, talkId, isFavorite),
-            incrementAllInOneTalkStats(eventId, talkId, isFavorite),
-            incrementUserTotalFavs(userId, eventId, talkId, isFavorite),
+            eventLastUpdateRefreshed(maybeSpaceToken, eventId, [ "favorites" ]),
+            upsertTalkStats(maybeSpaceToken, eventId, talkId, isFavorite),
+            incrementAllInOneTalkStats(maybeSpaceToken, eventId, talkId, isFavorite),
+            incrementUserTotalFavs(userId, maybeSpaceToken, eventId, talkId, isFavorite),
+            ensureTalkNotesIntermediateNodesCreated(userId, maybeSpaceToken, eventId),
         ])
     }
 };
 
-export const onUserTalksNoteCreate = async (event: FirestoreEvent<QueryDocumentSnapshot|undefined, { userId: string, eventId: string, talkId: string }>) => {
+export const onUserTalksNoteCreate = async (event: FirestoreEvent<QueryDocumentSnapshot|undefined, { userId: string, eventId: string, talkId: string, spaceToken?: string|undefined }>) => {
     const userId = event.params.userId;
     const eventId = event.params.eventId;
     const talkId = event.params.talkId;
+    const maybeSpaceToken = event.params.spaceToken;
 
     if(!event.data) {
       return;
@@ -83,10 +90,27 @@ export const onUserTalksNoteCreate = async (event: FirestoreEvent<QueryDocumentS
         info(`favorite create by ${userId} on ${eventId} // ${talkId}: ${isFavorite}`);
 
         await Promise.all([
-            eventLastUpdateRefreshed(eventId, [ "favorites" ]),
-            upsertTalkStats(eventId, talkId, isFavorite),
-            incrementAllInOneTalkStats(eventId, talkId, isFavorite),
-            incrementUserTotalFavs(userId, eventId, talkId, isFavorite),
+            eventLastUpdateRefreshed(maybeSpaceToken, eventId, [ "favorites" ]),
+            upsertTalkStats(maybeSpaceToken, eventId, talkId, isFavorite),
+            incrementAllInOneTalkStats(maybeSpaceToken, eventId, talkId, isFavorite),
+            incrementUserTotalFavs(userId, maybeSpaceToken, eventId, talkId, isFavorite),
+            ensureTalkNotesIntermediateNodesCreated(userId, maybeSpaceToken, eventId),
         ])
     }
 };
+
+async function ensureTalkNotesIntermediateNodesCreated(userId: string, maybeSpaceToken: string|undefined, eventId: string) {
+  const userPath = `users/${userId}`
+  const checks = [
+    {path: `${userPath}/${resolvedEventFirestorePath(eventId, maybeSpaceToken)}`, content: { eventId }},
+    ...(maybeSpaceToken ? [{path: `${userPath}${resolvedSpaceFirestorePath(maybeSpaceToken, false, true)}`, content: {spaceToken: maybeSpaceToken}}]:[])
+  ]
+
+  return Promise.all(checks.map(async check => {
+    const ref = db.doc(check.path)
+    const doc = await ref.get()
+    if(!doc.exists) {
+      await ref.set(check.content);
+    }
+  }))
+}

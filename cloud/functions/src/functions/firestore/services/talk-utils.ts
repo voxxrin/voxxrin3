@@ -8,9 +8,10 @@ import {logPerf} from "../../http/utils";
 import {getTimeslottedTalks} from "./schedule-utils";
 import {firestore} from "firebase-admin";
 import QuerySnapshot = firestore.QuerySnapshot;
-import {Talk} from "../../../../../../shared/daily-schedule.firestore";
+import {Talk, TalkFormat} from "../../../../../../shared/daily-schedule.firestore";
 import stringSimilarity from "string-similarity-js";
 import {EventRecordingConfig} from "../../../../../../shared/conference-descriptor.firestore";
+import {resolvedEventFirestorePath} from "../../../../../../shared/utilities/event-utils";
 
 
 type PerTalkPublicUserIdFeedbackRating = {
@@ -41,8 +42,8 @@ class ConfOrganizerAllRatingsModel {
     }
 }
 
-export async function getEveryRatingsForEvent(eventId: string, organizerSpaceToken: string) {
-    const dailyRatingsColl = await db.collection(`/events/${eventId}/organizer-space/${organizerSpaceToken}/daily-ratings`).listDocuments()
+export async function getEveryRatingsForEvent(maybeSpaceToken: string|undefined, eventId: string, organizerSpaceToken: string) {
+    const dailyRatingsColl = await db.collection(`${resolvedEventFirestorePath(eventId, maybeSpaceToken)}/organizer-space/${organizerSpaceToken}/daily-ratings`).listDocuments()
 
     const allDailyRatings: PerTalkPublicUserIdFeedbackRating[][] = await Promise.all(dailyRatingsColl.map(async dailyRatingsDoc => {
         const dailyPerTalkIdRatings = (await dailyRatingsDoc.get()).data() as DailyTalkFeedbackRatings;
@@ -58,13 +59,13 @@ export async function getEveryRatingsForEvent(eventId: string, organizerSpaceTok
     return new ConfOrganizerAllRatingsModel(allDailyRatings.flatMap(dailyRatings => dailyRatings));
 }
 
-export async function getTalksDetailsWithRatings(eventId: string) {
-    return logPerf(`getTalksDetailsWithRatings(${eventId})`, async () => {
-        const organizerSpaceRef = await getSecretTokenRef(`/events/${eventId}/organizer-space`)
+export async function getTalksDetailsWithRatings(maybeSpaceToken: string|undefined, eventId: string) {
+    return logPerf(`getTalksDetailsWithRatings(${maybeSpaceToken}, ${eventId})`, async () => {
+        const organizerSpaceRef = await getSecretTokenRef(`${resolvedEventFirestorePath(eventId, maybeSpaceToken)}/organizer-space`)
 
         const [ talks, everyRatings ] = await Promise.all([
-            getTimeslottedTalks(eventId),
-            getEveryRatingsForEvent(eventId, organizerSpaceRef.id)
+            getTimeslottedTalks(maybeSpaceToken, eventId),
+            getEveryRatingsForEvent(maybeSpaceToken, eventId, organizerSpaceRef.id)
         ]);
 
         return talks
@@ -76,9 +77,9 @@ export async function getTalksDetailsWithRatings(eventId: string) {
     })
 }
 
-export async function getEventTalks(eventId: string) {
-  return logPerf(`getEventTalks(${eventId})`, async () => {
-    const talkSnapshots = await db.collection(`events/${eventId}/talks`).get() as QuerySnapshot<Talk>
+export async function getEventTalks(maybeSpaceToken: string|undefined, eventId: string) {
+  return logPerf(`getEventTalks(${maybeSpaceToken}, ${eventId})`, async () => {
+    const talkSnapshots = await db.collection(`${resolvedEventFirestorePath(eventId, maybeSpaceToken)}/talks`).get() as QuerySnapshot<Talk>
 
     return talkSnapshots.docs.map(snap => snap.data());
   })
@@ -95,8 +96,34 @@ export type YoutubeVideo = {
 export type SimpleTalk = {
   id: string,
   title: string,
+  format: TalkFormat,
   speakers: Array<{ fullName: string }>,
 }
+
+export type TalkAndVideoTitles = {
+  talkWithSpeakers: string,
+  video: string,
+}
+export type MatchedTalk = {
+  score: number,
+  talk: SimpleTalk,
+  video: YoutubeVideo,
+  titles: TalkAndVideoTitles
+}
+export type UnmatchedTalk = SimpleTalk & {
+  highestScoreVideoMatch: VideoMatch|undefined
+}
+
+export type VideoMatch = {
+  bestScore: number,
+  bestScoreFrom: 'titleWithSpeakers'|'titleOnly',
+  titleWithSpeakersSimilarityScore: number,
+  titleOnlySimilarityScore: number,
+  titles: TalkAndVideoTitles,
+  titleIncludingSpeakerNamesRatio: number,
+  video: YoutubeVideo,
+}
+
 const SIMILARITY_MIN_SCORE_FOR_TITLE_WITH_SPEAKERS_MATCH = 0.7,
   SIMILARITY_MIN_SCORE_FOR_TITLE_ONLY_MATCH = 0.8,
   SIMILARITY_MIN_SCORE_FOR_SPEAKERS_ONLY_TITLE_MATCH = 0.4,
@@ -116,37 +143,43 @@ export function findYoutubeMatchingTalks(eventTalks: SimpleTalk[], youtubeVideos
 
       const titleIncludingSpeakerNamesRatio = includedSpeakersRatio(vid.title, speakerNames);
 
-      return {
+      const videoMatch: VideoMatch = {
         ...(titleWithSpeakersSimilarityScore > titleOnlySimilarityScore
           ? {bestScore: titleWithSpeakersSimilarityScore, bestScoreFrom: 'titleWithSpeakers'} as const
           : {bestScore: titleOnlySimilarityScore, bestScoreFrom: 'titleOnly'} as const
         ),
         titleWithSpeakersSimilarityScore,
         titleOnlySimilarityScore,
-        titles: [talkAndSpeakerLowTitle, videoLowTitle],
+        titles: { talkWithSpeakers: talkAndSpeakerLowTitle, video: videoLowTitle },
         titleIncludingSpeakerNamesRatio,
         video: vid
       }
-    }).sort((m1, m2) => m2.bestScore - m1.bestScore)
-      .filter(m =>
-        m.bestScore >= Math.min(
+
+      return videoMatch;
+    }).sort((m1, m2) => m2.bestScore - m1.bestScore);
+
+    const firstVideoIndexNotMeetingMinMatchCriteria = videoMatches.findIndex(m =>
+        m.bestScore < Math.min(
           SIMILARITY_MIN_SCORE_FOR_TITLE_WITH_SPEAKERS_MATCH,
           SIMILARITY_MIN_SCORE_FOR_SPEAKERS_ONLY_TITLE_MATCH,
           SIMILARITY_MIN_SCORE_FOR_TITLE_ONLY_MATCH
         )
       );
 
-    return { talk, videoMatches };
+    const validVideoMatchCandidates = videoMatches.slice(0, firstVideoIndexNotMeetingMinMatchCriteria);
+    const highestScoreInvalidVideo: VideoMatch|undefined = videoMatches[firstVideoIndexNotMeetingMinMatchCriteria];
+
+    return { talk, videoMatches: validVideoMatchCandidates, highestScoreInvalidVideo };
   });
 
   const unmatchedYoutubeVideos: YoutubeVideo[] = [...youtubeVideos];
 
   // Processing talks one by one, best scores first
-  const { matchedTalks: firstPassMatchedTalks, unmatchedTalkResults, unmatchedTalks: firstPassUnmatchedTalks } = talkMatchingResults
+  const { matchedTalks: firstPassMatchedTalks, matchingTalksWithUnmetMatchingThreshold, unmatchedTalks: firstPassUnmatchedTalks } = talkMatchingResults
     // Sorting matching results by best score
     .sort((mr1, mr2) => (mr2.videoMatches[0]?.bestScore || 0) - (mr1.videoMatches[0]?.bestScore || 0))
     .reduce(
-    ({ matchedTalks, unmatchedTalkResults, unmatchedTalks }, talkMatchingResult, _, talkMatchingResults) => {
+    ({ matchedTalks, matchingTalksWithUnmetMatchingThreshold, unmatchedTalks }, talkMatchingResult, _, talkMatchingResults) => {
       if(talkMatchingResult.videoMatches.length) {
         const bestMatchingTalk = talkMatchingResult.videoMatches[0];
 
@@ -166,53 +199,62 @@ export function findYoutubeMatchingTalks(eventTalks: SimpleTalk[], youtubeVideos
             }
           })
         } else {
-          unmatchedTalkResults.push(talkMatchingResult)
+          matchingTalksWithUnmetMatchingThreshold.push(talkMatchingResult)
         }
       } else {
-        unmatchedTalks.push(talkMatchingResult.talk)
+        unmatchedTalks.push({ talk: talkMatchingResult.talk, highestScoreInvalidVideo: talkMatchingResult.highestScoreInvalidVideo || null })
       }
 
-      return { matchedTalks, unmatchedTalkResults, unmatchedTalks };
-    }, { matchedTalks: [], unmatchedTalkResults: [], unmatchedTalks: [] } as {
-      matchedTalks: Array<{ score: number, talk: SimpleTalk, video: YoutubeVideo, titles: string[]}>,
-      unmatchedTalkResults: Array<{ talk: SimpleTalk, videoMatches: (typeof talkMatchingResults)[number]['videoMatches']}>,
-      unmatchedTalks: SimpleTalk[]
+      return { matchedTalks, matchingTalksWithUnmetMatchingThreshold, unmatchedTalks };
+    }, { matchedTalks: [], matchingTalksWithUnmetMatchingThreshold: [], unmatchedTalks: [] } as {
+      matchedTalks: Array<MatchedTalk>,
+      matchingTalksWithUnmetMatchingThreshold: Array<{ talk: SimpleTalk, videoMatches: VideoMatch[]}>,
+      unmatchedTalks: Array<{ talk: SimpleTalk, highestScoreInvalidVideo: VideoMatch|null }>
     })
 
   // For every unmatched talk results trying to match with a minimum of speakers + being more laxist on title similarity
-  const { matchedTalks, unmatchedTalks } = unmatchedTalkResults
+  const { matchedTalks, unmatchedTalks } = matchingTalksWithUnmetMatchingThreshold
     // Sorting matching results by titleWithSpeakersSimilarityScore
     .sort((mr1, mr2) => (mr2.videoMatches[0]?.titleWithSpeakersSimilarityScore || 0) - (mr1.videoMatches[0]?.titleWithSpeakersSimilarityScore || 0))
     .reduce(
-    ({ matchedTalks, unmatchedTalks }, talkMatchingResult, _, talkMatchingResults) => {
+    ({ matchedTalks, unmatchedTalks }, firstPassUnmatchedTalkResult, _, talkMatchingResults) => {
 
-      const videosMoreLikelyToMatchSpeakers = talkMatchingResult.videoMatches.filter(mr =>
+      const videosMoreLikelyToMatchSpeakers = firstPassUnmatchedTalkResult.videoMatches.filter(mr =>
         mr.titleWithSpeakersSimilarityScore >= SIMILARITY_MIN_SCORE_FOR_SPEAKERS_ONLY_TITLE_MATCH
         // not matching 1 speaker out of 2 is ok
         // but wondering if matching "only" 3 speakers out of 6 is ok...
-        && includedSpeakersRatio(mr.titles[1], talkMatchingResult.talk.speakers.map(sp => sp.fullName)) >= MIN_SPEAKERS_COUNT_MATCHING_RATIO_TO_CONSIDER_A_MATCH
+        && includedSpeakersRatio(mr.titles.video, firstPassUnmatchedTalkResult.talk.speakers.map(sp => sp.fullName)) >= MIN_SPEAKERS_COUNT_MATCHING_RATIO_TO_CONSIDER_A_MATCH
       )
 
       if(videosMoreLikelyToMatchSpeakers.length) {
-        const bestMatchingTalk = talkMatchingResult.videoMatches[0];
+        const bestVideoMatch = videosMoreLikelyToMatchSpeakers[0];
 
-        matchedTalks.push({ score: bestMatchingTalk.titleWithSpeakersSimilarityScore, titles: bestMatchingTalk.titles, talk: talkMatchingResult.talk, video: bestMatchingTalk.video })
+        matchedTalks.push({
+          score: bestVideoMatch.titleWithSpeakersSimilarityScore,
+          titles: bestVideoMatch.titles,
+          talk: firstPassUnmatchedTalkResult.talk,
+          video: bestVideoMatch.video
+        })
 
         // Removing matching results with video on every talkMatchingResults
-        unmatchedYoutubeVideos.splice(unmatchedYoutubeVideos.findIndex(vid => vid.id === bestMatchingTalk.video.id), 1);
+        unmatchedYoutubeVideos.splice(unmatchedYoutubeVideos.findIndex(vid => vid.id === bestVideoMatch.video.id), 1);
         talkMatchingResults.forEach(matchingRestult => {
-          const videoIndex = matchingRestult.videoMatches.findIndex(videoMatch => videoMatch.video.id === bestMatchingTalk.video.id);
+          const videoIndex = matchingRestult.videoMatches.findIndex(videoMatch => videoMatch.video.id === bestVideoMatch.video.id);
           if(videoIndex !== -1) {
             matchingRestult.videoMatches.splice(videoIndex, 1);
           }
         })
       } else {
-        unmatchedTalks.push(talkMatchingResult.talk)
+        unmatchedTalks.push({
+          highestScoreInvalidVideo: firstPassUnmatchedTalkResult.videoMatches[0] || null,
+          talk: firstPassUnmatchedTalkResult.talk
+        })
       }
 
       return { matchedTalks, unmatchedTalks }
     }, { matchedTalks: firstPassMatchedTalks, unmatchedTalks: firstPassUnmatchedTalks } as {
-      matchedTalks: typeof firstPassMatchedTalks, unmatchedTalks: SimpleTalk[]
+      matchedTalks: MatchedTalk[],
+      unmatchedTalks: typeof firstPassUnmatchedTalks
     })
 
   matchedTalks.sort((m1, m2) => m1.score - m2.score)

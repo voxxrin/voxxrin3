@@ -8,19 +8,23 @@ import {
 import {match, P} from "ts-pattern";
 import {TalkStats} from "../../../../../../../shared/event-stats";
 import {Response} from "express";
+import {resolvedSpacedEventFieldName} from "../../../../../../../shared/utilities/event-utils";
 
 export async function deprecatedEventStats(request: https.Request, response: Response) {
 
     const organizerSecretToken = extractSingleQueryParam(request, 'organizerSecretToken');
     const eventId = extractSingleQueryParam(request, 'eventId');
+    const spaceToken = undefined;
 
     if(!eventId) { return sendResponseMessage(response, 400, `Missing [eventId] query parameter !`) }
     if(!organizerSecretToken) { return sendResponseMessage(response, 400, `Missing either [organizerSecretToken] or [familyToken] query parameter !`) }
 
-    const { cachedHash, updatesDetected } = await checkEventLastUpdate(eventId, [
-        root => root.favorites,
-        root => root.talkListUpdated
-    ], request, response)
+    const { cachedHash, updatesDetected } = await checkEventLastUpdate(spaceToken, eventId, [
+          root => root.favorites,
+          root => root.talkListUpdated
+      ], (lastUpdateDate) => `${resolvedSpacedEventFieldName(eventId, spaceToken)}:${lastUpdateDate}`,
+      request, response
+    )
     if(!updatesDetected) {
         return sendResponseMessage(response, 304)
     }
@@ -29,10 +33,10 @@ export async function deprecatedEventStats(request: https.Request, response: Res
         const organizerSpace = await match([organizerSecretToken])
             .with([ P.nullish ], async ([_1]) => { throw new Error(`Unexpected state: (undefined,undefined)`); })
             .with([ P.not(P.nullish) ], async ([organizerSecretToken]) => {
-                return getOrganizerSpaceByToken(eventId, 'organizerSecretToken', organizerSecretToken);
+                return getOrganizerSpaceByToken(spaceToken, eventId, 'organizerSecretToken', organizerSecretToken);
             }).run()
 
-        const talksStats = await eventTalkStatsFor(eventId);
+        const talksStats = await eventTalkStatsFor(spaceToken, eventId);
 
         const perTalkStats = await Promise.all(organizerSpace.talkFeedbackViewerTokens.map(async (talkFeedbackViewerToken): Promise<TalkStats> => {
             const talkStats: TalkStats = {

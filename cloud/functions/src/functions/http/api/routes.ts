@@ -50,9 +50,8 @@ const validateRouteWith =
 
 
 function specialParamHandling<T extends string>(params: any) {
-  if(params && params.eventId === 'voxxedlu2024') {
-    params.eventId = 'voxxedlu24';
-  }
+  // Put here some special query/path param transformation that would need to be applied
+  // on a general level
 }
 
 

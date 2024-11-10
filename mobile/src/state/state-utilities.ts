@@ -1,5 +1,8 @@
 import {match, P} from "ts-pattern";
 import {Logger} from "@/services/Logger";
+import {computed, ref, Ref, toValue, watch} from "vue";
+import {useInterval} from "@/views/vue-utils";
+import {Temporal} from "temporal-polyfill";
 
 const LOGGER = Logger.named("state-utilities");
 
@@ -131,4 +134,37 @@ export async function useFetchJsonDebouncer<T>(executionName: string, executionH
             }
         };
     })
+}
+
+const VERY_HIGH_FREQ_FOR_CALLS_COUNTS = 120
+export function useLocalStorage<T>(keyRef: Ref<string>, opts: { serializer: { read(strValue: string): T | undefined, write(objValue: T): string } }) {
+  const rawContentRef = ref<string|null>(null);
+
+  let callsCount = 0;
+  useInterval(() => {
+    callsCount++;
+    // We should use very high frequency reads at the beginning, and lower frequency after
+    // VERY_HIGH_FREQ_FOR_CALLS_COUNTS calls
+    const triggerRead = callsCount <= VERY_HIGH_FREQ_FOR_CALLS_COUNTS || (callsCount % 5)===0
+    if(triggerRead) {
+      rawContentRef.value = localStorage.getItem(keyRef.value);
+    }
+  }, { freq: 'custom', duration: Temporal.Duration.from({ milliseconds: 500 }) }, { immediate: true})
+
+  const resultRef = computed(() => {
+    const rawContent = toValue(rawContentRef)
+    if(!rawContent) {
+      return undefined;
+    }
+    return opts.serializer.read(rawContent);
+  });
+
+  return {
+    ref: resultRef,
+    writeStore: (obj: T|undefined) => {
+      const serialized = obj ? opts.serializer.write(obj) : ""
+      localStorage.setItem(keyRef.value, serialized)
+      rawContentRef.value = serialized;
+    }
+  };
 }

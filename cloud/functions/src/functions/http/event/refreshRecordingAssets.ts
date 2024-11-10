@@ -9,28 +9,31 @@ import {db} from "../../../firebase";
 import {firestore} from "firebase-admin";
 import DocumentReference = firestore.DocumentReference;
 import {DetailedTalk, Talk, TalkAsset} from "../../../../../../shared/daily-schedule.firestore";
+import {match, P} from "ts-pattern";
+import {resolvedEventFirestorePath} from "../../../../../../shared/utilities/event-utils";
 
 
 
-export async function requestRecordingAssetsRefresh(response: Response, pathParams: {eventId: string}, queryParams: {token: string}) {
+export async function requestRecordingAssetsRefresh(response: Response, pathParams: {eventId: string, spaceToken?: string|undefined}, queryParams: {token: string, dryRun: boolean}) {
+  const { eventId, spaceToken } = pathParams;
   if(!process.env.YOUTUBE_API_KEY) {
     throw new Error(`Missing YOUTUBE_API_KEY env variable !`);
   }
 
-  const eventDescriptor = await getEventDescriptor(pathParams.eventId);
+  const eventDescriptor = await getEventDescriptor(spaceToken, eventId);
 
   if(!eventDescriptor.features.recording) {
-    throw new Error(`Missing event descriptor ${pathParams.eventId}'s features.recording configuration !`);
+    throw new Error(`Missing event descriptor ${eventId}'s features.recording configuration !`);
   }
 
   const recordingConfig = eventDescriptor.features.recording;
   if(recordingConfig.platform !== 'youtube') {
-    throw new Error(`Unsupported platform type ${recordingConfig.platform} for eventId=${pathParams.eventId}`)
+    throw new Error(`Unsupported platform type ${recordingConfig.platform} for eventId=${eventId}`)
   }
 
   const start = (eventDescriptor.days || []).map(d => d.localDate).sort()[0]
 
-  const eventTalks = await getEventTalks(pathParams.eventId);
+  const eventTalks = await getEventTalks(spaceToken, eventId);
   const filteredEventTalks = eventTalks
     .filter(talk =>
       !(recordingConfig.notRecordedFormatIds || []).includes(talk.format.id)
@@ -47,12 +50,13 @@ export async function requestRecordingAssetsRefresh(response: Response, pathPara
     const simpleTalks: SimpleTalk[] = filteredEventTalks.map(talk => ({
       id: talk.id,
       title: talk.title,
+      format: talk.format,
       speakers: talk.speakers.map(sp => ({ fullName: sp.fullName })),
     }));
     const matchingResults = findYoutubeMatchingTalks(simpleTalks, allMatchingVideos, recordingConfig);
 
-    await Promise.all(matchingResults.matchedTalks.map(async matchedTalk => {
-      const talkSnapshot = await (db.doc(`events/${pathParams.eventId}/talks/${matchedTalk.talk.id}`) as DocumentReference<DetailedTalk>).get()
+    const updatedTalks = (await Promise.all(matchingResults.matchedTalks.map(async matchedTalk => {
+      const talkSnapshot = await (db.doc(`${resolvedEventFirestorePath(eventId, spaceToken)}/talks/${matchedTalk.talk.id}`) as DocumentReference<DetailedTalk>).get()
       const maybeTalk = talkSnapshot.data();
 
       if(maybeTalk) {
@@ -68,19 +72,58 @@ export async function requestRecordingAssetsRefresh(response: Response, pathPara
               assetUrl
             })
 
-          await talkSnapshot.ref.update({
-            assets: assets
-          })
+          if(!queryParams.dryRun) {
+            await talkSnapshot.ref.update({
+              assets: assets
+            })
+          }
 
-          console.log(`Updated talkId=${maybeTalk.id}'s youtube recording url to ${assetUrl} for eventId=${pathParams.eventId}`)
+          console.log(`Updated talkId=${maybeTalk.id}'s youtube recording url to ${assetUrl} for eventId=${eventId}, spaceToken=${spaceToken}`)
+          return maybeTalk;
         }
       }
-    }))
+      return undefined;
+    }))).filter(talk => !!talk).map(talk => talk!);
+
+    const updatesSummary = match({ dryRun: queryParams.dryRun, updatedTalks, matchedTalks: matchingResults.matchedTalks })
+      .with({ updatedTalks: [] }, ({ dryRun, updatedTalks, matchedTalks }) => `
+      No talk URL have been updated out of ${matchedTalks.length} matched talks (should have already been set previously)
+      `.trim()
+      ).otherwise(({ dryRun, updatedTalks, matchedTalks }) =>
+        `${updatedTalks.length} talk URLs${dryRun?' should ':' '}have been updated ${dryRun?'(dry run)':''} (out of ${matchedTalks.length} matched talks): ${updatedTalks.map(t => t.id).join(", ")}`
+      )
+
+    const summary = match(matchingResults)
+      .with({ unmatchedTalks: [] }, () => ({
+        updates: updatesSummary,
+        matchings: {
+          message: `Every ${eventTalks.length} talks have matched with a video ! So far so good !`,
+          unmatchedElements: [],
+        },
+      })).with({ unmatchedYoutubeVideos: [] }, () => ({
+        updates: updatesSummary,
+        matchings: {
+          message: `Every ${allMatchingVideos.length} matching videos have matched with a talk ! So far so good !`,
+          unmatchedElements: [],
+        },
+      })).otherwise(({ unmatchedYoutubeVideos, unmatchedTalks }) => ({
+        updates: updatesSummary,
+        matchings: {
+          message: `There are ${unmatchedTalks.length} talks and ${unmatchedYoutubeVideos.length} videos which didn't matched`,
+          unmatchedElements: [
+            ...unmatchedYoutubeVideos.map(video => ({ type: 'Video', label: `${video.title} | ${video.duration} | published: ${video.publishedAt}` })),
+            ...unmatchedTalks.map(({talk}) => ({ type: 'Talk', label: `[${talk.id}] ${talk.title} (${talk.speakers.map(sp => sp.fullName).join(", ")})`, format: talk.format.title })),
+          ]
+        },
+      }))
 
     // Uncomment this in DEV if you want to generate unit tests based on fetched talks & youtube videos
-    // generateTestFile(`./test-data/${pathParams.eventId.toLowerCase()}-talks-and-youtube.ts`, `${pathParams.eventId.toUpperCase()}_TALKS_AND_YOUTUBE`, matchingResults, filteredEventTalks);
+    // generateTestFile(`./test-data/${eventId.toLowerCase()}-talks-and-youtube.ts`, `${eventId.toUpperCase()}_TALKS_AND_YOUTUBE`, matchingResults, filteredEventTalks);
 
-    return sendResponseMessage(response, 200, matchingResults)
+    return sendResponseMessage(response, 200, {
+      summary,
+      ...matchingResults
+    })
   }catch(e) {
     return sendResponseMessage(response, 500, e?.toString() || "");
   }
@@ -190,7 +233,7 @@ export const ${exportedVarName} = ${JSON.stringify({
       '__videoTitle': mt.video.title,
       talkId: mt.talk.id, videoId: mt.video.id
     })),
-    expectedUnmappedTalks: results.unmatchedTalks.map(ut => ({
+    expectedUnmappedTalks: results.unmatchedTalks.map(({talk: ut}) => ({
       '__talkTitle': ut.title, 
       '__talkFormat': `${talkById.get(ut.id)!.format.title} (id=${talkById.get(ut.id)!.format.id}, duration=${talkById.get(ut.id)!.format.duration})`, 
       '__talkRoom': `${talkById.get(ut.id)!.room.title} (${talkById.get(ut.id)!.room.id})`,

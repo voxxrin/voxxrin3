@@ -13,6 +13,10 @@ import {
 } from "../../../../../../../shared/conference-organizer-space.firestore";
 import {EventLastUpdates} from "../../../../../../../shared/event-list.firestore";
 import {Response} from "express";
+import {
+  resolvedEventFirestorePath,
+  resolvedSpacedEventFieldName
+} from "../../../../../../../shared/utilities/event-utils";
 
 export async function legacyAttendeesFeedbacks(request: https.Request, response: Response) {
 
@@ -20,12 +24,13 @@ export async function legacyAttendeesFeedbacks(request: https.Request, response:
     const talkIds = extractMultiQueryParam(request, 'talkIds');
     const familyOrganizerSecretToken = extractSingleQueryParam(request, 'familyOrganizerSecretToken');
     const eventId = extractSingleQueryParam(request, 'eventId');
+    const spaceToken = undefined;
 
     if(!talkIds || !talkIds.length) { return sendResponseMessage(response, 400, `Missing [talkIds] (multi) query parameter !`) }
     if(!eventId) { return sendResponseMessage(response, 400, `Missing [eventId] query parameter !`) }
     if(!organizerSecretToken && !familyOrganizerSecretToken) { return sendResponseMessage(response, 400, `Missing either [organizerSecretToken] or [familyOrganizerSecretToken] query parameter !`) }
 
-    const eventDescriptor = await getEventDescriptor(eventId);
+    const eventDescriptor = await getEventDescriptor(spaceToken, eventId);
     if(familyOrganizerSecretToken) {
         const familyOrganizerToken = await getFamilyOrganizerToken(familyOrganizerSecretToken);
 
@@ -34,13 +39,15 @@ export async function legacyAttendeesFeedbacks(request: https.Request, response:
         }
     }
 
-    const { cachedHash, updatesDetected } = await checkEventLastUpdate(eventId, [
-        root => root.allFeedbacks,
-        root => root.talkListUpdated,
-        ...talkIds.map(talkId => {
-            return (root: EventLastUpdates) => root.feedbacks?.[talkId]
-        })
-    ], request, response)
+    const { cachedHash, updatesDetected } = await checkEventLastUpdate(spaceToken, eventId, [
+          root => root.allFeedbacks,
+          root => root.talkListUpdated,
+          ...talkIds.map(talkId => {
+              return (root: EventLastUpdates) => root.feedbacks?.[talkId]
+          })
+      ], (lastUpdateDate) => `${resolvedSpacedEventFieldName(eventId, spaceToken)}:${lastUpdateDate}`,
+      request, response
+    )
     // if(!updatesDetected) {
     //     return sendResponseMessage(response, 304)
     // }
@@ -49,16 +56,16 @@ export async function legacyAttendeesFeedbacks(request: https.Request, response:
         const organizerSpace = await match([organizerSecretToken, familyOrganizerSecretToken])
             .with([ P.nullish, P.nullish ], async ([_1, _2]) => { throw new Error(`Unexpected state: (undefined,undefined)`); })
             .with([ P.not(P.nullish), P.any ], async ([organizerSecretToken, _]) => {
-                return getOrganizerSpaceByToken(eventId, 'organizerSecretToken', organizerSecretToken);
+                return getOrganizerSpaceByToken(spaceToken, eventId, 'organizerSecretToken', organizerSecretToken);
             }).with([ P.any, P.not(P.nullish) ], async ([_1]) => {
-                return getSecretTokenDoc<ConferenceOrganizerSpace>(`/events/${eventId}/organizer-space`);
+                return getSecretTokenDoc<ConferenceOrganizerSpace>(`${resolvedEventFirestorePath(eventId, spaceToken)}/organizer-space`);
             }).run()
 
         const perTalkFeedbacks = await Promise.all(organizerSpace.talkFeedbackViewerTokens
             .filter(talkFeedbacksViewerToken => talkIds.includes(talkFeedbacksViewerToken.talkId))
             .map(async (talkFeedbackViewerToken) => {
 
-            const feedbacks = await ensureTalkFeedbackViewerTokenIsValidThenGetFeedbacks(talkFeedbackViewerToken.eventId, talkFeedbackViewerToken.talkId, talkFeedbackViewerToken.secretToken);
+            const feedbacks = await ensureTalkFeedbackViewerTokenIsValidThenGetFeedbacks(spaceToken, talkFeedbackViewerToken.eventId, talkFeedbackViewerToken.talkId, talkFeedbackViewerToken.secretToken);
 
             // Enriching bingo entries with label
             const enrichedFeedbacks = feedbacks.map(feedback => ({

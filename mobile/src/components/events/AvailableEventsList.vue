@@ -24,6 +24,7 @@
   <div v-else>
     <slot name="no-event"></slot>
   </div>
+  <PoweredVoxxrin v-if="currentCategoryEventsRef && currentCategoryEventsRef.eventsCount > 5"></PoweredVoxxrin>
 </template>
 
 <script setup lang="ts">
@@ -34,6 +35,7 @@ import AvailableEventItem from "@/components/events/AvailableEventItem.vue";
 import {conferenceStatusOf} from "@/models/VoxxrinConferenceDescriptor";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {IonSegment, IonSegmentButton} from "@ionic/vue";
+import PoweredVoxxrin from "@/components/ui/PoweredVoxxrin.vue";
 
 const props = defineProps({
     events: {

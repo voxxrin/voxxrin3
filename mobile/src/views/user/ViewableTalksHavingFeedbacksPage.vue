@@ -13,8 +13,9 @@
       </ion-header>
 
       <div class="schedule-talk-event"  v-for="(eventTalksGroup, index) in talksGroupedByEventRef" :key="eventTalksGroup.confDescriptor.id.value"
-           v-themed-event-styles="eventTalksGroup.confDescriptor">
-
+           v-themed-event-styles="eventTalksGroup.confDescriptor"
+           :style="{ 'background': eventTalksGroup.confDescriptor.headingBackground || `var(--default-background)` }"
+      >
         <event-talks-group :conf-descriptor="eventTalksGroup.confDescriptor" :talks="eventTalksGroup.talks"
           @talk-clicked="openTalkDetails($event)"/>
       </div>
@@ -33,12 +34,14 @@ import {VoxxrinUserTokensWallet} from "@/models/VoxxrinUser";
 import {VoxxrinDetailedTalk, VoxxrinTalk} from "@/models/VoxxrinTalk";
 import {fetchTalkDetails} from "@/services/DetailedTalks";
 import {fetchConferenceDescriptor} from "@/services/ConferenceDescriptors";
-import {EventId} from "@/models/VoxxrinEvent";
+import {toSpacedEventId} from "@/models/VoxxrinEvent";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {sortBy} from "@/models/utils";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {match, P} from "ts-pattern";
 import EventTalksGroup from "@/components/events/EventTalksGroup.vue";
+import {getResolvedEventRootPath} from "@/services/Spaces";
+import {dedupe} from "@/services/Arrays";
 
 const ionRouter = useIonRouter();
 
@@ -57,10 +60,12 @@ watch([userTokensWalletRef], async ([userTokensWallet]) => {
       return;
   }
 
-  const uniqueEventIds = new Set(userTokensWallet.secretTokens.talkFeedbacksViewerTokens.map(tfvt => tfvt.eventId.value))
-  const confDescriptors = await Promise.all(Array.from(uniqueEventIds).map(async rawEventId => {
-    return fetchConferenceDescriptor(new EventId(rawEventId));
-  }));
+  const confDescriptors = await Promise.all(dedupe(
+    userTokensWallet.secretTokens.talkFeedbacksViewerTokens,
+    tfvt => `${tfvt.eventId.value}__${tfvt.spaceToken?.value}`
+  ).map(tfvt => {
+    return fetchConferenceDescriptor(toSpacedEventId(tfvt.eventId, tfvt.spaceToken))
+  }))
 
   const confDescriptorsById = confDescriptors.reduce((confDescriptorsById, confDescriptor) => {
       if(confDescriptor) {
@@ -114,7 +119,7 @@ function openTalkDetails(talk: VoxxrinTalk) {
 
     const feedbackViewerTalk = feedbackViewerTalks.find(feedbackViewerTalk => feedbackViewerTalk.detailedTalk.id.isSameThan(talk.id));
     if(feedbackViewerTalk) {
-        ionRouter.push(`/user/events/${feedbackViewerTalk.token.eventId.value}/talks/${feedbackViewerTalk.token.talkId.value}/asFeedbackViewer/${feedbackViewerTalk.token.secretToken}`)
+        ionRouter.push(`/user${getResolvedEventRootPath(feedbackViewerTalk.token.eventId, feedbackViewerTalk.token.spaceToken)}/talks/${feedbackViewerTalk.token.talkId.value}/asFeedbackViewer/${feedbackViewerTalk.token.secretToken}`)
     }
 }
 
@@ -124,7 +129,7 @@ function openTalkDetails(talk: VoxxrinTalk) {
 
 .schedule-talk-event {
   position: relative;
-  background: linear-gradient(0deg, rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.4802) 0%, rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.98) 52.84%);
+  --default-background: linear-gradient(0deg, rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.4802) 0%, rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.98) 52.84%);
   margin: 16px;
   padding: 8px 4px;
   border-radius: 16px;

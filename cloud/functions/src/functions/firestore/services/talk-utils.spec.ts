@@ -47,7 +47,7 @@ describe('findYoutubeMatchingTalks', () => {
         excludeTitleWordsFromMatching: testDescriptor.excludeTitleWordsFromMatching
       })
 
-      const unmappedTalks = result.unmatchedTalks.map(gm => gm.id).sort()
+      const unmappedTalks = result.unmatchedTalks.map(gm => gm.talk.id).sort()
       const expectedUnmappedTalks = testDescriptor.testingData.expectedUnmappedTalks.map(ut => ut.talkId).sort();
 
       expect(unmappedTalks).toStrictEqual(expectedUnmappedTalks)

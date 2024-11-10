@@ -1,20 +1,24 @@
-import {RouteLocationNormalizedLoaded} from "vue-router";
+import {LocationQueryValue, RouteLocationNormalizedLoaded} from "vue-router";
 import {
-    onUnmounted,
-    Ref,
-    unref,
-    ref as vueRef,
-    toRef as vueToRef,
-    shallowRef as vueShallowRef,
-    MaybeRef, watch, toValue, WatchSource
+  MaybeRef,
+  onUnmounted,
+  Ref,
+  ref as vueRef,
+  shallowRef as vueShallowRef,
+  toRef as vueToRef,
+  toValue,
+  unref,
+  watch,
+  WatchSource
 } from "vue";
 import {Temporal} from "temporal-polyfill";
-import {actionSheetController, ActionSheetOptions, alertController} from "@ionic/vue";
+import {actionSheetController, ActionSheetOptions} from "@ionic/vue";
 import {match, P} from "ts-pattern";
 import {
-    useCollection as vuefireUseCollection, UseCollectionOptions,
-    useDocument as vuefireUseDocument,
-    UseDocumentOptions
+  useCollection as vuefireUseCollection,
+  UseCollectionOptions,
+  useDocument as vuefireUseDocument,
+  UseDocumentOptions
 } from "vuefire";
 import {CollectionReference, DocumentReference, onSnapshot, Unsubscribe} from "firebase/firestore";
 import {MultiWatchSources} from "@vueuse/core";
@@ -33,6 +37,22 @@ export const getRouteParamsValue = (route: RouteLocationNormalizedLoaded, paramN
     }
 
     return paramValue as string;
+}
+export const getRouteQueryParamValue = (route: RouteLocationNormalizedLoaded, paramName: string): string|null => {
+  const paramValue = route.query[paramName]
+  const unwrappedParamValue = match(paramValue)
+    .with(P.nullish.or(P.string), val => val)
+    .with(P.array(P.nullish.or(P.string)), ([val]) => val)
+    .exhaustive()
+
+  return unwrappedParamValue;
+}
+export const getOptionalTransformedRouteParamsValue = <U>(route: RouteLocationNormalizedLoaded, paramName: string, transformer: (value: string) => U): U|undefined => {
+  if(!route.params[paramName]) {
+    return undefined;
+  }
+
+  return transformer(getRouteParamsValue(route, paramName));
 }
 
 export function isRefDefined<T>(ref: Ref<T | undefined>): ref is Ref<T> {

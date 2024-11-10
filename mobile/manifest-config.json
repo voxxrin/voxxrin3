@@ -17,5 +17,38 @@
     "type": "image/png"
   }],
   "background_color": "#E30A63",
-  "theme_color": "transparent"
+  "theme_color": "transparent",
+  "shortcuts": [],
+  "description": "Your conference companion",
+  "screenshots": [
+    {
+      "src": "/assets/imgs/screenshot-narrow-android.png",
+      "type": "image/png",
+      "sizes": "1080x2400",
+      "platform": "android",
+      "form_factor": "narrow",
+      "label": "Voxxrin"
+    }, {
+      "src": "/assets/imgs/screenshot-narrow-ios.png",
+      "type": "image/png",
+      "sizes": "1080x2400",
+      "platform": "ios",
+      "form_factor": "narrow",
+      "label": "Voxxrin"
+    }, {
+      "src": "/assets/imgs/screenshot-wide-android.png",
+      "type": "image/png",
+      "sizes": "2400x1080",
+      "platform": "android",
+      "form_factor": "wide",
+      "label": "Voxxrin"
+    }, {
+      "src": "/assets/imgs/screenshot-wide-ios.png",
+      "type": "image/png",
+      "sizes": "2400x1080",
+      "platform": "ios",
+      "form_factor": "wide",
+      "label": "Voxxrin"
+    }
+  ]
 }
