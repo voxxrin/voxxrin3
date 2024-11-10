@@ -13,6 +13,7 @@ import {ISOLocalDate} from "../../../../../../../shared/type-utils";
 import {getFamilyEventsStatsToken} from "../../../firestore/services/publicTokens-utils";
 import {sortBy} from "lodash";
 import * as express from "express";
+import {resolvedSpacedEventFieldName} from "../../../../../../../shared/utilities/event-utils";
 
 export async function legacyPublicEventStats(request: functions.https.Request, response: express.Response) {
 
@@ -36,10 +37,12 @@ export async function legacyPublicEventStats(request: functions.https.Request, r
 
     const { cachedHash, updatesDetected } = await logPerf("cached hash", async () => {
         return await checkEventLastUpdate(spaceToken, eventId, [
-            root => root.favorites,
-            root => root.allFeedbacks,
-            root => root.talkListUpdated
-        ], request, response)
+              root => root.favorites,
+              root => root.allFeedbacks,
+              root => root.talkListUpdated
+          ], (lastUpdateDate) => `${resolvedSpacedEventFieldName(eventId, spaceToken)}:${lastUpdateDate}`,
+          request, response
+        )
     });
 
     if(!updatesDetected) {

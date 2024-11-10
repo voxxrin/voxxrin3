@@ -108,24 +108,28 @@ export async function eventLastUpdateRefreshed<T extends {[field in keyof T]: IS
 
 export async function checkEventLastUpdate(
     maybeSpaceToken: string|undefined, eventId: string, lastUpdateFieldExtractors: Array<(root: EventLastUpdates) => ISODatetime|undefined|null>,
+    cachedHashFactory: (lastUpdateDate: ISODatetime) => string,
     request: express.Request, response: functions.Response
 ): Promise<{ cachedHash: string|undefined, updatesDetected: boolean }> {
     const eventLastUpdatesDoc = await db
         .doc(`${resolvedEventFirestorePath(eventId, maybeSpaceToken)}/last-updates/self`)
         .get();
 
-    const eventLastUpdates = eventLastUpdatesDoc.data() as EventLastUpdates|undefined
-    const cachedHash = sortBy(
-        lastUpdateFieldExtractors.map(lastUpdateFieldExtractor => eventLastUpdates?lastUpdateFieldExtractor(eventLastUpdates):undefined)
+    const cachedHash = match([eventLastUpdatesDoc])
+      .with([{ exists: true}], ([eventLastUpdatesDoc]) => {
+        const eventLastUpdates = eventLastUpdatesDoc.data() as EventLastUpdates|undefined
+        const lastUpdateDate = sortBy(
+          lastUpdateFieldExtractors.map(lastUpdateFieldExtractor => eventLastUpdates?lastUpdateFieldExtractor(eventLastUpdates):undefined)
             .filter(v => !!v),
-        isoDate => -Date.parse(isoDate!)
-    )[0] || undefined;
+          isoDate => -Date.parse(isoDate!)
+        )[0]!;
 
-    const ifNoneMatchHeader = request.header("If-None-Match")
-    if(ifNoneMatchHeader) {
-        if(eventLastUpdatesDoc.exists && cachedHash && cachedHash === ifNoneMatchHeader) {
-            return { cachedHash, updatesDetected: false }
-        }
+        return cachedHashFactory(lastUpdateDate);
+      }).otherwise(() => undefined);
+
+    const ifNoneMatchHeader = request.header("if-none-match")
+    if(ifNoneMatchHeader && cachedHash === ifNoneMatchHeader) {
+        return { cachedHash, updatesDetected: false }
     }
 
     return { cachedHash, updatesDetected: true };

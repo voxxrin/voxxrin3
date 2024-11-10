@@ -3,7 +3,7 @@ import {checkEventLastUpdate, getSecretTokenDoc,} from "../../firestore/firestor
 import {ConferenceOrganizerSpace} from "../../../../../../shared/conference-organizer-space.firestore";
 import * as express from "express";
 import {ConferenceDescriptor} from "../../../../../../shared/conference-descriptor.firestore";
-import {resolvedEventFirestorePath} from "../../../../../../shared/utilities/event-utils";
+import {resolvedEventFirestorePath, resolvedSpacedEventFieldName} from "../../../../../../shared/utilities/event-utils";
 
 
 export async function eventTalksEditors(
@@ -17,8 +17,10 @@ export async function eventTalksEditors(
     const { eventId, spaceToken } = pathParams
 
     const { cachedHash, updatesDetected } = await checkEventLastUpdate(spaceToken, eventId, [
-      root => root.talkListUpdated
-    ], request, response)
+        root => root.talkListUpdated
+      ], (lastUpdateDate) => `${resolvedSpacedEventFieldName(eventId, spaceToken)}:${lastUpdateDate}`,
+      request, response
+    )
     if(!updatesDetected) {
         return sendResponseMessage(response, 304)
     }

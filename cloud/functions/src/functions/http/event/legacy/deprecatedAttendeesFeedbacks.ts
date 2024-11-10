@@ -13,7 +13,10 @@ import {
 } from "../../../../../../../shared/conference-organizer-space.firestore";
 import {EventLastUpdates} from "../../../../../../../shared/event-list.firestore";
 import * as express from "express";
-import {resolvedEventFirestorePath} from "../../../../../../../shared/utilities/event-utils";
+import {
+  resolvedEventFirestorePath,
+  resolvedSpacedEventFieldName
+} from "../../../../../../../shared/utilities/event-utils";
 
 export async function legacyAttendeesFeedbacks(request: functions.https.Request, response: express.Response) {
 
@@ -37,12 +40,14 @@ export async function legacyAttendeesFeedbacks(request: functions.https.Request,
     }
 
     const { cachedHash, updatesDetected } = await checkEventLastUpdate(spaceToken, eventId, [
-        root => root.allFeedbacks,
-        root => root.talkListUpdated,
-        ...talkIds.map(talkId => {
-            return (root: EventLastUpdates) => root.feedbacks?.[talkId]
-        })
-    ], request, response)
+          root => root.allFeedbacks,
+          root => root.talkListUpdated,
+          ...talkIds.map(talkId => {
+              return (root: EventLastUpdates) => root.feedbacks?.[talkId]
+          })
+      ], (lastUpdateDate) => `${resolvedSpacedEventFieldName(eventId, spaceToken)}:${lastUpdateDate}`,
+      request, response
+    )
     // if(!updatesDetected) {
     //     return sendResponseMessage(response, 304)
     // }
