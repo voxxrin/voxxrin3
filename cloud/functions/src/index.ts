@@ -1,9 +1,9 @@
 import * as express from 'express';
 import {declareExpressHttpRoutes} from "./functions/http/api/routes";
-import {onDocumentCreated, onDocumentDeleted, onDocumentUpdated} from "firebase-functions/lib/v2/providers/firestore";
-import {onSchedule} from "firebase-functions/lib/v2/providers/scheduler";
-import {beforeUserCreated} from "firebase-functions/lib/v2/providers/identity";
-import {onRequest} from "firebase-functions/lib/v2/providers/https";
+import {onDocumentCreated, onDocumentDeleted, onDocumentUpdated} from "firebase-functions/v2/firestore";
+import {onSchedule} from "firebase-functions/v2/scheduler";
+import {beforeUserCreated} from "firebase-functions/v2/identity";
+import {onRequest} from "firebase-functions/v2/https";
 
 const app = express()
 app.use(express.json());

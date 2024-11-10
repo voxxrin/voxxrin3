@@ -11,7 +11,7 @@ import {EventLastUpdates} from "../../../../../shared/event-list.firestore";
 import {ISODatetime} from "../../../../../shared/type-utils";
 import {ConferenceDescriptor} from "../../../../../shared/conference-descriptor.firestore";
 import {Change} from "firebase-functions/lib/common/change";
-import {QueryDocumentSnapshot} from "firebase-functions/lib/v2/providers/firestore";
+import {QueryDocumentSnapshot} from "firebase-functions/v2/firestore";
 import {User} from "../../../../../shared/user.firestore";
 import {
   resolvedEventFirestorePath,
@@ -19,7 +19,7 @@ import {
   resolvedSpaceFirestorePath
 } from "../../../../../shared/utilities/event-utils";
 import { FieldValue, FieldPath } from "firebase-admin/firestore";
-import {FirestoreEvent} from "firebase-functions/lib/v2/providers/firestore";
+import {FirestoreEvent} from "firebase-functions/v2/firestore";
 
 
 export const onUserTalkFeedbackUpdated = async (event: FirestoreEvent<Change<QueryDocumentSnapshot>|undefined, { userId: string, eventId: string, dayId: string, spaceToken?: string|undefined }>) => {

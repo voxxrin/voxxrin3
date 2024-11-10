@@ -1,6 +1,6 @@
 import {db, info} from "../../firebase"
-import {QueryDocumentSnapshot} from "firebase-functions/lib/v2/providers/firestore";
-import {FirestoreEvent} from "firebase-functions/lib/v2/providers/firestore";
+import {QueryDocumentSnapshot} from "firebase-functions/v2/firestore";
+import {FirestoreEvent} from "firebase-functions/v2/firestore";
 import {FieldValue} from "firebase-admin/firestore";
 
 

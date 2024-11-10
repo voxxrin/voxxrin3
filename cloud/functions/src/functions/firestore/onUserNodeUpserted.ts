@@ -3,7 +3,7 @@ import {EventContext} from "firebase-functions/lib/v1/cloud-functions";
 import {db} from "../../firebase";
 import {defaultUserInfos} from "./onUserCreated";
 import {User} from "../../../../../shared/user.firestore";
-import {FirestoreEvent, QueryDocumentSnapshot} from "firebase-functions/lib/v2/providers/firestore";
+import {FirestoreEvent, QueryDocumentSnapshot} from "firebase-functions/v2/firestore";
 import {Change} from "firebase-functions/lib/common/change";
 
 

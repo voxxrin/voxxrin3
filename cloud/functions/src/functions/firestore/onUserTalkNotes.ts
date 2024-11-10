@@ -7,8 +7,8 @@ import {
 import {eventLastUpdateRefreshed} from "./firestore-utils";
 import {TalkStats} from "../../../../../shared/event-stats";
 import {Change} from "firebase-functions/lib/common/change";
-import {QueryDocumentSnapshot} from "firebase-functions/lib/v2/providers/firestore";
-import {FirestoreEvent} from "firebase-functions/lib/v2/providers/firestore";
+import {QueryDocumentSnapshot} from "firebase-functions/v2/firestore";
+import {FirestoreEvent} from "firebase-functions/v2/firestore";
 import {
   resolvedEventFirestorePath,
   resolvedSpacedEventFieldName,
