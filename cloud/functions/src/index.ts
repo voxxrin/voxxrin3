@@ -2,8 +2,10 @@ import * as express from 'express';
 import {declareExpressHttpRoutes} from "./functions/http/api/routes";
 import {onDocumentCreated, onDocumentDeleted, onDocumentUpdated} from "firebase-functions/v2/firestore";
 import {onSchedule} from "firebase-functions/v2/scheduler";
-import {beforeUserCreated} from "firebase-functions/v2/identity";
 import {onRequest} from "firebase-functions/v2/https";
+// Auth functions are not available yet on firebase functions v2
+// see https://github.com/firebase/firebase-functions/issues/1383
+import * as v1Functions from "firebase-functions/v1";
 
 const app = express()
 app.use(express.json());
@@ -72,10 +74,9 @@ exports.onUserPrivateSpaceTalksNoteUpdate = onDocumentUpdated(
   { document: "users/{userId}/spaces/{spaceToken}/events/{eventId}/talksNotes/{talkId}" },
   async event => (await import('./functions/firestore/onUserTalkNotes')).onUserTalksNoteUpdate(event)
 );
-exports.onUserCreated = beforeUserCreated(
-  { },
-  async event => (await import('./functions/firestore/onUserCreated')).onUserCreated(event)
-)
+exports.onUserCreated = v1Functions.auth.user().onCreate(async (user, context) => {
+  (await import('./functions/firestore/onUserCreated')).onUserCreated(user, context)
+});
 exports.onUserTokenWalletDeleted = onDocumentDeleted(
   {document: `users/{userId}/tokens-wallet/self`},
   async event => (await import('./functions/firestore/onUserTokensWalletDeleted')).onUserTokensWalletDeleted(event)
@@ -101,14 +102,14 @@ exports.onUserPrivateSpaceTalkFeedbackCreated = onDocumentCreated(
 exports.onUserNodeCreated = onDocumentCreated(
   { document: `users/{userId}` },
   async event => {
-    console.log(`onUserNodeCreated called !`)
+    // console.log(`onUserNodeCreated called with id ${event.params.userId} !`)
     return (await import('./functions/firestore/onUserNodeUpserted')).onUserNodeUpserted(event);
   }
 );
 exports.onUserNodeUpdated = onDocumentUpdated(
   { document: `users/{userId}` },
   async event => {
-    console.log(`onUserNodeUpdated called !`)
+    // console.log(`onUserNodeUpdated called with id ${event.params.userId} !`)
     return (await import('./functions/firestore/onUserNodeUpserted')).onUserNodeUpserted(event);
   }
 );
