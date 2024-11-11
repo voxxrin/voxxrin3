@@ -127,7 +127,11 @@ export async function checkEventLastUpdate(
         return cachedHashFactory(lastUpdateDate);
       }).otherwise(() => undefined);
 
-    const ifNoneMatchHeader = request.header("if-none-match")
+    // Potentially using X-If-None-Match header because Firebase Hosting seems to filter out If-None-Match header
+    // => https://us-central1-<project>.cloudfunctions.net/* urls will "keep" If-None-Match
+    // and https://*.web.app/* urls will filter it out
+    // see https://stackoverflow.com/questions/79175363/if-none-match-header-filtered-upstream-to-my-firebase-function
+    const ifNoneMatchHeader = request.header("if-none-match") || request.header("x-if-none-match")
     if(ifNoneMatchHeader && cachedHash === ifNoneMatchHeader) {
         return { cachedHash, updatesDetected: false }
     }
