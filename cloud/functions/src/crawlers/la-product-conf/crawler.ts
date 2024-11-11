@@ -1,5 +1,5 @@
 import {z} from "zod";
-import {FullEvent} from "../../models/Event";
+import {detailedTalksToSpeakersLineup, FullEvent} from "../../models/Event";
 import {ISODatetime, ISOLocalDate} from "../../../../../shared/type-utils";
 import {Temporal} from "@js-temporal/polyfill";
 import {
@@ -287,6 +287,7 @@ export const LA_PRODUCT_CONF_CRAWLER: CrawlerKind<typeof LA_PRODUCT_CONF_DESCRIP
             conferenceDescriptor: confDescriptor,
             daySchedules: [{ day: LOCAL_DATE, timeSlots }],
             talks,
+            lineupSpeakers: detailedTalksToSpeakersLineup(talks),
         };
 
         return fullEvent;

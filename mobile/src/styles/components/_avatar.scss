@@ -1,0 +1,77 @@
+// Style for Thumbnail Avatar
+.avatar {
+  --size: 48px;
+  --border-radius: 40px;
+  filter: drop-shadow(-2px 0px 2px rgba(0, 0, 0, 0.15));
+  background-color: var(--app-background);
+
+  &._small {
+    --size: 34px;
+    --border-radius: 34px;
+  }
+
+  &._large {
+    --size: 64px;
+    --border-radius: 64px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    background-color: var(--app-medium-contrast);
+  }
+}
+
+// Style for group avatars
+.avatarGroup {
+  display: flex;
+  flex-direction: row;
+  flex: 0 0 auto;
+
+  .avatarItem {
+    width: 24px;
+  }
+}
+
+// Layout for Avatar with infos
+.avatarContainer {
+  display: flex;
+  align-items: center;
+  gap: var(--app-gutters-medium);
+
+  .avatarInfos {
+    display: flex;
+    flex-direction: column;
+    gap: var(--app-gutters-tiny);
+
+    &._small {
+      gap: 0;
+
+      .avatarInfos-title { font-size: 13px;}
+      .avatarInfos-subTitle { font-size: 11px;}
+    }
+
+    &-title {
+      flex: 1 1 0;
+      font-weight: 900;
+      color: var(--app-primary);
+      font-size: 16px;
+      line-height: 1.2;
+
+      @media (prefers-color-scheme: dark) {
+        color: var(--app-white);
+      }
+    }
+
+    &-subTitle {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: var(--app-gutters-tiny);
+      color: var(--app-beige-dark);
+      font-weight: 500;
+
+      @media (prefers-color-scheme: dark) {
+        color: var(--app-white-90);
+      }
+    }
+  }
+}

@@ -1,23 +1,23 @@
 <template>
   <div class="room" v-if="confDescriptor?.features.roomsDisplayed">
     <ion-icon aria-hidden="true" src="/assets/icons/solid/map-marker.svg"></ion-icon>
-    {{talk.room.title}}
+    {{room.title}}
   </div>
 </template>
 
 <script setup lang="ts">
 import {PropType} from "vue";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
-import {VoxxrinTalk} from "@/models/VoxxrinTalk";
+import {VoxxrinRoom} from "@/models/VoxxrinRoom";
 
 const props = defineProps({
     confDescriptor: {
         required: true,
         type: Object as PropType<VoxxrinConferenceDescriptor|undefined>
     },
-    talk: {
+    room: {
         required: true,
-        type: Object as PropType<VoxxrinTalk>
+        type: Object as PropType<VoxxrinRoom>
     }
 })
 </script>

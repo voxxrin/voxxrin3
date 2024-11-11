@@ -1,3 +1,7 @@
 .contentView {
-  padding: 16px;
+  padding: var(--app-gutters);
+}
+
+.sectionBloc {
+  padding: var(--app-gutters) 0;
 }

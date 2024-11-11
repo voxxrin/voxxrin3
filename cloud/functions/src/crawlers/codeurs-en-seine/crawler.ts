@@ -1,5 +1,5 @@
 import {z} from "zod";
-import {FullEvent} from "../../models/Event";
+import {detailedTalksToSpeakersLineup, FullEvent} from "../../models/Event";
 import {
     Break, BreakTimeSlot, DailySchedule,
     DetailedTalk, ScheduleTimeSlot, SocialLink, Speaker, Talk, TalksTimeSlot
@@ -303,6 +303,7 @@ export const CODEURS_EN_SEINE_CRAWLER: CrawlerKind<typeof CODEURS_EN_SEINE_PARSE
             conferenceDescriptor: confDescriptor,
             daySchedules: dailySchedules,
             talks: detailedTalks,
+            lineupSpeakers: detailedTalksToSpeakersLineup(detailedTalks),
         };
 
         return fullEvent;

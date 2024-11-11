@@ -65,7 +65,7 @@
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {computed, PropType, toRef, toValue} from "vue";
 import {IonAlert, IonIcon} from "@ionic/vue";
-import {VoxxrinTalk} from "@/models/VoxxrinTalk";
+import {TalkId} from "@/models/VoxxrinTalk";
 import {VoxxrinRoomStats, VoxxrinUnknownRoomStats} from "@/models/VoxxrinRoomStats";
 import {managedRef as ref} from "@/views/vue-utils";
 import {watchClock} from "@/state/useCurrentClock";
@@ -74,6 +74,7 @@ import {match, P} from "ts-pattern";
 import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
 import {SpacedEventId} from "@/models/VoxxrinEvent";
 import {Temporal} from "temporal-polyfill";
+import {RoomId} from "@/models/VoxxrinRoom";
 
 const { LL } = typesafeI18n()
 
@@ -90,9 +91,13 @@ const props = defineProps({
     required: true,
     type: Object as PropType<SpacedEventId>
   },
-  talk: {
+  talkId: {
     required: true,
-    type: Object as PropType<VoxxrinTalk>
+    type: Object as PropType<TalkId>
+  },
+  roomId: {
+    required: true,
+    type: Object as PropType<RoomId>
   },
   showUnknownCapacity: {
     required: false,
@@ -168,8 +173,8 @@ const roomCapacityIndicatorShownRef = computed(() => {
     confDescriptor = toValue(confDescriptorRef),
     now = toValue(clockRef),
     roomStats = props.roomStats,
-    talkRoomId = props.talk.room.id,
-    talkId = props.talk.id;
+    talkRoomId = props.roomId,
+    talkId = props.talkId;
 
   if(!capacityStatus || !confDescriptor || !now || !roomStats
     || !roomStats.roomId.isSameThan(talkRoomId)

@@ -3,28 +3,31 @@
 
 /* ~ UTILS*/
 @import "@/styles/utils/variables.scss";
-@import "@/styles/utils/_helpers.scss";
-@import "@/styles/utils/_animations.scss";
+@import "@/styles/utils/helpers.scss";
+@import "@/styles/utils/animations.scss";
 
 /* ~ COMPONENTS*/
-@import "@/styles/components/_listCardsButtons.scss";
-@import "@/styles/components/_tabsSelection.scss";
+@import "@/styles/components/avatar.scss";
+@import "@/styles/components/bulletTag.scss";
+@import "@/styles/components/listCardsButtons.scss";
+@import "@/styles/components/listModeSwitch.scss";
+@import "@/styles/components/tabsSelection.scss";
 
 /* ~ BASE */
 @import "@/styles/base/base.scss";
-@import "@/styles/base/_typography.scss";
+@import "@/styles/base/typography.scss";
 
 /* ~ VENDORS*/
-@import "@/styles/vendors/ionic/customs/_custom-ion-accordion.scss";
+@import "@/styles/vendors/ionic/customs/custom-ion-accordion.scss";
 @import "@/styles/vendors/ionic/customs/_custom-ion-alert.scss";
 @import "@/styles/vendors/ionic/customs/custom-ion-badges.scss";
 @import "@/styles/vendors/ionic/customs/custom-ion-buttons.scss";
 @import "@/styles/vendors/ionic/customs/custom-ion-content.scss";
 @import "@/styles/vendors/ionic/customs/custom-ion-header.scss";
-@import "@/styles/vendors/ionic/customs/_custom-ion-form.scss";
-@import "@/styles/vendors/ionic/customs/_custom-ion-modal.scss";
-@import "@/styles/vendors/ionic/customs/_custom-ion-list.scss";
-@import "@/styles/vendors/ionic/customs/_custom-ion-action-sheet.scss";
+@import "@/styles/vendors/ionic/customs/custom-ion-form.scss";
+@import "@/styles/vendors/ionic/customs/custom-ion-modal.scss";
+@import "@/styles/vendors/ionic/customs/custom-ion-list.scss";
+@import "@/styles/vendors/ionic/customs/custom-ion-action-sheet.scss";
 @import "@/styles/vendors/ionic/customs/custom-ion-tabs.scss";
 @import "@/styles/vendors/ionic/customs/custom-ion-toast.scss";
 @import "@/styles/vendors/ionic/metrics-ionic-variables.scss";
@@ -32,4 +35,4 @@
 @import "@/styles/vendors/font.scss";
 
 /* ~ LAYOUT*/
-@import "@/styles/layout/_content.scss";
+@import "@/styles/layout/content.scss";

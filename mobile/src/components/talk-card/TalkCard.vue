@@ -1,6 +1,6 @@
 <template>
   <div class="talkItemContainer">
-    <room-capacity-indicator v-if="!!roomStats" :spaced-event-id="spacedEventIdRef" :talk="talk" :room-stats="roomStats" :show-unknown-capacity="isUpcomingTalk" />
+    <room-capacity-indicator v-if="!!roomStats && roomId" :spaced-event-id="spacedEventIdRef" :talkId="talk.id" :roomId="roomId" :room-stats="roomStats" :show-unknown-capacity="isUpcomingTalk" />
     <ion-card class="talkCard"
               v-if="talkNotes"
               :class="{ container: true, '_is-highlighted': isHighlighted(talk, talkNotes), '_has-favorited': talkNotes.isFavorite, '_has-to-watch-later': talkNotes.watchLater }"
@@ -31,22 +31,22 @@
         </div>
       </div>
 
-      <div class="talkCard-content">
-        <div class="title"
-             :class="{'_hasTalkLang' : talkLang && confDescriptor.features.hideLanguages.indexOf(talkLang.id.value)===-1}">
-          <ion-badge v-if="talkLang && confDescriptor.features.hideLanguages.indexOf(talkLang.id.value)===-1"
-                     :style="{ '--background':  talkLang.themeColor}"
-                     class="talkLang">
-            {{talkLang.label}}
-          </ion-badge>
-          {{talk.title}}
-        </div>
-        <div class="pictures">
-          <div class="picturesItem" v-for="(speaker, index) in talk.speakers" :key="speaker.id.value">
-            <speaker-thumbnail size="48px" :is-highlighted="isHighlighted(talk, talkNotes) || talkNotes.isFavorite" :speaker="speaker" />
-          </div>
+    <div class="talkCard-content">
+      <div class="title"
+           :class="{'_hasTalkLang' : talkLang && confDescriptor.features.hideLanguages.indexOf(talkLang.id.value)===-1}">
+        <ion-badge v-if="talkLang && confDescriptor.features.hideLanguages.indexOf(talkLang.id.value)===-1"
+                   :style="{ '--background':  talkLang.themeColor}"
+                   class="talkLang">
+          {{talkLang.label}}
+        </ion-badge>
+        {{talk.title}}
+      </div>
+      <div class="avatarGroup">
+        <div class="avatarItem" v-for="(speaker, index) in talk.speakers" :key="speaker.id.value">
+          <speaker-thumbnail size="48px" :is-highlighted="isHighlighted(talk, talkNotes) || talkNotes.isFavorite" :speaker="speaker" />
         </div>
       </div>
+    </div>
 
       <div class="talkCard-footer">
         <div class="speakersContainer">
@@ -77,6 +77,7 @@ import {people, person} from "ionicons/icons";
 import RoomCapacityIndicator from "@/components/rooms/RoomCapacityIndicator.vue";
 import SpeakerThumbnail from "@/components/speaker/SpeakerThumbnail.vue";
 import {useCurrentSpaceEventIdRef} from "@/services/Spaces";
+import {RoomId} from "@/models/VoxxrinRoom";
 
 const { LL } = typesafeI18n()
 const baseUrl = import.meta.env.BASE_URL;
@@ -86,14 +87,20 @@ function handle404OnSpeakerThumbnail(img: HTMLImageElement|null) {
     }
 }
 
+type MinimumTalkAttrs = Pick<VoxxrinTalk, "id"|"track"|"format"|"speakers"|"language"|"title">
+
 const props = defineProps({
   talk: {
     required: true,
-    type: Object as PropType<VoxxrinTalk>
+    type: Object as PropType<MinimumTalkAttrs>
+  },
+  roomId: {
+    required: true,
+    type: Object as PropType<RoomId|undefined>
   },
   isHighlighted: {
       required: true,
-      type: Function as PropType<(talk: VoxxrinTalk, talkNotes: TalkNote) => boolean>
+      type: Function as PropType<(talk: MinimumTalkAttrs, talkNotes: TalkNote) => boolean>
   },
   confDescriptor: {
       required: true,
@@ -115,11 +122,15 @@ const props = defineProps({
   talkNotes: {
       required: false,
       type: Object as PropType<TalkNote|undefined>
+  },
+  scope: {
+    required: true,
+    type: String as PropType<"schedule"|"rating"|"favorites"|"speaker"|"event-talks">
   }
 })
 
 defineEmits<{
-    (e: 'talk-clicked', talk: VoxxrinTalk): void,
+    (e: 'talk-clicked', talk: MinimumTalkAttrs): void,
 }>()
 
 const talkLang = computed(() => {
@@ -164,7 +175,7 @@ const theme = {
     top: 1px solid var(--app-grey-line);
     right: 1px solid var(--app-grey-line);
   }
-  box-shadow: rgba(100, 100, 111, 0.2) 0 7px 29px 0;
+  box-shadow: var(--app-shadow-default);
   transition: 80ms ease-in-out;
 
   @media (prefers-color-scheme: dark) {
@@ -258,29 +269,10 @@ const theme = {
       }
     }
 
-    .pictures {
-      display: flex;
-      flex-direction: row;
-      flex: 0 0 auto;
-
-      .picturesItem {
-        width: 24px;
-
-        @media screen and (max-width: 380px) {
-          width: 16px;
-
-          ion-avatar {
-            --size: 38px;
-          }
-
-          &:last-child {
-            margin-right: 16px;
-          }
-        }
-
-        &:last-child {
-          margin-right: 24px;
-        }
+    .avatarItem:last-child {
+      margin-right: 24px;
+      @media screen and (max-width: 380px) {
+        margin-right: 16px;
       }
     }
   }
@@ -317,7 +309,6 @@ const theme = {
 
       @media (prefers-color-scheme: dark) {
         color: var(--app-white-70);
-
       }
 
       .speakers {
@@ -341,7 +332,6 @@ const theme = {
   }
 
   //* States card talk *//
-
   &._is-highlighted {
     border : {
       top: 2px solid var(--app-primary);
@@ -373,7 +363,7 @@ const theme = {
 
 
       /* TODO RLZ: move it to a proper place in talk actions components */
-      :deep(.btnTalk) {
+      :deep(.btnActionCard) {
         border-width: 2px;
         border-color: var(--app-primary);
 
@@ -403,27 +393,7 @@ const theme = {
 
       .talkCard-footer {
         border-color: var(--app-primary-shade);
-
-        /* TODO RLZ: move it to a proper place in talk actions components */
-        :deep(.btnTalk) { border-color: var(--app-primary-shade);}
       }
-    }
-
-    //* TODO - Start - Delete when btn is component *//
-    //* Change style type actions *//
-    ion-button {
-      &.btn-watchLater {
-        --background: var(--voxxrin-event-theme-colors-tertiary-hex);
-        --color: var(--voxxrin-event-theme-colors-tertiary-contrast-hex);
-        border-left: 1px solid var(--voxxrin-event-theme-colors-tertiary-hex);
-      }
-
-      &.btn-feedbackSelect {
-        --background: var(--voxxrin-event-theme-colors-primary-hex);
-        --color: var(--voxxrin-event-theme-colors-primary-contrast-hex);
-        border-left: 1px solid var(--voxxrin-event-theme-colors-primary-hex);
-      }
-      //* END - Delete when btn is component *//
     }
   }
 

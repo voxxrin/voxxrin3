@@ -204,6 +204,30 @@ type RootTranslation = {
 	 */
 	Speakers: string
 	/**
+	 * G​o​ ​t​o​ ​t​i​c​k​e​t​i​n​g
+	 */
+	Go_To_Ticketing: string
+	/**
+	 * L​i​k​e​ ​s​p​e​a​k​e​r
+	 */
+	Like_Speaker: string
+	/**
+	 * B​i​g​ ​l​i​s​t​ ​m​o​d​e
+	 */
+	Big_list_mode: string
+	/**
+	 * B​i​o​g​r​a​p​h​y
+	 */
+	Speaker_bio: string
+	/**
+	 * C​o​m​p​a​c​t​ ​l​i​s​t​ ​m​o​d​e
+	 */
+	Compact_list_mode: string
+	/**
+	 * S​e​e​ ​t​h​e​ ​s​p​e​a​k​e​r​'​s​ ​p​a​g​e
+	 */
+	View_Profil_Speaker: string
+	/**
 	 * W​e​l​c​o​m​e​ ​t​o
 	 */
 	Welcome_to: string
@@ -491,14 +515,6 @@ type RootTranslation = {
 	 */
 	Logout: string
 	/**
-	 * P​r​e​l​o​a​d​i​n​g​ ​e​v​e​n​t​ ​a​s​s​e​t​s​ ​f​o​r​ ​o​f​f​l​i​n​e​ ​u​s​a​g​e
-	 */
-	Preloading_event_assets_for_offline_usage: string
-	/**
-	 * T​h​i​s​ ​c​a​n​ ​s​l​o​w​ ​d​o​w​n​ ​t​h​e​ ​a​p​p​ ​a​ ​l​i​t​t​l​e​ ​b​i​t​ ​d​u​r​i​n​g​ ​p​r​e​-​l​o​a​d​i​n​g
-	 */
-	This_can_slow_down_the_app_a_little_bit_during_pre_loading: string
-	/**
 	 * A​n​o​n​y​m​o​u​s​ ​(​p​r​i​v​a​t​e​)​ ​u​s​e​r​ ​t​o​k​e​n
 	 */
 	Anonymous_private_user_id: string
@@ -526,6 +542,22 @@ type RootTranslation = {
 	 * F​r​e​q​u​e​n​t​l​y​ ​a​s​k​e​d​ ​q​u​e​s​t​i​o​n​s
 	 */
 	Frequently_asked_questions: string
+	/**
+	 * S​p​e​a​k​e​r​ ​d​e​t​a​i​l​s
+	 */
+	Speaker_details: string
+	/**
+	 * C​l​o​s​e​ ​s​p​e​a​k​e​r​ ​d​e​t​a​i​l​s
+	 */
+	Close_speaker_details: string
+	/**
+	 * P​r​e​l​o​a​d​i​n​g​ ​e​v​e​n​t​ ​a​s​s​e​t​s​ ​f​o​r​ ​o​f​f​l​i​n​e​ ​u​s​a​g​e
+	 */
+	Preloading_event_assets_for_offline_usage: string
+	/**
+	 * T​h​i​s​ ​c​a​n​ ​s​l​o​w​ ​d​o​w​n​ ​t​h​e​ ​a​p​p​ ​a​ ​l​i​t​t​l​e​ ​b​i​t​ ​d​u​r​i​n​g​ ​p​r​e​-​l​o​a​d​i​n​g
+	 */
+	This_can_slow_down_the_app_a_little_bit_during_pre_loading: string
 	/**
 	 * S​t​i​l​l​ ​p​l​e​n​t​y​ ​o​f​ ​s​e​a​t​s​ ​a​v​a​i​l​a​b​l​e
 	 */
@@ -579,6 +611,19 @@ type RootTranslation = {
 	 * M​y​ ​E​v​e​n​t​s
 	 */
 	My_events: string
+	/**
+	 * +​{​c​o​u​n​t​}​ ​S​p​e​a​k​e​r​{​{​s​}​}
+	 * @param {number} count
+	 */
+	Talk_additional_speakers: RequiredParams<'count'>
+	/**
+	 * T​a​l​k​s
+	 */
+	Speaker_talks: string
+	/**
+	 * I​n​f​o​s
+	 */
+	Speaker_infos: string
 }
 
 export type TranslationFunctions = {
@@ -770,6 +815,30 @@ export type TranslationFunctions = {
 	 * Speakers
 	 */
 	Speakers: () => LocalizedString
+	/**
+	 * Go to ticketing
+	 */
+	Go_To_Ticketing: () => LocalizedString
+	/**
+	 * Like speaker
+	 */
+	Like_Speaker: () => LocalizedString
+	/**
+	 * Big list mode
+	 */
+	Big_list_mode: () => LocalizedString
+	/**
+	 * Biography
+	 */
+	Speaker_bio: () => LocalizedString
+	/**
+	 * Compact list mode
+	 */
+	Compact_list_mode: () => LocalizedString
+	/**
+	 * See the speaker's page
+	 */
+	View_Profil_Speaker: () => LocalizedString
 	/**
 	 * Welcome to
 	 */
@@ -1055,14 +1124,6 @@ export type TranslationFunctions = {
 	 */
 	Logout: () => LocalizedString
 	/**
-	 * Preloading event assets for offline usage
-	 */
-	Preloading_event_assets_for_offline_usage: () => LocalizedString
-	/**
-	 * This can slow down the app a little bit during pre-loading
-	 */
-	This_can_slow_down_the_app_a_little_bit_during_pre_loading: () => LocalizedString
-	/**
 	 * Anonymous (private) user token
 	 */
 	Anonymous_private_user_id: () => LocalizedString
@@ -1090,6 +1151,22 @@ export type TranslationFunctions = {
 	 * Frequently asked questions
 	 */
 	Frequently_asked_questions: () => LocalizedString
+	/**
+	 * Speaker details
+	 */
+	Speaker_details: () => LocalizedString
+	/**
+	 * Close speaker details
+	 */
+	Close_speaker_details: () => LocalizedString
+	/**
+	 * Preloading event assets for offline usage
+	 */
+	Preloading_event_assets_for_offline_usage: () => LocalizedString
+	/**
+	 * This can slow down the app a little bit during pre-loading
+	 */
+	This_can_slow_down_the_app_a_little_bit_during_pre_loading: () => LocalizedString
 	/**
 	 * Still plenty of seats available
 	 */
@@ -1142,6 +1219,18 @@ export type TranslationFunctions = {
 	 * My Events
 	 */
 	My_events: () => LocalizedString
+	/**
+	 * +{count} Speaker{{s}}
+	 */
+	Talk_additional_speakers: (arg: { count: number }) => LocalizedString
+	/**
+	 * Talks
+	 */
+	Speaker_talks: () => LocalizedString
+	/**
+	 * Infos
+	 */
+	Speaker_infos: () => LocalizedString
 }
 
 export type Formatters = {

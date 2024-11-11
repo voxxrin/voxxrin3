@@ -39,7 +39,8 @@
                     </no-results>
                   </ion-item>
                   <ion-item v-else-if="feedback.status === 'provided'" class="listTalks-item">
-                    <schedule-talk :talk="findTimeslotTalkMatchingFeedback(timeslot, feedback.userFeedback)!"
+                    <talk-card :talk="findTimeslotTalkMatchingFeedback(timeslot, feedback.userFeedback)!" scope="rating"
+                                   :room-id="findTimeslotTalkMatchingFeedback(timeslot, feedback.userFeedback)!.room.id"
                                    :talk-notes="userEventTalkNotesRef.get(findTimeslotTalkMatchingFeedback(timeslot, feedback.userFeedback)!.id.value)"
                                    :is-highlighted="(talk, talkNotes) => talkNotes.isFavorite"
                                    :conf-descriptor="confDescriptor"
@@ -51,7 +52,7 @@
                         <linear-rating v-if="confDescriptor.features.ratings.scale.enabled" :config="confDescriptor.features.ratings.scale"
                                        :user-feedback="feedback.userFeedback" :readonly="true" :is-small="true" />
                       </template>
-                    </schedule-talk>
+                    </talk-card>
                   </ion-item>
                   <ion-item v-else>
                     <no-results illu-path="icons/solid/comment-feedback-skipped.svg" class="_small" position="absolute">
@@ -80,7 +81,7 @@
   import {IonAccordionGroup} from "@ionic/vue";
   import {extractTalksFromSchedule, VoxxrinScheduleTimeSlot} from "@/models/VoxxrinSchedule";
   import TimeslotsIterator from "@/components/timeslots/TimeslotsIterator.vue";
-  import ScheduleTalk from "@/components/talk-card/ScheduleTalk.vue";
+  import TalkCard from "@/components/talk-card/TalkCard.vue";
   import {useTabbedPageNav} from "@/state/useTabbedPageNav";
   import {useSchedule} from "@/state/useSchedule";
   import {findTimeslotTalkMatchingFeedback} from "@/models/VoxxrinFeedback";

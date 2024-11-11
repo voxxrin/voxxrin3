@@ -1,0 +1,32 @@
+.listModesSwitch {
+  background-color: var(--app-background);
+  border-radius: 44px;
+  border: 1px solid var(--app-beige-line);
+
+  &-button {
+    height: 38px;
+    width: 52px;
+    margin: 0;
+    --background: transparent;
+    --color: var(--app-primary);
+    --padding-start: 0;
+    --padding-end: 0;
+
+    @media (prefers-color-scheme: dark) {
+      &.button-solid {
+        --background: transparent;
+        --color: var(--app-white);
+      }
+    }
+
+    &._active {
+      --background: var(--app-primary);
+      --color: var(--app-white);
+
+      @media (prefers-color-scheme: dark) {
+        --background: var(--app-white);
+        --color: var(--app-primary);
+      }
+    }
+  }
+}

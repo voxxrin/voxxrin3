@@ -42,7 +42,8 @@
         </ion-badge>
       </div>
       <ion-label :style="{ 'color': talk.format.themeColor }">
-        {{talk.format.title}} ({{talk.format.hmmDuration}})
+        {{talk.format.title}}
+        <span v-if="confDescriptor.formattings.talkFormatTitle === 'with-duration'">&nbsp;({{talk.format.hmmDuration}})</span>
       </ion-label>
     </div>
   </ion-text>

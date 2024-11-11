@@ -1,0 +1,49 @@
+.bulletTagList {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+
+.bulletTag {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 2px;
+  height: fit-content;
+  padding-right: var(--app-gutters-small);
+  border-radius: 34px;
+  font-weight: 900;
+  font-size: 12px;
+  color: var(--app-primary);
+  border: 1px solid var(--app-primary);
+  background-color: var(--app-background);
+
+  @media (prefers-color-scheme: dark) {
+    color: var(--app-white);
+    border: 1px solid var(--app-white);
+    background-color: transparent;
+  }
+
+  &._labelOnly {
+    padding: var(--app-gutters-tiny) var(--app-gutters-small);
+  }
+
+  &-nb {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 20px;
+    min-width: 20px;
+    margin-right: var(--app-gutters-tiny);
+    padding: 0 4px;
+    border-radius: 22px;
+    background-color: var(--app-primary-shade);
+    color: var(--app-white);
+
+    @media (prefers-color-scheme: dark) {
+      border-right: 2px solid var(--app-white);
+      background-color: var(--app-medium--contrast);
+    }
+  }
+}

@@ -1,6 +1,6 @@
 <template>
   <div class="talkAction">
-    <ion-button :class="{ 'btnTalk': true, 'btn-favorite': true, '_is-active': !!talkNotes?.isFavorite }"
+    <ion-button :class="{ 'btnActionCard': true, 'btn-favorite': true, '_is-active': !!talkNotes?.isFavorite }"
                 @click.stop="() => toggleFavorite(!!talkNotes?.isFavorite)" v-if="confDescriptor?.features.favoritesEnabled"
                 :aria-label="talkNotes?.isFavorite ? LL.Remove_Favorites() : LL.Add_Favorites()">
       <span class="btn-favorite-group" :class="{'_animationIn': !!talkNotes?.isFavorite}">
@@ -36,11 +36,15 @@ const props = defineProps({
         required: true,
         type: Object as PropType<TalkNote>
     },
+    scope: {
+      required: true,
+      type: String as PropType<"schedule-talk"|"speaker-talk">,
+    },
     localFavorite: {
         required: false,
         type: Number as PropType<1 | -1 | undefined>,
         default: undefined
-    }
+    },
 });
 
 const emits = defineEmits<{
