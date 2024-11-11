@@ -329,6 +329,13 @@ export function deferredVuefireUseDocument<SOURCES extends MultiWatchSources, T>
 ): Ref<T|undefined> {
     const documentRef = ref<T>()
 
+    // IMPORTANT NOTE if your coming outta here because you're surprised some document updates are not reflected
+    // onto your vue refs (particularly on current user)
+    // The Firestore emulator doesn't work exactly like the production one LOCALLY, meaning that some document updates
+    // are not reflected locally
+    // If you want to workaround this situation, please change .env.dev.local and avoid targetting local firestore instance
+    // for both db and auth
+
     const docSourceRef = shallowRef<DocumentReference<T>|null>(null);
     useDocument(docSourceRef, {target: documentRef });
 
