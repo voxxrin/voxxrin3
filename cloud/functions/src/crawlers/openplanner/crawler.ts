@@ -97,9 +97,9 @@ export const OPENPLANNER_CRAWLER: CrawlerKind<typeof OPENPLANNER_DESCRIPTOR_PARS
         const speaker: Speaker = {
           id: openPlannerSpeaker.id,
           fullName: openPlannerSpeaker.name,
-          bio: openPlannerSpeaker.bio,
-          photoUrl: openPlannerSpeaker.photoUrl,
-          companyName: openPlannerSpeaker.company,
+          bio: openPlannerSpeaker.bio || null,
+          photoUrl: openPlannerSpeaker.photoUrl || null,
+          companyName: openPlannerSpeaker.company || null,
           social: openPlannerSpeaker.socials.map(opSocial => {
             const type = match([opSocial.icon, opSocial.name])
               .with(['github', P.any], () => 'github' as const)
