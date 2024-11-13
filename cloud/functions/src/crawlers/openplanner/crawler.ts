@@ -1,7 +1,18 @@
 import {BreakTimeslotWithPotentiallyUnknownIcon, FullEvent} from "../../models/Event";
 import {z} from "zod";
-import {EVENT_DESCRIPTOR_PARSER, EVENT_FEATURES_CONFIG_PARSER, RATINGS_CONFIG_PARSER} from "../crawler-parsers";
-import {CrawlerKind, TALK_TRACK_FALLBACK_COLORS} from "../crawl";
+import {
+  BREAK_PARSER,
+  BREAK_TIME_SLOT_PARSER,
+  EVENT_DESCRIPTOR_PARSER,
+  EVENT_FEATURES_CONFIG_PARSER,
+  RATINGS_CONFIG_PARSER, ROOM_PARSER,
+  SPEAKER_PARSER,
+  TALK_PARSER,
+  TALKS_TIME_SLOT_PARSER, THEMABLE_LANGUAGE_PARSER,
+  THEMABLE_TALK_FORMAT_PARSER,
+  THEMABLE_TALK_TRACK_PARSER
+} from "../crawler-parsers";
+import {CrawlerKind, TALK_FORMAT_FALLBACK_COLORS, TALK_TRACK_FALLBACK_COLORS} from "../crawl";
 import {ISO_DATETIME_PARSER} from "../../utils/zod-parsers";
 import {
   DailySchedule,
@@ -11,13 +22,42 @@ import {
   Speaker,
   Talk,
   TalkFormat,
-  TalksTimeSlot,
+  TalksTimeSlot, ThemedTalkFormat,
   ThemedTrack,
 } from "../../../../../shared/daily-schedule.firestore";
 import {match, P} from "ts-pattern";
 import {Temporal} from "@js-temporal/polyfill";
 import {ISODatetime} from "../../../../../shared/type-utils";
 import {fillUnknownBreakIcons} from "../utils";
+
+const OPENPLANNER_SESSION_PARSER = z.object({
+    speakers: z.array(z.string()),
+    tags: z.array(z.string()),
+    title: z.string(),
+    id: z.string(),
+    categoryName: z.string().nullish(),
+    categoryId: z.string().nullish(), // talkTrack
+    formatId: z.string().nullish(), // talkFormat
+    abstract: z.string().nullish(),
+    trackId: z.string(), // room
+    trackTitle: z.string(),
+    startTime: ISO_DATETIME_PARSER.optional(),
+    endTime: ISO_DATETIME_PARSER.optional(),
+    type: z.literal('undefined').optional().default('undefined'),
+  });
+
+const OPENPLANNER_SPEAKER_PARSER = z.object({
+  id: z.string(),
+  name: z.string(),
+  photoUrl: z.string().optional(),
+  socials: z.array(z.object({
+    icon: z.union([z.literal(""), z.literal("site"), z.literal("twitter"), z.literal("linkedin"), z.literal("github")]),
+    link: z.string(),
+    name: z.string().optional(),
+  })),
+  bio: z.string().nullish(),
+  company: z.string().nullish()
+})
 
 export const OPENPLANNER_DESCRIPTOR_PARSER = EVENT_DESCRIPTOR_PARSER.omit({
   id: true,
@@ -37,6 +77,16 @@ export const OPENPLANNER_DESCRIPTOR_PARSER = EVENT_DESCRIPTOR_PARSER.omit({
   openPlannerGeneratedJson: z.string(),
   language: z.string(),
   ratings: RATINGS_CONFIG_PARSER,
+  additionalBreakTimeslots: z.array(BREAK_TIME_SLOT_PARSER.omit({ type: true, id: true })).optional().default([]),
+  additionalSessions: z.record(z.string(), OPENPLANNER_SESSION_PARSER
+    .omit({ type: true })
+    .extend({
+      type: z.literal('talk').optional().default('talk')
+    })).optional().default({}),
+  additionalSpeakers: z.record(z.string(), OPENPLANNER_SPEAKER_PARSER).optional().default({}),
+  additionalTalkFormats: z.array(THEMABLE_TALK_FORMAT_PARSER).optional().default([]),
+  additionalTalkTracks: z.array(THEMABLE_TALK_TRACK_PARSER).optional().default([]),
+  additionalRooms: z.array(ROOM_PARSER).optional().default([]),
 })
 
 export const OPENPLANNER_GENERATED_SCHEDULE_PARSER = EVENT_DESCRIPTOR_PARSER.omit({
@@ -50,32 +100,8 @@ export const OPENPLANNER_GENERATED_SCHEDULE_PARSER = EVENT_DESCRIPTOR_PARSER.omi
 }).extend({
   features: EVENT_FEATURES_CONFIG_PARSER.omit({ ratings: true }).extend({
   }),
-  sessions: z.record(z.string(), z.object({
-    speakers: z.array(z.string()),
-    tags: z.array(z.string()),
-    title: z.string(),
-    id: z.string(),
-    categoryName: z.string().nullish(),
-    categoryId: z.string().nullish(), // talkTrack
-    formatId: z.string().nullish(), // talkFormat
-    abstract: z.string().nullish(),
-    trackId: z.string(), // room
-    trackTitle: z.string(),
-    startTime: ISO_DATETIME_PARSER.optional(),
-    endTime: ISO_DATETIME_PARSER.optional(),
-  })),
-  speakers: z.record(z.string(), z.object({
-    id: z.string(),
-    name: z.string(),
-    photoUrl: z.string().optional(),
-    socials: z.array(z.object({
-      icon: z.union([z.literal(""), z.literal("site"), z.literal("twitter"), z.literal("linkedin"), z.literal("github")]),
-      link: z.string(),
-      name: z.string().optional(),
-    })),
-    bio: z.string().nullish(),
-    company: z.string().nullish()
-  }))
+  sessions: z.record(z.string(), OPENPLANNER_SESSION_PARSER),
+  speakers: z.record(z.string(), OPENPLANNER_SPEAKER_PARSER),
 })
 
 export const OPENPLANNER_CRAWLER: CrawlerKind<typeof OPENPLANNER_DESCRIPTOR_PARSER> = {
@@ -88,12 +114,12 @@ export const OPENPLANNER_CRAWLER: CrawlerKind<typeof OPENPLANNER_DESCRIPTOR_PARS
         .then(data => OPENPLANNER_GENERATED_SCHEDULE_PARSER.parse(data));
 
       const talks: DetailedTalk[] = [],
-        tracks: ThemedTrack[] = openPlannerSchedule.talkTracks,
-        formats: TalkFormat[] = openPlannerSchedule.talkFormats,
-        rooms: Room[] = openPlannerSchedule.rooms,
+        tracks: ThemedTrack[] = openPlannerSchedule.talkTracks.concat(descriptor.additionalTalkTracks),
+        formats: TalkFormat[] = openPlannerSchedule.talkFormats.concat(descriptor.additionalTalkFormats),
+        rooms: Room[] = openPlannerSchedule.rooms.concat(descriptor.additionalRooms),
         timezone = openPlannerSchedule.timezone;
 
-      const speakers = Object.values(openPlannerSchedule.speakers).map(openPlannerSpeaker => {
+      const speakers = Object.values({ ...openPlannerSchedule.speakers, ...descriptor.additionalSpeakers }).map(openPlannerSpeaker => {
         const speaker: Speaker = {
           id: openPlannerSpeaker.id,
           fullName: openPlannerSpeaker.name,
@@ -117,7 +143,7 @@ export const OPENPLANNER_CRAWLER: CrawlerKind<typeof OPENPLANNER_DESCRIPTOR_PARS
         return speaker;
       })
 
-      let trackFallbackColors = 0
+      let trackFallbackColors = 0, formatFallbackColors = 0;
       const UNKNOWN_TRACK_ID = 'unknown'
       // Auto-appending an 'unknown' track as openplanner's category might be nullable (ex: on sunnytech, for keynotes)
       // => in that case, we'll use this special 'unknown' track name
@@ -128,7 +154,7 @@ export const OPENPLANNER_CRAWLER: CrawlerKind<typeof OPENPLANNER_DESCRIPTOR_PARS
       })
 
       const dailySchedules = openPlannerSchedule.days.map((day, dayIndex) => {
-        const dailyRawSessions = Object.values(openPlannerSchedule.sessions)
+        const dailyRawSessions = Object.values({ ...openPlannerSchedule.sessions, ...descriptor.additionalSessions })
           .filter(session => session.startTime && session.endTime && session.startTime.startsWith(day.localDate))
 
         const { talkTimeslots, breakTimeslots: breakTimeslotsWithPotentiallyUnknownIcons } = dailyRawSessions.reduce(({talkTimeslots, breakTimeslots}, session) => {
@@ -140,7 +166,7 @@ export const OPENPLANNER_CRAWLER: CrawlerKind<typeof OPENPLANNER_DESCRIPTOR_PARS
 
           const timeslotId = `${start}--${end}` as const
 
-          const room = match(rooms.find(r => r.id === session.trackId))
+          const room = match(rooms.find(r => r.id === session.trackId)) // track is room in openplanner
             .with(P.nullish, () => {
               const newRoom: Room = {
                 id: session.trackId,
@@ -151,7 +177,7 @@ export const OPENPLANNER_CRAWLER: CrawlerKind<typeof OPENPLANNER_DESCRIPTOR_PARS
               return newRoom;
             }).otherwise(room => room)
 
-          if(!session.formatId) {
+          if(!session.formatId && session.type !== 'talk') {
             const breakSlot: BreakTimeslotWithPotentiallyUnknownIcon = {
               type: 'break',
               start, end,
@@ -242,7 +268,12 @@ export const OPENPLANNER_CRAWLER: CrawlerKind<typeof OPENPLANNER_DESCRIPTOR_PARS
 
         const breakTimeslots = fillUnknownBreakIcons(
           { isFirst: dayIndex === 0, isLast: dayIndex === openPlannerSchedule.days.length-1 },
-          timezone, breakTimeslotsWithPotentiallyUnknownIcons, talkTimeslots);
+          timezone, breakTimeslotsWithPotentiallyUnknownIcons, talkTimeslots)
+          .concat((descriptor.additionalBreakTimeslots || []).map(partialTimeslot => ({
+            ...partialTimeslot,
+            id: `${partialTimeslot.start as ISODatetime}--${partialTimeslot.end as ISODatetime}`,
+            type: 'break'
+          })))
 
         const dailySchedule: DailySchedule = {
           day: day.id,
