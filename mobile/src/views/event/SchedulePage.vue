@@ -165,8 +165,17 @@ const props = defineProps({
         require: false,
         type: Boolean,
         default: false
+    },
+    emitEventOnTalkClicked: {
+        required: false,
+        type: Boolean,
+        default: false,
     }
 })
+
+const emits = defineEmits<{
+  (event: 'talk-clicked', talk: VoxxrinTalk): void,
+}>()
 
 const spacedEventId = useCurrentSpaceEventIdRef()
 const {conferenceDescriptor: confDescriptor} = useSharedConferenceDescriptor(spacedEventId);
@@ -241,14 +250,18 @@ async function navigateToTalkRatingScreenFor(talk: VoxxrinTalk) {
 
 async function openTalkDetails(talk: VoxxrinTalk) {
     if(talk) {
-        // TODO: Re-enable this once *tabbed* talk details as feedback viewer routing has been fixed
-        // const talkFeedbackViewerToken = toValue(talkFeedbackViewerTokensRef)?.find(t => t.talkId.isSameThan(talk.id));
-        // const url = talkFeedbackViewerToken
-        //   ?`/events/${eventId.value.value}/talks/${talk.id.value}/asFeedbackViewer/${talkFeedbackViewerToken.secretToken}/details`
-        //   :`/events/${eventId.value.value}/talks/${talk.id.value}/details`
-        const url = `${getResolvedEventRootPathFromSpacedEventIdRef(spacedEventId)}/talks/${talk.id.value}/details`
+        if(props.emitEventOnTalkClicked) {
+          emits('talk-clicked', talk);
+        } else {
+          // TODO: Re-enable this once *tabbed* talk details as feedback viewer routing has been fixed
+          // const talkFeedbackViewerToken = toValue(talkFeedbackViewerTokensRef)?.find(t => t.talkId.isSameThan(talk.id));
+          // const url = talkFeedbackViewerToken
+          //   ?`/events/${eventId.value.value}/talks/${talk.id.value}/asFeedbackViewer/${talkFeedbackViewerToken.secretToken}/details`
+          //   :`/events/${eventId.value.value}/talks/${talk.id.value}/details`
+          const url = `${getResolvedEventRootPathFromSpacedEventIdRef(spacedEventId)}/talks/${talk.id.value}/details`
 
-        triggerTabbedPageNavigate(url, "forward", "push");
+          triggerTabbedPageNavigate(url, "forward", "push");
+        }
     }
 }
 
