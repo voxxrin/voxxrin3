@@ -67,7 +67,7 @@ export const OPENPLANNER_GENERATED_SCHEDULE_PARSER = EVENT_DESCRIPTOR_PARSER.omi
   speakers: z.record(z.string(), z.object({
     id: z.string(),
     name: z.string(),
-    photoUrl: z.string(),
+    photoUrl: z.string().optional(),
     socials: z.array(z.object({
       icon: z.union([z.literal(""), z.literal("site"), z.literal("twitter"), z.literal("linkedin"), z.literal("github")]),
       link: z.string(),
