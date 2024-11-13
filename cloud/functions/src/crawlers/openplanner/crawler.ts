@@ -185,10 +185,11 @@ export const OPENPLANNER_CRAWLER: CrawlerKind<typeof OPENPLANNER_DESCRIPTOR_PARS
                 const talkDurationInMinutes = startInstant.until(endInstant).total('minutes')
                 const formatDuration = `PT${talkDurationInMinutes}m` as const;
 
-                const newFormat: TalkFormat = {
+                const newFormat: ThemedTalkFormat = {
                   id: `talk-${formatDuration}m`,
-                  title: `Talk de ${formatDuration}m`,
-                  duration: formatDuration
+                  title: `Talk de ${talkDurationInMinutes}m`,
+                  duration: formatDuration,
+                  themeColor: TALK_FORMAT_FALLBACK_COLORS[formatFallbackColors++],
                 }
                 formats.push(newFormat)
                 console.warn(`Format with id ${session.formatId} (in talk ${session.id}) was not found in formats' list !.. Created it !`)
