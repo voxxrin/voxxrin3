@@ -81,6 +81,8 @@ export const OPENPLANNER_DESCRIPTOR_PARSER = EVENT_DESCRIPTOR_PARSER.omit({
   logoUrl: z.string().optional(),
   theming: EVENT_THEME_PARSER.optional(),
   features: EVENT_FEATURES_CONFIG_PARSER.omit({ ratings: true }).optional(),
+  talkFormats: z.array(THEMABLE_TALK_FORMAT_PARSER).default([]),
+  talkTracks: z.array(THEMABLE_TALK_TRACK_PARSER).default([]),
   language: z.string(),
   ratings: RATINGS_CONFIG_PARSER,
   additionalBreakTimeslots: z.array(BREAK_TIME_SLOT_PARSER.omit({ type: true, id: true })).optional().default([]),
@@ -120,8 +122,8 @@ export const OPENPLANNER_CRAWLER: CrawlerKind<typeof OPENPLANNER_DESCRIPTOR_PARS
         .then(data => OPENPLANNER_GENERATED_SCHEDULE_PARSER.parse(data));
 
       const talks: DetailedTalk[] = [],
-        tracks: ThemedTrack[] = openPlannerSchedule.talkTracks.concat(descriptor.additionalTalkTracks),
-        formats: ThemedTalkFormat[] = openPlannerSchedule.talkFormats.concat(descriptor.additionalTalkFormats),
+        tracks: ThemedTrack[] = descriptor.talkTracks.concat(openPlannerSchedule.talkTracks).concat(descriptor.additionalTalkTracks),
+        formats: ThemedTalkFormat[] = descriptor.talkFormats.concat(openPlannerSchedule.talkFormats).concat(descriptor.additionalTalkFormats),
         rooms: Room[] = openPlannerSchedule.rooms.concat(descriptor.additionalRooms),
         timezone = openPlannerSchedule.timezone;
 
