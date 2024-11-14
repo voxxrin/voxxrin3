@@ -4,7 +4,7 @@ import {
   BREAK_PARSER,
   BREAK_TIME_SLOT_PARSER,
   EVENT_DESCRIPTOR_PARSER,
-  EVENT_FEATURES_CONFIG_PARSER,
+  EVENT_FEATURES_CONFIG_PARSER, EVENT_THEME_PARSER,
   RATINGS_CONFIG_PARSER, ROOM_PARSER,
   SPEAKER_PARSER,
   TALK_PARSER,
@@ -74,11 +74,13 @@ export const OPENPLANNER_DESCRIPTOR_PARSER = EVENT_DESCRIPTOR_PARSER.omit({
   supportedTalkLanguages: true,
   rooms: true,
 }).extend({
+  openPlannerGeneratedJson: z.string(),
   title: z.string().optional(),
   headingTitle: z.string().optional(),
   backgroundUrl: z.string().optional(),
   logoUrl: z.string().optional(),
-  openPlannerGeneratedJson: z.string(),
+  theming: EVENT_THEME_PARSER.optional(),
+  features: EVENT_FEATURES_CONFIG_PARSER.omit({ ratings: true }).optional(),
   language: z.string(),
   ratings: RATINGS_CONFIG_PARSER,
   additionalBreakTimeslots: z.array(BREAK_TIME_SLOT_PARSER.omit({ type: true, id: true })).optional().default([]),
@@ -306,9 +308,9 @@ export const OPENPLANNER_CRAWLER: CrawlerKind<typeof OPENPLANNER_DESCRIPTOR_PARS
           days: openPlannerSchedule.days,
           keywords: descriptor.keywords,
           location: descriptor.location,
-          theming: openPlannerSchedule.theming,
+          theming: descriptor.theming || openPlannerSchedule.theming,
           features: {
-            ...openPlannerSchedule.features,
+            ...(descriptor.features || openPlannerSchedule.features),
             ratings: descriptor.ratings
           },
           formattings: descriptor.formattings || {
@@ -328,7 +330,7 @@ export const OPENPLANNER_CRAWLER: CrawlerKind<typeof OPENPLANNER_DESCRIPTOR_PARS
           logoUrl: descriptor.logoUrl || openPlannerSchedule.logoUrl,
           backgroundUrl: descriptor.backgroundUrl || openPlannerSchedule.backgroundUrl,
           location: descriptor.location,
-          theming: openPlannerSchedule.theming,
+          theming: descriptor.theming || openPlannerSchedule.theming,
           keywords: descriptor.keywords
         }
       }
