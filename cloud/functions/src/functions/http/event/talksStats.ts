@@ -3,6 +3,7 @@ import {checkEventLastUpdate, eventTalkStatsFor} from "../../firestore/firestore
 import {Request, Response} from "express";
 import {ConferenceDescriptor} from "../../../../../../shared/conference-descriptor.firestore";
 import {getTimeslottedTalks} from "../../firestore/services/schedule-utils";
+import {resolvedSpacedEventFieldName} from "../../../../../../shared/utilities/event-utils";
 
 export async function eventTalksStats(response: Response, pathParams: {eventId: string, spaceToken?: string|undefined}, queryParams: {token: string }, request: Request, eventDescriptor: ConferenceDescriptor) {
 
@@ -10,9 +11,12 @@ export async function eventTalksStats(response: Response, pathParams: {eventId: 
 
     const { cachedHash, updatesDetected } = await logPerf("cached hash", async () => {
         return await checkEventLastUpdate(spaceToken, eventId, [
-            root => root.favorites,
-            root => root.talkListUpdated
-        ], request, response)
+              root => root.favorites,
+              root => root.talkListUpdated
+          ],
+          (lastUpdateDate) => `${resolvedSpacedEventFieldName(eventId, spaceToken)}:${lastUpdateDate}`,
+          request, response
+        )
     });
 
     if(!updatesDetected) {

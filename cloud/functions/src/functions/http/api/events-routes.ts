@@ -6,7 +6,7 @@ import {
   ensureHasCrawlerFamilyOrEventOrganizerToken,
   ensureHasEventStatsValidToken,
   ensureHasFamilyOrEventOrganizerToken,
-  ensureHasRoomStatsContributorValidToken,
+  ensureHasRoomStatsContributorValidToken, legacyEnsureHasCrawlerFamilyOrEventOrganizerToken,
 } from "./route-access";
 
 export function declareEventHttpRoutes(app: Express) {
@@ -150,6 +150,7 @@ export function declareEventHttpRoutes(app: Express) {
   })
 
   // For conf organizers
+  // LEGACY entry (remove this once devoxx cfp will have aligned)
   Routes.post(app, '/events/:eventId/refreshScheduleRequest',
     z.object({
       query: z.object({
@@ -160,7 +161,20 @@ export function declareEventHttpRoutes(app: Express) {
         eventId: z.string().min(3),
       })
     }),
+    legacyEnsureHasCrawlerFamilyOrEventOrganizerToken(),
+    async (res, path, query, body) =>
+      (await import("../event/crawlEvent")).requestCrawlerScheduleRefresh(res, { crawlerId: path.eventId }, query));
+  Routes.post(app, '/crawlers/:crawlerId/refreshScheduleRequest',
+    z.object({
+      query: z.object({
+        token: z.string().min(10),
+        dayIds: z.string().min(1).optional()
+      }),
+      path: z.object({
+        crawlerId: z.string().min(3),
+      })
+    }),
     ensureHasCrawlerFamilyOrEventOrganizerToken(),
     async (res, path, query, body) =>
-      (await import("../event/crawlEvent")).requestEventScheduleRefresh(res, path, query));
+      (await import("../event/crawlEvent")).requestCrawlerScheduleRefresh(res, path, query));
 }

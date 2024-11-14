@@ -10,7 +10,7 @@ export async function crawl(request: functions.https.Request, response: express.
     const eventIds = extractMultiQueryParam(request, 'eventId')
 
     try {
-        const events = await crawlAll({ crawlingToken, dayIds, eventIds })
+        const events = await crawlAll({ crawlingToken, dayIds, crawlerIds: eventIds })
         return sendResponseMessage(response, 200, events)
     }catch(e) {
         return sendResponseMessage(response, 500, e?.toString() || "");

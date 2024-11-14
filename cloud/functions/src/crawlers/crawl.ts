@@ -68,7 +68,7 @@ export const LANGUAGE_FALLBACK_COLORS: HexColor[] = [
 ];
 
 export type CrawlCriteria = {
-    eventIds?: string[]|undefined;
+    crawlerIds?: string[]|undefined;
     crawlingToken?: string|undefined;
     dayIds?: string[]|undefined;
 }
@@ -105,15 +105,15 @@ const crawlAll = async function(criteria: CrawlCriteria) {
     const crawlerDescriptors = await resolveCrawlerDescriptorsMatchingWithToken(criteria.crawlingToken);
 
     const matchingCrawlerDescriptors = crawlerDescriptors.filter(firestoreCrawler => {
-      const eventIdConstraintMatches = !criteria.eventIds
-        || !criteria.eventIds.length
-        || criteria.eventIds.includes(firestoreCrawler.id);
+      const eventIdConstraintMatches = !criteria.crawlerIds
+        || !criteria.crawlerIds.length
+        || criteria.crawlerIds.includes(firestoreCrawler.id);
 
       return eventIdConstraintMatches;
     });
 
     if(!matchingCrawlerDescriptors.length) {
-      throw new Error(`No crawler found matching eventIds=${JSON.stringify(criteria.eventIds)}`);
+      throw new Error(`No crawler found matching crawlerIds=${JSON.stringify(criteria.crawlerIds)}`);
     }
 
     return await Promise.all(matchingCrawlerDescriptors.map(async crawlerDescriptor => {
@@ -370,7 +370,7 @@ const saveEvent = async function (event: FullEvent, crawlerDescriptor: z.infer<t
           }
         }),
         ...event.talks.map(async talk => {
-          if(!ratingsTalkIds.includes(talk.id)) {
+          if(!ratingsTalkIds.includes(talk.id) && !talk.isOverflow) {
             await db.doc(`${resolvedEventFirestorePath(event.id, spaceToken)}/organizer-space/${organizerSecretToken}/ratings/${talk.id}`).create({})
           }
         })

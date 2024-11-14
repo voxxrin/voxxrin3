@@ -8,6 +8,7 @@ import {
 import {match, P} from "ts-pattern";
 import {TalkStats} from "../../../../../../../shared/event-stats";
 import * as express from "express";
+import {resolvedSpacedEventFieldName} from "../../../../../../../shared/utilities/event-utils";
 
 export async function deprecatedEventStats(request: functions.https.Request, response: express.Response) {
 
@@ -19,9 +20,11 @@ export async function deprecatedEventStats(request: functions.https.Request, res
     if(!organizerSecretToken) { return sendResponseMessage(response, 400, `Missing either [organizerSecretToken] or [familyToken] query parameter !`) }
 
     const { cachedHash, updatesDetected } = await checkEventLastUpdate(spaceToken, eventId, [
-        root => root.favorites,
-        root => root.talkListUpdated
-    ], request, response)
+          root => root.favorites,
+          root => root.talkListUpdated
+      ], (lastUpdateDate) => `${resolvedSpacedEventFieldName(eventId, spaceToken)}:${lastUpdateDate}`,
+      request, response
+    )
     if(!updatesDetected) {
         return sendResponseMessage(response, 304)
     }

@@ -5,7 +5,7 @@ import {DailyTalkFeedbackRatings} from "../../../../../../shared/conference-orga
 import {firestore} from "firebase-admin";
 import {match} from "ts-pattern";
 import DocumentReference = firestore.DocumentReference;
-import {resolvedEventFirestorePath} from "../../../../../../shared/utilities/event-utils";
+import {resolvedEventFirestorePath, resolvedSpacedEventFieldName} from "../../../../../../shared/utilities/event-utils";
 
 
 export async function provideDailyRatingsStats(response: Response, pathParams: {eventId: string, spaceToken?: string|undefined}, queryParams: {token: string}, request: Request) {
@@ -13,9 +13,11 @@ export async function provideDailyRatingsStats(response: Response, pathParams: {
   const {eventId, spaceToken} = pathParams;
   const { cachedHash, updatesDetected } = await logPerf("cached hash", async () => {
     return await checkEventLastUpdate(spaceToken, eventId, [
-      root => root.allFeedbacks,
-      root => root.talkListUpdated
-    ], request, response)
+        root => root.allFeedbacks,
+        root => root.talkListUpdated
+      ], (lastUpdateDate) => `${resolvedSpacedEventFieldName(eventId, spaceToken)}:${lastUpdateDate}`,
+      request, response
+    )
   });
 
   if(!updatesDetected) {

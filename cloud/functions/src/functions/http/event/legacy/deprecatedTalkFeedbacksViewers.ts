@@ -6,7 +6,10 @@ import {getFamilyOrganizerToken} from "../../../firestore/services/publicTokens-
 import {checkEventLastUpdate, getOrganizerSpaceByToken, getSecretTokenDoc} from "../../../firestore/firestore-utils";
 import {match, P} from "ts-pattern";
 import {ConferenceOrganizerSpace} from "../../../../../../../shared/conference-organizer-space.firestore";
-import {resolvedEventFirestorePath} from "../../../../../../../shared/utilities/event-utils";
+import {
+  resolvedEventFirestorePath,
+  resolvedSpacedEventFieldName
+} from "../../../../../../../shared/utilities/event-utils";
 
 export async function legacyTalkFeedbacksViewers(request: functions.https.Request, response: express.Response) {
 
@@ -31,7 +34,11 @@ export async function legacyTalkFeedbacksViewers(request: functions.https.Reques
     }
   }
 
-  const { cachedHash, updatesDetected } = await checkEventLastUpdate(spaceToken, eventId, [root => root.talkListUpdated], request, response)
+  const { cachedHash, updatesDetected } = await checkEventLastUpdate(spaceToken, eventId,
+    [root => root.talkListUpdated],
+    (lastUpdateDate) => `${resolvedSpacedEventFieldName(eventId, spaceToken)}:${lastUpdateDate}`,
+    request, response
+  );
   if(!updatesDetected) {
     return sendResponseMessage(response, 304)
   }
