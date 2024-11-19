@@ -30,12 +30,20 @@ const props = defineProps({
 
   ion-icon {
     font-size: 24px;
+
+    @media (prefers-color-scheme: dark) {
+      color: var(--ion-color-dark) !important;
+    }
   }
 
   ion-label {
     padding-left: 8px;
     font-size: 16px;
     font-weight: 900;
+
+    @media (prefers-color-scheme: dark) {
+      color: var(--ion-color-dark);
+    }
   }
 }
 </style>
