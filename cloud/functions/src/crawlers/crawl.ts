@@ -214,7 +214,7 @@ function sanityCheckEvent(event: FullEvent): string[] {
     if(!descriptorFormatIds.includes(talk.format.id)) {
       unknownValues.unknownFormats.set(talk.format.id, talk.format);
     }
-    if(!descriptorRoomIds.includes(talk.room.id)) {
+    if(talk.room && !descriptorRoomIds.includes(talk.room.id)) {
       unknownValues.unknownRooms.set(talk.room.id, talk.room);
     }
     talkLangs.add(talk.language);

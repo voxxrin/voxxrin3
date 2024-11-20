@@ -19,7 +19,7 @@ export type VoxxrinTalk = Replace<Talk, {
     speakers: VoxxrinSimpleSpeaker[],
     format: VoxxrinTalkFormat,
     track: VoxxrinTrack,
-    room: VoxxrinRoom,
+    room: VoxxrinRoom | undefined,
     id: TalkId,
     language: TalkLanguageCode
 }>
@@ -43,7 +43,7 @@ export function removeTalkOverflowsAndDuplicates(talks: VoxxrinTalk[]) {
 export function createVoxxrinTalkFromFirestore(event: VoxxrinConferenceDescriptor, firestoreTalk: Talk) {
     const format = findTalkFormat(event, new TalkFormatId(firestoreTalk.format.id));
     const track = findTrack(event, new TrackId(firestoreTalk.track.id));
-    const room = findRoom(event, new RoomId(firestoreTalk.room.id));
+    const maybeRoom = firestoreTalk.room ? findRoom(event, new RoomId(firestoreTalk.room.id)) : undefined;
 
     const talk: VoxxrinTalk = {
         language: new TalkLanguageCode(firestoreTalk.language),
@@ -51,7 +51,7 @@ export function createVoxxrinTalkFromFirestore(event: VoxxrinConferenceDescripto
         speakers: firestoreTalk.speakers.map(sp => toVoxxrinSpeaker(sp)),
         format,
         track,
-        room,
+        room: maybeRoom,
         id: new TalkId(firestoreTalk.id),
         isOverflow: firestoreTalk.isOverflow
     }
@@ -93,7 +93,17 @@ export function sortThenGroupByFormat(talks: VoxxrinTalk[], confDescriptor: Voxx
     talksPerFormat.forEach(format => {
         // Ensuring all talks for a given format are always sorted by rooms declaration order
         // in conf descriptor
-        format.talks = sortBy(format.talks, talk => confDescriptor.rooms.findIndex(room => room.id.isSameThan(talk.room.id)))
+        format.talks = sortBy(
+          format.talks,
+          talk => {
+            const talkRoom = talk.room;
+            if(!talkRoom) {
+              return 1000; // should be enough to put unallocated talks to room in the end of the list :-)
+            }
+
+            return confDescriptor.rooms.findIndex(room => room.id.isSameThan(talkRoom.id))
+          }
+        )
     })
 
     return talksPerFormat
@@ -108,7 +118,7 @@ export function filterTalksMatching(talks: VoxxrinTalk[], searchTerms: string|un
         const talkSearchableContent = `
             ${talk.title}
             ${talk.speakers.map(sp => `${sp.fullName} ${sp.companyName}`).join("\n")}
-            ${talk.room.title}
+            ${talk.room?.title || ""}
         `.toLowerCase()
 
         return searchTerms.split(" ").every(searchTerm => talkSearchableContent.includes(searchTerm.toLowerCase()));

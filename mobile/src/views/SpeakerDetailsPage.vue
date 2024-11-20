@@ -49,7 +49,8 @@
             <div class="sectionBloc" v-if="speaker.talks.length > 0">
               <VoxDivider>{{LL.Speaker_talks()}}</VoxDivider>
               <talk-card v-for="talk in speaker.talks" :key="talk.id.value" scope="speaker"
-                             :talk="{ ...talk, speakers: [speaker, ...talk.otherSpeakers] }" :room-id="talk.allocation?.room.id" :talk-stats="talkStatsRefByTalkId.get(talk.id.value)"
+                             :talk="{ ...talk, speakers: [speaker, ...talk.otherSpeakers] }"
+                             :room-id="talk.allocation?.room?.id" :talk-stats="talkStatsRefByTalkId.get(talk.id.value)"
                              :talk-notes="userEventTalkNotesRef.get(talk.id.value)"
                              @talk-clicked="(clickedTalk) => $emit('talk-clicked', clickedTalk)"
                              :is-highlighted="(talk, talkNotes) => talkNotes.isFavorite" :conf-descriptor="confDescriptor">

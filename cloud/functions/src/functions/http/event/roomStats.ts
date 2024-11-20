@@ -66,7 +66,7 @@ async function updateRoomStatsFor(params: { spaceToken: string|undefined, eventI
 
   const talkCandidates = params.timeslottedTalks
     .filter(tt => {
-      return tt.room.id === params.roomId
+      return tt.room?.id === params.roomId
         && recordingTimestamp <= maxTalkCompletionTimestampToBeConsideredACandidateForCapacityFillingRatio(tt)
         && recordingTimestamp + 3*60*60*1000 > Date.parse(tt.start)
     }).sort((tt1, tt2) => Date.parse(tt1.start) - Date.parse(tt2.start));

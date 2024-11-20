@@ -13,10 +13,7 @@
             <span class="slot-schedule-end">{{timeslotLabel.end}}</span>
           </ion-label>
         </div>
-        <div class="subHeader-room" v-if="confDescriptor.features.roomsDisplayed">
-          <ion-icon aria-hidden="true" src="/assets/icons/solid/map-marker.svg"></ion-icon>
-          {{talk.room.title}}
-        </div>
+        <talk-room class="subHeader-room" :room="talk.room" :conf-descriptor="confDescriptor" />
       </div>
     </ion-header>
 
@@ -57,6 +54,7 @@ import {VoxxrinDetailedTalk} from "@/models/VoxxrinTalk";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {formatHourMinutes, weekDayMonthYearFormattedDate} from "@/models/DatesAndTime";
 import {Temporal} from "temporal-polyfill";
+import TalkRoom from "@/components/talk-card/TalkRoom.vue";
 
 const props = defineProps({
     talk: {

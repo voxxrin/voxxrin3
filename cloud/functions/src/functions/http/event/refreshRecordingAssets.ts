@@ -36,7 +36,8 @@ export async function requestRecordingAssetsRefresh(response: Response, pathPara
   const eventTalks = await getEventTalks(spaceToken, eventId);
   const filteredEventTalks = eventTalks
     .filter(talk =>
-      !(recordingConfig.notRecordedFormatIds || []).includes(talk.format.id)
+      talk.room
+      && !(recordingConfig.notRecordedFormatIds || []).includes(talk.format.id)
       && !(recordingConfig.notRecordedRoomIds || []).includes(talk.room.id)
       && (!recordingConfig.recordedFormatIds || recordingConfig.recordedFormatIds.includes(talk.format.id))
       && (!recordingConfig.recordedRoomIds || recordingConfig.recordedRoomIds.includes(talk.room.id))
@@ -233,13 +234,16 @@ export const ${exportedVarName} = ${JSON.stringify({
       '__videoTitle': mt.video.title,
       talkId: mt.talk.id, videoId: mt.video.id
     })),
-    expectedUnmappedTalks: results.unmatchedTalks.map(({talk: ut}) => ({
-      '__talkTitle': ut.title, 
-      '__talkFormat': `${talkById.get(ut.id)!.format.title} (id=${talkById.get(ut.id)!.format.id}, duration=${talkById.get(ut.id)!.format.duration})`, 
-      '__talkRoom': `${talkById.get(ut.id)!.room.title} (${talkById.get(ut.id)!.room.id})`,
-      '__talkSpeakers': ut.speakers.map(sp => sp.fullName).join(", "),
-      talkId: ut.id
-    })),
+    expectedUnmappedTalks: results.unmatchedTalks.map(({talk: ut}) => {
+      const talk = talkById.get(ut.id)!
+      return {
+        '__talkTitle': ut.title,
+        '__talkFormat': `${talk.format.title} (id=${talk.format.id}, duration=${talk.format.duration})`,
+        '__talkRoom': talk.room ? `${talk.room.title} (${talk.room.id})` : undefined,
+        '__talkSpeakers': ut.speakers.map(sp => sp.fullName).join(", "),
+        talkId: ut.id
+      };
+    }),
     unmappedYoutubeVideos: results.unmatchedYoutubeVideos.map(vid => ({
       id: vid.id, publishedAt: vid.publishedAt, duration: vid.duration, title: vid.title
     } satisfies YoutubeVideo)),

@@ -33,7 +33,7 @@ export type Talk = {
     id: string,
     title: string,
     track: Track,
-    room: Room,
+    room: Room|undefined,
     isOverflow: boolean
 }
 export type DetailedTalk = Talk & {

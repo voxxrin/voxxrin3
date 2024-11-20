@@ -7,7 +7,7 @@
         <div class="rateTalkView">
           <div class="rateTalkView-head">
             <talk-card :conf-descriptor="confDescriptorRef" :is-highlighted="() => false" scope="rating"
-                           :talk="labelledTimeslotWithTalkRef.talk" :room-id="labelledTimeslotWithTalkRef.talk.room.id"
+                           :talk="labelledTimeslotWithTalkRef.talk" :room-id="labelledTimeslotWithTalkRef.talk.room?.id"
                            :talk-notes="userEventTalkNotesRef.get(labelledTimeslotWithTalkRef.talk.id.value)">
             </talk-card>
           </div>

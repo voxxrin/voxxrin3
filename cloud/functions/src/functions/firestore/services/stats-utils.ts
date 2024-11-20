@@ -17,7 +17,7 @@ export async function ensureRoomsStatsFilledFor(spaceToken: string|undefined, ev
     const timeslottedTalks = await getTimeslottedTalks(spaceToken, eventId)
 
     const roomsStats = timeslottedTalks.reduce((roomsStats, talk) => {
-      if(talk.room.id) {
+      if(talk.room?.id) {
         const encodedRoomId = toValidFirebaseKey(talk.room.id);
         if(!roomsStats[encodedRoomId]) {
           roomsStats[encodedRoomId] = {
