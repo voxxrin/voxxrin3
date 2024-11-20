@@ -8,7 +8,7 @@ import {
 import {CrawlerKind} from "../crawl";
 import {match, P} from "ts-pattern";
 import {
-  BreakTimeSlot, DailySchedule,
+  BreakTimeSlot, DailySchedule, DetailedTalk,
   ScheduleTimeSlot,
   TalksTimeSlot,
   TimeSlotBase,
@@ -119,9 +119,7 @@ export const SINGLE_FILE_CRAWLER: CrawlerKind<typeof SINGLE_FILE_DESCRIPTOR_PARS
       timeSlots: timeslots.filter(timeslot => timeslot.start.startsWith(day.localDate))
     }))
 
-    const talks = descriptor.talks.map(detailedTalk => ({
-      start: detailedTalk.start,
-      end: detailedTalk.end,
+    const talks: DetailedTalk[] = descriptor.talks.map(detailedTalk => ({
       summary: detailedTalk.summary,
       description: detailedTalk.summary,
       tags: detailedTalk.tags,
@@ -130,6 +128,7 @@ export const SINGLE_FILE_CRAWLER: CrawlerKind<typeof SINGLE_FILE_DESCRIPTOR_PARS
       id: detailedTalk.id,
       title: detailedTalk.title,
       isOverflow: detailedTalk.isOverflow,
+      allocation: { start: detailedTalk.start, end: detailedTalk.end },
 
       format: findItemById(descriptor.talkFormats, detailedTalk.formatId, "format"),
       language: findItemById(descriptor.supportedTalkLanguages, detailedTalk.langId, "language").id,

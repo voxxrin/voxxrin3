@@ -46,11 +46,11 @@ export function detailedTalksToSpeakersLineup(talks: DetailedTalk[]): LineupSpea
           language: talk.language,
           track: talk.track,
           tags: talk.tags,
-          allocation: {
+          allocation: talk.allocation ? {
             room: talk.room,
-            start: talk.start,
-            end: talk.end,
-          },
+            start: talk.allocation.start,
+            end: talk.allocation.end,
+          } : undefined,
           otherSpeakers: talk.speakers.filter(sp => sp.id !== speaker.id),
         })
       })

@@ -195,7 +195,6 @@ export const BDXIO_CRAWLER: CrawlerKind<typeof BDXIO_PARSER> = {
 
                 const detailedTalk: DetailedTalk = {
                     id: talkId,
-                    start, end,
                     title,
                     room, track, format,
                     speakers,
@@ -206,7 +205,8 @@ export const BDXIO_CRAWLER: CrawlerKind<typeof BDXIO_PARSER> = {
                         .concat(levelLabel ? [levelLabel]:[])
                         .concat(roomId === 'Amphi A' ? ['Sous-Titrage' /* 'Closed Captions' */]:[]),
                     isOverflow: false,
-                    assets: []
+                    assets: [],
+                    allocation: { start, end, }
                 };
 
                 return detailedTalk;
@@ -247,14 +247,14 @@ export const BDXIO_CRAWLER: CrawlerKind<typeof BDXIO_PARSER> = {
                 const detailedTalk: DetailedTalk = {
                     id: additionnalTalk.id,
                     title: additionnalTalk.title,
-                    start, end,
                     room, track, language: lang.id, format,
                     speakers: additionnalTalk.speakers,
                     description: additionnalTalk.description,
                     summary: additionnalTalk.summary,
                     tags: [],
                     isOverflow: false,
-                    assets: []
+                    assets: [],
+                    allocation: { start, end, }
                 };
 
                 return detailedTalk;
@@ -308,6 +308,11 @@ export const BDXIO_CRAWLER: CrawlerKind<typeof BDXIO_PARSER> = {
             });
 
         const talksTimeSlots = detailedTalks.reduce((timeslots, detailedTalk) => {
+            const allocation = detailedTalk.allocation;
+            if(!allocation) {
+              return timeslots;
+            }
+
             const talk: Talk = {
                 id: detailedTalk.id,
                 title: detailedTalk.title,
@@ -319,12 +324,12 @@ export const BDXIO_CRAWLER: CrawlerKind<typeof BDXIO_PARSER> = {
                 isOverflow: false
             }
 
-            const timeslotId: TalksTimeSlot['id'] = `${detailedTalk.start}--${detailedTalk.end}`;
+            const timeslotId: TalksTimeSlot['id'] = `${allocation.start}--${allocation.end}`;
             const timeslot: TalksTimeSlot = match(timeslots.find(tts => tts.id === timeslotId))
                 .with(P.nullish, () => {
                     const timeslot: TalksTimeSlot = {
                         id: timeslotId,
-                        start: detailedTalk.start, end: detailedTalk.end,
+                        start: allocation.start, end: allocation.end,
                         type: "talks" as const,
                         talks: []
                     }

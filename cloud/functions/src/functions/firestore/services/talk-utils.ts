@@ -79,16 +79,27 @@ export async function getTalksDetailsWithRatings(maybeSpaceToken: string|undefin
     })
 }
 
-export async function getEventTalks(maybeSpaceToken: DocumentReference|string|undefined, eventId: string) {
-  return logPerf(`getEventTalks(${maybeSpaceToken}, ${eventId})`, async () => {
-    const eventPath = match(maybeSpaceToken)
-      .with(P.nullish, () => resolvedEventFirestorePath(eventId, undefined))
-      .with(P.string, (spaceToken) => resolvedEventFirestorePath(eventId, spaceToken))
-      .otherwise(ref => ref.path)
+async function _getEventTalksDocs(maybeSpaceToken: DocumentReference|string|undefined, eventId: string) {
+  const eventPath = match(maybeSpaceToken)
+    .with(P.nullish, () => resolvedEventFirestorePath(eventId, undefined))
+    .with(P.string, (spaceToken) => resolvedEventFirestorePath(eventId, spaceToken))
+    .otherwise(ref => ref.path)
 
     const talkSnapshots = await db.collection(`${eventPath}/talks`).get() as QuerySnapshot<DetailedTalk>
 
-    return talkSnapshots.docs.map(snap => snap.data());
+  return talkSnapshots.docs;
+}
+
+export async function getEventTalksDocs(maybeSpaceToken: DocumentReference|string|undefined, eventId: string) {
+  return logPerf(`getEventTalksDocs(${maybeSpaceToken}, ${eventId})`, () => {
+    return _getEventTalksDocs(maybeSpaceToken, eventId);
+  });
+}
+
+export async function getEventTalks(maybeSpaceToken: DocumentReference|string|undefined, eventId: string) {
+  return logPerf(`getEventTalks(${maybeSpaceToken}, ${eventId})`, async () => {
+    const talksDocs = await _getEventTalksDocs(maybeSpaceToken, eventId);
+    return talksDocs.map(snap => snap.data());
   })
 }
 

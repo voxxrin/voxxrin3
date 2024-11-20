@@ -244,11 +244,11 @@ export const OPENPLANNER_CRAWLER: CrawlerKind<typeof OPENPLANNER_DESCRIPTOR_PARS
 
             const detailedTalk: DetailedTalk = {
               ...talk,
-              start, end,
               tags: session.tags,
               assets: [],
               description: session.abstract || "",
               summary: session.abstract || "",
+              allocation: { start, end, }
             }
 
             talks.push(detailedTalk);
@@ -257,8 +257,7 @@ export const OPENPLANNER_CRAWLER: CrawlerKind<typeof OPENPLANNER_DESCRIPTOR_PARS
               .with(P.nullish, () => {
                 const talksTimeslot: TalksTimeSlot = {
                   id: timeslotId,
-                  start: detailedTalk.start,
-                  end: detailedTalk.end,
+                  start, end,
                   type: 'talks',
                   talks: []
                 }

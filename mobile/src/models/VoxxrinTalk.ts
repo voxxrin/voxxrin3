@@ -62,15 +62,14 @@ export function createVoxxrinDetailedTalkFromFirestore(event: VoxxrinConferenceD
 
     const detailedTalk: VoxxrinDetailedTalk = {
         ...talk,
-        start: firestoreTalk.start,
-        end: firestoreTalk.end,
         speakers: firestoreTalk.speakers.map(sp => ({
             ...sp,
             id: new SpeakerId(sp.id)
         })),
         description: firestoreTalk.description,
         tags: firestoreTalk.tags || [],
-        assets: firestoreTalk.assets
+        assets: firestoreTalk.assets,
+        allocation: firestoreTalk.allocation,
     };
     return detailedTalk;
 }
