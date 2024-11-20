@@ -3,7 +3,7 @@
     <talk-format-groups-breakdown :conf-descriptor="confDescriptor" :talks="displayedTalksRef">
       <template #talk="{ talk }">
         <ion-item class="listTalks-item">
-          <talk-card :talk="talk" :room-id="talk.room.id" :talk-stats="talkStatsRefByTalkId.get(talk.id.value)" :talk-notes="userTalkNotesRefByTalkIdRef.get(talk.id.value)"
+          <talk-card :talk="talk" :room-id="talk.room?.id" :talk-stats="talkStatsRefByTalkId.get(talk.id.value)" :talk-notes="userTalkNotesRefByTalkIdRef.get(talk.id.value)"
                          :is-highlighted="(talk, talkNotes) => talk.id.isSameThan(selectedTalkId)" :conf-descriptor="confDescriptor"
                          @talkClicked="updateSelected($event)" scope="rating">
             <template #upper-right="{ talk, talkNotes }">

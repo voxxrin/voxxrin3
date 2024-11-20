@@ -1,5 +1,5 @@
 <template>
-  <div class="room" v-if="confDescriptor?.features.roomsDisplayed">
+  <div class="room" v-if="confDescriptor?.features.roomsDisplayed && room">
     <ion-icon aria-hidden="true" src="/assets/icons/solid/map-marker.svg"></ion-icon>
     {{room.title}}
   </div>
@@ -17,7 +17,7 @@ const props = defineProps({
     },
     room: {
         required: true,
-        type: Object as PropType<VoxxrinRoom>
+        type: Object as PropType<VoxxrinRoom|undefined>
     }
 })
 </script>

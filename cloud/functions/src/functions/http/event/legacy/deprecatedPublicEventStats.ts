@@ -129,7 +129,8 @@ export async function legacyPublicEventStats(request: functions.https.Request, r
                             start: talk.start, end: talk.end,
                             format: talk.format.title,
                             language: talk.language,
-                            room: talk.room.title, track: talk.track.title,
+                            room: talk.room?.title,
+                            track: talk.track.title,
                             tags: [], // TODO: remove this once we're OK that it's not used by callers
                             averageRating: talk.averageRating,
                             numberOfVotes: talk.numberOfVotes

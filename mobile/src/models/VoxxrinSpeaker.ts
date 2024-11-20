@@ -55,10 +55,10 @@ export const createVoxxrinSpeakerFromFirestore = (conferenceDescriptor: VoxxrinC
       const track = findTrack(conferenceDescriptor, new TrackId(firestoreTalk.track.id));
       const allocation = match(firestoreTalk.allocation)
         .with(P.not(P.nullish), allocation => {
-          const room = findRoom(conferenceDescriptor, new RoomId(allocation.room.id));
+          const maybeRoom = allocation.room ? findRoom(conferenceDescriptor, new RoomId(allocation.room.id)) : undefined;
           return {
             ...allocation,
-            room
+            room: maybeRoom
           };
         }).otherwise(() => undefined);
 

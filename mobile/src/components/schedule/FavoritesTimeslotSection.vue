@@ -8,14 +8,12 @@
         </no-results>
         <talk-format-groups-breakdown :conf-descriptor="confDescriptor" v-if="timeslot.type==='talks'" :talks="timeslot.talks.filter(t => t.id.isIncludedIntoArray(favoritedTalkIdsRef))">
           <template #talk="{ talk }">
-            <talk-card :talk="talk" :room-id="talk.room.id" :talk-stats="talkStatsRefByTalkId.get(talk.id.value)" :talk-notes="userEventTalkNotes.get(talk.id.value)"
+            <talk-card :talk="talk" :room-id="talk.room?.id" :talk-stats="talkStatsRefByTalkId.get(talk.id.value)" :talk-notes="userEventTalkNotes.get(talk.id.value)"
                            :is-highlighted="(talk, talkNotes) => talkNotes.isFavorite" :conf-descriptor="confDescriptor"
-                           :room-stats="roomsStatsRefByRoomId?.[talk.room.id.value]" :is-upcoming-talk="upcomingRawTalkIds.includes(talk.id.value)"
+                           :room-stats="talk.room ? roomsStatsRefByRoomId?.[talk.room.id.value] : undefined" :is-upcoming-talk="upcomingRawTalkIds.includes(talk.id.value)"
                            @talk-clicked="_ => $emit('talk-clicked', talk)" scope="favorites">
               <template #upper-right="{ }">
-                <div class="room" v-if="confDescriptor?.features.roomsDisplayed">
-                  {{talk.room.title}}
-                </div>
+                <talk-room :room="talk.room" :conf-descriptor="confDescriptor" />
               </template>
               <template #footer-actions="{ talkNotes, talkStats }">
                 <provide-feedback-talk-button v-if="!talk.isOverflow"
@@ -57,6 +55,7 @@ import {TalkNote} from "../../../../shared/feedbacks.firestore";
 import {TalkId, VoxxrinTalk} from "@/models/VoxxrinTalk";
 import NoResults from "@/components/ui/NoResults.vue";
 import TimeSlotSection from "@/components/timeslots/TimeSlotSection.vue";
+import TalkRoom from "@/components/talk-card/TalkRoom.vue";
 
 const { LL } = typesafeI18n()
 

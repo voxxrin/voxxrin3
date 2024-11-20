@@ -84,7 +84,9 @@ export function getRoomsTalksSchedule(timeslots: VoxxrinScheduleTimeSlot[]) {
   for(const timeslot of timeslots) {
     if(timeslot.type === 'talks') {
       for(const talk of timeslot.talks) {
-        perRoomIdTalks.set(talk.room.id.value, (perRoomIdTalks.get(talk.room.id.value) || []).concat({ talk, timeslot }))
+        if(talk.room) {
+          perRoomIdTalks.set(talk.room.id.value, (perRoomIdTalks.get(talk.room.id.value) || []).concat({ talk, timeslot }))
+        }
       }
     }
   }

@@ -9,7 +9,7 @@ export type LineupTalk = {
   track: Track,
   tags: string[],
   allocation: {
-    room: Room,
+    room: Room|undefined,
     start: ISODatetime,
     end: ISODatetime,
   }|undefined,

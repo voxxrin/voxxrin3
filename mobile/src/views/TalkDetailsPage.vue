@@ -32,7 +32,7 @@
       </ion-header>
 
       <talk-details-header :conf-descriptor="confDescriptor" :talk="detailedTalkRef">
-        <room-capacity-indicator v-if="!!firestoreRoomStatsRef && detailedTalkRef.room.id" :spaced-event-id="spacedEventIdRef" :talkId="detailedTalkRef.id" :room-id="detailedTalkRef.room.id" :room-stats="firestoreRoomStatsRef" :bottom-rounded="true" :show-unknown-capacity="false" />
+        <room-capacity-indicator v-if="!!firestoreRoomStatsRef && detailedTalkRef.room?.id" :spaced-event-id="spacedEventIdRef" :talkId="detailedTalkRef.id" :room-id="detailedTalkRef.room.id" :room-stats="firestoreRoomStatsRef" :bottom-rounded="true" :show-unknown-capacity="false" />
       </talk-details-header>
 
       <div class="talkDetails-tags" v-if="detailedTalkRef?.tags.length">
@@ -166,7 +166,7 @@ const theme = computed(() => {
     }
 });
 
-const {firestoreRoomStatsRef } = useRoomStats(spacedEventIdRef, toRef(() => detailedTalkRef.value?.room.id))
+const {firestoreRoomStatsRef } = useRoomStats(spacedEventIdRef, toRef(() => detailedTalkRef.value?.room?.id))
 
 </script>
 
