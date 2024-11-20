@@ -51,7 +51,7 @@
   import {typesafeI18n} from "@/i18n/i18n-vue";
   import {managedRef as ref, toManagedRef as toRef} from "@/views/vue-utils";
   import {IonFab, IonFabButton} from "@ionic/vue";
-  import {albums, list, ticket} from "ionicons/icons";
+  import {albums, people, ticket} from "ionicons/icons";
   import PoweredVoxxrin from "@/components/ui/PoweredVoxxrin.vue";
   import SpeakerCard from "@/components/speaker-card/SpeakerCard.vue";
   import {useTabbedPageNav} from "@/state/useTabbedPageNav";
@@ -96,7 +96,7 @@
   const DEFAULT_MODE = 'compact';
   const currentMode = ref<typeof MODES[number]['id']>(DEFAULT_MODE);
   const MODES = [
-    { id: "compact", icon: list, label: LL.value.Compact_list_mode(), preSelected: true },
+    { id: "compact", icon: people, label: LL.value.Compact_list_mode(), preSelected: true },
     { id: "detailed", icon: albums, label: LL.value.Big_list_mode(), preSelected: false },
   ] as const
 
