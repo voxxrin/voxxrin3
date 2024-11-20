@@ -130,9 +130,6 @@ export const DEVOXX_SCALA_CRAWLER: CrawlerKind<typeof DEVOXX_SCALA_DESCRIPTOR_PA
                      end = Temporal.Instant.fromEpochMilliseconds(timeslot.toTimeMillis).toString() as ISODatetime;
 
                 const timeslotId: ScheduleTimeSlot['id'] = `${start}--${end}`
-                const base = {
-                    id: timeslotId, start, end
-                }
 
                 return match(timeslot)
                     .with({talk: P.not(P.nullish)}, ({talk}) => {
@@ -193,7 +190,6 @@ export const DEVOXX_SCALA_CRAWLER: CrawlerKind<typeof DEVOXX_SCALA_DESCRIPTOR_PA
 
 
                         const detailedTalk: DetailedTalk = {
-                            ...base,
                             id: timeslot.slotId,
                             title: talk.title,
                             speakers: talkSpeakers,
@@ -208,15 +204,16 @@ export const DEVOXX_SCALA_CRAWLER: CrawlerKind<typeof DEVOXX_SCALA_DESCRIPTOR_PA
                             description: talk.summaryAsHtml,
                             tags: [],
                             isOverflow: false,
-                            assets: []
+                            assets: [],
+                            allocation: { start, end, }
                         }
 
                         talks.push(detailedTalk);
 
-                        return { ...base, type: 'talks', talk: detailedTalk };
+                        return { id: timeslotId, start, end, type: 'talks', talk: detailedTalk };
                     }).with({break: P.not(P.nullish)}, ({break: breakEntry}) => {
                         const breakSlot: BreakTimeSlot = {
-                            ...base,
+                            id: timeslotId, start, end,
                             type: 'break',
                             break: {
                                 title: breakEntry.nameEN,

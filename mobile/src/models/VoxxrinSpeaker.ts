@@ -1,6 +1,6 @@
 import {ValueObject} from "@/models/utils";
 import {Speaker} from "../../../shared/daily-schedule.firestore";
-import {Replace} from "../../../shared/type-utils";
+import {ISODatetime, Replace} from "../../../shared/type-utils";
 import {LineupSpeaker, LineupTalk} from "../../../shared/event-lineup.firestore";
 import {TalkId} from "@/models/VoxxrinTalk";
 import {RoomId, VoxxrinRoom} from "@/models/VoxxrinRoom";
@@ -24,7 +24,9 @@ export type VoxxrinLineupTalk = Replace<LineupTalk, {
   format: VoxxrinTalkFormat,
   track: VoxxrinTrack,
   allocation: {
-    room: VoxxrinRoom,
+    start: ISODatetime,
+    end: ISODatetime,
+    room: VoxxrinRoom|undefined,
   }|undefined,
   otherSpeakers: VoxxrinSimpleSpeaker[],
   language: TalkLanguageCode,
@@ -55,12 +57,12 @@ export const createVoxxrinSpeakerFromFirestore = (conferenceDescriptor: VoxxrinC
         .with(P.not(P.nullish), allocation => {
           const room = findRoom(conferenceDescriptor, new RoomId(allocation.room.id));
           return {
-            ...firestoreTalk.allocation,
+            ...allocation,
             room
           };
         }).otherwise(() => undefined);
 
-      return {
+      const lineupTalk: VoxxrinLineupTalk = {
         ...firestoreTalk,
         id: new TalkId(firestoreTalk.id),
         allocation,
@@ -69,6 +71,7 @@ export const createVoxxrinSpeakerFromFirestore = (conferenceDescriptor: VoxxrinC
         otherSpeakers: firestoreTalk.otherSpeakers.map(sp => toVoxxrinSpeaker(sp)),
         language: new TalkLanguageCode(firestoreTalk.language),
       };
+      return lineupTalk;
     })
   }
 }

@@ -37,12 +37,14 @@ export type Talk = {
     isOverflow: boolean
 }
 export type DetailedTalk = Talk & {
-    start: ISODatetime,
-    end: ISODatetime,
     summary: string,
     description: string,
     tags: string[],
-    assets: TalkAsset[]
+    assets: TalkAsset[],
+    allocation: {
+      start: ISODatetime,
+      end: ISODatetime,
+    }|undefined
 }
 
 export type TalkAsset = {

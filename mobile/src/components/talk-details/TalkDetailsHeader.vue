@@ -6,7 +6,7 @@
       </div>
       <div class="slot-infos">
         <div class="subHeader-schedule">
-          <ion-icon class="_accordion-icon _future-icon" aria-hidden="true" src="assets/icons/solid/clock.svg"></ion-icon>
+          <ion-icon v-if="timeslotLabel" class="_accordion-icon _future-icon" aria-hidden="true" src="assets/icons/solid/clock.svg"></ion-icon>
           <ion-label v-if="timeslotLabel">
             <span class="slot-schedule-start">{{timeslotLabel.start}}</span>
             <ion-icon class="slot-schedule-icon" aria-hidden="true" src="assets/icons/line/chevron-right-line.svg"></ion-icon>
@@ -70,11 +70,11 @@ const props = defineProps({
 })
 
 const timeslotLabel = computed(() => {
-    if(props.talk && props.confDescriptor) {
+    if(props.talk && props.confDescriptor && props.talk.allocation) {
         return {
-            date: weekDayMonthYearFormattedDate(Temporal.ZonedDateTime.from(`${props.talk.start}[${props.confDescriptor.timezone}]`)),
-            start: formatHourMinutes(Temporal.ZonedDateTime.from(`${props.talk.start}[${props.confDescriptor.timezone}]`)),
-            end: formatHourMinutes(Temporal.ZonedDateTime.from(`${props.talk.end}[${props.confDescriptor.timezone}]`)),
+            date: weekDayMonthYearFormattedDate(Temporal.ZonedDateTime.from(`${props.talk.allocation.start}[${props.confDescriptor.timezone}]`)),
+            start: formatHourMinutes(Temporal.ZonedDateTime.from(`${props.talk.allocation.start}[${props.confDescriptor.timezone}]`)),
+            end: formatHourMinutes(Temporal.ZonedDateTime.from(`${props.talk.allocation.end}[${props.confDescriptor.timezone}]`)),
         }
     } else {
         return undefined;

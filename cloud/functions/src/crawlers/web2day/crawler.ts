@@ -14,7 +14,7 @@ import {
     DAY_PARSER,
     EVENT_DESCRIPTOR_PARSER
 } from "../crawler-parsers";
-import {CrawlCriteria, CrawlerKind} from "../crawl";
+import {CrawlerKind} from "../crawl";
 import {ISODatetime} from "../../../../../shared/type-utils";
 import {Temporal} from "@js-temporal/polyfill";
 import {http} from "../utils";
@@ -217,11 +217,10 @@ export const WEB2DAY_CRAWLER: CrawlerKind<typeof WEB2DAY_PARSER> = {
                 summary: rawTalk!.summary || "",
                 description: rawTalk!.summary || "",
                 language: descriptor.supportedTalkLanguages.find(lang => lang.id === rawTalk!.lang)!.id,
-                start: rawTalk!.start,
-                end: rawTalk!.end,
                 tags: [],
                 isOverflow: false,
-                assets: []
+                assets: [],
+                allocation: { start: rawTalk!.start, end: rawTalk!.end, }
             };
             return detailedTalk;
         });

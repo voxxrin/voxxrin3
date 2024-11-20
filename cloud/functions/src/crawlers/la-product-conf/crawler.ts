@@ -166,7 +166,6 @@ export const LA_PRODUCT_CONF_CRAWLER: CrawlerKind<typeof LA_PRODUCT_CONF_DESCRIP
 
                 const track = descriptor.talkTracks[tabIdx];
                 const detailedTalk: DetailedTalk = {
-                  start, end,
                   speakers: ts.speakers,
                   format: {
                     id: format.id,
@@ -182,8 +181,9 @@ export const LA_PRODUCT_CONF_CRAWLER: CrawlerKind<typeof LA_PRODUCT_CONF_DESCRIP
                   description: '',
                   tags: [],
                   isOverflow: false,
-                        assets: []
-                    };
+                  assets: [],
+                  allocation: { start, end, }
+                };
 
                 talks.push(detailedTalk);
 

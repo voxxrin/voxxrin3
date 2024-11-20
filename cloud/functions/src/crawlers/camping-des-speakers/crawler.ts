@@ -10,7 +10,6 @@ import {ConferenceDescriptor} from "../../../../../shared/conference-descriptor.
 import {
     BREAK_PARSER,
     BREAK_TIME_SLOT_PARSER,
-    DAY_PARSER,
     EVENT_DESCRIPTOR_PARSER
 } from "../crawler-parsers";
 import {CrawlerKind} from "../crawl";
@@ -179,8 +178,7 @@ export const CAMPING_DES_SPEAKERS_CRAWLER: CrawlerKind<typeof CAMPING_DES_SPEAKE
                 summary: rawTalk!.summary || "",
                 description: rawTalk!.summary || "",
                 language: descriptor.supportedTalkLanguages.find(lang => lang.id === rawTalk!.lang)!.id,
-                start: rawTalk!.start,
-                end: rawTalk!.end,
+                allocation: { start: rawTalk!.start, end: rawTalk!.end, },
                 tags: [],
                 isOverflow: false,
                 assets: []

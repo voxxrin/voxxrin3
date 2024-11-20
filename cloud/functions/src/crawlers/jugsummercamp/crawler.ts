@@ -169,11 +169,11 @@ export const JUG_SUMMERCAMP_CRAWLER: CrawlerKind<typeof JUG_SUMMERCAMP_PARSER> =
                 summary: rawTalk!.summary || "",
                 description: rawTalk!.summary || "",
                 language: descriptor.supportedTalkLanguages.find(lang => lang.id === rawTalk!.lang)!.id,
-                start: rawTalk!.start,
-                end: rawTalk!.end,
                 tags: rawTalk!.tags,
                 isOverflow: false,
-                assets: []
+                assets: [],
+                allocation: { start: rawTalk!.start, end: rawTalk!.end, }
+
             };
             return detailedTalk;
         });

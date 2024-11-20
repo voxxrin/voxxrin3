@@ -169,7 +169,6 @@ export const CODEURS_EN_SEINE_CRAWLER: CrawlerKind<typeof CODEURS_EN_SEINE_PARSE
 
                       const talkDetails: DetailedTalk = {
                             id: talkId,
-                            start, end,
                             speakers,
                             summary: mdxFile.content,
                             description: mdxFile.content,
@@ -179,8 +178,9 @@ export const CODEURS_EN_SEINE_CRAWLER: CrawlerKind<typeof CODEURS_EN_SEINE_PARSE
                             language: FR_LANG.id,
                             room, format,
                             isOverflow: false,
-                            assets: []
-                        }
+                            assets: [],
+                            allocation: { start, end, }
+                      }
 
                         return { type: 'talks', start, end, talkDetails } as const;
                     }).with([{ kind: "pause" }], ([breakMetadata]) => {
