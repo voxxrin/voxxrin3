@@ -18,9 +18,9 @@ describe('devoxx crawlers', () => {
     const events = [{
         id: 'dvgr23', confName: `Devoxx Greece 23`,
         descriptorUrl: `https://gist.githubusercontent.com/fcamblor/9947fc134714855116c2afd8c1856303/raw/voxxrin3-dvgr23-crawler-descriptor.json`,
-        skipped: false,
+        skipped: true,
     }, {
-        id: 'devoxxuk23', confName: `Devoxx UK 23`,
+        id: 'devoxxuk24', confName: `Devoxx UK 24`,
         descriptorUrl: `https://gist.githubusercontent.com/fcamblor/9947fc134714855116c2afd8c1856303/raw/voxxrin3-devoxxuk23-crawler-descriptor.json`,
         skipped: false,
     }, {
@@ -31,6 +31,10 @@ describe('devoxx crawlers', () => {
     }, {
         id: 'dvbe23', confName: `Devoxx Belgium 23`,
         descriptorUrl: `https://gist.githubusercontent.com/stephanj/7d91c0273c16580bd1ef106d0a8097e6/raw/dvbe.json`,
+        skipped: true,
+    }, {
+        id: 'devoxxfr2024', confName: `Devoxx France 24`,
+        descriptorUrl: `https://gist.githubusercontent.com/aheritier/b48ddebfaf5918e3ce9519a67fe045c0/raw/dvfr.json`,
         skipped: false,
     }, {
         id: 'dvbe24', confName: `Devoxx Belgium 24`,
