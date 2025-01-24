@@ -405,6 +405,7 @@ const saveEvent = async function (event: FullEvent, crawlerDescriptor: z.infer<t
             const existingTalkFeedbackViewerToken = organizerSpaceContent.talkFeedbackViewerTokens
                 .find(tfvt => tfvt.eventId === event.id && tfvt.talkId === talk.id)
 
+            const speakersFullNames = talk.speakers.map(sp => sp.fullName);
             // If token already exists for the talk, let's not add it
             if(!existingTalkFeedbackViewerToken) {
                 const talkFeedbackViewerSecretToken = uuidv4();
@@ -418,9 +419,12 @@ const saveEvent = async function (event: FullEvent, crawlerDescriptor: z.infer<t
                 organizerSpaceContent.talkFeedbackViewerTokens.push({
                     eventId: event.id,
                     talkId: talk.id,
-                    speakersFullNames: talk.speakers.map(sp => sp.fullName),
+                    speakersFullNames: speakersFullNames,
                     secretToken: talkFeedbackViewerSecretToken
                 });
+            } else {
+              // Ensuring speaker full names are always up to date in case speaker list has evolved
+              existingTalkFeedbackViewerToken.speakersFullNames = speakersFullNames;
             }
         }catch(e) {
             error(`Error while saving talk ${talk.id}: ${e?.toString()}`)
