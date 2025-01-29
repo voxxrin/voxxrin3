@@ -9,7 +9,7 @@ export type EventCrawlerTestDefinition = {
   skipped?: boolean,
 }
 
-export function createCrawlingTestsFor(eventCrawlerTestDefinitions: EventCrawlerTestDefinition[], crawler: CrawlerKind<any>) {
+export function createCrawlingTestsFor(eventCrawlerTestDefinitions: EventCrawlerTestDefinition[], crawler: CrawlerKind<any>, avoidConsideringSanityWarningsAsErrors?: boolean) {
   eventCrawlerTestDefinitions.forEach(eventCrawlerTestDefinition => {
     (eventCrawlerTestDefinition.skipped ? it.skip : it)(`Loading ${eventCrawlerTestDefinition.confName} schedule`, async () => {
       const descriptorPayload = await http.get(eventCrawlerTestDefinition.descriptorUrl);
@@ -27,7 +27,7 @@ export function createCrawlingTestsFor(eventCrawlerTestDefinitions: EventCrawler
           ...warningMessages.map(message => `  ${message.msg}`)
         ].join("\n"))
       }
-      if(errorMessages.length) {
+      if(errorMessages.length || (!avoidConsideringSanityWarningsAsErrors && sanityCheckMessages.length)) {
         throw new Error([
           `Some sanity check ERRORS were encountered:`,
           ...sanityCheckMessages.map(message => `  ${message.severity}: ${message.msg}`)
