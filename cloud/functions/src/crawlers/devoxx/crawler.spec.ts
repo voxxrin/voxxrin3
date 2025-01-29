@@ -37,6 +37,10 @@ describe('devoxx crawlers', () => {
         id: 'dvbe24', confName: `Devoxx Belgium 24`,
         descriptorUrl: `https://gist.githubusercontent.com/stephanj/7d91c0273c16580bd1ef106d0a8097e6/raw/dvbe24.json`,
         skipped: false,
+    }, {
+        id: 'vdams25', confName: `Voxxed Amsterdam 25`,
+        descriptorUrl: `https://gist.githubusercontent.com/stephanj/e4251172b6fff3d9df0937135295b859/raw/vdams25.json`,
+        skipped: false,
     }] as const;
     events.forEach(event => {
         (event.skipped ? it.skip : it)(`Loading ${event.confName} schedule`, async () => {
