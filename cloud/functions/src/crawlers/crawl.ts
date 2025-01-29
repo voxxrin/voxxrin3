@@ -133,6 +133,16 @@ const crawlAll = async function(criteria: CrawlCriteria) {
             const event = await crawler.crawlerImpl(eventId, crawlerKindDescriptor, { dayIds: criteria.dayIds });
             const messages = await sanityCheckEvent(event);
 
+            const errorMessages = messages.filter(message => message.severity === 'ERROR');
+            if(errorMessages.length) {
+              const errorMessage = [
+                `Some sanity checks ERRORS were encountered on fetched event:`,
+                ...messages.map(message => `  ${message.severity}: ${message.msg}`)
+              ].join('\n')
+
+              throw new Error(errorMessage);
+            }
+
             await transformEventContent(event, [
               {
                 name: "talks-regular",
@@ -175,12 +185,11 @@ const crawlAll = async function(criteria: CrawlCriteria) {
             ])
             await saveEvent(event, crawlerDescriptor)
 
-            const end = Temporal.Now.instant()
             return {
                 eventId,
                 days: event.daySchedules.map(ds => ds.day),
                 descriptorUrlUsed: crawlerDescriptor.descriptorUrl,
-                durationInSeconds: start.until(end).total('seconds'),
+                durationInSeconds: start.until(Temporal.Now.instant()).total('seconds'),
                 messages
             }
         } catch(e: any) {
@@ -199,7 +208,7 @@ const crawlAll = async function(criteria: CrawlCriteria) {
     }))
 };
 
-export function sanityCheckEvent(event: FullEvent): string[] {
+export function sanityCheckEvent(event: FullEvent) {
 
   const descriptorTrackIds = event.conferenceDescriptor.talkTracks.map(t => t.id);
   const descriptorFormatIds = event.conferenceDescriptor.talkFormats.map(f => f.id);
@@ -221,9 +230,9 @@ export function sanityCheckEvent(event: FullEvent): string[] {
     return unknownValues
   }, { unknownTracks: new Map<string, Track>(), unknownFormats: new Map<string, TalkFormat>, unknownRooms: new Map<string, Room>() });
 
-  const crawlingMessages: string[] = [];
+  const crawlingMessages: Array<{ msg: string, severity: 'WARNING'|'ERROR' }> = [];
   if(unknownValues.unknownTracks.size) {
-    crawlingMessages.push(`WARNING: Some tracks have not been declared in crawler configuration: ${Array.from(unknownValues.unknownTracks.keys()).join(", ")}. Those tracks' title/color will be auto-guessed.`)
+    crawlingMessages.push({ msg: `Some tracks have not been declared in crawler configuration: ${Array.from(unknownValues.unknownTracks.keys()).join(", ")}. Those tracks' title/color will be auto-guessed.`, severity: 'WARNING' });
     event.conferenceDescriptor.talkTracks.push(...Array.from(unknownValues.unknownTracks.values()).map((track, index) => {
       return {
         id: track.id, title: track.title,
@@ -232,7 +241,7 @@ export function sanityCheckEvent(event: FullEvent): string[] {
     }))
   }
   if(unknownValues.unknownFormats.size) {
-    crawlingMessages.push(`WARNING: Some talk formats have not been declared in crawler configuration: ${Array.from(unknownValues.unknownFormats.keys()).join(", ")}. Those formats' title/color/duration will be auto-guessed.`)
+    crawlingMessages.push({ msg: `Some talk formats have not been declared in crawler configuration: ${Array.from(unknownValues.unknownFormats.keys()).join(", ")}. Those formats' title/color/duration will be auto-guessed.`, severity: 'WARNING' });
     event.conferenceDescriptor.talkFormats.push(...Array.from(unknownValues.unknownFormats.values()).map((format, index) => {
       return {
         id: format.id, title: format.title, duration: format.duration,
@@ -241,7 +250,7 @@ export function sanityCheckEvent(event: FullEvent): string[] {
     }))
   }
   if(unknownValues.unknownRooms.size) {
-    crawlingMessages.push(`WARNING: Some rooms have not been declared in crawler configuration: ${Array.from(unknownValues.unknownRooms.keys()).join(", ")}. Those rooms' title will be auto-guessed.`)
+    crawlingMessages.push({ msg: `Some rooms have not been declared in crawler configuration: ${Array.from(unknownValues.unknownRooms.keys()).join(", ")}. Those rooms' title will be auto-guessed.`, severity: 'WARNING' });
     event.conferenceDescriptor.rooms.push(...Array.from(unknownValues.unknownRooms.values()).map((room, index) => {
       return {
         id: room.id, title: room.title,
@@ -288,7 +297,7 @@ export function sanityCheckEvent(event: FullEvent): string[] {
   }
 
   if(!isValidTimezone(event.info.timezone)) {
-    crawlingMessages.push(`Invalid timezone: ${event.info.timezone}`);
+    crawlingMessages.push({ msg: `Invalid timezone: ${event.info.timezone}`, severity: 'ERROR' });
   }
 
   return crawlingMessages;

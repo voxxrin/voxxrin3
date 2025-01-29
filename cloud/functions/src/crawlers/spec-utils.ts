@@ -17,9 +17,21 @@ export function createCrawlingTestsFor(eventCrawlerTestDefinitions: EventCrawler
       const result = await crawler.crawlerImpl(eventCrawlerTestDefinition.id, descriptor, {});
       FULL_EVENT_PARSER.parse(result);
 
-      const errorMessages = sanityCheckEvent(result);
+      const sanityCheckMessages = sanityCheckEvent(result);
+      const warningMessages = sanityCheckMessages.filter(message => message.severity === 'WARNING');
+      const errorMessages = sanityCheckMessages.filter(message => message.severity === 'ERROR');
+
+      if(warningMessages.length) {
+        console.warn([
+          `Some sanity check WARNINGS were encountered:`,
+          ...warningMessages.map(message => `  ${message.msg}`)
+        ].join("\n"))
+      }
       if(errorMessages.length) {
-        throw new Error(`Some sanity checks were encountered: \n${errorMessages.map(msg => `  ${msg}`).join("\n")}`);
+        throw new Error([
+          `Some sanity check ERRORS were encountered:`,
+          ...sanityCheckMessages.map(message => `  ${message.severity}: ${message.msg}`)
+        ].join("\n"))
       }
     }, { timeout: 300000 })
   })
