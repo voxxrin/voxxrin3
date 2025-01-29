@@ -1,5 +1,5 @@
 import {db} from "../../../firebase";
-import {getAllEventsWithTalks} from "../services/event-utils";
+import {getAllEventsWithTalksStats, getMaybeSpaceTokenOf} from "../services/event-utils";
 import {windowedProcessUsers} from "../services/user-utils";
 import {resolvedSpaceFirestorePath} from "../../../../../../shared/utilities/event-utils";
 import {firestore} from "firebase-admin";
@@ -40,7 +40,7 @@ export async function configurableFillEmptyUserSubCollectionDocs(opts?: {fromUse
       migrationsStats[opName]++;
   }
 
-  const eventDaysWithStats = (await getAllEventsWithTalks({ includePrivateSpaces: true }))
+  const eventDaysWithStats = (await getAllEventsWithTalksStats({ includePrivateSpaces: true }))
     .flatMap(({ event, allInOneTalkStats }) => event.days.map(day => ({ event, allInOneTalkStats, day })))
 
   const start = Date.now();
@@ -72,7 +72,7 @@ export async function configurableFillEmptyUserSubCollectionDocs(opts?: {fromUse
 
           const feedbacksProcessedPromise = Promise.all(eventDaysWithStats.map(async eventDayWithStats => {
               const event = eventDayWithStats.event;
-              const maybeSpaceToken = event.visibility === 'private' ? event.spaceToken : undefined
+              const maybeSpaceToken = getMaybeSpaceTokenOf(event);
               const spacePath = `${userPath}${resolvedSpaceFirestorePath(maybeSpaceToken, false, true)}`
 
               const eventPath = `${spacePath}/events/${event.id}`
@@ -99,7 +99,7 @@ export async function configurableFillEmptyUserSubCollectionDocs(opts?: {fromUse
                   }
 
                   const event = eventDayWithStatsMatchingEvent.event;
-                  const maybeSpaceToken = event.visibility === 'private' ? event.spaceToken : undefined
+                  const maybeSpaceToken = getMaybeSpaceTokenOf(event);
                   const spacePath = `${userPath}${resolvedSpaceFirestorePath(maybeSpaceToken, false, true)}`
                   const eventPath = `${spacePath}/events/${event.id}`
 
