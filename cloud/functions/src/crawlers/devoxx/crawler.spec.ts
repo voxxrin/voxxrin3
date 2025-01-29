@@ -2,6 +2,7 @@ import {describe, it} from 'vitest'
 import {DEVOXX_CRAWLER, DEVOXX_DESCRIPTOR_PARSER} from "./crawler";
 import {FULL_EVENT_PARSER} from "../crawler-parsers";
 import {http} from "../utils";
+import {sanityCheckEvent} from "../crawl";
 
 describe('devoxx crawlers', () => {
     it(`Full event type matches zod validations`, () => {
@@ -41,6 +42,10 @@ describe('devoxx crawlers', () => {
         id: 'vdams25', confName: `Voxxed Amsterdam 25`,
         descriptorUrl: `https://gist.githubusercontent.com/stephanj/e4251172b6fff3d9df0937135295b859/raw/vdams25.json`,
         skipped: false,
+    }, {
+        id: 'vdz25', confName: `Voxxed Zurich 25`,
+        descriptorUrl: `https://gist.githubusercontent.com/stephanj/e4251172b6fff3d9df0937135295b859/raw/vdz25.json`,
+        skipped: false,
     }] as const;
     events.forEach(event => {
         (event.skipped ? it.skip : it)(`Loading ${event.confName} schedule`, async () => {
@@ -48,6 +53,11 @@ describe('devoxx crawlers', () => {
             const descriptor = DEVOXX_CRAWLER.descriptorParser.parse(descriptorPayload)
             const result = await DEVOXX_CRAWLER.crawlerImpl(event.id, descriptor, {});
             FULL_EVENT_PARSER.parse(result);
+
+            const errorMessages = sanityCheckEvent(result);
+            if(errorMessages.length) {
+              throw new Error(`Some sanity checks were encountered: \n${errorMessages.map(msg => `  ${msg}`).join("\n")}`);
+            }
         }, { timeout: 300000 })
     })
 })

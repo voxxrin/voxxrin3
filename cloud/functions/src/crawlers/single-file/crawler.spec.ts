@@ -2,6 +2,7 @@ import {describe, it} from 'vitest'
 import {SINGLE_FILE_CRAWLER} from "./crawler";
 import {FULL_EVENT_PARSER} from "../crawler-parsers";
 import {http} from "../utils";
+import {sanityCheckEvent} from "../crawl";
 
 describe('single-file crawlers', () => {
     const events = [{
@@ -16,6 +17,11 @@ describe('single-file crawlers', () => {
             const descriptor = SINGLE_FILE_CRAWLER.descriptorParser.parse(descriptorPayload)
             const result = await SINGLE_FILE_CRAWLER.crawlerImpl(event.id, descriptor, {});
             FULL_EVENT_PARSER.parse(result);
+
+            const errorMessages = sanityCheckEvent(result);
+            if(errorMessages.length) {
+              throw new Error(`Some sanity checks were encountered: \n${errorMessages.map(msg => `  ${msg}`).join("\n")}`);
+            }
         }, { timeout: 300000 })
     })
 })

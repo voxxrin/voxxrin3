@@ -2,6 +2,7 @@ import {describe, it} from 'vitest'
 import {FULL_EVENT_PARSER} from "../crawler-parsers";
 import {DEVOXX_SCALA_CRAWLER} from "./crawler";
 import {http} from "../utils";
+import {sanityCheckEvent} from "../crawl";
 
 // Skipped because voxxedlu devoxx-scala instance is no longer available
 describe.skip('devoxx scala crawlers', () => {
@@ -17,6 +18,11 @@ describe.skip('devoxx scala crawlers', () => {
             const descriptor = DEVOXX_SCALA_CRAWLER.descriptorParser.parse(descriptorPayload)
             const result = await DEVOXX_SCALA_CRAWLER.crawlerImpl(event.id, descriptor, {});
             FULL_EVENT_PARSER.parse(result);
+
+            const errorMessages = sanityCheckEvent(result);
+            if(errorMessages.length) {
+              throw new Error(`Some sanity checks were encountered: \n${errorMessages.map(msg => `  ${msg}`).join("\n")}`);
+            }
         }, { timeout: 30000 })
     })
 })

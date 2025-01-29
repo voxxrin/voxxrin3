@@ -2,6 +2,7 @@ import {describe, it} from 'vitest'
 import {OPENPLANNER_CRAWLER, OPENPLANNER_DESCRIPTOR_PARSER} from "./crawler";
 import {FULL_EVENT_PARSER} from "../crawler-parsers";
 import {http} from "../utils";
+import {sanityCheckEvent} from "../crawl";
 
 describe('openplanenr crawlers', () => {
     const events = [
@@ -23,6 +24,11 @@ describe('openplanenr crawlers', () => {
             const descriptor = OPENPLANNER_CRAWLER.descriptorParser.parse(descriptorPayload)
             const result = await OPENPLANNER_CRAWLER.crawlerImpl(event.id, descriptor, {});
             FULL_EVENT_PARSER.parse(result);
+
+            const errorMessages = sanityCheckEvent(result);
+            if(errorMessages.length) {
+              throw new Error(`Some sanity checks were encountered: \n${errorMessages.map(msg => `  ${msg}`).join("\n")}`);
+            }
         }, { timeout: 300000 })
     })
 })

@@ -2,6 +2,7 @@ import {describe, it} from 'vitest'
 import {FULL_EVENT_PARSER} from "../crawler-parsers";
 import {LA_PRODUCT_CONF_CRAWLER} from "./crawler";
 import {http} from "../utils";
+import {sanityCheckEvent} from "../crawl";
 
 describe('la-product-conf crawler', () => {
     const events = [
@@ -21,6 +22,11 @@ describe('la-product-conf crawler', () => {
             const descriptor = LA_PRODUCT_CONF_CRAWLER.descriptorParser.parse(descriptorPayload)
             const result = await LA_PRODUCT_CONF_CRAWLER.crawlerImpl(event.id, descriptor, {});
             FULL_EVENT_PARSER.parse(result);
+
+            const errorMessages = sanityCheckEvent(result);
+            if(errorMessages.length) {
+              throw new Error(`Some sanity checks were encountered: \n${errorMessages.map(msg => `  ${msg}`).join("\n")}`);
+            }
         })
     })
 })

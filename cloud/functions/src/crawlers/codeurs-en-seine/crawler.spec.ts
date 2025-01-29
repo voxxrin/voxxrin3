@@ -2,6 +2,7 @@ import {describe, it} from 'vitest'
 import {FULL_EVENT_PARSER} from "../crawler-parsers";
 import {CODEURS_EN_SEINE_CRAWLER} from "./crawler";
 import {http} from "../utils";
+import {sanityCheckEvent} from "../crawl";
 
 describe('codeurs-en-seine crawler', () => {
     const events = [{
@@ -17,6 +18,11 @@ describe('codeurs-en-seine crawler', () => {
             const descriptor = CODEURS_EN_SEINE_CRAWLER.descriptorParser.parse(descriptorPayload)
             const result = await CODEURS_EN_SEINE_CRAWLER.crawlerImpl(event.id, descriptor, { dayIds: ['Vendredi'] });
             FULL_EVENT_PARSER.parse(result);
+
+            const errorMessages = sanityCheckEvent(result);
+            if(errorMessages.length) {
+              throw new Error(`Some sanity checks were encountered: \n${errorMessages.map(msg => `  ${msg}`).join("\n")}`);
+            }
         }, { timeout: 30000 })
     })
 })

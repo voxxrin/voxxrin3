@@ -199,7 +199,7 @@ const crawlAll = async function(criteria: CrawlCriteria) {
     }))
 };
 
-function sanityCheckEvent(event: FullEvent): string[] {
+export function sanityCheckEvent(event: FullEvent): string[] {
 
   const descriptorTrackIds = event.conferenceDescriptor.talkTracks.map(t => t.id);
   const descriptorFormatIds = event.conferenceDescriptor.talkFormats.map(f => f.id);
@@ -285,6 +285,10 @@ function sanityCheckEvent(event: FullEvent): string[] {
 
       dailySchedule.day = validDayId;
     }
+  }
+
+  if(!isValidTimezone(event.info.timezone)) {
+    crawlingMessages.push(`Invalid timezone: ${event.info.timezone}`);
   }
 
   return crawlingMessages;
@@ -492,6 +496,15 @@ async function sanitize(content: string): Promise<string> {
 
 async function markdownToHtml(content: string): Promise<string> {
   return marked.parse(content);
+}
+
+function isValidTimezone(timezone: string) {
+  try {
+    new Intl.DateTimeFormat('en-US', { timeZone: timezone });
+    return true;
+  } catch (e) {
+    return false;
+  }
 }
 
 export default crawlAll;

@@ -2,6 +2,7 @@ import {describe, it} from 'vitest'
 import {FULL_EVENT_PARSER} from "../crawler-parsers";
 import {WEB2DAY_CRAWLER} from "./crawler";
 import {http} from "../utils";
+import {sanityCheckEvent} from "../crawl";
 
 describe.skip('web2day crawler', () => {
     const events = [{
@@ -14,6 +15,11 @@ describe.skip('web2day crawler', () => {
             const descriptor = WEB2DAY_CRAWLER.descriptorParser.parse(descriptorPayload)
             const result = await WEB2DAY_CRAWLER.crawlerImpl(event.id, descriptor, { dayIds: ['Mercredi'] });
             FULL_EVENT_PARSER.parse(result);
+
+            const errorMessages = sanityCheckEvent(result);
+            if(errorMessages.length) {
+              throw new Error(`Some sanity checks were encountered: \n${errorMessages.map(msg => `  ${msg}`).join("\n")}`);
+            }
         }, { timeout: 30000 })
     })
 })
