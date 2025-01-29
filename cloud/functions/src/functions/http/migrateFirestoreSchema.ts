@@ -147,6 +147,7 @@ export async function migrateFirestoreSchema(request: functions.https.Request, r
                     duration: Date.now() - start.getTime(),
                 }
             }catch(error: any) {
+                console.error(`Error during migration [${migration.name}]:`, error)
                 persistedMigration = {
                     name: migration.name,
                     status: "failure",
@@ -178,6 +179,10 @@ export async function migrateFirestoreSchema(request: functions.https.Request, r
         migrations: migrationsToPersist
     }
     await db.collection('schema-migrations').doc("self").set(updatedSchemaMigration)
+
+    if(migrationFailure) {
+      console.error(`Migration failure at ${migrationFailure.name}: ${JSON.stringify(migrationFailure)}`)
+    }
 
     return sendResponseMessage(response, success?200:500, [
         `Executed migrations: [${executedMigrations.map(m => `${m.name} (${m.duration}ms)`).join(", ")}]`,
