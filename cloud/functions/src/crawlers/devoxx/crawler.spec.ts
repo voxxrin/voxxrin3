@@ -46,6 +46,10 @@ describe('devoxx crawlers', () => {
         id: 'vdz25', confName: `Voxxed Zurich 25`,
         descriptorUrl: `https://gist.githubusercontent.com/stephanj/e4251172b6fff3d9df0937135295b859/raw/vdz25.json`,
         skipped: false,
+    }, {
+        id: 'vdbuh2025', confName: `Voxxed Bucharest 25`,
+        descriptorUrl: `https://gist.githubusercontent.com/stephanj/e4251172b6fff3d9df0937135295b859/raw/vdbuh2025.json`,
+        skipped: false,
     }] as const;
     events.forEach(event => {
         (event.skipped ? it.skip : it)(`Loading ${event.confName} schedule`, async () => {

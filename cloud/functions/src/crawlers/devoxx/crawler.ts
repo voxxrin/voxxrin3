@@ -118,12 +118,44 @@ Please, unless event id is made configurable at cfp.dev level, you should rather
             keywords: descriptor.keywords
         }
 
+        const dailySchedulesResults = await Promise.all(daysMatchingCriteria.map(async day => {
+          try {
+            return {
+              day: day.id,
+              outcome: 'success' as const,
+              schedules: await http.get<DevoxxScheduleItem[]>(`${cfpBaseUrl}api/public/schedules/${day.id}`)
+            }
+          } catch(error) {
+            return {
+              day: day.id,
+              outcome: 'failure' as const,
+              schedules: undefined
+            }
+          }
+        }));
+
+        const dayFailures = dailySchedulesResults.filter(result => result.outcome === 'failure');
+        if(dayFailures.length) {
+          const errorMessages = [
+            `Error while fetching daily schedules:`,
+            ...dayFailures.map(failure => `  ${failure.day}: GET ${cfpBaseUrl}api/public/schedules/${failure.day}`),
+            ``,
+            `Has schedule been published ?`,
+          ];
+          throw new Error(errorMessages.join("\n"));
+        }
+
+        const dailySchedules = dailySchedulesResults
+          .map(result => result.outcome === 'success' ? { schedules: result.schedules, day: result.day } : undefined)
+          .filter(schedule => schedule !== undefined)
+          .map(dailySchedule => dailySchedule!);
+
         const eventTalks: DetailedTalk[] = [],
             daySchedules: DailySchedule[] = [],
             eventRooms: ConferenceDescriptor['rooms'] = [],
             eventTalkFormats: ConferenceDescriptor['talkFormats'] = [];
-        await Promise.all(daysMatchingCriteria.map(async day => {
-            const {daySchedule, talkStats, talks, rooms, talkFormats} = await crawlDevoxxDay(cfpBaseUrl, day.id, descriptor)
+        await Promise.all(dailySchedules.map(async dailySchedule => {
+            const {daySchedule, talkStats, talks, rooms, talkFormats} = await crawlDevoxxDay(cfpBaseUrl, dailySchedule, descriptor)
             daySchedules.push(daySchedule)
             for (const talk of talks) {
                 eventTalks.push(talk)
@@ -248,9 +280,7 @@ function toScheduleTalk(item: DevoxxScheduleItem, start: ISODatetime, end: ISODa
   return { type: 'proposal', talk, detailedTalk, totalFavourites: item.totalFavourites };
 }
 
-const crawlDevoxxDay = async (cfpBaseUrl: string, day: string, descriptor: z.infer<typeof DEVOXX_DESCRIPTOR_PARSER>) => {
-    const schedules = await http.get<DevoxxScheduleItem[]>(`${cfpBaseUrl}api/public/schedules/${day}`)
-
+const crawlDevoxxDay = async (cfpBaseUrl: string, {day, schedules}: {day: string, schedules: DevoxxScheduleItem[]}, descriptor: z.infer<typeof DEVOXX_DESCRIPTOR_PARSER>) => {
     const daySchedule: DailySchedule = {
         day: day,
         timeSlots: []
