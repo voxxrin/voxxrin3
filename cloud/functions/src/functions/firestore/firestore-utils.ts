@@ -12,19 +12,20 @@ import {TalkStats} from "../../../../../shared/event-stats";
 import * as express from "express";
 import {resolvedEventFirestorePath} from "../../../../../shared/utilities/event-utils";
 import {match, P} from "ts-pattern";
+import DocumentData = firestore.DocumentData;
 
 export type EventFamilyToken = {
     families: string[],
     token: string;
 }
 
-export async function getSecretTokenRef(path: string) {
+export async function getSecretTokenRef<T = DocumentData>(path: string) {
     const list = await db.collection(path).listDocuments()
     if(list.length !== 1) {
         throw new Error(`Unexpected size=${list.length} for path [${path}] (expected=1)`)
     }
 
-    const secretTokenRef: DocumentReference = db.doc(`${path}/${list[0].id}`);
+    const secretTokenRef = db.doc(`${path}/${list[0].id}`) as DocumentReference<T>;
     return secretTokenRef;
 }
 export async function getSecretTokenDoc<T>(path: string) {

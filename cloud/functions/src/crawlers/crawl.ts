@@ -432,12 +432,15 @@ const saveEvent = async function (event: FullEvent, crawlerDescriptor: z.infer<t
                 organizerSpaceContent.talkFeedbackViewerTokens.push({
                     eventId: event.id,
                     talkId: talk.id,
+                    talkTitle: talk.title,
                     speakersFullNames: speakersFullNames,
                     secretToken: talkFeedbackViewerSecretToken
                 });
             } else {
-              // Ensuring speaker full names are always up to date in case speaker list has evolved
+              // Ensuring talk title & speaker full names are always up to date in case they evolved
+              // since last crawl
               existingTalkFeedbackViewerToken.speakersFullNames = speakersFullNames;
+              existingTalkFeedbackViewerToken.talkTitle = talk.title;
             }
         }catch(e) {
             error(`Error while saving talk ${talk.id}: ${e?.toString()}`)

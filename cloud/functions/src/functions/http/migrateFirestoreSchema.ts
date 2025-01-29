@@ -34,6 +34,7 @@ const MIGRATIONS: Migration[] = [
     { name: "dontConsiderOptionalMigrationInUserVersion", exec: async () => (await import("../firestore/migrations/023-dontConsiderOptionalMigrationInUserVersion")).dontConsiderOptionalMigrationInUserVersion() },
     { name: "fillEmptyUserSubCollectionDocs", exec: async () => (await import("../firestore/migrations/024-fillEmptyUserSubCollectionDocs")).fillEmptyUserSubCollectionDocs() },
     { name: "fillUserLastConnection", exec: async () => (await import("../firestore/migrations/025-fillUserLastConnection")).fillUserLastConnection() },
+    { name: "fillTalkEditorsSpeakersAndTitle", exec: async () => (await import("../firestore/migrations/026-fillTalkEditorsSpeakersAndTitle")).fillTalkEditorsSpeakersAndTitle() },
 ];
 
 export type MigrationResult = "OK"|"Error";
