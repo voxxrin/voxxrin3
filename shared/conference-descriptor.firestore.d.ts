@@ -13,6 +13,12 @@ export type EventRecordingConfig = {
   excludeTitleWordsFromMatching?: string[]|undefined,
 }
 
+export type ThemedLanguage = {
+  id: string,
+  label: string,
+  themeColor: HexColor,
+}
+
 export type ConferenceDescriptor = Omit<ListableEvent, "websiteUrl"> & {
     headingTitle: string,
     headingBackground: string|null;
@@ -24,6 +30,7 @@ export type ConferenceDescriptor = Omit<ListableEvent, "websiteUrl"> & {
         // for multi-lang conferences, where we want to hide "default" (implicit) conference lang (ex: in devoxxfr, we'd hide FR)
         hideLanguages: string[],
         showRoomCapacityIndicator?: boolean,
+        skipShowingSchedule?: boolean,
         ratings: {
             bingo: {
                 enabled: boolean,
@@ -63,7 +70,7 @@ export type ConferenceDescriptor = Omit<ListableEvent, "websiteUrl"> & {
     },
     talkFormats: Array<ThemedTalkFormat>,
     talkTracks: Array<ThemedTrack>,
-    supportedTalkLanguages: Array<{ id: string, label: string, themeColor: HexColor }>,
+    supportedTalkLanguages: Array<ThemedLanguage>,
     rooms: Array<{ id: string, title: string }>,
     infos?: {
         floorPlans?: Array<{

@@ -213,7 +213,7 @@ export const TALK_PARSER = z.object({
     id: z.string(),
     title: z.string(),
     track: TALK_TRACK_PARSER,
-    room: ROOM_PARSER,
+    room: ROOM_PARSER.nullable().default(null),
     isOverflow: z.boolean().optional().default(false)
 })
 
@@ -241,12 +241,14 @@ export const TALK_ASSET_PARSER = z.discriminatedUnion('type', [
 ])
 
 export const DETAILED_TALK_PARSER =  TALK_PARSER.extend({
-    start: ISO_DATETIME_PARSER,
-    end: ISO_DATETIME_PARSER,
     summary: z.string(),
     description: z.string(),
     tags: z.array(z.string()),
-    assets: z.array(TALK_ASSET_PARSER)
+    assets: z.array(TALK_ASSET_PARSER),
+    allocation: z.object({
+      start: ISO_DATETIME_PARSER,
+      end: ISO_DATETIME_PARSER,
+    }).nullable()
 })
 
 export const TIME_SLOT_BASE_PARSER = z.object({

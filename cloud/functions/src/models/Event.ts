@@ -50,7 +50,7 @@ export function detailedTalksToSpeakersLineup(talks: DetailedTalk[]): LineupSpea
             room: talk.room,
             start: talk.allocation.start,
             end: talk.allocation.end,
-          } : undefined,
+          } : null,
           otherSpeakers: talk.speakers.filter(sp => sp.id !== speaker.id),
         })
       })

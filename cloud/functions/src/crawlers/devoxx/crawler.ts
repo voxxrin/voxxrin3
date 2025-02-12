@@ -1,32 +1,17 @@
-import {debug, info} from "../../firebase";
+import {info} from "../../firebase";
 
-import {
-    CfpEvent,
-    DevoxxScheduleItem,
-    DevoxxScheduleSpeakerInfo
-} from "./types"
-import {
-  Break,
-  DailySchedule,
-  DetailedTalk, Room,
-  Speaker,
-  Talk
-} from "../../../../../shared/daily-schedule.firestore"
-import {detailedTalksToSpeakersLineup, FullEvent} from "../../models/Event";
-import { ISODatetime, ISOLocalDate } from "../../../../../shared/type-utils";
-import { Day, ListableEvent } from "../../../../../shared/event-list.firestore";
-import { Temporal } from "@js-temporal/polyfill";
+import {CfpDetailedSpeaker, CfpEvent, DevoxxRoom, DevoxxScheduleItem, DevoxxScheduleProposal,} from "./types"
+import {Break, SocialLink} from "../../../../../shared/daily-schedule.firestore"
+import {FullEvent} from "../../models/Event";
+import {ISODatetime, ISOLocalDate} from "../../../../../shared/type-utils";
+import {Day} from "../../../../../shared/event-list.firestore";
+import {Temporal} from "@js-temporal/polyfill";
 import {z} from "zod";
-import {ConferenceDescriptor} from "../../../../../shared/conference-descriptor.firestore";
-import {
-  EVENT_DESCRIPTOR_PARSER,
-  INFOS_PARSER,
-  THEMABLE_TALK_FORMAT_PARSER
-} from "../crawler-parsers";
-import {CrawlerKind, TALK_FORMAT_FALLBACK_COLORS} from "../crawl";
+import {EVENT_DESCRIPTOR_PARSER, INFOS_PARSER, THEMABLE_TALK_FORMAT_PARSER} from "../crawler-parsers";
+import {CrawlerKind} from "../crawl";
 import {match, P} from "ts-pattern";
 import {http} from "../utils";
-import {TalkStats} from "../../../../../shared/event-stats";
+import {FullEventBuilder} from "../full-event.builder";
 
 const daysOfWeek = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
 
@@ -51,7 +36,7 @@ export const DEVOXX_DESCRIPTOR_PARSER = EVENT_DESCRIPTOR_PARSER.omit({
     infos: INFOS_PARSER.extend({
         address: z.string().nullish(),
     }).omit({ floorPlans: true }).optional(),
-    talkFormats: z.array(THEMABLE_TALK_FORMAT_PARSER).optional(),
+    talkFormats: z.array(THEMABLE_TALK_FORMAT_PARSER).default([]),
 })
 
 type DevoxxFloorPlan = {
@@ -75,11 +60,81 @@ Please, unless event id is made configurable at cfp.dev level, you should rather
 `)
         }
 
+        const fullEventBuilder = new FullEventBuilder(eventId);
+
+        console.info(`Fetching CFP main infos...`)
         const cfpBaseUrl = rawCfpBaseUrl+"/";
-        const [cfpEvent, cfpFloorPlans] = await Promise.all([
+        const [cfpEvent, cfpTalks, cfpFloorPlans, cfpRooms ] = await Promise.all([
             http.get<CfpEvent>(`${cfpBaseUrl}api/public/event`),
+            http.get<DevoxxScheduleProposal[]>(`${cfpBaseUrl}api/public/talks?size=1000`),
             http.maybeGet<DevoxxFloorPlan[]>(`${cfpBaseUrl}api/public/floorplans`),
+            http.get<DevoxxRoom[]>(`${cfpBaseUrl}api/public/rooms`),
         ])
+
+        console.info(`Fetching speakers' details...`)
+        await Promise.all(cfpTalks.flatMap(talk => talk.speakers).map(talkSpeaker =>
+          http.get<CfpDetailedSpeaker>(`${cfpBaseUrl}api/public/speakers/${talkSpeaker.id}`).then(cfpDetailedSpeaker => {
+            fullEventBuilder.addSpeaker({
+              id: cfpDetailedSpeaker.id.toString(),
+              fullName: talkSpeaker.fullName,
+              companyName: cfpDetailedSpeaker.company,
+              photoUrl: cfpDetailedSpeaker.imageUrl,
+              bio: talkSpeaker.bio, // strangely, talkSpeaker.bio is better than cfpDetailedSpeaker.bio (we have less <p></p> in it)
+              social: ([] as SocialLink[])
+                .concat(cfpDetailedSpeaker.twitterHandle ? [ {type: "twitter", url: `https://twitter.com/${cfpDetailedSpeaker.twitterHandle}`} ]:[])
+                .concat(cfpDetailedSpeaker.linkedInUsername ? [ {type: "linkedin", url: `https://linkedin.com/in/${cfpDetailedSpeaker.linkedInUsername}`} ]:[])
+            });
+          })
+        ))
+
+        console.info(`Filling tracks/formats/rooms in fullEventBuilder...`)
+        descriptor.talkTracks.forEach(track => {
+          fullEventBuilder.addThemedTrack(track);
+        });
+        descriptor.talkFormats.forEach(format => {
+          fullEventBuilder.addThemedFormat(format);
+        });
+        descriptor.supportedTalkLanguages.forEach(lang => {
+          fullEventBuilder.addThemedLanguage(lang);
+        });
+        (cfpRooms || []).forEach(room => {
+          fullEventBuilder.addRoom({
+            id: room.id.toString(),
+            title: room.name,
+          })
+        });
+
+        console.info(`Filling fullEvent's detailed talks`)
+        cfpTalks.map(proposal => {
+          // In case format was missing in descriptor
+          fullEventBuilder.addFormat({
+            id: proposal.sessionType.id.toString(),
+            title: proposal.sessionType.name,
+            duration: `PT${proposal.sessionType.duration}m`,
+          }, { ignoreDuplicates: true });
+          // In case track was missing in descriptor
+          fullEventBuilder.addTrack({
+            id: ""+proposal.track.id,
+            title: proposal.track.name,
+          }, { ignoreDuplicates: true });
+
+          const upperFirstAudience = proposal.audienceLevel.charAt(0).toUpperCase() + proposal.audienceLevel.slice(1).toLowerCase();
+          fullEventBuilder.addTalk({
+            id: proposal.id.toString(),
+            title: proposal.title,
+            speakerIds: proposal.speakers.map(speaker => speaker.id.toString()),
+            formatId: proposal.sessionType.id.toString(),
+            trackId: proposal.track.id.toString(),
+            language: proposal.language?.alpha2 || "en",
+            // we can't know at this stage, if talk is an overflow one (this a timeslot-level information)
+            // see fullEventBuilder.updateTalk() call later
+            isOverflow: false,
+            description: proposal.description || "",
+            summary: proposal.summary || "",
+            tags: [`Audience:${upperFirstAudience}`].concat((proposal.tags || []).map(t => t.name)),
+            assets: [],
+          });
+        })
 
         const start = cfpEvent.fromDate.substring(0, 10) as ISOLocalDate
         const end = cfpEvent.toDate.substring(0, 10) as ISOLocalDate
@@ -97,29 +152,10 @@ Please, unless event id is made configurable at cfp.dev level, you should rather
             return !criteria.dayIds || !criteria.dayIds.length || criteria.dayIds.includes(d.id);
         })
 
-        const eventInfo: FullEvent['info'] = {
-            id: eventId,
-            title: cfpEvent.name,
-            description: cfpEvent.description,
-            peopleDescription: descriptor.peopleDescription,
-            timezone: cfpEvent.timezone,
-            days: days,
-            logoUrl: descriptor.logoUrl,
-            backgroundUrl: descriptor.backgroundUrl,
-            location: {
-                city: cfpEvent.locationCity, country: cfpEvent.locationCountry,
-                coords: {
-                    latitude: cfpEvent.venueLatitude,
-                    longitude: cfpEvent.venueLongitude
-                },
-                ...(descriptor.infos?.address ? {address: descriptor.infos.address} : {}),
-            },
-            theming: descriptor.theming,
-            keywords: descriptor.keywords
-        }
-
+        console.info(`Building daily schedules...`)
         const dailySchedulesResults = await Promise.all(daysMatchingCriteria.map(async day => {
           try {
+            console.info(`[dayId=${day.id}] fetching schedule items...`)
             return {
               day: day.id,
               outcome: 'success' as const,
@@ -150,248 +186,139 @@ Please, unless event id is made configurable at cfp.dev level, you should rather
           .filter(schedule => schedule !== undefined)
           .map(dailySchedule => dailySchedule!);
 
-        const eventTalks: DetailedTalk[] = [],
-            daySchedules: DailySchedule[] = [],
-            eventRooms: ConferenceDescriptor['rooms'] = [],
-            eventTalkFormats: ConferenceDescriptor['talkFormats'] = [];
-        await Promise.all(dailySchedules.map(async dailySchedule => {
-            const {daySchedule, talkStats, talks, rooms, talkFormats} = await crawlDevoxxDay(cfpBaseUrl, dailySchedule, descriptor)
-            daySchedules.push(daySchedule)
-            for (const talk of talks) {
-                eventTalks.push(talk)
+        // const ongoingScheduleItems = new Set<string>();
+        // const intervalId = setInterval(() => console.info(`ongoingScheduleItems: ${[...ongoingScheduleItems].join('\n')}`), 1000)
+
+        const results = await Promise.all(dailySchedules.map(async dailySchedule => {
+          try {
+            const dailyScheduleItems = dailySchedule.schedules;
+
+            console.info(`[dayId=${dailySchedule.day}] processing ${dailyScheduleItems.length} schedule items...`)
+            for(const scheduleItem of dailyScheduleItems) {
+              const scheduleItemHash = `${dailySchedule.day} -> ${scheduleItem.id}`
+              // ongoingScheduleItems.add(scheduleItemHash)
+
+              match(scheduleItem)
+                .with({ sessionType: { pause: true }}, pauseItem => {
+                  const icon = match<string, Break['icon']>(pauseItem.sessionType.name.toLowerCase())
+                    .when(sessionTypeName => sessionTypeName.includes('meet') || sessionTypeName.includes('greet'), () => 'beer')
+                    .when(sessionTypeName => sessionTypeName.includes('movie'), () => 'movie')
+                    .when(sessionTypeName => sessionTypeName.includes('lunch'), () => 'restaurant')
+                    .when(sessionTypeName => sessionTypeName.includes('registration'), () => 'ticket')
+                    .when(sessionTypeName => sessionTypeName.includes('travel'), () => 'wallet')
+                    .when(sessionTypeName => sessionTypeName.includes('coffee'), () => 'cafe')
+                    .otherwise(() => 'cafe')
+
+                  fullEventBuilder.addBreak({
+                    start: pauseItem.fromDate as ISODatetime,
+                    duration: Temporal.Duration.from({ minutes: pauseItem.sessionType.duration }),
+                    title: pauseItem.sessionType.name,
+                    roomId: pauseItem.room.id.toString(),
+                    icon,
+                  })
+                })
+                .with({ proposal: P.not(P.nullish) }, talkItem => {
+                  const talkId = talkItem.proposal.id.toString()
+                  fullEventBuilder.allocateTalk({
+                    talkId,
+                    start: talkItem.fromDate as ISODatetime,
+                    maybeRoomId: talkItem.room.id.toString(),
+                  })
+
+                  if(talkItem.overflow) {
+                    fullEventBuilder.updateTalk(talkId, ({simpleTalk, detailedTalk}) => {
+                      simpleTalk.isOverflow = true;
+                      detailedTalk.isOverflow = true;
+                    })
+                  }
+                }).otherwise(slotWithoutProposal => {
+                  if(slotWithoutProposal.overflow) {
+                    // OVERFLOWS handling...
+                    // Looking for non-overflow result to copy (most of) its properties
+                    const nonOverflowTalks = dailyScheduleItems
+                      .filter(item =>
+                         // Looking for non-overflow slot at the same timeslot
+                         !item.overflow
+                         && item.proposal
+                         && Temporal.Instant.from(item.fromDate).toString() === Temporal.Instant.from(slotWithoutProposal.fromDate).toString()
+                         && Temporal.Instant.from(item.toDate).toString() === Temporal.Instant.from(slotWithoutProposal.toDate).toString()
+                      )
+                    if(nonOverflowTalks.length !== 1) {
+                      console.warn(`WARNING: found ${nonOverflowTalks.length} non-overflow talks on ${slotWithoutProposal.fromDate}--${slotWithoutProposal.toDate} timeslot for an overflow talk`)
+                      // No-op
+                    } else {
+                      const nonOverflowProposal = nonOverflowTalks[0].proposal!;
+                      fullEventBuilder.allocateOverflowForTalk({
+                        talkId: nonOverflowProposal.id.toString(),
+                        start: slotWithoutProposal.fromDate as ISODatetime,
+                        inRoomId: slotWithoutProposal.room.id.toString(),
+                      })
+                    }
+                  } else {
+                    // Ignoring slot ???
+                    info(`Ignoring slot with id ${slotWithoutProposal.id} (on day=${dailySchedule.day}) as it has no proposal nor is a pause !`);
+                  }
+                });
+
+              // ongoingScheduleItems.delete(scheduleItemHash);
             }
-            rooms.forEach(r => {
-                if(!eventRooms.find(er => er.id === r.id)) {
-                    eventRooms.push(r);
-                }
-            })
-            talkFormats.forEach(tf => {
-                if(!eventTalkFormats.find(etf => etf.id === tf.id)) {
-                    eventTalkFormats.push(tf);
-                }
-            })
+
+            console.info(`[dayId=${dailySchedule.day}] ${dailyScheduleItems.length} schedule items processed !`)
+          } catch(err) {
+            console.error(`[dayId=${dailySchedule.day}] Error occured: ${err}`);
+          }
         }))
 
-        const eventDescriptor: FullEvent['conferenceDescriptor'] = {
-            ...eventInfo,
-            headingTitle: descriptor.headingTitle,
-            headingBackground: descriptor.headingBackground,
-            features: descriptor.features,
-            talkFormats: eventTalkFormats,
-            talkTracks: descriptor.talkTracks,
-            supportedTalkLanguages: descriptor.supportedTalkLanguages,
-            rooms: eventRooms,
-            infos: {
-                floorPlans: (cfpFloorPlans || []).map(cfpFloorPlan => ({
-                    label: cfpFloorPlan.name,
-                    pictureUrl: cfpFloorPlan.imageURL
-                })),
-                socialMedias: descriptor.infos?.socialMedias || [],
-                sponsors: descriptor.infos?.sponsors || []
+      // clearInterval(intervalId);
+      // console.info(results)
+
+      console.info(`Building event info...`)
+      const eventInfo: FullEvent['info'] = {
+            id: eventId,
+            title: cfpEvent.name,
+            description: cfpEvent.description,
+            peopleDescription: descriptor.peopleDescription,
+            timezone: cfpEvent.timezone,
+            days: days,
+            logoUrl: descriptor.logoUrl,
+            backgroundUrl: descriptor.backgroundUrl,
+            location: {
+                city: cfpEvent.locationCity, country: cfpEvent.locationCountry,
+                coords: {
+                    latitude: cfpEvent.venueLatitude,
+                    longitude: cfpEvent.venueLongitude
+                },
+                ...(descriptor.infos?.address ? {address: descriptor.infos.address} : {}),
             },
-            formattings: descriptor.formattings || {
-              talkFormatTitle: 'with-duration',
-              parseMarkdownOn: [],
-            },
+            theming: descriptor.theming,
+            keywords: descriptor.keywords
         }
 
-        const event: FullEvent = {
-            id: eventId, info: eventInfo, daySchedules,
-            talks: eventTalks, conferenceDescriptor: eventDescriptor,
-            lineupSpeakers: detailedTalksToSpeakersLineup(eventTalks),
-        }
-        return event
+        fullEventBuilder.usingInfosAndDescriptor(eventInfo, {
+          headingTitle: descriptor.headingTitle,
+          headingBackground: descriptor.headingBackground,
+          features: {
+            ...descriptor.features,
+          },
+          infos: {
+            floorPlans: (cfpFloorPlans || []).map(cfpFloorPlan => ({
+              label: cfpFloorPlan.name,
+              pictureUrl: cfpFloorPlan.imageURL
+            })),
+            socialMedias: descriptor.infos?.socialMedias || [],
+            sponsors: descriptor.infos?.sponsors || []
+          },
+          formattings: descriptor.formattings || {
+            talkFormatTitle: 'with-duration',
+            parseMarkdownOn: [],
+          },
+        });
+
+        console.info(`Generating fullEvent...`)
+        const fullEvent = fullEventBuilder.createFullEvent();
+        console.info(`FullEvent generated !`)
+        return fullEvent;
     }
 };
-
-type ScheduleTalkResult =
-  { type: 'no-proposal', talk: undefined, detailedTalk: undefined, totalFavourites: undefined }
-  | { type: 'overflow', start: ISODatetime, end: ISODatetime, room: Room }
-  | { type: 'proposal', talk: Talk, detailedTalk: DetailedTalk, totalFavourites: number|undefined };
-function toScheduleTalk(item: DevoxxScheduleItem, start: ISODatetime, end: ISODatetime, rooms: ConferenceDescriptor['rooms'], talkFormats: ConferenceDescriptor['talkFormats']): ScheduleTalkResult {
-  if(!rooms.find(r => r.id === item.room.id.toString())) {
-    rooms.push({ id: item.room.id.toString(), title: item.room.name });
-  }
-  if(!talkFormats.find(tf => tf.id === item.sessionType.id.toString())) {
-    talkFormats.push({
-      id: item.sessionType.id.toString(),
-      title: item.sessionType.name,
-      duration: `PT${item.sessionType.duration}m`,
-      themeColor: TALK_FORMAT_FALLBACK_COLORS[talkFormats.length % TALK_FORMAT_FALLBACK_COLORS.length]
-    });
-  }
-
-  const room: Room = {
-    id: item.room.id.toString(),
-    title: item.room.name
-  }
-
-  if(item.overflow) {
-    return {
-      type: 'overflow',
-      start: start as ISODatetime,
-      end: end as ISODatetime,
-      room
-    }
-  }
-
-  if(!item.proposal) {
-    return { type: 'no-proposal', talk:undefined, detailedTalk: undefined, totalFavourites: undefined };
-  }
-
-  const talk: Talk = {
-    id: item.proposal.id.toString(),
-    title: item.proposal.title,
-    speakers: item.proposal.speakers.map((s:DevoxxScheduleSpeakerInfo) => {
-      const speaker: Speaker = {
-        id: s.id.toString(),
-        fullName: s.fullName,
-        companyName: s.company,
-        photoUrl: s.imageUrl,
-        bio: s.bio,
-        social: s.twitterHandle?[{type: "twitter", url: `https://twitter.com/${s.twitterHandle}`}]:[]
-      }
-      return speaker;
-    }),
-    room,
-    format: {
-      id: item.sessionType.id.toString(),
-      title: item.sessionType.name,
-      duration: `PT${item.sessionType.duration}m`
-    },
-    track: {
-      id: item.proposal.track.id.toString(),
-      title: item.proposal.track.name
-    },
-    language: item.proposal.language?.alpha2 || "en",
-    isOverflow: false
-  };
-
-  const upperFirstAudience = item.proposal.audienceLevel.charAt(0).toUpperCase() + item.proposal.audienceLevel.slice(1).toLowerCase();
-  const detailedTalk: DetailedTalk = {
-    ...talk,
-    summary: item.proposal.summary || "",
-    description: item.proposal.description || "",
-    tags: [`Audience:${upperFirstAudience}`].concat((item.proposal.tags || []).map(t => t.name)),
-    assets: [],
-    allocation: { start, end, }
-  };
-
-  return { type: 'proposal', talk, detailedTalk, totalFavourites: item.totalFavourites };
-}
-
-const crawlDevoxxDay = async (cfpBaseUrl: string, {day, schedules}: {day: string, schedules: DevoxxScheduleItem[]}, descriptor: z.infer<typeof DEVOXX_DESCRIPTOR_PARSER>) => {
-    const daySchedule: DailySchedule = {
-        day: day,
-        timeSlots: []
-    }
-
-    const talkStats: TalkStats[] = []
-
-    const detailedTalks: DetailedTalk[] = []
-
-    const rooms: ConferenceDescriptor['rooms'] = [];
-    const talkFormats = descriptor.talkFormats || [];
-
-    const slots = schedules.reduce((slots, item) => {
-      const key = `${item.fromDate}--${item.toDate}`
-      slots[key] = slots[key] || [];
-      slots[key].push(item);
-      return slots;
-    }, {} as Record<string, DevoxxScheduleItem[]>)
-
-    // debug(`Devoxx slots for day ${day}: ${JSON.stringify(slots)}`)
-
-    for(const [key, items] of Object.entries(slots)) {
-        const [start, end] = key.split("--")
-
-        info(key + "\n-------------------\n  - " + items.map((schedule:DevoxxScheduleItem, itemIndex) => {
-            let title = schedule.proposal?.title || schedule.sessionType?.name
-            if(!title) {
-              throw Error(`Error while retrieving schedule item title for id ${schedule.id} (day=${day}, slot=${key}, itemIndex=${itemIndex})`);
-            }
-            return `${schedule.id} - ${schedule.room.name} - ${title}`
-        }).join("\n  -") + "\n------------------");
-
-        if (items.every((item: DevoxxScheduleItem) => { return item.sessionType.pause })) {
-            const icon = match<string, Break['icon']>(items[0].sessionType.name.toLowerCase())
-                .when(sessionTypeName => sessionTypeName.includes('meet') || sessionTypeName.includes('greet'), () => 'beer')
-                .when(sessionTypeName => sessionTypeName.includes('movie'), () => 'movie')
-                .when(sessionTypeName => sessionTypeName.includes('lunch'), () => 'restaurant')
-                .when(sessionTypeName => sessionTypeName.includes('registration'), () => 'ticket')
-                .when(sessionTypeName => sessionTypeName.includes('travel'), () => 'wallet')
-                .when(sessionTypeName => sessionTypeName.includes('coffee'), () => 'cafe')
-                .otherwise(() => 'cafe')
-            daySchedule.timeSlots.push({
-                id: key as any,
-                start: start as ISODatetime,
-                end: end as ISODatetime,
-                type: "break",
-                break: {
-                    title: items[0].sessionType.name,
-                    room: {
-                        id: items[0].room.id.toString(),
-                        title: items[0].room.name
-                    },
-                    icon
-                }
-            }
-            )
-        } else {
-            const scheduleTalkResults = items.map(item => toScheduleTalk(item, start as ISODatetime, end as ISODatetime, rooms, talkFormats))
-            const talks = scheduleTalkResults.reduce((talks, result, index, scheduleTalkResults) => {
-              const { talkToAdd, talkDetailToAdd } = match(result)
-                .with({ type: 'proposal' }, ({talk, detailedTalk, totalFavourites}) => {
-                  if (totalFavourites !== undefined) {
-                    talkStats.push({id: talk.id, totalFavoritesCount: totalFavourites})
-                  }
-
-                  return { talkToAdd: talk, talkDetailToAdd: detailedTalk }
-                })
-                .with({ type: 'overflow'}, ({ room }) => {
-                  // Looking for non-overflow result to copy (most of) its properties
-                  const nonOverflowTalks = scheduleTalkResults
-                    .filter(r => r.type === 'proposal')
-                    .map(r => match(r)
-                      .with({ type: 'proposal'}, p => p)
-                      .otherwise(() => { throw new Error(`This should never happen`); })
-                    )
-                  if(nonOverflowTalks.length !== 1) {
-                    console.warn(`WARNING: found ${nonOverflowTalks.length} non-overflow talks on ${start}--${end} timeslot for an overflow talk`)
-                    return { talkToAdd: undefined, talkDetailToAdd: undefined };
-                  } else {
-                    const {talk, detailedTalk} = nonOverflowTalks[0]
-
-                    const title = `[OVERFLOW] ${talk.title}`;
-                    const talkToAdd: Talk = { ...talk, title, room, isOverflow: true }
-                    const talkDetailToAdd: DetailedTalk = { ...detailedTalk, title, room, isOverflow: true }
-
-                    return { talkToAdd, talkDetailToAdd };
-                  }
-                }).with({type: "no-proposal"}, () => {
-                  return { talkToAdd: undefined, talkDetailToAdd: undefined };
-                }).exhaustive();
-
-              if(talkToAdd){ talks.push(talkToAdd); }
-              if(talkDetailToAdd){ detailedTalks.push(talkDetailToAdd); }
-
-              return talks;
-            }, [] as Talk[]);
-
-            if(talks.length) {
-              daySchedule.timeSlots.push({
-                id: key as any,
-                start: start as ISODatetime,
-                end: end as ISODatetime,
-                type: "talks",
-                talks
-              })
-            }
-        }
-    }
-
-    info("devoxx day crawling done for " + day)
-    return {daySchedule, talkStats, talks: detailedTalks, rooms, talkFormats }
-}
 
 export default DEVOXX_CRAWLER;

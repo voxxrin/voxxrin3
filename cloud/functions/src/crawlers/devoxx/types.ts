@@ -2,40 +2,33 @@
 
 import {HexColor} from "../../../../../shared/type-utils";
 
+export type DevoxxRoom = {
+  id: number,
+  name: string,
+  weight: number,
+  capacity: number,
+}
+
+export type DevoxxSessionType = {
+  id: number,
+  name: string,
+  duration: number,
+  pause: boolean,
+  description: string,
+  cssColor?: HexColor|undefined
+}
+
 export interface DevoxxScheduleItem {
         id: number,
         fromDate: string,
         toDate: string,
-        room: {
-          id: number,
-          name: string,
-          weight: number,
-          capacity: number
-        },
+        room: DevoxxRoom,
         streamId?: string,
-        sessionType: {
-          id: number,
-          name: string,
-          duration: number,
-          pause: boolean,
-          description: string,
-          cssColor?: HexColor|undefined
-        },
+        sessionType: DevoxxSessionType,
         proposal?: DevoxxScheduleProposal,
         timezone: string,
         totalFavourites?: number,
         overflow: boolean,
-}
-
-export interface DevoxxScheduleSpeakerInfo {
-    id: number,
-    firstName: string,
-    lastName: string,
-    fullName: string,
-    bio: string,
-    company: string,
-    imageUrl: string,
-    twitterHandle: string
 }
 
 export interface DevoxxScheduleProposal {
@@ -51,7 +44,8 @@ export interface DevoxxScheduleProposal {
       description: string,
       imageURL: string
     },
-    speakers: DevoxxScheduleSpeakerInfo[],
+    sessionType: DevoxxSessionType,
+    speakers: CfpListableSpeaker[],
     tags: DevoxxScheduleItemTag[]|undefined,
     language: {
       id: number,
@@ -63,6 +57,28 @@ export interface DevoxxScheduleProposal {
 
 export interface DevoxxScheduleItemTag {
     name: string
+}
+
+// speakers
+
+type CfpBaseSpeaker = {
+  "id": number,
+  "firstName": string,
+  "lastName": string,
+  "bio": string,
+  "company": string|null,
+  "imageUrl": string|null,
+  "twitterHandle": string|null,
+  "linkedInUsername": string|null,
+}
+// https://{slug}.cfp.dev/api/public/speakers
+export type CfpListableSpeaker = CfpBaseSpeaker & {
+  "fullName": string,
+  "anonymizedBio": string|null,
+}
+// https://{slug}.cfp.dev/api/public/speakers/:speakerId
+export type CfpDetailedSpeaker = CfpBaseSpeaker & {
+  "proposals": DevoxxScheduleProposal[]
 }
 
 
@@ -88,15 +104,7 @@ export interface CfpEvent {
   "eventImageURL": string | null, // eg null,
   "maxProposals": number,
   "languages": [],
-  "sessionTypes":
-    {
-      "id": number,
-      "name": string, // eg "UnConference Session",
-      "duration": number, // eg 45,
-      "isPause": boolean,
-      "description": string | null,
-      "cssColor": string, // eg "#6fff00"
-    }[],
+  "sessionTypes": DevoxxSessionType[],
   "tracks": 
     {
       "id": number,

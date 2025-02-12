@@ -33,7 +33,7 @@ export type Talk = {
     id: string,
     title: string,
     track: Track,
-    room: Room|undefined,
+    room: Room|null,
     isOverflow: boolean
 }
 export type DetailedTalk = Talk & {
@@ -44,7 +44,7 @@ export type DetailedTalk = Talk & {
     allocation: {
       start: ISODatetime,
       end: ISODatetime,
-    }|undefined
+    }|null
 }
 
 export type TalkAsset = {

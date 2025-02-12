@@ -1,19 +1,16 @@
-import {detailedTalksToSpeakersLineup, FullEvent} from "../../models/Event";
+import {FullEvent} from "../../models/Event";
 import {z} from "zod";
 import {
   BREAK_PARSER,
   DETAILED_TALK_PARSER,
-  EVENT_DESCRIPTOR_PARSER, FORMATTINGS_CONFIG_PARSER,
+  EVENT_DESCRIPTOR_PARSER,
+  FORMATTINGS_CONFIG_PARSER,
 } from "../crawler-parsers";
 import {CrawlerKind} from "../crawl";
-import {match, P} from "ts-pattern";
-import {
-  BreakTimeSlot, DailySchedule, DetailedTalk,
-  ScheduleTimeSlot,
-  TalksTimeSlot,
-  TimeSlotBase,
-} from "../../../../../shared/daily-schedule.firestore";
 import {ISO_DATETIME_PARSER} from "../../utils/zod-parsers";
+import {FullEventBuilder} from "../full-event.builder";
+import {omit} from "lodash";
+import {Temporal} from "@js-temporal/polyfill";
 
 
 export const SINGLE_FILE_DESCRIPTOR_PARSER = EVENT_DESCRIPTOR_PARSER.omit({
@@ -22,8 +19,15 @@ export const SINGLE_FILE_DESCRIPTOR_PARSER = EVENT_DESCRIPTOR_PARSER.omit({
   formattings: FORMATTINGS_CONFIG_PARSER, // not optional
   talks: z.array(
     DETAILED_TALK_PARSER
-      .omit({ track: true, room: true, format: true, language: true, description: true })
-      .extend({ trackId: z.string(), roomId: z.string(), formatId: z.string(), langId: z.string() })
+      .omit({ track: true, room: true, format: true, language: true, description: true, allocation: true })
+      .extend({
+        start: ISO_DATETIME_PARSER,
+        end: ISO_DATETIME_PARSER,
+        trackId: z.string(),
+        roomId: z.string(),
+        formatId: z.string(),
+        langId: z.string()
+      })
   ),
   breaks: z.array(
     BREAK_PARSER
@@ -43,6 +47,8 @@ function findItemById<T extends {id: string}>(items: T[], id: string, itemName: 
 export const SINGLE_FILE_CRAWLER: CrawlerKind<typeof SINGLE_FILE_DESCRIPTOR_PARSER> = {
   descriptorParser: SINGLE_FILE_DESCRIPTOR_PARSER,
   crawlerImpl: async (eventId: string, descriptor: z.infer<typeof SINGLE_FILE_DESCRIPTOR_PARSER>, criteria: { dayIds?: string[]|undefined }) => {
+    const fullEventBuilder = new FullEventBuilder(eventId);
+
     const eventInfo: FullEvent['info'] = {
       id: eventId,
       title: descriptor.title,
@@ -57,105 +63,55 @@ export const SINGLE_FILE_CRAWLER: CrawlerKind<typeof SINGLE_FILE_DESCRIPTOR_PARS
       theming: descriptor.theming,
     }
 
-    const talksTimeslots: TalksTimeSlot[] = descriptor.talks.reduce((timeslots, talk) => {
-      const timeslotId = `${talk.start}--${talk.end}` as TimeSlotBase['id']
+    descriptor.rooms.forEach(room => {
+      fullEventBuilder.addRoom(room);
+    })
+    descriptor.talkTracks.forEach(track => {
+      fullEventBuilder.addThemedTrack(track);
+    })
+    descriptor.talkFormats.forEach(format => {
+      fullEventBuilder.addThemedFormat(format);
+    })
+    descriptor.supportedTalkLanguages.forEach(lang => {
+      fullEventBuilder.addThemedLanguage(lang);
+    })
 
-      const timeslot = match(timeslots.find(ts => ts.id === timeslotId))
-        .with(P.nullish, () => {
-          const timeslot: TalksTimeSlot = {
-            id: timeslotId,
-            type: 'talks',
-            start: talk.start,
-            end: talk.end,
-            talks: []
-          }
-          timeslots.push(timeslot);
-          return timeslot;
-        }).otherwise(timeslot => timeslot);
-
-      timeslot.talks.push({
-        speakers: talk.speakers,
-        format: findItemById(descriptor.talkFormats, talk.formatId, "format"),
-        language: findItemById(descriptor.supportedTalkLanguages, talk.langId, "language").id,
-        id: talk.id,
-        title: talk.title,
-        track: findItemById(descriptor.talkTracks, talk.trackId, "track"),
-        room: findItemById(descriptor.rooms, talk.roomId, "room"),
-        isOverflow: talk.isOverflow,
+    descriptor.talks.forEach(talk => {
+      talk.speakers.forEach(speaker => {
+        fullEventBuilder.addSpeaker(speaker);
       })
+      fullEventBuilder.addTalk({
+        ...omit(talk, ['speakers', 'start', 'end']),
+        language: talk.langId,
+        description: talk.summary,
+        speakerIds: talk.speakers.map(sp => sp.id),
+      });
+      fullEventBuilder.allocateTalk({
+        talkId: talk.id,
+        start: talk.start,
+        maybeRoomId: talk.roomId,
+      })
+    })
 
-      return timeslots;
-    }, [] as TalksTimeSlot[])
+    descriptor.breaks.forEach(breakSlot => {
+      fullEventBuilder.addBreak({
+        start: breakSlot.start,
+        duration: Temporal.Instant.from(breakSlot.start).until(breakSlot.end),
+        title: breakSlot.title,
+        roomId: breakSlot.roomId,
+        icon: breakSlot.icon,
+      });
+    })
 
-    const breaksTimeslots: BreakTimeSlot[] = descriptor.breaks.reduce((timeslots, breakSlot) => {
-      const timeslotId = `${breakSlot.start}--${breakSlot.end}` as TimeSlotBase['id']
+    fullEventBuilder.usingInfosAndDescriptor(eventInfo, {
+      headingTitle: descriptor.headingTitle,
+      headingBackground: descriptor.headingBackground,
+      features: descriptor.features,
+      infos: descriptor.infos,
+      formattings: descriptor.formattings,
+    });
 
-      const timeslot = match(timeslots.find(ts => ts.id === timeslotId))
-        .with(P.nullish, () => {
-          const timeslot: BreakTimeSlot = {
-            id: timeslotId,
-            type: 'break',
-            start: breakSlot.start,
-            end: breakSlot.end,
-            break: {
-              room: findItemById(descriptor.rooms, breakSlot.roomId, "room"),
-              title: breakSlot.title,
-              icon: breakSlot.icon
-            }
-          }
-          timeslots.push(timeslot);
-          return timeslot;
-        }).otherwise(timeslot => timeslot);
-
-      return timeslots;
-    }, [] as BreakTimeSlot[]);
-
-    const timeslots = ([] as ScheduleTimeSlot[])
-      .concat(talksTimeslots)
-      .concat(breaksTimeslots);
-
-    const dailySchedules: DailySchedule[] = descriptor.days.map(day => ({
-      day: day.id,
-      timeSlots: timeslots.filter(timeslot => timeslot.start.startsWith(day.localDate))
-    }))
-
-    const talks: DetailedTalk[] = descriptor.talks.map(detailedTalk => ({
-      summary: detailedTalk.summary,
-      description: detailedTalk.summary,
-      tags: detailedTalk.tags,
-      assets: detailedTalk.assets,
-      speakers: detailedTalk.speakers,
-      id: detailedTalk.id,
-      title: detailedTalk.title,
-      isOverflow: detailedTalk.isOverflow,
-      allocation: { start: detailedTalk.start, end: detailedTalk.end },
-
-      format: findItemById(descriptor.talkFormats, detailedTalk.formatId, "format"),
-      language: findItemById(descriptor.supportedTalkLanguages, detailedTalk.langId, "language").id,
-      track: findItemById(descriptor.talkTracks, detailedTalk.trackId, "track"),
-      room: findItemById(descriptor.rooms, detailedTalk.roomId, "room"),
-    }))
-
-    const event: FullEvent = {
-      id: eventId,
-      info: eventInfo,
-      daySchedules: dailySchedules,
-      talks,
-      conferenceDescriptor: {
-        ...eventInfo,
-        headingTitle: descriptor.headingTitle,
-        headingBackground: descriptor.headingBackground,
-        features: descriptor.features,
-        talkFormats: descriptor.talkFormats,
-        talkTracks: descriptor.talkTracks,
-        supportedTalkLanguages: descriptor.supportedTalkLanguages,
-        rooms: descriptor.rooms,
-        infos: descriptor.infos,
-        formattings: descriptor.formattings,
-      },
-      lineupSpeakers: detailedTalksToSpeakersLineup(talks),
-    }
-    return event
+    return fullEventBuilder.createFullEvent();
   }
 };
 
