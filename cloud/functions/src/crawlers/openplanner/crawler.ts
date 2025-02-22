@@ -168,7 +168,7 @@ export const OPENPLANNER_CRAWLER: CrawlerKind<typeof OPENPLANNER_DESCRIPTOR_PARS
           const start = startInstant.toString() as ISODatetime,
             end = endInstant.toString() as ISODatetime;
 
-          const timeslotId = `${start}--${end}` as const
+          const timeRangeId = `${start}--${end}` as const
 
           const room = match(rooms.find(r => r.id === session.trackId)) // track is room in openplanner
             .with(P.nullish, () => {
@@ -185,7 +185,7 @@ export const OPENPLANNER_CRAWLER: CrawlerKind<typeof OPENPLANNER_DESCRIPTOR_PARS
             const breakSlot: BreakTimeslotWithPotentiallyUnknownIcon = {
               type: 'break',
               start, end,
-              id: timeslotId,
+              id: `${timeRangeId}--${room.id}`,
               break: {
                 title: session.title,
                 room,
@@ -249,10 +249,10 @@ export const OPENPLANNER_CRAWLER: CrawlerKind<typeof OPENPLANNER_DESCRIPTOR_PARS
 
             talks.push(detailedTalk);
 
-            const talksTimeslot = match(talkTimeslots.find(ts => ts.id === timeslotId))
+            const talksTimeslot = match(talkTimeslots.find(ts => ts.id === timeRangeId))
               .with(P.nullish, () => {
                 const talksTimeslot: TalksTimeSlot = {
-                  id: timeslotId,
+                  id: timeRangeId,
                   start, end,
                   type: 'talks',
                   talks: []
@@ -274,7 +274,7 @@ export const OPENPLANNER_CRAWLER: CrawlerKind<typeof OPENPLANNER_DESCRIPTOR_PARS
           timezone, breakTimeslotsWithPotentiallyUnknownIcons, talkTimeslots)
           .concat((descriptor.additionalBreakTimeslots || []).map(partialTimeslot => ({
             ...partialTimeslot,
-            id: `${partialTimeslot.start as ISODatetime}--${partialTimeslot.end as ISODatetime}`,
+            id: `${partialTimeslot.start as ISODatetime}--${partialTimeslot.end as ISODatetime}--${partialTimeslot.break.room.id}`,
             type: 'break'
           })))
 

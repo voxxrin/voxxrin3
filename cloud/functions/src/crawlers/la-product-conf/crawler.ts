@@ -125,17 +125,17 @@ export const LA_PRODUCT_CONF_CRAWLER: CrawlerKind<typeof LA_PRODUCT_CONF_DESCRIP
               const originalStart = ts.timerange.start || rawTimeslots[idx-1].timerange.end as ISODatetime;
               const originalEnd = ts.timerange.end || rawTimeslots[idx+1]?.timerange?.start || `${LOCAL_DATE}T${DAY.endTime}` as ISODatetime;
 
-              const originalTimeslotId = `${originalStart}--${originalEnd}` as const;
-              const overrides = descriptor.timeslotOverrides[originalTimeslotId];
+              const timeRange = `${originalStart}--${originalEnd}` as const;
+              const overrides = descriptor.timeslotOverrides[timeRange];
 
               const { start, end, timeslotId} = {
                 start: originalStart,
                 end: originalEnd,
-                timeslotId: originalTimeslotId,
+                timeslotId: timeRange,
                 ...(overrides?.type === 'replace' ? {
                   start: overrides.replacement.start || originalStart,
                   end: overrides.replacement.end || originalEnd,
-                  timeslotId: overrides.replacement.id || originalTimeslotId,
+                  timeslotId: overrides.replacement.id || timeRange,
                 } : {})
               }
 
@@ -145,7 +145,7 @@ export const LA_PRODUCT_CONF_CRAWLER: CrawlerKind<typeof LA_PRODUCT_CONF_DESCRIP
                 const breakTimeslot: BreakTimeSlot = {
                   start,
                   end,
-                  id: timeslotId,
+                  id: `${timeslotId}--${room.id}`,
                   type: 'break',
                   break: {
                     title: ts.breakLabel,
@@ -189,7 +189,7 @@ export const LA_PRODUCT_CONF_CRAWLER: CrawlerKind<typeof LA_PRODUCT_CONF_DESCRIP
 
                 const talksTimeslot: TalksTimeSlot = {
                   start, end,
-                  id: timeslotId,
+                  id: timeRange,
 
                   type: 'talks',
                   talks: [{

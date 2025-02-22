@@ -232,7 +232,7 @@ export class FullEventBuilder {
     const timeslot: TalksTimeSlot = match(this.talkTimeslots.find(timeslot => timeslot.start === timeslotBase.start && timeslot.end === timeslotBase.end))
       .with(P.nullish, () => {
         const timeslot: TalksTimeSlot = {
-          id: timeslotBase.id,
+          id: `${timeslotBase.start}--${timeslotBase.end}`,
           start: timeslotBase.start,
           end: timeslotBase.end,
           type: "talks",
@@ -321,7 +321,7 @@ export class FullEventBuilder {
     }
 
     const breakTimeslot: BreakTimeSlot = {
-      id: timeslotBase.id,
+      id: `${timeslotBase.start}--${timeslotBase.end}--${roomId}`,
       start: timeslotBase.start,
       end: timeslotBase.end,
       type: 'break',
@@ -418,8 +418,5 @@ export class FullEventBuilder {
 function timeslotBaseOf(start: ISODatetime, duration: Parameters<Temporal.Instant['add']>[0]) {
   const utcStart = Temporal.Instant.from(start).toString() as ISODatetime;
   const utcEnd = Temporal.Instant.from(start).add(duration).toString() as ISODatetime;
-  const id: TimeSlotBase['id'] = `${utcStart}--${utcEnd}`
-
-  const base: TimeSlotBase = { id, start: utcStart, end: utcEnd }
-  return base;
+  return { start: utcStart, end: utcEnd };
 }
