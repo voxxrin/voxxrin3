@@ -8,12 +8,14 @@
           <ion-input :size="10" ref="$searchInput"
                      :debounce="300"
                      :placeholder="`${LL.Search()}...`"
-                     @ionInput="(ev) => $emits('search-terms-updated', ''+ev.target.value)"
+                      :clear-input="true"
+                     v-model="searchTermsRef"
+                     @ionInput="(ev) => $emits('search-terms-updated', ''+(ev.target.value ?? ''))"
           />
           <ion-icon class="iconInput" src="/assets/icons/line/search-line.svg"></ion-icon>
           <ion-button shape="round" size="small" fill="outline" @click="toggleSearchField()"
                       :aria-label="LL.Search_close()">
-            <ion-icon src="/assets/icons/line/close-line.svg"></ion-icon>
+            <ion-icon src="/assets/icons/line/arrow-right-line.svg"></ion-icon>
           </ion-button>
         </div>
       </transition>
@@ -70,8 +72,6 @@ async function toggleSearchField() {
     if(isRefDefined($searchInput)) {
       setTimeout(() => $searchInput.value.$el.setFocus(), 100);
     }
-  } else {
-    searchTermsRef.value = '';
   }
 }
 </script>
@@ -100,5 +100,9 @@ ion-toolbar {
     align-items: center;
     gap: var(--app-gutters);
   }
+}
+
+:deep(ion-input) button.input-clear-icon {
+  margin-right: 80px;
 }
 </style>
