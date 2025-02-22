@@ -49,7 +49,7 @@ export const SINGLE_FILE_CRAWLER: CrawlerKind<typeof SINGLE_FILE_DESCRIPTOR_PARS
   crawlerImpl: async (eventId: string, descriptor: z.infer<typeof SINGLE_FILE_DESCRIPTOR_PARSER>, criteria: { dayIds?: string[]|undefined }) => {
     const fullEventBuilder = new FullEventBuilder(eventId);
 
-    const eventInfo: FullEvent['info'] = {
+    const eventInfo: FullEvent['listableEventInfo'] = {
       id: eventId,
       title: descriptor.title,
       description: descriptor.description,

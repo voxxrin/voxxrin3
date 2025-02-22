@@ -40,7 +40,7 @@ export class FullEventBuilder {
   private readonly talkTimeslots: TalksTimeSlot[] = [];
   private readonly breakTimeslots: BreakTimeSlot[] = [];
 
-  private infos: FullEvent['info']|undefined = undefined;
+  private listableEventInfo: FullEvent['listableEventInfo']|undefined = undefined;
   private descriptor: FullEvent['conferenceDescriptor']|undefined = undefined;
 
   constructor(readonly eventId: string){}
@@ -336,10 +336,10 @@ export class FullEventBuilder {
     return this;
   }
 
-  public usingInfosAndDescriptor(infos: FullEvent['info'], descriptor: Omit<FullEvent['conferenceDescriptor'], "rooms"|"talkTracks"|"talkFormats"|"supportedTalkLanguages"|keyof FullEvent['info']>): this {
-    this.infos = infos;
+  public usingInfosAndDescriptor(listableEventInfo: FullEvent['listableEventInfo'], descriptor: Omit<FullEvent['conferenceDescriptor'], "rooms"|"talkTracks"|"talkFormats"|"supportedTalkLanguages"|keyof FullEvent['listableEventInfo']>): this {
+    this.listableEventInfo = listableEventInfo;
     this.descriptor = {
-      ...pick(infos, ['id', 'title', 'days', 'timezone', 'keywords', 'location', 'backgroundUrl', 'logoUrl', 'theming']),
+      ...pick(listableEventInfo, ['id', 'title', 'days', 'timezone', 'keywords', 'location', 'backgroundUrl', 'logoUrl', 'theming']),
       ...pick(descriptor, ['headingTitle', 'headingBackground', 'features', 'formattings']),
       rooms: [...this.roomsById.values()],
       talkTracks: [...this.tracksById.values()],
@@ -367,7 +367,7 @@ export class FullEventBuilder {
   }
 
   public createFullEvent(): FullEvent {
-    if(!this.infos) {
+    if(!this.listableEventInfo) {
       throw new Error(`Missing FullEvent's infos (in createFullEvent()) for eventId=${this.eventId}`)
     }
 
@@ -375,7 +375,7 @@ export class FullEventBuilder {
       throw new Error(`Missing FullEvent's descriptor (in createFullEvent()) for eventId=${this.eventId}`)
     }
 
-    const daySchedules = this.infos.days.map(day => {
+    const daySchedules = this.listableEventInfo.days.map(day => {
       const talksTimeslots = this.talkTimeslots.filter(ts => ts.start.startsWith(day.localDate))
       const breaksTimeslots = this.breakTimeslots.filter(ts => ts.start.startsWith(day.localDate))
 
@@ -396,7 +396,7 @@ export class FullEventBuilder {
 
     return {
       id: this.eventId,
-      info: this.infos,
+      listableEventInfo: this.listableEventInfo,
       conferenceDescriptor: {
         ...pick(this.descriptor, [
           'id', 'title', 'days', 'timezone', 'keywords', 'location', 'backgroundUrl',

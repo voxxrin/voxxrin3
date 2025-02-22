@@ -273,7 +273,7 @@ Please, unless event id is made configurable at cfp.dev level, you should rather
       // console.info(results)
 
       console.info(`Building event info...`)
-      const eventInfo: FullEvent['info'] = {
+      const eventInfo: FullEvent['listableEventInfo'] = {
             id: eventId,
             title: cfpEvent.name,
             description: cfpEvent.description,

@@ -287,7 +287,7 @@ export const CODEURS_EN_SEINE_CRAWLER: CrawlerKind<typeof CODEURS_EN_SEINE_PARSE
 
         const fullEvent: FullEvent = {
             id: eventId,
-            info: {
+            listableEventInfo: {
                 id: eventId,
                 title: confDescriptor.title,
                 days: confDescriptor.days,

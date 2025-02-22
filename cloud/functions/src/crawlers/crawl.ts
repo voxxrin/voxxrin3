@@ -297,8 +297,8 @@ export function sanityCheckEvent(event: FullEvent) {
     }
   }
 
-  if(!isValidTimezone(event.info.timezone)) {
-    crawlingMessages.push({ msg: `Invalid timezone: ${event.info.timezone}`, severity: 'ERROR' });
+  if(!isValidTimezone(event.listableEventInfo.timezone)) {
+    crawlingMessages.push({ msg: `Invalid timezone: ${event.listableEventInfo.timezone}`, severity: 'ERROR' });
   }
 
   return crawlingMessages;
@@ -309,7 +309,7 @@ const saveEvent = async function (event: FullEvent, crawlerDescriptor: z.infer<t
 
     const websiteUrl = (event.conferenceDescriptor.infos?.socialMedias || []).find(sm => sm.type === 'website')?.href || ""
     const baseListableEvent = {
-      ...event.info,
+      ...event.listableEventInfo,
       eventFamily: crawlerDescriptor.eventFamily,
       eventName: crawlerDescriptor.eventName,
       websiteUrl,

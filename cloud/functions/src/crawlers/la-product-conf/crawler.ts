@@ -271,7 +271,7 @@ export const LA_PRODUCT_CONF_CRAWLER: CrawlerKind<typeof LA_PRODUCT_CONF_DESCRIP
 
         const fullEvent: FullEvent = {
             id: eventId,
-            info: {
+            listableEventInfo: {
                 id: eventId,
                 title: descriptor.title,
                 days: descriptor.days as any,

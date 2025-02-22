@@ -266,7 +266,7 @@ export const DEVOXX_SCALA_CRAWLER: CrawlerKind<typeof DEVOXX_SCALA_DESCRIPTOR_PA
             return voxxrinSchedule;
         }));
 
-        const eventInfo: FullEvent['info'] = {
+        const eventInfo: FullEvent['listableEventInfo'] = {
             id: eventId,
             title: descriptor.title,
             description: conferenceResourceUrl.resource.label,
@@ -297,7 +297,7 @@ export const DEVOXX_SCALA_CRAWLER: CrawlerKind<typeof DEVOXX_SCALA_DESCRIPTOR_PA
         }
 
         const event: FullEvent = {
-            id: eventId, info: eventInfo, daySchedules: dailySchedules,
+            id: eventId, listableEventInfo: eventInfo, daySchedules: dailySchedules,
             talks, conferenceDescriptor: eventDescriptor,
             lineupSpeakers: detailedTalksToSpeakersLineup(talks),
         }

@@ -350,7 +350,7 @@ export const BDXIO_CRAWLER: CrawlerKind<typeof BDXIO_PARSER> = {
 
         const fullEvent: FullEvent = {
             id: eventId,
-            info: {
+            listableEventInfo: {
                 id: eventId,
                 title: descriptor.title,
                 days: descriptor.days as any,

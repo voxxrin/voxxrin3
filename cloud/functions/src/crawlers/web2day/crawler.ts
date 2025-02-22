@@ -290,7 +290,7 @@ export const WEB2DAY_CRAWLER: CrawlerKind<typeof WEB2DAY_PARSER> = {
 
         const fullEvent: FullEvent = {
             id: eventId,
-            info: {
+            listableEventInfo: {
                 id: eventId,
                 title: descriptor.title,
                 days: descriptor.days as any,

@@ -1,14 +1,10 @@
 import {BreakTimeslotWithPotentiallyUnknownIcon, detailedTalksToSpeakersLineup, FullEvent} from "../../models/Event";
 import {z} from "zod";
 import {
-  BREAK_PARSER,
   BREAK_TIME_SLOT_PARSER,
   EVENT_DESCRIPTOR_PARSER,
   EVENT_FEATURES_CONFIG_PARSER, EVENT_THEME_PARSER,
   RATINGS_CONFIG_PARSER, ROOM_PARSER,
-  SPEAKER_PARSER,
-  TALK_PARSER,
-  TALKS_TIME_SLOT_PARSER, THEMABLE_LANGUAGE_PARSER,
   THEMABLE_TALK_FORMAT_PARSER,
   THEMABLE_TALK_TRACK_PARSER
 } from "../crawler-parsers";
@@ -321,7 +317,7 @@ export const OPENPLANNER_CRAWLER: CrawlerKind<typeof OPENPLANNER_DESCRIPTOR_PARS
         },
         daySchedules: dailySchedules,
         talks,
-        info: {
+        listableEventInfo: {
           id: eventId,
           title: descriptor.title || openPlannerSchedule.title,
           description: descriptor.description,

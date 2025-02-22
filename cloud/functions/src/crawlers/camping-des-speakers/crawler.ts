@@ -251,7 +251,7 @@ export const CAMPING_DES_SPEAKERS_CRAWLER: CrawlerKind<typeof CAMPING_DES_SPEAKE
 
         const fullEvent: FullEvent = {
             id: eventId,
-            info: {
+            listableEventInfo: {
                 id: eventId,
                 title: descriptor.title,
                 days: descriptor.days as any,

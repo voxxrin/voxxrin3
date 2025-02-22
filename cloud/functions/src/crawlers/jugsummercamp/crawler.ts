@@ -243,7 +243,7 @@ export const JUG_SUMMERCAMP_CRAWLER: CrawlerKind<typeof JUG_SUMMERCAMP_PARSER> =
 
         const fullEvent: FullEvent = {
             id: eventId,
-            info: {
+            listableEventInfo: {
                 id: eventId,
                 title: descriptor.title,
                 days: descriptor.days as any,
