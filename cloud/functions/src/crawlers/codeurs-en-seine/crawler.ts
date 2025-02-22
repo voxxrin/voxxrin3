@@ -271,6 +271,7 @@ export const CODEURS_EN_SEINE_CRAWLER: CrawlerKind<typeof CODEURS_EN_SEINE_PARSE
             logoUrl: descriptor.logoUrl,
             timezone: descriptor.timezone,
             peopleDescription: descriptor.peopleDescription || "",
+            buyTicketsUrl: descriptor.buyTicketsUrl || null,
             backgroundUrl: descriptor.backgroundUrl,
             theming: descriptor.theming,
             rooms: descriptor.rooms,
@@ -298,6 +299,7 @@ export const CODEURS_EN_SEINE_CRAWLER: CrawlerKind<typeof CODEURS_EN_SEINE_PARSE
                 logoUrl: confDescriptor.logoUrl,
                 timezone: confDescriptor.timezone,
                 peopleDescription: confDescriptor.peopleDescription,
+                buyTicketsUrl: confDescriptor.buyTicketsUrl || null,
                 backgroundUrl: confDescriptor.backgroundUrl
             },
             conferenceDescriptor: confDescriptor,

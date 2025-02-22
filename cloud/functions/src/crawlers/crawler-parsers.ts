@@ -92,6 +92,7 @@ export const LISTABLE_EVENT_PARSER = z.object({
     backgroundUrl: z.string(),
     logoUrl: z.string(),
     theming: EVENT_THEME_PARSER,
+    buyTicketsUrl: z.string().nullish().optional(),
 })
 
 export const INFOS_PARSER = z.object({

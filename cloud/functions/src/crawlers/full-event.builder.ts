@@ -337,9 +337,20 @@ export class FullEventBuilder {
   }
 
   public usingInfosAndDescriptor(listableEventInfo: FullEvent['listableEventInfo'], descriptor: Omit<FullEvent['conferenceDescriptor'], "rooms"|"talkTracks"|"talkFormats"|"supportedTalkLanguages"|keyof FullEvent['listableEventInfo']>): this {
-    this.listableEventInfo = listableEventInfo;
+    this.listableEventInfo = {
+      ...listableEventInfo,
+      // converting undefined unsupported firestore values to null
+      description: listableEventInfo.description || null,
+      peopleDescription: listableEventInfo.peopleDescription || null,
+      buyTicketsUrl: listableEventInfo.buyTicketsUrl || null,
+      location: {
+        ...listableEventInfo.location,
+        address: listableEventInfo.location.address || null,
+        coords: listableEventInfo.location.coords || null,
+      },
+    };
     this.descriptor = {
-      ...pick(listableEventInfo, ['id', 'title', 'days', 'timezone', 'keywords', 'location', 'backgroundUrl', 'logoUrl', 'theming']),
+      ...pick(this.listableEventInfo, ['id', 'title', 'days', 'timezone', 'keywords', 'location', 'backgroundUrl', 'logoUrl', 'theming', 'buyTicketsUrl']),
       ...pick(descriptor, ['headingTitle', 'headingBackground', 'features', 'formattings', 'infos']),
       rooms: [...this.roomsById.values()],
       talkTracks: [...this.tracksById.values()],

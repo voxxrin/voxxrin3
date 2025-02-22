@@ -32,14 +32,15 @@ export type ListableEvent = {
     location: {
         country: string,
         city: string,
-        address?: string|undefined,
-        coords?: { latitude: number, longitude: number }|undefined,
+        address?: string|undefined|null,
+        coords?: { latitude: number, longitude: number }|undefined|null,
     },
     peopleDescription?: string|undefined|null,
     backgroundUrl: string,
     logoUrl: string,
     websiteUrl: string,
-    theming: EventTheme
+    buyTicketsUrl?: string|null|undefined,
+    theming: EventTheme,
 } & ListableEventVisibility;
 
 export type EventLastUpdates = {

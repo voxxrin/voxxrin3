@@ -278,6 +278,7 @@ Please, unless event id is made configurable at cfp.dev level, you should rather
             title: cfpEvent.name,
             description: cfpEvent.description,
             peopleDescription: descriptor.peopleDescription,
+            buyTicketsUrl: descriptor.buyTicketsUrl || null,
             timezone: cfpEvent.timezone,
             days: days,
             logoUrl: descriptor.logoUrl,

@@ -36,7 +36,8 @@
         </template>
       </speaker-card>
       <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-        <ion-fab-button class="btnGoToTicketing" :aria-label="LL.Go_To_Ticketing()">
+        <ion-fab-button class="btnGoToTicketing" :aria-label="LL.Go_To_Ticketing()" v-if="confDescriptor.buyTicketsUrl"
+                        :href="confDescriptor.buyTicketsUrl" target="_blank">
           <ion-icon :icon="ticket" aria-hidden="true"></ion-icon>
         </ion-fab-button>
       </ion-fab>

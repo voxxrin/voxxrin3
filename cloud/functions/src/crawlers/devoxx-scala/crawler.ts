@@ -273,6 +273,7 @@ export const DEVOXX_SCALA_CRAWLER: CrawlerKind<typeof DEVOXX_SCALA_DESCRIPTOR_PA
             title: descriptor.title,
             description: conferenceResourceUrl.resource.label,
             peopleDescription: descriptor.peopleDescription,
+            buyTicketsUrl: descriptor.buyTicketsUrl || null,
             timezone: descriptor.timezone,
             days: descriptor.days,
             logoUrl: descriptor.logoUrl,

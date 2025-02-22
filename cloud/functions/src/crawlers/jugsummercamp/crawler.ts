@@ -142,6 +142,7 @@ export const JUG_SUMMERCAMP_CRAWLER: CrawlerKind<typeof JUG_SUMMERCAMP_PARSER> =
             logoUrl: descriptor.logoUrl,
             timezone: descriptor.timezone,
             peopleDescription: descriptor.peopleDescription || "",
+            buyTicketsUrl: descriptor.buyTicketsUrl || null,
             backgroundUrl: descriptor.backgroundUrl,
             theming: descriptor.theming as ConferenceDescriptor['theming'],
             rooms: descriptor.rooms,
@@ -253,7 +254,8 @@ export const JUG_SUMMERCAMP_CRAWLER: CrawlerKind<typeof JUG_SUMMERCAMP_PARSER> =
                 location: descriptor.location,
                 logoUrl: descriptor.logoUrl,
                 timezone: descriptor.timezone,
-                peopleDescription: descriptor.peopleDescription as any,
+                peopleDescription: descriptor.peopleDescription,
+                buyTicketsUrl: descriptor.buyTicketsUrl || null,
                 backgroundUrl: descriptor.backgroundUrl
             },
             conferenceDescriptor: confDescriptor,

@@ -283,6 +283,7 @@ export const BDXIO_CRAWLER: CrawlerKind<typeof BDXIO_PARSER> = {
             infos: descriptor.infos,
             features: descriptor.features,
             supportedTalkLanguages: descriptor.supportedTalkLanguages,
+            buyTicketsUrl: descriptor.buyTicketsUrl || null,
             formattings: descriptor.formattings || {
               talkFormatTitle: 'with-duration',
               parseMarkdownOn: [],
@@ -360,7 +361,8 @@ export const BDXIO_CRAWLER: CrawlerKind<typeof BDXIO_PARSER> = {
                 location: descriptor.location,
                 logoUrl: descriptor.logoUrl,
                 timezone: descriptor.timezone,
-                peopleDescription: descriptor.peopleDescription as any,
+                peopleDescription: descriptor.peopleDescription,
+                buyTicketsUrl: descriptor.buyTicketsUrl || null,
                 backgroundUrl: descriptor.backgroundUrl
             },
             conferenceDescriptor: confDescriptor,

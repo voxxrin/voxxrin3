@@ -61,6 +61,7 @@ export const SINGLE_FILE_CRAWLER: CrawlerKind<typeof SINGLE_FILE_DESCRIPTOR_PARS
       backgroundUrl: descriptor.backgroundUrl,
       logoUrl: descriptor.logoUrl,
       theming: descriptor.theming,
+      buyTicketsUrl: descriptor.buyTicketsUrl || null,
     }
 
     descriptor.rooms.forEach(room => {

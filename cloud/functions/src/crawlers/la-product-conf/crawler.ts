@@ -255,6 +255,7 @@ export const LA_PRODUCT_CONF_CRAWLER: CrawlerKind<typeof LA_PRODUCT_CONF_DESCRIP
             logoUrl: descriptor.logoUrl,
             timezone: descriptor.timezone,
             peopleDescription: descriptor.peopleDescription || "",
+            buyTicketsUrl: descriptor.buyTicketsUrl || null,
             backgroundUrl: descriptor.backgroundUrl,
             theming: descriptor.theming as ConferenceDescriptor['theming'],
             rooms: descriptor.rooms,
@@ -281,7 +282,8 @@ export const LA_PRODUCT_CONF_CRAWLER: CrawlerKind<typeof LA_PRODUCT_CONF_DESCRIP
                 location: descriptor.location,
                 logoUrl: descriptor.logoUrl,
                 timezone: descriptor.timezone,
-                peopleDescription: descriptor.peopleDescription as any,
+                peopleDescription: descriptor.peopleDescription,
+                buyTicketsUrl: descriptor.buyTicketsUrl || null,
                 backgroundUrl: descriptor.backgroundUrl
             },
             conferenceDescriptor: confDescriptor,
