@@ -9,9 +9,9 @@
            layout="stacked"
            @didDismiss="preparingOfflineScheduleToastIsOpenRef = false"
       ></ion-toast>
-      <toolbar-header :title="LL.Schedule()" :modes="[...MODES]" :search-enabled="true"
+      <toolbar-header :title="LL.Schedule()" :modes="[...scheduleModes]" :search-enabled="true"
                       @search-terms-updated="searchTerms => searchTermsRef = searchTerms"
-                      @mode-updated="updatedModeId => currentSelectedMode = updatedModeId as typeof MODES[number]['id']">
+                      @mode-updated="updatedModeId => currentSelectedMode = updatedModeId as ScheduleModeId">
         <ion-button class="ion-margin-end" slot="end" shape="round" size="small" fill="outline" @click="openSchedulePreferencesModal()"
                     v-if="false"   :aria-label="LL.Filters()">
           <ion-icon src="/assets/icons/solid/settings-cog.svg"></ion-icon>
@@ -157,12 +157,22 @@ const { LL } = typesafeI18n()
 const {selectedDayId} = useSharedEventSelectedDay(spacedEventId);
 
 const user = useCurrentUser()
-const MODES = [
-  { id: "schedule", icon: list, label: LL.value.Big_list_mode(), preSelected: true },
-  { id: "favorites", icon: star, label: LL.value.Compact_list_mode() },
-] as const
 
-const currentSelectedMode = ref<typeof MODES[number]['id']>("schedule")
+type ScheduleModeId = "schedule"|"favorites"
+const scheduleModes = computed(() => {
+  const descriptor = toValue(confDescriptor);
+
+  const modes: Array<{id: ScheduleModeId, icon: string, label: string}> = [
+    { id: "schedule", icon: list, label: LL.value.Big_list_mode() },
+  ];
+  if(descriptor?.features.favoritesEnabled) {
+    modes.push({ id: "favorites", icon: star, label: LL.value.Compact_list_mode() });
+  }
+
+  return modes;
+})
+
+const currentSelectedMode = ref<ScheduleModeId>("schedule")
 
 const availableDaysRef = ref<VoxxrinDay[]|undefined>(undefined);
 function onceDayInitializedTo(day: VoxxrinDay, availableDays: VoxxrinDay[]) {
