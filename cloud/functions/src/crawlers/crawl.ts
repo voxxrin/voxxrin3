@@ -10,6 +10,9 @@ import {ConferenceOrganizerSpace} from "../../../../shared/conference-organizer-
 import {eventLastUpdateRefreshed} from "../functions/firestore/firestore-utils";
 import {http} from "./utils";
 import {
+  Break,
+  BreakTimeSlot,
+  DailySchedule,
   DetailedTalk,
   Room, TalkAsset,
   TalkFormat,
@@ -26,6 +29,7 @@ import { marked } from 'marked'
 import {
   resolvedEventFirestorePath,
 } from "../../../../shared/utilities/event-utils";
+import { DocumentSnapshot } from "firebase-admin/firestore";
 
 export type CrawlerKind<ZOD_TYPE extends z.ZodType> = {
     crawlerImpl: (eventId: string, crawlerDescriptor: z.infer<ZOD_TYPE>, criteria: { dayIds?: string[]|undefined }) => Promise<FullEvent>,
@@ -391,9 +395,35 @@ const saveEvent = async function (event: FullEvent, crawlerDescriptor: z.infer<t
 
     await Promise.all(event.daySchedules.map(async daySchedule => {
         try {
-            await firestoreEvent
-                .collection("days").doc(daySchedule.day)
-                .set(daySchedule)
+            const dayDoc = firestoreEvent.collection("days").doc(daySchedule.day);
+
+            const alreadyPersistedScheduleDoc = (await dayDoc.get()) as DocumentSnapshot<DailySchedule>;
+            const alreadyPersistedSchedule = alreadyPersistedScheduleDoc.data();
+
+            // Ensuring existing (legacy) break timeslot ids are kept across new crawls()
+            // as we changed the rule in feb 2025, including room in break timeslot ids
+            // Note that this shouldn't be *that* problematic and we might remove this particular case handling at some point
+            // in time, because no break timeslot id is supposed to be referenced anywhere (only talks timeslot ids
+            // are supposed to be referenced in feedbacks ... and even those are not supposed to exist either)
+            if(alreadyPersistedSchedule) {
+              daySchedule.timeSlots.forEach(timeslotToPersist => {
+                if(timeslotToPersist.type === 'break') {
+                  const existingPersistedScheduleWithLegacyId = alreadyPersistedSchedule.timeSlots
+                    .filter((persistedTimeslot): persistedTimeslot is BreakTimeSlot => persistedTimeslot.type === 'break')
+                    .find(persistedTimeslot => {
+                      return persistedTimeslot.type === 'break'
+                        && `${timeslotToPersist.start}--${timeslotToPersist.end}` === `${persistedTimeslot.start}--${persistedTimeslot.end}`
+                        && timeslotToPersist.id !== persistedTimeslot.id;
+                    })
+
+                  if(existingPersistedScheduleWithLegacyId) {
+                    timeslotToPersist.id = existingPersistedScheduleWithLegacyId.id;
+                  }
+                }
+              })
+            }
+
+            await dayDoc.set(daySchedule)
         }catch(e) {
             error(`Error while saving dailySchedule ${daySchedule.day}: ${e?.toString()}`)
         }

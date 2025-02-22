@@ -208,7 +208,7 @@ export const CODEURS_EN_SEINE_CRAWLER: CrawlerKind<typeof CODEURS_EN_SEINE_PARSE
                 talkOrBreak
             ]).with([ P.nullish, {type:"break"} ], ([_, breakSlot]) => {
                 const breakTimeslot: BreakTimeSlot = {
-                    id: `${breakSlot.start}--${breakSlot.end}`,
+                    id: `${breakSlot.start}--${breakSlot.end}--${breakSlot.breakSlot.room.id}`,
                     type: 'break',
                     start: breakSlot.start,
                     end: breakSlot.end,
@@ -245,7 +245,7 @@ export const CODEURS_EN_SEINE_CRAWLER: CrawlerKind<typeof CODEURS_EN_SEINE_PARSE
             return timeslots;
         }, [] as ScheduleTimeSlot[]).concat(descriptor.additionalBreaks.map(addBreak => ({
             ...addBreak.breakTimeslot,
-            id: `${addBreak.breakTimeslot.start}--${addBreak.breakTimeslot.end}` as ScheduleTimeSlot['id'],
+            id: `${addBreak.breakTimeslot.start}--${addBreak.breakTimeslot.end}--${HALL_ROOM.id}` as BreakTimeSlot['id'],
             type: 'break',
             break: {
                 ...addBreak.breakTimeslot.break,

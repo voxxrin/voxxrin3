@@ -294,7 +294,11 @@ const crawlDevoxxDay = async (cfpBaseUrl: string, {day, schedules}: {day: string
     const talkFormats = descriptor.talkFormats || [];
 
     const slots = schedules.reduce((slots, item) => {
-      const key = `${item.fromDate}--${item.toDate}`
+      let key = `${item.fromDate}--${item.toDate}`
+      if(item.sessionType.pause) {
+        key = `${item.fromDate}--${item.toDate}--${item.room.id}`
+      }
+
       slots[key] = slots[key] || [];
       slots[key].push(item);
       return slots;
