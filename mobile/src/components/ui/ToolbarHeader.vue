@@ -19,7 +19,7 @@
       </transition>
 
       <div class="toolbarHeader-actions" slot="end">
-        <ListModeSwitch v-if="modes" :modes="modes" @mode-updated="(updatedModeId, previousModeId) => $emits('mode-updated', updatedModeId, previousModeId)"></ListModeSwitch>
+        <list-mode-switch v-if="modes && modes.length > 1" :modes="modes" @mode-updated="(updatedModeId, previousModeId) => $emits('mode-updated', updatedModeId, previousModeId)"></list-mode-switch>
         <slot />
         <ion-button slot="end" shape="round" size="small" @click="toggleSearchField()"
                     :aria-label="LL.Search()" v-if="searchEnabled">

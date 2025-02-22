@@ -46,10 +46,7 @@
           <vox-divider>{{ LL.Social_media() }}</vox-divider>
           <ul class="linksInfoConf-list">
             <li v-for="(socialMedia) in socialMedias" :key="socialMedia.type">
-              <ion-button color="theming" slot="end" shape="round" size="small" :href="socialMedia.href"
-                          :aria-label="socialMedia.label">
-                <font-awesome-icon :icon="socialMedia.icon" :alt="socialMedia.label" />
-              </ion-button>
+              <social-media-icon :href="socialMedia.href" :type="socialMedia.type" />
             </li>
           </ul>
         </div>
@@ -84,62 +81,28 @@
   import {
       location,
       calendar,
-      link,
   } from "ionicons/icons";
   import VoxDivider from "@/components/ui/VoxDivider.vue";
   import {IonText, IonImg} from "@ionic/vue"
   import MonthDayDateRange from "@/components/MonthDayDateRange.vue";
   import {computed, Ref, toValue} from "vue";
-  import {SocialMediaType} from "../../../../shared/type-utils";
   import CarouselSwiper from "@/components/ui/CarouselSwiper.vue";
   import Tips from "@/components/ui/Tips.vue";
   import {useCurrentSpaceEventIdRef} from "@/services/Spaces";
-  import {faYoutube} from "@fortawesome/free-brands-svg-icons/faYoutube";
-  import {faLinkedin} from "@fortawesome/free-brands-svg-icons/faLinkedin";
-  import {faXTwitter} from "@fortawesome/free-brands-svg-icons/faXTwitter";
-  import {faMastodon} from "@fortawesome/free-brands-svg-icons/faMastodon";
-  import {faInstagram} from "@fortawesome/free-brands-svg-icons/faInstagram";
-  import {faTwitch} from "@fortawesome/free-brands-svg-icons/faTwitch";
-  import {faGithub} from "@fortawesome/free-brands-svg-icons/faGithub";
-  import {faFacebook} from "@fortawesome/free-brands-svg-icons/faFacebook";
-  import {faFlickr} from "@fortawesome/free-brands-svg-icons/faFlickr";
-  import {faBluesky} from "@fortawesome/free-brands-svg-icons/faBluesky";
-  import {faLink} from "@fortawesome/free-solid-svg-icons/faLink";
-  import {IconDefinition} from "@fortawesome/free-solid-svg-icons";
-  import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+  import SocialMediaIcon from "@/components/ui/SocialMediaIcon.vue";
 
   const { LL } = typesafeI18n()
 
   const spacedEventIdRef = useCurrentSpaceEventIdRef();
   const {conferenceDescriptor: confDescriptorRef} = useSharedConferenceDescriptor(spacedEventIdRef);
 
-  const SUPPORTED_SOCIAL_MEDIAS = {
-    "website": { icon: faLink, label: "Website" },
-    "twitter": { icon: faXTwitter, label: "X (previously Twitter)" },
-    "x": { icon: faXTwitter, label: "X (previously Twitter)" },
-    "linkedin": { icon: faLinkedin, label: "Linkedin" },
-    "mastodon": { icon: faMastodon, label: "Mastodon" },
-    "instagram": { icon: faInstagram, label: "Instagram" },
-    "youtube": { icon: faYoutube, label: "Youtube" },
-    "twitch": { icon: faTwitch, label: "Twitch" },
-    "github": { icon: faGithub, label: "Github" },
-    "facebook": { icon: faFacebook, label: "Facebook" },
-    "flickr": { icon: faFlickr, label: "Flickr" },
-    "bluesky": { icon: faBluesky, label: "Bluesky" },
-  } as const
-
-  const socialMedias: Ref<Array<{type: SocialMediaType, href: string, icon: IconDefinition, label: string}>> = computed(() => {
+  const socialMedias = computed(() => {
     const confDescriptor = toValue(confDescriptorRef)
     if(!confDescriptor || !confDescriptor.infos || !confDescriptor.infos.socialMedias) {
       return [];
     }
 
-    return (Object.keys(SUPPORTED_SOCIAL_MEDIAS) as Array<keyof typeof SUPPORTED_SOCIAL_MEDIAS>)
-      .map((socialMediaType) => {
-        const confSocialMedia = (confDescriptor.infos?.socialMedias || []).find(sm => sm.type === socialMediaType)
-        const maybeSocialMediaWithLink = confSocialMedia ? {...SUPPORTED_SOCIAL_MEDIAS[socialMediaType], ...confSocialMedia} : undefined;
-        return maybeSocialMediaWithLink
-      }).filter(v => !!v).map(v => v!);
+    return (confDescriptor.infos?.socialMedias || []).filter(v => !!v);
   })
 
 </script>
