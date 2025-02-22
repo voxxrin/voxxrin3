@@ -13,4 +13,4 @@ export type ArrayReplace<T, FIELDNAME extends keyof T, REPLACEMENT> =
     T[FIELDNAME] extends Array<infer ITEM> ?
         Array<Replace<ITEM, REPLACEMENT>>:never;
 
-export type SocialMediaType = "website"|"twitter"|"linkedin"|"mastodon"|"instagram"|"youtube"|"twitch"|"github"|"facebook"|"flickr";
+export type SocialMediaType = "website"|"twitter"|"linkedin"|"mastodon"|"instagram"|"youtube"|"twitch"|"github"|"facebook"|"flickr"|"bluesky";

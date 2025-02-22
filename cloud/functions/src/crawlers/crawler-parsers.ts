@@ -68,6 +68,7 @@ export const SOCIAL_MEDIA_TYPE = z.union([
     z.literal('github'),
     z.literal('facebook'),
     z.literal('flickr'),
+    z.literal('bluesky'),
 ])
 
 export const LISTABLE_EVENT_PARSER = z.object({

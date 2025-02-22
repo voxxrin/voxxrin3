@@ -103,6 +103,7 @@
   import {faGithub} from "@fortawesome/free-brands-svg-icons/faGithub";
   import {faFacebook} from "@fortawesome/free-brands-svg-icons/faFacebook";
   import {faFlickr} from "@fortawesome/free-brands-svg-icons/faFlickr";
+  import {faBluesky} from "@fortawesome/free-brands-svg-icons/faBluesky";
   import {faLink} from "@fortawesome/free-solid-svg-icons/faLink";
   import {IconDefinition} from "@fortawesome/free-solid-svg-icons";
   import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
@@ -123,6 +124,7 @@
     "github": { icon: faGithub, label: "Github" },
     "facebook": { icon: faFacebook, label: "Facebook" },
     "flickr": { icon: faFlickr, label: "Flickr" },
+    "bluesky": { icon: faBluesky, label: "Bluesky" },
   } as const
 
   const socialMedias: Ref<Array<{type: SocialMediaType, href: string, icon: IconDefinition, label: string}>> = computed(() => {
