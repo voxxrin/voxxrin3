@@ -19,15 +19,16 @@ const { LL } = typesafeI18n()
 
 const tabs = computed(() => {
     const confDescriptor = toValue(confDescriptorRef);
-    return [{
+    return ([] as Array<{id: string, label: string, url: string, icon: string, selectedIcon: string }>)
+      .concat(confDescriptor?.features.skipShowingSchedule === true ? []:[{
         id: 'schedule', url: `${getResolvedEventRootPathFromSpacedEventIdRef(spacedEventIdRef)}/schedule`, label: LL.value.Schedule(),
         icon: '/assets/icons/line/calendar-line.svg',
         selectedIcon: '/assets/icons/solid/calendar.svg',
-    }, {
+    }]).concat([{
       id: 'speakers', url: `${getResolvedEventRootPathFromSpacedEventIdRef(spacedEventIdRef)}/speakers`, label: LL.value.Speakers(),
       icon: '/assets/icons/line/megaphone-line.svg',
       selectedIcon: '/assets/icons/solid/megaphone.svg',
-    }].concat(confDescriptor && areFeedbacksEnabled(confDescriptor) ? [{
+    }]).concat(confDescriptor && areFeedbacksEnabled(confDescriptor) ? [{
         id: 'feedbacks', url: `${getResolvedEventRootPathFromSpacedEventIdRef(spacedEventIdRef)}/feedbacks`, label: LL.value.Feedbacks(),
         icon: '/assets/icons/line/comments-2-line.svg',
         selectedIcon: '/assets/icons/solid/comments-2.svg',
