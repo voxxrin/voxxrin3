@@ -340,7 +340,7 @@ export class FullEventBuilder {
     this.listableEventInfo = listableEventInfo;
     this.descriptor = {
       ...pick(listableEventInfo, ['id', 'title', 'days', 'timezone', 'keywords', 'location', 'backgroundUrl', 'logoUrl', 'theming']),
-      ...pick(descriptor, ['headingTitle', 'headingBackground', 'features', 'formattings']),
+      ...pick(descriptor, ['headingTitle', 'headingBackground', 'features', 'formattings', 'infos']),
       rooms: [...this.roomsById.values()],
       talkTracks: [...this.tracksById.values()],
       talkFormats: [...this.formatsById.values()],
@@ -401,7 +401,7 @@ export class FullEventBuilder {
         ...pick(this.descriptor, [
           'id', 'title', 'days', 'timezone', 'keywords', 'location', 'backgroundUrl',
           'logoUrl', 'theming', 'headingTitle', 'headingBackground', 'talkFormats',
-          'talkTracks', 'supportedTalkLanguages', 'rooms', 'formattings'
+          'talkTracks', 'supportedTalkLanguages', 'rooms', 'formattings', 'infos',
         ]),
         features: {
           ...this.descriptor.features,
