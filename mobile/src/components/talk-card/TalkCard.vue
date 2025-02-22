@@ -95,7 +95,7 @@ const props = defineProps({
     type: Object as PropType<MinimumTalkAttrs>
   },
   roomId: {
-    required: true,
+    required: false,
     type: Object as PropType<RoomId|undefined>
   },
   isHighlighted: {
