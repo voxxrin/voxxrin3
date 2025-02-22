@@ -115,7 +115,8 @@
 
   const SUPPORTED_SOCIAL_MEDIAS = {
     "website": { icon: faLink, label: "Website" },
-    "twitter": { icon: faXTwitter, label: "Twitter" },
+    "twitter": { icon: faXTwitter, label: "X (previously Twitter)" },
+    "x": { icon: faXTwitter, label: "X (previously Twitter)" },
     "linkedin": { icon: faLinkedin, label: "Linkedin" },
     "mastodon": { icon: faMastodon, label: "Mastodon" },
     "instagram": { icon: faInstagram, label: "Instagram" },

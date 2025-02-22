@@ -60,6 +60,7 @@ export const EVENT_THEME_PARSER = z.object({
 export const SOCIAL_MEDIA_TYPE = z.union([
     z.literal('website'),
     z.literal('twitter'),
+    z.literal('x'),
     z.literal('linkedin'),
     z.literal('mastodon'),
     z.literal('instagram'),
