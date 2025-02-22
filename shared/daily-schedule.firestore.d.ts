@@ -63,11 +63,17 @@ export type RecordingPlatform = "youtube"|"unknown"/* |"twitch"|"dailymotion"...
 export type TimeSlotBase<START extends ISODatetime = ISODatetime, END extends ISODatetime = ISODatetime> = {
     start: START,
     end: END,
-    id: `${START}--${END}`,
 }
 
-export type BreakTimeSlot = TimeSlotBase & { type: 'break', break: Break }
-export type TalksTimeSlot = TimeSlotBase & { type: 'talks', talks: Talk[] }
+export type BreakTimeSlot<
+  START extends ISODatetime = ISODatetime,
+  END extends ISODatetime = ISODatetime,
+  ROOM_ID extends string = string,
+> = TimeSlotBase<START, END> & { id: `${START}--${END}--${ROOM_ID}`, type: 'break', break: Break }
+export type TalksTimeSlot<
+  START extends ISODatetime = ISODatetime,
+  END extends ISODatetime = ISODatetime,
+> = TimeSlotBase<START, END> & { id: `${START}--${END}`, type: 'talks', talks: Talk[] }
 
 export type ScheduleTimeSlot = BreakTimeSlot | TalksTimeSlot
 
