@@ -97,6 +97,10 @@ service cloud.firestore {
         allow get, list: if true;
         allow write: if false;
       }
+      match /speakers-allInOne/self {
+        allow get: if true;
+        allow list, write: if false;
+      }
 
       match /organizer-space/{secretOrganizerToken} {
         allow get: if true;
@@ -162,6 +166,10 @@ service cloud.firestore {
           allow list, write: if false;
         }
         match /roomsStats-allInOne/self {
+          allow get: if true;
+          allow list, write: if false;
+        }
+        match /speakers-allInOne/self {
           allow get: if true;
           allow list, write: if false;
         }

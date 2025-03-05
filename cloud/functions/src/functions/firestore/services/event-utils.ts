@@ -9,6 +9,7 @@ import {AllInOneTalkStats} from "../../../../../../shared/event-stats";
 import {detailedTalksToSpeakersLineup} from "../../../models/Event";
 import {DetailedTalk} from "../../../../../../shared/daily-schedule.firestore";
 import {toValidFirebaseKey} from "../../../../../../shared/utilities/firebase.utils";
+import {LineupSpeaker} from "../../../../../../shared/event-lineup.firestore";
 import {arrayDiff} from "../../../../../../shared/utilities/arrays.utils";
 
 
@@ -63,6 +64,13 @@ export async function createAllSpeakers(eventTalks: DetailedTalk[], maybeSpaceTo
     ...speakersDiff.elementsToAdd.map(lineupSpeakerToAdd => db.doc(`${eventRootPath}/speakers/${toValidFirebaseKey(lineupSpeakerToAdd.id)}`).set(lineupSpeakerToAdd)),
     ...speakersDiff.elementsAlreadyPresent.map(async ({ origin: speakerDoc, target: lineupSpeaker }) => speakerDoc.update(lineupSpeaker)),
   ])
+
+  const allInOneSpeakers = lineupSpeakers.reduce((allInOneSpeakers, lineupSpeaker) => {
+    allInOneSpeakers[lineupSpeaker.id] = lineupSpeaker;
+    return allInOneSpeakers;
+  }, {} as Record<string, LineupSpeaker>)
+
+  await db.doc(`${eventRootPath}/speakers-allInOne/self`).set(allInOneSpeakers);
 
   return { createdSpeakers: lineupSpeakers }
 }

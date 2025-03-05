@@ -1,12 +1,11 @@
 import {computed, Ref, toValue} from "vue";
-import {deferredVuefireUseCollection, deferredVuefireUseDocument} from "@/views/vue-utils";
-import {VoxxrinConferenceDescriptor, VoxxrinLanguaceCode} from "@/models/VoxxrinConferenceDescriptor";
-import {collection, CollectionReference, doc, DocumentReference, getDocs } from "firebase/firestore";
+import {deferredVuefireUseDocument} from "@/views/vue-utils";
+import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
+import {doc, DocumentReference, getDoc} from "firebase/firestore";
 import {db} from "@/state/firebase";
 import {resolvedEventFirestorePath} from "../../../shared/utilities/event-utils";
 import {LineupSpeaker} from "../../../shared/event-lineup.firestore";
 import {createVoxxrinSpeakerFromFirestore, SpeakerId, speakerMatchesSearchTerms} from "@/models/VoxxrinSpeaker";
-import {match} from "ts-pattern";
 import {CompletablePromiseQueue, sortBy} from "@/models/utils";
 import {User} from "firebase/auth";
 import {checkCache} from "@/services/Cachings";
@@ -14,34 +13,25 @@ import {Temporal} from "temporal-polyfill";
 import {PERF_LOGGER} from "@/services/Logger";
 import {loadSpeakerUrl} from "@/state/useEventTalk";
 import {toValidFirebaseKey} from "../../../shared/utilities/firebase.utils";
+import {match, P} from "ts-pattern";
 
 export function useLineupSpeakers(eventDescriptorRef: Ref<VoxxrinConferenceDescriptor|undefined>, searchTermsRef: Ref<string|undefined>) {
 
-  const firestoreSpeakersRef = deferredVuefireUseCollection([ eventDescriptorRef ],
-    ([eventDescriptor]) => eventLineupSpeakersCollections(eventDescriptor),
-    (firestoreSpeaker: LineupSpeaker) => firestoreSpeaker,
-    () => {},
-    (change, speakerId, collectionRef) => {
-      match(change)
-        .with({type:'created'}, change => collectionRef.value.set(speakerId, change.createdDoc))
-        .with({type:'updated'}, change => collectionRef.value.set(speakerId, change.updatedDoc))
-        .with({type:'deleted'}, change => collectionRef.value.delete(speakerId))
-        .exhaustive()
-    }
-  );
+  const firestoreAllSpeakersRef = deferredVuefireUseDocument([eventDescriptorRef],
+    ([maybeEventDescriptor]) => allEventLineupSpeakersDoc(maybeEventDescriptor));
 
   return {
     speakers: computed(() => {
-      const firestoreSpeakersLineup = toValue(firestoreSpeakersRef),
+      const firestoreAllSpeakersLineup = toValue(firestoreAllSpeakersRef),
         eventDescriptor = toValue(eventDescriptorRef),
         searchTerms = toValue(searchTermsRef);
 
-      if(!firestoreSpeakersLineup || !eventDescriptor) {
-        return undefined;
+      if(!firestoreAllSpeakersLineup || !eventDescriptor) {
+        return [];
       }
 
       const speakers = sortBy(
-        [...firestoreSpeakersLineup.values()]
+        [...Object.values(firestoreAllSpeakersLineup)]
           .map(fSpeaker => createVoxxrinSpeakerFromFirestore(eventDescriptor, fSpeaker))
           .filter(speaker => speakerMatchesSearchTerms(speaker, searchTerms)),
         sp => sp.fullName
@@ -71,16 +61,12 @@ export function useLineupSpeaker(eventDescriptorRef: Ref<VoxxrinConferenceDescri
   }
 }
 
-export function eventLineupSpeakersCollections(eventDescriptor: VoxxrinConferenceDescriptor|undefined) {
-  if(!eventDescriptor || !eventDescriptor.id || !eventDescriptor.id.value) {
-    return [];
+export function allEventLineupSpeakersDoc(maybeEventDescriptor: VoxxrinConferenceDescriptor|undefined) {
+  if(!maybeEventDescriptor || !maybeEventDescriptor.id || !maybeEventDescriptor.id.value) {
+    return undefined;
   }
 
-  return [
-    collection(db,
-    `${resolvedEventFirestorePath(eventDescriptor.id.value, eventDescriptor.spaceToken?.value)}/speakers`
-    ) as CollectionReference<LineupSpeaker>
-  ];
+  return doc(db, `${resolvedEventFirestorePath(maybeEventDescriptor.id.value, maybeEventDescriptor.spaceToken?.value)}/speakers-allInOne/self`) as DocumentReference<Record<string, LineupSpeaker>>;
 }
 
 export function eventLineupSpeakerDocument(eventDescriptor: VoxxrinConferenceDescriptor|undefined, speakerId: SpeakerId|undefined) {
@@ -99,13 +85,14 @@ export async function prepareEventSpeakers(user: User, conferenceDescriptor: Vox
     async () => {
       PERF_LOGGER.debug(`eventTalkPreparation(eventId=${conferenceDescriptor.id.value})`)
 
-      const speakersColl = eventLineupSpeakersCollections(conferenceDescriptor)[0];
-      const speakers = await getDocs(speakersColl)
+      const maybeAllSpeakersDoc = allEventLineupSpeakersDoc(conferenceDescriptor);
+      const allSpeakersById = await match(maybeAllSpeakersDoc)
+        .with(P.nullish, async () => ({} as Record<string, LineupSpeaker>))
+        .otherwise(async allSpeakersDoc => (await getDoc(allSpeakersDoc)).data() || {});
 
-      promisesQueue.addAll(speakers.docs.map(speaker => () => {
-        const speakerData = speaker.data()
-        if(speakerData.photoUrl) {
-          return loadSpeakerUrl(speakerData.photoUrl);
+      promisesQueue.addAll(Object.values(allSpeakersById).map(speaker => () => {
+        if(speaker.photoUrl) {
+          return loadSpeakerUrl(speaker.photoUrl);
         }
       }), {priority: 100 });
     }), { priority: 1000 });

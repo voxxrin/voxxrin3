@@ -392,6 +392,24 @@ const FIREBASE_MANAGED_COLLECTIONS = [
       }),
     }]
   }, {
+    name: '/events/{eventId}/speakers-allInOne/self',
+    docInitializations: [{
+      name: 'default',
+      collection: '/events/an-event/speakers-allInOne',
+      path: '/events/an-event/speakers-allInOne/self',
+      newDocPath: '/events/an-event/speakers-allInOne/other',
+      data: () => ({
+        "12345": {
+          id: `12345`,
+        }
+      }),
+      updatedData: () => ({
+        "54321": {
+          id: `54321`,
+        }
+      }),
+    }]
+  }, {
     name: '/events/{eventId}/speakers/{speakerId}',
     docInitializations: [{
       name: 'default',
@@ -566,6 +584,24 @@ const FIREBASE_MANAGED_COLLECTIONS = [
           capacityFillingRatio: 0,
           recordedAt: "2024-03-28T11:58:10Z",
           persistedAt: "2024-03-28T12:00:00Z"
+        }
+      }),
+    }]
+  }, {
+    name: '/spaces/{spaceId}/events/{eventId}/speakers-allInOne/self',
+    docInitializations: [{
+      name: 'default',
+      collection: '/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/speakers-allInOne',
+      path: '/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/speakers-allInOne/self',
+      newDocPath: '/spaces/12345678-1234-5678-90ab-1234567890ab/events/an-event/speakers-allInOne/other',
+      data: () => ({
+        "12345": {
+          id: `12345`,
+        }
+      }),
+      updatedData: () => ({
+        "54321": {
+          id: `54321`,
         }
       }),
     }]
@@ -1179,6 +1215,20 @@ const COLLECTIONS: CollectionDescriptor[] = [{
     }),
     tests: (userContext: UserContext) => {
       ensureCollectionFollowAccessPermissions(`/${eventFirestorePath(space.id)}/roomsStats-allInOne/self`, userContext,
+        {
+          get: true,
+          list: false, write: false
+        })
+    },
+    spaceId: space.id,
+  }, {
+    name: `/${eventFirestorePath(space.id)}/speakers-allInOne`,
+    aroundTests: (_: UserContext) => ({
+      beforeEach: [],
+      afterEach: [],
+    }),
+    tests: (userContext: UserContext) => {
+      ensureCollectionFollowAccessPermissions(`/${eventFirestorePath(space.id)}/speakers-allInOne/self`, userContext,
         {
           get: true,
           list: false, write: false

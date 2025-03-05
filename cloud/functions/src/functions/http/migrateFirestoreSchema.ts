@@ -37,6 +37,7 @@ const MIGRATIONS: Migration[] = [
     { name: "fillTalkEditorsSpeakersAndTitle", exec: async () => (await import("../firestore/migrations/026-fillTalkEditorsSpeakersAndTitle")).fillTalkEditorsSpeakersAndTitle() },
     { name: "introduceEventSpeakersAndFixTalkUndefinedTags", exec: async () => (await import("../firestore/migrations/027-introduceEventSpeakersAndFixTalkUndefinedTags")).introduceEventSpeakersAndFixTalkUndefinedTags() },
     { name: "introduceDetailedTalksAllocation", exec: async () => (await import("../firestore/migrations/028-introduceDetailedTalksAllocation")).introduceDetailedTalksAllocation() },
+    { name: "introduceSpeakersAllInOneDoc", exec: async () => (await import("../firestore/migrations/029-introduceSpeakersAllInOneDoc")).introduceSpeakersAllInOneDoc() },
 ];
 
 export type MigrationResult = "OK"|"Error";
