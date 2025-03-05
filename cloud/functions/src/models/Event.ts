@@ -51,7 +51,15 @@ export function detailedTalksToSpeakersLineup(talks: DetailedTalk[]): LineupSpea
             start: talk.allocation.start,
             end: talk.allocation.end,
           } : null,
-          otherSpeakers: talk.speakers.filter(sp => sp.id !== speaker.id),
+          otherSpeakers: talk.speakers.filter(sp => sp.id !== speaker.id)
+            .map(speaker => ({
+              id: speaker.id,
+              fullName: speaker.fullName,
+              photoUrl: speaker.photoUrl,
+              companyName: speaker.companyName,
+              bio: speaker.bio,
+              social: speaker.social,
+            })),
         })
       })
     }
