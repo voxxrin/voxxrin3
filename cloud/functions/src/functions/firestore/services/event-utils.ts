@@ -9,6 +9,7 @@ import {AllInOneTalkStats} from "../../../../../../shared/event-stats";
 import {getEventTalks} from "./talk-utils";
 import {detailedTalksToSpeakersLineup} from "../../../models/Event";
 import {DetailedTalk} from "../../../../../../shared/daily-schedule.firestore";
+import {toValidFirebaseKey} from "../../../../../../shared/utilities/firebase.utils";
 
 
 export async function getAllEventsDocs(opts: { includePrivateSpaces: boolean } = { includePrivateSpaces: false }) {
@@ -58,7 +59,7 @@ export async function createAllSpeakers(eventTalks: DetailedTalk[], maybeSpaceTo
 
   // delete all then re-create all
   await Promise.all(existingSpeakerDocs.map(speakerDoc => speakerDoc.delete()))
-  await Promise.all(lineupSpeakers.map(lineupSpeaker => db.doc(`${eventRootPath}/speakers/${lineupSpeaker.id}`).set(lineupSpeaker)))
+  await Promise.all(lineupSpeakers.map(lineupSpeaker => db.doc(`${eventRootPath}/speakers/${toValidFirebaseKey(lineupSpeaker.id)}`).set(lineupSpeaker)))
 
   return { createdSpeakers: lineupSpeakers }
 }

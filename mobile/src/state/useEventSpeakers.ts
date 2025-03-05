@@ -13,6 +13,7 @@ import {checkCache} from "@/services/Cachings";
 import {Temporal} from "temporal-polyfill";
 import {PERF_LOGGER} from "@/services/Logger";
 import {loadSpeakerUrl} from "@/state/useEventTalk";
+import {toValidFirebaseKey} from "../../../shared/utilities/firebase.utils";
 
 export function useLineupSpeakers(eventDescriptorRef: Ref<VoxxrinConferenceDescriptor|undefined>, searchTermsRef: Ref<string|undefined>) {
 
@@ -88,7 +89,7 @@ export function eventLineupSpeakerDocument(eventDescriptor: VoxxrinConferenceDes
   }
 
   return doc(db,
-    `${resolvedEventFirestorePath(eventDescriptor.id.value, eventDescriptor.spaceToken?.value)}/speakers/${speakerId.value}`
+    `${resolvedEventFirestorePath(eventDescriptor.id.value, eventDescriptor.spaceToken?.value)}/speakers/${toValidFirebaseKey(speakerId.value)}`
     ) as DocumentReference<LineupSpeaker>;
 }
 
