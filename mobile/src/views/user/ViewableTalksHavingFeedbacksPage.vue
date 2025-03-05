@@ -41,7 +41,7 @@ import {typesafeI18n} from "@/i18n/i18n-vue";
 import {match, P} from "ts-pattern";
 import EventTalksGroup from "@/components/events/EventTalksGroup.vue";
 import {getResolvedEventRootPath} from "@/services/Spaces";
-import {dedupe} from "@/services/Arrays";
+import {dedupe} from "../../../../shared/utilities/arrays.utils";
 
 const ionRouter = useIonRouter();
 
