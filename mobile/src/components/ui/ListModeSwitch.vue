@@ -28,7 +28,8 @@
   function updateSelectedModeTo(updatedModeId: string) {
     const previousModeId = selectedModeRef.value;
     selectedModeRef.value = updatedModeId;
-    $emits('mode-updated', updatedModeId, previousModeId);
+    // Deferring emit so that list mode switch state immediately updates
+    setTimeout(() => $emits('mode-updated', updatedModeId, previousModeId), 50);
   }
 </script>
 
