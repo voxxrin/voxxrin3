@@ -2,7 +2,7 @@
   <ion-header class="ion-no-border">
     <ion-toolbar :style="{ '--background': headingBackground }">
       <div class="viewsHeader">
-        <ion-button class="viewsHeader-back" @click="backButtonClicked" shape="round" :aria-label="LL.Back_List_Events()">
+        <ion-button class="viewsHeader-back" @click="backButtonClicked" shape="round" :aria-label="LL.Back_List_Events()" data-testid="back-to-events-list">
           <ion-icon src="/assets/icons/solid/checkbox-list.svg"></ion-icon>
         </ion-button>
 <!-- TODO: Fix router navigation from preferences/schedule prior to re-enabling this one -->

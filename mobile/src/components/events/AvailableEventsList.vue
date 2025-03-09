@@ -4,7 +4,7 @@
                scrollable
                @ion-change="(event) => categoryUpdated(event.detail.value)">
     <ion-segment-button v-for="(categorizedEvents, index) in perCategoryEventsRef" :key="index"
-                        :value="categorizedEvents.category">
+                        :value="categorizedEvents.category" :data-testid="categorizedEvents.testId">
       <ion-label>{{ categorizedEvents.label }} <span class="count">{{categorizedEvents.eventsCount}}</span></ion-label>
     </ion-segment-button>
   </ion-segment>
@@ -57,6 +57,7 @@ const { LL } = typesafeI18n()
 
 type CategoryEvents = {
   category: "future"|"past",
+  testId: string,
   label: string,
   eventsCount: number,
   sections: Array<{
@@ -76,6 +77,7 @@ const perCategoryEventsRef = computed(() => {
 
   const categories: CategoryEvents[] = [{
     category: 'future',
+    testId: 'future-events-tab',
     label: LL.value.Future_events(),
     eventsCount: ongoingEvents.length + futureEvents.length,
     sections: [{
@@ -87,6 +89,7 @@ const perCategoryEventsRef = computed(() => {
     }]
   }, {
     category: 'past',
+    testId: 'past-events-tab',
     label: LL.value.Past_events(),
     eventsCount: pastEvents.length,
     sections: [{
