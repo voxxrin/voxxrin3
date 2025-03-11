@@ -330,6 +330,7 @@ const {firestoreRoomStatsRef } = useRoomStats(spacedEventIdRef, toRef(() => deta
       :deep {
         * {
           color: var(--app-primary) !important;
+          background-color: transparent !important;
 
           @media (prefers-color-scheme: dark) {
             color: var(--app-white) !important;
@@ -413,6 +414,7 @@ const {firestoreRoomStatsRef } = useRoomStats(spacedEventIdRef, toRef(() => deta
               :deep {
                 * {
                   color: var(--app-primary) !important;
+                  background-color: transparent !important;
                 }
 
                 @media (prefers-color-scheme: dark) {
