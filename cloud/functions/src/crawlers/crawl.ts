@@ -373,7 +373,12 @@ const saveEvent = async function (event: FullEvent, crawlerDescriptor: z.infer<t
     const ratingsTalkIds = talkFeedbacksDoc.map(doc => doc.id);
     await Promise.all([
         ...event.daySchedules.map(async daySchedule => {
-          const dailyRatings = (await db.doc(`${resolvedEventFirestorePath(event.id, maybeSpaceToken)}/organizer-space/${organizerSecretToken}/daily-ratings/${daySchedule.day}`).get()).data() as Record<string, object>;
+          const dailyRatingsDoc = db.doc(`${resolvedEventFirestorePath(event.id, maybeSpaceToken)}/organizer-space/${organizerSecretToken}/daily-ratings/${daySchedule.day}`);
+          let dailyRatings = (await dailyRatingsDoc.get()).data() as Record<string, object>;
+          if(!dailyRatings) {
+            dailyRatings = {};
+            await dailyRatingsDoc.create(dailyRatings);
+          }
           const talkIds = daySchedule.timeSlots.flatMap(ts => ts.type === 'talks' ? ts.talks.map(t => t.id) : [])
           const dailyRatingsToUpdate = talkIds.reduce((dailyRatingsToUpdate, talkId) => {
             if(!dailyRatings[talkId]) {
@@ -383,7 +388,7 @@ const saveEvent = async function (event: FullEvent, crawlerDescriptor: z.infer<t
           }, {} as Record<string, object>)
 
           if(Object.keys(dailyRatingsToUpdate).length) {
-            await db.doc(`${resolvedEventFirestorePath(event.id, maybeSpaceToken)}/organizer-space/${organizerSecretToken}/daily-ratings/${daySchedule.day}`).update(dailyRatingsToUpdate);
+            await dailyRatingsDoc.update(dailyRatingsToUpdate);
           }
         }),
         ...event.talks.map(async talk => {
