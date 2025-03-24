@@ -13,7 +13,7 @@
                 '--voxxrin-event-theme-head-title-font-familly': 'Poppins, sans-serif',
                 '--voxxrin-event-theme-head-title-font-weight': '700'
               }"
-          >Devoxx France
+          >{{ confDescriptor?.headingTitle }}
         </span>
           <span class="viewsHeader-dates">16 - 18 avril 2025</span>
         </div>
