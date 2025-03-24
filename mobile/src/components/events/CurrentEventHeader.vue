@@ -5,13 +5,18 @@
         <ion-button class="viewsHeader-back" @click="backButtonClicked" shape="round" :aria-label="LL.Back_List_Events()" data-testid="back-to-events-list">
           <ion-icon src="/assets/icons/solid/checkbox-list.svg"></ion-icon>
         </ion-button>
-<!-- TODO: Fix router navigation from preferences/schedule prior to re-enabling this one -->
-<!--        <global-user-actions-button :tabbed-navigation="true" />-->
+        <!-- TODO: Fix router navigation from preferences/schedule prior to re-enabling this one -->
+        <!-- <global-user-actions-button :tabbed-navigation="true" /> -->
       </div>
 
       <div class="viewsSubHeader">
-        <div class="viewsSubHeader-title">{{ confDescriptor?.headingTitle }}</div>
-        <current-event-status :conf-descriptor="confDescriptor"></current-event-status>
+        <div class="viewsSubHeader-title _centerInHead">
+          <span class="viewsSubHeader-name">Devoxx France</span>
+          <span class="viewsSubHeader-dates">16 - 18 avril 2025</span>
+        </div>
+        <div class="viewsSubHeader-infos">
+          <current-event-status :conf-descriptor="confDescriptor"></current-event-status>
+        </div>
       </div>
     </ion-toolbar>
     <img :src="confDescriptor?.backgroundUrl" :alt="LL.Banner_Event()">
@@ -49,6 +54,7 @@ const headingBackground = computed(() => {
 </script>
 
 <style scoped lang="scss">
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
   ion-header {
     img {
       position: absolute;
@@ -80,6 +86,7 @@ const headingBackground = computed(() => {
   ion-toolbar {
     padding-top: 0 !important;
     position: relative;
+    min-height: 164px;
     --default-background: linear-gradient(0deg, rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.4802) 0%, rgba(var(--voxxrin-event-theme-colors-primary-rgb), 0.98) 52.84%);
     z-index: 1;
 
@@ -92,6 +99,7 @@ const headingBackground = computed(() => {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 16px;
       padding-top: 16px;
       font-weight: bold;
       color: var(--voxxrin-event-theme-colors-primary-contrast-hex);
@@ -103,16 +111,56 @@ const headingBackground = computed(() => {
 
     .viewsSubHeader {
       display: flex;
-      align-items: center;
-      justify-content: space-between;
+      align-items: end;
+      justify-content: end;
       padding: 12px 0 18px 0;
       font-weight: bold;
 
+      /* TODO Add variable for custom properties title */
       &-title {
+        font-family: "Poppins", sans-serif;
+        position: relative;
         flex: 1;
-        color: var(--voxxrin-event-theme-colors-primary-contrast-hex);
-        font-weight: bold;
-        font-size: calc(22px + 8 * (100vw - 320px) / 1024)
+        display: flex;
+        flex-direction: column;
+        align-content: center;
+        justify-content: center;
+        line-height: 1;
+        font-weight: 500;
+        color: var(--ion-color-light);
+
+        @media (min-width:768px) {
+          position: absolute;
+          left: 50%;
+          top: calc(50% + 16px);
+          transform: translate(-50%, -50%);
+          min-height: 100%;
+          max-width: calc(100% - 174px);
+          white-space: nowrap;
+
+          .viewsSubHeader-name {
+            font-size: clamp(55px, 5vw, 78px) !important;
+          }
+
+          .viewsSubHeader-dates {
+            font-size: clamp(16px, 5vw, 24px) !important;
+          }
+        }
+
+        .viewsSubHeader-name {
+          line-height: 1;
+          font-size: calc(32px + 8 * (100vw - 320px) / 1024);
+          font-weight: 800;
+        }
+
+        .viewsSubHeader-dates {
+          font-weight: 500;
+          font-size: 16px;
+        }
+      }
+
+      &-infos {
+        flex: 0 0 auto;
       }
     }
   }
