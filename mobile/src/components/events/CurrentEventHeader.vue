@@ -13,9 +13,8 @@
                 '--voxxrin-event-theme-head-title-font-familly': 'Poppins, sans-serif',
                 '--voxxrin-event-theme-head-title-font-weight': '700'
               }"
-          >{{ confDescriptor?.headingTitle }}
-        </span>
-          <span class="viewsHeader-dates">16 - 18 avril 2025</span>
+          >{{ confDescriptor?.headingTitle }}</span>
+          <span v-if="confDescriptor.headingSubTitle" class="viewsHeader-subTitle">{{ confDescriptor.headingSubTitle }}</span>
         </div>
       </div>
 
@@ -147,7 +146,7 @@ const headingBackground = computed(() => {
           font-weight: 800;
         }
 
-        .viewsHeader-dates {
+        .viewsHeader-subTitle {
           font-weight: 500;
           font-size: 15px;
         }

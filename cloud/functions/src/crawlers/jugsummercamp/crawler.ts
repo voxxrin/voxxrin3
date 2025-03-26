@@ -135,6 +135,7 @@ export const JUG_SUMMERCAMP_CRAWLER: CrawlerKind<typeof JUG_SUMMERCAMP_PARSER> =
             title: descriptor.title,
             days: descriptor.days,
             headingTitle: descriptor.headingTitle,
+            headingSubTitle: descriptor.headingSubTitle,
             headingBackground: descriptor.headingBackground,
             description: descriptor.description || "",
             keywords: descriptor.keywords,

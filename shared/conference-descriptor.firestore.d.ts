@@ -15,6 +15,7 @@ export type EventRecordingConfig = {
 
 export type ConferenceDescriptor = Omit<ListableEvent, "websiteUrl"> & {
     headingTitle: string,
+    headingSubTitle: string|null,
     headingBackground: string|null;
     features: {
         roomsDisplayed: boolean,
