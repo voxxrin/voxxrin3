@@ -13,19 +13,19 @@
                 '--voxxrin-event-theme-head-title-font-familly': 'Poppins, sans-serif',
                 '--voxxrin-event-theme-head-title-font-weight': '700'
               }"
-          >{{ confDescriptor?.headingTitle }}</span>
+          >{{ confDescriptor.headingTitle }}</span>
           <span v-if="confDescriptor.headingSubTitle" class="viewsHeader-subTitle">{{ confDescriptor.headingSubTitle }}</span>
         </div>
       </div>
 
       <div class="viewsSubHeader">
-        <div class="viewsSubHeader-infos">
+        <div class="viewsSubHeader-status">
           <current-event-status :conf-descriptor="confDescriptor"></current-event-status>
         </div>
       </div>
     </ion-toolbar>
     <!-- TODO Connect variables custom title -->
-    <img :src="confDescriptor?.backgroundUrl" :alt="LL.Banner_Event()"
+    <img :src="confDescriptor.backgroundUrl" :alt="LL.Banner_Event()"
     :style="{ '--voxxrin-event-theme-head-background-justify': 'right'}">
   </ion-header>
 </template>
@@ -36,7 +36,6 @@ import CurrentEventStatus from "@/components/events/CurrentEventStatus.vue";
 import {computed, PropType, ref} from "vue";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {useTabbedPageNav} from "@/state/useTabbedPageNav";
-import GlobalUserActionsButton from "@/components/user/GlobalUserActionsButton.vue";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 
 const { LL } = typesafeI18n()
@@ -56,7 +55,7 @@ function backButtonClicked() {
 }
 
 const headingBackground = computed(() => {
-  return props.confDescriptor?.headingBackground || `var(--default-background)`
+  return props.confDescriptor.headingBackground || `var(--default-background)`
 })
 </script>
 
@@ -164,7 +163,7 @@ const headingBackground = computed(() => {
       padding: 12px 0 18px 0;
       font-weight: bold;
 
-      &-infos {
+      &-status {
         flex: 0 0 auto;
       }
     }
