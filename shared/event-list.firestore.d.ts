@@ -8,7 +8,14 @@ export type EventTheme = {
         secondaryContrastHex: HexColor,
         tertiaryHex: HexColor,
         tertiaryContrastHex: HexColor
-    }
+    },
+    headingCustomStyles: {
+      title: string|null,
+      subTitle: string|null,
+      banner: string|null,
+    }|null,
+    headingSrcSet: Array<{ url: string, descriptor: string }>|null,
+    customGoogleFontFamilies: string[]|null
 }
 
 export type Day = {

@@ -54,7 +54,17 @@ export const EVENT_THEME_PARSER = z.object({
         secondaryContrastHex: HEX_COLOR_PARSER,
         tertiaryHex: HEX_COLOR_PARSER,
         tertiaryContrastHex: HEX_COLOR_PARSER
-    })
+    }),
+    headingCustomStyles: z.object({
+      title: z.string().nullable(),
+      subTitle: z.string().nullable(),
+      banner: z.string().nullable(),
+    }).optional().nullable().default(null),
+    headingSrcSet: z.array(z.object({
+      url: z.string(),
+      descriptor: z.string().regex(/\d(?:w|x)/)
+    })).min(1).optional().nullable().default(null),
+    customGoogleFontFamilies: z.array(z.string()).optional().nullable().default(null),
 })
 
 export const SOCIAL_MEDIA_TYPE = z.union([
@@ -178,6 +188,7 @@ export const EVENT_FEATURES_CONFIG_PARSER = z.object({
 
 export const EVENT_DESCRIPTOR_PARSER = LISTABLE_EVENT_PARSER.extend({
     headingTitle: z.string(),
+    headingSubTitle: z.string().optional().nullable().default(null),
     headingBackground: z.string().optional().nullable().default(null),
     features: EVENT_FEATURES_CONFIG_PARSER,
     talkFormats: z.array(THEMABLE_TALK_FORMAT_PARSER),

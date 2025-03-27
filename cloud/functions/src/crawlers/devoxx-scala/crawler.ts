@@ -284,6 +284,7 @@ export const DEVOXX_SCALA_CRAWLER: CrawlerKind<typeof DEVOXX_SCALA_DESCRIPTOR_PA
         const eventDescriptor: FullEvent['conferenceDescriptor'] = {
             ...eventInfo,
             headingTitle: descriptor.headingTitle,
+            headingSubTitle: descriptor.headingSubTitle,
             headingBackground: descriptor.headingBackground,
             features: descriptor.features,
             talkFormats: Array.from(themedTalkFormatsByIdAndDuration.values()),
