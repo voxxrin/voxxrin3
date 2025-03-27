@@ -351,7 +351,7 @@ export class FullEventBuilder {
     };
     this.descriptor = {
       ...pick(this.listableEventInfo, ['id', 'title', 'days', 'timezone', 'keywords', 'location', 'backgroundUrl', 'logoUrl', 'theming', 'buyTicketsUrl']),
-      ...pick(descriptor, ['headingTitle', 'headingBackground', 'features', 'formattings', 'infos']),
+      ...pick(descriptor, ['headingTitle', 'headingSubTitle', 'headingBackground', 'features', 'formattings', 'infos']),
       rooms: [...this.roomsById.values()],
       talkTracks: [...this.tracksById.values()],
       talkFormats: [...this.formatsById.values()],
@@ -411,7 +411,7 @@ export class FullEventBuilder {
       conferenceDescriptor: {
         ...pick(this.descriptor, [
           'id', 'title', 'days', 'timezone', 'keywords', 'location', 'backgroundUrl',
-          'logoUrl', 'theming', 'headingTitle', 'headingBackground', 'talkFormats',
+          'logoUrl', 'theming', 'headingTitle', 'headingSubTitle', 'headingBackground', 'talkFormats',
           'talkTracks', 'supportedTalkLanguages', 'rooms', 'formattings', 'infos',
         ]),
         features: {

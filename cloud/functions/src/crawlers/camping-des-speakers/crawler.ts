@@ -144,6 +144,7 @@ export const CAMPING_DES_SPEAKERS_CRAWLER: CrawlerKind<typeof CAMPING_DES_SPEAKE
             title: descriptor.title,
             days: descriptor.days,
             headingTitle: descriptor.headingTitle,
+            headingSubTitle: descriptor.headingSubTitle,
             headingBackground: descriptor.headingBackground,
             description: descriptor.description || "",
             keywords: descriptor.keywords,

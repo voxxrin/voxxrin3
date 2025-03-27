@@ -268,6 +268,7 @@ export const BDXIO_CRAWLER: CrawlerKind<typeof BDXIO_PARSER> = {
             title: descriptor.title,
             days: descriptor.days as Day[],
             headingTitle: descriptor.headingTitle,
+            headingSubTitle: descriptor.headingSubTitle,
             headingBackground: descriptor.headingBackground,
             description: descriptor.description,
             keywords: descriptor.keywords,

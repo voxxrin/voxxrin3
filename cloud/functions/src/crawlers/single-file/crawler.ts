@@ -106,7 +106,7 @@ export const SINGLE_FILE_CRAWLER: CrawlerKind<typeof SINGLE_FILE_DESCRIPTOR_PARS
 
     fullEventBuilder.usingInfosAndDescriptor(eventInfo, {
       headingTitle: descriptor.headingTitle,
-      headingBackground: descriptor.headingBackground,
+      headingSubTitle: descriptor.headingSubTitle,headingBackground: descriptor.headingBackground,
       features: descriptor.features,
       infos: descriptor.infos,
       formattings: descriptor.formattings,

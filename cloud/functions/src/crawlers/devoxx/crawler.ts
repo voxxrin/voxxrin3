@@ -297,7 +297,7 @@ Please, unless event id is made configurable at cfp.dev level, you should rather
 
         fullEventBuilder.usingInfosAndDescriptor(eventInfo, {
           headingTitle: descriptor.headingTitle,
-          headingBackground: descriptor.headingBackground,
+          headingSubTitle: descriptor.headingSubTitle,headingBackground: descriptor.headingBackground,
           features: {
             ...descriptor.features,
           },

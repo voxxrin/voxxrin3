@@ -298,6 +298,7 @@ export const OPENPLANNER_CRAWLER: CrawlerKind<typeof OPENPLANNER_DESCRIPTOR_PARS
           logoUrl: descriptor.logoUrl || openPlannerSchedule.logoUrl,
           backgroundUrl: descriptor.backgroundUrl || openPlannerSchedule.backgroundUrl,
           headingTitle: descriptor.headingTitle || openPlannerSchedule.headingTitle,
+          headingSubTitle: descriptor.headingSubTitle || openPlannerSchedule.headingSubTitle,
           headingBackground: descriptor.headingBackground || openPlannerSchedule.headingBackground,
           talkFormats: formats,
           talkTracks: tracks,

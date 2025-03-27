@@ -248,6 +248,7 @@ export const LA_PRODUCT_CONF_CRAWLER: CrawlerKind<typeof LA_PRODUCT_CONF_DESCRIP
             title: descriptor.title,
             days: descriptor.days as Day[],
             headingTitle: descriptor.headingTitle,
+            headingSubTitle: descriptor.headingSubTitle,
             headingBackground: descriptor.headingBackground,
             description: descriptor.description,
             keywords: descriptor.keywords,

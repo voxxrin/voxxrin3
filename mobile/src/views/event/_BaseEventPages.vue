@@ -1,6 +1,7 @@
 <template>
   <ion-page>
     <event-tabs :tabs="tabs" :spaced-event-id="spacedEventIdRef"></event-tabs>
+    <link v-for="googleFontUrl in confDescriptorRef?.theming.customGoogleFontFamilies || []" :key="googleFontUrl" rel="stylesheet" :href="`https://fonts.googleapis.com/css2?family=${googleFontUrl}&display=swap`" />
   </ion-page>
 </template>
 

@@ -1,5 +1,8 @@
 <template>
-  <img :src="confDescriptor.backgroundUrl">
+  <img
+    :src="!confDescriptor.theming.headingSrcSet?.length && confDescriptor.backgroundUrl ? confDescriptor.backgroundUrl : ''"
+    :srcset="confDescriptor.theming.headingSrcSet?.length ? confDescriptor.theming.headingSrcSet.map(entry => `${entry.url} ${entry.descriptor}`).join(', ') : ''"
+  />
   <span class="schedule-talk-event-title">{{confDescriptor.headingTitle}}</span>
 
   <talk-card v-for="(talk, index) in talks" :key="talk.id.value"
