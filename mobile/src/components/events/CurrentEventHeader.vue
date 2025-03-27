@@ -5,7 +5,6 @@
         <ion-button class="viewsHeader-back" @click="backButtonClicked" shape="round" :aria-label="LL.Back_List_Events()" data-testid="back-to-events-list">
           <ion-icon src="/assets/icons/solid/checkbox-list.svg"></ion-icon>
         </ion-button>
-        <!-- NOTE (!) See how to manage the dynamic import of font familly via a URL. --> 
         <div class="viewsHeader-title">
           <span class="viewsHeader-name" :style="confDescriptor.theming.headingCustomStyles?.title || ''">{{ confDescriptor.headingTitle }}</span>
           <span v-if="confDescriptor.headingSubTitle"

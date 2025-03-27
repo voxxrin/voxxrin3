@@ -14,6 +14,7 @@ export type EventTheme = {
       subTitle: string|null,
       banner: string|null,
     }|null,
+    customGoogleFontFamilies: string[]|null
 }
 
 export type Day = {

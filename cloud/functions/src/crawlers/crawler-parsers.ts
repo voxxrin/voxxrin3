@@ -60,6 +60,7 @@ export const EVENT_THEME_PARSER = z.object({
       subTitle: z.string().nullable(),
       banner: z.string().nullable(),
     }).optional().nullable().default(null),
+    customGoogleFontFamilies: z.array(z.string()).optional().nullable().default(null),
 })
 
 export const SOCIAL_MEDIA_TYPE = z.union([
