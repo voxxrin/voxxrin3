@@ -60,6 +60,10 @@ export const EVENT_THEME_PARSER = z.object({
       subTitle: z.string().nullable(),
       banner: z.string().nullable(),
     }).optional().nullable().default(null),
+    headingSrcSet: z.array(z.object({
+      url: z.string(),
+      descriptor: z.string().regex(/\d(?:w|x)/)
+    })).min(1).optional().nullable().default(null),
     customGoogleFontFamilies: z.array(z.string()).optional().nullable().default(null),
 })
 

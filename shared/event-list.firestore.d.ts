@@ -14,6 +14,7 @@ export type EventTheme = {
       subTitle: string|null,
       banner: string|null,
     }|null,
+    headingSrcSet: Array<{ url: string, descriptor: string }>|null,
     customGoogleFontFamilies: string[]|null
 }
 

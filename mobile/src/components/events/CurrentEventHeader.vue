@@ -20,7 +20,8 @@
       </div>
     </ion-toolbar>
     <img
-      :src="confDescriptor.backgroundUrl"
+      :src="!confDescriptor.theming.headingSrcSet?.length && confDescriptor.backgroundUrl ? confDescriptor.backgroundUrl : ''"
+      :srcset="confDescriptor.theming.headingSrcSet?.length ? confDescriptor.theming.headingSrcSet.map(entry => `${entry.url} ${entry.descriptor}`).join(', ') : ''"
       :alt="LL.Banner_Event()"
       :style="confDescriptor.theming.headingCustomStyles?.banner || ''"
     />
