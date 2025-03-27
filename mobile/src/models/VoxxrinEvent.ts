@@ -117,5 +117,6 @@ export function toVoxxrinEventTheme(firestoreTheme: EventTheme): VoxxrinEventThe
             tertiaryRGB: hexToRGB(firestoreTheme.colors.tertiaryHex),
             tertiaryContrastRGB: hexToRGB(firestoreTheme.colors.tertiaryContrastHex),
         },
+        headingCustomStyles: firestoreTheme.headingCustomStyles,
     }
 }

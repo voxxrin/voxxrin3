@@ -8,7 +8,12 @@ export type EventTheme = {
         secondaryContrastHex: HexColor,
         tertiaryHex: HexColor,
         tertiaryContrastHex: HexColor
-    }
+    },
+    headingCustomStyles: {
+      title: string|null,
+      subTitle: string|null,
+      banner: string|null,
+    }|null,
 }
 
 export type Day = {

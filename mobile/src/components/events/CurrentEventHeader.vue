@@ -5,16 +5,12 @@
         <ion-button class="viewsHeader-back" @click="backButtonClicked" shape="round" :aria-label="LL.Back_List_Events()" data-testid="back-to-events-list">
           <ion-icon src="/assets/icons/solid/checkbox-list.svg"></ion-icon>
         </ion-button>
-        <!-- TODO Connect variables custom title -->
         <!-- NOTE (!) See how to manage the dynamic import of font familly via a URL. --> 
         <div class="viewsHeader-title">
-          <span class="viewsHeader-name" 
-          :style="{
-                '--voxxrin-event-theme-head-title-font-familly': 'Poppins, sans-serif',
-                '--voxxrin-event-theme-head-title-font-weight': '700'
-              }"
-          >{{ confDescriptor.headingTitle }}</span>
-          <span v-if="confDescriptor.headingSubTitle" class="viewsHeader-subTitle">{{ confDescriptor.headingSubTitle }}</span>
+          <span class="viewsHeader-name" :style="confDescriptor.theming.headingCustomStyles?.title || ''">{{ confDescriptor.headingTitle }}</span>
+          <span v-if="confDescriptor.headingSubTitle"
+                :style="confDescriptor.theming.headingCustomStyles?.subTitle || ''" class="viewsHeader-subTitle"
+          >{{ confDescriptor.headingSubTitle }}</span>
         </div>
       </div>
 
@@ -24,9 +20,11 @@
         </div>
       </div>
     </ion-toolbar>
-    <!-- TODO Connect variables custom title -->
-    <img :src="confDescriptor.backgroundUrl" :alt="LL.Banner_Event()"
-    :style="{ '--voxxrin-event-theme-head-background-justify': 'right'}">
+    <img
+      :src="confDescriptor.backgroundUrl"
+      :alt="LL.Banner_Event()"
+      :style="confDescriptor.theming.headingCustomStyles?.banner || ''"
+    />
   </ion-header>
 </template>
 
@@ -70,7 +68,6 @@ const headingBackground = computed(() => {
       width: 100%;
       z-index: -1;
       object-fit: cover;
-      object-position: var(--voxxrin-event-theme-head-background-justify);
     }
 
     .btnUser {
@@ -108,8 +105,6 @@ const headingBackground = computed(() => {
       padding-top: 16px;
       font-weight: bold;
       color: var(--voxxrin-event-theme-colors-primary-contrast-hex);
-      font-family: var(--voxxrin-event-theme-head-title-font-familly), sans-serif;
-      font-weight: var(--voxxrin-event-theme-head-title-font-weight);
 
        &-title {
         position: relative;
@@ -119,7 +114,6 @@ const headingBackground = computed(() => {
         align-content: center;
         justify-content: center;
         line-height: 1;
-        color: white;
 
         @media (min-width:768px) {
           position: absolute;
@@ -142,7 +136,7 @@ const headingBackground = computed(() => {
         .viewsHeader-name {
           line-height: 1;
           font-size: calc(26px + 16 * (100vw - 320px) / 1024);
-          font-weight: 800;
+          font-weight: 700;
         }
 
         .viewsHeader-subTitle {

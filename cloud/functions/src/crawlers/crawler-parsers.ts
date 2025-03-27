@@ -54,7 +54,12 @@ export const EVENT_THEME_PARSER = z.object({
         secondaryContrastHex: HEX_COLOR_PARSER,
         tertiaryHex: HEX_COLOR_PARSER,
         tertiaryContrastHex: HEX_COLOR_PARSER
-    })
+    }),
+    headingCustomStyles: z.object({
+      title: z.string().nullable(),
+      subTitle: z.string().nullable(),
+      banner: z.string().nullable(),
+    }).optional().nullable().default(null),
 })
 
 export const SOCIAL_MEDIA_TYPE = z.union([
