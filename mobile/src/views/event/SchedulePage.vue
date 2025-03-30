@@ -183,7 +183,7 @@ const { schedule: currentSchedule } = useSchedule(confDescriptor, selectedDayId)
 
 const preparingOfflineScheduleToastMessageRef = ref<string | undefined>(undefined);
 const preparingOfflineScheduleToastIsOpenRef = ref<boolean>(false);
-useOfflineEventPreparation(user, confDescriptor, currentSchedule, availableDaysRef, preparingOfflineScheduleToastMessageRef, preparingOfflineScheduleToastIsOpenRef);
+// useOfflineEventPreparation(user, confDescriptor, currentSchedule, availableDaysRef, preparingOfflineScheduleToastMessageRef, preparingOfflineScheduleToastIsOpenRef);
 
 const talkIdsRef = computed(() => {
     const schedule = toValue(currentSchedule);

@@ -1,12 +1,13 @@
-import {onMounted, onUnmounted} from "vue";
+import {onMounted, onUnmounted, getCurrentInstance} from "vue";
 import {RouteAction, RouteDirection} from "@ionic/vue-router/dist/types/types";
 import {useIonRouter} from "@ionic/vue";
 import {
     createTypedCustomEventClass,
     TypedCustomEventData,
 } from "@/models/utils";
-import {useRouter} from "vue-router";
 import {goBackOrNavigateTo} from "@/router";
+import {getCurrentComponentInstancePath} from "@/views/vue-utils";
+import {match, P} from "ts-pattern";
 
 
 /**
@@ -52,6 +53,28 @@ const NavigationEvent = createTypedCustomEventClass<{
 }>(NavigationEventName)
 
 
+/**
+ * This map allows to declare multiple navigation callback per component 'path'
+ * because, for some (unknown) reasons, when we refresh tabbed page (like, event schedule)
+ * we have 2 instances of event-tabs component after a tab navigation:
+ * - first <event-tabs> instance when loading page
+ * - second <event-tabs> instance on first tab switch
+ *
+ * Note that this behaviour only happens on page load occuring on a tabbed page: when we navigate
+ * from event-selector screen, only a single <event-tabs> instance is created
+ *
+ * I guess this has something to do with _BaseEventPages "parent" route which is instantiated twice
+ * instead of once, in case of a parent-child route refresh
+ *
+ * Map below allows to track callback registrations on a per-component path basis (in duplicated <event-tabs> case
+ * described above, we will have a single entry in PER_COMPONENT_PATH_CALLBACKS, with an array of 2 callbacks declared)
+ * And when a navigation will be triggered, every callbacks in array will be triggered)
+ */
+type TabbedPageNavigationCallbacks = {
+  navCallback: (event: Event) => Promise<void>,
+  tabExitOrNavigateCallback: (event: Event) => Promise<void>,
+};
+const PER_COMPONENT_PATH_CALLBACKS = new Map<string, TabbedPageNavigationCallbacks[]>();
 
 export function useTabbedPageNav() {
     return {
@@ -76,10 +99,20 @@ export function useTabbedPageNav() {
         // Please, call this listeners registration whenever you open a page containing tabs, so that
         // tabbed views are able to communicate root-level navigation calls through triggerXXX hooks
         registerTabbedPageNavListeners: function(opts?: { skipNavRegistration: boolean, skipExitOrNavRegistration: boolean }) {
+            const { path: currentComponentInstancePath } = getCurrentComponentInstancePath()
+
             const ionRouter = useIonRouter();
             const startingHistoryPosition = history.state.position;
 
             const navCallback = async (event: Event) => {
+                const perComponentPathCallbacks = PER_COMPONENT_PATH_CALLBACKS.get(currentComponentInstancePath);
+                if(!perComponentPathCallbacks) {
+                  return;
+                }
+                if(perComponentPathCallbacks[perComponentPathCallbacks.length-1].navCallback !== navCallback) {
+                  return;
+                }
+
                 if(isNavigationEvent(event)) {
                     if(event.detail.onEventCaught) {
                         await event.detail.onEventCaught();
@@ -87,33 +120,89 @@ export function useTabbedPageNav() {
 
                     // This navigate() call will happen inside tabbed page context
                     ionRouter.navigate(event.detail.url, event.detail.routerDirection, event.detail.routerAction);
+
+                    perComponentPathCallbacks.pop();
+                    if(perComponentPathCallbacks.length) {
+                      await new Promise((resolve) => {
+                        setTimeout(async () => {
+                          await perComponentPathCallbacks[perComponentPathCallbacks.length-1].navCallback(event);
+                          resolve(null);
+                        }, 0);
+                      });
+                    } else {
+                      PER_COMPONENT_PATH_CALLBACKS.delete(currentComponentInstancePath);
+                    }
                 } else {
                     throw new Error(`Unexpected event type ${event.type} in tabbed-page-navigation callback registration !`)
                 }
             }
             const tabExitOrNavigateCallback = async (event: Event) => {
+                const perComponentPathCallbacks = PER_COMPONENT_PATH_CALLBACKS.get(currentComponentInstancePath);
+                if(!perComponentPathCallbacks) {
+                  return;
+                }
+                if(perComponentPathCallbacks[perComponentPathCallbacks.length-1].tabExitOrNavigateCallback !== tabExitOrNavigateCallback) {
+                  return;
+                }
+
                 if(isTabExitOrNavigateEvent(event)) {
                     const routerGoBacks = startingHistoryPosition - history.state.position;
                     await goBackOrNavigateTo(ionRouter, event.detail.url, routerGoBacks, event.detail.routerDirection, event.detail.onEventCaught);
+
+                    perComponentPathCallbacks.pop();
+                    if(perComponentPathCallbacks.length) {
+                      await new Promise(async (resolve) => {
+                        await perComponentPathCallbacks[perComponentPathCallbacks.length-1].tabExitOrNavigateCallback(event);
+                        setTimeout(() => resolve(null), 0);
+                      });
+                    } else {
+                      PER_COMPONENT_PATH_CALLBACKS.delete(currentComponentInstancePath);
+                    }
                 } else {
                     throw new Error(`Unexpected event type ${event.type} in tabbed-page-navigation callback registration !`)
                 }
             }
 
+            const componentCallbacks: TabbedPageNavigationCallbacks = { navCallback, tabExitOrNavigateCallback }
+
             onMounted(() => {
+                const perComponentPathCallbacks = match(PER_COMPONENT_PATH_CALLBACKS.get(currentComponentInstancePath))
+                  .with(P.nullish, () => {
+                    const callbacks: TabbedPageNavigationCallbacks[] = [];
+                    PER_COMPONENT_PATH_CALLBACKS.set(currentComponentInstancePath, callbacks);
+                    return callbacks;
+                  }).otherwise(callbacks => callbacks);
+
                 if(!opts?.skipNavRegistration) {
-                    window.addEventListener(NavigationEventName, navCallback);
+                    window.addEventListener(NavigationEventName, componentCallbacks.navCallback);
                 }
                 if(!opts?.skipExitOrNavRegistration) {
-                    window.addEventListener(TabExitOrNavigateEventName, tabExitOrNavigateCallback);
+                    window.addEventListener(TabExitOrNavigateEventName, componentCallbacks.tabExitOrNavigateCallback);
                 }
+
+                perComponentPathCallbacks.push(componentCallbacks);
             })
             onUnmounted(() => {
-                if(!opts?.skipNavRegistration) {
-                    window.removeEventListener(NavigationEventName, navCallback);
+                const maybePerComponentPathCallbacks = PER_COMPONENT_PATH_CALLBACKS.get(currentComponentInstancePath);
+                if(!maybePerComponentPathCallbacks) {
+                  return;
                 }
-                if(!opts?.skipExitOrNavRegistration) {
-                    window.removeEventListener(TabExitOrNavigateEventName, tabExitOrNavigateCallback);
+
+                const componentCallbacksIndex = maybePerComponentPathCallbacks.findIndex(callbacks => callbacks === componentCallbacks);
+                if(componentCallbacksIndex !== -1) {
+                  maybePerComponentPathCallbacks.splice(componentCallbacksIndex, 1);
+
+                  if(!opts?.skipNavRegistration) {
+                    window.removeEventListener(NavigationEventName, componentCallbacks.navCallback);
+                  }
+                  if(!opts?.skipExitOrNavRegistration) {
+                    window.removeEventListener(TabExitOrNavigateEventName, componentCallbacks.tabExitOrNavigateCallback);
+                  }
+                }
+                if(maybePerComponentPathCallbacks.length === 0) {
+                  PER_COMPONENT_PATH_CALLBACKS.delete(currentComponentInstancePath);
+                } else {
+                  console.log(`remaining callbacks in component ${currentComponentInstancePath}`)
                 }
             })
         }

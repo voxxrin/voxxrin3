@@ -1,5 +1,6 @@
 import {LocationQueryValue, RouteLocationNormalizedLoaded} from "vue-router";
 import {
+  getCurrentInstance,
   MaybeRef,
   onUnmounted,
   Ref,
@@ -413,5 +414,21 @@ export function deferredVuefireUseCollection<SOURCES extends MultiWatchSources, 
 
     return collectionRef;
 }
+
+export function getCurrentComponentInstancePath() {
+  let elem = getCurrentInstance();
+  const parents = [];
+
+  while(elem) {
+    parents.push(elem);
+    elem = elem.parent;
+  }
+
+  return {
+    parents,
+    path: parents.map(elem => `{type:${elem.type.name || elem.type.__name}}`).join(" > "),
+  }
+}
+
 
 export const MAX_NUMBER_OF_PARAMS_IN_FIREBASE_IN_CLAUSES = 30;

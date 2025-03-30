@@ -8,10 +8,12 @@ import {ISODatetime} from "../../../shared/type-utils";
 import {Temporal} from "temporal-polyfill";
 import {match, P} from "ts-pattern";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
-import {managedRef as ref} from "@/views/vue-utils";
+import {getCurrentComponentInstancePath, managedRef as ref} from "@/views/vue-utils";
 import {ListableVoxxrinEvent} from "@/models/VoxxrinEvent";
 import {Ref} from "vue";
 import {updateLogConfigTo} from "@/services/Logger";
+import router from "@/router";
+import {useIonRouter} from "@ionic/vue";
 
 
 // if(import.meta.env.DEV) {
@@ -69,6 +71,11 @@ export function useDevUtilities() {
         window.location.reload();
     }
     (window as any).updateLogConfigTo = updateLogConfigTo;
+    (window as any).getCurrentComponentInstancePath = getCurrentComponentInstancePath;
+    (window as any)._router = router;
+
+    const ionRouter = useIonRouter();
+    (window as any)._ionRouter = ionRouter;
 }
 
 // }

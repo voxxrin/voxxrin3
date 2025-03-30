@@ -9,7 +9,7 @@
 import EventTabs from "@/components/events/EventTabs.vue";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
-import {computed, toValue} from "vue";
+import {computed, toValue, onMounted, onUnmounted, onBeforeMount, onBeforeUnmount} from "vue";
 import {areFeedbacksEnabled} from "@/models/VoxxrinConferenceDescriptor";
 import {getResolvedEventRootPathFromSpacedEventIdRef, useCurrentSpaceEventIdRef} from "@/services/Spaces";
 import {match} from "ts-pattern";
@@ -27,6 +27,9 @@ const tabs = computed(() => {
         icon: '/assets/icons/line/calendar-line.svg',
         selectedIcon: '/assets/icons/solid/calendar.svg',
     }]).concat([{
+      // TODO: Seems like we have a navigation error when hitting back button while being on speakers list (after having navigated to a speaker talk)
+      // TODO: There is a persistent background loading toaster on top of the screen which appears randomly (particularly while stopping in devtools for a long time)
+      //       => need to sort it out
       id: 'speakers', url: `${getResolvedEventRootPathFromSpacedEventIdRef(spacedEventIdRef)}/speakers`, label: LL.value.Speakers(),
       icon: '/assets/icons/line/megaphone-line.svg',
       selectedIcon: '/assets/icons/solid/megaphone.svg',
@@ -48,6 +51,12 @@ const customFontUrls = computed(() => {
     .exhaustive()
   )
 })
+
+console.log(`In _BaseEventPages::setup()`);
+onBeforeMount(() => console.log(`In _BaseEventPages::onBeforeMount`))
+onMounted(() => console.log(`In _BaseEventPages::onMounted`))
+onBeforeUnmount(() => console.log(`In _BaseEventPages::onBeforeUnmount`))
+onUnmounted(() => console.log(`In _BaseEventPages::onUnmounted`))
 </script>
 
 <style lang="scss" scoped>

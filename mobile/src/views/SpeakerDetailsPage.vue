@@ -10,7 +10,7 @@
       <ion-header class="stickyHeader">
         <ion-toolbar>
           <ion-button class="stickyHeader-close" shape="round" slot="start" size="small" fill="outline" @click="closeAndNavigateBack()"
-                      :aria-label="LL.Close_speaker_details()">
+                      :aria-label="LL.Close_speaker_details()" data-testid="close-speaker-details">
             <ion-icon src="/assets/icons/solid/close.svg"></ion-icon>
           </ion-button>
           <div class="speakerInfoHeader" slot="start">

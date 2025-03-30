@@ -113,11 +113,14 @@ export async function goBackOrNavigateTo(ionRouter: UseIonRouterResult, fallback
     // Calling ionRouter.back() can't be done in the same thread than router.go(-x) on iOS
     // To reproduce: navigate to schedule page from event selector screen, navigate on another tab (ex: favorites tab)
     // then click on 'back to event list screen' button in event header
-    if(isPlatform('ios') && platformRouterGoBacks < 0) {
-      setTimeout(() => { ionRouter.back(); }, 0)
-    } else {
-      ionRouter.back();
-    }
+    // if(isPlatform('ios') && platformRouterGoBacks < 0) {
+      await new Promise((resolve) => setTimeout(() => {
+        ionRouter.back();
+        setTimeout(() => resolve(null), 0);
+      }, 0));
+    // } else {
+    //   ionRouter.back();
+    // }
   // Sometimes, we might be on a tabbed page without having navigated from another context
   // Typical case: if we "refresh" the page on the schedule page, canGoBack() will return false
   // because ionic doesn't have into its (memory) history the previous page we would like to navigate to
