@@ -119,6 +119,6 @@ export function toVoxxrinEventTheme(firestoreTheme: EventTheme): VoxxrinEventThe
         },
         headingCustomStyles: firestoreTheme.headingCustomStyles,
         headingSrcSet: firestoreTheme.headingSrcSet,
-        customGoogleFontFamilies: firestoreTheme.customGoogleFontFamilies,
+        customImportedFonts: firestoreTheme.customImportedFonts,
     }
 }
