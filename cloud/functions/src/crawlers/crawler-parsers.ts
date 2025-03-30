@@ -64,7 +64,10 @@ export const EVENT_THEME_PARSER = z.object({
       url: z.string(),
       descriptor: z.string().regex(/\d(?:w|x)/)
     })).min(1).optional().nullable().default(null),
-    customGoogleFontFamilies: z.array(z.string()).optional().nullable().default(null),
+    customImportedFonts: z.array(z.object({
+      provider: z.literal('google-fonts'),
+      family: z.string(),
+    })).optional().nullable().default(null),
 })
 
 export const SOCIAL_MEDIA_TYPE = z.union([

@@ -15,7 +15,10 @@ export type EventTheme = {
       banner: string|null,
     }|null,
     headingSrcSet: Array<{ url: string, descriptor: string }>|null,
-    customGoogleFontFamilies: string[]|null
+    customImportedFonts: Array<{
+      provider: 'google-fonts',
+      family: string,
+    }>|null,
 }
 
 export type Day = {
