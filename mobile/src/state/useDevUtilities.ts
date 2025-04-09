@@ -28,6 +28,21 @@ let overridenEventDescriptorPropertiesRef: Ref<OverridableEventDescriptorPropert
 export function useOverridenListableEventProperties(){ return overridenListableEventPropertiesRef; }
 export function useOverridenEventDescriptorProperties() { return overridenEventDescriptorPropertiesRef; }
 
+
+declare global {
+  interface Window {
+    _overrideCurrentEventDescriptorInfos(overridenEventDescriptorProperties: OverridableEventDescriptorProperties): void;
+    _overrideListableEventProperties(overridenListableEventProperties: OverridableListableEventProperties): void;
+    overrideCurrentClock: typeof overrideCurrentClock;
+    _overrideCurrentClock(clockOrDate: Clock | ISODatetime, clockType: 'fixed'|'shifted', temporalDurationOrSeconds?: Temporal.Duration | number | undefined): void;
+    useManagedVueRefs(enabled: boolean): void;
+    updateLogConfigTo: typeof updateLogConfigTo;
+    getCurrentComponentInstancePath: typeof getCurrentComponentInstancePath;
+    _router: typeof router;
+    _ionRouter: ReturnType<typeof useIonRouter>;
+  }
+}
+
 export function useDevUtilities() {
     if(!overridenListableEventPropertiesRef) {
         overridenListableEventPropertiesRef = ref(undefined);
@@ -45,10 +60,10 @@ export function useDevUtilities() {
         overrideListableEventProperties(overridenEventDescriptorProperties);
     }
 
-    (window as any)._overrideCurrentEventDescriptorInfos = overrideCurrentEventDescriptorInfos;
-    (window as any)._overrideListableEventProperties = overrideListableEventProperties;
-    (window as any).overrideCurrentClock = overrideCurrentClock;
-    (window as any)._overrideCurrentClock = (clockOrDate: Clock | ISODatetime, clockType: 'fixed'|'shifted', temporalDurationOrSeconds?: Temporal.Duration | number | undefined) => {
+    window._overrideCurrentEventDescriptorInfos = overrideCurrentEventDescriptorInfos;
+    window._overrideListableEventProperties = overrideListableEventProperties;
+    window.overrideCurrentClock = overrideCurrentClock;
+    window._overrideCurrentClock = (clockOrDate: Clock | ISODatetime, clockType: 'fixed'|'shifted', temporalDurationOrSeconds?: Temporal.Duration | number | undefined) => {
         const clock = match([clockOrDate, clockType])
             .with([P.string, 'fixed'], ([isoDate, _]) => new FixedTimeClock(isoDate))
             .with([P.string, 'shifted'], ([isoDate, _]) => new ShiftedTimeClock(isoDate))
@@ -66,16 +81,16 @@ export function useDevUtilities() {
             })
         }:undefined)
     }
-    (window as any).useManagedVueRefs = (enabled: boolean) => {
+    window.useManagedVueRefs = (enabled: boolean) => {
         localStorage.setItem("_useManagedRefs", ""+enabled);
         window.location.reload();
     }
-    (window as any).updateLogConfigTo = updateLogConfigTo;
-    (window as any).getCurrentComponentInstancePath = getCurrentComponentInstancePath;
-    (window as any)._router = router;
+    window.updateLogConfigTo = updateLogConfigTo;
+    window.getCurrentComponentInstancePath = getCurrentComponentInstancePath;
+    window._router = router;
 
     const ionRouter = useIonRouter();
-    (window as any)._ionRouter = ionRouter;
+    window._ionRouter = ionRouter;
 }
 
 // }
