@@ -14,6 +14,7 @@ import {Ref} from "vue";
 import {updateLogConfigTo} from "@/services/Logger";
 import router from "@/router";
 import {useIonRouter} from "@ionic/vue";
+import {RouteAction, RouteDirection} from "@ionic/vue-router/dist/types/types";
 
 
 // if(import.meta.env.DEV) {
@@ -28,6 +29,15 @@ let overridenEventDescriptorPropertiesRef: Ref<OverridableEventDescriptorPropert
 export function useOverridenListableEventProperties(){ return overridenListableEventPropertiesRef; }
 export function useOverridenEventDescriptorProperties() { return overridenEventDescriptorPropertiesRef; }
 
+export type TabbedPageNavigationEvent =
+  | { type: 'tabbed-page-custom-dispatch-event:navigation', params: { url: string, routerDirection: RouteDirection, routerAction: RouteAction } }
+  | { type: 'tabbed-page-custom-dispatch-event:tabExitOrNavigate', params: { url: string, routerDirection: RouteDirection|undefined } }
+  | { type: 'tabbed-page-nag-listeners:registration', params: { currentComponentInstancePath: string, startingHistoryPosition: number } }
+  | { type: 'nav-callback:no-op', params: { reason: string } }
+  | { type: 'tab-exit-or-navigate-callback:no-op', params: { reason: string } }
+  | { type: 'ionRouter:navigate', params: { url: string, routerDirection: RouteDirection, routerAction: RouteAction } }
+  | { type: 'goBackOrNavigateTo', params: { url: string, routerDirection: RouteDirection|undefined, routerGoBacks: number, startingHistoryPosition: number, historyPosition: number } }
+  | { type: 'otherNavCallbackDelegation', params: { perComponentPathCallbacksSize: number } }
 
 declare global {
   interface Window {
@@ -40,6 +50,8 @@ declare global {
     getCurrentComponentInstancePath: typeof getCurrentComponentInstancePath;
     _router: typeof router;
     _ionRouter: ReturnType<typeof useIonRouter>;
+    _tabbedPageNavigationEvents: Array<{ type: TabbedPageNavigationEvent['type'], date: string, location: string, historyPosition: number, params: object }>;
+    trackTabbedPageNavigationEvent(event: TabbedPageNavigationEvent): void;
   }
 }
 
@@ -91,6 +103,17 @@ export function useDevUtilities() {
 
     const ionRouter = useIonRouter();
     window._ionRouter = ionRouter;
+
+    window._tabbedPageNavigationEvents = [];
+    window.trackTabbedPageNavigationEvent = (event) => {
+      window._tabbedPageNavigationEvents.push({
+        type: event.type,
+        date: new Date().toISOString(),
+        historyPosition: history.state.position,
+        params: event.params,
+        location: window.location.href,
+      })
+    }
 }
 
 // }

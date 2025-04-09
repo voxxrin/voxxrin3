@@ -79,6 +79,10 @@ const PER_COMPONENT_PATH_CALLBACKS = new Map<string, TabbedPageNavigationCallbac
 export function useTabbedPageNav() {
     return {
         triggerTabbedPageNavigate: function(url: string, routerDirection: RouteDirection, routerAction: RouteAction, onEventCaught?: TypedCustomEventData<typeof NavigationEvent>['onEventCaught']|undefined) {
+            window.trackTabbedPageNavigationEvent({
+              type: 'tabbed-page-custom-dispatch-event:navigation',
+              params: { url, routerDirection, routerAction }
+            })
             // Using standard event dispatching through ionic's $emit is pointless here, as I didn't find
             // how to bubble these event from <ion-router-outlet> placed into _BaseEventPages
             // => I'm using a crappy global event (type unsafe) hack here
@@ -88,6 +92,10 @@ export function useTabbedPageNav() {
             }))
         },
         triggerTabbedPageExitOrNavigate: function(url: string, routerDirection?: RouteDirection, onEventCaught?: TypedCustomEventData<typeof NavigationEvent>['onEventCaught']|undefined) {
+            window.trackTabbedPageNavigationEvent({
+              type: 'tabbed-page-custom-dispatch-event:tabExitOrNavigate',
+              params: { url, routerDirection }
+            })
             // Using standard event dispatching through ionic's $emit is pointless here, as I didn't find
             // how to bubble these event from <ion-router-outlet> placed into _BaseEventPages
             // => I'm using a crappy global event (type unsafe) hack here
@@ -104,12 +112,22 @@ export function useTabbedPageNav() {
             const ionRouter = useIonRouter();
             const startingHistoryPosition = history.state.position;
 
+            window.trackTabbedPageNavigationEvent({
+              type: 'tabbed-page-nag-listeners:registration', params: { currentComponentInstancePath, startingHistoryPosition }
+            });
+
             const navCallback = async (event: Event) => {
                 const perComponentPathCallbacks = PER_COMPONENT_PATH_CALLBACKS.get(currentComponentInstancePath);
                 if(!perComponentPathCallbacks) {
+                  window.trackTabbedPageNavigationEvent({
+                    type: 'nav-callback:no-op', params: { reason: `no PER_COMPONENT_PATH_CALLBACKS found for path: ${currentComponentInstancePath}` }
+                  })
                   return;
                 }
                 if(perComponentPathCallbacks[perComponentPathCallbacks.length-1].navCallback !== navCallback) {
+                  window.trackTabbedPageNavigationEvent({
+                    type: 'nav-callback:no-op', params: { reason: `last registered navCallback not matching current navCallback for path: ${currentComponentInstancePath}` }
+                  })
                   return;
                 }
 
@@ -118,14 +136,21 @@ export function useTabbedPageNav() {
                         await event.detail.onEventCaught();
                     }
 
+                    window.trackTabbedPageNavigationEvent({
+                      type: 'ionRouter:navigate', params: event.detail
+                    })
                     // This navigate() call will happen inside tabbed page context
                     ionRouter.navigate(event.detail.url, event.detail.routerDirection, event.detail.routerAction);
 
                     perComponentPathCallbacks.pop();
                     if(perComponentPathCallbacks.length) {
+                      window.trackTabbedPageNavigationEvent({
+                        type: 'otherNavCallbackDelegation', params: { perComponentPathCallbacksSize: perComponentPathCallbacks.length }
+                      })
+                      const nextCallback = perComponentPathCallbacks[perComponentPathCallbacks.length-1];
                       await new Promise((resolve) => {
                         setTimeout(async () => {
-                          await perComponentPathCallbacks[perComponentPathCallbacks.length-1].navCallback(event);
+                          await nextCallback.navCallback(event);
                           resolve(null);
                         }, 0);
                       });
@@ -139,20 +164,39 @@ export function useTabbedPageNav() {
             const tabExitOrNavigateCallback = async (event: Event) => {
                 const perComponentPathCallbacks = PER_COMPONENT_PATH_CALLBACKS.get(currentComponentInstancePath);
                 if(!perComponentPathCallbacks) {
+                  window.trackTabbedPageNavigationEvent({
+                    type: "tab-exit-or-navigate-callback:no-op", params: { reason: `no PER_COMPONENT_PATH_CALLBACKS found for path: ${currentComponentInstancePath}` }
+                  })
                   return;
                 }
                 if(perComponentPathCallbacks[perComponentPathCallbacks.length-1].tabExitOrNavigateCallback !== tabExitOrNavigateCallback) {
+                  window.trackTabbedPageNavigationEvent({
+                    type: 'tab-exit-or-navigate-callback:no-op', params: { reason: `last registered tabExitOrNavigateCallback not matching current tabExitOrNavigateCallback for path: ${currentComponentInstancePath}` }
+                  })
                   return;
                 }
 
                 if(isTabExitOrNavigateEvent(event)) {
                     const routerGoBacks = startingHistoryPosition - history.state.position;
+
+                    window.trackTabbedPageNavigationEvent({
+                      type: 'goBackOrNavigateTo', params: {
+                        url: event.detail.url, routerGoBacks, startingHistoryPosition,
+                        historyPosition: history.state.position, routerDirection: event.detail.routerDirection
+                      }
+                    })
+
                     await goBackOrNavigateTo(ionRouter, event.detail.url, routerGoBacks, event.detail.routerDirection, event.detail.onEventCaught);
 
                     perComponentPathCallbacks.pop();
                     if(perComponentPathCallbacks.length) {
+                      window.trackTabbedPageNavigationEvent({
+                        type: 'otherNavCallbackDelegation', params: { perComponentPathCallbacksSize: perComponentPathCallbacks.length }
+                      })
+
+                      const nextCallback = perComponentPathCallbacks[perComponentPathCallbacks.length-1];
                       await new Promise(async (resolve) => {
-                        await perComponentPathCallbacks[perComponentPathCallbacks.length-1].tabExitOrNavigateCallback(event);
+                        await nextCallback.tabExitOrNavigateCallback(event);
                         setTimeout(() => resolve(null), 0);
                       });
                     } else {
