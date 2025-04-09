@@ -142,20 +142,23 @@ export function useTabbedPageNav() {
                     // This navigate() call will happen inside tabbed page context
                     ionRouter.navigate(event.detail.url, event.detail.routerDirection, event.detail.routerAction);
 
-                    perComponentPathCallbacks.pop();
-                    if(perComponentPathCallbacks.length) {
-                      window.trackTabbedPageNavigationEvent({
-                        type: 'otherNavCallbackDelegation', params: { perComponentPathCallbacksSize: perComponentPathCallbacks.length }
-                      })
-                      const nextCallback = perComponentPathCallbacks[perComponentPathCallbacks.length-1];
-                      await new Promise((resolve) => {
-                        setTimeout(async () => {
-                          await nextCallback.navCallback(event);
-                          resolve(null);
-                        }, 0);
-                      });
-                    } else {
-                      PER_COMPONENT_PATH_CALLBACKS.delete(currentComponentInstancePath);
+                    if(event.detail.routerAction === 'pop') {
+                      perComponentPathCallbacks.pop();
+                      if(perComponentPathCallbacks.length) {
+                        window.trackTabbedPageNavigationEvent({
+                          type: 'otherNavCallbackDelegation', params: { perComponentPathCallbacksSize: perComponentPathCallbacks.length }
+                        })
+
+                        const nextCallback = perComponentPathCallbacks[perComponentPathCallbacks.length-1];
+                        await new Promise((resolve) => {
+                          setTimeout(async () => {
+                            await nextCallback.navCallback(event);
+                            resolve(null);
+                          }, 0);
+                        });
+                      } else {
+                        PER_COMPONENT_PATH_CALLBACKS.delete(currentComponentInstancePath);
+                      }
                     }
                 } else {
                     throw new Error(`Unexpected event type ${event.type} in tabbed-page-navigation callback registration !`)
