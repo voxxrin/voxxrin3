@@ -4,7 +4,7 @@
     "lint": "eslint --ext .js,.ts .",
     "build": "tsc",
     "build:watch": "tsc --watch",
-    "serve": "npm run build && env-cmd -f ./.env.local firebase emulators:start --import data --export-on-exit --inspect-functions",
+    "serve": "npm run build && env-cmd -f ./.env.local firebase emulators:start --import data --export-on-exit --inspect-functions --project ${FIREBASE_PROJECT_NAME:-voxxrin-v3}",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions --project ${FIREBASE_PROJECT_NAME:-voxxrin-v3}",
