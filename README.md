@@ -45,7 +45,7 @@ You should get a successful execution summary, and should be able to see *a new 
 
 ## Project structure
 
-Voxxrin is a mobile app developed using ionic / capacitor + vue, with a serverless backend relying on several Firebase services (auth, firestore, cloud functions).
+Voxxrin is a **Progressive Web App** using **Ionic** & **Vue3** on the frontend, with a serverless backend relying on several **Firebase** services (auth, firestore, cloud functions).
 
 The mobile app is located in the `mobile` directory, and serverless firebase code is located in the `cloud` directory.
 
