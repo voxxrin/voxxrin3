@@ -3,9 +3,9 @@ import {FullEvent} from "../../models/Event";
 import {
     Break, BreakTimeSlot, DailySchedule,
     DetailedTalk, ScheduleTimeSlot, SocialLink, Speaker, Talk, TalksTimeSlot
-} from "../../../../../shared/daily-schedule.firestore";
-import {ConferenceDescriptor} from "../../../../../shared/conference-descriptor.firestore";
-import {Day} from "../../../../../shared/event-list.firestore";
+} from "@shared/daily-schedule.firestore";
+import {ConferenceDescriptor} from "@shared/conference-descriptor.firestore";
+import {Day} from "@shared/event-list.firestore";
 import {
     BREAK_PARSER,
     BREAK_TIME_SLOT_PARSER,
@@ -14,7 +14,7 @@ import {
     THEMABLE_TALK_FORMAT_PARSER
 } from "../crawler-parsers";
 import {CrawlerKind} from "../crawl";
-import {ISODatetime, ISOLocalDate, Replace} from "../../../../../shared/type-utils";
+import {ISODatetime, ISOLocalDate, Replace} from "@shared/type-utils";
 import {Temporal} from "@js-temporal/polyfill";
 import {match, P} from "ts-pattern";
 import {GithubMDXCrawler} from "../github/GithubMDXCrawler";
@@ -208,7 +208,7 @@ export const CODEURS_EN_SEINE_CRAWLER: CrawlerKind<typeof CODEURS_EN_SEINE_PARSE
                 talkOrBreak
             ]).with([ P.nullish, {type:"break"} ], ([_, breakSlot]) => {
                 const breakTimeslot: BreakTimeSlot = {
-                    id: `${breakSlot.start}--${breakSlot.end}`,
+                    id: `${breakSlot.start}--${breakSlot.end}--${breakSlot.breakSlot.room.id}`,
                     type: 'break',
                     start: breakSlot.start,
                     end: breakSlot.end,
@@ -245,7 +245,7 @@ export const CODEURS_EN_SEINE_CRAWLER: CrawlerKind<typeof CODEURS_EN_SEINE_PARSE
             return timeslots;
         }, [] as ScheduleTimeSlot[]).concat(descriptor.additionalBreaks.map(addBreak => ({
             ...addBreak.breakTimeslot,
-            id: `${addBreak.breakTimeslot.start}--${addBreak.breakTimeslot.end}` as ScheduleTimeSlot['id'],
+            id: `${addBreak.breakTimeslot.start}--${addBreak.breakTimeslot.end}--${HALL_ROOM.id}` as BreakTimeSlot['id'],
             type: 'break',
             break: {
                 ...addBreak.breakTimeslot.break,
@@ -264,6 +264,7 @@ export const CODEURS_EN_SEINE_CRAWLER: CrawlerKind<typeof CODEURS_EN_SEINE_PARSE
             title: descriptor.title,
             days: descriptor.days as Day[],
             headingTitle: descriptor.headingTitle,
+            headingSubTitle: descriptor.headingSubTitle,
             headingBackground: descriptor.headingBackground,
             description: descriptor.description,
             keywords: descriptor.keywords,

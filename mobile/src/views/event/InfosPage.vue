@@ -48,7 +48,7 @@
             <li v-for="(socialMedia) in socialMedias" :key="socialMedia.type">
               <ion-button color="theming" slot="end" shape="round" size="small" :href="socialMedia.href"
                           :aria-label="socialMedia.label">
-                <ion-icon :icon="socialMedia.icon" :alt="socialMedia.label"></ion-icon>
+                <font-awesome-icon :icon="socialMedia.icon" :alt="socialMedia.label" />
               </ion-button>
             </li>
           </ul>
@@ -85,9 +85,6 @@
       location,
       calendar,
       link,
-      logoYoutube,
-      logoLinkedin,
-      logoTwitter, logoMastodon, logoInstagram, logoTwitch, logoGithub, logoFacebook, logoFlickr
   } from "ionicons/icons";
   import VoxDivider from "@/components/ui/VoxDivider.vue";
   import {IonText, IonImg} from "@ionic/vue"
@@ -97,6 +94,19 @@
   import CarouselSwiper from "@/components/ui/CarouselSwiper.vue";
   import Tips from "@/components/ui/Tips.vue";
   import {useCurrentSpaceEventIdRef} from "@/services/Spaces";
+  import {faYoutube} from "@fortawesome/free-brands-svg-icons/faYoutube";
+  import {faLinkedin} from "@fortawesome/free-brands-svg-icons/faLinkedin";
+  import {faXTwitter} from "@fortawesome/free-brands-svg-icons/faXTwitter";
+  import {faMastodon} from "@fortawesome/free-brands-svg-icons/faMastodon";
+  import {faInstagram} from "@fortawesome/free-brands-svg-icons/faInstagram";
+  import {faTwitch} from "@fortawesome/free-brands-svg-icons/faTwitch";
+  import {faGithub} from "@fortawesome/free-brands-svg-icons/faGithub";
+  import {faFacebook} from "@fortawesome/free-brands-svg-icons/faFacebook";
+  import {faFlickr} from "@fortawesome/free-brands-svg-icons/faFlickr";
+  import {faBluesky} from "@fortawesome/free-brands-svg-icons/faBluesky";
+  import {faLink} from "@fortawesome/free-solid-svg-icons/faLink";
+  import {IconDefinition} from "@fortawesome/free-solid-svg-icons";
+  import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 
   const { LL } = typesafeI18n()
 
@@ -104,19 +114,21 @@
   const {conferenceDescriptor: confDescriptorRef} = useSharedConferenceDescriptor(spacedEventIdRef);
 
   const SUPPORTED_SOCIAL_MEDIAS = {
-    "website": { icon: link, label: "Website" },
-    "twitter": { icon: logoTwitter, label: "Twitter" },
-    "linkedin": { icon: logoLinkedin, label: "Linkedin" },
-    "mastodon": { icon: logoMastodon, label: "Mastodon" },
-    "instagram": { icon: logoInstagram, label: "Instagram" },
-    "youtube": { icon: logoYoutube, label: "Youtube" },
-    "twitch": { icon: logoTwitch, label: "Twitch" },
-    "github": { icon: logoGithub, label: "Github" },
-    "facebook": { icon: logoFacebook, label: "Facebook" },
-    "flickr": { icon: logoFlickr, label: "Flickr" },
+    "website": { icon: faLink, label: "Website" },
+    "twitter": { icon: faXTwitter, label: "X (previously Twitter)" },
+    "x": { icon: faXTwitter, label: "X (previously Twitter)" },
+    "linkedin": { icon: faLinkedin, label: "Linkedin" },
+    "mastodon": { icon: faMastodon, label: "Mastodon" },
+    "instagram": { icon: faInstagram, label: "Instagram" },
+    "youtube": { icon: faYoutube, label: "Youtube" },
+    "twitch": { icon: faTwitch, label: "Twitch" },
+    "github": { icon: faGithub, label: "Github" },
+    "facebook": { icon: faFacebook, label: "Facebook" },
+    "flickr": { icon: faFlickr, label: "Flickr" },
+    "bluesky": { icon: faBluesky, label: "Bluesky" },
   } as const
 
-  const socialMedias: Ref<Array<{type: SocialMediaType, href: string, icon: string, label: string}>> = computed(() => {
+  const socialMedias: Ref<Array<{type: SocialMediaType, href: string, icon: IconDefinition, label: string}>> = computed(() => {
     const confDescriptor = toValue(confDescriptorRef)
     if(!confDescriptor || !confDescriptor.infos || !confDescriptor.infos.socialMedias) {
       return [];

@@ -18,9 +18,9 @@ import {
   TalksTimeSlot,
   ThemedTalkFormat,
   ThemedTrack
-} from "../../../../../shared/daily-schedule.firestore"
+} from "@shared/daily-schedule.firestore"
 import {FullEvent} from "../../models/Event";
-import {ISODatetime} from "../../../../../shared/type-utils";
+import {ISODatetime} from "@shared/type-utils";
 import {Temporal} from "@js-temporal/polyfill";
 import {z} from "zod";
 import {EVENT_DESCRIPTOR_PARSER, THEMABLE_TALK_FORMAT_PARSER, THEMABLE_TALK_TRACK_PARSER,} from "../crawler-parsers";
@@ -129,10 +129,7 @@ export const DEVOXX_SCALA_CRAWLER: CrawlerKind<typeof DEVOXX_SCALA_DESCRIPTOR_PA
                 const start = Temporal.Instant.fromEpochMilliseconds(timeslot.fromTimeMillis).toString() as ISODatetime,
                      end = Temporal.Instant.fromEpochMilliseconds(timeslot.toTimeMillis).toString() as ISODatetime;
 
-                const timeslotId: ScheduleTimeSlot['id'] = `${start}--${end}`
-                const base = {
-                    id: timeslotId, start, end
-                }
+                const base = { start, end }
 
                 return match(timeslot)
                     .with({talk: P.not(P.nullish)}, ({talk}) => {
@@ -217,6 +214,7 @@ export const DEVOXX_SCALA_CRAWLER: CrawlerKind<typeof DEVOXX_SCALA_DESCRIPTOR_PA
                     }).with({break: P.not(P.nullish)}, ({break: breakEntry}) => {
                         const breakSlot: BreakTimeSlot = {
                             ...base,
+                            id: `${base.start}--${base.end}--${room.id}`,
                             type: 'break',
                             break: {
                                 title: breakEntry.nameEN,
@@ -235,14 +233,14 @@ export const DEVOXX_SCALA_CRAWLER: CrawlerKind<typeof DEVOXX_SCALA_DESCRIPTOR_PA
             })
 
             const voxxrinSchedule = rawSlots.reduce((schedule, rawSlot) => {
-                match([schedule.timeSlots.find(ts => ts.id === rawSlot.id && ts.type === rawSlot.type), rawSlot ])
+                match([schedule.timeSlots.find(ts => `${ts.start}--${ts.end}` === `${rawSlot.start}--${rawSlot.end}` && ts.type === rawSlot.type), rawSlot ])
                     .with([ P.nullish, P._ ], () => {
                         const createdTimeslot: ScheduleTimeSlot = match(rawSlot)
                             .with({ type:'break'}, (breakSlot: BreakTimeSlot) => {
                                 return breakSlot;
                             }).with({ type: 'talks'}, (talkSlot) => {
                                 const talkTimeslot: TalksTimeSlot = {
-                                    id: talkSlot.id,
+                                    id: `${talkSlot.start}--${talkSlot.end}`,
                                     start: talkSlot.start,
                                     end: talkSlot.end,
                                     type: 'talks',
@@ -286,6 +284,7 @@ export const DEVOXX_SCALA_CRAWLER: CrawlerKind<typeof DEVOXX_SCALA_DESCRIPTOR_PA
         const eventDescriptor: FullEvent['conferenceDescriptor'] = {
             ...eventInfo,
             headingTitle: descriptor.headingTitle,
+            headingSubTitle: descriptor.headingSubTitle,
             headingBackground: descriptor.headingBackground,
             features: descriptor.features,
             talkFormats: Array.from(themedTalkFormatsByIdAndDuration.values()),

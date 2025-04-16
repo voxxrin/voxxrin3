@@ -6,9 +6,9 @@ import {
     eventTalkStatsFor
 } from "../../../firestore/firestore-utils";
 import {match, P} from "ts-pattern";
-import {TalkStats} from "../../../../../../../shared/event-stats";
+import {TalkStats} from "@shared/event-stats";
 import * as express from "express";
-import {resolvedSpacedEventFieldName} from "../../../../../../../shared/utilities/event-utils";
+import {resolvedSpacedEventFieldName} from "@shared/utilities/event-utils";
 
 export async function deprecatedEventStats(request: functions.https.Request, response: express.Response) {
 

@@ -5,6 +5,7 @@ export type TalkFeedbacksViewerSecretToken = {
     eventId: string;
     speakersFullNames: string[];
     talkId: string;
+    talkTitle: string;
 }
 
 export type ConferenceOrganizerSpace = {

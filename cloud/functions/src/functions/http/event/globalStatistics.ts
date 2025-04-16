@@ -1,7 +1,7 @@
 import {db} from "../../../firebase";
-import {TalkStats} from "../../../../../../shared/event-stats";
+import {TalkStats} from "@shared/event-stats";
 import {getAllEvents} from "../../firestore/services/event-utils";
-import {resolvedEventFirestorePath} from "../../../../../../shared/utilities/event-utils";
+import {resolvedEventFirestorePath} from "@shared/utilities/event-utils";
 
 export async function globalStats() {
     const users = await db.collection(`users`).listDocuments()

@@ -1,11 +1,11 @@
 import {db} from "../../../firebase";
 import {firestore} from "firebase-admin";
-import {EventLastUpdates, ListableEvent} from "../../../../../../shared/event-list.firestore";
+import {EventLastUpdates, ListableEvent} from "@shared/event-list.firestore";
 import QuerySnapshot = firestore.QuerySnapshot;
 import DocumentSnapshot = firestore.DocumentSnapshot;
 import {getAllSpaceIds} from "./space-utils";
-import {resolvedEventFirestorePath, resolvedEventsFirestorePath} from "../../../../../../shared/utilities/event-utils";
-import {AllInOneTalkStats} from "../../../../../../shared/event-stats";
+import {resolvedEventFirestorePath, resolvedEventsFirestorePath} from "@shared/utilities/event-utils";
+import {AllInOneTalkStats} from "@shared/event-stats";
 
 
 export async function getAllEventsDocs(opts: { includePrivateSpaces: boolean } = { includePrivateSpaces: false }) {
@@ -34,10 +34,14 @@ export async function getEventLastUpdates(eventId: string, maybeSpaceId: string|
   return await db.doc(`${resolvedEventFirestorePath(eventId, maybeSpaceId)}/last-updates/self`).get() as DocumentSnapshot<EventLastUpdates>
 }
 
-export async function getAllEventsWithTalks(opts: { includePrivateSpaces: boolean } = { includePrivateSpaces: false }) {
+export async function getAllEventsWithTalksStats(opts: { includePrivateSpaces: boolean } = { includePrivateSpaces: false }) {
   const eventDocs = await getAllEventsDocs(opts);
   return await Promise.all(eventDocs.map(async eventDoc => {
      const allInOneTalkStats = (await eventDoc.ref.collection("talksStats-allInOne").doc("self").get() as DocumentSnapshot<AllInOneTalkStats>).data()
     return { event: eventDoc.data(), allInOneTalkStats: allInOneTalkStats || {} };
   }))
+}
+
+export function getMaybeSpaceTokenOf(event: ListableEvent) {
+  return event.visibility === 'private' ? event.spaceToken : undefined;
 }

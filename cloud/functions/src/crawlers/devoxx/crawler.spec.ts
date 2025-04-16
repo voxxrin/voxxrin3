@@ -1,7 +1,6 @@
 import {describe, it} from 'vitest'
 import {DEVOXX_CRAWLER, DEVOXX_DESCRIPTOR_PARSER} from "./crawler";
-import {FULL_EVENT_PARSER} from "../crawler-parsers";
-import {http} from "../utils";
+import {createCrawlingTestsFor} from "../spec-utils";
 
 describe('devoxx crawlers', () => {
     it(`Full event type matches zod validations`, () => {
@@ -37,13 +36,35 @@ describe('devoxx crawlers', () => {
         id: 'dvbe24', confName: `Devoxx Belgium 24`,
         descriptorUrl: `https://gist.githubusercontent.com/stephanj/7d91c0273c16580bd1ef106d0a8097e6/raw/dvbe24.json`,
         skipped: false,
-    }] as const;
-    events.forEach(event => {
-        (event.skipped ? it.skip : it)(`Loading ${event.confName} schedule`, async () => {
-            const descriptorPayload = await http.get(event.descriptorUrl);
-            const descriptor = DEVOXX_CRAWLER.descriptorParser.parse(descriptorPayload)
-            const result = await DEVOXX_CRAWLER.crawlerImpl(event.id, descriptor, {});
-            FULL_EVENT_PARSER.parse(result);
-        }, { timeout: 300000 })
-    })
+    }, {
+        id: 'vdams25', confName: `Voxxed Amsterdam 25`,
+        descriptorUrl: `https://gist.githubusercontent.com/stephanj/e4251172b6fff3d9df0937135295b859/raw/vdams25.json`,
+        skipped: false,
+    }, {
+        id: 'vdz25', confName: `Voxxed Zurich 25`,
+        descriptorUrl: `https://gist.githubusercontent.com/stephanj/e4251172b6fff3d9df0937135295b859/raw/vdz25.json`,
+        skipped: false,
+    }, {
+        id: 'vdloa25', confName: `Voxxed Loannina 25`,
+        descriptorUrl: `https://gist.githubusercontent.com/stephanj/e4251172b6fff3d9df0937135295b859/raw/vdloa25.json`,
+        skipped: false,
+    }, {
+      id: 'vdbuh2025', confName: `Voxxed Bucharest 25`,
+      descriptorUrl: `https://gist.githubusercontent.com/stephanj/e4251172b6fff3d9df0937135295b859/raw/vdbuh2025.json`,
+      skipped: false,
+    }, {
+        id: 'devoxxfr2025', confName: `Devoxx France 2025`,
+        descriptorUrl: `https://gist.githubusercontent.com/stephanj/7d91c0273c16580bd1ef106d0a8097e6/raw/devoxxfr2025.json`,
+        skipped: false,
+    }, {
+        id: 'dvgr25', confName: `Devoxx Greece 25`,
+        descriptorUrl: `https://gist.githubusercontent.com/stephanj/7d91c0273c16580bd1ef106d0a8097e6/raw/dvgr25.json`,
+        skipped: false,
+    }, {
+        id: 'devoxxuk25', confName: `Devoxx UK 25`,
+        descriptorUrl: `https://gist.githubusercontent.com/stephanj/7d91c0273c16580bd1ef106d0a8097e6/raw/dvuk25.json`,
+        skipped: false,
+    }];
+
+    createCrawlingTestsFor(events, DEVOXX_CRAWLER);
 })

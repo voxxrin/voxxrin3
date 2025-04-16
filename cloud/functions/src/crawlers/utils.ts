@@ -1,8 +1,8 @@
 import axios from "axios";
-import {ISODatetime} from "../../../../shared/type-utils";
+import {ISODatetime} from "@shared/type-utils";
 import {Temporal} from "@js-temporal/polyfill";
 import {match, P} from "ts-pattern";
-import {Break, BreakTimeSlot, TalksTimeSlot} from "../../../../shared/daily-schedule.firestore";
+import {Break, BreakTimeSlot, TalksTimeSlot} from "@shared/daily-schedule.firestore";
 import {BreakTimeslotWithPotentiallyUnknownIcon} from "../models/Event";
 
 const STD_HEADERS = {

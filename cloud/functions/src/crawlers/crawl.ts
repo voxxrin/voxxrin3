@@ -2,30 +2,34 @@ import {db, info, error} from "../firebase"
 import { FullEvent } from "../models/Event";
 import {z} from "zod";
 import {FIREBASE_CRAWLER_DESCRIPTOR_PARSER} from "./crawler-parsers";
-import {HexColor} from "../../../../shared/type-utils";
+import {HexColor} from "@shared/type-utils";
 import {Temporal} from "@js-temporal/polyfill";
 import {match, P} from "ts-pattern";
 import {v4 as uuidv4} from "uuid"
-import {ConferenceOrganizerSpace} from "../../../../shared/conference-organizer-space.firestore";
+import {ConferenceOrganizerSpace} from "@shared/conference-organizer-space.firestore";
 import {eventLastUpdateRefreshed} from "../functions/firestore/firestore-utils";
 import {http} from "./utils";
 import {
+  Break,
+  BreakTimeSlot,
+  DailySchedule,
   DetailedTalk,
   Room, TalkAsset,
   TalkFormat,
   Track
-} from "../../../../shared/daily-schedule.firestore";
+} from "@shared/daily-schedule.firestore";
 import {ensureRoomsStatsFilledFor} from "../functions/firestore/services/stats-utils";
 import {getEventOrganizerToken, getFamilyOrganizerToken} from "../functions/firestore/services/publicTokens-utils";
 import {getCrawlersMatching} from "../functions/firestore/services/crawlers-utils";
-import {ListableEvent} from "../../../../shared/event-list.firestore";
-import {ConferenceDescriptor} from "../../../../shared/conference-descriptor.firestore";
-import {toValidFirebaseKey} from "../../../../shared/utilities/firebase.utils";
+import {ListableEvent} from "@shared/event-list.firestore";
+import {ConferenceDescriptor} from "@shared/conference-descriptor.firestore";
+import {toValidFirebaseKey} from "@shared/utilities/firebase.utils";
 import { sanitize as domPurifySanitize } from "isomorphic-dompurify";
 import { marked } from 'marked'
 import {
   resolvedEventFirestorePath,
-} from "../../../../shared/utilities/event-utils";
+} from "@shared/utilities/event-utils";
+import { DocumentSnapshot } from "firebase-admin/firestore";
 
 export type CrawlerKind<ZOD_TYPE extends z.ZodType> = {
     crawlerImpl: (eventId: string, crawlerDescriptor: z.infer<ZOD_TYPE>, criteria: { dayIds?: string[]|undefined }) => Promise<FullEvent>,
@@ -133,6 +137,16 @@ const crawlAll = async function(criteria: CrawlCriteria) {
             const event = await crawler.crawlerImpl(eventId, crawlerKindDescriptor, { dayIds: criteria.dayIds });
             const messages = await sanityCheckEvent(event);
 
+            const errorMessages = messages.filter(message => message.severity === 'ERROR');
+            if(errorMessages.length) {
+              const errorMessage = [
+                `Some sanity checks ERRORS were encountered on fetched event:`,
+                ...messages.map(message => `  ${message.severity}: ${message.msg}`)
+              ].join('\n')
+
+              throw new Error(errorMessage);
+            }
+
             await transformEventContent(event, [
               {
                 name: "talks-regular",
@@ -175,12 +189,11 @@ const crawlAll = async function(criteria: CrawlCriteria) {
             ])
             await saveEvent(event, crawlerDescriptor)
 
-            const end = Temporal.Now.instant()
             return {
                 eventId,
                 days: event.daySchedules.map(ds => ds.day),
                 descriptorUrlUsed: crawlerDescriptor.descriptorUrl,
-                durationInSeconds: start.until(end).total('seconds'),
+                durationInSeconds: start.until(Temporal.Now.instant()).total('seconds'),
                 messages
             }
         } catch(e: any) {
@@ -199,7 +212,7 @@ const crawlAll = async function(criteria: CrawlCriteria) {
     }))
 };
 
-function sanityCheckEvent(event: FullEvent): string[] {
+export function sanityCheckEvent(event: FullEvent) {
 
   const descriptorTrackIds = event.conferenceDescriptor.talkTracks.map(t => t.id);
   const descriptorFormatIds = event.conferenceDescriptor.talkFormats.map(f => f.id);
@@ -221,9 +234,9 @@ function sanityCheckEvent(event: FullEvent): string[] {
     return unknownValues
   }, { unknownTracks: new Map<string, Track>(), unknownFormats: new Map<string, TalkFormat>, unknownRooms: new Map<string, Room>() });
 
-  const crawlingMessages: string[] = [];
+  const crawlingMessages: Array<{ msg: string, severity: 'WARNING'|'ERROR' }> = [];
   if(unknownValues.unknownTracks.size) {
-    crawlingMessages.push(`WARNING: Some tracks have not been declared in crawler configuration: ${Array.from(unknownValues.unknownTracks.keys()).join(", ")}. Those tracks' title/color will be auto-guessed.`)
+    crawlingMessages.push({ msg: `Some tracks have not been declared in crawler configuration: ${Array.from(unknownValues.unknownTracks.keys()).join(", ")}. Those tracks' title/color will be auto-guessed.`, severity: 'WARNING' });
     event.conferenceDescriptor.talkTracks.push(...Array.from(unknownValues.unknownTracks.values()).map((track, index) => {
       return {
         id: track.id, title: track.title,
@@ -232,7 +245,7 @@ function sanityCheckEvent(event: FullEvent): string[] {
     }))
   }
   if(unknownValues.unknownFormats.size) {
-    crawlingMessages.push(`WARNING: Some talk formats have not been declared in crawler configuration: ${Array.from(unknownValues.unknownFormats.keys()).join(", ")}. Those formats' title/color/duration will be auto-guessed.`)
+    crawlingMessages.push({ msg: `Some talk formats have not been declared in crawler configuration: ${Array.from(unknownValues.unknownFormats.keys()).join(", ")}. Those formats' title/color/duration will be auto-guessed.`, severity: 'WARNING' });
     event.conferenceDescriptor.talkFormats.push(...Array.from(unknownValues.unknownFormats.values()).map((format, index) => {
       return {
         id: format.id, title: format.title, duration: format.duration,
@@ -241,7 +254,7 @@ function sanityCheckEvent(event: FullEvent): string[] {
     }))
   }
   if(unknownValues.unknownRooms.size) {
-    crawlingMessages.push(`WARNING: Some rooms have not been declared in crawler configuration: ${Array.from(unknownValues.unknownRooms.keys()).join(", ")}. Those rooms' title will be auto-guessed.`)
+    crawlingMessages.push({ msg: `Some rooms have not been declared in crawler configuration: ${Array.from(unknownValues.unknownRooms.keys()).join(", ")}. Those rooms' title will be auto-guessed.`, severity: 'WARNING' });
     event.conferenceDescriptor.rooms.push(...Array.from(unknownValues.unknownRooms.values()).map((room, index) => {
       return {
         id: room.id, title: room.title,
@@ -285,6 +298,10 @@ function sanityCheckEvent(event: FullEvent): string[] {
 
       dailySchedule.day = validDayId;
     }
+  }
+
+  if(!isValidTimezone(event.info.timezone)) {
+    crawlingMessages.push({ msg: `Invalid timezone: ${event.info.timezone}`, severity: 'ERROR' });
   }
 
   return crawlingMessages;
@@ -378,9 +395,35 @@ const saveEvent = async function (event: FullEvent, crawlerDescriptor: z.infer<t
 
     await Promise.all(event.daySchedules.map(async daySchedule => {
         try {
-            await firestoreEvent
-                .collection("days").doc(daySchedule.day)
-                .set(daySchedule)
+            const dayDoc = firestoreEvent.collection("days").doc(daySchedule.day);
+
+            const alreadyPersistedScheduleDoc = (await dayDoc.get()) as DocumentSnapshot<DailySchedule>;
+            const alreadyPersistedSchedule = alreadyPersistedScheduleDoc.data();
+
+            // Ensuring existing (legacy) break timeslot ids are kept across new crawls()
+            // as we changed the rule in feb 2025, including room in break timeslot ids
+            // Note that this shouldn't be *that* problematic and we might remove this particular case handling at some point
+            // in time, because no break timeslot id is supposed to be referenced anywhere (only talks timeslot ids
+            // are supposed to be referenced in feedbacks ... and even those are not supposed to exist either)
+            if(alreadyPersistedSchedule) {
+              daySchedule.timeSlots.forEach(timeslotToPersist => {
+                if(timeslotToPersist.type === 'break') {
+                  const existingPersistedScheduleWithLegacyId = alreadyPersistedSchedule.timeSlots
+                    .filter((persistedTimeslot): persistedTimeslot is BreakTimeSlot => persistedTimeslot.type === 'break')
+                    .find(persistedTimeslot => {
+                      return persistedTimeslot.type === 'break'
+                        && `${timeslotToPersist.start}--${timeslotToPersist.end}` === `${persistedTimeslot.start}--${persistedTimeslot.end}`
+                        && timeslotToPersist.id !== persistedTimeslot.id;
+                    })
+
+                  if(existingPersistedScheduleWithLegacyId) {
+                    timeslotToPersist.id = existingPersistedScheduleWithLegacyId.id;
+                  }
+                }
+              })
+            }
+
+            await dayDoc.set(daySchedule)
         }catch(e) {
             error(`Error while saving dailySchedule ${daySchedule.day}: ${e?.toString()}`)
         }
@@ -405,6 +448,7 @@ const saveEvent = async function (event: FullEvent, crawlerDescriptor: z.infer<t
             const existingTalkFeedbackViewerToken = organizerSpaceContent.talkFeedbackViewerTokens
                 .find(tfvt => tfvt.eventId === event.id && tfvt.talkId === talk.id)
 
+            const speakersFullNames = talk.speakers.map(sp => sp.fullName);
             // If token already exists for the talk, let's not add it
             if(!existingTalkFeedbackViewerToken) {
                 const talkFeedbackViewerSecretToken = uuidv4();
@@ -418,9 +462,15 @@ const saveEvent = async function (event: FullEvent, crawlerDescriptor: z.infer<t
                 organizerSpaceContent.talkFeedbackViewerTokens.push({
                     eventId: event.id,
                     talkId: talk.id,
-                    speakersFullNames: talk.speakers.map(sp => sp.fullName),
+                    talkTitle: talk.title,
+                    speakersFullNames: speakersFullNames,
                     secretToken: talkFeedbackViewerSecretToken
                 });
+            } else {
+              // Ensuring talk title & speaker full names are always up to date in case they evolved
+              // since last crawl
+              existingTalkFeedbackViewerToken.speakersFullNames = speakersFullNames;
+              existingTalkFeedbackViewerToken.talkTitle = talk.title;
             }
         }catch(e) {
             error(`Error while saving talk ${talk.id}: ${e?.toString()}`)
@@ -488,6 +538,15 @@ async function sanitize(content: string): Promise<string> {
 
 async function markdownToHtml(content: string): Promise<string> {
   return marked.parse(content);
+}
+
+function isValidTimezone(timezone: string) {
+  try {
+    new Intl.DateTimeFormat('en-US', { timeZone: timezone });
+    return true;
+  } catch (e) {
+    return false;
+  }
 }
 
 export default crawlAll;

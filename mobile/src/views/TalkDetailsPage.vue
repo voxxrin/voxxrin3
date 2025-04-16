@@ -4,7 +4,7 @@
       <ion-header class="stickyHeader" v-if="talkNotes" :class="{ 'is-favorited': talkNotes.isFavorite, 'to-watch-later': talkNotes.watchLater }">
         <ion-toolbar>
           <ion-button class="stickyHeader-close" shape="round" slot="start" size="small" fill="outline" @click="closeAndNavigateBack()"
-          :aria-label="LL.Close_talk_details()">
+              :aria-label="LL.Close_talk_details()" data-testid="close-talk-details">
             <ion-icon src="/assets/icons/solid/close.svg"></ion-icon>
           </ion-button>
           <ion-title class="stickyHeader-title" slot="start" >{{ LL.Talk_details() }}</ion-title>
@@ -330,6 +330,7 @@ const {firestoreRoomStatsRef } = useRoomStats(spacedEventIdRef, toRef(() => deta
       :deep {
         * {
           color: var(--app-primary) !important;
+          background-color: transparent !important;
 
           @media (prefers-color-scheme: dark) {
             color: var(--app-white) !important;
@@ -413,6 +414,7 @@ const {firestoreRoomStatsRef } = useRoomStats(spacedEventIdRef, toRef(() => deta
               :deep {
                 * {
                   color: var(--app-primary) !important;
+                  background-color: transparent !important;
                 }
 
                 @media (prefers-color-scheme: dark) {

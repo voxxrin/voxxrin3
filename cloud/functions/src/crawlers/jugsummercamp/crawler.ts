@@ -4,16 +4,16 @@ import {
     BreakTimeSlot,
     DailySchedule, DetailedTalk, ScheduleTimeSlot,
     Speaker, TalksTimeSlot,
-} from "../../../../../shared/daily-schedule.firestore";
+} from "@shared/daily-schedule.firestore";
 import * as cheerio from 'cheerio';
-import {ConferenceDescriptor} from "../../../../../shared/conference-descriptor.firestore";
+import {ConferenceDescriptor} from "@shared/conference-descriptor.firestore";
 import {
     BREAK_PARSER,
     BREAK_TIME_SLOT_PARSER,
     EVENT_DESCRIPTOR_PARSER
 } from "../crawler-parsers";
 import {CrawlerKind} from "../crawl";
-import {ISODatetime} from "../../../../../shared/type-utils";
+import {ISODatetime} from "@shared/type-utils";
 import {Temporal} from "@js-temporal/polyfill";
 import {http} from "../utils";
 
@@ -135,6 +135,7 @@ export const JUG_SUMMERCAMP_CRAWLER: CrawlerKind<typeof JUG_SUMMERCAMP_PARSER> =
             title: descriptor.title,
             days: descriptor.days,
             headingTitle: descriptor.headingTitle,
+            headingSubTitle: descriptor.headingSubTitle,
             headingBackground: descriptor.headingBackground,
             description: descriptor.description || "",
             keywords: descriptor.keywords,

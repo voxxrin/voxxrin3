@@ -1,6 +1,7 @@
 <template>
   <ion-page>
     <event-tabs :tabs="tabs" :spaced-event-id="spacedEventIdRef"></event-tabs>
+    <link v-for="customFontUrl in customFontUrls" :key="customFontUrl" rel="stylesheet" :href="customFontUrl" />
   </ion-page>
 </template>
 
@@ -11,6 +12,7 @@ import {useSharedConferenceDescriptor} from "@/state/useConferenceDescriptor";
 import {computed, toValue} from "vue";
 import {areFeedbacksEnabled} from "@/models/VoxxrinConferenceDescriptor";
 import {getResolvedEventRootPathFromSpacedEventIdRef, useCurrentSpaceEventIdRef} from "@/services/Spaces";
+import {match} from "ts-pattern";
 
 const spacedEventIdRef = useCurrentSpaceEventIdRef()
 const {conferenceDescriptor: confDescriptorRef} = useSharedConferenceDescriptor(spacedEventIdRef);
@@ -36,6 +38,14 @@ const tabs = computed(() => {
         icon: '/assets/icons/line/info-circle-line.svg',
         selectedIcon: '/assets/icons/solid/info-circle.svg',
     }]:[])
+})
+
+const customFontUrls = computed(() => {
+  const confDescriptor = toValue(confDescriptorRef);
+  return (confDescriptor?.theming?.customImportedFonts || []).map(customFontDescriptor => match(customFontDescriptor)
+    .with({ provider: 'google-fonts' }, ({ family }) => `https://fonts.googleapis.com/css2?family=${family}&display=swap`)
+    .exhaustive()
+  )
 })
 </script>
 

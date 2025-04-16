@@ -2,11 +2,11 @@ import {Response, Request} from "express";
 import {logPerf, roundedAverage, sendResponseMessage} from "../utils";
 import {checkEventLastUpdate} from "../../firestore/firestore-utils";
 import {getTalksDetailsWithRatings} from "../../firestore/services/talk-utils";
-import {ISOLocalDate} from "../../../../../../shared/type-utils";
+import {ISOLocalDate} from "@shared/type-utils";
 import {match, P} from "ts-pattern";
 import {sortBy} from "lodash";
-import {ConferenceDescriptor} from "../../../../../../shared/conference-descriptor.firestore";
-import {resolvedSpacedEventFieldName} from "../../../../../../shared/utilities/event-utils";
+import {ConferenceDescriptor} from "@shared/conference-descriptor.firestore";
+import {resolvedSpacedEventFieldName} from "@shared/utilities/event-utils";
 
 
 export async function eventTopTalks(response: Response, pathParams: {eventId: string, spaceToken?: string|undefined}, queryParams: {token: string }, request: Request, eventDescriptor: ConferenceDescriptor) {

@@ -1,7 +1,7 @@
 import {z, ZodLiteral} from "zod";
-import {type ISODatetime, ISOLocalDate, ISOZonedTime} from "../../../../shared/type-utils";
-import {ConferenceDescriptor} from "../../../../shared/conference-descriptor.firestore";
-import {RecordingPlatform, ScheduleTimeSlot} from "../../../../shared/daily-schedule.firestore";
+import {type ISODatetime, ISOLocalDate, ISOZonedTime} from "@shared/type-utils";
+import {ConferenceDescriptor} from "@shared/conference-descriptor.firestore";
+import {RecordingPlatform, ScheduleTimeSlot} from "@shared/daily-schedule.firestore";
 import {ISO_DATETIME_PARSER} from "../utils/zod-parsers";
 
 
@@ -54,12 +54,26 @@ export const EVENT_THEME_PARSER = z.object({
         secondaryContrastHex: HEX_COLOR_PARSER,
         tertiaryHex: HEX_COLOR_PARSER,
         tertiaryContrastHex: HEX_COLOR_PARSER
-    })
+    }),
+    headingCustomStyles: z.object({
+      title: z.string().nullable(),
+      subTitle: z.string().nullable(),
+      banner: z.string().nullable(),
+    }).optional().nullable().default(null),
+    headingSrcSet: z.array(z.object({
+      url: z.string(),
+      descriptor: z.string().regex(/\d(?:w|x)/)
+    })).min(1).optional().nullable().default(null),
+    customImportedFonts: z.array(z.object({
+      provider: z.literal('google-fonts'),
+      family: z.string(),
+    })).optional().nullable().default(null),
 })
 
 export const SOCIAL_MEDIA_TYPE = z.union([
     z.literal('website'),
     z.literal('twitter'),
+    z.literal('x'),
     z.literal('linkedin'),
     z.literal('mastodon'),
     z.literal('instagram'),
@@ -68,6 +82,7 @@ export const SOCIAL_MEDIA_TYPE = z.union([
     z.literal('github'),
     z.literal('facebook'),
     z.literal('flickr'),
+    z.literal('bluesky'),
 ])
 
 export const LISTABLE_EVENT_PARSER = z.object({
@@ -176,6 +191,7 @@ export const EVENT_FEATURES_CONFIG_PARSER = z.object({
 
 export const EVENT_DESCRIPTOR_PARSER = LISTABLE_EVENT_PARSER.extend({
     headingTitle: z.string(),
+    headingSubTitle: z.string().optional().nullable().default(null),
     headingBackground: z.string().optional().nullable().default(null),
     features: EVENT_FEATURES_CONFIG_PARSER,
     talkFormats: z.array(THEMABLE_TALK_FORMAT_PARSER),

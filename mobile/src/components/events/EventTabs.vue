@@ -1,7 +1,7 @@
 <template>
   <ion-tabs ref="$tabs" v-if="confDescriptor" v-themed-event-styles="confDescriptor">
     <ion-router-outlet></ion-router-outlet>
-    <ion-tab-bar slot="bottom" ref="$tabBarRef">
+    <ion-tab-bar slot="bottom" ref="$tabBarRef" data-testid="event-tabs">
       <ion-tab-button v-for="(tab, index) in tabs" :key="index"
                       :tab="tab.id" :href="tab.url">
         <ion-icon aria-hidden="true" :src="$tabBarRef?.tabState.activeTab === tab.id ? tab.selectedIcon : tab.icon" />

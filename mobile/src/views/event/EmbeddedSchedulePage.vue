@@ -23,9 +23,15 @@ import {
 } from "@/services/Spaces";
 import {computed} from "vue";
 import {VoxxrinTalk} from "@/models/VoxxrinTalk";
+import {useTabbedPageNav} from "@/state/useTabbedPageNav";
 
 const appBaseUrl = import.meta.env.VITE_WHITE_LABEL_PUBLIC_URL;
 const appBaseUrlWithoutTrailingSlash = appBaseUrl.substring(0, appBaseUrl.length - (appBaseUrl[appBaseUrl.length-1]==='/'?1:0));
+
+// Required to make navigation work on schedule (as this hook is registered on EventTabs component, which is not loaded
+// on embedded mode)
+const { registerTabbedPageNavListeners } = useTabbedPageNav();
+registerTabbedPageNavListeners();
 
 const spacedEventIdRef = useCurrentSpaceEventIdRef()
 const {conferenceDescriptor: confDescriptor} = useSharedConferenceDescriptor(spacedEventIdRef);

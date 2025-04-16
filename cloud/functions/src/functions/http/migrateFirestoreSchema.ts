@@ -1,6 +1,6 @@
 import {extractSingleQueryParam, sendResponseMessage} from "./utils";
 import {db} from "../../firebase";
-import {ISODatetime} from "../../../../../shared/type-utils";
+import {ISODatetime} from "@shared/type-utils";
 import * as functions from "firebase-functions";
 import * as express from "express";
 
@@ -34,6 +34,7 @@ const MIGRATIONS: Migration[] = [
     { name: "dontConsiderOptionalMigrationInUserVersion", exec: async () => (await import("../firestore/migrations/023-dontConsiderOptionalMigrationInUserVersion")).dontConsiderOptionalMigrationInUserVersion() },
     { name: "fillEmptyUserSubCollectionDocs", exec: async () => (await import("../firestore/migrations/024-fillEmptyUserSubCollectionDocs")).fillEmptyUserSubCollectionDocs() },
     { name: "fillUserLastConnection", exec: async () => (await import("../firestore/migrations/025-fillUserLastConnection")).fillUserLastConnection() },
+    { name: "fillTalkEditorsSpeakersAndTitle", exec: async () => (await import("../firestore/migrations/026-fillTalkEditorsSpeakersAndTitle")).fillTalkEditorsSpeakersAndTitle() },
 ];
 
 export type MigrationResult = "OK"|"Error";
@@ -147,6 +148,7 @@ export async function migrateFirestoreSchema(request: functions.https.Request, r
                     duration: Date.now() - start.getTime(),
                 }
             }catch(error: any) {
+                console.error(`Error during migration [${migration.name}]:`, error)
                 persistedMigration = {
                     name: migration.name,
                     status: "failure",
@@ -178,6 +180,10 @@ export async function migrateFirestoreSchema(request: functions.https.Request, r
         migrations: migrationsToPersist
     }
     await db.collection('schema-migrations').doc("self").set(updatedSchemaMigration)
+
+    if(migrationFailure) {
+      console.error(`Migration failure at ${migrationFailure.name}: ${JSON.stringify(migrationFailure)}`)
+    }
 
     return sendResponseMessage(response, success?200:500, [
         `Executed migrations: [${executedMigrations.map(m => `${m.name} (${m.duration}ms)`).join(", ")}]`,

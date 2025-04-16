@@ -18,7 +18,7 @@ import {updateLogConfigTo} from "@/services/Logger";
 // May be useful for debug purposes
 
 type OverridableListableEventProperties = {eventId: string} & Partial<Pick<ListableVoxxrinEvent, "theming"|"location"|"backgroundUrl"|"logoUrl">>;
-type OverridableEventDescriptorProperties = {eventId: string} & Partial<Pick<VoxxrinConferenceDescriptor, "headingTitle"|"theming"|"features"|"infos"|"location"|"backgroundUrl"|"logoUrl">>;
+type OverridableEventDescriptorProperties = {eventId: string} & Partial<Pick<VoxxrinConferenceDescriptor, "headingTitle"|"headingSubTitle"|"theming"|"features"|"infos"|"location"|"backgroundUrl"|"logoUrl">>;
 
 let overridenListableEventPropertiesRef: Ref<OverridableListableEventProperties|undefined>|undefined = undefined
 let overridenEventDescriptorPropertiesRef: Ref<OverridableEventDescriptorProperties|undefined>|undefined = undefined

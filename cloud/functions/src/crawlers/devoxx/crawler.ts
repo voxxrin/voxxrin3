@@ -11,13 +11,13 @@ import {
   DetailedTalk, Room,
   Speaker,
   Talk
-} from "../../../../../shared/daily-schedule.firestore"
+} from "@shared/daily-schedule.firestore"
 import { FullEvent } from "../../models/Event";
-import { ISODatetime, ISOLocalDate } from "../../../../../shared/type-utils";
-import { Day, ListableEvent } from "../../../../../shared/event-list.firestore";
+import { ISODatetime, ISOLocalDate } from "@shared/type-utils";
+import { Day, ListableEvent } from "@shared/event-list.firestore";
 import { Temporal } from "@js-temporal/polyfill";
 import {z} from "zod";
-import {ConferenceDescriptor} from "../../../../../shared/conference-descriptor.firestore";
+import {ConferenceDescriptor} from "@shared/conference-descriptor.firestore";
 import {
   EVENT_DESCRIPTOR_PARSER,
   INFOS_PARSER,
@@ -26,7 +26,7 @@ import {
 import {CrawlerKind, TALK_FORMAT_FALLBACK_COLORS} from "../crawl";
 import {match, P} from "ts-pattern";
 import {http} from "../utils";
-import {TalkStats} from "../../../../../shared/event-stats";
+import {TalkStats} from "@shared/event-stats";
 
 const daysOfWeek = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
 
@@ -64,18 +64,18 @@ export const DEVOXX_CRAWLER: CrawlerKind<typeof DEVOXX_DESCRIPTOR_PARSER> = {
     descriptorParser: DEVOXX_DESCRIPTOR_PARSER,
     crawlerImpl: async (eventId: string, descriptor: z.infer<typeof DEVOXX_DESCRIPTOR_PARSER>, criteria: { dayIds?: string[]|undefined }) => {
         const rawCfpBaseUrl = match([descriptor.cfpBaseUrl, descriptor.cfpId])
-            .with([P.nonNullable, P._], ([cfpBaseUrl, _]) => cfpBaseUrl)
+            .with([P.nonNullable, P._], ([cfpBaseUrl, _]) => cfpBaseUrl.substring(0, cfpBaseUrl.length - (cfpBaseUrl.endsWith("/")?1:0)))
             .with([P._, P.nonNullable], ([_, cfpId]) => `https://${cfpId}.cfp.dev`)
             .otherwise(() => `https://${eventId}.cfp.dev`)
 
-        if(rawCfpBaseUrl !== `https://${eventId}.cfp.dev`) {
+        if(![`https://${eventId}.cfp.dev`, `http://${eventId}.cfp.dev`].includes(rawCfpBaseUrl)) {
           throw new Error(`Voxxrin event id (${eventId}) not matching with cfp.dev's slug (${rawCfpBaseUrl}).
 This can lead to unexpected behaviour when CFP will try to call voxxrin API using slug as event id.
 Please, unless event id is made configurable at cfp.dev level, you should rather use a voxxrin event id matching cfp.dev's slug !
 `)
         }
 
-        const cfpBaseUrl = rawCfpBaseUrl+(rawCfpBaseUrl.endsWith("/")?"":"/")
+        const cfpBaseUrl = rawCfpBaseUrl+"/";
         const [cfpEvent, cfpFloorPlans] = await Promise.all([
             http.get<CfpEvent>(`${cfpBaseUrl}api/public/event`),
             http.maybeGet<DevoxxFloorPlan[]>(`${cfpBaseUrl}api/public/floorplans`),
@@ -118,12 +118,44 @@ Please, unless event id is made configurable at cfp.dev level, you should rather
             keywords: descriptor.keywords
         }
 
+        const dailySchedulesResults = await Promise.all(daysMatchingCriteria.map(async day => {
+          try {
+            return {
+              day: day.id,
+              outcome: 'success' as const,
+              schedules: await http.get<DevoxxScheduleItem[]>(`${cfpBaseUrl}api/public/schedules/${day.id}`)
+            }
+          } catch(error) {
+            return {
+              day: day.id,
+              outcome: 'failure' as const,
+              schedules: undefined
+            }
+          }
+        }));
+
+        const dayFailures = dailySchedulesResults.filter(result => result.outcome === 'failure');
+        if(dayFailures.length) {
+          const errorMessages = [
+            `Error while fetching daily schedules:`,
+            ...dayFailures.map(failure => `  ${failure.day}: GET ${cfpBaseUrl}api/public/schedules/${failure.day}`),
+            ``,
+            `Has schedule been published ?`,
+          ];
+          throw new Error(errorMessages.join("\n"));
+        }
+
+        const dailySchedules = dailySchedulesResults
+          .map(result => result.outcome === 'success' ? { schedules: result.schedules, day: result.day } : undefined)
+          .filter(schedule => schedule !== undefined)
+          .map(dailySchedule => dailySchedule!);
+
         const eventTalks: DetailedTalk[] = [],
             daySchedules: DailySchedule[] = [],
             eventRooms: ConferenceDescriptor['rooms'] = [],
             eventTalkFormats: ConferenceDescriptor['talkFormats'] = [];
-        await Promise.all(daysMatchingCriteria.map(async day => {
-            const {daySchedule, talkStats, talks, rooms, talkFormats} = await crawlDevoxxDay(cfpBaseUrl, day.id, descriptor)
+        await Promise.all(dailySchedules.map(async dailySchedule => {
+            const {daySchedule, talkStats, talks, rooms, talkFormats} = await crawlDevoxxDay(cfpBaseUrl, dailySchedule, descriptor)
             daySchedules.push(daySchedule)
             for (const talk of talks) {
                 eventTalks.push(talk)
@@ -143,6 +175,7 @@ Please, unless event id is made configurable at cfp.dev level, you should rather
         const eventDescriptor: FullEvent['conferenceDescriptor'] = {
             ...eventInfo,
             headingTitle: descriptor.headingTitle,
+            headingSubTitle: descriptor.headingSubTitle,
             headingBackground: descriptor.headingBackground,
             features: descriptor.features,
             talkFormats: eventTalkFormats,
@@ -248,9 +281,7 @@ function toScheduleTalk(item: DevoxxScheduleItem, start: ISODatetime, end: ISODa
   return { type: 'proposal', talk, detailedTalk, totalFavourites: item.totalFavourites };
 }
 
-const crawlDevoxxDay = async (cfpBaseUrl: string, day: string, descriptor: z.infer<typeof DEVOXX_DESCRIPTOR_PARSER>) => {
-    const schedules = await http.get<DevoxxScheduleItem[]>(`${cfpBaseUrl}api/public/schedules/${day}`)
-
+const crawlDevoxxDay = async (cfpBaseUrl: string, {day, schedules}: {day: string, schedules: DevoxxScheduleItem[]}, descriptor: z.infer<typeof DEVOXX_DESCRIPTOR_PARSER>) => {
     const daySchedule: DailySchedule = {
         day: day,
         timeSlots: []
@@ -264,7 +295,11 @@ const crawlDevoxxDay = async (cfpBaseUrl: string, day: string, descriptor: z.inf
     const talkFormats = descriptor.talkFormats || [];
 
     const slots = schedules.reduce((slots, item) => {
-      const key = `${item.fromDate}--${item.toDate}`
+      let key = `${item.fromDate}--${item.toDate}`
+      if(item.sessionType.pause) {
+        key = `${item.fromDate}--${item.toDate}--${item.room.id}`
+      }
+
       slots[key] = slots[key] || [];
       slots[key].push(item);
       return slots;

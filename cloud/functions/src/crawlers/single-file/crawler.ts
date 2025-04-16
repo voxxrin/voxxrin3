@@ -11,9 +11,9 @@ import {
   BreakTimeSlot, DailySchedule,
   ScheduleTimeSlot,
   TalksTimeSlot,
-  TimeSlotBase,
-} from "../../../../../shared/daily-schedule.firestore";
+} from "@shared/daily-schedule.firestore";
 import {ISO_DATETIME_PARSER} from "../../utils/zod-parsers";
+import {ISODatetime} from "@shared/type-utils";
 
 
 export const SINGLE_FILE_DESCRIPTOR_PARSER = EVENT_DESCRIPTOR_PARSER.omit({
@@ -58,12 +58,12 @@ export const SINGLE_FILE_CRAWLER: CrawlerKind<typeof SINGLE_FILE_DESCRIPTOR_PARS
     }
 
     const talksTimeslots: TalksTimeSlot[] = descriptor.talks.reduce((timeslots, talk) => {
-      const timeslotId = `${talk.start}--${talk.end}` as TimeSlotBase['id']
+      const timeRangeId = `${talk.start as ISODatetime}--${talk.end as ISODatetime}` as const
 
-      const timeslot = match(timeslots.find(ts => ts.id === timeslotId))
+      const timeslot = match(timeslots.find(ts => `${ts.start}--${ts.end}` === timeRangeId))
         .with(P.nullish, () => {
           const timeslot: TalksTimeSlot = {
-            id: timeslotId,
+            id: timeRangeId,
             type: 'talks',
             start: talk.start,
             end: talk.end,
@@ -88,12 +88,12 @@ export const SINGLE_FILE_CRAWLER: CrawlerKind<typeof SINGLE_FILE_DESCRIPTOR_PARS
     }, [] as TalksTimeSlot[])
 
     const breaksTimeslots: BreakTimeSlot[] = descriptor.breaks.reduce((timeslots, breakSlot) => {
-      const timeslotId = `${breakSlot.start}--${breakSlot.end}` as TimeSlotBase['id']
+      const timeRangeId = `${breakSlot.start as ISODatetime}--${breakSlot.end as ISODatetime}` as const
 
-      const timeslot = match(timeslots.find(ts => ts.id === timeslotId))
+      const timeslot = match(timeslots.find(ts => `${ts.start}--${ts.end}` === timeRangeId))
         .with(P.nullish, () => {
           const timeslot: BreakTimeSlot = {
-            id: timeslotId,
+            id: `${timeRangeId}--${breakSlot.roomId}`,
             type: 'break',
             start: breakSlot.start,
             end: breakSlot.end,
@@ -143,6 +143,7 @@ export const SINGLE_FILE_CRAWLER: CrawlerKind<typeof SINGLE_FILE_DESCRIPTOR_PARS
       conferenceDescriptor: {
         ...eventInfo,
         headingTitle: descriptor.headingTitle,
+        headingSubTitle: descriptor.headingSubTitle,
         headingBackground: descriptor.headingBackground,
         features: descriptor.features,
         talkFormats: descriptor.talkFormats,

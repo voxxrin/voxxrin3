@@ -43,6 +43,10 @@ const props = defineProps({
     flex-direction: column;
     line-height: 0.9;
 
+    strong {
+      color: var(app-black);
+    }
+
     small {
       opacity: 0.8;
     }

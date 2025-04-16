@@ -247,7 +247,7 @@ const talkFeedbacksStats = computed(() => {
     border-radius: 34px;
     color: var(--app-white);
     font-weight: 900;
-    background-color: var(--voxxrin-event-theme-colors-primary-hex);
+    background-color: var(--ion-color-dark);
 
     @media (prefers-color-scheme: dark) {
       color: var(--app-primary);
@@ -258,8 +258,10 @@ const talkFeedbacksStats = computed(() => {
     font-weight: 900;
     font-size: 24px;
 
+    color: rgba(var(--ion-color-dark-rgb), 0.6);
+
     &-value {
-      color: var(--voxxrin-event-theme-colors-primary-hex);
+      color: var(--ion-color-dark);
     }
   }
 
@@ -268,7 +270,7 @@ const talkFeedbacksStats = computed(() => {
     font-size: 12px;
     font-weight: bold;
     border-radius: 16px;
-    background-color: var(--voxxrin-event-theme-colors-primary-hex);
+    background-color: var(--ion-color-dark);
     color: var(--app-white);
 
     @media (prefers-color-scheme: dark) {
@@ -297,7 +299,7 @@ const talkFeedbacksStats = computed(() => {
 .privateBingo {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  grid-gap: 16px;
+  grid-gap: 10px;
   margin: 0;
   background: transparent;
 
@@ -366,10 +368,15 @@ const talkFeedbacksStats = computed(() => {
       --border-width: 1px;
     }
 
+    &::part(native) {
+      min-height: 100%;
+    }
+
     ion-label {
       margin: 0;
-      padding: 20px 8px 16px 8px;
-      font-size: 14px;
+      padding: 20px 4px 16px 4px;
+      font-size: 13px;
+      line-height: 120%;
       white-space: normal;
       text-align: center;
     }

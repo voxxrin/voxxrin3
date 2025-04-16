@@ -1,6 +1,6 @@
 import {z} from "zod";
 import {FullEvent} from "../../models/Event";
-import {ISODatetime, ISOLocalDate} from "../../../../../shared/type-utils";
+import {ISODatetime, ISOLocalDate} from "@shared/type-utils";
 import {Temporal} from "@js-temporal/polyfill";
 import {
   BreakTimeSlot,
@@ -8,11 +8,11 @@ import {
   ScheduleTimeSlot,
   Speaker,
   TalksTimeSlot,
-} from "../../../../../shared/daily-schedule.firestore";
+} from "@shared/daily-schedule.firestore";
 import * as cheerio from 'cheerio';
 import {match, P} from "ts-pattern";
-import {ConferenceDescriptor} from "../../../../../shared/conference-descriptor.firestore";
-import {Day} from "../../../../../shared/event-list.firestore";
+import {ConferenceDescriptor} from "@shared/conference-descriptor.firestore";
+import {Day} from "@shared/event-list.firestore";
 import {
   BREAK_TIME_SLOT_PARSER,
   DAY_PARSER,
@@ -125,17 +125,17 @@ export const LA_PRODUCT_CONF_CRAWLER: CrawlerKind<typeof LA_PRODUCT_CONF_DESCRIP
               const originalStart = ts.timerange.start || rawTimeslots[idx-1].timerange.end as ISODatetime;
               const originalEnd = ts.timerange.end || rawTimeslots[idx+1]?.timerange?.start || `${LOCAL_DATE}T${DAY.endTime}` as ISODatetime;
 
-              const originalTimeslotId = `${originalStart}--${originalEnd}` as const;
-              const overrides = descriptor.timeslotOverrides[originalTimeslotId];
+              const timeRange = `${originalStart}--${originalEnd}` as const;
+              const overrides = descriptor.timeslotOverrides[timeRange];
 
               const { start, end, timeslotId} = {
                 start: originalStart,
                 end: originalEnd,
-                timeslotId: originalTimeslotId,
+                timeslotId: timeRange,
                 ...(overrides?.type === 'replace' ? {
                   start: overrides.replacement.start || originalStart,
                   end: overrides.replacement.end || originalEnd,
-                  timeslotId: overrides.replacement.id || originalTimeslotId,
+                  timeslotId: overrides.replacement.id || timeRange,
                 } : {})
               }
 
@@ -145,7 +145,7 @@ export const LA_PRODUCT_CONF_CRAWLER: CrawlerKind<typeof LA_PRODUCT_CONF_DESCRIP
                 const breakTimeslot: BreakTimeSlot = {
                   start,
                   end,
-                  id: timeslotId,
+                  id: `${timeslotId}--${room.id}`,
                   type: 'break',
                   break: {
                     title: ts.breakLabel,
@@ -189,7 +189,7 @@ export const LA_PRODUCT_CONF_CRAWLER: CrawlerKind<typeof LA_PRODUCT_CONF_DESCRIP
 
                 const talksTimeslot: TalksTimeSlot = {
                   start, end,
-                  id: timeslotId,
+                  id: timeRange,
 
                   type: 'talks',
                   talks: [{
@@ -248,6 +248,7 @@ export const LA_PRODUCT_CONF_CRAWLER: CrawlerKind<typeof LA_PRODUCT_CONF_DESCRIP
             title: descriptor.title,
             days: descriptor.days as Day[],
             headingTitle: descriptor.headingTitle,
+            headingSubTitle: descriptor.headingSubTitle,
             headingBackground: descriptor.headingBackground,
             description: descriptor.description,
             keywords: descriptor.keywords,
