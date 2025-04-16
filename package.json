@@ -21,5 +21,8 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "@fcamblor/concurrently": "8.2.2-for-firebase"
+  },
+  "engines": {
+    "node": "20"
   }
 }

@@ -10,6 +10,9 @@
     "deploy": "concurrently 'npm run deploy:rules' 'npm run deploy:indexes'"
   },
   "license": "Apache-2.0",
+  "engines": {
+    "node": "20"
+  },
   "devDependencies": {
     "@firebase/rules-unit-testing": "3.0.0",
     "@types/jest": "29.5.4",
