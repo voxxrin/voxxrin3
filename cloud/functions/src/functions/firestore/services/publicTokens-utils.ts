@@ -1,7 +1,7 @@
 import {db} from "../../../firebase";
 import {
     PublicToken
-} from "../../../../../../shared/public-tokens";
+} from "@shared/public-tokens";
 import {match, P} from "ts-pattern";
 import {logPerf} from "../../http/utils";
 

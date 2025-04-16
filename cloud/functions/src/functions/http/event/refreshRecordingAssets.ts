@@ -1,16 +1,16 @@
 import {Response} from "express";
 import {sendResponseMessage} from "../utils";
 import {youtube, youtube_v3} from '@googleapis/youtube'
-import {ISODatetime} from "../../../../../../shared/type-utils";
+import {ISODatetime} from "@shared/type-utils";
 import * as fs from "fs";
 import {findYoutubeMatchingTalks, getEventTalks, SimpleTalk, YoutubeVideo} from "../../firestore/services/talk-utils";
 import {getEventDescriptor} from "../../firestore/services/eventDescriptor-utils";
 import {db} from "../../../firebase";
 import {firestore} from "firebase-admin";
 import DocumentReference = firestore.DocumentReference;
-import {DetailedTalk, Talk, TalkAsset} from "../../../../../../shared/daily-schedule.firestore";
+import {DetailedTalk, Talk, TalkAsset} from "@shared/daily-schedule.firestore";
 import {match, P} from "ts-pattern";
-import {resolvedEventFirestorePath} from "../../../../../../shared/utilities/event-utils";
+import {resolvedEventFirestorePath} from "@shared/utilities/event-utils";
 
 
 

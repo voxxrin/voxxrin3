@@ -1,13 +1,13 @@
 import {db} from "../../../firebase";
-import {UserPreferences} from "../../../../../../shared/user-preferences.firestore";
+import {UserPreferences} from "@shared/user-preferences.firestore";
 import {getSecretTokenRef} from "../firestore-utils";
-import {TalkAttendeeFeedback} from "../../../../../../shared/talk-feedbacks.firestore";
+import {TalkAttendeeFeedback} from "@shared/talk-feedbacks.firestore";
 import {firestore} from "firebase-admin";
 import DocumentReference = firestore.DocumentReference;
 import {v4 as uuidv4} from "uuid";
 import {
     ConferenceOrganizerSpace
-} from "../../../../../../shared/conference-organizer-space.firestore";
+} from "@shared/conference-organizer-space.firestore";
 
 export async function createOrganizerSpaceRatings(): Promise<"OK"|"Error"> {
     const existingEvents = await db.collection("events").listDocuments()

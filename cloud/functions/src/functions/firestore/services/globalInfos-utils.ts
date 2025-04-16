@@ -1,6 +1,6 @@
 import {db} from "../../../firebase";
 import {firestore} from "firebase-admin";
-import {ISODatetime} from "../../../../../../shared/type-utils";
+import {ISODatetime} from "@shared/type-utils";
 import DocumentSnapshot = firestore.DocumentSnapshot;
 
 

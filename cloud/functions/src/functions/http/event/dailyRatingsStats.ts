@@ -1,11 +1,11 @@
 import {Response, Request} from "express";
 import {logPerf, sendResponseMessage} from "../utils";
 import {checkEventLastUpdate, getSecretTokenRef} from "../../firestore/firestore-utils";
-import {DailyTalkFeedbackRatings} from "../../../../../../shared/conference-organizer-space.firestore";
+import {DailyTalkFeedbackRatings} from "@shared/conference-organizer-space.firestore";
 import {firestore} from "firebase-admin";
 import {match} from "ts-pattern";
 import DocumentReference = firestore.DocumentReference;
-import {resolvedEventFirestorePath, resolvedSpacedEventFieldName} from "../../../../../../shared/utilities/event-utils";
+import {resolvedEventFirestorePath, resolvedSpacedEventFieldName} from "@shared/utilities/event-utils";
 
 
 export async function provideDailyRatingsStats(response: Response, pathParams: {eventId: string, spaceToken?: string|undefined}, queryParams: {token: string}, request: Request) {

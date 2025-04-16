@@ -1,14 +1,14 @@
 import {CollectionReference, Query, QueryDocumentSnapshot} from "firebase-admin/lib/firestore";
 import {db} from "../../../firebase";
 import {Temporal} from "@js-temporal/polyfill";
-import {ISODatetime} from "../../../../../../shared/type-utils";
+import {ISODatetime} from "@shared/type-utils";
 import {firestore} from "firebase-admin";
 import DocumentReference = firestore.DocumentReference;
 import {durationOf} from "../../http/utils";
 import DocumentData = firestore.DocumentData;
 import QuerySnapshot = firestore.QuerySnapshot;
-import {User} from "../../../../../../shared/user.firestore";
-import {UserTokensWallet} from "../../../../../../shared/user-tokens-wallet.localstorage";
+import {User} from "@shared/user.firestore";
+import {UserTokensWallet} from "@shared/user-tokens-wallet.localstorage";
 import DocumentSnapshot = firestore.DocumentSnapshot;
 import {match, P} from "ts-pattern";
 import {FieldPath} from "firebase-admin/firestore";

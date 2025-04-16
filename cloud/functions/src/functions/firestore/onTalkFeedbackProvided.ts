@@ -2,23 +2,23 @@ import {
     ProvidedUserFeedback,
     UserDailyFeedbacks,
     UserFeedback
-} from "../../../../../shared/feedbacks.firestore";
+} from "@shared/feedbacks.firestore";
 import {db} from "../../firebase";
 import {eventLastUpdateRefreshed, getSecretTokenRef} from "./firestore-utils";
-import {ConferenceOrganizerSpace} from "../../../../../shared/conference-organizer-space.firestore";
-import {TalkAttendeeFeedback} from "../../../../../shared/talk-feedbacks.firestore";
-import {EventLastUpdates} from "../../../../../shared/event-list.firestore";
-import {ISODatetime} from "../../../../../shared/type-utils";
-import {ConferenceDescriptor} from "../../../../../shared/conference-descriptor.firestore";
+import {ConferenceOrganizerSpace} from "@shared/conference-organizer-space.firestore";
+import {TalkAttendeeFeedback} from "@shared/talk-feedbacks.firestore";
+import {EventLastUpdates} from "@shared/event-list.firestore";
+import {ISODatetime} from "@shared/type-utils";
+import {ConferenceDescriptor} from "@shared/conference-descriptor.firestore";
 import {Change} from "firebase-functions/lib/common/change";
 import {QueryDocumentSnapshot} from "firebase-functions/lib/v1/providers/firestore";
 import {EventContext} from "firebase-functions/lib/v1/cloud-functions";
-import {User} from "../../../../../shared/user.firestore";
+import {User} from "@shared/user.firestore";
 import {
   resolvedEventFirestorePath,
   resolvedSpacedEventFieldName,
   resolvedSpaceFirestorePath
-} from "../../../../../shared/utilities/event-utils";
+} from "@shared/utilities/event-utils";
 import { FieldValue, FieldPath } from "firebase-admin/firestore";
 
 

@@ -18,9 +18,9 @@ import {
   TalksTimeSlot,
   ThemedTalkFormat,
   ThemedTrack
-} from "../../../../../shared/daily-schedule.firestore"
+} from "@shared/daily-schedule.firestore"
 import {FullEvent} from "../../models/Event";
-import {ISODatetime} from "../../../../../shared/type-utils";
+import {ISODatetime} from "@shared/type-utils";
 import {Temporal} from "@js-temporal/polyfill";
 import {z} from "zod";
 import {EVENT_DESCRIPTOR_PARSER, THEMABLE_TALK_FORMAT_PARSER, THEMABLE_TALK_TRACK_PARSER,} from "../crawler-parsers";

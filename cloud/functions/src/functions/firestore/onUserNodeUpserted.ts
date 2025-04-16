@@ -2,7 +2,7 @@ import {DocumentSnapshot} from "firebase-functions/lib/v1/providers/firestore";
 import {EventContext} from "firebase-functions/lib/v1/cloud-functions";
 import {db} from "../../firebase";
 import {defaultUserInfos} from "./onUserCreated";
-import {User} from "../../../../../shared/user.firestore";
+import {User} from "@shared/user.firestore";
 
 
 export const onUserNodeUpserted = async (context: EventContext<{ userId: string }>) => {
