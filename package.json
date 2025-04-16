@@ -2,7 +2,7 @@
   "name": "voxxrin-app",
   "description": "Voxxrin is your mobile conference companion.",
   "scripts": {
-    "bootstrap": "npm ci && concurrently 'cd mobile && npm ci' 'cd cloud/hosting && npm ci' 'cd cloud/functions && npm ci' 'cd cloud/firestore && npm ci'",
+    "bootstrap": "([ -f cloud/functions/.env.local ] || cp cloud/functions/.env.local.sample cloud/functions/.env.local) && npm ci && concurrently 'cd mobile && npm ci' 'cd cloud/hosting && npm ci' 'cd cloud/functions && npm ci' 'cd cloud/firestore && npm ci'",
     "build-mobile": "npm run build-mobile:prod",
     "build-mobile:prod": "cd mobile && npm run build && cd -",
     "build-mobile:dev": "cd mobile && npm run build-dev && cd -",
