@@ -4,7 +4,7 @@
     "noImplicitReturns": true,
     "noUnusedLocals": false,
     "rootDir": "./src",
-    "outDir": "lib",
+    "outDir": "lib/cloud-functions/",
     "sourceMap": true,
     "strict": true,
     "target": "es2017",

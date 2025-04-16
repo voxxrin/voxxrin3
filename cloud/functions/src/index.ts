@@ -1,4 +1,4 @@
-import 'module-alias/register';
+import './configure-early-module-aliases'
 import express from 'express';
 import * as functions from 'firebase-functions';
 import {declareExpressHttpRoutes} from "./functions/http/api/routes";
