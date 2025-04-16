@@ -1,7 +1,7 @@
-import { ListableEvent } from "../../../../shared/event-list.firestore";
-import {BreakTimeSlot, DailySchedule, DetailedTalk, Talk} from "../../../../shared/daily-schedule.firestore";
-import {ConferenceDescriptor} from "../../../../shared/conference-descriptor.firestore";
-import {Replace} from "../../../../shared/type-utils";
+import { ListableEvent } from "@shared/event-list.firestore";
+import {BreakTimeSlot, DailySchedule, DetailedTalk, Talk} from "@shared/daily-schedule.firestore";
+import {ConferenceDescriptor} from "@shared/conference-descriptor.firestore";
+import {Replace} from "@shared/type-utils";
 
 export type BreakTimeslotWithPotentiallyUnknownIcon = Replace<BreakTimeSlot, {
   break: Replace<BreakTimeSlot['break'], {

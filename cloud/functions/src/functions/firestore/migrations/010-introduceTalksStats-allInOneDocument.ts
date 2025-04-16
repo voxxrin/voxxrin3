@@ -1,7 +1,7 @@
 import {db} from "../../../firebase";
 import {firestore} from "firebase-admin";
 import DocumentReference = firestore.DocumentReference;
-import {TalkStats} from "../../../../../../shared/event-stats";
+import {TalkStats} from "@shared/event-stats";
 
 
 export async function introduceTalksStats_allInOneDocument(): Promise<"OK"|"Error"> {

@@ -2,11 +2,11 @@ import {db, info, error} from "../firebase"
 import { FullEvent } from "../models/Event";
 import {z} from "zod";
 import {FIREBASE_CRAWLER_DESCRIPTOR_PARSER} from "./crawler-parsers";
-import {HexColor} from "../../../../shared/type-utils";
+import {HexColor} from "@shared/type-utils";
 import {Temporal} from "@js-temporal/polyfill";
 import {match, P} from "ts-pattern";
 import {v4 as uuidv4} from "uuid"
-import {ConferenceOrganizerSpace} from "../../../../shared/conference-organizer-space.firestore";
+import {ConferenceOrganizerSpace} from "@shared/conference-organizer-space.firestore";
 import {eventLastUpdateRefreshed} from "../functions/firestore/firestore-utils";
 import {http} from "./utils";
 import {
@@ -17,18 +17,18 @@ import {
   Room, TalkAsset,
   TalkFormat,
   Track
-} from "../../../../shared/daily-schedule.firestore";
+} from "@shared/daily-schedule.firestore";
 import {ensureRoomsStatsFilledFor} from "../functions/firestore/services/stats-utils";
 import {getEventOrganizerToken, getFamilyOrganizerToken} from "../functions/firestore/services/publicTokens-utils";
 import {getCrawlersMatching} from "../functions/firestore/services/crawlers-utils";
-import {ListableEvent} from "../../../../shared/event-list.firestore";
-import {ConferenceDescriptor} from "../../../../shared/conference-descriptor.firestore";
-import {toValidFirebaseKey} from "../../../../shared/utilities/firebase.utils";
+import {ListableEvent} from "@shared/event-list.firestore";
+import {ConferenceDescriptor} from "@shared/conference-descriptor.firestore";
+import {toValidFirebaseKey} from "@shared/utilities/firebase.utils";
 import { sanitize as domPurifySanitize } from "isomorphic-dompurify";
 import { marked } from 'marked'
 import {
   resolvedEventFirestorePath,
-} from "../../../../shared/utilities/event-utils";
+} from "@shared/utilities/event-utils";
 import { DocumentSnapshot } from "firebase-admin/firestore";
 
 export type CrawlerKind<ZOD_TYPE extends z.ZodType> = {

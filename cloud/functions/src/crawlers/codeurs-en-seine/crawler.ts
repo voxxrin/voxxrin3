@@ -3,9 +3,9 @@ import {FullEvent} from "../../models/Event";
 import {
     Break, BreakTimeSlot, DailySchedule,
     DetailedTalk, ScheduleTimeSlot, SocialLink, Speaker, Talk, TalksTimeSlot
-} from "../../../../../shared/daily-schedule.firestore";
-import {ConferenceDescriptor} from "../../../../../shared/conference-descriptor.firestore";
-import {Day} from "../../../../../shared/event-list.firestore";
+} from "@shared/daily-schedule.firestore";
+import {ConferenceDescriptor} from "@shared/conference-descriptor.firestore";
+import {Day} from "@shared/event-list.firestore";
 import {
     BREAK_PARSER,
     BREAK_TIME_SLOT_PARSER,
@@ -14,7 +14,7 @@ import {
     THEMABLE_TALK_FORMAT_PARSER
 } from "../crawler-parsers";
 import {CrawlerKind} from "../crawl";
-import {ISODatetime, ISOLocalDate, Replace} from "../../../../../shared/type-utils";
+import {ISODatetime, ISOLocalDate, Replace} from "@shared/type-utils";
 import {Temporal} from "@js-temporal/polyfill";
 import {match, P} from "ts-pattern";
 import {GithubMDXCrawler} from "../github/GithubMDXCrawler";

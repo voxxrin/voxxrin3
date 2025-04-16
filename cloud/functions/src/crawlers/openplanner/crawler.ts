@@ -24,10 +24,10 @@ import {
   TalkFormat,
   TalksTimeSlot, ThemedTalkFormat,
   ThemedTrack,
-} from "../../../../../shared/daily-schedule.firestore";
+} from "@shared/daily-schedule.firestore";
 import {match, P} from "ts-pattern";
 import {Temporal} from "@js-temporal/polyfill";
-import {ISODatetime} from "../../../../../shared/type-utils";
+import {ISODatetime} from "@shared/type-utils";
 import {fillUnknownBreakIcons} from "../utils";
 
 const OPENPLANNER_SESSION_PARSER = z.object({

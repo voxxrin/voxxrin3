@@ -11,13 +11,13 @@ import {
   DetailedTalk, Room,
   Speaker,
   Talk
-} from "../../../../../shared/daily-schedule.firestore"
+} from "@shared/daily-schedule.firestore"
 import { FullEvent } from "../../models/Event";
-import { ISODatetime, ISOLocalDate } from "../../../../../shared/type-utils";
-import { Day, ListableEvent } from "../../../../../shared/event-list.firestore";
+import { ISODatetime, ISOLocalDate } from "@shared/type-utils";
+import { Day, ListableEvent } from "@shared/event-list.firestore";
 import { Temporal } from "@js-temporal/polyfill";
 import {z} from "zod";
-import {ConferenceDescriptor} from "../../../../../shared/conference-descriptor.firestore";
+import {ConferenceDescriptor} from "@shared/conference-descriptor.firestore";
 import {
   EVENT_DESCRIPTOR_PARSER,
   INFOS_PARSER,
@@ -26,7 +26,7 @@ import {
 import {CrawlerKind, TALK_FORMAT_FALLBACK_COLORS} from "../crawl";
 import {match, P} from "ts-pattern";
 import {http} from "../utils";
-import {TalkStats} from "../../../../../shared/event-stats";
+import {TalkStats} from "@shared/event-stats";
 
 const daysOfWeek = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
 

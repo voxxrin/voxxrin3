@@ -1,11 +1,11 @@
 import {db} from "../../../firebase";
 import {firestore} from "firebase-admin";
-import {EventLastUpdates, ListableEvent} from "../../../../../../shared/event-list.firestore";
+import {EventLastUpdates, ListableEvent} from "@shared/event-list.firestore";
 import QuerySnapshot = firestore.QuerySnapshot;
 import DocumentSnapshot = firestore.DocumentSnapshot;
 import {getAllSpaceIds} from "./space-utils";
-import {resolvedEventFirestorePath, resolvedEventsFirestorePath} from "../../../../../../shared/utilities/event-utils";
-import {AllInOneTalkStats} from "../../../../../../shared/event-stats";
+import {resolvedEventFirestorePath, resolvedEventsFirestorePath} from "@shared/utilities/event-utils";
+import {AllInOneTalkStats} from "@shared/event-stats";
 
 
 export async function getAllEventsDocs(opts: { includePrivateSpaces: boolean } = { includePrivateSpaces: false }) {

@@ -3,15 +3,15 @@ import {getSecretTokenRef} from "../firestore-utils";
 import {
     DailyTalkFeedbackRatings,
     PerPublicUserIdFeedbackRatings
-} from "../../../../../../shared/conference-organizer-space.firestore";
+} from "@shared/conference-organizer-space.firestore";
 import {logPerf} from "../../http/utils";
 import {getTimeslottedTalks} from "./schedule-utils";
 import {firestore} from "firebase-admin";
 import QuerySnapshot = firestore.QuerySnapshot;
-import {Talk, TalkFormat} from "../../../../../../shared/daily-schedule.firestore";
+import {Talk, TalkFormat} from "@shared/daily-schedule.firestore";
 import stringSimilarity from "string-similarity-js";
-import {EventRecordingConfig} from "../../../../../../shared/conference-descriptor.firestore";
-import {resolvedEventFirestorePath} from "../../../../../../shared/utilities/event-utils";
+import {EventRecordingConfig} from "@shared/conference-descriptor.firestore";
+import {resolvedEventFirestorePath} from "@shared/utilities/event-utils";
 
 
 type PerTalkPublicUserIdFeedbackRating = {

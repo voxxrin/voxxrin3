@@ -1,6 +1,6 @@
 import {extractSingleQueryParam, sendResponseMessage} from "./utils";
 import {db} from "../../firebase";
-import {ISODatetime} from "../../../../../shared/type-utils";
+import {ISODatetime} from "@shared/type-utils";
 import * as functions from "firebase-functions";
 import * as express from "express";
 

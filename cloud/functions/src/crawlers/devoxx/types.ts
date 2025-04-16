@@ -1,6 +1,6 @@
 // cfp
 
-import {HexColor} from "../../../../../shared/type-utils";
+import {HexColor} from "@shared/type-utils";
 
 export interface DevoxxScheduleItem {
         id: number,

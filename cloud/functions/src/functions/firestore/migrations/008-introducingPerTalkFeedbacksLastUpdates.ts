@@ -1,6 +1,6 @@
 import {db, info} from "../../../firebase";
-import {EventLastUpdates} from "../../../../../../shared/event-list.firestore";
-import {ISODatetime, Replace} from "../../../../../../shared/type-utils";
+import {EventLastUpdates} from "@shared/event-list.firestore";
+import {ISODatetime, Replace} from "@shared/type-utils";
 
 
 export async function introducingPerTalkFeedbacksLastUpdates(): Promise<"OK"|"Error"> {

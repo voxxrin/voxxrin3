@@ -1,7 +1,7 @@
 import {z, ZodLiteral} from "zod";
-import {type ISODatetime, ISOLocalDate, ISOZonedTime} from "../../../../shared/type-utils";
-import {ConferenceDescriptor} from "../../../../shared/conference-descriptor.firestore";
-import {RecordingPlatform, ScheduleTimeSlot} from "../../../../shared/daily-schedule.firestore";
+import {type ISODatetime, ISOLocalDate, ISOZonedTime} from "@shared/type-utils";
+import {ConferenceDescriptor} from "@shared/conference-descriptor.firestore";
+import {RecordingPlatform, ScheduleTimeSlot} from "@shared/daily-schedule.firestore";
 import {ISO_DATETIME_PARSER} from "../utils/zod-parsers";
 
 

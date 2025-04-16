@@ -1,8 +1,8 @@
 import {getAllEvents, getMaybeSpaceTokenOf} from "../services/event-utils";
 import {getEventTalks} from "../services/talk-utils";
 import {getSecretTokenRef} from "../firestore-utils";
-import {ConferenceOrganizerSpace} from "../../../../../../shared/conference-organizer-space.firestore";
-import {resolvedEventFirestorePath} from "../../../../../../shared/utilities/event-utils";
+import {ConferenceOrganizerSpace} from "@shared/conference-organizer-space.firestore";
+import {resolvedEventFirestorePath} from "@shared/utilities/event-utils";
 import {match, P} from "ts-pattern";
 import {v4 as uuidv4} from "uuid";
 

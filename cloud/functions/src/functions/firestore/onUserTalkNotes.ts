@@ -3,9 +3,9 @@ import { db, info } from "../../firebase"
 import { FieldValue, FieldPath } from "firebase-admin/firestore";
 import {
     UserTalkNote
-} from "../../../../../shared/feedbacks.firestore";
+} from "@shared/feedbacks.firestore";
 import {eventLastUpdateRefreshed} from "./firestore-utils";
-import {TalkStats} from "../../../../../shared/event-stats";
+import {TalkStats} from "@shared/event-stats";
 import {Change} from "firebase-functions/lib/common/change";
 import {QueryDocumentSnapshot} from "firebase-functions/lib/v1/providers/firestore";
 import {EventContext} from "firebase-functions/lib/v1/cloud-functions";
@@ -13,7 +13,7 @@ import {
   resolvedEventFirestorePath,
   resolvedSpacedEventFieldName,
   resolvedSpaceFirestorePath
-} from "../../../../../shared/utilities/event-utils";
+} from "@shared/utilities/event-utils";
 
 async function upsertTalkStats(maybeSpaceToken: string|undefined, eventId: string, talkId: string, isFavorite: boolean) {
     const existingTalksStatsEntryRef = db

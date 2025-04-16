@@ -9,11 +9,11 @@ import {
     getTalksDetailsWithRatings
 } from "../../../firestore/services/talk-utils";
 import {getEventDescriptor} from "../../../firestore/services/eventDescriptor-utils";
-import {ISOLocalDate} from "../../../../../../../shared/type-utils";
+import {ISOLocalDate} from "@shared/type-utils";
 import {getFamilyEventsStatsToken} from "../../../firestore/services/publicTokens-utils";
 import {sortBy} from "lodash";
 import * as express from "express";
-import {resolvedSpacedEventFieldName} from "../../../../../../../shared/utilities/event-utils";
+import {resolvedSpacedEventFieldName} from "@shared/utilities/event-utils";
 
 export async function legacyPublicEventStats(request: functions.https.Request, response: express.Response) {
 

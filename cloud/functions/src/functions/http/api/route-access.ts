@@ -5,10 +5,10 @@ import {
   getRoomStatsContributorValidToken
 } from "../../firestore/services/publicTokens-utils";
 import {match, P} from "ts-pattern";
-import {PublicToken} from "../../../../../../shared/public-tokens";
+import {PublicToken} from "@shared/public-tokens";
 import {getCrawlersMatching} from "../../firestore/services/crawlers-utils";
 import {FieldPath} from "firebase-admin/firestore";
-import {ConferenceDescriptor} from "../../../../../../shared/conference-descriptor.firestore";
+import {ConferenceDescriptor} from "@shared/conference-descriptor.firestore";
 import {FIREBASE_CRAWLER_DESCRIPTOR_PARSER} from "../../../crawlers/crawler-parsers";
 import {z} from "zod";
 

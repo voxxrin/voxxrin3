@@ -10,13 +10,13 @@ import {getEventDescriptor} from "../../../firestore/services/eventDescriptor-ut
 import {getFamilyOrganizerToken} from "../../../firestore/services/publicTokens-utils";
 import {
     ConferenceOrganizerSpace
-} from "../../../../../../../shared/conference-organizer-space.firestore";
-import {EventLastUpdates} from "../../../../../../../shared/event-list.firestore";
+} from "@shared/conference-organizer-space.firestore";
+import {EventLastUpdates} from "@shared/event-list.firestore";
 import * as express from "express";
 import {
   resolvedEventFirestorePath,
   resolvedSpacedEventFieldName
-} from "../../../../../../../shared/utilities/event-utils";
+} from "@shared/utilities/event-utils";
 
 export async function legacyAttendeesFeedbacks(request: functions.https.Request, response: express.Response) {
 

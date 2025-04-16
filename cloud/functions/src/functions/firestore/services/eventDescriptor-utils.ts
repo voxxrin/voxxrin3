@@ -1,7 +1,7 @@
 import {db} from "../../../firebase";
-import {ConferenceDescriptor} from "../../../../../../shared/conference-descriptor.firestore";
+import {ConferenceDescriptor} from "@shared/conference-descriptor.firestore";
 import {logPerf} from "../../http/utils";
-import {resolvedEventFirestorePath, resolvedEventsFirestorePath} from "../../../../../../shared/utilities/event-utils";
+import {resolvedEventFirestorePath, resolvedEventsFirestorePath} from "@shared/utilities/event-utils";
 
 
 export async function getEventDescriptor(maybeSpaceToken: string|undefined, eventId: string) {

@@ -11,9 +11,9 @@ import {
   BreakTimeSlot, DailySchedule,
   ScheduleTimeSlot,
   TalksTimeSlot,
-} from "../../../../../shared/daily-schedule.firestore";
+} from "@shared/daily-schedule.firestore";
 import {ISO_DATETIME_PARSER} from "../../utils/zod-parsers";
-import {ISODatetime} from "../../../../../shared/type-utils";
+import {ISODatetime} from "@shared/type-utils";
 
 
 export const SINGLE_FILE_DESCRIPTOR_PARSER = EVENT_DESCRIPTOR_PARSER.omit({

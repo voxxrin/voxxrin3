@@ -1,9 +1,9 @@
 import {logPerf, sendResponseMessage} from "../utils";
 import {checkEventLastUpdate, eventTalkStatsFor} from "../../firestore/firestore-utils";
 import {Request, Response} from "express";
-import {ConferenceDescriptor} from "../../../../../../shared/conference-descriptor.firestore";
+import {ConferenceDescriptor} from "@shared/conference-descriptor.firestore";
 import {getTimeslottedTalks} from "../../firestore/services/schedule-utils";
-import {resolvedSpacedEventFieldName} from "../../../../../../shared/utilities/event-utils";
+import {resolvedSpacedEventFieldName} from "@shared/utilities/event-utils";
 
 export async function eventTalksStats(response: Response, pathParams: {eventId: string, spaceToken?: string|undefined}, queryParams: {token: string }, request: Request, eventDescriptor: ConferenceDescriptor) {
 

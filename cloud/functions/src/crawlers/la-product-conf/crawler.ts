@@ -1,6 +1,6 @@
 import {z} from "zod";
 import {FullEvent} from "../../models/Event";
-import {ISODatetime, ISOLocalDate} from "../../../../../shared/type-utils";
+import {ISODatetime, ISOLocalDate} from "@shared/type-utils";
 import {Temporal} from "@js-temporal/polyfill";
 import {
   BreakTimeSlot,
@@ -8,11 +8,11 @@ import {
   ScheduleTimeSlot,
   Speaker,
   TalksTimeSlot,
-} from "../../../../../shared/daily-schedule.firestore";
+} from "@shared/daily-schedule.firestore";
 import * as cheerio from 'cheerio';
 import {match, P} from "ts-pattern";
-import {ConferenceDescriptor} from "../../../../../shared/conference-descriptor.firestore";
-import {Day} from "../../../../../shared/event-list.firestore";
+import {ConferenceDescriptor} from "@shared/conference-descriptor.firestore";
+import {Day} from "@shared/event-list.firestore";
 import {
   BREAK_TIME_SLOT_PARSER,
   DAY_PARSER,
