@@ -4,7 +4,7 @@ import {
     overrideCurrentClock,
     ShiftedTimeClock
 } from "@/state/useCurrentClock";
-import {ISODatetime} from "../../../shared/type-utils";
+import {ISODatetime} from "@shared/type-utils";
 import {Temporal} from "temporal-polyfill";
 import {match, P} from "ts-pattern";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";

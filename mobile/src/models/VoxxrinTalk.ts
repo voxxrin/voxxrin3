@@ -1,5 +1,5 @@
 import {sortBy, ValueObject} from "@/models/utils";
-import {Break, DetailedTalk, Talk, TalkAsset} from "../../../shared/daily-schedule.firestore";
+import {Break, DetailedTalk, Talk, TalkAsset} from "@shared/daily-schedule.firestore";
 import {RoomId, VoxxrinRoom} from "@/models/VoxxrinRoom";
 import {SpeakerId, VoxxrinDetailedSpeaker, VoxxrinSimpleSpeaker} from "@/models/VoxxrinSpeaker";
 import {TalkFormatId, VoxxrinTalkFormat} from "@/models/VoxxrinTalkFormat";
@@ -10,7 +10,7 @@ import {
     VoxxrinConferenceDescriptor
 } from "@/models/VoxxrinConferenceDescriptor";
 import {match} from "ts-pattern";
-import {Replace} from "../../../shared/type-utils";
+import {Replace} from "@shared/type-utils";
 
 export class TalkId extends ValueObject<string>{ _talkIdClassDiscriminator!: never; }
 

@@ -1,7 +1,7 @@
 import {computed, onMounted, Ref, unref, watch} from "vue";
 import {createVoxxrinConferenceDescriptor, VoxxrinConferenceDescriptor,} from "@/models/VoxxrinConferenceDescriptor";
 import {SpacedEventId, stringifySpacedEventId} from "@/models/VoxxrinEvent";
-import {ConferenceDescriptor} from "../../../shared/conference-descriptor.firestore";
+import {ConferenceDescriptor} from "@shared/conference-descriptor.firestore";
 import {deferredVuefireUseDocument} from "@/views/vue-utils";
 import {doc, DocumentReference} from "firebase/firestore";
 import {db} from "@/state/firebase";
@@ -16,7 +16,7 @@ import {Temporal} from "temporal-polyfill";
 import {CompletablePromiseQueue} from "@/models/utils";
 import {prepareSchedules} from "@/state/useSchedule";
 import {typesafeI18n} from "@/i18n/i18n-vue";
-import {resolvedEventFirestorePath} from "../../../shared/utilities/event-utils";
+import {resolvedEventFirestorePath} from "@shared/utilities/event-utils";
 
 function getConferenceDescriptorDoc(spacedEventId: SpacedEventId|undefined) {
     if(!spacedEventId || !spacedEventId.eventId || !spacedEventId.eventId.value) {

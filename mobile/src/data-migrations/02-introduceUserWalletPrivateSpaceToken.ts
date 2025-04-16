@@ -1,7 +1,7 @@
 import {
   UserWalletTalkFeedbacksViewerSecretToken,
   UserWalletEventOrganizerSecretToken, UserTokensWallet
-} from "../../../shared/user-tokens-wallet.localstorage";
+} from "@shared/user-tokens-wallet.localstorage";
 import {match, P} from "ts-pattern";
 
 

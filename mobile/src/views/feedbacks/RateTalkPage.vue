@@ -80,7 +80,7 @@ import ScheduleTalk from "@/components/talk-card/ScheduleTalk.vue";
 import {IonTextarea, useIonRouter} from "@ionic/vue";
 import QuickFeedbackRating from "@/components/ratings/QuickFeedbackRating.vue";
 import IconBasedRating from "@/components/ratings/IconBasedRating.vue";
-import {ProvidedUserFeedback} from "../../../../shared/feedbacks.firestore";
+import {ProvidedUserFeedback} from "@shared/feedbacks.firestore";
 import {UnwrapNestedRefs} from "@vue/reactivity";
 import {useUserFeedbacks} from "@/state/useUserFeedbacks";
 import VoxDivider from "@/components/ui/VoxDivider.vue";

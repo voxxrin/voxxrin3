@@ -1,6 +1,6 @@
 import {ValueObject} from "@/models/utils";
 import {DayId, VoxxrinDay} from "@/models/VoxxrinDay";
-import {ConferenceDescriptor} from "../../../shared/conference-descriptor.firestore";
+import {ConferenceDescriptor} from "@shared/conference-descriptor.firestore";
 import {TalkFormatId, VoxxrinTalkFormat} from "@/models/VoxxrinTalkFormat";
 import {TrackId, VoxxrinTrack} from "@/models/VoxxrinTrack";
 import {RoomId, VoxxrinRoom} from "@/models/VoxxrinRoom";
@@ -17,7 +17,7 @@ import {Temporal} from "temporal-polyfill";
 import {match, P} from "ts-pattern";
 import {useCurrentClock} from "@/state/useCurrentClock";
 import {toHMMDuration, zonedDateTimeRangeOf} from "@/models/DatesAndTime";
-import {ISOLocalDate, Replace} from "../../../shared/type-utils";
+import {ISOLocalDate, Replace} from "@shared/type-utils";
 
 export type VoxxrinConferenceDescriptor = Omit<ListableVoxxrinEvent, "websiteUrl"> & Replace<Omit<ConferenceDescriptor, keyof ListableVoxxrinEvent>, {
     talkFormats: VoxxrinTalkFormat[],

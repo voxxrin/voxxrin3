@@ -1,10 +1,10 @@
 import {hexToRGB, ValueObject} from "@/models/utils";
-import {EventTheme, ListableEvent} from "../../../shared/event-list.firestore";
+import {EventTheme, ListableEvent} from "@shared/event-list.firestore";
 import {DayId, VoxxrinDay} from "@/models/VoxxrinDay";
 import {Temporal} from "temporal-polyfill";
 import {useCurrentClock} from "@/state/useCurrentClock";
 import {zonedDateTimeRangeOf} from "@/models/DatesAndTime";
-import {ISOLocalDate, Replace} from "../../../shared/type-utils";
+import {ISOLocalDate, Replace} from "@shared/type-utils";
 import {match, P} from "ts-pattern";
 
 export class EventId extends ValueObject<string>{ _eventIdClassDiscriminator!: never; }

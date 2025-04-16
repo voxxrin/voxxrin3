@@ -7,7 +7,7 @@
 
 <script setup lang="ts">
 import {PropType, Ref} from "vue";
-import {TalkNote} from "../../../../shared/feedbacks.firestore";
+import {TalkNote} from "@shared/feedbacks.firestore";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 
 const { LL } = typesafeI18n()

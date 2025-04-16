@@ -6,7 +6,7 @@
 import {PropType} from "vue";
 import {MonthDayFormatOpts, monthDayFormattedRange} from "@/models/DatesAndTime";
 import {Temporal} from "temporal-polyfill";
-import {ISOLocalDate} from "../../../shared/type-utils";
+import {ISOLocalDate} from "@shared/type-utils";
 
 const props = defineProps({
     range: {

@@ -3,11 +3,11 @@ import {collection, CollectionReference,} from "firebase/firestore";
 import {db} from "@/state/firebase";
 import {deferredVuefireUseCollection} from "@/views/vue-utils";
 import {TalkId} from "@/models/VoxxrinTalk";
-import {TalkAttendeeFeedback} from "../../../shared/talk-feedbacks.firestore";
+import {TalkAttendeeFeedback} from "@shared/talk-feedbacks.firestore";
 import {Ref} from "vue";
 import {toCollectionReferenceArray} from "@/models/utils";
 import {match} from "ts-pattern";
-import {resolvedEventFirestorePath} from "../../../shared/utilities/event-utils";
+import {resolvedEventFirestorePath} from "@shared/utilities/event-utils";
 
 function getTalkFeedbacksRef(spacedEventId: SpacedEventId|undefined, talkId: TalkId|undefined, talkFeedbackViewerToken: string|undefined) {
     if(!talkId || !talkId.value || !spacedEventId || !spacedEventId.eventId || !spacedEventId.eventId.value || !talkFeedbackViewerToken) {

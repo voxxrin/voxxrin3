@@ -1,5 +1,5 @@
 import {EventFamily, firestoreListableEventToVoxxrinListableEvent,} from "@/models/VoxxrinEvent";
-import {ListableEvent} from "../../../shared/event-list.firestore";
+import {ListableEvent} from "@shared/event-list.firestore";
 import {sortBy, toCollectionReferenceArray} from "@/models/utils";
 import {computed, unref} from "vue";
 import {collection, CollectionReference} from "firebase/firestore";
@@ -9,7 +9,7 @@ import {useOverridenListableEventProperties} from "@/state/useDevUtilities";
 import {deferredVuefireUseCollection} from "@/views/vue-utils";
 import {match} from "ts-pattern";
 import {useUserTokensWallet} from "@/state/useUserTokensWallet";
-import {resolvedEventsFirestorePath} from "../../../shared/utilities/event-utils";
+import {resolvedEventsFirestorePath} from "@shared/utilities/event-utils";
 
 const LOGGER = Logger.named("useAvailableEvents");
 

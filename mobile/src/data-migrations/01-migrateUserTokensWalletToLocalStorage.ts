@@ -3,7 +3,7 @@ import {doc, DocumentReference, getDoc, deleteDoc} from "firebase/firestore";
 import {
   UserWalletTalkFeedbacksViewerSecretToken,
   UserWalletEventOrganizerSecretToken
-} from "../../../shared/user-tokens-wallet.localstorage";
+} from "@shared/user-tokens-wallet.localstorage";
 import {match, P} from "ts-pattern";
 
 

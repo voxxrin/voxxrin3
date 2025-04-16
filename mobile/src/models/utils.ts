@@ -1,4 +1,4 @@
-import {HexColor} from "../../../shared/type-utils";
+import {HexColor} from "@shared/type-utils";
 import {CollectionReference} from "firebase/firestore";
 import pQueue, {type Options, type QueueAddOptions} from 'p-queue'
 import type PriorityQueue from "p-queue/dist/priority-queue";

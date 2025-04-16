@@ -56,7 +56,7 @@ import {managedRef as ref, toManagedRef as toRef} from "@/views/vue-utils";
 import {DayId, VoxxrinDay} from "@/models/VoxxrinDay";
 import {localDateToReadableParts, toISOLocalDate} from "@/models/DatesAndTime";
 import {useCurrentUserLocale} from "@/state/useCurrentUser";
-import {ISOLocalDate} from "../../../../shared/type-utils";
+import {ISOLocalDate} from "@shared/type-utils";
 import {useCurrentClock, watchClock} from "@/state/useCurrentClock";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {spacedEventIdOf, VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";

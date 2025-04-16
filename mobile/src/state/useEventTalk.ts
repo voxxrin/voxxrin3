@@ -1,6 +1,6 @@
 import {createVoxxrinDetailedTalkFromFirestore, TalkId, VoxxrinTalk,} from "@/models/VoxxrinTalk";
 import {computed, Ref, unref, watch} from "vue";
-import {DetailedTalk} from "../../../shared/daily-schedule.firestore";
+import {DetailedTalk} from "@shared/daily-schedule.firestore";
 import {maybeSpacedEventIdOf, spacedEventIdOf, VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {doc, DocumentReference, getDoc} from "firebase/firestore";
 import {db} from "@/state/firebase";
@@ -12,7 +12,7 @@ import {DayId} from "@/models/VoxxrinDay";
 import {Temporal} from "temporal-polyfill";
 import {checkCache, preloadPicture} from "@/services/Cachings";
 import {CompletablePromiseQueue} from "@/models/utils";
-import {resolvedEventFirestorePath} from "../../../shared/utilities/event-utils";
+import {resolvedEventFirestorePath} from "@shared/utilities/event-utils";
 
 
 function getTalkDetailsRef(spacedEventId: SpacedEventId|undefined, talkId: TalkId|undefined) {

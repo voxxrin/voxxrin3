@@ -10,8 +10,8 @@ import {db} from "@/state/firebase";
 import {User} from "firebase/auth";
 import {useUserTokensWallet} from "@/state/useUserTokensWallet";
 import {match, P} from "ts-pattern";
-import {User as FirestoreUser} from "../../../../shared/user.firestore";
-import {ISODatetime} from "../../../../shared/type-utils";
+import {User as FirestoreUser} from "@shared/user.firestore";
+import {ISODatetime} from "@shared/type-utils";
 
 const props = defineProps({
   user: {

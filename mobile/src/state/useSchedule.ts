@@ -1,6 +1,6 @@
 import {computed, Ref, unref, watch} from "vue";
 import {deferredVuefireUseDocument, managedRef as ref} from "@/views/vue-utils";
-import {DailySchedule} from "../../../shared/daily-schedule.firestore";
+import {DailySchedule} from "@shared/daily-schedule.firestore";
 import {
   createVoxxrinDailyScheduleFromFirestore,
   getTimeslotLabel,
@@ -17,14 +17,14 @@ import {prepareTalkStats} from "@/state/useEventTalkStats";
 import {prepareUserTalkNotes} from "@/state/useUserTalkNotes";
 import {createVoxxrinTalkFromFirestore, removeTalkOverflowsAndDuplicates, VoxxrinTalk} from "@/models/VoxxrinTalk";
 import {VoxxrinTimeslotFeedback} from "@/models/VoxxrinFeedback";
-import {UserDailyFeedbacks} from "../../../shared/feedbacks.firestore";
+import {UserDailyFeedbacks} from "@shared/feedbacks.firestore";
 import {PERF_LOGGER} from "@/services/Logger";
 import {User} from 'firebase/auth';
 import {CompletablePromiseQueue} from "@/models/utils";
 import {match, P} from "ts-pattern";
 import {checkCache} from "@/services/Cachings";
 import {Temporal} from "temporal-polyfill";
-import {resolvedEventFirestorePath} from "../../../shared/utilities/event-utils";
+import {resolvedEventFirestorePath} from "@shared/utilities/event-utils";
 
 export function useSchedule(
             conferenceDescriptorRef: Ref<VoxxrinConferenceDescriptor | undefined>,

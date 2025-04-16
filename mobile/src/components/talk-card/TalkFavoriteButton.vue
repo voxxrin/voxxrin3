@@ -18,9 +18,9 @@ import {spacedEventIdOf, VoxxrinConferenceDescriptor} from "@/models/VoxxrinConf
 import {useUserTalkNoteActions} from "@/state/useUserTalkNotes";
 import {toManagedRef as toRef} from "@/views/vue-utils";
 import {TalkId} from "@/models/VoxxrinTalk";
-import {TalkNote} from "../../../../shared/feedbacks.firestore";
+import {TalkNote} from "@shared/feedbacks.firestore";
 import {typesafeI18n} from "@/i18n/i18n-vue";
-import {TalkStats} from "../../../../shared/event-stats";
+import {TalkStats} from "@shared/event-stats";
 
 const { LL } = typesafeI18n()
 const props = defineProps({

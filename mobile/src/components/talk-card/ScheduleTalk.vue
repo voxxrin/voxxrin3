@@ -68,10 +68,10 @@
 import {computed, PropType} from "vue";
 import {IonBadge,} from '@ionic/vue';
 import {VoxxrinTalk} from "@/models/VoxxrinTalk";
-import {TalkNote} from "../../../../shared/feedbacks.firestore";
+import {TalkNote} from "@shared/feedbacks.firestore";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {typesafeI18n} from "@/i18n/i18n-vue";
-import {TalkStats} from "../../../../shared/event-stats";
+import {TalkStats} from "@shared/event-stats";
 import {VoxxrinRoomStats} from "@/models/VoxxrinRoomStats";
 import {people, person} from "ionicons/icons";
 import RoomCapacityIndicator from "@/components/rooms/RoomCapacityIndicator.vue";

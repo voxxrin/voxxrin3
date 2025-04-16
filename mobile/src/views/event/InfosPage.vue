@@ -90,7 +90,7 @@
   import {IonText, IonImg} from "@ionic/vue"
   import MonthDayDateRange from "@/components/MonthDayDateRange.vue";
   import {computed, Ref, toValue} from "vue";
-  import {SocialMediaType} from "../../../../shared/type-utils";
+  import {SocialMediaType} from "@shared/type-utils";
   import CarouselSwiper from "@/components/ui/CarouselSwiper.vue";
   import Tips from "@/components/ui/Tips.vue";
   import {useCurrentSpaceEventIdRef} from "@/services/Spaces";

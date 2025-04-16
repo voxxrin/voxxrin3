@@ -2,8 +2,8 @@ import {createVoxxrinConferenceDescriptor,} from "@/models/VoxxrinConferenceDesc
 import {doc, DocumentReference, getDoc} from "firebase/firestore";
 import {db} from "@/state/firebase";
 import {SpacedEventId} from "@/models/VoxxrinEvent";
-import {ConferenceDescriptor} from "../../../shared/conference-descriptor.firestore";
-import {resolvedEventFirestorePath} from "../../../shared/utilities/event-utils";
+import {ConferenceDescriptor} from "@shared/conference-descriptor.firestore";
+import {resolvedEventFirestorePath} from "@shared/utilities/event-utils";
 
 export async function fetchConferenceDescriptor(spacedEventId: SpacedEventId) {
     const conferenceDescriptorSource = doc(
