@@ -2,8 +2,8 @@
   "name": "functions",
   "scripts": {
     "lint": "eslint --ext .js,.ts .",
-    "build": "tsc",
-    "build:watch": "tsc --watch",
+    "build": "tsc --build",
+    "build:watch": "tsc --build --watch",
     "serve": "npm run build && env-cmd -f ./.env.local firebase emulators:start --import data --export-on-exit --inspect-functions --project ${FIREBASE_PROJECT_NAME:-voxxrin-v3}",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
@@ -15,7 +15,7 @@
   "engines": {
     "node": "20"
   },
-  "main": "lib/cloud/functions/src/index.js",
+  "main": "lib/index.js",
   "dependencies": {
     "@googleapis/youtube": "15.0.0",
     "@js-temporal/polyfill": "^0.4.3",
@@ -28,6 +28,7 @@
     "isomorphic-dompurify": "2.14.0",
     "lodash": "^4.17.21",
     "marked": "13.0.2",
+    "module-alias": "2.2.3",
     "string-similarity-js": "2.1.4",
     "ts-pattern": "5.1.1",
     "uuid": "9.0.0",
@@ -48,5 +49,8 @@
     "typescript": "5.4.5",
     "vitest": "0.31.1"
   },
-  "private": true
+  "private": true,
+  "_moduleAliases": {
+    "@shared": "../../shared/dist"
+  }
 }

@@ -3,15 +3,25 @@
     "module": "commonjs",
     "noImplicitReturns": true,
     "noUnusedLocals": false,
+    "rootDir": "./src",
     "outDir": "lib",
     "sourceMap": true,
     "strict": true,
     "target": "es2017",
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "paths": {
+      "@shared/*": ["../../shared/dist/*"]
+    }
   },
+  "references": [{
+    "path": "../../shared"
+  }],
   "compileOnSave": true,
   "include": [
-    "../../shared/**/*.ts",
     "src/**/*.ts"
-  ]
+  ],
+  "exclude": ["node_modules", "lib", "src/**/*.spec.ts"]
 }

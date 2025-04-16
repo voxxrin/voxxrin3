@@ -1,10 +1,11 @@
-import * as express from 'express';
+import 'module-alias/register';
+import express from 'express';
 import * as functions from 'firebase-functions';
 import {declareExpressHttpRoutes} from "./functions/http/api/routes";
 
 const app = express()
 app.use(express.json());
-app.use((req, res, next) => {
+app.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
   if (req.headers['x-forwarded-host'] && req.headers['x-forwarded-host'].toString().endsWith("voxxr.in") && req.originalUrl.startsWith('/api')) {
     req.url = req.originalUrl.substring("/api".length);
   }
