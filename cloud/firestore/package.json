@@ -9,7 +9,10 @@
     "deploy:indexes": "npx firebase-tools deploy --only firestore:indexes --project ${FIREBASE_PROJECT_NAME:-voxxrin-v3} --force || true",
     "deploy": "concurrently 'npm run deploy:rules' 'npm run deploy:indexes'"
   },
-  "license": "Apache-2.0",
+  "license": "AGPL-3.0-only",
+  "engines": {
+    "node": "20"
+  },
   "devDependencies": {
     "@firebase/rules-unit-testing": "3.0.0",
     "@types/jest": "29.5.4",
