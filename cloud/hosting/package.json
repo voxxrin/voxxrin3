@@ -6,7 +6,7 @@
     "copy-from-mobile": "rm -Rf ./public/* && cp -a ../../mobile/dist/* ./public/",
     "deploy": "npm run copy-from-mobile && firebase deploy --only hosting --project ${FIREBASE_PROJECT_NAME:-voxxrin-v3}"
   },
-  "license": "Apache-2.0",
+  "license": "AGPL-3.0-only",
   "engines": {
     "node": "20"
   },

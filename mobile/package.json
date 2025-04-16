@@ -76,7 +76,7 @@
     "workbox-window": "7.0.0"
   },
   "description": "Voxxrin mobile app`",
-  "license": "Apache-2.0"
+  "license": "AGPL-3.0-only",
   "engines": {
     "node": "20"
   }

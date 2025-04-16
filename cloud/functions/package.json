@@ -11,6 +11,7 @@
     "logs": "firebase functions:log",
     "test": "vitest"
   },
+  "license": "AGPL-3.0-only",
   "engines": {
     "node": "20"
   },

@@ -18,7 +18,7 @@
     "deploy": "concurrently 'npm run deploy:fn' 'npm run deploy:site' 'npm run deploy:firestore'",
     "test": "cd cloud/firestore/ && npm test"
   },
-  "license": "Apache-2.0",
+  "license": "AGPL-3.0-only",
   "devDependencies": {
     "@fcamblor/concurrently": "8.2.2-for-firebase"
   },
