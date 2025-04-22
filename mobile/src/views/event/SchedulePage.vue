@@ -354,13 +354,18 @@ async function openSchedulePreferencesModal() {
   }
 
   .listFeedbackSlot {
+
     &.temporarily-displayed-during-inactive-animation {
       display: flex;
     }
+    
     flex-direction: column;
     row-gap: 12px;
-    right: 2px;
+    right: -18px;
+    max-height: calc(100vh - 160px);
+    padding: 0 16px;
     pointer-events: none;
+    overflow-y: auto;
 
     &.fab-list-active {
       pointer-events: inherit;
