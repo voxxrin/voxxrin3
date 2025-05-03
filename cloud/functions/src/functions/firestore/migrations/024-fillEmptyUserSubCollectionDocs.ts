@@ -1,11 +1,11 @@
 import {db} from "../../../firebase";
 import {getAllEventsWithTalksStats, getMaybeSpaceTokenOf} from "../services/event-utils";
 import {windowedProcessUsers} from "../services/user-utils";
-import {resolvedSpaceFirestorePath} from "../../../../../../shared/utilities/event-utils";
+import {resolvedSpaceFirestorePath} from "@shared/utilities/event-utils";
 import {firestore} from "firebase-admin";
 import DocumentSnapshot = firestore.DocumentSnapshot;
-import {UserDailyFeedbacks, UserTalkNote} from "../../../../../../shared/feedbacks.firestore";
-import {User, UserTotalFeedbacks} from "../../../../../../shared/user.firestore";
+import {UserDailyFeedbacks, UserTalkNote} from "@shared/feedbacks.firestore";
+import {User, UserTotalFeedbacks} from "@shared/user.firestore";
 import {match, P} from "ts-pattern";
 import {v4 as uuidv4} from "uuid";
 import {FieldPath} from "firebase-admin/firestore";

@@ -1,4 +1,4 @@
-import {ISOLocalDate} from "../../../shared/type-utils";
+import {ISOLocalDate} from "@shared/type-utils";
 import {UserLocale} from "@/models/VoxxrinUser";
 import {Temporal} from "temporal-polyfill";
 import {match, P} from "ts-pattern";

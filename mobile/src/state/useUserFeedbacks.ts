@@ -11,13 +11,13 @@ import {
   SkippedUserFeedback,
   UserDailyFeedbacks,
   UserFeedback
-} from "../../../shared/feedbacks.firestore";
+} from "@shared/feedbacks.firestore";
 import {ScheduleTimeSlotId} from "@/models/VoxxrinSchedule";
 import {useCurrentClock} from "@/state/useCurrentClock";
-import {ISODatetime} from "../../../shared/type-utils";
+import {ISODatetime} from "@shared/type-utils";
 import {match} from "ts-pattern";
 import {User} from "firebase/auth";
-import {resolvedEventFirestorePath} from "../../../shared/utilities/event-utils";
+import {resolvedEventFirestorePath} from "@shared/utilities/event-utils";
 
 function getUserFeedbacksSourceDoc(user: User|undefined|null, spacedEventId: SpacedEventId|undefined, dayId: DayId|undefined) {
     if(!user || !spacedEventId || !spacedEventId.eventId || !spacedEventId.eventId.value || !dayId || !dayId.value) {

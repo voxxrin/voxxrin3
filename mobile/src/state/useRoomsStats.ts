@@ -4,11 +4,11 @@ import {PERF_LOGGER} from "@/services/Logger";
 import {deferredVuefireUseDocument} from "@/views/vue-utils";
 import {doc, DocumentReference} from "firebase/firestore";
 import {db} from "@/state/firebase";
-import {RoomsStats} from "../../../shared/event-stats";
-import {toValidFirebaseKey, unescapeFirebaseKey} from "../../../shared/utilities/firebase.utils";
+import {RoomsStats} from "@shared/event-stats";
+import {toValidFirebaseKey, unescapeFirebaseKey} from "@shared/utilities/firebase.utils";
 import {createVoxxrinRoomStatsFromFirestore} from "@/models/VoxxrinRoomStats";
 import {RoomId} from "@/models/VoxxrinRoom";
-import {resolvedEventFirestorePath} from "../../../shared/utilities/event-utils";
+import {resolvedEventFirestorePath} from "@shared/utilities/event-utils";
 
 export function useRoomsStats(spacedEventIdRef: Ref<SpacedEventId|undefined>) {
   PERF_LOGGER.debug(() => `useRoomsStats(spacedEventId=${stringifySpacedEventId(toValue(spacedEventIdRef))})`)

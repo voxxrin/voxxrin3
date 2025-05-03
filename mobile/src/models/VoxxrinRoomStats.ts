@@ -1,5 +1,5 @@
-import {Replace} from "../../../shared/type-utils";
-import {DefinedRoomStats, RoomStats, RoomStatsBase, UnknownRoomStats} from "../../../shared/event-stats";
+import {Replace} from "@shared/type-utils";
+import {DefinedRoomStats, RoomStats, RoomStatsBase, UnknownRoomStats} from "@shared/event-stats";
 import {RoomId} from "@/models/VoxxrinRoom";
 import {TalkId} from "@/models/VoxxrinTalk";
 import {match} from "ts-pattern";

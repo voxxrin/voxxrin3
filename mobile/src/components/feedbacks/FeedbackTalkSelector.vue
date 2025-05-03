@@ -45,7 +45,7 @@ import TalkCard from "@/components/talk-card/TalkCard.vue";
 import TalkIsFavorited from "@/components/talk-card/TalkIsFavorited.vue";
 import {useEventTalkStats} from "@/state/useEventTalkStats";
 import {useUserEventTalkNotes} from "@/state/useUserTalkNotes";
-import {TalkNote} from "../../../../shared/feedbacks.firestore";
+import {TalkNote} from "@shared/feedbacks.firestore";
 
 const { LL } = typesafeI18n()
 

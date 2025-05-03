@@ -1,14 +1,14 @@
 import {sendResponseMessage} from "../utils";
 import {Response} from "express";
-import {ISODatetime} from "../../../../../../shared/type-utils";
+import {ISODatetime} from "@shared/type-utils";
 import {getTimeslottedTalks, TimeslottedTalk} from "../../firestore/services/schedule-utils";
-import {RoomsStats, RoomStats} from "../../../../../../shared/event-stats";
+import {RoomsStats, RoomStats} from "@shared/event-stats";
 import {db} from "../../../firebase";
 
-import {toValidFirebaseKey} from "../../../../../../shared/utilities/firebase.utils";
- import {TALK_COMPLETION_THRESHOLD} from "../../../../../../shared/constants/shared-constants.utils";
-import {ConferenceDescriptor} from "../../../../../../shared/conference-descriptor.firestore";
-import {resolvedEventFirestorePath} from "../../../../../../shared/utilities/event-utils";
+import {toValidFirebaseKey} from "@shared/utilities/firebase.utils";
+import {TALK_COMPLETION_THRESHOLD} from "@shared/constants/shared-constants.utils";
+import {ConferenceDescriptor} from "@shared/conference-descriptor.firestore";
+import {resolvedEventFirestorePath} from "@shared/utilities/event-utils";
 
 
 export async function provideRoomsStats(response: Response, pathParams: {eventId: string, spaceToken?: string|undefined}, queryParams: {token: string}, body: {

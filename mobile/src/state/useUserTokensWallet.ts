@@ -14,7 +14,7 @@ import {createSharedComposable} from "@vueuse/core";
 import {
   UserWalletEventOrganizerSecretToken, UserWalletPrivateSpaceToken,
   UserWalletTalkFeedbacksViewerSecretToken
-} from "../../../shared/user-tokens-wallet.localstorage";
+} from "@shared/user-tokens-wallet.localstorage";
 import {Unreffable} from "@/views/vue-utils";
 import {Logger, PERF_LOGGER} from "@/services/Logger";
 import {useLocalStorage} from "@/state/state-utilities";

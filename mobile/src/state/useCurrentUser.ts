@@ -4,7 +4,7 @@ import {computed, toValue} from "vue";
 import {db} from "@/state/firebase";
 import {deferredVuefireUseDocument} from "@/views/vue-utils";
 import {doc, DocumentReference} from "firebase/firestore";
-import {User} from "../../../shared/user.firestore";
+import {User} from "@shared/user.firestore";
 
 
 export function useCurrentUserLocale() {

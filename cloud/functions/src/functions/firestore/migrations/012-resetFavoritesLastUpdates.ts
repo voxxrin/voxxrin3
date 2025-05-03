@@ -1,6 +1,6 @@
 import {db} from "../../../firebase";
-import {EventLastUpdates} from "../../../../../../shared/event-list.firestore";
-import {ISODatetime} from "../../../../../../shared/type-utils";
+import {EventLastUpdates} from "@shared/event-list.firestore";
+import {ISODatetime} from "@shared/type-utils";
 
 
 export async function resetFavoritesLastUpdates(): Promise<"OK"|"Error"> {

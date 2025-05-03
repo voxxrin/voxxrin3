@@ -1,7 +1,7 @@
 import {db, info} from "../../../firebase";
 import {
     PerPublicUserIdFeedbackRatings
-} from "../../../../../../shared/conference-organizer-space.firestore";
+} from "@shared/conference-organizer-space.firestore";
 
 
 export type OldConferenceOrganizerAllRatings = {

@@ -1,7 +1,7 @@
 import {db, info} from "../../firebase"
 import {v4 as uuidv4} from "uuid";
-import {User} from "../../../../../shared/user.firestore";
-import {ISODatetime} from "../../../../../shared/type-utils";
+import {User} from "@shared/user.firestore";
+import {ISODatetime} from "@shared/type-utils";
 import {UserRecord} from "firebase-admin/auth";
 import {EventContext} from "firebase-functions/lib/v1/cloud-functions";
 

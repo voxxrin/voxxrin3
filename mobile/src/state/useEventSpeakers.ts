@@ -3,8 +3,8 @@ import {deferredVuefireUseDocument} from "@/views/vue-utils";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {doc, DocumentReference, getDoc} from "firebase/firestore";
 import {db} from "@/state/firebase";
-import {resolvedEventFirestorePath} from "../../../shared/utilities/event-utils";
-import {LineupSpeaker} from "../../../shared/event-lineup.firestore";
+import {resolvedEventFirestorePath} from "@shared/utilities/event-utils";
+import {LineupSpeaker} from "@shared/event-lineup.firestore";
 import {createVoxxrinSpeakerFromFirestore, SpeakerId, speakerMatchesSearchTerms} from "@/models/VoxxrinSpeaker";
 import {CompletablePromiseQueue, sortBy} from "@/models/utils";
 import {User} from "firebase/auth";
@@ -12,7 +12,7 @@ import {checkCache} from "@/services/Cachings";
 import {Temporal} from "temporal-polyfill";
 import {PERF_LOGGER} from "@/services/Logger";
 import {loadSpeakerUrl} from "@/state/useEventTalk";
-import {toValidFirebaseKey} from "../../../shared/utilities/firebase.utils";
+import {toValidFirebaseKey} from "@shared/utilities/firebase.utils";
 import {match, P} from "ts-pattern";
 
 export function useLineupSpeakers(eventDescriptorRef: Ref<VoxxrinConferenceDescriptor|undefined>, searchTermsRef: Ref<string|undefined>) {

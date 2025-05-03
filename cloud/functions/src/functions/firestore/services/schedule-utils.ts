@@ -3,9 +3,9 @@ import {
     DailySchedule,
     Talk,
     TalksTimeSlot
-} from "../../../../../../shared/daily-schedule.firestore";
-import {ISODatetime} from "../../../../../../shared/type-utils";
-import {resolvedEventFirestorePath} from "../../../../../../shared/utilities/event-utils";
+} from "@shared/daily-schedule.firestore";
+import {ISODatetime} from "@shared/type-utils";
+import {resolvedEventFirestorePath} from "@shared/utilities/event-utils";
 
 
 export type TimeslottedTalk = Talk & {start: ISODatetime, end: ISODatetime};

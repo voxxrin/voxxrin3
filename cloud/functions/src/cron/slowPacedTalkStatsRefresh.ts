@@ -1,7 +1,7 @@
 import {Temporal} from "@js-temporal/polyfill";
 import {getAllEvents, getEventLastUpdates} from "../functions/firestore/services/event-utils";
 import {getGlobalInfos, storeGlobalInfos} from "../functions/firestore/services/globalInfos-utils";
-import {ISODatetime} from "../../../../shared/type-utils";
+import {ISODatetime} from "@shared/type-utils";
 import {getEventTalkStats, storeEventTalkStats} from "../functions/firestore/services/stats-utils";
 import {match, P} from "ts-pattern";
 

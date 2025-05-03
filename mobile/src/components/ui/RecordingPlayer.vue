@@ -7,7 +7,7 @@
 
 <script setup lang="ts">
 import {computed, PropType, toValue} from "vue";
-import {RecordingPlatform} from "../../../../shared/daily-schedule.firestore";
+import {RecordingPlatform} from "@shared/daily-schedule.firestore";
 import {match, P} from "ts-pattern";
 
 const props = defineProps({

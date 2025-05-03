@@ -1,16 +1,16 @@
 import {db} from "../../../firebase";
 import {firestore} from "firebase-admin";
-import {EventLastUpdates, ListableEvent} from "../../../../../../shared/event-list.firestore";
+import {EventLastUpdates, ListableEvent} from "@shared/event-list.firestore";
 import QuerySnapshot = firestore.QuerySnapshot;
 import DocumentSnapshot = firestore.DocumentSnapshot;
 import {getAllSpaceIds} from "./space-utils";
-import {resolvedEventFirestorePath, resolvedEventsFirestorePath} from "../../../../../../shared/utilities/event-utils";
-import {AllInOneTalkStats} from "../../../../../../shared/event-stats";
+import {resolvedEventFirestorePath, resolvedEventsFirestorePath} from "@shared/utilities/event-utils";
+import {AllInOneTalkStats} from "@shared/event-stats";
 import {detailedTalksToSpeakersLineup} from "../../../models/Event";
-import {DetailedTalk} from "../../../../../../shared/daily-schedule.firestore";
-import {toValidFirebaseKey} from "../../../../../../shared/utilities/firebase.utils";
-import {LineupSpeaker} from "../../../../../../shared/event-lineup.firestore";
-import {arrayDiff} from "../../../../../../shared/utilities/arrays.utils";
+import {DetailedTalk} from "@shared/daily-schedule.firestore";
+import {toValidFirebaseKey} from "@shared/utilities/firebase.utils";
+import {LineupSpeaker} from "@shared/event-lineup.firestore";
+import {arrayDiff} from "@shared/utilities/arrays.utils";
 
 
 export async function getAllEventsDocs(opts: { includePrivateSpaces: boolean } = { includePrivateSpaces: false }) {

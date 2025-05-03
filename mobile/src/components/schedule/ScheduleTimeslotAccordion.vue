@@ -53,9 +53,9 @@ import {PropType} from "vue";
 import {LabelledTimeslotWithFeedback} from "@/state/useSchedule";
 import {TimeslotTimingProgress, VoxxrinScheduleTimeSlot} from "@/models/VoxxrinSchedule";
 import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
-import {TalkStats} from "../../../../shared/event-stats";
+import {TalkStats} from "@shared/event-stats";
 import {VoxxrinRoomStats} from "@/models/VoxxrinRoomStats";
-import {TalkNote} from "../../../../shared/feedbacks.firestore";
+import {TalkNote} from "@shared/feedbacks.firestore";
 import {VoxxrinTalk} from "@/models/VoxxrinTalk";
 const { LL } = typesafeI18n()
 

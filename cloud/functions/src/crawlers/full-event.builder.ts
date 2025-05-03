@@ -6,14 +6,14 @@ import {
   Speaker, Talk, TalkFormat,
   TalksTimeSlot, ThemedTalkFormat, ThemedTrack, TimeSlotBase,
   Track,
-} from "../../../../shared/daily-schedule.firestore";
-import {ISODatetime, Replace} from "../../../../shared/type-utils";
+} from "@shared/daily-schedule.firestore";
+import {ISODatetime, Replace} from "@shared/type-utils";
 import {pick, sortBy} from "lodash";
-import {LineupSpeaker} from "../../../../shared/event-lineup.firestore";
+import {LineupSpeaker} from "@shared/event-lineup.firestore";
 import {Temporal} from "@js-temporal/polyfill";
 import {match, P} from "ts-pattern";
 import {TALK_FORMAT_FALLBACK_COLORS, TALK_TRACK_FALLBACK_COLORS} from "./crawl";
-import {ThemedLanguage} from "../../../../shared/conference-descriptor.firestore";
+import {ThemedLanguage} from "@shared/conference-descriptor.firestore";
 
 export type RawUnallocatedDetailedTalk = Replace<DetailedTalk, {
   speakers?: undefined,

@@ -18,7 +18,7 @@ import {faFlickr} from "@fortawesome/free-brands-svg-icons/faFlickr";
 import {faBluesky} from "@fortawesome/free-brands-svg-icons/faBluesky";
 import {faLink} from "@fortawesome/free-solid-svg-icons/faLink";
 import {PropType} from "vue";
-import {SocialMediaType} from "../../../../shared/type-utils";
+import {SocialMediaType} from "@shared/type-utils";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 
 const props = defineProps({

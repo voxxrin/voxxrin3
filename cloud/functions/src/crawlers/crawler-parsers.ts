@@ -1,7 +1,7 @@
 import {z, ZodLiteral} from "zod";
-import {type ISODatetime, ISOLocalDate, ISOZonedTime} from "../../../../shared/type-utils";
-import {ConferenceDescriptor} from "../../../../shared/conference-descriptor.firestore";
-import {RecordingPlatform, ScheduleTimeSlot} from "../../../../shared/daily-schedule.firestore";
+import {type ISODatetime, ISOLocalDate, ISOZonedTime} from "@shared/type-utils";
+import {ConferenceDescriptor} from "@shared/conference-descriptor.firestore";
+import {RecordingPlatform, ScheduleTimeSlot} from "@shared/daily-schedule.firestore";
 import {ISO_DATETIME_PARSER} from "../utils/zod-parsers";
 
 
@@ -46,15 +46,23 @@ export const THEMABLE_LANGUAGE_PARSER = z.object({
     themeColor: HEX_COLOR_PARSER
 })
 
+export const THEME_COLORS_PARSER = z.object({
+  primaryHex: HEX_COLOR_PARSER,
+  primaryContrastHex: HEX_COLOR_PARSER,
+  secondaryHex: HEX_COLOR_PARSER,
+  secondaryContrastHex: HEX_COLOR_PARSER,
+  tertiaryHex: HEX_COLOR_PARSER,
+  tertiaryContrastHex: HEX_COLOR_PARSER
+})
+
 export const EVENT_THEME_PARSER = z.object({
-    colors: z.object({
-        primaryHex: HEX_COLOR_PARSER,
-        primaryContrastHex: HEX_COLOR_PARSER,
-        secondaryHex: HEX_COLOR_PARSER,
-        secondaryContrastHex: HEX_COLOR_PARSER,
-        tertiaryHex: HEX_COLOR_PARSER,
-        tertiaryContrastHex: HEX_COLOR_PARSER
-    }),
+    colors: z.union([
+      THEME_COLORS_PARSER,
+      z.object({
+        light: THEME_COLORS_PARSER,
+        dark: THEME_COLORS_PARSER,
+      })
+    ]),
     headingCustomStyles: z.object({
       title: z.string().nullable(),
       subTitle: z.string().nullable(),

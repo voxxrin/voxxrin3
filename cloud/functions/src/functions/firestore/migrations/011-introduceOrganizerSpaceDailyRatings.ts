@@ -1,11 +1,11 @@
 import {db, info} from "../../../firebase";
 import {firestore} from "firebase-admin";
 import DocumentReference = firestore.DocumentReference;
-import {DailySchedule, Talk} from "../../../../../../shared/daily-schedule.firestore";
-import {FeedbackRatings} from "../../../../../../shared/talk-feedbacks.firestore";
+import {DailySchedule, Talk} from "@shared/daily-schedule.firestore";
+import {FeedbackRatings} from "@shared/talk-feedbacks.firestore";
 import {
     DailyTalkFeedbackRatings
-} from "../../../../../../shared/conference-organizer-space.firestore";
+} from "@shared/conference-organizer-space.firestore";
 
 
 export async function introduceOrganizerSpaceDailyRatings(): Promise<"OK"|"Error"> {

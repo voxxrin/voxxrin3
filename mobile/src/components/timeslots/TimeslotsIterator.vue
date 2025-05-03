@@ -31,7 +31,7 @@ import {Logger, PERF_LOGGER} from "@/services/Logger";
 import NoResults from "@/components/ui/NoResults.vue";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 import {Temporal} from "temporal-polyfill";
-import {TALK_COMPLETION_THRESHOLD} from "../../../../shared/constants/shared-constants.utils";
+import {TALK_COMPLETION_THRESHOLD} from "@shared/constants/shared-constants.utils";
 
 const LOGGER = Logger.named("TimeslotIterator");
 

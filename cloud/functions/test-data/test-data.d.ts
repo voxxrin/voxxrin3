@@ -1,5 +1,5 @@
 import {SimpleTalk, YoutubeVideo} from "../src/functions/firestore/services/talk-utils";
-import {Room, TalkFormat} from "../../../shared/daily-schedule.firestore";
+import {Room, TalkFormat} from "@shared/daily-schedule.firestore";
 
 export type TalkMatchingYoutubeTestData = {
   youtubeVideos: YoutubeVideo[],

@@ -1,12 +1,12 @@
-import { ListableEvent } from "../../../../shared/event-list.firestore";
+import {ListableEvent} from "@shared/event-list.firestore";
 import {
   BreakTimeSlot,
   DailySchedule,
   DetailedTalk,
-} from "../../../../shared/daily-schedule.firestore";
-import {ConferenceDescriptor} from "../../../../shared/conference-descriptor.firestore";
-import {Replace} from "../../../../shared/type-utils";
-import {LineupSpeaker} from "../../../../shared/event-lineup.firestore";
+} from "@shared/daily-schedule.firestore";
+import {ConferenceDescriptor} from "@shared/conference-descriptor.firestore";
+import {Replace} from "@shared/type-utils";
+import {LineupSpeaker} from "@shared/event-lineup.firestore";
 import {match, P} from "ts-pattern";
 
 export type BreakTimeslotWithPotentiallyUnknownIcon = Replace<BreakTimeSlot, {
@@ -15,10 +15,12 @@ export type BreakTimeslotWithPotentiallyUnknownIcon = Replace<BreakTimeSlot, {
   }>
 }>
 
+export type DescriptorableEvent<T extends Omit<ListableEvent, "websiteUrl">> = Omit<T, "eventFamily"|"eventName"|"websiteUrl"|"visibility"|"spaceToken">;
+
 export type FullEvent = {
     id: string,
-    conferenceDescriptor: Omit<ConferenceDescriptor, "eventFamily"|"eventName"|"websiteUrl"|"visibility"|"spaceToken">,
-    listableEventInfo: Omit<ListableEvent, "eventFamily"|"eventName"|"websiteUrl"|"visibility"|"spaceToken">,
+    conferenceDescriptor: DescriptorableEvent<ConferenceDescriptor>,
+    listableEventInfo: DescriptorableEvent<ListableEvent>,
     daySchedules: DailySchedule[],
     talks: DetailedTalk[],
     lineupSpeakers: LineupSpeaker[],

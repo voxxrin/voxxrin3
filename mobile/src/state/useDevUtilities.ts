@@ -4,14 +4,14 @@ import {
     overrideCurrentClock,
     ShiftedTimeClock
 } from "@/state/useCurrentClock";
-import {ISODatetime} from "../../../shared/type-utils";
+import {ISODatetime} from "@shared/type-utils";
 import {Temporal} from "temporal-polyfill";
 import {match, P} from "ts-pattern";
-import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {getCurrentComponentInstancePath, managedRef as ref} from "@/views/vue-utils";
-import {ListableVoxxrinEvent} from "@/models/VoxxrinEvent";
+import {ListableVoxxrinEvent, toVoxxrinEventTheme} from "@/models/VoxxrinEvent";
 import {Ref} from "vue";
 import {updateLogConfigTo} from "@/services/Logger";
+import {ConferenceDescriptor} from "@shared/conference-descriptor.firestore";
 import router from "@/router";
 import {useIonRouter} from "@ionic/vue";
 import {RouteAction, RouteDirection} from "@ionic/vue-router/dist/types/types";
@@ -21,7 +21,7 @@ import {RouteAction, RouteDirection} from "@ionic/vue-router/dist/types/types";
 // May be useful for debug purposes
 
 type OverridableListableEventProperties = {eventId: string} & Partial<Pick<ListableVoxxrinEvent, "theming"|"location"|"backgroundUrl"|"logoUrl">>;
-type OverridableEventDescriptorProperties = {eventId: string} & Partial<Pick<VoxxrinConferenceDescriptor, "headingTitle"|"headingSubTitle"|"theming"|"features"|"infos"|"location"|"backgroundUrl"|"logoUrl">>;
+type OverridableEventDescriptorProperties = {eventId: string} & Partial<Pick<ConferenceDescriptor, "headingTitle"|"headingSubTitle"|"theming"|"features"|"infos"|"location"|"backgroundUrl"|"logoUrl">>;
 
 let overridenListableEventPropertiesRef: Ref<OverridableListableEventProperties|undefined>|undefined = undefined
 let overridenEventDescriptorPropertiesRef: Ref<OverridableEventDescriptorProperties|undefined>|undefined = undefined
@@ -69,7 +69,13 @@ export function useDevUtilities() {
 
     function overrideCurrentEventDescriptorInfos(overridenEventDescriptorProperties: OverridableEventDescriptorProperties) {
         overridenEventDescriptorPropertiesRef!.value = overridenEventDescriptorProperties;
-        overrideListableEventProperties(overridenEventDescriptorProperties);
+
+        const { theming, ...themingLessOverridenEventDescriptorProps } = overridenEventDescriptorProperties;
+        const voxxrinTheming = theming ? {theming: toVoxxrinEventTheme(theming) }:undefined
+        overrideListableEventProperties({
+          ...themingLessOverridenEventDescriptorProps,
+          ...voxxrinTheming,
+        });
     }
 
     window._overrideCurrentEventDescriptorInfos = overrideCurrentEventDescriptorInfos;

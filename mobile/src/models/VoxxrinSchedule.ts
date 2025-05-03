@@ -3,7 +3,7 @@ import {
   DailySchedule,
   TalksTimeSlot,
   TimeSlotBase
-} from "../../../shared/daily-schedule.firestore";
+} from "@shared/daily-schedule.firestore";
 import {
     createVoxxrinTalkFromFirestore, filterTalksMatching, TalkId,
     VoxxrinBreak,
@@ -22,8 +22,8 @@ import {NumberRange, sortBy, ValueObject} from "@/models/utils";
 import {useCurrentUserLocale} from "@/state/useCurrentUser";
 import {LabelledTimeslotWithFeedback} from "@/state/useSchedule";
 import {findTimeslotFeedback} from "@/models/VoxxrinFeedback";
-import {UserDailyFeedbacks} from "../../../shared/feedbacks.firestore";
-import {Replace} from "../../../shared/type-utils";
+import {UserDailyFeedbacks} from "@shared/feedbacks.firestore";
+import {Replace} from "@shared/type-utils";
 
 export class ScheduleTimeSlotId extends ValueObject<string>{ _scheduleTimeSlotIdClassDiscriminator!: never; }
 

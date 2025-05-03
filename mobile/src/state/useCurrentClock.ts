@@ -1,5 +1,5 @@
 import {Temporal} from "temporal-polyfill";
-import {ISODatetime} from "../../../shared/type-utils";
+import {ISODatetime} from "@shared/type-utils";
 import {match, P} from "ts-pattern";
 import {Logger} from "@/services/Logger";
 import {useInterval, UseIntervalDurationOpts} from "@/views/vue-utils";

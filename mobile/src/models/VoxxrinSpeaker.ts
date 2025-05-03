@@ -1,7 +1,7 @@
 import {ValueObject} from "@/models/utils";
-import {Speaker} from "../../../shared/daily-schedule.firestore";
-import {ISODatetime, Replace} from "../../../shared/type-utils";
-import {LineupSpeaker, LineupTalk} from "../../../shared/event-lineup.firestore";
+import {Speaker} from "@shared/daily-schedule.firestore";
+import {ISODatetime, Replace} from "@shared/type-utils";
+import {LineupSpeaker, LineupTalk} from "@shared/event-lineup.firestore";
 import {TalkId} from "@/models/VoxxrinTalk";
 import {RoomId, VoxxrinRoom} from "@/models/VoxxrinRoom";
 import {

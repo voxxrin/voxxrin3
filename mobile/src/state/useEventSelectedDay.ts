@@ -4,7 +4,7 @@ import {computed, reactive, unref} from "vue";
 import {DayId} from "@/models/VoxxrinDay";
 import {createSharedComposable} from "@vueuse/core";
 import {PERF_LOGGER} from "@/services/Logger";
-import {resolvedSpacedEventFieldName} from "../../../shared/utilities/event-utils";
+import {resolvedSpacedEventFieldName} from "@shared/utilities/event-utils";
 
 
 const perEventIdSelectedDayIdRef = reactive(new Map<string, string>());

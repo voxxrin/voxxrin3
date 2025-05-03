@@ -1,11 +1,11 @@
-import {ISODatetime} from "../../../../../../shared/type-utils";
-import {RoomsStats, TalkStats} from "../../../../../../shared/event-stats";
+import {ISODatetime} from "@shared/type-utils";
+import {RoomsStats, TalkStats} from "@shared/event-stats";
 import {db, error} from "../../../firebase";
 import {getTimeslottedTalks} from "./schedule-utils";
-import {toValidFirebaseKey} from "../../../../../../shared/utilities/firebase.utils";
+import {toValidFirebaseKey} from "@shared/utilities/firebase.utils";
 import {firestore} from "firebase-admin";
 import QuerySnapshot = firestore.QuerySnapshot;
-import {resolvedEventFirestorePath} from "../../../../../../shared/utilities/event-utils";
+import {resolvedEventFirestorePath} from "@shared/utilities/event-utils";
 
 
 export async function ensureRoomsStatsFilledFor(spaceToken: string|undefined, eventId: string) {

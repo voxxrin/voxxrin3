@@ -16,9 +16,9 @@ import {checkCache} from "@/services/Cachings";
 import {Temporal} from "temporal-polyfill";
 import {CompletablePromiseQueue, partitionArray, toValueObjectValues} from "@/models/utils";
 import {match} from "ts-pattern";
-import {TalkStats} from "../../../shared/event-stats";
+import {TalkStats} from "@shared/event-stats";
 import {useLocalEventTalkFavsStorage} from "@/state/useUserTalkNotes";
-import {resolvedEventFirestorePath} from "../../../shared/utilities/event-utils";
+import {resolvedEventFirestorePath} from "@shared/utilities/event-utils";
 
 function getTalksStatsRef(spacedEventId: SpacedEventId|undefined, talkId: TalkId|undefined) {
     if(!spacedEventId || !spacedEventId.eventId || !spacedEventId.eventId.value || !talkId || !talkId.value) {

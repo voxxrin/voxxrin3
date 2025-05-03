@@ -1,4 +1,4 @@
-import {ISODatetime} from "../../../shared/type-utils";
+import {ISODatetime} from "@shared/type-utils";
 import {Temporal} from "temporal-polyfill";
 import {Logger} from "@/services/Logger";
 

@@ -7,9 +7,9 @@ import {
     ProvidedUserFeedback,
     UserDailyFeedbacks,
     UserFeedback
-} from "../../../shared/feedbacks.firestore";
+} from "@shared/feedbacks.firestore";
 import {TalkId} from "@/models/VoxxrinTalk";
-import {Replace} from "../../../shared/type-utils";
+import {Replace} from "@shared/type-utils";
 
 export type VoxxrinUserFeedback = Replace<ProvidedUserFeedback, {
     timeslotId: ScheduleTimeSlotId,

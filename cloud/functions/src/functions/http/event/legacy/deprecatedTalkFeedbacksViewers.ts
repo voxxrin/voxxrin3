@@ -5,11 +5,11 @@ import {getEventDescriptor} from "../../../firestore/services/eventDescriptor-ut
 import {getFamilyOrganizerToken} from "../../../firestore/services/publicTokens-utils";
 import {checkEventLastUpdate, getOrganizerSpaceByToken, getSecretTokenDoc} from "../../../firestore/firestore-utils";
 import {match, P} from "ts-pattern";
-import {ConferenceOrganizerSpace} from "../../../../../../../shared/conference-organizer-space.firestore";
+import {ConferenceOrganizerSpace} from "@shared/conference-organizer-space.firestore";
 import {
   resolvedEventFirestorePath,
   resolvedSpacedEventFieldName
-} from "../../../../../../../shared/utilities/event-utils";
+} from "@shared/utilities/event-utils";
 
 export async function legacyTalkFeedbacksViewers(request: functions.https.Request, response: express.Response) {
 

@@ -1,9 +1,9 @@
 import {sendResponseMessage} from "../utils";
 import {checkEventLastUpdate, getSecretTokenDoc,} from "../../firestore/firestore-utils";
-import {ConferenceOrganizerSpace} from "../../../../../../shared/conference-organizer-space.firestore";
+import {ConferenceOrganizerSpace} from "@shared/conference-organizer-space.firestore";
 import * as express from "express";
-import {ConferenceDescriptor} from "../../../../../../shared/conference-descriptor.firestore";
-import {resolvedEventFirestorePath, resolvedSpacedEventFieldName} from "../../../../../../shared/utilities/event-utils";
+import {ConferenceDescriptor} from "@shared/conference-descriptor.firestore";
+import {resolvedEventFirestorePath, resolvedSpacedEventFieldName} from "@shared/utilities/event-utils";
 
 
 export async function eventTalksEditors(

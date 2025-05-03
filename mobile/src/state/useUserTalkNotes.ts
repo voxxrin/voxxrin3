@@ -17,7 +17,7 @@ import {
   where
 } from "firebase/firestore";
 import {db} from "@/state/firebase";
-import {TalkNote, UserTalkNote} from "../../../shared/feedbacks.firestore";
+import {TalkNote, UserTalkNote} from "@shared/feedbacks.firestore";
 import {Logger, PERF_LOGGER} from "@/services/Logger";
 import {User} from 'firebase/auth';
 import {Temporal} from "temporal-polyfill";
@@ -26,7 +26,7 @@ import {CompletablePromiseQueue, partitionArray, toValueObjectValues} from "@/mo
 import {match} from "ts-pattern";
 import {useStorage} from "@vueuse/core";
 import {getLocalStorageKeyCompound} from "@/services/Spaces";
-import {resolvedEventFirestorePath} from "../../../shared/utilities/event-utils";
+import {resolvedEventFirestorePath} from "@shared/utilities/event-utils";
 
 const LOGGER = Logger.named("useUserTalkNotes");
 

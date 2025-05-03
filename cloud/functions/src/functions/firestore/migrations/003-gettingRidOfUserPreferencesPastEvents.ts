@@ -1,5 +1,5 @@
 import {db} from "../../../firebase";
-import {UserPreferences} from "../../../../../../shared/user-preferences.firestore";
+import {UserPreferences} from "@shared/user-preferences.firestore";
 
 export async function gettingRidOfUserPreferencesPastEvents(): Promise<"OK"|"Error"> {
     const existingUsers = await db.collection("users").listDocuments()

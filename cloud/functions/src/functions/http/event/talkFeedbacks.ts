@@ -4,11 +4,11 @@ import {
   ensureTalkFeedbackViewerTokenIsValidThenGetFeedbacks,
   getSecretTokenDoc
 } from "../../firestore/firestore-utils";
-import {ConferenceOrganizerSpace} from "../../../../../../shared/conference-organizer-space.firestore";
+import {ConferenceOrganizerSpace} from "@shared/conference-organizer-space.firestore";
 import {Request, Response} from "express";
-import {ConferenceDescriptor} from "../../../../../../shared/conference-descriptor.firestore";
-import {ISODatetime} from "../../../../../../shared/type-utils";
-import {resolvedEventFirestorePath, resolvedSpacedEventFieldName} from "../../../../../../shared/utilities/event-utils";
+import {ConferenceDescriptor} from "@shared/conference-descriptor.firestore";
+import {ISODatetime} from "@shared/type-utils";
+import {resolvedEventFirestorePath, resolvedSpacedEventFieldName} from "@shared/utilities/event-utils";
 
 export async function eventTalkFeedbacks(response: Response, pathParams: {eventId: string, talkId: string, spaceToken?: string|undefined}, queryParams: {token: string, updatedSince?: ISODatetime|undefined }, request: Request, eventDescriptor: ConferenceDescriptor) {
 

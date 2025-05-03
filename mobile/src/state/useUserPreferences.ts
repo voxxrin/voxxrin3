@@ -8,7 +8,7 @@ import {
     setDoc,
 } from "firebase/firestore";
 import {db} from "@/state/firebase";
-import {UserPreferences} from "../../../shared/user-preferences.firestore";
+import {UserPreferences} from "@shared/user-preferences.firestore";
 import {VoxxrinUserPreferences} from "@/models/VoxxrinUser";
 import {createSharedComposable} from "@vueuse/core";
 import {Logger, PERF_LOGGER} from "@/services/Logger";

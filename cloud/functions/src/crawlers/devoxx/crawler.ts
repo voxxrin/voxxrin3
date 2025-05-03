@@ -1,13 +1,17 @@
 import {info} from "../../firebase";
 
 import {CfpDetailedSpeaker, CfpEvent, DevoxxRoom, DevoxxScheduleItem, DevoxxScheduleProposal,} from "./types"
-import {Break, SocialLink} from "../../../../../shared/daily-schedule.firestore"
+import {Break, SocialLink} from "@shared/daily-schedule.firestore"
 import {FullEvent} from "../../models/Event";
-import {ISODatetime, ISOLocalDate} from "../../../../../shared/type-utils";
-import {Day} from "../../../../../shared/event-list.firestore";
+import {ISODatetime, ISOLocalDate} from "@shared/type-utils";
+import {Day} from "@shared/event-list.firestore";
 import {Temporal} from "@js-temporal/polyfill";
 import {z} from "zod";
-import {EVENT_DESCRIPTOR_PARSER, INFOS_PARSER, THEMABLE_TALK_FORMAT_PARSER} from "../crawler-parsers";
+import {
+  EVENT_DESCRIPTOR_PARSER,
+  INFOS_PARSER,
+  THEMABLE_TALK_FORMAT_PARSER
+} from "../crawler-parsers";
 import {CrawlerKind} from "../crawl";
 import {match, P} from "ts-pattern";
 import {http} from "../utils";
