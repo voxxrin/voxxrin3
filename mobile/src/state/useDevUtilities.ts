@@ -7,18 +7,18 @@ import {
 import {ISODatetime} from "@shared/type-utils";
 import {Temporal} from "temporal-polyfill";
 import {match, P} from "ts-pattern";
-import {VoxxrinConferenceDescriptor} from "@/models/VoxxrinConferenceDescriptor";
 import {managedRef as ref} from "@/views/vue-utils";
-import {ListableVoxxrinEvent} from "@/models/VoxxrinEvent";
+import {ListableVoxxrinEvent, toVoxxrinEventTheme} from "@/models/VoxxrinEvent";
 import {Ref} from "vue";
 import {updateLogConfigTo} from "@/services/Logger";
+import {ConferenceDescriptor} from "@shared/conference-descriptor.firestore";
 
 
 // if(import.meta.env.DEV) {
 // May be useful for debug purposes
 
 type OverridableListableEventProperties = {eventId: string} & Partial<Pick<ListableVoxxrinEvent, "theming"|"location"|"backgroundUrl"|"logoUrl">>;
-type OverridableEventDescriptorProperties = {eventId: string} & Partial<Pick<VoxxrinConferenceDescriptor, "headingTitle"|"headingSubTitle"|"theming"|"features"|"infos"|"location"|"backgroundUrl"|"logoUrl">>;
+type OverridableEventDescriptorProperties = {eventId: string} & Partial<Pick<ConferenceDescriptor, "headingTitle"|"headingSubTitle"|"theming"|"features"|"infos"|"location"|"backgroundUrl"|"logoUrl">>;
 
 let overridenListableEventPropertiesRef: Ref<OverridableListableEventProperties|undefined>|undefined = undefined
 let overridenEventDescriptorPropertiesRef: Ref<OverridableEventDescriptorProperties|undefined>|undefined = undefined
@@ -40,7 +40,13 @@ export function useDevUtilities() {
 
     function overrideCurrentEventDescriptorInfos(overridenEventDescriptorProperties: OverridableEventDescriptorProperties) {
         overridenEventDescriptorPropertiesRef!.value = overridenEventDescriptorProperties;
-        overrideListableEventProperties(overridenEventDescriptorProperties);
+
+        const { theming, ...themingLessOverridenEventDescriptorProps } = overridenEventDescriptorProperties;
+        const voxxrinTheming = theming ? {theming: toVoxxrinEventTheme(theming) }:undefined
+        overrideListableEventProperties({
+          ...themingLessOverridenEventDescriptorProps,
+          ...voxxrinTheming,
+        });
     }
 
     (window as any)._overrideCurrentEventDescriptorInfos = overrideCurrentEventDescriptorInfos;

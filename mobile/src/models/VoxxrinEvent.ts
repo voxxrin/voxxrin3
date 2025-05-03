@@ -1,5 +1,5 @@
 import {hexToRGB, ValueObject} from "@/models/utils";
-import {EventTheme, ListableEvent} from "@shared/event-list.firestore";
+import {EventTheme, ListableEvent, ThemeColors} from "@shared/event-list.firestore";
 import {DayId, VoxxrinDay} from "@/models/VoxxrinDay";
 import {Temporal} from "temporal-polyfill";
 import {useCurrentClock} from "@/state/useCurrentClock";
@@ -40,16 +40,21 @@ export type ListableVoxxrinEvent = Replace<ListableEvent, {
     theming: VoxxrinEventTheme,
 } & ListableVoxxrinEventVisibility>
 
-export type VoxxrinEventTheme = Replace<EventTheme, {
-    colors: EventTheme['colors'] & {
-        primaryRGB: string,
-        primaryContrastRGB: string,
-        secondaryRGB: string,
-        secondaryContrastRGB: string,
-        tertiaryRGB: string,
-        tertiaryContrastRGB: string
+export type VoxxringThemeColors = ThemeColors & {
+  primaryRGB: string,
+  primaryContrastRGB: string,
+  secondaryRGB: string,
+  secondaryContrastRGB: string,
+  tertiaryRGB: string,
+  tertiaryContrastRGB: string
+}
+
+export type VoxxrinEventTheme = Omit<EventTheme, "colors"> & {
+    colors: {
+      light: VoxxringThemeColors,
+      dark: VoxxringThemeColors,
     }
-}>
+}
 
 export function searchEvents(events: ListableVoxxrinEvent[], searchCriteria: { terms: string|undefined, includePastEvents: boolean}, pinnededIds: EventId[]) {
     const filteredEvents = events.filter(event => {
@@ -107,16 +112,49 @@ export function firestoreListableEventToVoxxrinListableEvent(firestoreListableEv
 }
 
 export function toVoxxrinEventTheme(firestoreTheme: EventTheme): VoxxrinEventTheme {
-    return {
-        colors: {
-            ...firestoreTheme.colors,
-            primaryRGB: hexToRGB(firestoreTheme.colors.primaryHex),
-            primaryContrastRGB: hexToRGB(firestoreTheme.colors.primaryContrastHex),
-            secondaryRGB: hexToRGB(firestoreTheme.colors.secondaryHex),
-            secondaryContrastRGB: hexToRGB(firestoreTheme.colors.secondaryContrastHex),
-            tertiaryRGB: hexToRGB(firestoreTheme.colors.tertiaryHex),
-            tertiaryContrastRGB: hexToRGB(firestoreTheme.colors.tertiaryContrastHex),
+    const colors: VoxxrinEventTheme['colors'] = match(firestoreTheme.colors)
+      .with({ light: P.any, dark: P.any }, ({light, dark}) => ({
+        light: {
+          ...light,
+          primaryRGB: hexToRGB(light.primaryHex),
+          primaryContrastRGB: hexToRGB(light.primaryContrastHex),
+          secondaryRGB: hexToRGB(light.secondaryHex),
+          secondaryContrastRGB: hexToRGB(light.secondaryContrastHex),
+          tertiaryRGB: hexToRGB(light.tertiaryHex),
+          tertiaryContrastRGB: hexToRGB(light.tertiaryContrastHex),
         },
+        dark: {
+          ...dark,
+          primaryRGB: hexToRGB(dark.primaryHex),
+          primaryContrastRGB: hexToRGB(dark.primaryContrastHex),
+          secondaryRGB: hexToRGB(dark.secondaryHex),
+          secondaryContrastRGB: hexToRGB(dark.secondaryContrastHex),
+          tertiaryRGB: hexToRGB(dark.tertiaryHex),
+          tertiaryContrastRGB: hexToRGB(dark.tertiaryContrastHex),
+        }
+      }))
+      .otherwise(colors => ({
+        light: {
+          ...colors,
+          primaryRGB: hexToRGB(colors.primaryHex),
+          primaryContrastRGB: hexToRGB(colors.primaryContrastHex),
+          secondaryRGB: hexToRGB(colors.secondaryHex),
+          secondaryContrastRGB: hexToRGB(colors.secondaryContrastHex),
+          tertiaryRGB: hexToRGB(colors.tertiaryHex),
+          tertiaryContrastRGB: hexToRGB(colors.tertiaryContrastHex),
+        },
+        dark: {
+          ...colors,
+          primaryRGB: hexToRGB(colors.primaryHex),
+          primaryContrastRGB: hexToRGB(colors.primaryContrastHex),
+          secondaryRGB: hexToRGB(colors.secondaryHex),
+          secondaryContrastRGB: hexToRGB(colors.secondaryContrastHex),
+          tertiaryRGB: hexToRGB(colors.tertiaryHex),
+          tertiaryContrastRGB: hexToRGB(colors.tertiaryContrastHex),
+        }
+      }))
+    return {
+        colors,
         headingCustomStyles: firestoreTheme.headingCustomStyles,
         headingSrcSet: firestoreTheme.headingSrcSet,
         customImportedFonts: firestoreTheme.customImportedFonts,

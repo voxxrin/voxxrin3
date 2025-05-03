@@ -1,13 +1,18 @@
 import {HexColor, ISODatetime, ISOLocalDate} from "./type-utils";
 
+export type ThemeColors = {
+  primaryHex: HexColor,
+  primaryContrastHex: HexColor,
+  secondaryHex: HexColor,
+  secondaryContrastHex: HexColor,
+  tertiaryHex: HexColor,
+  tertiaryContrastHex: HexColor,
+}
+
 export type EventTheme = {
-    colors: {
-        primaryHex: HexColor,
-        primaryContrastHex: HexColor,
-        secondaryHex: HexColor,
-        secondaryContrastHex: HexColor,
-        tertiaryHex: HexColor,
-        tertiaryContrastHex: HexColor
+    colors: ThemeColors | {
+        light: ThemeColors,
+        dark: ThemeColors,
     },
     headingCustomStyles: {
       title: string|null,
