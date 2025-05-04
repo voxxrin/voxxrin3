@@ -1,0 +1,32 @@
+diff --git a/node_modules/@ionic/vue-router/dist/index.js b/node_modules/@ionic/vue-router/dist/index.js
+index 97f1d73..8c1cea2 100644
+--- a/node_modules/@ionic/vue-router/dist/index.js
++++ b/node_modules/@ionic/vue-router/dist/index.js
+@@ -212,18 +212,16 @@ const createLocationHistory = () => {
+                 }
+             }
+         }
+-        if (delta < -1) {
+-            return locationHistory[locationHistory.length - 1 + delta];
+-        }
+-        else {
+-            for (let i = locationHistory.length - 2; i >= 0; i--) {
+-                const ri = locationHistory[i];
+-                if (ri) {
+-                    if (ri.pathname === routeInfo.pushedByRoute) {
+-                        return ri;
+-                    }
+-                }
++        // Fix applied from https://github.com/ionic-team/ionic-framework/pull/29877/files
++        // available in @ionic/vue-router@8.3.4+
++        // see changelog: https://github.com/ionic-team/ionic-framework/blob/main/packages/vue-router/CHANGELOG.md#834-2024-10-30
++        for (let i = locationHistory.length - 2; i >= 0; i--) {
++          const ri = locationHistory[i];
++          if (ri) {
++            if (ri.pathname === routeInfo.pushedByRoute) {
++              return locationHistory[i + 1 + delta]
+             }
++          }
+         }
+         return undefined;
+     };
