@@ -59,6 +59,10 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
+    match /family-crawlers/{familyCrawlerId} {
+      allow read, write: if false;
+    }
+
     match /schema-migrations/self {
       allow read, write: if false;
     }

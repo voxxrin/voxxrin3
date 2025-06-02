@@ -268,6 +268,22 @@ const FIREBASE_MANAGED_COLLECTIONS = [
       })
     }]
   }, {
+    name: '/family-crawlers/{familyCrawlerId}',
+    docInitializations: [{
+      name: 'default',
+      collection: '/family-crawlers',
+      path: '/family-crawlers/a-family-crawler',
+      newDocPath: '/family-crawlers/another-family-crawler',
+      data: () => ({
+        kind: 'devoxxians',
+        url: 'https://path-to-descriptor.json',
+      }),
+      updatedData: () => ({
+        kind: 'devoxxians',
+        descriptorUrl: 'https://path-to-descriptor2.json',
+      })
+    }]
+  }, {
     name: '/schema-migrations/self',
     docInitializations: [{
       name: 'default',
@@ -1034,6 +1050,18 @@ const COLLECTIONS: CollectionDescriptor[] = [{
     }),
     tests: (userContext: UserContext) => {
       ensureCollectionFollowAccessPermissions('/crawlers/{crawlerId}', userContext,
+        {
+          read: false, write: false
+        })
+    }
+}, {
+    name: "/family-crawlers",
+    aroundTests: (_: UserContext) => ({
+        beforeEach: [],
+        afterEach: [],
+    }),
+    tests: (userContext: UserContext) => {
+      ensureCollectionFollowAccessPermissions('/family-crawlers/{familyCrawlerId}', userContext,
         {
           read: false, write: false
         })
