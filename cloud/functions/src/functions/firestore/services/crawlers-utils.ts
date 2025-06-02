@@ -2,6 +2,7 @@ import {db} from "../../../firebase";
 import {FIREBASE_CRAWLER_DESCRIPTOR_PARSER} from "../../../crawlers/crawler-parsers";
 import {firestore} from "firebase-admin";
 import {CollectionReference, Query} from "firebase-admin/firestore";
+import { z } from "zod";
 
 
 function zodParseCrawlerSnapshot(snap: firestore.QueryDocumentSnapshot) {
@@ -28,4 +29,9 @@ export async function getAllCrawlers() {
 
 export async function getAllRawCrawlers() {
   return getRawCrawlersMatching(collection => collection);
+}
+
+export async function createCrawler(eventId: string, crawler: z.infer<typeof FIREBASE_CRAWLER_DESCRIPTOR_PARSER>) {
+  const doc = db.collection('crawlers').doc(eventId);
+  await doc.set(crawler);
 }

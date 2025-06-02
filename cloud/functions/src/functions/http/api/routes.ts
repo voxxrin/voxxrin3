@@ -8,6 +8,7 @@ import {RouteParameters} from "express-serve-static-core";
 import {debug, exposeLogContext} from "../../../firebase";
 import {sendResponseMessage} from "../utils";
 import {publicEndpoint} from "./route-access";
+import {declareFamilyEventsHttpRoutes} from "./family-events-routes";
 
 export function declareExpressHttpRoutes(app: Express) {
   // For testing purposes only
@@ -19,6 +20,7 @@ export function declareExpressHttpRoutes(app: Express) {
 
   declareEventHttpRoutes(app);
   declareAdminHttpRoutes(app);
+  declareFamilyEventsHttpRoutes(app);
 }
 
 

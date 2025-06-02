@@ -15,7 +15,11 @@ export type FamilyEventsStatsAccessToken = {
 
 export type FamilyOrganizerToken = {
     type: "FamilyOrganizerToken",
-    eventFamilies: string[]
+    eventFamilies: string[],
+    familyCrawlers: Array<{
+      eventFamily: string,
+      token: string,
+    }>
 }
 
 export type FamilyRoomStatsContributorToken = {

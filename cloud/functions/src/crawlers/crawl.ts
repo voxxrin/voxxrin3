@@ -98,6 +98,8 @@ async function resolveCrawlerDescriptorsMatchingWithToken(crawlingToken: string)
   return fbCrawlerDescriptors;
 }
 
+export type CrawlingResult = Awaited<ReturnType<typeof crawlAll>>[number]
+
 const crawlAll = async function(criteria: CrawlCriteria) {
     if(!criteria.crawlingToken) {
         throw new Error(`Missing crawlingToken mandatory query parameter !`)
