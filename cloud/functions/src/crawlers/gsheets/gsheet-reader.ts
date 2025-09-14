@@ -31,6 +31,10 @@ type FullColDescriptorOf<COL_DESC extends ColDescriptor = ColDescriptor> = {
       : { -readonly [fieldName in keyof COL_DESC[colDescriptorKey]]: COL_DESC[colDescriptorKey][fieldName]};
 }
 
+type GSheetReaderDescriptorResults<DESC extends GSheetDescriptors> = {
+  [key in keyof DESC]: GSheetRowType<GSheetFullColDescriptorOf<DESC, key>>[]
+}
+
 export function createDescriptor<COLS_DESCRIPTOR extends FullColDescriptor>(descriptor: GSheetReaderDescriptor<COLS_DESCRIPTOR>): GSheetReaderDescriptor<COLS_DESCRIPTOR> {
   return descriptor;
 }
@@ -85,6 +89,35 @@ export class GSheetReader<DESC extends GSheetDescriptors> {
     })
 
     this.sheets = googleSheets({ auth, version: 'v4' });
+  }
+
+  async readAll(gsheetId: string) {
+    const promiseResults = await Promise.allSettled(
+      Object.keys(this.descriptor).map(async fieldName => ({
+          content: await this.read(gsheetId, fieldName as keyof DESC & string),
+          fieldName,
+      }))
+    );
+
+    const reasons = promiseResults.map(result => result.status === 'rejected'
+      ? result.reason
+      : undefined
+    ).filter(reason => !!reason);
+    if (reasons.length > 0) {
+      throw new Error('Failed to read GSheets: ' + reasons.map(error => error.message).join(', '));
+    }
+
+    const byDescriptorNameResults = promiseResults
+      .map(result => result.status === 'fulfilled' ? result.value : undefined)
+      .filter(value => !!value)
+      .map(value => value!)
+      .reduce((byDescriptorNameResult, promiseResult) => {
+        const key: keyof DESC & string = promiseResult.fieldName;
+        byDescriptorNameResult[key] = promiseResult.content;
+        return byDescriptorNameResult;
+      }, {} as Partial<GSheetReaderDescriptorResults<DESC>>) as GSheetReaderDescriptorResults<DESC>;
+
+    return byDescriptorNameResults;
   }
 
   async read<NAME extends string & keyof DESC>(spreadsheetId: string, name: NAME) {
