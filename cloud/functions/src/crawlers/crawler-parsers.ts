@@ -336,6 +336,7 @@ export const FIREBASE_CRAWLER_DESCRIPTOR_PARSER = z.object({
     z.object({ kind: z.literal("codeurs-en-seine"), descriptorUrl: z.string() }),
     z.object({ kind: z.literal("openplanner"), descriptorUrl: z.string() }),
     z.object({ kind: z.literal("single-file"), descriptorUrl: z.string() }),
+    z.object({ kind: z.literal("gsheets"), gsheetId: z.string() }),
 ])).and(z.union([
   z.object({
     visibility: z.literal("public").default("public"),

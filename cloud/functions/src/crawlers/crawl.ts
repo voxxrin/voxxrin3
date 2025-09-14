@@ -39,31 +39,38 @@ export type CrawlerKind<ZOD_TYPE extends z.ZodType> = {
 async function resolveEventFrom(crawlerDescriptor: z.infer<typeof FIREBASE_CRAWLER_DESCRIPTOR_PARSER>, eventId: string): Promise<{
   event: FullEvent
 } & Record<string, any>> {
-    const module = await match(crawlerDescriptor)
-      .with({ kind: "devoxx" }, async () => import("./devoxx/crawler"))
-      .with({ kind: "devoxx-scala" }, async () => import("./devoxx-scala/crawler"))
-      .with({ kind: "la-product-conf" }, async () => import("./la-product-conf/crawler"))
-      .with({ kind: "web2day" }, async () => import("./web2day/crawler"))
-      .with({ kind: "camping-des-speakers" }, async () => import("./camping-des-speakers/crawler"))
-      .with({ kind: "jugsummercamp" }, async () => import("./jugsummercamp/crawler"))
-      .with({ kind: "bdxio" }, async () => import("./bdxio/crawler"))
-      .with({ kind: "codeurs-en-seine" }, async () => import("./codeurs-en-seine/crawler"))
-      .with({ kind: "openplanner" }, async () => import("./openplanner/crawler"))
-      .with({ kind: "single-file" }, async () => import("./single-file/crawler"))
-      .exhaustive()
 
-    if(!module || !module.default) {
-      throw new Error(`Error: no crawler found for kind: ${crawlerDescriptor.kind} (with id=${eventId})`)
+    if(crawlerDescriptor.kind === 'gsheets') {
+      const crawler = await import("./gsheets/gsheets-crawler")
+      const event = await crawler.crawlGsheet(eventId, crawlerDescriptor.gsheetId);
+      return { event, gsheetIdUsed: crawlerDescriptor.gsheetId };
+    } else {
+      const module = await match(crawlerDescriptor)
+        .with({ kind: "devoxx" }, async () => import("./devoxx/crawler"))
+        .with({ kind: "devoxx-scala" }, async () => import("./devoxx-scala/crawler"))
+        .with({ kind: "la-product-conf" }, async () => import("./la-product-conf/crawler"))
+        .with({ kind: "web2day" }, async () => import("./web2day/crawler"))
+        .with({ kind: "camping-des-speakers" }, async () => import("./camping-des-speakers/crawler"))
+        .with({ kind: "jugsummercamp" }, async () => import("./jugsummercamp/crawler"))
+        .with({ kind: "bdxio" }, async () => import("./bdxio/crawler"))
+        .with({ kind: "codeurs-en-seine" }, async () => import("./codeurs-en-seine/crawler"))
+        .with({ kind: "openplanner" }, async () => import("./openplanner/crawler"))
+        .with({ kind: "single-file" }, async () => import("./single-file/crawler"))
+        .exhaustive()
+
+      if(!module || !module.default) {
+        throw new Error(`Error: no crawler found for kind: ${crawlerDescriptor.kind} (with id=${eventId})`)
+      }
+
+      const crawler = module.default;
+
+      info(`crawling event ${eventId} of type [${crawlerDescriptor.kind}]...`)
+      const crawlerDescriptorContent = await http.get(crawlerDescriptor.descriptorUrl)
+      const crawlerKindDescriptor: any = crawler.descriptorParser.parse(crawlerDescriptorContent);
+
+      const event = await crawler.crawlerImpl(eventId, crawlerKindDescriptor, { dayIds: undefined });
+      return { event, descriptorUrlUsed: crawlerDescriptor.descriptorUrl };
     }
-
-    const crawler = module.default;
-
-    info(`crawling event ${eventId} of type [${crawlerDescriptor.kind}]...`)
-    const crawlerDescriptorContent = await http.get(crawlerDescriptor.descriptorUrl)
-    const crawlerKindDescriptor: any = crawler.descriptorParser.parse(crawlerDescriptorContent);
-
-    const event = await crawler.crawlerImpl(eventId, crawlerKindDescriptor, { dayIds: undefined });
-    return { event, descriptorUrlUsed: crawlerDescriptor.descriptorUrl };
 }
 
 export const TALK_FORMAT_FALLBACK_COLORS: HexColor[] = [
