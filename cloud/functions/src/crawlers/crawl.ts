@@ -36,25 +36,34 @@ export type CrawlerKind<ZOD_TYPE extends z.ZodType> = {
     descriptorParser: ZOD_TYPE
 }
 
-async function resolveCrawler(kind: string): Promise<CrawlerKind<any>|undefined> {
-    const crawler = await match(kind)
-        .with("devoxx", async () => import("./devoxx/crawler"))
-        .with("devoxx-scala", async () => import("./devoxx-scala/crawler"))
-        .with("la-product-conf", async () => import("./la-product-conf/crawler"))
-        .with("web2day", async () => import("./web2day/crawler"))
-        .with("camping-des-speakers", async () => import("./camping-des-speakers/crawler"))
-        .with("jugsummercamp", async () => import("./jugsummercamp/crawler"))
-        .with("bdxio", async () => import("./bdxio/crawler"))
-        .with("codeurs-en-seine", async () => import("./codeurs-en-seine/crawler"))
-        .with("openplanner", async () => import("./openplanner/crawler"))
-        .with("single-file", async () => import("./single-file/crawler"))
-        .run()
+async function resolveEventFrom(crawlerDescriptor: z.infer<typeof FIREBASE_CRAWLER_DESCRIPTOR_PARSER>, eventId: string): Promise<{
+  event: FullEvent
+} & Record<string, any>> {
+    const module = await match(crawlerDescriptor)
+      .with({ kind: "devoxx" }, async () => import("./devoxx/crawler"))
+      .with({ kind: "devoxx-scala" }, async () => import("./devoxx-scala/crawler"))
+      .with({ kind: "la-product-conf" }, async () => import("./la-product-conf/crawler"))
+      .with({ kind: "web2day" }, async () => import("./web2day/crawler"))
+      .with({ kind: "camping-des-speakers" }, async () => import("./camping-des-speakers/crawler"))
+      .with({ kind: "jugsummercamp" }, async () => import("./jugsummercamp/crawler"))
+      .with({ kind: "bdxio" }, async () => import("./bdxio/crawler"))
+      .with({ kind: "codeurs-en-seine" }, async () => import("./codeurs-en-seine/crawler"))
+      .with({ kind: "openplanner" }, async () => import("./openplanner/crawler"))
+      .with({ kind: "single-file" }, async () => import("./single-file/crawler"))
+      .exhaustive()
 
-    if(!crawler) {
-        return undefined;
+    if(!module || !module.default) {
+      throw new Error(`Error: no crawler found for kind: ${crawlerDescriptor.kind} (with id=${eventId})`)
     }
 
-    return crawler.default;
+    const crawler = module.default;
+
+    info(`crawling event ${eventId} of type [${crawlerDescriptor.kind}]...`)
+    const crawlerDescriptorContent = await http.get(crawlerDescriptor.descriptorUrl)
+    const crawlerKindDescriptor: any = crawler.descriptorParser.parse(crawlerDescriptorContent);
+
+    const event = await crawler.crawlerImpl(eventId, crawlerKindDescriptor, { dayIds: undefined });
+    return { event, descriptorUrlUsed: crawlerDescriptor.descriptorUrl };
 }
 
 export const TALK_FORMAT_FALLBACK_COLORS: HexColor[] = [
@@ -125,16 +134,7 @@ const crawlAll = async function(criteria: CrawlCriteria) {
         try {
             const start = Temporal.Now.instant()
 
-            const crawler = await resolveCrawler(crawlerDescriptor.kind);
-            if(!crawler) {
-                throw new Error(`Error: no crawler found for kind: ${crawlerDescriptor.kind} (with id=${eventId})`)
-            }
-
-            info(`crawling event ${eventId} of type [${crawlerDescriptor.kind}]...`)
-            const crawlerDescriptorContent = await http.get(crawlerDescriptor.descriptorUrl)
-            const crawlerKindDescriptor = crawler.descriptorParser.parse(crawlerDescriptorContent);
-
-            const event = await crawler.crawlerImpl(eventId, crawlerKindDescriptor, { dayIds: criteria.dayIds });
+            const { event, ...rest } = await resolveEventFrom(crawlerDescriptor, eventId);
             const messages = await sanityCheckEvent(event);
 
             const errorMessages = messages.filter(message => message.severity === 'ERROR');
@@ -192,7 +192,7 @@ const crawlAll = async function(criteria: CrawlCriteria) {
             return {
                 eventId,
                 days: event.daySchedules.map(ds => ds.day),
-                descriptorUrlUsed: crawlerDescriptor.descriptorUrl,
+                ...rest,
                 durationInSeconds: start.until(Temporal.Now.instant()).total('seconds'),
                 messages
             }
