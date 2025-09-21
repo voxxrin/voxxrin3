@@ -7,7 +7,8 @@ import {
 } from "./gsheet-reader";
 import { match, P } from "ts-pattern";
 import {HexColor, ISOLocalDate} from "@shared/type-utils";
-import {SOCIAL_MEDIA_TYPE} from "../crawler-parsers";
+import {HEX_COLOR_PARSER, ISO_LOCAL_DATE_PARSER, SOCIAL_MEDIA_TYPE} from "../crawler-parsers";
+import {logger} from "firebase-functions";
 
 
 const GSHEETS_EVENT_DESCRIPTORS = {
@@ -43,7 +44,7 @@ const GSHEETS_EVENT_DESCRIPTORS = {
     sheetName: "Event description",
     firstRowIsHeader: true,
     minRow: 2, maxRow: 17,
-    cols: createColDescriptor({id: 'E', localDate: {col: 'F', parser: z.string().regex(/\d{4}-\d{2}-\d{2}/).transform(localDate => localDate as ISOLocalDate) },}),
+    cols: createColDescriptor({id: 'E', localDate: {col: 'F', parser: ISO_LOCAL_DATE_PARSER },}),
     ignoreRowWhen: (rowType) => !rowType.id
   }),
   floorPlans: createDescriptor({
@@ -189,7 +190,7 @@ const GSHEETS_EVENT_DESCRIPTORS = {
 } satisfies GSheetDescriptors;
 
 
-function transformRows<PARSER extends ZodType>(parser: PARSER, init = {} as Partial<z.infer<PARSER>>) {
+function transformRows<PARSER extends ZodType>(context: string, parser: PARSER, init = {} as Partial<z.infer<PARSER>>) {
   return <T>(
     rows: T[],
     resultBuilder: (buildingResult: Partial<z.infer<PARSER>>, row: T) => void
@@ -199,7 +200,14 @@ function transformRows<PARSER extends ZodType>(parser: PARSER, init = {} as Part
       return buildingResult;
     }, init);
 
-    return parser.parse(result);
+    const parsingResult = parser.safeParse(result);
+    if(parsingResult.success) {
+      return parsingResult.data;
+    } else {
+      const errorMessage = `Error while building gsheet content for context=${context}:\n${JSON.stringify(parsingResult.error)}`
+      logger.error(errorMessage)
+      throw new Error(errorMessage);
+    }
   }
 }
 
@@ -208,7 +216,7 @@ export async function crawlGsheet(eventId: string, gsheetId: string): Promise<Fu
 
   const gsheetContent = await gsheetReader.readAll(gsheetId);
 
-  const mainDescription = transformRows(z.object({
+  const mainDescription = transformRows('mainDescription', z.object({
     title: z.string(), headingTitle: z.string(), description: z.string().optional(),
     timezone: z.string(), keywords: z.array(z.string()), peopleDescription: z.string().optional(),
     backgroundUrl: z.string(), logoUrl: z.string(), ticketingUrl: z.string(),
@@ -218,7 +226,7 @@ export async function crawlGsheet(eventId: string, gsheetId: string): Promise<Fu
       .with({ name: P.string.regex(/^heading\s+title/gi) }, ({ value }) => mainDescription.headingTitle = value)
       .with({ name: P.string.regex(/^description/gi) }, ({ value }) => mainDescription.description = value)
       .with({ name: P.string.regex(/^timezone/gi) }, ({ value }) => mainDescription.timezone = value)
-      .with({ name: P.string.regex(/keywords/gi) }, ({ value }) => mainDescription.keywords = value?.split("\s*,\s*") || [])
+      .with({ name: P.string.regex(/keywords/gi) }, ({ value }) => mainDescription.keywords = value?.split(/\s*,\s*/gi) || [])
       .with({ name: P.string.regex(/^people\s+description/gi) }, ({ value }) => mainDescription.peopleDescription = value)
       .with({ name: P.string.regex(/^background\s+url/gi) }, ({ value }) => mainDescription.backgroundUrl = value)
       .with({ name: P.string.regex(/^logo\s+url/gi) }, ({ value }) => mainDescription.logoUrl = value)
@@ -226,7 +234,7 @@ export async function crawlGsheet(eventId: string, gsheetId: string): Promise<Fu
       .run();
   });
 
-  const eventLocation = transformRows(z.object({
+  const eventLocation = transformRows('eventLocation', z.object({
     address: z.string(), city: z.string(), country: z.string(),
     latitude: z.number(), longitude: z.number(),
   }))(gsheetContent.eventLocation, (eventLocation, row) => {
@@ -239,13 +247,10 @@ export async function crawlGsheet(eventId: string, gsheetId: string): Promise<Fu
       .run();
   });
 
-  const theming = transformRows(z.object({
-    primaryHex: z.string().regex(/^#[0-9a-fA-F]{6}$/).transform(color => color as HexColor),
-    primaryContrastHex: z.string().regex(/^#[0-9a-fA-F]{6}$/).transform(color => color as HexColor),
-    secondaryHex: z.string().regex(/^#[0-9a-fA-F]{6}$/).transform(color => color as HexColor),
-    secondaryContrastHex: z.string().regex(/^#[0-9a-fA-F]{6}$/).transform(color => color as HexColor),
-    tertiaryHex: z.string().regex(/^#[0-9a-fA-F]{6}$/).transform(color => color as HexColor),
-    tertiaryContrastHex: z.string().regex(/^#[0-9a-fA-F]{6}$/).transform(color => color as HexColor),
+  const theming = transformRows('theming', z.object({
+    primaryHex: HEX_COLOR_PARSER, primaryContrastHex: HEX_COLOR_PARSER,
+    secondaryHex: HEX_COLOR_PARSER, secondaryContrastHex: HEX_COLOR_PARSER,
+    tertiaryHex: HEX_COLOR_PARSER, tertiaryContrastHex: HEX_COLOR_PARSER,
   }))(gsheetContent.theming, (theming, row) => {
     match(row)
       .with({ colorName: P.string.regex(/^primary\s+contrast/gi) }, ({ color }) => theming.primaryContrastHex = color as HexColor)
@@ -257,7 +262,7 @@ export async function crawlGsheet(eventId: string, gsheetId: string): Promise<Fu
       .run();
   });
 
-  const socialMedias = transformRows(z.array(z.object({
+  const socialMedias = transformRows('socialMedias', z.array(z.object({
     type: SOCIAL_MEDIA_TYPE, href: z.string()
   })), [])(gsheetContent.socialMedia, (socialMedia, row) => {
     match(row)
@@ -274,7 +279,58 @@ export async function crawlGsheet(eventId: string, gsheetId: string): Promise<Fu
       .otherwise(() => { /* no-op */ });
   });
 
+  const featureFlags = transformRows('featureFlags', z.object({
+    favoritesEnabled: z.boolean().default(true),
+    roomsDisplayed: z.boolean().default(false),
+    showInfosTab: z.boolean().default(true),
+    showRoomCapacityIndicator: z.boolean().default(false),
+    hideLanguages: z.array(z.string()).default([]),
+    feedbacksEnabled: z.boolean().default(false),
+    hideSchedule: z.boolean().default(true),
+    remindMeOnceVideosAreAvailableEnabled: z.boolean().default(false),
+  }))(gsheetContent.features, (featureFlags, row) => {
+    match(row)
+      .with({ flagName: P.string.regex(/favorites/gi) }, ({ value }) =>  featureFlags.favoritesEnabled = (value || '').toLowerCase().includes('enabled'))
+      .with({ flagName: P.string.regex(/rooms\s+displayed/gi) }, ({ value }) => featureFlags.roomsDisplayed = (value || '').toLowerCase().includes('enabled'))
+      .with({ flagName: P.string.regex(/show\s+infos\s+tab/gi) }, ({ value }) => featureFlags.showInfosTab = (value || '').toLowerCase().includes('enabled'))
+      .with({ flagName: P.string.regex(/show\s+live.*capacity.*indicator/gi) }, ({ value }) => featureFlags.showRoomCapacityIndicator = (value || '').toLowerCase().includes('enabled'))
+      .with({ flagName: P.string.regex(/hide\s+language/gi) }, ({ value }) => featureFlags.hideLanguages = value?.split(/\s*,\s*/gi) || [])
+      .with({ flagName: P.string.regex(/feedbacks/gi) }, ({ value }) => featureFlags.feedbacksEnabled = (value || '').toLowerCase().includes('enabled'))
+      .with({ flagName: P.string.regex(/hide\s+schedule/gi) }, ({ value }) => featureFlags.hideSchedule = (value || '').toLowerCase().includes('enabled'))
+      .run();
+  });
 
+  const formattings = transformRows('formattings', z.object({
+    talkFormatTitle: z.union([z.literal('with-duration'), z.literal('without-duration')]).default('with-duration'),
+    parseMarkdownOn: z.array(z.union([z.literal('talk-summary'), z.literal('speaker-bio')])).default(['talk-summary', 'speaker-bio']),
+  }))(gsheetContent.formattings, (formattings, row) => {
+    match(row)
+      .with({ formatName: P.string.regex(/talk\s+title\s+format/gi) }, ({ value }) =>  formattings.talkFormatTitle = (value || '').toLowerCase().includes('with-duration') ? 'with-duration' as const : 'without-duration' as const)
+      .with({ formatName: P.string.regex(/parse\s+markdown/gi) }, ({ value }) => formattings.parseMarkdownOn = (value?.split(/\s*,\s*/gi) || []).map(str => str as 'talk-summary'|'speaker-bio'))
+      .run();
+  });
+
+  const recordingConfig = transformRows('recordingCrawlerConfiguration', z.object({
+    platform: z.literal('youtube').optional(),
+    youtubeHandle: z.string().optional(),
+    recordedFormatIds: z.array(z.string()).optional(),
+    notRecordedFormatIds: z.array(z.string()).optional(),
+    recordedRoomIds: z.array(z.string()).optional(),
+    notRecordedRoomIds: z.array(z.string()).optional(),
+    ignoreVideosPublishedAfter: ISO_LOCAL_DATE_PARSER.optional(),
+    excludeTitleWordsFromMatching: z.array(z.string()).optional(),
+  }))(gsheetContent.recordingCrawlerConfiguration, (config, row) => {
+    match(row)
+      .with({ name: P.string.regex(/platform/gi) }, ({ value }) =>  config.platform = value === 'youtube' ? 'youtube' as const : undefined)
+      .with({ name: P.string.regex(/youtube\s+handle/gi) }, ({ value }) => config.youtubeHandle = value)
+      .with({ name: P.string.regex(/ignore\s+videos\s+published\s+after/gi) }, ({ value }) => config.ignoreVideosPublishedAfter = value as ISOLocalDate)
+      .with({ name: P.string.regex(/not\s+recorded\s+format\s+ids/gi) }, ({ value }) => config.notRecordedFormatIds = (value?.split(/\s*,\s*/gi) || []))
+      .with({ name: P.string.regex(/recorded\s+format\s+ids/gi) }, ({ value }) => config.recordedFormatIds = (value?.split(/\s*,\s*/gi) || []))
+      .with({ name: P.string.regex(/not\s+recorded\s+room\s+ids/gi) }, ({ value }) => config.notRecordedRoomIds = (value?.split(/\s*,\s*/gi) || []))
+      .with({ name: P.string.regex(/recorded\s+room\s+ids/gi) }, ({ value }) => config.recordedRoomIds = (value?.split(/\s*,\s*/gi) || []))
+      .with({ name: P.string.regex(/words\s+excluded/gi) }, ({ value }) => config.excludeTitleWordsFromMatching = (value?.split(/\s*,\s*/gi) || []))
+      .run();
+  });
 
   const schedule = await gsheetReader.read(gsheetId, 'schedule');
   type ScheduleBaseEntry = {
@@ -382,13 +438,13 @@ export async function crawlGsheet(eventId: string, gsheetId: string): Promise<Fu
       headingSubTitle: "", // TODO
       headingBackground: "", // TODO
       features: {
-        roomsDisplayed: false, // TODO
-        favoritesEnabled: true, // TODO
+        favoritesEnabled: featureFlags.favoritesEnabled,
+        roomsDisplayed: featureFlags.roomsDisplayed,
+        showInfosTab: featureFlags.showInfosTab,
+        showRoomCapacityIndicator: featureFlags.showRoomCapacityIndicator,
+        hideLanguages: featureFlags.hideLanguages,
         remindMeOnceVideosAreAvailableEnabled: false, // TODO
-        showInfosTab: true, // TODO
         // for multi-lang conferences, where we want to hide "default" (implicit) conference lang (ex: in devoxxfr, we'd hide FR)
-        hideLanguages: [], // TODO
-        showRoomCapacityIndicator: false, // TODO
         ratings: {
           bingo: {
             enabled: false, // TODO
@@ -413,8 +469,9 @@ export async function crawlGsheet(eventId: string, gsheetId: string): Promise<Fu
           minimumAverageScoreToBeConsidered: undefined, // TODO
           numberOfDailyTopTalksConsidered: 42, // TODO
         },
-        recording: undefined, // TODO
-
+        recording: match(recordingConfig)
+          .with({ youtubeHandle: P.nonNullable, platform: P.nonNullable}, recordingConfig => recordingConfig)
+          .otherwise(() => undefined),
       }, // TODO
       talkFormats: [], // TODO
       talkTracks: [], // TODO
@@ -425,7 +482,7 @@ export async function crawlGsheet(eventId: string, gsheetId: string): Promise<Fu
         socialMedias,
         sponsors: undefined, // TODO
       },
-      formattings: { talkFormatTitle: 'with-duration', parseMarkdownOn: [ 'talk-summary', 'speaker-bio' ] }, // TODO
+      formattings,
     }
   }
 
