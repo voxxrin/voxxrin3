@@ -1,4 +1,4 @@
-import {z, ZodObject} from "zod";
+import {z, ZodType} from "zod";
 import {FullEvent} from "../../models/Event";
 import {
   createColDescriptor, createDescriptor,
@@ -6,6 +6,8 @@ import {
   GSheetReader
 } from "./gsheet-reader";
 import { match, P } from "ts-pattern";
+import {HexColor, ISOLocalDate} from "@shared/type-utils";
+import {SOCIAL_MEDIA_TYPE} from "../crawler-parsers";
 
 
 const GSHEETS_EVENT_DESCRIPTORS = {
@@ -34,14 +36,14 @@ const GSHEETS_EVENT_DESCRIPTORS = {
     sheetName: "Event description",
     firstRowIsHeader: true,
     minRow: 30,
-    cols: createColDescriptor({socialMediaName: 'A', url: 'B?',}),
+    cols: createColDescriptor({socialMediaName: 'A', href: 'B?',}),
     ignoreRowWhen: (rowType) => !rowType.socialMediaName
   }),
   days: createDescriptor({
     sheetName: "Event description",
     firstRowIsHeader: true,
     minRow: 2, maxRow: 17,
-    cols: createColDescriptor({id: 'E', localDate: {col: 'F', parser: z.string().regex(/\d{4}-\d{2}-\d{2}/)},}),
+    cols: createColDescriptor({id: 'E', localDate: {col: 'F', parser: z.string().regex(/\d{4}-\d{2}-\d{2}/).transform(localDate => localDate as ISOLocalDate) },}),
     ignoreRowWhen: (rowType) => !rowType.id
   }),
   floorPlans: createDescriptor({
@@ -187,7 +189,7 @@ const GSHEETS_EVENT_DESCRIPTORS = {
 } satisfies GSheetDescriptors;
 
 
-function transformRows<PARSER extends ZodObject<any>>(parser: PARSER) {
+function transformRows<PARSER extends ZodType>(parser: PARSER, init = {} as Partial<z.infer<PARSER>>) {
   return <T>(
     rows: T[],
     resultBuilder: (buildingResult: Partial<z.infer<PARSER>>, row: T) => void
@@ -195,7 +197,7 @@ function transformRows<PARSER extends ZodObject<any>>(parser: PARSER) {
     const result = rows.reduce((buildingResult, row) => {
       resultBuilder(buildingResult, row);
       return buildingResult;
-    }, {} as Partial<z.infer<PARSER>>);
+    }, init);
 
     return parser.parse(result);
   }
@@ -206,25 +208,73 @@ export async function crawlGsheet(eventId: string, gsheetId: string): Promise<Fu
 
   const gsheetContent = await gsheetReader.readAll(gsheetId);
 
-  const rawMainDescription = gsheetContent.mainDescription;
-
   const mainDescription = transformRows(z.object({
     title: z.string(), headingTitle: z.string(), description: z.string().optional(),
     timezone: z.string(), keywords: z.array(z.string()), peopleDescription: z.string().optional(),
     backgroundUrl: z.string(), logoUrl: z.string(), ticketingUrl: z.string(),
-  }))(rawMainDescription, (mainDescription, row) => {
+  }))(gsheetContent.mainDescription, (mainDescription, row) => {
     match(row)
-      .with({ name: P.string.regex(/^title/) }, ({ value }) => mainDescription.title = value)
-      .with({ name: P.string.regex(/^heading\s+title/) }, ({ value }) => mainDescription.headingTitle = value)
-      .with({ name: P.string.regex(/^description/) }, ({ value }) => mainDescription.description = value)
-      .with({ name: P.string.regex(/^timezone/) }, ({ value }) => mainDescription.timezone = value)
-      .with({ name: P.string.regex(/keywords/) }, ({ value }) => mainDescription.keywords = value?.split("\s*,\s*") || [])
-      .with({ name: P.string.regex(/^people\s+description/) }, ({ value }) => mainDescription.peopleDescription = value)
-      .with({ name: P.string.regex(/^background\s+url/) }, ({ value }) => mainDescription.backgroundUrl = value)
-      .with({ name: P.string.regex(/^logo\s+url/) }, ({ value }) => mainDescription.logoUrl = value)
-      .with({ name: P.string.regex(/^ticketing\s+url/) }, ({ value }) => mainDescription.ticketingUrl = value)
+      .with({ name: P.string.regex(/^title/gi) }, ({ value }) => mainDescription.title = value)
+      .with({ name: P.string.regex(/^heading\s+title/gi) }, ({ value }) => mainDescription.headingTitle = value)
+      .with({ name: P.string.regex(/^description/gi) }, ({ value }) => mainDescription.description = value)
+      .with({ name: P.string.regex(/^timezone/gi) }, ({ value }) => mainDescription.timezone = value)
+      .with({ name: P.string.regex(/keywords/gi) }, ({ value }) => mainDescription.keywords = value?.split("\s*,\s*") || [])
+      .with({ name: P.string.regex(/^people\s+description/gi) }, ({ value }) => mainDescription.peopleDescription = value)
+      .with({ name: P.string.regex(/^background\s+url/gi) }, ({ value }) => mainDescription.backgroundUrl = value)
+      .with({ name: P.string.regex(/^logo\s+url/gi) }, ({ value }) => mainDescription.logoUrl = value)
+      .with({ name: P.string.regex(/^ticketing\s+url/gi) }, ({ value }) => mainDescription.ticketingUrl = value)
       .run();
   });
+
+  const eventLocation = transformRows(z.object({
+    address: z.string(), city: z.string(), country: z.string(),
+    latitude: z.number(), longitude: z.number(),
+  }))(gsheetContent.eventLocation, (eventLocation, row) => {
+    match(row)
+      .with({ name: P.string.regex(/^address/gi) }, ({ value }) => eventLocation.address = value)
+      .with({ name: P.string.regex(/^city/gi) }, ({ value }) => eventLocation.city = value)
+      .with({ name: P.string.regex(/^country/gi) }, ({ value }) => eventLocation.country = value)
+      .with({ name: P.string.regex(/^latitude/gi) }, ({ value }) => eventLocation.latitude = Number(value))
+      .with({ name: P.string.regex(/^longitude/gi) }, ({ value }) => eventLocation.longitude = Number(value))
+      .run();
+  });
+
+  const theming = transformRows(z.object({
+    primaryHex: z.string().regex(/^#[0-9a-fA-F]{6}$/).transform(color => color as HexColor),
+    primaryContrastHex: z.string().regex(/^#[0-9a-fA-F]{6}$/).transform(color => color as HexColor),
+    secondaryHex: z.string().regex(/^#[0-9a-fA-F]{6}$/).transform(color => color as HexColor),
+    secondaryContrastHex: z.string().regex(/^#[0-9a-fA-F]{6}$/).transform(color => color as HexColor),
+    tertiaryHex: z.string().regex(/^#[0-9a-fA-F]{6}$/).transform(color => color as HexColor),
+    tertiaryContrastHex: z.string().regex(/^#[0-9a-fA-F]{6}$/).transform(color => color as HexColor),
+  }))(gsheetContent.theming, (theming, row) => {
+    match(row)
+      .with({ colorName: P.string.regex(/^primary\s+contrast/gi) }, ({ color }) => theming.primaryContrastHex = color as HexColor)
+      .with({ colorName: P.string.regex(/^primary/gi) }, ({ color }) => theming.primaryHex = color as HexColor)
+      .with({ colorName: P.string.regex(/^secondary\s+contrast/gi) }, ({ color }) => theming.secondaryContrastHex = color as HexColor)
+      .with({ colorName: P.string.regex(/^secondary/gi) }, ({ color }) => theming.secondaryHex = color as HexColor)
+      .with({ colorName: P.string.regex(/^tertiary\s+contrast/gi) }, ({ color }) => theming.tertiaryContrastHex = color as HexColor)
+      .with({ colorName: P.string.regex(/^tertiary/gi) }, ({ color }) => theming.tertiaryHex = color as HexColor)
+      .run();
+  });
+
+  const socialMedias = transformRows(z.array(z.object({
+    type: SOCIAL_MEDIA_TYPE, href: z.string()
+  })), [])(gsheetContent.socialMedia, (socialMedia, row) => {
+    match(row)
+      .with({ socialMediaName: P.string.regex(/website/gi), href: P.nonNullable }, ({ href }) =>  socialMedia.push({ type: 'website' as const, href }))
+      .with({ socialMediaName: P.string.regex(/twitter/gi), href: P.nonNullable }, ({ href }) => socialMedia.push({ type: 'twitter' as const, href }))
+      .with({ socialMediaName: P.string.regex(/youtube/gi), href: P.nonNullable }, ({ href }) => socialMedia.push({ type: 'youtube' as const, href }))
+      .with({ socialMediaName: P.string.regex(/linkedin/gi), href: P.nonNullable }, ({ href }) => socialMedia.push({ type: 'linkedin' as const, href }))
+      .with({ socialMediaName: P.string.regex(/flickr/gi), href: P.nonNullable }, ({ href }) => socialMedia.push({ type: 'flickr' as const, href }))
+      .with({ socialMediaName: P.string.regex(/mastodon/gi), href: P.nonNullable }, ({ href }) => socialMedia.push({ type: 'mastodon' as const, href }))
+      .with({ socialMediaName: P.string.regex(/instagram/gi), href: P.nonNullable }, ({ href }) => socialMedia.push({ type: 'instagram' as const, href }))
+      .with({ socialMediaName: P.string.regex(/facebook/gi), href: P.nonNullable }, ({ href }) => socialMedia.push({ type: 'facebook' as const, href }))
+      .with({ socialMediaName: P.string.regex(/github/gi), href: P.nonNullable }, ({ href }) => socialMedia.push({ type: 'github' as const, href }))
+      .with({ socialMediaName: P.string.regex(/bluesky/gi), href: P.nonNullable }, ({ href }) => socialMedia.push({ type: 'bluesky' as const, href }))
+      .otherwise(() => { /* no-op */ });
+  });
+
+
 
   const schedule = await gsheetReader.read(gsheetId, 'schedule');
   type ScheduleBaseEntry = {
@@ -284,22 +334,20 @@ export async function crawlGsheet(eventId: string, gsheetId: string): Promise<Fu
     id: eventId,
     title: mainDescription.title,
     description: mainDescription.description,
-    days: [], // TODO
+    days: gsheetContent.days,
     timezone: mainDescription.timezone,
     keywords: mainDescription.keywords,
-    location: { country: "", city: "" }, // TODO
+    location: {
+      country: eventLocation.country,
+      city: eventLocation.city,
+      address: eventLocation.address,
+      coords: { latitude: eventLocation.latitude, longitude: eventLocation.longitude },
+    },
     peopleDescription: mainDescription.peopleDescription,
     backgroundUrl: mainDescription.backgroundUrl,
     logoUrl: mainDescription.logoUrl,
     theming: {
-      colors: { // TODO
-        primaryHex: "#", // TODO
-        primaryContrastHex: "#", // TODO
-        secondaryHex: "#", // TODO
-        secondaryContrastHex: "#", // TODO
-        tertiaryHex: "#", // TODO
-        tertiaryContrastHex: "#", // TODO
-      },
+      colors: theming,
       headingCustomStyles: null, // TODO
       headingSrcSet: null, // TODO
       customImportedFonts: null, // TODO
@@ -373,8 +421,8 @@ export async function crawlGsheet(eventId: string, gsheetId: string): Promise<Fu
       supportedTalkLanguages: [], // TODO
       rooms: [], // TODO
       infos: { // TODO
-        floorPlans: undefined, // TODO,
-        socialMedias: undefined, // TODO
+        floorPlans: gsheetContent.floorPlans,
+        socialMedias,
         sponsors: undefined, // TODO
       },
       formattings: { talkFormatTitle: 'with-duration', parseMarkdownOn: [ 'talk-summary', 'speaker-bio' ] }, // TODO
