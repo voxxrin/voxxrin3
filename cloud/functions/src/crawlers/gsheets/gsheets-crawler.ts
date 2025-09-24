@@ -134,7 +134,7 @@ const GSHEETS_EVENT_DESCRIPTORS = {
     sheetName: "Schedule setup",
     firstRowIsHeader: true,
     minRow: 2,
-    cols: createColDescriptor({id: 'A', label: 'B',}),
+    cols: createColDescriptor({id: 'A', title: 'B',}),
     ignoreRowWhen: (rowType) => !rowType.id
   }),
   scheduleFormatsSetup: createDescriptor({
@@ -144,7 +144,7 @@ const GSHEETS_EVENT_DESCRIPTORS = {
     cols: createColDescriptor({
       id: 'D', title: 'E',
       duration: { col: 'F', parser: DURATION_IN_MINUTES_PARSER },
-      themeColor: 'G',
+      themeColor: { col: 'G', parser: HEX_COLOR_PARSER },
     }),
     ignoreRowWhen: (rowType) => !rowType.id
   }),
@@ -152,14 +152,14 @@ const GSHEETS_EVENT_DESCRIPTORS = {
     sheetName: "Schedule setup",
     firstRowIsHeader: true,
     minRow: 2,
-    cols: createColDescriptor({id: 'J', label: 'K', themeColor: 'L'}),
+    cols: createColDescriptor({id: 'J', title: 'K', themeColor: { col: 'L', parser: HEX_COLOR_PARSER } }),
     ignoreRowWhen: (rowType) => !rowType.id
   }),
   scheduleSupportedTrackLanguages: createDescriptor({
     sheetName: "Schedule setup",
     firstRowIsHeader: true,
     minRow: 2,
-    cols: createColDescriptor({id: 'O', label: 'P', themeColor: 'Q'}),
+    cols: createColDescriptor({id: 'O', label: 'P', themeColor: { col: 'Q', parser: HEX_COLOR_PARSER } }),
     ignoreRowWhen: (rowType) => !rowType.id
   }),
   schedule: createDescriptor({
@@ -508,12 +508,12 @@ export async function crawlGsheet(eventId: string, gsheetId: string): Promise<Fu
         recording: match(recordingConfig)
           .with({ youtubeHandle: P.nonNullable, platform: P.nonNullable}, recordingConfig => recordingConfig)
           .otherwise(() => undefined),
-      }, // TODO
-      talkFormats: [], // TODO
-      talkTracks: [], // TODO
-      supportedTalkLanguages: [], // TODO
-      rooms: [], // TODO
-      infos: { // TODO
+      },
+      talkFormats: gsheetContent.scheduleFormatsSetup,
+      talkTracks: gsheetContent.scheduleTracksSetup,
+      supportedTalkLanguages: gsheetContent.scheduleSupportedTrackLanguages,
+      rooms: gsheetContent.scheduleRoomsSetup,
+      infos: {
         floorPlans: gsheetContent.floorPlans,
         socialMedias,
         sponsors: undefined, // TODO
