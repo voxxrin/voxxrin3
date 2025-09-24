@@ -14,6 +14,12 @@ import {
   SOCIAL_MEDIA_TYPE
 } from "../crawler-parsers";
 import {logger} from "firebase-functions";
+import {
+  Speaker, SocialLink,
+} from "@shared/daily-schedule.firestore";
+import {Talk} from "@shared/daily-schedule.firestore";
+import {fillBreakIcons, toTimezoneOffsettedDateTime} from "../utils";
+import {Temporal} from "@js-temporal/polyfill";
 
 
 const GSHEETS_EVENT_DESCRIPTORS = {
@@ -113,22 +119,24 @@ const GSHEETS_EVENT_DESCRIPTORS = {
     firstRowIsHeader: true,
     minRow: 2,
     cols: createColDescriptor({
-      fullName: 'A',
-      photoUrl: 'B?',
-      companyName: 'C?',
-      bio: 'D?',
-      website: 'E?',
-      xwitter: 'F?',
-      linkedin: 'G?',
-      mastodon: 'H?',
-      instagram: 'I?',
-      youtube: 'J?',
-      twitch: 'K?',
-      github: 'L?',
-      facebook: 'M?',
-      flickr: 'N?',
+      label: 'A',
+      id: 'B',
+      fullName: 'C',
+      photoUrl: 'D?',
+      companyName: 'E?',
+      bio: 'F?',
+      website: 'G?',
+      xwitter: 'H?',
+      linkedin: 'I?',
+      mastodon: 'J?',
+      instagram: 'K?',
+      youtube: 'L?',
+      twitch: 'M?',
+      github: 'N?',
+      facebook: 'O?',
+      flickr: 'P?',
     }),
-    ignoreRowWhen: (rowType) => !rowType.fullName,
+    ignoreRowWhen: (rowType) => !rowType.id || !rowType.label,
   }),
   scheduleRoomsSetup: createDescriptor({
     sheetName: "Schedule setup",
@@ -385,41 +393,91 @@ export async function crawlGsheet(eventId: string, gsheetId: string): Promise<Fu
   };
   type ScheduleBreak = { type: 'Break' } & ScheduleBaseEntry;
 
-  const talksOrBreaks: Array<ScheduleBreak|ScheduleTalk> = schedule.map(row => {
-    const {
-      commaSeparatedSpeakerFullNames,
-      commaSeparatedTags,
-      trackId, langId, summary,
-      ...rest
-    } = row;
+  const speakersByLabel = gsheetContent.speakers.reduce((speakersByLabel, rawSpeaker) => {
+    speakersByLabel[rawSpeaker.label] = {
+      id: rawSpeaker.id,
+      fullName: rawSpeaker.fullName,
+      photoUrl: rawSpeaker.photoUrl,
+      companyName: rawSpeaker.companyName,
+      bio: rawSpeaker.bio,
+      social: ([] as SocialLink[])
+        .concat(rawSpeaker.website ? [{ type: 'website' as const, url: rawSpeaker.website }]:[])
+        .concat(rawSpeaker.xwitter ? [{ type: 'twitter' as const, url: rawSpeaker.xwitter }]:[])
+        .concat(rawSpeaker.linkedin ? [{ type: 'linkedin' as const, url: rawSpeaker.linkedin }]:[])
+        .concat(rawSpeaker.mastodon ? [{ type: 'mastodon' as const, url: rawSpeaker.mastodon }]:[])
+        .concat(rawSpeaker.instagram ? [{ type: 'instagram' as const, url: rawSpeaker.instagram }]:[])
+        .concat(rawSpeaker.youtube ? [{ type: 'youtube' as const, url: rawSpeaker.youtube }]:[])
+        .concat(rawSpeaker.twitch ? [{ type: 'twitch' as const, url: rawSpeaker.twitch }]:[])
+        .concat(rawSpeaker.github ? [{ type: 'github' as const, url: rawSpeaker.github }]:[])
+        .concat(rawSpeaker.facebook ? [{ type: 'facebook' as const, url: rawSpeaker.facebook }]:[])
+        .concat(rawSpeaker.flickr ? [{ type: 'flickr' as const, url: rawSpeaker.flickr }]:[])
+    }
+    return speakersByLabel;
+  }, {} as Record<string, Speaker>);
 
-    return match(row)
-      .with({ type: 'Talk' } , ({ type }) => {
-        if(!trackId) { throw new Error(`Missing trackId for talk ${row.id} !`) }
-        if(!langId) { throw new Error(`Missing langId for talk ${row.id} !`) }
-        if(!summary) { throw new Error(`Missing summary for talk ${row.id} !`) }
 
-        const scheduleTalk: ScheduleTalk = {
-          ...rest, type, trackId, langId, summary,
-          speakerFullNames: commaSeparatedSpeakerFullNames?.split(", ") || [],
-          tags: commaSeparatedTags?.split(", ") || [],
-          overflow: row.overflow === 'YES',
-        };
-        return scheduleTalk;
+        const talkStart = toTimezoneOffsettedDateTime(`${talkEntry.start}:00`, mainDescription.timezone);
+        const talkEnd = addDuration(talkStart, mainDescription.timezone, format.duration);
+        const expectedTimeslotId: TalkTimeSlotId = `${talkStart}--${talkEnd}`
+        const maybeTimeslot: TalksTimeSlot|undefined = talksTimeSlotsFrom(dailySchedule.timeSlots).find(ts => ts.id === expectedTimeslotId)
+
+        const talksTimeslot = match(maybeTimeslot)
+          .with(P.nullish, () => {
+            const talksTimeslot: TalksTimeSlot = {id: expectedTimeslotId, type: 'talks', talks: [], start: talkStart, end: talkEnd };
+            dailySchedule.timeSlots.push(talksTimeslot);
+            return talksTimeslot;
+          })
+          .otherwise(timeslot => timeslot);
+
+        const talk: Talk = {
+          id: talkEntry.id,
+          room, format, track,
+          title: talkEntry.title,
+          speakers: talkSpeakers,
+          language: language.id,
+          isOverflow: parseYesNoBoolean(talkEntry.overflow),
+        }
+        talksTimeslot.talks.push(talk);
+
+        const detailedTalk: DetailedTalk = {
+          ...talk,
+          start: talkStart,
+          end: talkEnd,
+          summary: talkEntry.summary || '',
+          description: talkEntry.summary || '',
+          tags: parseCommaSeparatedValues(talkEntry.commaSeparatedTags),
+          assets: [],
+        }
+        detailedTalks.push(detailedTalk);
       })
-      .with({ type: 'Break' }, ({ type }) => {
-        const scheduleBreak: ScheduleBreak = { ...rest, type };
-        return scheduleBreak;
-      })
-      .exhaustive();
-  });
+      .with({ type: 'Break' }, breakEntry => {
+        const breakStart = toTimezoneOffsettedDateTime(`${breakEntry.start}:00`, mainDescription.timezone);
+        const breakEnd = addDuration(breakStart, mainDescription.timezone, format.duration);
+        const expectedTimeslotId: BreakTimeSlotId = `${breakStart}--${breakEnd}--${breakEntry.roomId}`
+        const maybeTimeslot = breakTimeSlotsFrom(dailySchedule.timeSlots).find(ts => ts.id === expectedTimeslotId)
 
-  talksOrBreaks.forEach(row => {
-    match(row)
-      .with({ type: 'Talk' }, (talk) => console.log(`This is a talk: ${JSON.stringify(talk)}`))
-      .with({ type: 'Break' }, (breakEntry) => console.log(`This is a break: ${JSON.stringify(breakEntry)}`))
-      .exhaustive();
-  })
+        return match(maybeTimeslot)
+          .with(P.nullish, () => {
+            const breakTimeslot: BreakTimeSlot = {
+              id: expectedTimeslotId, type: 'break', start: breakStart, end: breakEnd,
+              break: {
+                icon: 'cafe',
+                title: breakEntry.title,
+                room,
+              }
+            };
+            dailySchedule.timeSlots.push(breakTimeslot);
+            return breakTimeslot;
+
+          })
+          .otherwise(timeslot => timeslot);
+      })
+      .exhaustive()
+
+    return { dailySchedules, detailedTalks };
+  }, { dailySchedules: [] as DailySchedule[], detailedTalks: [] as DetailedTalk[] })
+
+  fillBreakIcons(dailySchedules, mainDescription.timezone);
 
   const eventInfo: FullEvent['info'] = {
     id: eventId,
@@ -448,25 +506,8 @@ export async function crawlGsheet(eventId: string, gsheetId: string): Promise<Fu
   const event: FullEvent = {
     id: eventId,
     info: eventInfo,
-    daySchedules: [], // TODO
-    talks: [], // TODO
-    // descriptor.talks.map(detailedTalk => ({
-    //   start: detailedTalk.start,
-    //   end: detailedTalk.end,
-    //   summary: detailedTalk.summary,
-    //   description: detailedTalk.summary,
-    //   tags: detailedTalk.tags,
-    //   assets: detailedTalk.assets,
-    //   speakers: detailedTalk.speakers,
-    //   id: detailedTalk.id,
-    //   title: detailedTalk.title,
-    //   isOverflow: detailedTalk.isOverflow,
-    //
-    //   format: descriptor.talkFormats[0], // TODO
-    //   language: descriptor.supportedTalkLanguages[0].id, // TODO
-    //   track: descriptor.talkTracks[0], // TODO
-    //   room: descriptor.rooms[0], // TODO
-    // })),
+    daySchedules: dailySchedules,
+    talks: detailedTalks,
     conferenceDescriptor: {
       ...eventInfo,
       headingTitle: mainDescription.headingTitle,
@@ -527,6 +568,9 @@ export async function crawlGsheet(eventId: string, gsheetId: string): Promise<Fu
 
 function parseEnabledBoolean(value: string | undefined) {
   return (value || '').toLowerCase().includes('enabled');
+}
+function parseYesNoBoolean(value: string | undefined) {
+  return (value || '').toLowerCase().includes('yes');
 }
 
 function parseCommaSeparatedValues(value: string | undefined) {
