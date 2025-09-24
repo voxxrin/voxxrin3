@@ -25,6 +25,7 @@ import {
 import {Talk} from "@shared/daily-schedule.firestore";
 import {fillBreakIcons, toTimezoneOffsettedDateTime} from "../utils";
 import {Temporal} from "@js-temporal/polyfill";
+import { SponsorCategory } from "@shared/conference-descriptor.firestore";
 
 
 const GSHEETS_EVENT_DESCRIPTORS = {
@@ -199,14 +200,14 @@ const GSHEETS_EVENT_DESCRIPTORS = {
     sheetName: "Sponsors",
     firstRowIsHeader: true,
     minRow: 2,
-    cols: createColDescriptor({name: 'A', color: 'B', fontColor: 'D'}),
-    ignoreRowWhen: (rowType) => !rowType.name
+    cols: createColDescriptor({type: 'A', typeColor: 'B', typeFontColor: 'D?'}),
+    ignoreRowWhen: (rowType) => !rowType.type
   }),
   sponsors: createDescriptor({
     sheetName: "Sponsors",
     firstRowIsHeader: true,
     minRow: 2,
-    cols: createColDescriptor({categoryId: 'G', companyName: 'H', logoUrl: 'I?', websiteUrl: 'J?'}),
+    cols: createColDescriptor({categoryId: 'G', name: 'H', logoUrl: 'I', href: 'J'}),
     ignoreRowWhen: (rowType) => !rowType.categoryId,
   }),
 } satisfies GSheetDescriptors;
@@ -380,6 +381,22 @@ export async function crawlGsheet(eventId: string, gsheetId: string): Promise<Fu
       .run();
   });
 
+  const sponsors = gsheetContent.sponsorCategories.map(rawSponsorCategory => {
+    const category: SponsorCategory = {
+      type: rawSponsorCategory.type,
+      typeColor: rawSponsorCategory.typeColor,
+      typeFontColor: rawSponsorCategory.typeFontColor,
+      sponsorships: gsheetContent.sponsors
+        .filter(rawSponsor => rawSponsor.categoryId === rawSponsorCategory.type)
+        .map(rawSponsor => ({
+          name: rawSponsor.name,
+          logoUrl: rawSponsor.logoUrl,
+          href: rawSponsor.href,
+        }))
+    }
+    return category;
+  })
+
 
   const speakersByLabel = gsheetContent.speakers.reduce((speakersByLabel, rawSpeaker) => {
     speakersByLabel[rawSpeaker.label] = {
@@ -531,7 +548,7 @@ export async function crawlGsheet(eventId: string, gsheetId: string): Promise<Fu
       headingCustomStyles: null, // TODO
       headingSrcSet: null, // TODO
       customImportedFonts: null, // TODO
-    } // TODO
+    }
   }
 
   const event: FullEvent = {
@@ -588,7 +605,7 @@ export async function crawlGsheet(eventId: string, gsheetId: string): Promise<Fu
       infos: {
         floorPlans: gsheetContent.floorPlans,
         socialMedias,
-        sponsors: undefined, // TODO
+        sponsors,
       },
       formattings,
     }
