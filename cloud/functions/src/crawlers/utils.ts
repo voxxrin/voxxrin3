@@ -1,8 +1,15 @@
 import axios from "axios";
-import {ISODatetime} from "@shared/type-utils";
+import {ISODatetime, ISOZonelessDatetime} from "@shared/type-utils";
 import {Temporal} from "@js-temporal/polyfill";
 import {match, P} from "ts-pattern";
-import {Break, BreakTimeSlot, TalksTimeSlot} from "@shared/daily-schedule.firestore";
+import {
+  Break,
+  BreakTimeSlot,
+  breakTimeSlotsFrom,
+  DailySchedule,
+  TalksTimeSlot,
+  talksTimeSlotsFrom
+} from "@shared/daily-schedule.firestore";
 import {BreakTimeslotWithPotentiallyUnknownIcon} from "../models/Event";
 
 const STD_HEADERS = {
@@ -85,4 +92,24 @@ export function fillUnknownBreakIcons(dayParticularities: {isFirst: boolean, isL
       }
     }
   })
+}
+
+export function fillBreakIcons(dailySchedules: DailySchedule[], timezone: string) {
+  dailySchedules.forEach((dailySchedule, index) => {
+    const breakTimeslots = breakTimeSlotsFrom(dailySchedule.timeSlots);
+    const talksTimeslots = talksTimeSlotsFrom(dailySchedule.timeSlots);
+
+    const updatedBreakTimeslots = fillUnknownBreakIcons({
+      isFirst: index === 0, isLast: index === dailySchedules.length-1
+    }, timezone, breakTimeslots, talksTimeslots);
+
+    const sortedUpdatedTimeslots = [...updatedBreakTimeslots, ...talksTimeslots].sort((bts1, bts2) => Temporal.Instant.from(bts1.start).epochMilliseconds - Temporal.Instant.from(bts2.start).epochMilliseconds);
+    dailySchedule.timeSlots = sortedUpdatedTimeslots;
+  });
+}
+
+export function toTimezoneOffsettedDateTime(isoZonelessDateTime: ISOZonelessDatetime, timezone: string) {
+  const plainDateTime = Temporal.PlainDateTime.from(isoZonelessDateTime);
+  const zonedDateTime = plainDateTime.toZonedDateTime(timezone);
+  return `${isoZonelessDateTime}${zonedDateTime.offset}` as ISODatetime;
 }

@@ -1,11 +1,7 @@
-import {z, ZodType} from "zod";
+import {z, ZodLiteral, ZodType} from "zod";
 import {FullEvent} from "../../models/Event";
-import {
-  createColDescriptor, createDescriptor,
-  GSheetDescriptors,
-  GSheetReader
-} from "./gsheet-reader";
-import { match, P } from "ts-pattern";
+import {createColDescriptor, createDescriptor, GSheetDescriptors, GSheetReader} from "./gsheet-reader";
+import {match, P} from "ts-pattern";
 import {HexColor, ISODatetime, ISODuration, ISOLocalDate} from "@shared/type-utils";
 import {
   DURATION_IN_MINUTES_PARSER,
@@ -15,7 +11,16 @@ import {
 } from "../crawler-parsers";
 import {logger} from "firebase-functions";
 import {
-  Speaker, SocialLink,
+  BreakTimeSlot,
+  BreakTimeSlotId,
+  breakTimeSlotsFrom,
+  DailySchedule,
+  DetailedTalk,
+  SocialLink,
+  Speaker,
+  TalksTimeSlot,
+  talksTimeSlotsFrom,
+  TalkTimeSlotId
 } from "@shared/daily-schedule.firestore";
 import {Talk} from "@shared/daily-schedule.firestore";
 import {fillBreakIcons, toTimezoneOffsettedDateTime} from "../utils";
@@ -179,7 +184,7 @@ const GSHEETS_EVENT_DESCRIPTORS = {
       roomId: 'B',
       type: { col: 'C', parser: z.union([z.literal('Talk'), z.literal('Break')]) },
       formatId: 'D',
-      start: 'E',
+      start: { col: 'E', parser: z.string().regex(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/gi) as unknown as ZodLiteral<`${number}-${number}-${number}T${number}:${number}`> },
       title: 'G',
       trackId: 'H?',
       langId: 'I?',
@@ -375,23 +380,6 @@ export async function crawlGsheet(eventId: string, gsheetId: string): Promise<Fu
       .run();
   });
 
-  const schedule = await gsheetReader.read(gsheetId, 'schedule');
-  type ScheduleBaseEntry = {
-    id: string,
-    roomId: string,
-    formatId: string,
-    start: string,
-    title: string,
-  }
-  type ScheduleTalk = { type: 'Talk' } & ScheduleBaseEntry & {
-    trackId: string,
-    langId: string,
-    speakerFullNames: string[],
-    summary: string,
-    tags: string[],
-    overflow: boolean,
-  };
-  type ScheduleBreak = { type: 'Break' } & ScheduleBaseEntry;
 
   const speakersByLabel = gsheetContent.speakers.reduce((speakersByLabel, rawSpeaker) => {
     speakersByLabel[rawSpeaker.label] = {
@@ -415,6 +403,49 @@ export async function crawlGsheet(eventId: string, gsheetId: string): Promise<Fu
     return speakersByLabel;
   }, {} as Record<string, Speaker>);
 
+  const { dailySchedules, detailedTalks } = gsheetContent.schedule.reduce(({ dailySchedules, detailedTalks }, rawTalkOrBreak) => {
+    const dayIndex = gsheetContent.days.findIndex(day => rawTalkOrBreak.start.startsWith(day.localDate));
+    if(dayIndex === -1) {
+      throw new Error(`No day found for talk schedule entry ${rawTalkOrBreak.id} (start=${rawTalkOrBreak.start}, days=[${gsheetContent.days.map(d => d.localDate).join(", ")}]`)
+    }
+    const day = gsheetContent.days[dayIndex];
+
+    const room = gsheetContent.scheduleRoomsSetup.find(room => room.id === rawTalkOrBreak.roomId);
+    if(!room) {
+      throw new Error(`No room found for talk schedule entry ${rawTalkOrBreak.id} (roomId=${rawTalkOrBreak.roomId}, rooms=[${gsheetContent.scheduleRoomsSetup.map(r => r.id).join(", ")}]`)
+    }
+
+    const format = gsheetContent.scheduleFormatsSetup.find(format => format.id === rawTalkOrBreak.formatId);
+    if(!format) {
+      throw new Error(`No format found for talk schedule entry ${rawTalkOrBreak.id} (formatId=${rawTalkOrBreak.formatId}, formats=[${gsheetContent.scheduleFormatsSetup.map(f => f.id).join(", ")}]`)
+    }
+
+    const dailySchedule = match(dailySchedules.find(ds => ds.day === day.id))
+      .with(P.nullish, () => {
+        const dailyScheduleToCreate: DailySchedule = { day: day.id, timeSlots: [] };
+        dailySchedules.push(dailyScheduleToCreate);
+        return dailyScheduleToCreate;
+      }).otherwise(dailySchedule => dailySchedule);
+
+    match(rawTalkOrBreak)
+      .with({ type: 'Talk' }, talkEntry => {
+        const track = gsheetContent.scheduleTracksSetup.find(track => track.id === rawTalkOrBreak.trackId);
+        if(!track) {
+          throw new Error(`No track found for talk schedule entry ${rawTalkOrBreak.id} (trackId=${rawTalkOrBreak.trackId}, tracks=[${gsheetContent.scheduleTracksSetup.map(t => t.id).join(", ")}]`)
+        }
+
+        const language = gsheetContent.scheduleSupportedTrackLanguages.find(lang => lang.id === rawTalkOrBreak.langId);
+        if(!language) {
+          throw new Error(`No language found for talk schedule entry ${rawTalkOrBreak.id} (langId=${rawTalkOrBreak.langId}, languageIds=[${gsheetContent.scheduleSupportedTrackLanguages.map(t => t.id).join(", ")}]`)
+        }
+
+        const talkSpeakers = parseCommaSeparatedValues(talkEntry.commaSeparatedSpeakerFullNames).map(speakerFullName => {
+          const speaker = speakersByLabel[speakerFullName];
+          if(!speaker) {
+            throw new Error(`No speaker found for talk schedule entry ${rawTalkOrBreak.id} (speakerFullName=${speakerFullName}, speakerFullNames=[${Object.keys(speakersByLabel).join(", ")}]`)
+          }
+          return speaker;
+        });
 
         const talkStart = toTimezoneOffsettedDateTime(`${talkEntry.start}:00`, mainDescription.timezone);
         const talkEnd = addDuration(talkStart, mainDescription.timezone, format.duration);

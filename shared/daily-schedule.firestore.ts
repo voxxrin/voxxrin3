@@ -63,15 +63,17 @@ export type TimeSlotBase<START extends ISODatetime = ISODatetime, END extends IS
     end: END,
 }
 
+export type BreakTimeSlotId<START extends ISODatetime = ISODatetime, END extends ISODatetime = ISODatetime, ROOM_ID extends string = string> = `${START}--${END}--${ROOM_ID}`
 export type BreakTimeSlot<
   START extends ISODatetime = ISODatetime,
   END extends ISODatetime = ISODatetime,
   ROOM_ID extends string = string,
-> = TimeSlotBase<START, END> & { id: `${START}--${END}--${ROOM_ID}`, type: 'break', break: Break }
+> = TimeSlotBase<START, END> & { id: BreakTimeSlotId<START, END, ROOM_ID>, type: 'break', break: Break }
+export type TalkTimeSlotId<START extends ISODatetime = ISODatetime, END extends ISODatetime = ISODatetime> = `${START}--${END}`
 export type TalksTimeSlot<
   START extends ISODatetime = ISODatetime,
   END extends ISODatetime = ISODatetime,
-> = TimeSlotBase<START, END> & { id: `${START}--${END}`, type: 'talks', talks: Talk[] }
+> = TimeSlotBase<START, END> & { id: TalkTimeSlotId<START, END>, type: 'talks', talks: Talk[] }
 
 export type ScheduleTimeSlot = BreakTimeSlot | TalksTimeSlot
 
@@ -79,4 +81,11 @@ export type ScheduleTimeSlot = BreakTimeSlot | TalksTimeSlot
 export type DailySchedule = {
     day: string;
     timeSlots: ScheduleTimeSlot[];
+}
+
+export function breakTimeSlotsFrom(timeslots: ScheduleTimeSlot[]) {
+    return timeslots.filter(timeslot => timeslot.type === 'break') as BreakTimeSlot[];
+}
+export function talksTimeSlotsFrom(timeslots: ScheduleTimeSlot[]) {
+    return timeslots.filter(timeslot => timeslot.type === 'talks') as TalksTimeSlot[];
 }
