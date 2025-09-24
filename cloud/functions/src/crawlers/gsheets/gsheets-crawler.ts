@@ -226,7 +226,7 @@ export async function crawlGsheet(eventId: string, gsheetId: string): Promise<Fu
       .with({ name: P.string.regex(/^heading\s+title/gi) }, ({ value }) => mainDescription.headingTitle = value)
       .with({ name: P.string.regex(/^description/gi) }, ({ value }) => mainDescription.description = value)
       .with({ name: P.string.regex(/^timezone/gi) }, ({ value }) => mainDescription.timezone = value)
-      .with({ name: P.string.regex(/keywords/gi) }, ({ value }) => mainDescription.keywords = value?.split(/\s*,\s*/gi) || [])
+      .with({ name: P.string.regex(/keywords/gi) }, ({ value }) => mainDescription.keywords = parseCommaSeparatedValues(value))
       .with({ name: P.string.regex(/^people\s+description/gi) }, ({ value }) => mainDescription.peopleDescription = value)
       .with({ name: P.string.regex(/^background\s+url/gi) }, ({ value }) => mainDescription.backgroundUrl = value)
       .with({ name: P.string.regex(/^logo\s+url/gi) }, ({ value }) => mainDescription.logoUrl = value)
@@ -290,13 +290,13 @@ export async function crawlGsheet(eventId: string, gsheetId: string): Promise<Fu
     remindMeOnceVideosAreAvailableEnabled: z.boolean().default(false),
   }))(gsheetContent.features, (featureFlags, row) => {
     match(row)
-      .with({ flagName: P.string.regex(/favorites/gi) }, ({ value }) =>  featureFlags.favoritesEnabled = (value || '').toLowerCase().includes('enabled'))
-      .with({ flagName: P.string.regex(/rooms\s+displayed/gi) }, ({ value }) => featureFlags.roomsDisplayed = (value || '').toLowerCase().includes('enabled'))
-      .with({ flagName: P.string.regex(/show\s+infos\s+tab/gi) }, ({ value }) => featureFlags.showInfosTab = (value || '').toLowerCase().includes('enabled'))
-      .with({ flagName: P.string.regex(/show\s+live.*capacity.*indicator/gi) }, ({ value }) => featureFlags.showRoomCapacityIndicator = (value || '').toLowerCase().includes('enabled'))
-      .with({ flagName: P.string.regex(/hide\s+language/gi) }, ({ value }) => featureFlags.hideLanguages = value?.split(/\s*,\s*/gi) || [])
-      .with({ flagName: P.string.regex(/feedbacks/gi) }, ({ value }) => featureFlags.feedbacksEnabled = (value || '').toLowerCase().includes('enabled'))
-      .with({ flagName: P.string.regex(/hide\s+schedule/gi) }, ({ value }) => featureFlags.hideSchedule = (value || '').toLowerCase().includes('enabled'))
+      .with({ flagName: P.string.regex(/favorites/gi) }, ({ value }) =>  featureFlags.favoritesEnabled = parseEnabledBoolean(value))
+      .with({ flagName: P.string.regex(/rooms\s+displayed/gi) }, ({ value }) => featureFlags.roomsDisplayed = parseEnabledBoolean(value))
+      .with({ flagName: P.string.regex(/show\s+infos\s+tab/gi) }, ({ value }) => featureFlags.showInfosTab = parseEnabledBoolean(value))
+      .with({ flagName: P.string.regex(/show\s+live.*capacity.*indicator/gi) }, ({ value }) => featureFlags.showRoomCapacityIndicator = parseEnabledBoolean(value))
+      .with({ flagName: P.string.regex(/hide\s+language/gi) }, ({ value }) => featureFlags.hideLanguages = parseCommaSeparatedValues(value))
+      .with({ flagName: P.string.regex(/feedbacks/gi) }, ({ value }) => featureFlags.feedbacksEnabled = parseEnabledBoolean(value))
+      .with({ flagName: P.string.regex(/hide\s+schedule/gi) }, ({ value }) => featureFlags.hideSchedule = parseEnabledBoolean(value))
       .run();
   });
 
@@ -305,8 +305,8 @@ export async function crawlGsheet(eventId: string, gsheetId: string): Promise<Fu
     parseMarkdownOn: z.array(z.union([z.literal('talk-summary'), z.literal('speaker-bio')])).default(['talk-summary', 'speaker-bio']),
   }))(gsheetContent.formattings, (formattings, row) => {
     match(row)
-      .with({ formatName: P.string.regex(/talk\s+title\s+format/gi) }, ({ value }) =>  formattings.talkFormatTitle = (value || '').toLowerCase().includes('with-duration') ? 'with-duration' as const : 'without-duration' as const)
-      .with({ formatName: P.string.regex(/parse\s+markdown/gi) }, ({ value }) => formattings.parseMarkdownOn = (value?.split(/\s*,\s*/gi) || []).map(str => str as 'talk-summary'|'speaker-bio'))
+      .with({ formatName: P.string.regex(/talk\s+title\s+format/gi) }, ({ value }) =>  formattings.talkFormatTitle = parseUnionLiteralValueWithDefault(value, ['with-duration', 'without-duration'] as const, 'without-duration'))
+      .with({ formatName: P.string.regex(/parse\s+markdown/gi) }, ({ value }) => formattings.parseMarkdownOn = parseCommaSeparatedValues(value).map(str => str as 'talk-summary'|'speaker-bio'))
       .run();
   });
 
@@ -321,14 +321,14 @@ export async function crawlGsheet(eventId: string, gsheetId: string): Promise<Fu
     excludeTitleWordsFromMatching: z.array(z.string()).optional(),
   }))(gsheetContent.recordingCrawlerConfiguration, (config, row) => {
     match(row)
-      .with({ name: P.string.regex(/platform/gi) }, ({ value }) =>  config.platform = value === 'youtube' ? 'youtube' as const : undefined)
+      .with({ name: P.string.regex(/platform/gi) }, ({ value }) =>  config.platform = parseUnionLiteralValue(value, ['youtube'] as const))
       .with({ name: P.string.regex(/youtube\s+handle/gi) }, ({ value }) => config.youtubeHandle = value)
       .with({ name: P.string.regex(/ignore\s+videos\s+published\s+after/gi) }, ({ value }) => config.ignoreVideosPublishedAfter = value as ISOLocalDate)
-      .with({ name: P.string.regex(/not\s+recorded\s+format\s+ids/gi) }, ({ value }) => config.notRecordedFormatIds = (value?.split(/\s*,\s*/gi) || []))
-      .with({ name: P.string.regex(/recorded\s+format\s+ids/gi) }, ({ value }) => config.recordedFormatIds = (value?.split(/\s*,\s*/gi) || []))
-      .with({ name: P.string.regex(/not\s+recorded\s+room\s+ids/gi) }, ({ value }) => config.notRecordedRoomIds = (value?.split(/\s*,\s*/gi) || []))
-      .with({ name: P.string.regex(/recorded\s+room\s+ids/gi) }, ({ value }) => config.recordedRoomIds = (value?.split(/\s*,\s*/gi) || []))
-      .with({ name: P.string.regex(/words\s+excluded/gi) }, ({ value }) => config.excludeTitleWordsFromMatching = (value?.split(/\s*,\s*/gi) || []))
+      .with({ name: P.string.regex(/not\s+recorded\s+format\s+ids/gi) }, ({ value }) => config.notRecordedFormatIds = parseCommaSeparatedValues(value))
+      .with({ name: P.string.regex(/recorded\s+format\s+ids/gi) }, ({ value }) => config.recordedFormatIds = parseCommaSeparatedValues(value))
+      .with({ name: P.string.regex(/not\s+recorded\s+room\s+ids/gi) }, ({ value }) => config.notRecordedRoomIds = parseCommaSeparatedValues(value))
+      .with({ name: P.string.regex(/recorded\s+room\s+ids/gi) }, ({ value }) => config.recordedRoomIds = parseCommaSeparatedValues(value))
+      .with({ name: P.string.regex(/words\s+excluded/gi) }, ({ value }) => config.excludeTitleWordsFromMatching = parseCommaSeparatedValues(value))
       .run();
   });
 
@@ -487,4 +487,29 @@ export async function crawlGsheet(eventId: string, gsheetId: string): Promise<Fu
   }
 
   return event
+}
+
+function parseEnabledBoolean(value: string | undefined) {
+  return (value || '').toLowerCase().includes('enabled');
+}
+
+function parseCommaSeparatedValues(value: string | undefined) {
+  return value?.split(/\s*,\s*/gi) || []
+}
+
+function parseUnionLiteralValue<const T extends readonly string[]>(
+  value: string | undefined,
+  allowedValues: T,
+  applyToLowerCase = true,
+): T[number] | undefined {
+  const transformedValue = (applyToLowerCase && value) ? value.toLowerCase() : value;
+  return allowedValues.includes(transformedValue as T[number]) ? transformedValue as T[number] : undefined;
+}
+function parseUnionLiteralValueWithDefault<const T extends readonly string[]>(
+  value: string | undefined,
+  allowedValues: T,
+  defaultValue: T[number],
+  applyToLowerCase = true,
+): T[number] {
+  return parseUnionLiteralValue(value, allowedValues, applyToLowerCase) || defaultValue;
 }
