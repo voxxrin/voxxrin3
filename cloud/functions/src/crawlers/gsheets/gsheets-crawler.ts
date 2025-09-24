@@ -6,8 +6,13 @@ import {
   GSheetReader
 } from "./gsheet-reader";
 import { match, P } from "ts-pattern";
-import {HexColor, ISOLocalDate} from "@shared/type-utils";
-import {HEX_COLOR_PARSER, ISO_LOCAL_DATE_PARSER, SOCIAL_MEDIA_TYPE} from "../crawler-parsers";
+import {HexColor, ISODatetime, ISODuration, ISOLocalDate} from "@shared/type-utils";
+import {
+  DURATION_IN_MINUTES_PARSER,
+  HEX_COLOR_PARSER,
+  ISO_LOCAL_DATE_PARSER,
+  SOCIAL_MEDIA_TYPE
+} from "../crawler-parsers";
 import {logger} from "firebase-functions";
 
 
@@ -136,7 +141,11 @@ const GSHEETS_EVENT_DESCRIPTORS = {
     sheetName: "Schedule setup",
     firstRowIsHeader: true,
     minRow: 2,
-    cols: createColDescriptor({id: 'D', label: 'E', durationInMinutes: 'F', themeColor: 'G'}),
+    cols: createColDescriptor({
+      id: 'D', title: 'E',
+      duration: { col: 'F', parser: DURATION_IN_MINUTES_PARSER },
+      themeColor: 'G',
+    }),
     ignoreRowWhen: (rowType) => !rowType.id
   }),
   scheduleTracksSetup: createDescriptor({
@@ -539,4 +548,10 @@ function parseUnionLiteralValueWithDefault<const T extends readonly string[]>(
   applyToLowerCase = true,
 ): T[number] {
   return parseUnionLiteralValue(value, allowedValues, applyToLowerCase) || defaultValue;
+}
+
+function addDuration(datetime: ISODatetime, timezone: string, duration: ISODuration): ISODatetime {
+  return Temporal.ZonedDateTime.from(`${datetime}[${timezone}]`)
+    .add(Temporal.Duration.from(duration))
+    .toString({ timeZoneName: 'never' }) as ISODatetime;
 }

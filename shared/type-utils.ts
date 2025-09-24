@@ -3,6 +3,7 @@ export type ISOLocalDate = `${number}-${number}-${number}`;
 
 export type ISOZonedTime = `${number}:${number}:${number}${'Z'|`${'+'|'-'}${number}:${number}`}`
 export type ISODatetime = `${ISOLocalDate}T${ISOZonedTime}`;
+export type ISODuration = `PT${number}m`;
 // To ease debug in TS compiler messages, uncomment this
 // export type ISODatetime = string
 
