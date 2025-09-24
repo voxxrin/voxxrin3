@@ -332,6 +332,32 @@ export async function crawlGsheet(eventId: string, gsheetId: string): Promise<Fu
       .run();
   });
 
+  const scaleRatingsConfig = transformRows('scaleRating', z.object({
+    enabled: z.boolean(),
+    icon: z.union([z.literal('star'), z.literal('thumbs-up')]),
+    minimumNumberOfRatingsToBeConsidered: z.number(),
+    minimumAverageScoreToBeConsidered: z.number(),
+    numberOfDailyTopTalksConsidered: z.number(),
+  }))(gsheetContent.scaleRating, (config, row) => {
+    match(row)
+      .with({ name: P.string.regex(/scale\s+rating/gi) }, ({ value }) =>  config.enabled = parseEnabledBoolean(value))
+      .with({ name: P.string.regex(/icon/gi) }, ({ value }) => config.icon = parseUnionLiteralValueWithDefault(value, ['star', 'thumbs-up'] as const, 'star'))
+      .with({ name: P.string.regex(/minimum\s+ratings\s+to\s+be\s+considered/gi) }, ({ value }) => config.minimumNumberOfRatingsToBeConsidered = Number(value))
+      .with({ name: P.string.regex(/minimum\s+average\s+score/gi) }, ({ value }) => config.minimumAverageScoreToBeConsidered = Number(value))
+      .with({ name: P.string.regex(/number\s+of\s+daily\s+top\s+talks/gi) }, ({ value }) => config.numberOfDailyTopTalksConsidered = Number(value))
+      .run();
+  });
+
+  const scaleRatingLabels = z.array(z.string()).min(3).max(7).parse(gsheetContent.scaleRatingLabels.map(row => row.label));
+
+  const bingoRatingsConfig = transformRows('bingoRating', z.object({
+    enabled: z.boolean(),
+  }))(gsheetContent.bingoRating, (config, row) => {
+    match(row)
+      .with({ name: P.string.regex(/bingo\s+rating/gi) }, ({ value }) =>  config.enabled = parseEnabledBoolean(value))
+      .run();
+  });
+
   const schedule = await gsheetReader.read(gsheetId, 'schedule');
   type ScheduleBaseEntry = {
     id: string,
@@ -447,13 +473,14 @@ export async function crawlGsheet(eventId: string, gsheetId: string): Promise<Fu
         // for multi-lang conferences, where we want to hide "default" (implicit) conference lang (ex: in devoxxfr, we'd hide FR)
         ratings: {
           bingo: {
-            enabled: false, // TODO
-            choices: [], // TODO
+            enabled: bingoRatingsConfig.enabled,
+            choices: gsheetContent.bingoRatingChoices,
           },
           scale: {
-            enabled: false, // TODO
-            icon: "star", // TODO
-            labels: ['a', 'b', 'c'], // TODO
+            enabled: scaleRatingsConfig.enabled,
+            icon: scaleRatingsConfig.icon,
+            // @ts-expect-error: string[] to string-tuple expected as zod can't seem to handle fixed-sized arrays as tuples
+            labels: scaleRatingLabels,
           },
           "free-text": {
             enabled: false, // TODO
@@ -464,10 +491,10 @@ export async function crawlGsheet(eventId: string, gsheetId: string): Promise<Fu
             choices: [], // TODO
           }
         },
-        topRatedTalks: { // TODO
-          minimumNumberOfRatingsToBeConsidered: 100, // TODO
-          minimumAverageScoreToBeConsidered: undefined, // TODO
-          numberOfDailyTopTalksConsidered: 42, // TODO
+        topRatedTalks: {
+          minimumNumberOfRatingsToBeConsidered: scaleRatingsConfig.minimumNumberOfRatingsToBeConsidered,
+          minimumAverageScoreToBeConsidered: scaleRatingsConfig.minimumAverageScoreToBeConsidered,
+          numberOfDailyTopTalksConsidered: scaleRatingsConfig.numberOfDailyTopTalksConsidered,
         },
         recording: match(recordingConfig)
           .with({ youtubeHandle: P.nonNullable, platform: P.nonNullable}, recordingConfig => recordingConfig)
