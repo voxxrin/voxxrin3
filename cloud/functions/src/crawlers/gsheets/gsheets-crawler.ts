@@ -284,19 +284,33 @@ export async function crawlGsheet(eventId: string, gsheetId: string): Promise<Fu
       .run();
   });
 
-  const theming = transformRows('theming', z.object({
+  const lightTheming = transformRows('light theming', z.object({
     primaryHex: HEX_COLOR_PARSER, primaryContrastHex: HEX_COLOR_PARSER,
     secondaryHex: HEX_COLOR_PARSER, secondaryContrastHex: HEX_COLOR_PARSER,
     tertiaryHex: HEX_COLOR_PARSER, tertiaryContrastHex: HEX_COLOR_PARSER,
   }))(gsheetContent.theming, (theming, row) => {
     match(row)
-      .with({ colorName: P.string.regex(/^primary\s+contrast/gi) }, ({ color }) => theming.primaryContrastHex = color as HexColor)
-      .with({ colorName: P.string.regex(/^primary/gi) }, ({ color }) => theming.primaryHex = color as HexColor)
-      .with({ colorName: P.string.regex(/^secondary\s+contrast/gi) }, ({ color }) => theming.secondaryContrastHex = color as HexColor)
-      .with({ colorName: P.string.regex(/^secondary/gi) }, ({ color }) => theming.secondaryHex = color as HexColor)
-      .with({ colorName: P.string.regex(/^tertiary\s+contrast/gi) }, ({ color }) => theming.tertiaryContrastHex = color as HexColor)
-      .with({ colorName: P.string.regex(/^tertiary/gi) }, ({ color }) => theming.tertiaryHex = color as HexColor)
-      .run();
+      .with({ colorName: P.string.regex(/^LIGHT\s+.*primary\s+contrast/gi) }, ({ color }) => theming.primaryContrastHex = color as HexColor)
+      .with({ colorName: P.string.regex(/^LIGHT\s+.*primary/gi) }, ({ color }) => theming.primaryHex = color as HexColor)
+      .with({ colorName: P.string.regex(/^LIGHT\s+.*secondary\s+contrast/gi) }, ({ color }) => theming.secondaryContrastHex = color as HexColor)
+      .with({ colorName: P.string.regex(/^LIGHT\s+.*secondary/gi) }, ({ color }) => theming.secondaryHex = color as HexColor)
+      .with({ colorName: P.string.regex(/^LIGHT\s+.*tertiary\s+contrast/gi) }, ({ color }) => theming.tertiaryContrastHex = color as HexColor)
+      .with({ colorName: P.string.regex(/^LIGHT\s+.*tertiary/gi) }, ({ color }) => theming.tertiaryHex = color as HexColor)
+      .otherwise(() => { /* no-op */ }); // this is important because of DARK theming below
+  });
+  const darkTheming = transformRows('dark theming', z.object({
+    primaryHex: HEX_COLOR_PARSER, primaryContrastHex: HEX_COLOR_PARSER,
+    secondaryHex: HEX_COLOR_PARSER, secondaryContrastHex: HEX_COLOR_PARSER,
+    tertiaryHex: HEX_COLOR_PARSER, tertiaryContrastHex: HEX_COLOR_PARSER,
+  }))(gsheetContent.theming, (theming, row) => {
+    match(row)
+      .with({ colorName: P.string.regex(/^DARK\s+.*primary\s+contrast/gi) }, ({ color }) => theming.primaryContrastHex = color as HexColor)
+      .with({ colorName: P.string.regex(/^DARK\s+.*primary/gi) }, ({ color }) => theming.primaryHex = color as HexColor)
+      .with({ colorName: P.string.regex(/^DARK\s+.*secondary\s+contrast/gi) }, ({ color }) => theming.secondaryContrastHex = color as HexColor)
+      .with({ colorName: P.string.regex(/^DARK\s+.*secondary/gi) }, ({ color }) => theming.secondaryHex = color as HexColor)
+      .with({ colorName: P.string.regex(/^DARK\s+.*tertiary\s+contrast/gi) }, ({ color }) => theming.tertiaryContrastHex = color as HexColor)
+      .with({ colorName: P.string.regex(/^DARK\s+.*tertiary/gi) }, ({ color }) => theming.tertiaryHex = color as HexColor)
+      .otherwise(() => { /* no-op */ }); // this is important because of LIGHT theming above
   });
 
   const socialMedias = transformRows('socialMedias', z.array(z.object({
@@ -579,7 +593,10 @@ export async function crawlGsheet(eventId: string, gsheetId: string): Promise<Fu
     backgroundUrl: mainDescription.backgroundUrl,
     logoUrl: mainDescription.logoUrl,
     theming: {
-      colors: theming,
+      colors: {
+        light: lightTheming,
+        dark: darkTheming,
+      },
       headingCustomStyles,
       headingSrcSet: null, // TODO
       customImportedFonts: null, // TODO
