@@ -120,6 +120,13 @@ const GSHEETS_EVENT_DESCRIPTORS = {
     cols: createColDescriptor({id: 'H', label: 'I',}),
     ignoreRowWhen: (rowType) => !rowType.id
   }),
+  freeTextRating: createDescriptor({
+    sheetName: "Features",
+    firstRowIsHeader: true,
+    minRow: 1, maxRow: 3,
+    cols: createColDescriptor({name: 'K', value: 'L',}),
+    ignoreRowWhen: (rowType) => !rowType.name
+  }),
   speakers: createDescriptor({
     sheetName: "Speakers",
     firstRowIsHeader: true,
@@ -381,6 +388,15 @@ export async function crawlGsheet(eventId: string, gsheetId: string): Promise<Fu
       .run();
   });
 
+  const freeTextRatingsConfig = transformRows('freeTextRating', z.object({
+    enabled: z.boolean(), maxLength: z.number(),
+  }))(gsheetContent.freeTextRating, (config, row) => {
+    match(row)
+      .with({ name: P.string.regex(/free\s+text\s+rating/gi) }, ({ value }) =>  config.enabled = parseEnabledBoolean(value))
+      .with({ name: P.string.regex(/max\s+length/gi) }, ({ value }) =>  config.maxLength = Number(value))
+      .run();
+  });
+
   const sponsors = gsheetContent.sponsorCategories.map(rawSponsorCategory => {
     const category: SponsorCategory = {
       type: rawSponsorCategory.type,
@@ -581,8 +597,8 @@ export async function crawlGsheet(eventId: string, gsheetId: string): Promise<Fu
             labels: scaleRatingLabels,
           },
           "free-text": {
-            enabled: false, // TODO
-            maxLength: 42, // TODO
+            enabled: freeTextRatingsConfig.enabled,
+            maxLength: freeTextRatingsConfig.maxLength,
           },
           "custom-scale": {
             enabled: false, // TODO
