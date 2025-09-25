@@ -46,14 +46,21 @@ const GSHEETS_EVENT_DESCRIPTORS = {
   theming: createDescriptor({
     sheetName: "Event description",
     firstRowIsHeader: true,
-    minRow: 21, maxRow: 29,
+    minRow: 21, maxRow: 36,
     cols: createColDescriptor({colorName: 'A', color: 'B',}),
     ignoreRowWhen: (rowType) => !rowType.colorName
+  }),
+  headingCustomStyles: createDescriptor({
+    sheetName: "Event description",
+    firstRowIsHeader: true,
+    minRow: 37, maxRow: 41,
+    cols: createColDescriptor({target: 'A', customStyle: 'B?',}),
+    ignoreRowWhen: (rowType) => !rowType.customStyle
   }),
   socialMedia: createDescriptor({
     sheetName: "Event description",
     firstRowIsHeader: true,
-    minRow: 30,
+    minRow: 42,
     cols: createColDescriptor({socialMediaName: 'A', href: 'B?',}),
     ignoreRowWhen: (rowType) => !rowType.socialMediaName
   }),
@@ -309,6 +316,18 @@ export async function crawlGsheet(eventId: string, gsheetId: string): Promise<Fu
       .otherwise(() => { /* no-op */ });
   });
 
+  const headingCustomStyles = transformRows('heading custom styles', z.object({
+    title: z.string().nullable().default(null),
+    subTitle: z.string().nullable().default(null),
+    banner: z.string().nullable().default(null),
+  }))(gsheetContent.headingCustomStyles, (customStyles, row) => {
+    match(row)
+      .with({ target: P.string.regex(/subtitle/gi) }, ({ customStyle }) => customStyles.subTitle = customStyle || null)
+      .with({ target: P.string.regex(/title/gi) }, ({ customStyle }) => customStyles.title = customStyle || null)
+      .with({ target: P.string.regex(/banner/gi) }, ({ customStyle }) => customStyles.banner = customStyle || null)
+      .run()
+  });
+
   const featureFlags = transformRows('featureFlags', z.object({
     favoritesEnabled: z.boolean().default(true),
     roomsDisplayed: z.boolean().default(false),
@@ -561,7 +580,7 @@ export async function crawlGsheet(eventId: string, gsheetId: string): Promise<Fu
     logoUrl: mainDescription.logoUrl,
     theming: {
       colors: theming,
-      headingCustomStyles: null, // TODO
+      headingCustomStyles,
       headingSrcSet: null, // TODO
       customImportedFonts: null, // TODO
     }
