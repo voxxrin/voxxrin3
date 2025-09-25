@@ -78,6 +78,20 @@ const GSHEETS_EVENT_DESCRIPTORS = {
     cols: createColDescriptor({label: 'I', pictureUrl: 'J',}),
     ignoreRowWhen: (rowType) => !rowType.label
   }),
+  customImportedFonts: createDescriptor({
+    sheetName: "Event description",
+    firstRowIsHeader: true,
+    minRow: 2,
+    cols: createColDescriptor({provider: { col: 'L', parser: z.literal('google-fonts') }, family: 'M',}),
+    ignoreRowWhen: (rowType) => !rowType.provider || !rowType.family
+  }),
+  headingSrcSets: createDescriptor({
+    sheetName: "Event description",
+    firstRowIsHeader: true,
+    minRow: 2,
+    cols: createColDescriptor({descriptor: 'O', url: 'P',}),
+    ignoreRowWhen: (rowType) => !rowType.descriptor || !rowType.url
+  }),
   features: createDescriptor({
     sheetName: "Features",
     firstRowIsHeader: true,
@@ -598,8 +612,8 @@ export async function crawlGsheet(eventId: string, gsheetId: string): Promise<Fu
         dark: darkTheming,
       },
       headingCustomStyles,
-      headingSrcSet: null, // TODO
-      customImportedFonts: null, // TODO
+      headingSrcSet: gsheetContent.headingSrcSets,
+      customImportedFonts: gsheetContent.customImportedFonts,
     }
   }
 
