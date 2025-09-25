@@ -25,7 +25,7 @@ import {
 import {Talk} from "@shared/daily-schedule.firestore";
 import {fillBreakIcons, toTimezoneOffsettedDateTime} from "../utils";
 import {Temporal} from "@js-temporal/polyfill";
-import { SponsorCategory } from "@shared/conference-descriptor.firestore";
+import {EventRecordingConfig, SponsorCategory} from "@shared/conference-descriptor.firestore";
 
 
 const GSHEETS_EVENT_DESCRIPTORS = {
@@ -409,6 +409,10 @@ export async function crawlGsheet(eventId: string, gsheetId: string): Promise<Fu
       .run();
   });
 
+  const recording: EventRecordingConfig|undefined = match(recordingConfig)
+    .with({ youtubeHandle: P.nonNullable, platform: P.nonNullable}, recordingConfig => recordingConfig)
+    .otherwise(() => undefined)
+
   const scaleRatingsConfig = transformRows('scaleRating', z.object({
     enabled: z.boolean(),
     icon: z.union([z.literal('star'), z.literal('thumbs-up')]),
@@ -465,9 +469,9 @@ export async function crawlGsheet(eventId: string, gsheetId: string): Promise<Fu
     speakersByLabel[rawSpeaker.label] = {
       id: rawSpeaker.id,
       fullName: rawSpeaker.fullName,
-      photoUrl: rawSpeaker.photoUrl,
-      companyName: rawSpeaker.companyName,
-      bio: rawSpeaker.bio,
+      photoUrl: rawSpeaker.photoUrl || '',
+      companyName: rawSpeaker.companyName || '',
+      bio: rawSpeaker.bio || '',
       social: ([] as SocialLink[])
         .concat(rawSpeaker.website ? [{ type: 'website' as const, url: rawSpeaker.website }]:[])
         .concat(rawSpeaker.xwitter ? [{ type: 'twitter' as const, url: rawSpeaker.xwitter }]:[])
@@ -660,9 +664,7 @@ export async function crawlGsheet(eventId: string, gsheetId: string): Promise<Fu
           minimumAverageScoreToBeConsidered: scaleRatingsConfig.minimumAverageScoreToBeConsidered,
           numberOfDailyTopTalksConsidered: scaleRatingsConfig.numberOfDailyTopTalksConsidered,
         },
-        recording: match(recordingConfig)
-          .with({ youtubeHandle: P.nonNullable, platform: P.nonNullable}, recordingConfig => recordingConfig)
-          .otherwise(() => undefined),
+        ...(recording ? { recording } : {}),
       },
       talkFormats: gsheetContent.scheduleFormatsSetup,
       talkTracks: gsheetContent.scheduleTracksSetup,
