@@ -1,6 +1,7 @@
 import {describe, assert, it } from 'vitest'
 import {crawlGsheet} from "./gsheets-crawler";
 import type {FullEvent} from "../../models/Event";
+import {writeFile} from "node:fs/promises";
 
 describe('gsheet crawler', async () => {
   it(`Trying to crawl sample crawler`, async () => {
@@ -8,7 +9,7 @@ describe('gsheet crawler', async () => {
 
     const expectedEvent: FullEvent = {
       "id": "testing event",
-      "info": {
+      "listableEventInfo": {
         "id": "testing event",
         "title": "Long event title",
         "description": "2 days of shared experiences",
@@ -131,6 +132,60 @@ describe('gsheet crawler', async () => {
                           "type": "github",
                           "url": "fcamblor"
                         }
+                      ],
+                      "talks": [
+                        {
+                          "id": "1",
+                          "title": "Keynote de démarrage",
+                          "format": {
+                            "id": "keynote",
+                            "title": "Keynote",
+                            "duration": "PT30m",
+                            "themeColor": "#165CE3"
+                          },
+                          "language": "fr",
+                          "track": {
+                            "id": "numbers",
+                            "title": "Chiffres",
+                            "themeColor": "#DA8DE0"
+                          },
+                          "tags": [],
+                          "allocation": {
+                            "room": {
+                              "id": "s1",
+                              "title": "Salle 1"
+                            },
+                            "start": "2024-04-17T09:00:00+02:00",
+                            "end": "2024-04-17T09:30:00+02:00"
+                          },
+                          "otherSpeakers": []
+                        },
+                        {
+                          "id": "3",
+                          "title": "Keynote J2",
+                          "format": {
+                            "id": "keynote",
+                            "title": "Keynote",
+                            "duration": "PT30m",
+                            "themeColor": "#165CE3"
+                          },
+                          "language": "fr",
+                          "track": {
+                            "id": "projects",
+                            "title": "Projets",
+                            "themeColor": "#EA7872"
+                          },
+                          "tags": [],
+                          "allocation": {
+                            "room": {
+                              "id": "s1",
+                              "title": "Salle 1"
+                            },
+                            "start": "2024-04-18T09:00:00+02:00",
+                            "end": "2024-04-18T09:30:00+02:00"
+                          },
+                          "otherSpeakers": []
+                        }
                       ]
                     }
                   ],
@@ -202,6 +257,60 @@ describe('gsheet crawler', async () => {
                           "type": "github",
                           "url": "fcamblor"
                         }
+                      ],
+                      "talks": [
+                        {
+                          "id": "1",
+                          "title": "Keynote de démarrage",
+                          "format": {
+                            "id": "keynote",
+                            "title": "Keynote",
+                            "duration": "PT30m",
+                            "themeColor": "#165CE3"
+                          },
+                          "language": "fr",
+                          "track": {
+                            "id": "numbers",
+                            "title": "Chiffres",
+                            "themeColor": "#DA8DE0"
+                          },
+                          "tags": [],
+                          "allocation": {
+                            "room": {
+                              "id": "s1",
+                              "title": "Salle 1"
+                            },
+                            "start": "2024-04-17T09:00:00+02:00",
+                            "end": "2024-04-17T09:30:00+02:00"
+                          },
+                          "otherSpeakers": []
+                        },
+                        {
+                          "id": "3",
+                          "title": "Keynote J2",
+                          "format": {
+                            "id": "keynote",
+                            "title": "Keynote",
+                            "duration": "PT30m",
+                            "themeColor": "#165CE3"
+                          },
+                          "language": "fr",
+                          "track": {
+                            "id": "projects",
+                            "title": "Projets",
+                            "themeColor": "#EA7872"
+                          },
+                          "tags": [],
+                          "allocation": {
+                            "room": {
+                              "id": "s1",
+                              "title": "Salle 1"
+                            },
+                            "start": "2024-04-18T09:00:00+02:00",
+                            "end": "2024-04-18T09:30:00+02:00"
+                          },
+                          "otherSpeakers": []
+                        }
                       ]
                     }
                   ],
@@ -254,13 +363,69 @@ describe('gsheet crawler', async () => {
                   "type": "github",
                   "url": "fcamblor"
                 }
+              ],
+              "talks": [
+                {
+                  "id": "1",
+                  "title": "Keynote de démarrage",
+                  "format": {
+                    "id": "keynote",
+                    "title": "Keynote",
+                    "duration": "PT30m",
+                    "themeColor": "#165CE3"
+                  },
+                  "language": "fr",
+                  "track": {
+                    "id": "numbers",
+                    "title": "Chiffres",
+                    "themeColor": "#DA8DE0"
+                  },
+                  "tags": [],
+                  "allocation": {
+                    "room": {
+                      "id": "s1",
+                      "title": "Salle 1"
+                    },
+                    "start": "2024-04-17T09:00:00+02:00",
+                    "end": "2024-04-17T09:30:00+02:00"
+                  },
+                  "otherSpeakers": []
+                },
+                {
+                  "id": "3",
+                  "title": "Keynote J2",
+                  "format": {
+                    "id": "keynote",
+                    "title": "Keynote",
+                    "duration": "PT30m",
+                    "themeColor": "#165CE3"
+                  },
+                  "language": "fr",
+                  "track": {
+                    "id": "projects",
+                    "title": "Projets",
+                    "themeColor": "#EA7872"
+                  },
+                  "tags": [],
+                  "allocation": {
+                    "room": {
+                      "id": "s1",
+                      "title": "Salle 1"
+                    },
+                    "start": "2024-04-18T09:00:00+02:00",
+                    "end": "2024-04-18T09:30:00+02:00"
+                  },
+                  "otherSpeakers": []
+                }
               ]
             }
           ],
           "language": "fr",
           "isOverflow": false,
-          "start": "2024-04-17T09:00:00+02:00",
-          "end": "2024-04-17T09:30:00+02:00",
+          "allocation": {
+            "start": "2024-04-17T09:00:00+02:00",
+            "end": "2024-04-17T09:30:00+02:00"
+          },
           "summary": "Une super présentation qui parle de sujets intéressants",
           "description": "Une super présentation qui parle de sujets intéressants",
           "tags": [],
@@ -304,17 +469,159 @@ describe('gsheet crawler', async () => {
                   "type": "github",
                   "url": "fcamblor"
                 }
+              ],
+              "talks": [
+                {
+                  "id": "1",
+                  "title": "Keynote de démarrage",
+                  "format": {
+                    "id": "keynote",
+                    "title": "Keynote",
+                    "duration": "PT30m",
+                    "themeColor": "#165CE3"
+                  },
+                  "language": "fr",
+                  "track": {
+                    "id": "numbers",
+                    "title": "Chiffres",
+                    "themeColor": "#DA8DE0"
+                  },
+                  "tags": [],
+                  "allocation": {
+                    "room": {
+                      "id": "s1",
+                      "title": "Salle 1"
+                    },
+                    "start": "2024-04-17T09:00:00+02:00",
+                    "end": "2024-04-17T09:30:00+02:00"
+                  },
+                  "otherSpeakers": []
+                },
+                {
+                  "id": "3",
+                  "title": "Keynote J2",
+                  "format": {
+                    "id": "keynote",
+                    "title": "Keynote",
+                    "duration": "PT30m",
+                    "themeColor": "#165CE3"
+                  },
+                  "language": "fr",
+                  "track": {
+                    "id": "projects",
+                    "title": "Projets",
+                    "themeColor": "#EA7872"
+                  },
+                  "tags": [],
+                  "allocation": {
+                    "room": {
+                      "id": "s1",
+                      "title": "Salle 1"
+                    },
+                    "start": "2024-04-18T09:00:00+02:00",
+                    "end": "2024-04-18T09:30:00+02:00"
+                  },
+                  "otherSpeakers": []
+                }
               ]
             }
           ],
           "language": "fr",
           "isOverflow": false,
-          "start": "2024-04-18T09:00:00+02:00",
-          "end": "2024-04-18T09:30:00+02:00",
+          "allocation": {
+            "start": "2024-04-18T09:00:00+02:00",
+            "end": "2024-04-18T09:30:00+02:00"
+          },
           "summary": "blablabla",
           "description": "blablabla",
           "tags": [],
           "assets": []
+        }
+      ],
+      "lineupSpeakers": [
+        {
+          "id": "frederic-camblor",
+          "fullName": "Frédéric Camblor",
+          "photoUrl": "https://pbs.twimg.com/profile_images/1191995569364975616/7NnECJaV_400x400.png",
+          "companyName": "4SH",
+          "bio": "",
+          "social": [
+            {
+              "type": "twitter",
+              "url": "@fcamblor"
+            },
+            {
+              "type": "linkedin",
+              "url": "frederic-camblor"
+            },
+            {
+              "type": "github",
+              "url": "fcamblor"
+            }
+          ],
+          "talks": [
+            {
+              "id": "1",
+              "title": "Keynote de démarrage",
+              "format": {
+                "id": "keynote",
+                "title": "Keynote",
+                "duration": "PT30m",
+                "themeColor": "#165CE3"
+              },
+              "language": "fr",
+              "track": {
+                "id": "numbers",
+                "title": "Chiffres",
+                "themeColor": "#DA8DE0"
+              },
+              "tags": [],
+              "allocation": {
+                "room": {
+                  "id": "s1",
+                  "title": "Salle 1"
+                },
+                "start": "2024-04-17T09:00:00+02:00",
+                "end": "2024-04-17T09:30:00+02:00"
+              },
+              "otherSpeakers": []
+            },
+            {
+              "id": "3",
+              "title": "Keynote J2",
+              "format": {
+                "id": "keynote",
+                "title": "Keynote",
+                "duration": "PT30m",
+                "themeColor": "#165CE3"
+              },
+              "language": "fr",
+              "track": {
+                "id": "projects",
+                "title": "Projets",
+                "themeColor": "#EA7872"
+              },
+              "tags": [],
+              "allocation": {
+                "room": {
+                  "id": "s1",
+                  "title": "Salle 1"
+                },
+                "start": "2024-04-18T09:00:00+02:00",
+                "end": "2024-04-18T09:30:00+02:00"
+              },
+              "otherSpeakers": []
+            }
+          ]
+        },
+        {
+          "id": "test2",
+          "fullName": "test 2",
+          "photoUrl": "https://pbs.twimg.com/profile_images/1191995569364975616/7NnECJaV_400x400.png",
+          "companyName": "4SH",
+          "bio": "",
+          "social": [],
+          "talks": []
         }
       ],
       "conferenceDescriptor": {

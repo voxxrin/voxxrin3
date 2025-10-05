@@ -17,7 +17,6 @@ import {
   DailySchedule,
   DetailedTalk,
   SocialLink,
-  Speaker,
   TalksTimeSlot,
   talksTimeSlotsFrom,
   TalkTimeSlotId
@@ -26,6 +25,7 @@ import {Talk} from "@shared/daily-schedule.firestore";
 import {fillBreakIcons, toTimezoneOffsettedDateTime} from "../utils";
 import {Temporal} from "@js-temporal/polyfill";
 import {EventRecordingConfig, SponsorCategory} from "@shared/conference-descriptor.firestore";
+import {LineupSpeaker} from "@shared/event-lineup.firestore";
 
 
 const GSHEETS_EVENT_DESCRIPTORS = {
@@ -484,10 +484,11 @@ export async function crawlGsheet(eventId: string, gsheetId: string): Promise<Fu
         .concat(rawSpeaker.twitch ? [{ type: 'twitch' as const, url: rawSpeaker.twitch }]:[])
         .concat(rawSpeaker.github ? [{ type: 'github' as const, url: rawSpeaker.github }]:[])
         .concat(rawSpeaker.facebook ? [{ type: 'facebook' as const, url: rawSpeaker.facebook }]:[])
-        .concat(rawSpeaker.flickr ? [{ type: 'flickr' as const, url: rawSpeaker.flickr }]:[])
+        .concat(rawSpeaker.flickr ? [{ type: 'flickr' as const, url: rawSpeaker.flickr }]:[]),
+      talks: [], // we will build talks later (see at the end of the loop)
     }
     return speakersByLabel;
-  }, {} as Record<string, Speaker>);
+  }, {} as Record<string, LineupSpeaker>);
 
   const { dailySchedules, detailedTalks } = gsheetContent.schedule.reduce(({ dailySchedules, detailedTalks }, rawTalkOrBreak) => {
     const dayIndex = gsheetContent.days.findIndex(day => rawTalkOrBreak.start.startsWith(day.localDate));
@@ -556,16 +557,35 @@ export async function crawlGsheet(eventId: string, gsheetId: string): Promise<Fu
         }
         talksTimeslot.talks.push(talk);
 
+        const tags = parseCommaSeparatedValues(talkEntry.commaSeparatedTags);
         const detailedTalk: DetailedTalk = {
           ...talk,
-          start: talkStart,
-          end: talkEnd,
+          allocation: {
+            start: talkStart,
+            end: talkEnd,
+          },
           summary: talkEntry.summary || '',
           description: talkEntry.summary || '',
-          tags: parseCommaSeparatedValues(talkEntry.commaSeparatedTags),
+          tags: tags,
           assets: [],
         }
         detailedTalks.push(detailedTalk);
+
+        talkSpeakers.forEach(speaker => {
+          speaker.talks.push({
+            id: talk.id,
+            title: talk.title,
+            format,
+            language: language.id,
+            track, tags,
+            allocation: {
+              room,
+              start: talkStart,
+              end: talkEnd,
+            },
+            otherSpeakers: talkSpeakers.filter(otherSpeaker => otherSpeaker.id !== speaker.id),
+          })
+        })
       })
       .with({ type: 'Break' }, breakEntry => {
         const breakStart = toTimezoneOffsettedDateTime(`${breakEntry.start}:00`, mainDescription.timezone);
@@ -596,7 +616,7 @@ export async function crawlGsheet(eventId: string, gsheetId: string): Promise<Fu
 
   fillBreakIcons(dailySchedules, mainDescription.timezone);
 
-  const eventInfo: FullEvent['info'] = {
+  const eventInfo: FullEvent['listableEventInfo'] = {
     id: eventId,
     title: mainDescription.title,
     description: mainDescription.description,
@@ -625,9 +645,10 @@ export async function crawlGsheet(eventId: string, gsheetId: string): Promise<Fu
 
   const event: FullEvent = {
     id: eventId,
-    info: eventInfo,
+    listableEventInfo: eventInfo,
     daySchedules: dailySchedules,
     talks: detailedTalks,
+    lineupSpeakers: Object.values(speakersByLabel),
     conferenceDescriptor: {
       ...eventInfo,
       headingTitle: mainDescription.headingTitle,
