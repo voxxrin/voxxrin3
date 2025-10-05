@@ -1,4 +1,4 @@
-import {ISOLocalDate} from "@shared/type-utils";
+import {ISODuration, ISOLocalDate} from "@shared/type-utils";
 import {UserLocale} from "@/models/VoxxrinUser";
 import {Temporal} from "temporal-polyfill";
 import {match, P} from "ts-pattern";
@@ -139,7 +139,7 @@ export function toISOLocalDate(zdt: Temporal.ZonedDateTime): ISOLocalDate {
     return zdt.toPlainDate().toString() as ISOLocalDate;
 }
 
-export function toHMMDuration(duration: `PT${number}m`): string {
+export function toHMMDuration(duration: ISODuration): string {
     const temporalDuration = Temporal.Duration.from(duration)
 
     let totalMinutes = temporalDuration.total('minutes');
