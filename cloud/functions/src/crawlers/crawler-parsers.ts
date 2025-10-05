@@ -1,12 +1,13 @@
 import {z, ZodLiteral} from "zod";
-import {type ISODatetime, ISOLocalDate, ISOZonedTime} from "@shared/type-utils";
+import {ISODuration, ISOLocalDate, ISOZonedTime} from "@shared/type-utils";
 import {ConferenceDescriptor} from "@shared/conference-descriptor.firestore";
-import {RecordingPlatform, ScheduleTimeSlot} from "@shared/daily-schedule.firestore";
+import {ScheduleTimeSlot} from "@shared/daily-schedule.firestore";
 import {ISO_DATETIME_PARSER} from "../utils/zod-parsers";
 
 
 export const HEX_COLOR_PARSER = z.string().regex(/#[0-9a-fA-F]{3}(?:[0-9a-fA-F]{3})?/gi) as unknown as ZodLiteral<`#${string}`>
-export const DURATION_PARSER = z.string().regex(/PT\d+m/gi) as unknown as ZodLiteral<`PT${number}m`>
+export const DURATION_IN_MINUTES_PARSER = z.coerce.number().transform(value => `PT${value}m` as ISODuration)
+export const DURATION_PARSER = z.string().regex(/PT\d+m/gi) as unknown as ZodLiteral<ISODuration>
 export const ISO_LOCAL_DATE_PARSER = z.string().regex(/\d{4}-\d{2}-\d{2}/gi) as unknown as ZodLiteral<ISOLocalDate>
 export const TIMESLOT_ID_PARSER = z.string()
     .regex(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?(?:Z|(?:[+-]\d{2}:\d{2}))--\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?(?:Z|(?:[+-]\d{2}:\d{2}))/gi) as unknown as ZodLiteral<ScheduleTimeSlot['id']>
@@ -324,21 +325,32 @@ export const FULL_EVENT_PARSER = z.object({
     talks: z.array(DETAILED_TALK_PARSER)
 })
 
-const firebaseCrawlerDescriptorParserBase = z.object({
+export const FIREBASE_CRAWLER_DESCRIPTOR_PARSER = z.object({
     eventId: z.string().optional(),
     eventFamily: z.string(),
     eventName: z.string(),
-    descriptorUrl: z.string(),
-    kind: z.string(),
+}).and(z.discriminatedUnion('kind', [
+    z.object({ kind: z.literal("devoxx"), descriptorUrl: z.string() }),
+    z.object({ kind: z.literal("devoxx-scala"), descriptorUrl: z.string() }),
+    z.object({ kind: z.literal("la-product-conf"), descriptorUrl: z.string() }),
+    z.object({ kind: z.literal("web2day"), descriptorUrl: z.string() }),
+    z.object({ kind: z.literal("camping-des-speakers"), descriptorUrl: z.string() }),
+    z.object({ kind: z.literal("jugsummercamp"), descriptorUrl: z.string() }),
+    z.object({ kind: z.literal("bdxio"), descriptorUrl: z.string() }),
+    z.object({ kind: z.literal("codeurs-en-seine"), descriptorUrl: z.string() }),
+    z.object({ kind: z.literal("openplanner"), descriptorUrl: z.string() }),
+    z.object({ kind: z.literal("single-file"), descriptorUrl: z.string() }),
+    z.object({ kind: z.literal("gsheets"), gsheetId: z.string() }),
+])).and(z.union([
+  z.object({
     visibility: z.literal("public").default("public"),
-})
-const privateFirebaseCrawlerDescriptorParser = firebaseCrawlerDescriptorParserBase.extend({
-  visibility: z.literal("private"),
-  spaceToken: z.string(),
-});
-const publicFirebaseCrawlerDescriptorParser = firebaseCrawlerDescriptorParserBase.extend({
-});
-export const FIREBASE_CRAWLER_DESCRIPTOR_PARSER = z.union([
-  publicFirebaseCrawlerDescriptorParser,
-  privateFirebaseCrawlerDescriptorParser,
-])
+  }),
+  z.object({
+    visibility: z.literal("private"),
+    spaceToken: z.string(),
+  })
+]).superRefine((data, ctx) => {
+  if (data.visibility === 'private' && !data.spaceToken) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, message: "spaceToken is required for private visibility", path: ["spaceToken"] });
+  }
+}))

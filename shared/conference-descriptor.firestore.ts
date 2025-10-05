@@ -19,6 +19,17 @@ export type ThemedLanguage = {
   themeColor: HexColor,
 }
 
+export type Sponsorship = {
+  name: string,
+  logoUrl: string,
+  href: string,
+}
+
+export type SponsorCategory = {
+  type: string, typeColor: string, typeFontColor?: string,
+  sponsorships: Sponsorship[]
+}
+
 export type ConferenceDescriptor = Omit<ListableEvent, "websiteUrl"> & {
     headingTitle: string,
     headingSubTitle: string|null,
@@ -80,12 +91,7 @@ export type ConferenceDescriptor = Omit<ListableEvent, "websiteUrl"> & {
         socialMedias?: Array<{
             type: SocialMediaType, href: string
         }>|undefined,
-        sponsors?: Array<{
-            type: string, typeColor: string, typeFontColor?: string,
-            sponsorships: Array<{
-                name: string, logoUrl: string, href: string
-            }>
-        }>|undefined,
+        sponsors?: SponsorCategory[]|undefined,
     },
     formattings: {
       talkFormatTitle: 'with-duration'|'without-duration',

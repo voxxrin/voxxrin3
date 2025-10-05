@@ -110,7 +110,7 @@ export async function requestRecordingAssetsRefresh(response: Response, pathPara
       })).otherwise(({ unmatchedYoutubeVideos, unmatchedTalks }) => ({
         updates: updatesSummary,
         matchings: {
-          message: `There are ${unmatchedTalks.length} talks and ${unmatchedYoutubeVideos.length} videos which didn't matched`,
+          message: `There are ${unmatchedTalks.length} talks and ${unmatchedYoutubeVideos.length} videos which didn't match`,
           unmatchedElements: [
             ...unmatchedYoutubeVideos.map(video => ({ type: 'Video', label: `${video.title} | ${video.duration} | published: ${video.publishedAt}` })),
             ...unmatchedTalks.map(({talk}) => ({ type: 'Talk', label: `[${talk.id}] ${talk.title} (${talk.speakers.map(sp => sp.fullName).join(", ")})`, format: talk.format.title })),
