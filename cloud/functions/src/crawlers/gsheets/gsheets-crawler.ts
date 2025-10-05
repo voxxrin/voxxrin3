@@ -32,42 +32,42 @@ const GSHEETS_EVENT_DESCRIPTORS = {
   mainDescription: createDescriptor({
     sheetName: "Event description",
     firstRowIsHeader: true,
-    minRow: 1, maxRow: 12,
+    minRow: 1, maxRow: 14,
     cols: createColDescriptor({name: 'A', value: 'B?',}),
     ignoreRowWhen: (rowType) => !rowType.name,
   }),
   eventLocation: createDescriptor({
     sheetName: "Event description",
     firstRowIsHeader: true,
-    minRow: 13, maxRow: 20,
+    minRow: 15, maxRow: 22,
     cols: createColDescriptor({name: 'A', value: 'B',} as const),
     ignoreRowWhen: (rowType) => !rowType.name
   }),
   theming: createDescriptor({
     sheetName: "Event description",
     firstRowIsHeader: true,
-    minRow: 21, maxRow: 36,
+    minRow: 23, maxRow: 36,
     cols: createColDescriptor({colorName: 'A', color: 'B',}),
     ignoreRowWhen: (rowType) => !rowType.colorName
   }),
   headingCustomStyles: createDescriptor({
     sheetName: "Event description",
     firstRowIsHeader: true,
-    minRow: 37, maxRow: 41,
+    minRow: 39, maxRow: 43,
     cols: createColDescriptor({target: 'A', customStyle: 'B?',}),
     ignoreRowWhen: (rowType) => !rowType.customStyle
   }),
   socialMedia: createDescriptor({
     sheetName: "Event description",
     firstRowIsHeader: true,
-    minRow: 42,
+    minRow: 44,
     cols: createColDescriptor({socialMediaName: 'A', href: 'B?',}),
     ignoreRowWhen: (rowType) => !rowType.socialMediaName
   }),
   days: createDescriptor({
     sheetName: "Event description",
     firstRowIsHeader: true,
-    minRow: 2, maxRow: 17,
+    minRow: 2, maxRow: 19,
     cols: createColDescriptor({id: 'E', localDate: {col: 'F', parser: ISO_LOCAL_DATE_PARSER },}),
     ignoreRowWhen: (rowType) => !rowType.id
   }),
@@ -268,13 +268,15 @@ export async function crawlGsheet(eventId: string, gsheetId: string): Promise<Fu
   const gsheetContent = await gsheetReader.readAll(gsheetId);
 
   const mainDescription = transformRows('mainDescription', z.object({
-    title: z.string(), headingTitle: z.string(), description: z.string().optional(),
-    timezone: z.string(), keywords: z.array(z.string()), peopleDescription: z.string().optional(),
+    title: z.string(), headingTitle: z.string(), headingSubTitle: z.string().optional(), headingBackground: z.string().optional(),
+    description: z.string().optional(), timezone: z.string(), keywords: z.array(z.string()), peopleDescription: z.string().optional(),
     backgroundUrl: z.string(), logoUrl: z.string(), ticketingUrl: z.string(),
   }))(gsheetContent.mainDescription, (mainDescription, row) => {
     match(row)
       .with({ name: P.string.regex(/^title/gi) }, ({ value }) => mainDescription.title = value)
       .with({ name: P.string.regex(/^heading\s+title/gi) }, ({ value }) => mainDescription.headingTitle = value)
+      .with({ name: P.string.regex(/^heading\s+subtitle/gi) }, ({ value }) => mainDescription.headingSubTitle = value)
+      .with({ name: P.string.regex(/^heading\s+background/gi) }, ({ value }) => mainDescription.headingBackground = value)
       .with({ name: P.string.regex(/^description/gi) }, ({ value }) => mainDescription.description = value)
       .with({ name: P.string.regex(/^timezone/gi) }, ({ value }) => mainDescription.timezone = value)
       .with({ name: P.string.regex(/keywords/gi) }, ({ value }) => mainDescription.keywords = parseCommaSeparatedValues(value))
@@ -629,8 +631,8 @@ export async function crawlGsheet(eventId: string, gsheetId: string): Promise<Fu
     conferenceDescriptor: {
       ...eventInfo,
       headingTitle: mainDescription.headingTitle,
-      headingSubTitle: "", // TODO
-      headingBackground: "", // TODO
+      headingSubTitle: mainDescription.headingSubTitle || null,
+      headingBackground: mainDescription.headingBackground || null,
       features: {
         favoritesEnabled: featureFlags.favoritesEnabled,
         roomsDisplayed: featureFlags.roomsDisplayed,
