@@ -110,7 +110,7 @@ export const LISTABLE_EVENT_PARSER = z.object({
         }).optional(),
         address: z.string().optional(),
     }),
-    peopleDescription: z.string().nullish().optional(),
+    peopleDescription: z.string().nullish().optional().transform(value => value || ""),
     backgroundUrl: z.string(),
     logoUrl: z.string(),
     theming: EVENT_THEME_PARSER,

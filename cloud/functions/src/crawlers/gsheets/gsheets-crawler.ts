@@ -277,17 +277,17 @@ export async function crawlGsheet(eventId: string, gsheetId: string): Promise<Fu
     backgroundUrl: z.string(), logoUrl: z.string(), ticketingUrl: z.string(),
   }))(gsheetContent.mainDescription, (mainDescription, row) => {
     match(row)
-      .with({ name: P.string.regex(/^title/gi) }, ({ value }) => mainDescription.title = value)
-      .with({ name: P.string.regex(/^heading\s+title/gi) }, ({ value }) => mainDescription.headingTitle = value)
-      .with({ name: P.string.regex(/^heading\s+subtitle/gi) }, ({ value }) => mainDescription.headingSubTitle = value)
-      .with({ name: P.string.regex(/^heading\s+background/gi) }, ({ value }) => mainDescription.headingBackground = value)
-      .with({ name: P.string.regex(/^description/gi) }, ({ value }) => mainDescription.description = value)
-      .with({ name: P.string.regex(/^timezone/gi) }, ({ value }) => mainDescription.timezone = value)
+      .with({ name: P.string.regex(/^title/gi) }, ({ value }) => mainDescription.title = value || "")
+      .with({ name: P.string.regex(/^heading\s+title/gi) }, ({ value }) => mainDescription.headingTitle = value || "")
+      .with({ name: P.string.regex(/^heading\s+subtitle/gi) }, ({ value }) => mainDescription.headingSubTitle = value || "")
+      .with({ name: P.string.regex(/^heading\s+background/gi) }, ({ value }) => mainDescription.headingBackground = value || "")
+      .with({ name: P.string.regex(/^description/gi) }, ({ value }) => mainDescription.description = value || "")
+      .with({ name: P.string.regex(/^timezone/gi) }, ({ value }) => mainDescription.timezone = value || "")
       .with({ name: P.string.regex(/keywords/gi) }, ({ value }) => mainDescription.keywords = parseCommaSeparatedValues(value))
-      .with({ name: P.string.regex(/^people\s+description/gi) }, ({ value }) => mainDescription.peopleDescription = value)
-      .with({ name: P.string.regex(/^background\s+url/gi) }, ({ value }) => mainDescription.backgroundUrl = value)
-      .with({ name: P.string.regex(/^logo\s+url/gi) }, ({ value }) => mainDescription.logoUrl = value)
-      .with({ name: P.string.regex(/^ticketing\s+url/gi) }, ({ value }) => mainDescription.ticketingUrl = value)
+      .with({ name: P.string.regex(/^people\s+description/gi) }, ({ value }) => mainDescription.peopleDescription = value || "")
+      .with({ name: P.string.regex(/^background\s+url/gi) }, ({ value }) => mainDescription.backgroundUrl = value || "")
+      .with({ name: P.string.regex(/^logo\s+url/gi) }, ({ value }) => mainDescription.logoUrl = value || "")
+      .with({ name: P.string.regex(/^ticketing\s+url/gi) }, ({ value }) => mainDescription.ticketingUrl = value || "")
       .run();
   });
 
