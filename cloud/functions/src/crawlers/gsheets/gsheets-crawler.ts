@@ -6,7 +6,7 @@ import {HexColor, ISODatetime, ISODuration, ISOLocalDate} from "@shared/type-uti
 import {
   DURATION_IN_MINUTES_PARSER,
   HEX_COLOR_PARSER,
-  ISO_LOCAL_DATE_PARSER,
+  ISO_LOCAL_DATE_PARSER, RATINGS_CONFIG_PARSER,
   SOCIAL_MEDIA_TYPE
 } from "../crawler-parsers";
 import {logger} from "firebase-functions";
@@ -145,7 +145,7 @@ const GSHEETS_EVENT_DESCRIPTORS = {
     sheetName: "Features",
     firstRowIsHeader: true,
     minRow: 1, maxRow: 3,
-    cols: createColDescriptor({name: 'K', value: 'L',}),
+    cols: createColDescriptor({name: 'K', value: 'L?',}), // colum L should be mandatory only when K=Enabled
     ignoreRowWhen: (rowType) => !rowType.name
   }),
   speakers: createDescriptor({
@@ -445,12 +445,13 @@ export async function crawlGsheet(eventId: string, gsheetId: string): Promise<Fu
       .run();
   });
 
-  const freeTextRatingsConfig = transformRows('freeTextRating', z.object({
-    enabled: z.boolean(), maxLength: z.number(),
-  }))(gsheetContent.freeTextRating, (config, row) => {
+  const freeTextRatingsConfig = transformRows('freeTextRating', z.discriminatedUnion("enabled", [
+    z.object({ enabled: z.literal(true), maxLength: z.number() }),
+    z.object({ enabled: z.literal(false), maxLength: z.number() }),
+  ]))(gsheetContent.freeTextRating, (config, row) => {
     match(row)
       .with({ name: P.string.regex(/free\s+text\s+rating/gi) }, ({ value }) =>  config.enabled = parseEnabledBoolean(value))
-      .with({ name: P.string.regex(/max\s+length/gi) }, ({ value }) =>  config.maxLength = Number(value))
+      .with({ name: P.string.regex(/max\s+length/gi) }, ({ value }) =>  config.maxLength = (value === undefined) ? 0 : Number(value))
       .run();
   });
 
