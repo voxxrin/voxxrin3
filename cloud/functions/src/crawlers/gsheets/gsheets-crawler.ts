@@ -213,7 +213,11 @@ const GSHEETS_EVENT_DESCRIPTORS = {
       roomId: 'B',
       type: { col: 'C', parser: z.union([z.literal('Talk'), z.literal('Break')]) },
       formatId: 'D',
-      start: { col: 'E', parser: z.string().regex(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/gi) as unknown as ZodLiteral<`${number}-${number}-${number}T${number}:${number}`> },
+      start: {
+        col: 'E',
+        parser: z.string().regex(/\d{4}-\d{2}-\d{2}[T\s]\d{2}:\d{2}/gi)
+          .transform(time => time.replace(" ", "T")) as unknown as ZodLiteral<`${number}-${number}-${number}T${number}:${number}`>
+      },
       title: 'G',
       trackId: 'H?',
       langId: 'I?',
