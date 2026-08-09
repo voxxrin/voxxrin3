@@ -31,3 +31,6 @@ export const error = function(msg:string) {
 initializeApp();
 
 export const db = getFirestore();
+// Will avoid to be in paranoid mode on every crawlers regarding undefined values
+// as this may prevent conf descriptor creation
+db.settings({ ignoreUndefinedProperties: true });
