@@ -6,7 +6,7 @@ import {HexColor, ISODatetime, ISODuration, ISOLocalDate} from "@shared/type-uti
 import {
   DURATION_IN_MINUTES_PARSER,
   HEX_COLOR_PARSER,
-  ISO_LOCAL_DATE_PARSER,
+  ISO_LOCAL_DATE_PARSER, RATINGS_CONFIG_PARSER,
   SOCIAL_MEDIA_TYPE
 } from "../crawler-parsers";
 import {logger} from "firebase-functions";
@@ -145,7 +145,7 @@ const GSHEETS_EVENT_DESCRIPTORS = {
     sheetName: "Features",
     firstRowIsHeader: true,
     minRow: 1, maxRow: 3,
-    cols: createColDescriptor({name: 'K', value: 'L',}),
+    cols: createColDescriptor({name: 'K', value: 'L?',}), // colum L should be mandatory only when K=Enabled
     ignoreRowWhen: (rowType) => !rowType.name
   }),
   speakers: createDescriptor({
@@ -213,7 +213,11 @@ const GSHEETS_EVENT_DESCRIPTORS = {
       roomId: 'B',
       type: { col: 'C', parser: z.union([z.literal('Talk'), z.literal('Break')]) },
       formatId: 'D',
-      start: { col: 'E', parser: z.string().regex(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/gi) as unknown as ZodLiteral<`${number}-${number}-${number}T${number}:${number}`> },
+      start: {
+        col: 'E',
+        parser: z.string().regex(/\d{4}-\d{2}-\d{2}[T\s]\d{2}:\d{2}/gi)
+          .transform(time => time.replace(" ", "T")) as unknown as ZodLiteral<`${number}-${number}-${number}T${number}:${number}`>
+      },
       title: 'G',
       trackId: 'H?',
       langId: 'I?',
@@ -273,17 +277,17 @@ export async function crawlGsheet(eventId: string, gsheetId: string): Promise<Fu
     backgroundUrl: z.string(), logoUrl: z.string(), ticketingUrl: z.string(),
   }))(gsheetContent.mainDescription, (mainDescription, row) => {
     match(row)
-      .with({ name: P.string.regex(/^title/gi) }, ({ value }) => mainDescription.title = value)
-      .with({ name: P.string.regex(/^heading\s+title/gi) }, ({ value }) => mainDescription.headingTitle = value)
-      .with({ name: P.string.regex(/^heading\s+subtitle/gi) }, ({ value }) => mainDescription.headingSubTitle = value)
-      .with({ name: P.string.regex(/^heading\s+background/gi) }, ({ value }) => mainDescription.headingBackground = value)
-      .with({ name: P.string.regex(/^description/gi) }, ({ value }) => mainDescription.description = value)
-      .with({ name: P.string.regex(/^timezone/gi) }, ({ value }) => mainDescription.timezone = value)
+      .with({ name: P.string.regex(/^title/gi) }, ({ value }) => mainDescription.title = value || "")
+      .with({ name: P.string.regex(/^heading\s+title/gi) }, ({ value }) => mainDescription.headingTitle = value || "")
+      .with({ name: P.string.regex(/^heading\s+subtitle/gi) }, ({ value }) => mainDescription.headingSubTitle = value || "")
+      .with({ name: P.string.regex(/^heading\s+background/gi) }, ({ value }) => mainDescription.headingBackground = value || "")
+      .with({ name: P.string.regex(/^description/gi) }, ({ value }) => mainDescription.description = value || "")
+      .with({ name: P.string.regex(/^timezone/gi) }, ({ value }) => mainDescription.timezone = value || "")
       .with({ name: P.string.regex(/keywords/gi) }, ({ value }) => mainDescription.keywords = parseCommaSeparatedValues(value))
-      .with({ name: P.string.regex(/^people\s+description/gi) }, ({ value }) => mainDescription.peopleDescription = value)
-      .with({ name: P.string.regex(/^background\s+url/gi) }, ({ value }) => mainDescription.backgroundUrl = value)
-      .with({ name: P.string.regex(/^logo\s+url/gi) }, ({ value }) => mainDescription.logoUrl = value)
-      .with({ name: P.string.regex(/^ticketing\s+url/gi) }, ({ value }) => mainDescription.ticketingUrl = value)
+      .with({ name: P.string.regex(/^people\s+description/gi) }, ({ value }) => mainDescription.peopleDescription = value || "")
+      .with({ name: P.string.regex(/^background\s+url/gi) }, ({ value }) => mainDescription.backgroundUrl = value || "")
+      .with({ name: P.string.regex(/^logo\s+url/gi) }, ({ value }) => mainDescription.logoUrl = value || "")
+      .with({ name: P.string.regex(/^ticketing\s+url/gi) }, ({ value }) => mainDescription.ticketingUrl = value || "")
       .run();
   });
 
@@ -441,12 +445,13 @@ export async function crawlGsheet(eventId: string, gsheetId: string): Promise<Fu
       .run();
   });
 
-  const freeTextRatingsConfig = transformRows('freeTextRating', z.object({
-    enabled: z.boolean(), maxLength: z.number(),
-  }))(gsheetContent.freeTextRating, (config, row) => {
+  const freeTextRatingsConfig = transformRows('freeTextRating', z.discriminatedUnion("enabled", [
+    z.object({ enabled: z.literal(true), maxLength: z.number() }),
+    z.object({ enabled: z.literal(false), maxLength: z.number() }),
+  ]))(gsheetContent.freeTextRating, (config, row) => {
     match(row)
       .with({ name: P.string.regex(/free\s+text\s+rating/gi) }, ({ value }) =>  config.enabled = parseEnabledBoolean(value))
-      .with({ name: P.string.regex(/max\s+length/gi) }, ({ value }) =>  config.maxLength = Number(value))
+      .with({ name: P.string.regex(/max\s+length/gi) }, ({ value }) =>  config.maxLength = (value === undefined) ? 0 : Number(value))
       .run();
   });
 

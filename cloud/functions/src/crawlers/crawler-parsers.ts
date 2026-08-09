@@ -110,7 +110,7 @@ export const LISTABLE_EVENT_PARSER = z.object({
         }).optional(),
         address: z.string().optional(),
     }),
-    peopleDescription: z.string().nullish().optional(),
+    peopleDescription: z.string().nullish().optional().transform(value => value || ""),
     backgroundUrl: z.string(),
     logoUrl: z.string(),
     theming: EVENT_THEME_PARSER,
@@ -157,10 +157,10 @@ export const RATINGS_CONFIG_PARSER = z.object({
     labels: z.array(z.string())
       .transform(arr => arr as ConferenceDescriptor['features']['ratings']['scale']['labels'])
   }),
-  'free-text': z.object({
-    enabled: z.boolean(),
-    maxLength: z.number()
-  }),
+  'free-text': z.discriminatedUnion("enabled", [
+    z.object({ enabled: z.literal(true), maxLength: z.number() }),
+    z.object({ enabled: z.literal(false), maxLength: z.number().nullable().optional().transform(value => (value===undefined || value===null) ? 0 : Number(value)) }),
+  ]),
   'custom-scale': z.object({
     enabled: z.boolean(),
     choices: z.array(z.object({

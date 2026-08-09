@@ -59,13 +59,14 @@ export function guessBreakIconFor(dayParticularities: {isFirst: boolean, isLast:
 
   const icon: Break['icon'] = match([dayParticularities, dailyTimeslotIndex, startZDT.hour, startZDT.minute])
     .with([{ isFirst: true }, 'first', P.any, P.any], () => 'ticket' as const)
-    .with([{ isLast: true }, 'last', P.any, P.any], () => 'wallet' as const)
+    .with([{ isLast: true }, 'last', P.number.lte(17), P.any], () => 'wallet' as const)
     .with([P.any, P.any, P.number.lte(10), P.any], () => 'cafe' as const)
     .with([P.any, P.any, 11, P.number.lt(45)], () => 'cafe' as const)
     .with([P.any, P.any, 11, P.number.gte(45)], () => 'restaurant' as const)
     .with([P.any, P.any, 12, P.any], () => 'restaurant' as const)
     .with([P.any, P.any, 13, P.any], () => 'restaurant' as const)
-    .with([P.any, P.any, P.number.lt(18), P.any], () => 'cafe' as const)
+    .with([P.any, P.any, 17, P.number.lt(45)], () => 'cafe' as const)
+    .with([P.any, P.any, 17, P.number.gte(45)], () => 'beer' as const)
     .with([P.any, P.any, P.number.gte(18), P.any], () => 'beer' as const)
     .otherwise(() => 'cafe' as const)
 
