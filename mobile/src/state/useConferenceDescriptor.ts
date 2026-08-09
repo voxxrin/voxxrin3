@@ -3,7 +3,7 @@ import {createVoxxrinConferenceDescriptor, VoxxrinConferenceDescriptor,} from "@
 import {SpacedEventId, stringifySpacedEventId} from "@/models/VoxxrinEvent";
 import {ConferenceDescriptor} from "@shared/conference-descriptor.firestore";
 import {deferredVuefireUseDocument} from "@/views/vue-utils";
-import {doc, DocumentReference} from "firebase/firestore";
+import {doc, DocumentReference, onSnapshot} from "firebase/firestore";
 import {db} from "@/state/firebase";
 import {createSharedComposable} from "@vueuse/core";
 import {Logger, PERF_LOGGER} from "@/services/Logger";
@@ -31,8 +31,21 @@ export function useConferenceDescriptor(
     const overridenEventDescriptorPropertiesRef = useOverridenEventDescriptorProperties();
 
     PERF_LOGGER.debug(() => `useConferenceDescriptor(${stringifySpacedEventId(unref(spacedEventIdRef))})`)
-    watch(() => unref(spacedEventIdRef), (newVal, oldVal) => {
+    watch(() => unref(spacedEventIdRef), (newVal, oldVal, onCleanup) => {
         PERF_LOGGER.debug(() => `useConferenceDescriptor[spacedEventIdRef] updated from [${stringifySpacedEventId(oldVal)}] to [${stringifySpacedEventId(newVal)}]`)
+      const docRef = getConferenceDescriptorDoc(newVal);
+      if (!docRef) return;
+
+      // enforce event-descriptor is available for event, otherwise show an error to quickly identify
+      // the issue
+      const unsub = onSnapshot(docRef, (snap) => {
+        if (!snap.exists()) {
+          const msg = `Missing event-descriptor/self for event "${newVal?.eventId?.value}" (space=${newVal?.spaceToken?.value ?? 'public'}). The crawler probably failed mid-run — check backend logs.`;
+          console.error(`[useConferenceDescriptor] ${msg}`);
+          throw new Error(msg);
+        }
+      });
+      onCleanup(unsub);
     }, {immediate: true})
 
     const firestoreConferenceDescriptorRef = deferredVuefireUseDocument([spacedEventIdRef],
