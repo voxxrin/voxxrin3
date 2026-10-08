@@ -3,7 +3,7 @@
             :class="{'_is-pined' : isPinnedRef}" v-if="event" v-themed-event-styles="event">
     <div class="eventItem-logoContainer">
       <div class="logo">
-        <ion-img :src="event.logoUrl" :alt="LL.Logo_event() + ' ' + event.title"/>
+        <ion-img :src="logoLoadFailed ? EVENT_LOGO_PLACEHOLDER : event.logoUrl" @ionError="logoLoadFailed = true" :alt="LL.Logo_event() + ' ' + event.title"/>
       </div>
     </div>
     <div class="eventItem-infos">
@@ -41,7 +41,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, PropType, toRef, unref} from "vue";
+import {computed, PropType, ref, toRef, unref} from "vue";
 import {
   IonImg, useIonRouter
 } from '@ionic/vue';
@@ -83,6 +83,10 @@ const isPinnedRef = computed(() => {
 })
 
 const eventOrganizerToken = organizerTokenRefForEvent(eventIdRef)
+
+const EVENT_LOGO_PLACEHOLDER = import.meta.env.BASE_URL+'assets/images/svg/event-logo-placeholder.svg';
+const logoLoadFailed = ref(false);
+
 </script>
 
 <style lang="scss" scoped>

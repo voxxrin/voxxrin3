@@ -29,7 +29,7 @@
       </div>
     </div>
     <div class="logo">
-      <ion-img :src="pinnedEvent.logoUrl" :alt="LL.Logo_event() + ' ' + pinnedEvent.title"/>
+      <ion-img :src="logoLoadFailed ? EVENT_LOGO_PLACEHOLDER : pinnedEvent.logoUrl" @ionError="logoLoadFailed = true" :alt="LL.Logo_event() + ' ' + pinnedEvent.title"/>
     </div>
   </ion-card>
 </template>
@@ -39,7 +39,7 @@ import {people} from "ionicons/icons";
 import CurrentEventStatus from "@/components/events/CurrentEventStatus.vue";
 import MonthDayDateRange from "@/components/MonthDayDateRange.vue";
 import {IonImg} from "@ionic/vue";
-import {PropType} from "vue";
+import {PropType, ref} from "vue";
 import {ListableVoxxrinEvent} from "@/models/VoxxrinEvent";
 import {typesafeI18n} from "@/i18n/i18n-vue";
 
@@ -51,6 +51,10 @@ const props = defineProps({
         type: Object as PropType<ListableVoxxrinEvent>
     }
 })
+
+
+const EVENT_LOGO_PLACEHOLDER = import.meta.env.BASE_URL+'assets/images/svg/event-logo-placeholder.svg';
+const logoLoadFailed = ref(false);
 
 </script>
 
