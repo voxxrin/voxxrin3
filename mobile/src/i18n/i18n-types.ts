@@ -564,7 +564,11 @@ type RootTranslation = {
 	 */
 	Organizers_are_regularly_sending_room_capacity_ratio: string
 	/**
-	 * O​n​ ​f​l​a​c​k​y​ ​c​o​n​n​e​c​t​i​o​n​s​,​ ​a​u​t​h​e​n​t​i​c​a​t​i​n​g​ ​t​h​e​ ​u​s​e​r​ ​c​a​n​ ​t​a​k​e​ ​t​i​m​e​,​ ​l​e​a​d​i​n​g​ ​t​o​ ​a​ ​l​o​n​g​ ​l​o​a​d​i​n​g​ ​s​p​i​n​n​e​r​.​ ​T​o​ ​w​o​r​k​a​r​o​u​n​d​ ​t​h​i​s​,​ ​y​o​u​ ​c​a​n​ ​e​i​t​h​e​r​ ​R​e​l​o​a​d​ ​t​h​e​ ​p​a​g​e​,​ ​o​r​ ​p​u​t​ ​y​o​u​r​ ​d​e​v​i​c​e​ ​c​o​m​p​l​e​t​e​l​y​ ​o​f​f​l​i​n​e​,​ ​s​o​ ​t​h​a​t​ ​F​i​r​e​b​a​s​e​ ​d​o​e​s​n​'​t​ ​e​v​e​n​ ​t​r​y​ ​t​o​ ​u​p​d​a​t​e​ ​a​u​t​h​e​n​t​i​c​a​t​e​d​ ​u​s​e​r​'​s​ ​i​n​f​o​s
+	 * G​e​t​t​i​n​g​ ​t​h​i​n​g​s​ ​r​e​a​d​y​…
+	 */
+	App_is_starting: string
+	/**
+	 * T​h​e​ ​n​e​t​w​o​r​k​ ​l​o​o​k​s​ ​s​l​o​w​.​ ​H​a​n​g​ ​o​n​,​ ​t​h​i​s​ ​c​a​n​ ​t​a​k​e​ ​u​p​ ​t​o​ ​3​0​ ​s​e​c​o​n​d​s​.​ ​T​i​p​:​ ​s​w​i​t​c​h​i​n​g​ ​t​o​ ​a​i​r​p​l​a​n​e​ ​m​o​d​e​ ​m​a​k​e​s​ ​t​h​e​ ​a​p​p​ ​s​t​a​r​t​ ​i​n​s​t​a​n​t​l​y​ ​w​i​t​h​ ​y​o​u​r​ ​s​a​v​e​d​ ​d​a​t​a​.
 	 */
 	On_flacky_connections_it_is_difficult_to_authenticate_the_user: string
 	/**
@@ -1127,7 +1131,11 @@ export type TranslationFunctions = {
 	 */
 	Organizers_are_regularly_sending_room_capacity_ratio: () => LocalizedString
 	/**
-	 * On flacky connections, authenticating the user can take time, leading to a long loading spinner. To workaround this, you can either Reload the page, or put your device completely offline, so that Firebase doesn't even try to update authenticated user's infos
+	 * Getting things ready…
+	 */
+	App_is_starting: () => LocalizedString
+	/**
+	 * The network looks slow. Hang on, this can take up to 30 seconds. Tip: switching to airplane mode makes the app start instantly with your saved data.
 	 */
 	On_flacky_connections_it_is_difficult_to_authenticate_the_user: () => LocalizedString
 	/**
