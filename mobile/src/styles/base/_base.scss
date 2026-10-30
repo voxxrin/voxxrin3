@@ -6,3 +6,9 @@ body {
 ion-tab-bar {
   margin-bottom: calc( env(safe-area-inset-top));
 }
+
+// In a mobile browser tab (not native, not installed PWA), the browser UI already handles the bottom inset:
+// some browsers (e.g. Firefox Android in edge-to-edge mode) still report one, adding a blank band under the tab bar
+html.plt-mobileweb:not(.plt-pwa) {
+  --ion-safe-area-bottom: 0px;
+}
