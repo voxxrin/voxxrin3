@@ -1,0 +1,17 @@
+"$schema" = "https://conductor.build/schemas/settings.repo.schema.json"
+
+[scripts]
+setup = '''
+set -e
+mise trust -q && mise install -q
+
+for f in mobile/.env.dev.local cloud/functions/.env.local cloud/.firebaserc; do
+  cp "$ADE_SOURCE_ROOT_PATH/$f" "$f"
+done
+'''
+run_mode = "concurrent"
+
+[scripts.run.dev]
+available_in = [ "local" ]
+command = "FIREBASE_PROJECT_NAME=voxxrin-v3-demo npm run dev"
+icon = "play"
